@@ -86,16 +86,30 @@
       var PV = window.PV || {};
       if (PV.user) {
         var email = PV.user.email || '';
-        var initial = (email.charAt(0) || '?').toUpperCase();
         var plan = (PV.plan || 'free').toUpperCase();
-        box.innerHTML =
-          '<div class="du-row"><div class="du-avatar">' + initial + '</div>' +
-          '<div><div class="du-name">' + esc(email.split('@')[0]) + '</div>' +
-          '<div class="du-mail">' + esc(email) + '</div></div></div>' +
-          '<div class="du-plan"><span class="plan-badge">' + esc(plan) + '</span></div>';
-        foot.innerHTML = '<a href="#" data-logout style="color:var(--ink-3);font-size:.92rem">Log out</a>';
-        var lo = foot.querySelector('[data-logout]');
-        if (lo && PV.signOut) lo.addEventListener('click', function (e) { e.preventDefault(); PV.signOut(); });
+        // Load display_name + avatar from profiles (synced with account page)
+        var renderUser = function (prof) {
+          prof = prof || {};
+          var name = (prof.display_name || '').trim() || email.split('@')[0];
+          var avatar = prof.avatar_url && prof.avatar_url.indexOf('data:image') === 0
+            ? '<img src="' + prof.avatar_url + '" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:12px">'
+            : esc((name.charAt(0) || '?').toUpperCase());
+          box.innerHTML =
+            '<div class="du-row"><div class="du-avatar">' + avatar + '</div>' +
+            '<div><div class="du-name">' + esc(name) + '</div>' +
+            '<div class="du-mail">' + esc(email) + '</div></div></div>' +
+            '<div class="du-plan"><span class="plan-badge">' + esc(plan) + '</span></div>';
+          foot.innerHTML = '<a href="#" data-logout style="color:var(--ink-3);font-size:.92rem">Log out</a>';
+          var lo = foot.querySelector('[data-logout]');
+          if (lo && PV.signOut) lo.addEventListener('click', function (e) { e.preventDefault(); PV.signOut(); });
+        };
+        // Render immediately with email fallback, then refresh from profiles
+        renderUser(null);
+        if (PV.from) {
+          PV.from('profiles').select('display_name,avatar_url').eq('id', PV.user.id).maybeSingle().then(function (r) {
+            if (r && r.data) renderUser(r.data);
+          }).catch(function () {});
+        }
       } else {
         box.innerHTML =
           '<div style="display:flex;gap:10px"><a class="btn btn-silver btn-sm" style="flex:1" href="' + up + 'signup.html">Sign up free</a>' +
