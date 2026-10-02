@@ -1,0 +1,362 @@
+/* PIPVANT Prop Firm Matcher — filter, render, compare. */
+(function () {
+  'use strict';
+
+  var PLANS = window.PIPVANT_PLANS || [];
+  var META = window.PIPVANT_META || {};
+  var VERIFY = 'Verified ' + (META.lastVerified || '2026-10-02') +
+    ' — promos change often, always confirm at checkout.';
+
+  var state = { market: 'any', size: 'any', maxPrice: null, dd: 'any', news: 'any', minSplit: 50 };
+  var compareKeys = []; // "firmId|planId"
+
+  /* ---------- cloud: watchlist + saved comparisons ---------- */
+  // NOTE: two DB ids differ from the firms.js slugs (seed slug mismatch):
+  //   firms.js 'alpha-capital' -> DB 'alpha-capital-group'
+  //   firms.js 'the-5ers'      -> DB 'the-5-ers'
+  function dbFirmId(fid) { return fid; } // DB ids match firms.js slugs
+  var watchlist = {}; // dbFirmId -> true
+
+  function needLogin() {
+    location.href = '../login.html?next=' + encodeURIComponent('tools/matcher.html');
+  }
+  function loadWatchlist() {
+    return PV.from('watchlist_firms').select('firm_id').eq('user_id', PV.user.id).then(function (res) {
+      if (res.error) throw res.error;
+      watchlist = {};
+      (res.data || []).forEach(function (r) { watchlist[r.firm_id] = true; });
+    }).catch(function () { watchlist = {}; });
+  }
+  function paintWatchButtons() {
+    document.querySelectorAll('.watch-btn').forEach(function (b) {
+      var on = !!watchlist[dbFirmId(b.getAttribute('data-firm'))];
+      b.innerHTML = on ? '♥ Saved' : '♡ Watchlist';
+    });
+  }
+  function toggleWatch(btn) {
+    if (!PV.user || !PV.ok) { needLogin(); return; }
+    var fid = dbFirmId(btn.getAttribute('data-firm'));
+    btn.disabled = true;
+    var job = watchlist[fid]
+      ? PV.from('watchlist_firms').delete().eq('user_id', PV.user.id).eq('firm_id', fid)
+      : PV.from('watchlist_firms').insert({ user_id: PV.user.id, firm_id: fid });
+    job.then(function (res) {
+      btn.disabled = false;
+      if (res.error) { alert(PV.friendly(res.error)); return; }
+      if (watchlist[fid]) delete watchlist[fid]; else watchlist[fid] = true;
+      paintWatchButtons();
+    });
+  }
+
+  function loadSaved() {
+    var box = document.getElementById('saved-list');
+    if (!PV.user || !PV.ok) {
+      box.innerHTML = '<p class="micro"><a href="../login.html?next=' + encodeURIComponent('tools/matcher.html') +
+        '" style="color:var(--silver-2);font-weight:600">Sign in</a> to save comparisons and sync them across devices.</p>';
+      return Promise.resolve();
+    }
+    return PV.from('saved_comparisons').select('id, name, firm_ids, filters, created_at')
+      .eq('user_id', PV.user.id).order('created_at', { ascending: false })
+      .then(function (res) {
+        if (res.error) throw res.error;
+        var rows = res.data || [];
+        box.innerHTML = rows.length ? rows.map(function (r) {
+          var names = (r.firm_ids || []).map(function (k) { var p = byKey(k); return p ? p.firm : k; }).join(' vs ');
+          return '<div class="saved-item"><div><strong>' + esc(r.name) + '</strong><br><span class="micro">' + esc(names) + '</span></div>' +
+            '<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn btn-ghost btn-sm" data-load="' + r.id + '">Load</button>' +
+            '<button class="btn btn-ghost btn-sm" data-del="' + r.id + '">Delete</button></div></div>';
+        }).join('') : '<p class="micro">Nothing saved yet — compare programs above, then save the result.</p>';
+        box.querySelectorAll('[data-del]').forEach(function (b) {
+          b.addEventListener('click', function () {
+            if (!confirm('Delete this saved comparison?')) return;
+            PV.from('saved_comparisons').delete().eq('id', b.getAttribute('data-del')).then(function (dr) {
+              if (dr.error) alert(PV.friendly(dr.error)); else loadSaved();
+            });
+          });
+        });
+        box.querySelectorAll('[data-load]').forEach(function (b) {
+          b.addEventListener('click', function () {
+            var r = rows.find(function (x) { return x.id === b.getAttribute('data-load'); });
+            if (r) applySaved(r);
+          });
+        });
+      }).catch(function (err) {
+        box.innerHTML = '<p class="micro">Could not load saved comparisons: ' + esc(PV.friendly(err)) + '</p>';
+      });
+  }
+  function applySaved(r) {
+    var keys = (r.firm_ids || []).filter(byKey);
+    if (!keys.length) { alert('Those programs are no longer listed.'); return; }
+    compareKeys = keys.slice(0, 3);
+    if (r.filters) {
+      state.market = r.filters.market || 'any';
+      state.size = r.filters.size || 'any';
+      state.maxPrice = r.filters.maxPrice != null ? r.filters.maxPrice : null;
+      state.dd = r.filters.dd || 'any';
+      state.news = r.filters.news || 'any';
+      state.minSplit = r.filters.minSplit || 50;
+      syncFilterUI();
+    }
+    render(); renderCompareTable();
+    document.getElementById('compare-section').scrollIntoView({ behavior: 'smooth' });
+  }
+  function syncFilterUI() {
+    [['f-market', 'market'], ['f-dd', 'dd'], ['f-news', 'news']].forEach(function (pair) {
+      document.getElementById(pair[0]).querySelectorAll('button').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-v') === state[pair[1]]);
+      });
+    });
+    document.getElementById('f-size').value = state.size;
+    document.getElementById('f-price').value = state.maxPrice == null ? '' : state.maxPrice;
+    document.getElementById('f-split').value = state.minSplit;
+    document.getElementById('f-split-v').textContent = state.minSplit + '%';
+  }
+
+  function key(p) { return p.firmId + '|' + p.planId; }
+  function byKey(k) { return PLANS.find(function (p) { return key(p) === k; }); }
+
+  /* ---------- filter ---------- */
+  function planMatches(p) {
+    if (state.market !== 'any' && p.markets.indexOf(state.market) < 0) return false;
+    if (state.dd !== 'any' && p.ddType !== state.dd) return false;
+    if (state.news !== 'any' && p.news !== state.news) return false;
+    if ((p.profitSplitMin || 0) < state.minSplit) return false;
+    var sizes = p.sizes;
+    if (state.size !== 'any') {
+      sizes = sizes.filter(function (s) { return String(s.sizeUsd) === state.size; });
+      if (!sizes.length) return false;
+    }
+    if (state.maxPrice != null) {
+      var ok = sizes.some(function (s) { return s.priceUsd != null && s.priceUsd <= state.maxPrice; });
+      if (!ok) return false;
+    }
+    return true;
+  }
+
+  /* ---------- render ---------- */
+  function newsLabel(n) {
+    return { allowed: 'Allowed', restricted: 'Restricted', prohibited: 'Prohibited', unknown: 'Check terms' }[n] || n;
+  }
+  function recLabel(r) {
+    return { 'one-time': 'one-time', 'monthly': '/month', 'per-30-days': '/30 days' }[r] || '';
+  }
+
+  function priceRows(p) {
+    return p.sizes.map(function (s) {
+      var hl = (state.size !== 'any' && String(s.sizeUsd) === state.size) ? ' class="hl"' : '';
+      var price = s.priceUsd != null
+        ? '<span class="p">' + esc(s.priceDisplay) + '</span> <span class="micro">' + recLabel(s.recurring) + '</span>'
+        : '<span class="micro">See website</span>';
+      return '<tr' + hl + '><td>' + esc(s.label) + '</td><td>' + price + '</td></tr>';
+    }).join('');
+  }
+
+  function card(p) {
+    var k = key(p);
+    var inCmp = compareKeys.indexOf(k) >= 0;
+    var badges = p.markets.map(function (m) {
+      return '<span class="badge">' + (m === 'cfd' ? 'CFDs' : 'Futures') + '</span>';
+    }).join('') + '<span class="badge dim">' + esc(p.ddType) + ' DD</span>' +
+      '<span class="badge dim">News: ' + esc(newsLabel(p.news)) + '</span>';
+    return '' +
+      '<article class="firm-card" data-key="' + esc(k) + '">' +
+        '<div class="top"><div><h3>' + esc(p.firm) + '</h3>' +
+        '<div class="micro">' + esc(p.plan) + '</div></div></div>' +
+        '<div class="badges">' + badges + '</div>' +
+        '<div class="ttable-wrap"><table class="price-table">' +
+          '<thead><tr><th>Account</th><th>Challenge price</th></tr></thead><tbody>' +
+          priceRows(p) + '</tbody></table></div>' +
+        (p.priceNote ? '<p class="micro" style="margin-bottom:8px">' + esc(p.priceNote) + '</p>' : '') +
+        '<p class="verify">' + esc(VERIFY) + '</p>' +
+        '<div class="spec">' +
+          '<div><div class="k">Profit target</div><div class="v">' + esc(p.profitTarget) + '</div></div>' +
+          '<div><div class="k">Daily drawdown</div><div class="v">' + esc(p.dailyDD) + '</div></div>' +
+          '<div><div class="k">Max drawdown</div><div class="v">' + esc(p.totalDD) + '</div></div>' +
+          '<div><div class="k">Profit split</div><div class="v">' + esc(p.profitSplit) + '</div></div>' +
+        '</div>' +
+        '<details class="terms"><summary>Full terms & conditions</summary><p style="margin-top:10px">' +
+          esc(p.terms || 'See the firm website for full terms.') +
+          (p.sourceUrl ? '<br><span class="micro">Source: ' + esc(p.sourceUrl) + '</span>' : '') +
+        '</p></details>' +
+        '<div class="firm-actions">' +
+          '<button class="btn btn-ghost btn-sm watch-btn" data-firm="' + esc(p.firmId) + '">♡ Watchlist</button>' +
+          '<button class="btn btn-ghost btn-sm cmp-btn"' + (inCmp || compareKeys.length >= 3 ? ' disabled' : '') + '>' +
+            (inCmp ? '✓ In comparison' : '＋ Compare') + '</button>' +
+          (p.website ? '<a class="btn btn-silver btn-sm" href="' + esc(p.website) + '" target="_blank" rel="noopener">Visit ' + esc(p.firm) + ' ↗</a>' : '') +
+        '</div>' +
+      '</article>';
+  }
+
+  function render() {
+    var list = PLANS.filter(planMatches);
+    var box = document.getElementById('results');
+    document.getElementById('res-count').textContent =
+      list.length + ' program' + (list.length === 1 ? '' : 's') + ' match your filters';
+    box.innerHTML = list.length
+      ? list.map(card).join('')
+      : '<div class="empty"><h3>No programs match</h3><p>Try widening the price range or clearing a filter.</p></div>';
+    box.querySelectorAll('.cmp-btn').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var k = b.closest('.firm-card').getAttribute('data-key');
+        toggleCompare(k);
+      });
+    });
+    box.querySelectorAll('.watch-btn').forEach(function (b) {
+      b.addEventListener('click', function () { toggleWatch(b); });
+    });
+    paintWatchButtons();
+    renderTray();
+  }
+
+  /* ---------- compare ---------- */
+  function toggleCompare(k) {
+    var i = compareKeys.indexOf(k);
+    if (i >= 0) compareKeys.splice(i, 1);
+    else if (compareKeys.length < 3) compareKeys.push(k);
+    render();
+    renderCompareTable();
+  }
+
+  function renderTray() {
+    var tray = document.getElementById('tray');
+    document.getElementById('tray-n').textContent = compareKeys.length;
+    var slots = document.getElementById('tray-slots');
+    var html = '';
+    for (var i = 0; i < 3; i++) {
+      var p = compareKeys[i] ? byKey(compareKeys[i]) : null;
+      html += p
+        ? '<span class="slot filled">' + esc(p.firm) + ' <button data-i="' + i + '" aria-label="Remove">×</button></span>'
+        : '<span class="slot">Empty slot</span>';
+    }
+    slots.innerHTML = html;
+    slots.querySelectorAll('button').forEach(function (b) {
+      b.addEventListener('click', function () { toggleCompare(compareKeys[+b.getAttribute('data-i')]); });
+    });
+    var go = document.getElementById('tray-go');
+    go.disabled = compareKeys.length < 2;
+    tray.classList.toggle('show', compareKeys.length > 0);
+  }
+
+  function cheapest(p) {
+    var best = null;
+    p.sizes.forEach(function (s) {
+      if (s.priceUsd != null && (!best || s.priceUsd < best.priceUsd)) best = s;
+    });
+    return best;
+  }
+
+  function renderCompareTable() {
+    var sec = document.getElementById('compare-section');
+    var tbl = document.getElementById('cmp-table');
+    if (compareKeys.length < 2) { sec.style.display = 'none'; return; }
+    sec.style.display = 'block';
+    var ps = compareKeys.map(byKey);
+    function row(label, fn) {
+      return '<tr><td class="k">' + label + '</td>' +
+        ps.map(function (p) { return '<td>' + fn(p) + '</td>'; }).join('') + '</tr>';
+    }
+    tbl.innerHTML =
+      '<tr><td class="k"></td>' + ps.map(function (p) {
+        return '<th>' + esc(p.firm) + '<br><span class="micro" style="font-family:var(--font-body)">' + esc(p.plan) + '</span></th>';
+      }).join('') + '</tr>' +
+      row('Markets', function (p) { return p.markets.map(function (m) { return m === 'cfd' ? 'CFDs' : 'Futures'; }).join(' + '); }) +
+      row('Cheapest price', function (p) {
+        var c = cheapest(p);
+        return c ? '<strong style="color:var(--silver-2)">' + esc(c.priceDisplay) + '</strong> <span class="micro">' + recLabel(c.recurring) + ' (' + esc(c.label) + ')</span><br><span class="verify">' + esc(VERIFY) + '</span>' : '—';
+      }) +
+      row('Profit target', function (p) { return esc(p.profitTarget); }) +
+      row('Daily drawdown', function (p) { return esc(p.dailyDD); }) +
+      row('Max drawdown', function (p) { return esc(p.totalDD) + ' <span class="badge dim">' + esc(p.ddType) + '</span>'; }) +
+      row('Profit split', function (p) { return esc(p.profitSplit); }) +
+      row('News trading', function (p) { return esc(newsLabel(p.news)); }) +
+      row('', function (p) {
+        return p.website ? '<a class="btn btn-silver btn-sm" href="' + esc(p.website) + '" target="_blank" rel="noopener">Visit site ↗</a>' : '';
+      });
+  }
+
+  /* ---------- filter wiring ---------- */
+  function seg(id, fn) {
+    var el = document.getElementById(id);
+    el.querySelectorAll('button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        el.querySelectorAll('button').forEach(function (x) { x.classList.remove('on'); });
+        b.classList.add('on');
+        fn(b.getAttribute('data-v'));
+        render();
+      });
+    });
+  }
+
+  function init() {
+    // size options from data
+    var sel = document.getElementById('f-size');
+    (window.PIPVANT_SIZES || []).forEach(function (s) {
+      var o = document.createElement('option');
+      o.value = String(s); o.textContent = fmtSize(s);
+      sel.appendChild(o);
+    });
+    var md = document.getElementById('meta-date');
+    if (md) md.textContent = 'verified ' + (META.lastVerified || '');
+
+    seg('f-market', function (v) { state.market = v; });
+    seg('f-dd', function (v) { state.dd = v; });
+    seg('f-news', function (v) { state.news = v; });
+    sel.addEventListener('change', function () { state.size = sel.value; render(); });
+    document.getElementById('f-price').addEventListener('input', function (e) {
+      var v = parseFloat(e.target.value);
+      state.maxPrice = isNaN(v) ? null : v;
+      render();
+    });
+    var split = document.getElementById('f-split');
+    split.addEventListener('input', function () {
+      state.minSplit = +split.value;
+      document.getElementById('f-split-v').textContent = split.value + '%';
+      render();
+    });
+    document.getElementById('f-reset').addEventListener('click', function () {
+      state = { market: 'any', size: 'any', maxPrice: null, dd: 'any', news: 'any', minSplit: 50 };
+      document.querySelectorAll('.seg button').forEach(function (b) {
+        b.classList.toggle('on', b.getAttribute('data-v') === 'any');
+      });
+      sel.value = 'any';
+      document.getElementById('f-price').value = '';
+      split.value = 50;
+      document.getElementById('f-split-v').textContent = '50%';
+      compareKeys = [];
+      document.getElementById('compare-section').style.display = 'none';
+      render();
+    });
+    document.getElementById('tray-go').addEventListener('click', function () {
+      renderCompareTable();
+      document.getElementById('compare-section').scrollIntoView({ behavior: 'smooth' });
+    });
+    document.getElementById('save-cmp-btn').addEventListener('click', function () {
+      if (!PV.user || !PV.ok) { needLogin(); return; }
+      if (compareKeys.length < 2) { alert('Add at least 2 programs to the comparison first.'); return; }
+      var nameInput = document.getElementById('cmp-name');
+      var name = nameInput.value.trim() ||
+        ('Comparison — ' + new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+      var btn = this;
+      btn.disabled = true;
+      PV.from('saved_comparisons').insert({
+        user_id: PV.user.id,
+        name: name,
+        firm_ids: compareKeys.slice(),
+        filters: { market: state.market, size: state.size, maxPrice: state.maxPrice, dd: state.dd, news: state.news, minSplit: state.minSplit }
+      }).then(function (res) {
+        btn.disabled = false;
+        if (res.error) { alert(PV.friendly(res.error)); return; }
+        nameInput.value = '';
+        loadSaved();
+      });
+    });
+    render();
+    // cloud state after auth resolves
+    PV.ready.then(function (user) {
+      if (user && PV.ok) loadWatchlist().then(function () { paintWatchButtons(); return loadSaved(); });
+      else loadSaved();
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+})();

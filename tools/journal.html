@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PIPVANT — Trading Journal | Orovanta</title>
+<meta name="description" content="Log every trade. Win rate, average R, profit factor, equity curve — computed automatically. Cloud sync when signed in, private local storage otherwise.">
+<link rel="icon" type="image/png" href="../assets/img/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap nav">
+    <a class="brand" href="../index.html">
+      <img src="../assets/img/logo.png" alt="Orovanta logo">
+      <span class="word">Oro<b>vanta</b></span>
+    </a>
+    <button class="nav-toggle" aria-expanded="false" aria-label="Menu">☰</button>
+    <ul class="nav-links">
+      <li><a href="matcher.html">Prop Firm Matcher</a></li>
+      <li><a href="journal.html">Journal</a></li>
+      <li><a href="risk-calculator.html">Risk Calculator</a></li>
+      <li><a href="../pricing.html">Pricing</a></li>
+      <li><a href="../about.html">About</a></li>
+      <li data-auth="out"><a href="../login.html">Log in</a></li>
+      <li data-auth="out"><a class="btn btn-silver btn-sm" href="../signup.html">Sign up free</a></li>
+      <li data-auth="in" hidden><a href="../account.html">Account</a></li>
+      <li data-auth="in" hidden><a href="#" data-logout>Log out</a></li>
+    </ul>
+  </div>
+</header>
+
+<main>
+  <section class="tool-head">
+    <div class="wrap">
+      <p class="eyebrow"><span data-brand="launchline">PIPVANT — launched by Orovanta</span></p>
+      <h1>Trading <span class="silver-text">Journal</span></h1>
+      <p class="verify" style="margin-top:12px">Log every trade. Your statistics compute themselves.</p>
+      <div class="notice" id="sync-note" style="margin-top:14px">Loading…</div>
+    </div>
+  </section>
+
+  <section style="padding-bottom:100px">
+    <div class="wrap">
+      <div class="dash" id="dash" style="display:none">
+        <div class="stat-card"><div class="k">Trades</div><div class="n" id="d-trades">0</div></div>
+        <div class="stat-card"><div class="k">Net P&L</div><div class="n" id="d-pnl">$0</div></div>
+        <div class="stat-card"><div class="k">Win rate</div><div class="n" id="d-wr">—</div></div>
+        <div class="stat-card"><div class="k">Avg R</div><div class="n" id="d-avgr">—</div></div>
+        <div class="stat-card"><div class="k">Profit factor</div><div class="n" id="d-pf">—</div></div>
+        <div class="stat-card"><div class="k">Expectancy</div><div class="n" id="d-exp">—</div></div>
+      </div>
+      <div id="equity-wrap" style="display:none;margin-top:24px">
+        <h2>Equity curve</h2>
+        <svg id="equity" viewBox="0 0 600 220" class="equity" preserveAspectRatio="none"></svg>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:44px;flex-wrap:wrap;gap:12px">
+        <h2 style="margin:0">Trades</h2>
+        <div style="display:flex;gap:10px">
+          <button class="btn btn-ghost btn-sm" id="csv-btn">Export CSV</button>
+          <button class="btn btn-silver btn-sm" id="add-btn">＋ Add trade</button>
+        </div>
+      </div>
+      <div id="trade-list" style="margin-top:18px"></div>
+    </div>
+  </section>
+</main>
+
+<div class="modal" id="modal">
+  <div class="sheet">
+    <h2 id="modal-title">Add trade</h2>
+    <form id="trade-form" style="margin-top:16px">
+      <div class="grid-2">
+        <div class="field"><label>Date</label><input type="date" name="date" required></div>
+        <div class="field"><label>Symbol</label><input type="text" name="symbol" placeholder="NQ, ES, US100, EURUSD…" required></div>
+      </div>
+      <div class="grid-2">
+        <div class="field"><label>Side</label><select name="side"><option>Long</option><option>Short</option></select></div>
+        <div class="field"><label>Session</label><select name="session"><option>New York</option><option>London</option><option>Asian</option><option>Other</option></select></div>
+      </div>
+      <div class="grid-2">
+        <div class="field"><label>Entry</label><input type="number" step="any" name="entry" required></div>
+        <div class="field"><label>Exit</label><input type="number" step="any" name="exit" required></div>
+      </div>
+      <div class="grid-2">
+        <div class="field"><label>Position size</label><input type="number" step="any" name="size" required></div>
+        <div class="field"><label>Risk in R (1 = your standard risk)</label><input type="number" step="any" name="riskR" placeholder="1" required></div>
+      </div>
+      <div class="grid-2">
+        <div class="field"><label>Setup / notes</label><input type="text" name="notes" placeholder="IFVG + MSS + OB, FVG 50% target…"></div>
+        <div class="field"><label>Mistake (optional)</label><select name="mistake"><option value="">None</option><option>Early entry</option><option>Late entry</option><option>Moved stop</option><option>Over-leveraged</option><option>FOMO</option><option>Revenge trade</option><option>News</option><option>Other</option></select></div>
+      </div>
+      <div class="field"><label>Result</label><select name="result"><option value="win">Win</option><option value="loss">Loss</option><option value="be">Breakeven</option></select></div>
+      <div class="field"><label>Chart screenshots</label>
+        <input type="file" id="shot-input" accept="image/*" multiple>
+        <div class="shot-hint" id="shot-hint">Sign in to attach chart screenshots — they need cloud storage.</div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:20px;justify-content:flex-end">
+        <button type="button" class="btn btn-ghost btn-sm" id="cancel-btn">Cancel</button>
+        <button type="submit" class="btn btn-silver btn-sm">Save trade</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="brand" href="../index.html">
+          <img src="../assets/img/logo.png" alt="Orovanta logo">
+          <span class="word">Oro<b>vanta</b></span>
+        </a>
+        <p class="launchline"><span data-brand="launchline">PIPVANT — launched by Orovanta</span></p>
+        <p class="micro">Professional trading tools for serious traders.</p>
+      </div>
+      <div>
+        <h4>Tools</h4>
+        <ul>
+          <li><a href="matcher.html">Prop Firm Matcher</a></li>
+          <li><a href="journal.html">Trading Journal</a></li>
+          <li><a href="risk-calculator.html">Risk Calculator</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="../pricing.html">Pricing</a></li>
+          <li><a href="../about.html">About</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="../legal/affiliate-disclosure.html">Affiliate Disclosure</a></li>
+          <li><a href="../legal/privacy.html">Privacy</a></li>
+          <li><a href="../legal/terms.html">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span data-brand="year">2026</span> <span data-brand="company">Orovanta</span>. All rights reserved.</span>
+      <span>Orovanta provides software tools, not financial advice.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/js/config.js"></script>
+<script src="../assets/js/sb-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="../assets/js/supabase.js"></script>
+<script src="../assets/js/site.js"></script>
+<script src="../assets/js/journal.js"></script>
+</body>
+</html>

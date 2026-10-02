@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PIPVANT — Risk Calculator | Orovanta</title>
+<meta name="description" content="Position sizing for CFD lots and futures contracts. Enter balance, risk % and stop distance — get precise size in seconds.">
+<link rel="icon" type="image/png" href="../assets/img/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap nav">
+    <a class="brand" href="../index.html">
+      <img src="../assets/img/logo.png" alt="Orovanta logo">
+      <span class="word">Oro<b>vanta</b></span>
+    </a>
+    <button class="nav-toggle" aria-expanded="false" aria-label="Menu">☰</button>
+    <ul class="nav-links">
+      <li><a href="matcher.html">Prop Firm Matcher</a></li>
+      <li><a href="journal.html">Journal</a></li>
+      <li><a href="risk-calculator.html">Risk Calculator</a></li>
+      <li><a href="../pricing.html">Pricing</a></li>
+      <li><a href="../about.html">About</a></li>
+      <li data-auth="out"><a href="../login.html">Log in</a></li>
+      <li data-auth="out"><a class="btn btn-silver btn-sm" href="../signup.html">Sign up free</a></li>
+      <li data-auth="in" hidden><a href="../account.html">Account</a></li>
+      <li data-auth="in" hidden><a href="#" data-logout>Log out</a></li>
+    </ul>
+  </div>
+</header>
+
+<main>
+  <section class="tool-head">
+    <div class="wrap">
+      <p class="eyebrow"><span data-brand="launchline">PIPVANT — launched by Orovanta</span></p>
+      <h1>Risk <span class="silver-text">Calculator</span></h1>
+      <p class="lead">Enter your balance, risk % and stop distance — get your precise position size in seconds.</p>
+    </div>
+  </section>
+
+  <section style="padding-bottom:100px">
+    <div class="wrap">
+      <div class="calc-grid">
+        <div class="card">
+          <div class="seg" id="mode" style="margin-bottom:22px">
+            <button data-v="cfd" class="on">CFD Lots</button>
+            <button data-v="futures">Futures Contracts</button>
+          </div>
+
+          <div class="field"><label>Account balance (USD)</label>
+            <input type="number" id="c-balance" value="5000" min="1"></div>
+          <div class="field"><label>Risk per trade (%)</label>
+            <input type="number" id="c-risk" value="1" min="0.01" max="100" step="0.1"></div>
+          <p class="micro" id="risk-sync" style="margin:-6px 0 14px"></p>
+
+          <div id="cfd-fields">
+            <div class="field"><label>Stop distance (pips)</label>
+              <input type="number" id="c-pips" value="20" min="0.1" step="0.1"></div>
+            <div class="field"><label>Pip value per lot (USD)</label>
+              <input type="number" id="c-pipval" value="10" min="0.01" step="0.01">
+              <div class="hint">Standard: $10/lot for most FX pairs. Indices differ — check your broker.</div></div>
+          </div>
+
+          <div id="fut-fields" style="display:none">
+            <div class="field"><label>Instrument</label>
+              <select id="c-instr">
+                <option value="20">NQ — Nasdaq 100 ($20/pt)</option>
+                <option value="12.5">ES — S&P 500 ($12.50/pt)</option>
+                <option value="5">YM — Dow ($5/pt)</option>
+                <option value="10">GC — Gold ($10/pt)</option>
+                <option value="10">CL — Crude Oil ($10/pt)</option>
+                <option value="custom">Custom tick value…</option>
+              </select></div>
+            <div class="field" id="c-custom-wrap" style="display:none"><label>Tick value (USD/pt)</label>
+              <input type="number" id="c-tick" value="10" min="0.01" step="0.01"></div>
+            <div class="field"><label>Stop distance (points)</label>
+              <input type="number" id="c-points" value="10" min="0.1" step="0.1"></div>
+          </div>
+        </div>
+
+        <div class="card result-panel">
+          <p class="eyebrow">Your size</p>
+          <div class="big-num" id="r-size">—</div>
+          <p class="micro" id="r-unit">lots</p>
+          <hr class="rule" style="margin:22px 0">
+          <div class="spec" style="grid-template-columns:1fr 1fr">
+            <div><div class="k">Risk amount</div><div class="v" id="r-amt">$50</div></div>
+            <div><div class="k">Loss at stop</div><div class="v" id="r-loss">$50</div></div>
+            <div><div class="k">% of balance</div><div class="v" id="r-pct">1%</div></div>
+            <div><div class="k">Contracts sanity</div><div class="v" id="r-note">—</div></div>
+          </div>
+          <p class="verify" style="margin-top:18px">A calculator can't remove risk. Never risk money you can't afford to lose.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="brand" href="../index.html">
+          <img src="../assets/img/logo.png" alt="Orovanta logo">
+          <span class="word">Oro<b>vanta</b></span>
+        </a>
+        <p class="launchline"><span data-brand="launchline">PIPVANT — launched by Orovanta</span></p>
+        <p class="micro">Professional trading tools for serious traders.</p>
+      </div>
+      <div>
+        <h4>Tools</h4>
+        <ul>
+          <li><a href="matcher.html">Prop Firm Matcher</a></li>
+          <li><a href="journal.html">Trading Journal</a></li>
+          <li><a href="risk-calculator.html">Risk Calculator</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="../pricing.html">Pricing</a></li>
+          <li><a href="../about.html">About</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="../legal/affiliate-disclosure.html">Affiliate Disclosure</a></li>
+          <li><a href="../legal/privacy.html">Privacy</a></li>
+          <li><a href="../legal/terms.html">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span data-brand="year">2026</span> <span data-brand="company">Orovanta</span>. All rights reserved.</span>
+      <span>Orovanta provides software tools, not financial advice.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/js/config.js"></script>
+<script src="../assets/js/sb-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="../assets/js/supabase.js"></script>
+<script src="../assets/js/site.js"></script>
+<script src="../assets/js/risk.js"></script>
+</body>
+</html>

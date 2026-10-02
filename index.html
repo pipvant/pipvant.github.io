@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PIPVANT — Professional Trading Tools | Orovanta</title>
+<meta name="description" content="PIPVANT by Orovanta: compare 10 leading prop firms across 33 programs, journal every trade, and size every position with precision. Tools, not signals.">
+<link rel="icon" type="image/png" href="assets/img/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap nav">
+    <a class="brand" href="index.html">
+      <img src="assets/img/logo.png" alt="Orovanta logo">
+      <span class="word">Oro<b>vanta</b></span>
+    </a>
+    <button class="nav-toggle" aria-expanded="false" aria-label="Menu">☰</button>
+    <ul class="nav-links">
+      <li><a href="tools/matcher.html">Prop Firm Matcher</a></li>
+      <li><a href="tools/journal.html">Journal</a></li>
+      <li><a href="tools/risk-calculator.html">Risk Calculator</a></li>
+      <li><a href="pricing.html">Pricing</a></li>
+      <li><a href="about.html">About</a></li>
+      <li data-auth="out"><a href="login.html">Log in</a></li>
+      <li data-auth="out"><a class="btn btn-silver btn-sm" href="signup.html">Sign up free</a></li>
+      <li data-auth="in" hidden><a href="account.html">Account</a></li>
+      <li data-auth="in" hidden><a href="#" data-logout>Log out</a></li>
+    </ul>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap">
+      <div class="seal"><img src="assets/img/logo.png" alt="PIPVANT seal"></div>
+      <p class="eyebrow center"><span data-brand="launchline">PIPVANT — launched by Orovanta</span></p>
+      <h1>The <span class="silver-text">Platinum Edge</span><br>for Serious Traders</h1>
+      <p class="lead">PIPVANT is a professional toolkit for traders: compare 10 leading prop firms across 33 programs, journal every trade with institutional-grade statistics, and size every position with precision.</p>
+      <div class="hero-cta">
+        <a class="btn btn-silver" href="tools/matcher.html">Compare Prop Firms</a>
+        <a class="btn btn-ghost" href="tools/journal.html">Open the Journal</a>
+      </div>
+      <p class="micro hero-note">Tools, not signals. Orovanta provides software — not financial advice.</p>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="stats">
+      <div class="stat"><div class="n" id="st-firms">10</div><div class="l">Prop Firms</div></div>
+      <div class="stat"><div class="n" id="st-plans">33</div><div class="l">Programs Compared</div></div>
+      <div class="stat"><div class="n">3</div><div class="l">Professional Tools</div></div>
+      <div class="stat"><div class="n">$0</div><div class="l">To Start</div></div>
+    </div>
+  </div>
+
+  <!-- TOOLS -->
+  <section class="block">
+    <div class="wrap">
+      <p class="eyebrow">The Toolkit</p>
+      <h2>Everything a trader needs.<br>Nothing a trader doesn't.</h2>
+      <div class="grid-3" style="margin-top:36px">
+        <div class="card">
+          <div class="icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v18M5 7l7-4 7 4M5 7v10l7 4 7-4V7"/><path d="M5 7l7 4 7-4M12 11v10"/></svg>
+          </div>
+          <h3>Prop Firm Matcher</h3>
+          <p>Filter 10 leading prop firms by market, account size, price, drawdown type, news rules and profit split. Compare up to 3 programs side by side.</p>
+          <a class="go" href="tools/matcher.html">Open the matcher →</a>
+        </div>
+        <div class="card">
+          <div class="icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V4H6.5A2.5 2.5 0 0 0 4 6.5v13z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/><path d="M9 8h7M9 12h5"/></svg>
+          </div>
+          <h3>Trading Journal</h3>
+          <p>Log every trade with setups, sessions and mistakes. Win rate, average R, profit factor and equity curve — computed automatically.</p>
+          <a class="go" href="tools/journal.html">Open the journal →</a>
+        </div>
+        <div class="card">
+          <div class="icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 13l4-4"/><path d="M3.5 17a9 9 0 1 1 17 0"/><circle cx="12" cy="13" r="1.4"/></svg>
+          </div>
+          <h3>Risk Calculator</h3>
+          <p>Position sizing for CFD lots and futures contracts. Enter balance, risk % and stop distance — get precise size in seconds.</p>
+          <a class="go" href="tools/risk-calculator.html">Open the calculator →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- MATCHER TEASER -->
+  <section class="block">
+    <div class="wrap">
+      <p class="eyebrow">Prop Firm Matcher</p>
+      <h2>Find the challenge that fits <span class="silver-text">your</span> trading.</h2>
+      <p class="lead">Live data, verified October 2026. Here are the most affordable 100k programs right now:</p>
+      <div id="teaser-list" style="margin-top:30px"></div>
+      <p class="verify" style="margin-top:14px">Firm data verified 2026-10-02. Promotions change frequently — always confirm pricing at checkout.</p>
+      <div style="margin-top:26px"><a class="btn btn-ghost" href="tools/matcher.html">Open the full matcher →</a></div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- PRINCIPLES -->
+  <section class="block">
+    <div class="wrap">
+      <p class="eyebrow">Our Principles</p>
+      <h2>What we will never do.</h2>
+      <div class="principles">
+        <div class="principle">
+          <h3>Tools, not signals</h3>
+          <p>We build software that sharpens your process. We don't sell signals, copy-trading, or "get funded fast" dreams.</p>
+        </div>
+        <div class="principle">
+          <h3>No profit claims</h3>
+          <p>You'll never see a promised return on this site. Trading involves substantial risk — most traders lose money.</p>
+        </div>
+        <div class="principle">
+          <h3>Verified, honest data</h3>
+          <p>Every firm price carries its verification date. Promos change constantly, so we always tell you to confirm at checkout.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- PRICING TEASER -->
+  <section class="block center">
+    <div class="wrap">
+      <p class="eyebrow center">Pricing</p>
+      <h2>Free to start. <span class="silver-text">Pro</span> when you're ready.</h2>
+      <p class="lead" style="margin:0 auto">The full toolkit is free — no card required. PIPVANT Pro, with advanced analytics and the ICT toolkit, is coming soon.</p>
+      <div style="margin-top:30px"><a class="btn btn-silver" href="pricing.html">See pricing</a></div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- FAQ -->
+  <section class="block">
+    <div class="wrap">
+      <p class="eyebrow">FAQ</p>
+      <h2>Questions, answered.</h2>
+      <div class="faq">
+        <details>
+          <summary>Is PIPVANT a prop firm or a broker?</summary>
+          <p>No. PIPVANT is a software toolkit built by Orovanta. We don't offer funded accounts, brokerage, or any financial product — we help you compare and manage the ones that exist.</p>
+        </details>
+        <details>
+          <summary>Do you offer trading signals or recommendations?</summary>
+          <p>Never. Our strict principle is "tools, not signals": we provide the instruments to analyze and execute your own strategy, not advice on what to trade.</p>
+        </details>
+        <details>
+          <summary>How current is the prop firm data?</summary>
+          <p>All 10 firms were researched and verified on 2026-10-02. Prop firms run frequent promotions, so every price on this site carries a reminder to confirm at checkout.</p>
+        </details>
+        <details>
+          <summary>Where is my journal data stored?</summary>
+          <p>When you're signed in, your journal, risk settings and watchlists are stored in your private PIPVANT cloud account — protected by database-level access rules so only you can read them. When you're signed out, the journal works from your browser's local storage instead, private to your device.</p>
+        </details>
+        <details>
+          <summary>What does PIPVANT cost?</summary>
+          <p>The core toolkit — matcher, journal, risk calculator — is free with no card required. A Pro tier with advanced analytics is coming soon; join the waitlist on the pricing page.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="brand" href="index.html">
+          <img src="assets/img/logo.png" alt="Orovanta logo">
+          <span class="word">Oro<b>vanta</b></span>
+        </a>
+        <p class="launchline"><span data-brand="launchline">PIPVANT — launched by Orovanta</span></p>
+        <p class="micro">Professional trading tools for serious traders.<br><span data-brand="tagline">The Platinum Edge</span>.</p>
+      </div>
+      <div>
+        <h4>Tools</h4>
+        <ul>
+          <li><a href="tools/matcher.html">Prop Firm Matcher</a></li>
+          <li><a href="tools/journal.html">Trading Journal</a></li>
+          <li><a href="tools/risk-calculator.html">Risk Calculator</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="about.html">About</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="legal/affiliate-disclosure.html">Affiliate Disclosure</a></li>
+          <li><a href="legal/privacy.html">Privacy</a></li>
+          <li><a href="legal/terms.html">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span data-brand="year">2026</span> <span data-brand="company">Orovanta</span>. All rights reserved.</span>
+      <span>Orovanta provides software tools, not financial advice.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/sb-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="assets/js/supabase.js"></script>
+<script src="assets/js/site.js"></script>
+<script src="assets/js/firms.js"></script>
+<script>
+(function () {
+  // teaser: 5 cheapest 100k one-time plans
+  function cheapest100k() {
+    var out = [];
+    (window.PIPVANT_PLANS || []).forEach(function (p) {
+      p.sizes.forEach(function (s) {
+        if (s.sizeUsd === 100000 && s.priceUsd != null && s.recurring === 'one-time') {
+          out.push({ firm: p.firm, plan: p.plan, price: s.priceUsd, disp: s.priceDisplay });
+        }
+      });
+    });
+    out.sort(function (a, b) { return a.price - b.price; });
+    return out.slice(0, 5);
+  }
+  document.addEventListener('DOMContentLoaded', function () {
+    var el = document.getElementById('teaser-list');
+    if (!el) return;
+    var rows = cheapest100k().map(function (r, i) {
+      return '<tr><td style="color:var(--silver-2);font-weight:700">#' + (i + 1) + '</td>' +
+        '<td><strong>' + esc(r.firm) + '</strong><br><span class="micro">' + esc(r.plan) + '</span></td>' +
+        '<td class="p">' + esc(r.disp) + '</td></tr>';
+    }).join('');
+    el.innerHTML = '<div class="ttable-wrap"><table class="ttable"><thead><tr><th></th><th>Firm · Program</th><th>100k Challenge</th></tr></thead><tbody>' +
+      rows + '</tbody></table></div>';
+    var st1 = document.getElementById('st-firms'), st2 = document.getElementById('st-plans');
+    if (st1 && window.PIPVANT_PLANS) {
+      var firms = {};
+      window.PIPVANT_PLANS.forEach(function (p) { firms[p.firmId] = 1; });
+      st1.textContent = Object.keys(firms).length;
+      st2.textContent = window.PIPVANT_PLANS.length;
+    }
+  });
+})();
+</script>
+</body>
+</html>

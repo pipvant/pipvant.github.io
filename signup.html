@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PIPVANT — Create account | Orovanta</title>
+<meta name="description" content="Create a free PIPVANT account — cloud journal sync, risk settings and watchlists.">
+<link rel="icon" type="image/png" href="assets/img/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap nav">
+    <a class="brand" href="index.html">
+      <img src="assets/img/logo.png" alt="Orovanta logo">
+      <span class="word">Oro<b>vanta</b></span>
+    </a>
+    <button class="nav-toggle" aria-expanded="false" aria-label="Menu">☰</button>
+    <ul class="nav-links">
+      <li><a href="tools/matcher.html">Prop Firm Matcher</a></li>
+      <li><a href="tools/journal.html">Journal</a></li>
+      <li><a href="tools/risk-calculator.html">Risk Calculator</a></li>
+      <li><a href="pricing.html">Pricing</a></li>
+      <li><a href="about.html">About</a></li>
+      <li data-auth="out"><a href="login.html">Log in</a></li>
+      <li data-auth="out"><a class="btn btn-silver btn-sm" href="signup.html">Sign up free</a></li>
+      <li data-auth="in" hidden><a href="account.html">Account</a></li>
+      <li data-auth="in" hidden><a href="#" data-logout>Log out</a></li>
+    </ul>
+  </div>
+</header>
+
+<main>
+  <section class="tool-head center">
+    <div class="wrap">
+      <p class="eyebrow center"><span data-brand="launchline">PIPVANT — launched by Orovanta</span></p>
+      <h1>Create your <span class="silver-text">account</span></h1>
+      <p class="lead" style="margin:0 auto">Free forever. Your journal and settings sync across devices.</p>
+    </div>
+  </section>
+
+  <section style="padding-bottom:100px">
+    <div class="wrap">
+      <div class="auth-card">
+        <div class="form-err" id="su-err" role="alert"></div>
+        <div class="form-ok" id="su-ok"></div>
+        <form id="su-form">
+          <div class="field"><label for="su-email">Email</label>
+            <input type="email" id="su-email" autocomplete="email" required></div>
+          <div class="field"><label for="su-pass">Password</label>
+            <input type="password" id="su-pass" autocomplete="current-password" required></div>
+          <button class="btn btn-silver" type="submit" style="width:100%" id="su-btn">Create free account</button>
+        </form>
+        <p class="micro center" style="margin-top:18px">Already have an account? <a href="login.html" style="color:var(--silver-2);font-weight:600">Log in</a></p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="brand" href="index.html">
+          <img src="assets/img/logo.png" alt="Orovanta logo">
+          <span class="word">Oro<b>vanta</b></span>
+        </a>
+        <p class="launchline"><span data-brand="launchline">PIPVANT — launched by Orovanta</span></p>
+        <p class="micro">Professional trading tools for serious traders.<br><span data-brand="tagline">The Platinum Edge</span>.</p>
+      </div>
+      <div>
+        <h4>Tools</h4>
+        <ul>
+          <li><a href="tools/matcher.html">Prop Firm Matcher</a></li>
+          <li><a href="tools/journal.html">Trading Journal</a></li>
+          <li><a href="tools/risk-calculator.html">Risk Calculator</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="about.html">About</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="legal/affiliate-disclosure.html">Affiliate Disclosure</a></li>
+          <li><a href="legal/privacy.html">Privacy</a></li>
+          <li><a href="legal/terms.html">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span data-brand="year">2026</span> <span data-brand="company">Orovanta</span>. All rights reserved.</span>
+      <span>Orovanta provides software tools, not financial advice.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/sb-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="assets/js/supabase.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+(function () {
+  function showErr(msg) {
+    var el = document.getElementById('su-err');
+    el.textContent = msg; el.classList.add('show');
+    document.getElementById('su-ok').classList.remove('show');
+  }
+  function showOk(msg) {
+    var el = document.getElementById('su-ok');
+    el.textContent = msg; el.classList.add('show');
+    document.getElementById('su-err').classList.remove('show');
+  }
+  function dest() {
+    try {
+      var n = sessionStorage.getItem('pv_next');
+      sessionStorage.removeItem('pv_next');
+      if (n && n.charAt(0) !== '/' && n.indexOf('://') < 0) return n;
+    } catch (e) {}
+    return 'account.html';
+  }
+  document.addEventListener('DOMContentLoaded', function () {
+    PV.ready.then(function (user) { if (user) location.replace('account.html'); });
+    document.getElementById('su-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var btn = document.getElementById('su-btn');
+      btn.disabled = true; btn.textContent = 'Creating…';
+      var email = document.getElementById('su-email').value.trim();
+      var pw = document.getElementById('su-pass').value;
+      PV.signUp(email, pw).then(function (res) {
+        if (res.error) { showErr(PV.friendly(res.error)); btn.disabled = false; btn.textContent = 'Create free account'; return; }
+        if (res.data && res.data.session) { location.replace(dest()); return; }
+        // Email confirmation required
+        showOk('Account created — check your inbox for the confirmation link, then log in.');
+        document.getElementById('su-form').style.display = 'none';
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>

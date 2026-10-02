@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PIPVANT — Prop Firm Matcher | Orovanta</title>
+<meta name="description" content="Compare 10 leading prop firms across 33 programs. Filter by market, account size, price, drawdown type, news rules and profit split.">
+<link rel="icon" type="image/png" href="../assets/img/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap nav">
+    <a class="brand" href="../index.html">
+      <img src="../assets/img/logo.png" alt="Orovanta logo">
+      <span class="word">Oro<b>vanta</b></span>
+    </a>
+    <button class="nav-toggle" aria-expanded="false" aria-label="Menu">☰</button>
+    <ul class="nav-links">
+      <li><a href="matcher.html">Prop Firm Matcher</a></li>
+      <li><a href="journal.html">Journal</a></li>
+      <li><a href="risk-calculator.html">Risk Calculator</a></li>
+      <li><a href="../pricing.html">Pricing</a></li>
+      <li><a href="../about.html">About</a></li>
+      <li data-auth="out"><a href="../login.html">Log in</a></li>
+      <li data-auth="out"><a class="btn btn-silver btn-sm" href="../signup.html">Sign up free</a></li>
+      <li data-auth="in" hidden><a href="../account.html">Account</a></li>
+      <li data-auth="in" hidden><a href="#" data-logout>Log out</a></li>
+    </ul>
+  </div>
+</header>
+
+<main>
+  <section class="tool-head">
+    <div class="wrap">
+      <p class="eyebrow"><span data-brand="launchline">PIPVANT — launched by Orovanta</span></p>
+      <h1>Prop Firm <span class="silver-text">Matcher</span></h1>
+      <p class="lead">Compare 10 leading prop firms across 33 programs. Filter by what matters to your trading — then compare up to 3 side by side.</p>
+      <p class="verify" style="margin-top:12px">Data verified 2026-10-02. Promotions change frequently — always confirm pricing at checkout.</p>
+    </div>
+  </section>
+
+  <section style="padding-bottom:100px">
+    <div class="wrap matcher-layout">
+      <aside class="filters" id="filters">
+        <h3>Filters</h3>
+
+        <div class="f-group">
+          <span class="flabel">Market</span>
+          <div class="seg" id="f-market">
+            <button data-v="any" class="on">Any</button>
+            <button data-v="cfd">CFDs</button>
+            <button data-v="futures">Futures</button>
+          </div>
+        </div>
+
+        <div class="f-group">
+          <span class="flabel">Account size</span>
+          <div class="field" style="margin:0">
+            <select id="f-size"><option value="any">Any size</option></select>
+          </div>
+        </div>
+
+        <div class="f-group">
+          <span class="flabel">Max first payment (USD)</span>
+          <div class="field" style="margin:0">
+            <input type="number" id="f-price" min="0" placeholder="e.g. 500">
+            <div class="hint">Compares the challenge / first payment price.</div>
+          </div>
+        </div>
+
+        <div class="f-group">
+          <span class="flabel">Drawdown type</span>
+          <div class="seg" id="f-dd">
+            <button data-v="any" class="on">Any</button>
+            <button data-v="static">Static</button>
+            <button data-v="trailing">Trailing</button>
+          </div>
+        </div>
+
+        <div class="f-group">
+          <span class="flabel">News trading</span>
+          <div class="seg" id="f-news">
+            <button data-v="any" class="on">Any</button>
+            <button data-v="allowed">Allowed</button>
+            <button data-v="restricted">Restricted</button>
+            <button data-v="prohibited">Prohibited</button>
+          </div>
+        </div>
+
+        <div class="f-group">
+          <span class="flabel">Min profit split: <strong id="f-split-v" style="color:var(--silver-2)">50%</strong></span>
+          <input type="range" id="f-split" min="50" max="100" value="50" step="5">
+        </div>
+
+        <button class="btn btn-ghost btn-sm" id="f-reset" style="width:100%">Reset filters</button>
+      </aside>
+
+      <div>
+        <div class="results-meta">
+          <span class="micro" id="res-count"></span>
+          <span class="micro">Prices in USD · <span id="meta-date"></span></span>
+        </div>
+        <div id="results"></div>
+        <div id="compare-section" style="display:none">
+          <h2 style="margin-top:40px">Side-by-side comparison</h2>
+          <div class="wl-wrap" style="margin:14px 0 6px">
+            <input type="text" id="cmp-name" placeholder="Name this comparison…" aria-label="Comparison name"
+              style="background:#0a0f1e;border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:9px 14px;font-size:.9rem;min-width:220px">
+            <button class="btn btn-ghost btn-sm" id="save-cmp-btn">Save comparison</button>
+          </div>
+          <div class="cmp-table-wrap"><table class="cmp-table" id="cmp-table"></table></div>
+        </div>
+        <div id="saved-wrap" style="margin-top:44px">
+          <h2>Your saved comparisons</h2>
+          <div class="saved-list" id="saved-list"><p class="micro">Loading…</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="compare-tray" id="tray">
+  <span class="micro" style="color:var(--silver-2);font-weight:600">Compare (<span id="tray-n">0</span>/3)</span>
+  <span id="tray-slots" style="display:flex;gap:8px"></span>
+  <button class="btn btn-silver btn-sm" id="tray-go" disabled>Compare now</button>
+</div>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="brand" href="../index.html">
+          <img src="../assets/img/logo.png" alt="Orovanta logo">
+          <span class="word">Oro<b>vanta</b></span>
+        </a>
+        <p class="launchline"><span data-brand="launchline">PIPVANT — launched by Orovanta</span></p>
+        <p class="micro">Professional trading tools for serious traders.</p>
+      </div>
+      <div>
+        <h4>Tools</h4>
+        <ul>
+          <li><a href="matcher.html">Prop Firm Matcher</a></li>
+          <li><a href="journal.html">Trading Journal</a></li>
+          <li><a href="risk-calculator.html">Risk Calculator</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="../pricing.html">Pricing</a></li>
+          <li><a href="../about.html">About</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="../legal/affiliate-disclosure.html">Affiliate Disclosure</a></li>
+          <li><a href="../legal/privacy.html">Privacy</a></li>
+          <li><a href="../legal/terms.html">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span data-brand="year">2026</span> <span data-brand="company">Orovanta</span>. All rights reserved.</span>
+      <span>Orovanta provides software tools, not financial advice.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="../assets/js/config.js"></script>
+<script src="../assets/js/sb-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="../assets/js/supabase.js"></script>
+<script src="../assets/js/site.js"></script>
+<script src="../assets/js/firms.js"></script>
+<script src="../assets/js/matcher.js"></script>
+</body>
+</html>

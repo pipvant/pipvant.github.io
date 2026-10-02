@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PIPVANT — Account | Orovanta</title>
+<meta name="description" content="Your PIPVANT account: profile, risk defaults and sign-out.">
+<link rel="icon" type="image/png" href="assets/img/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap nav">
+    <a class="brand" href="index.html">
+      <img src="assets/img/logo.png" alt="Orovanta logo">
+      <span class="word">Oro<b>vanta</b></span>
+    </a>
+    <button class="nav-toggle" aria-expanded="false" aria-label="Menu">☰</button>
+    <ul class="nav-links">
+      <li><a href="tools/matcher.html">Prop Firm Matcher</a></li>
+      <li><a href="tools/journal.html">Journal</a></li>
+      <li><a href="tools/risk-calculator.html">Risk Calculator</a></li>
+      <li><a href="pricing.html">Pricing</a></li>
+      <li><a href="about.html">About</a></li>
+      <li data-auth="out"><a href="login.html">Log in</a></li>
+      <li data-auth="out"><a class="btn btn-silver btn-sm" href="signup.html">Sign up free</a></li>
+      <li data-auth="in" hidden><a href="account.html">Account</a></li>
+      <li data-auth="in" hidden><a href="#" data-logout>Log out</a></li>
+    </ul>
+  </div>
+</header>
+
+<main>
+  <section class="tool-head">
+    <div class="wrap">
+      <p class="eyebrow"><span data-brand="launchline">PIPVANT — launched by Orovanta</span></p>
+      <h1>Your <span class="silver-text">account</span></h1>
+    </div>
+  </section>
+
+  <section style="padding-bottom:100px">
+    <div class="wrap">
+      <div id="acct-loading" class="notice">Loading your account…</div>
+
+      <div id="acct-body" style="display:none">
+        <div class="grid-2" style="align-items:start">
+          <div class="card">
+            <h3>Profile</h3>
+            <div class="spec" style="grid-template-columns:1fr">
+              <div><div class="k">Email</div><div class="v" id="a-email">—</div></div>
+              <div><div class="k">Plan</div><div class="v" id="a-plan">Free</div></div>
+              <div><div class="k">Member since</div><div class="v" id="a-since">—</div></div>
+            </div>
+            <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">
+              <a class="btn btn-ghost btn-sm" href="tools/journal.html">Open journal</a>
+              <a class="btn btn-ghost btn-sm" href="#" data-logout>Log out</a>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Risk defaults</h3>
+            <p class="micro" style="margin-bottom:16px">Used to pre-fill the Risk Calculator on all your devices.</p>
+            <div class="form-err" id="risk-err" role="alert"></div>
+            <div class="form-ok" id="risk-ok">Saved ✓</div>
+            <form id="risk-form">
+              <div class="grid-2">
+                <div class="field"><label>Account balance</label>
+                  <input type="number" id="r-balance" min="1" step="any" required></div>
+                <div class="field"><label>Currency</label>
+                  <select id="r-currency">
+                    <option>USD</option><option>EUR</option><option>GBP</option>
+                  </select></div>
+              </div>
+              <div class="grid-2">
+                <div class="field"><label>Risk per trade (%)</label>
+                  <input type="number" id="r-risk" min="0.01" max="100" step="0.1" required></div>
+                <div class="field"><label>Max daily loss (%)</label>
+                  <input type="number" id="r-daily" min="0.1" max="100" step="0.1" required></div>
+              </div>
+              <div class="field"><label>Max trades per day</label>
+                <input type="number" id="r-maxtrades" min="1" max="100" step="1" required></div>
+              <button class="btn btn-silver btn-sm" type="submit" id="risk-btn">Save defaults</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="brand" href="index.html">
+          <img src="assets/img/logo.png" alt="Orovanta logo">
+          <span class="word">Oro<b>vanta</b></span>
+        </a>
+        <p class="launchline"><span data-brand="launchline">PIPVANT — launched by Orovanta</span></p>
+        <p class="micro">Professional trading tools for serious traders.<br><span data-brand="tagline">The Platinum Edge</span>.</p>
+      </div>
+      <div>
+        <h4>Tools</h4>
+        <ul>
+          <li><a href="tools/matcher.html">Prop Firm Matcher</a></li>
+          <li><a href="tools/journal.html">Trading Journal</a></li>
+          <li><a href="tools/risk-calculator.html">Risk Calculator</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="pricing.html">Pricing</a></li>
+          <li><a href="about.html">About</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="legal/affiliate-disclosure.html">Affiliate Disclosure</a></li>
+          <li><a href="legal/privacy.html">Privacy</a></li>
+          <li><a href="legal/terms.html">Terms</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span data-brand="year">2026</span> <span data-brand="company">Orovanta</span>. All rights reserved.</span>
+      <span>Orovanta provides software tools, not financial advice.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/sb-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="assets/js/supabase.js"></script>
+<script src="assets/js/site.js"></script>
+<script>
+(function () {
+  function showErr(msg) {
+    var el = document.getElementById('risk-err');
+    el.textContent = msg; el.classList.add('show');
+    document.getElementById('risk-ok').classList.remove('show');
+  }
+  function showOk() {
+    document.getElementById('risk-ok').classList.add('show');
+    document.getElementById('risk-err').classList.remove('show');
+    setTimeout(function () { document.getElementById('risk-ok').classList.remove('show'); }, 2500);
+  }
+  document.addEventListener('DOMContentLoaded', function () {
+    PV.ready.then(function (user) {
+      if (!user) { location.replace('login.html?next=account.html'); return; }
+      document.getElementById('a-email').textContent = user.email || '—';
+      document.getElementById('a-since').textContent = new Date(user.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+      var uid = user.id;
+      PV.from('profiles').select('plan').eq('id', uid).maybeSingle().then(function (r) {
+        if (r.data && r.data.plan) document.getElementById('a-plan').textContent = r.data.plan.charAt(0).toUpperCase() + r.data.plan.slice(1);
+      });
+      PV.from('risk_settings').select('*').eq('user_id', uid).maybeSingle().then(function (r) {
+        document.getElementById('acct-loading').style.display = 'none';
+        document.getElementById('acct-body').style.display = 'block';
+        var d = r.data || {};
+        document.getElementById('r-balance').value = d.account_balance != null ? d.account_balance : 5000;
+        document.getElementById('r-currency').value = d.account_currency || 'USD';
+        document.getElementById('r-risk').value = d.risk_per_trade_percent != null ? d.risk_per_trade_percent : 1;
+        document.getElementById('r-daily').value = d.max_daily_loss_percent != null ? d.max_daily_loss_percent : 3;
+        document.getElementById('r-maxtrades').value = d.max_trades_per_day != null ? d.max_trades_per_day : 3;
+        if (r.error) showErr(PV.friendly(r.error));
+      });
+    });
+    document.getElementById('risk-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (!PV.user) { showErr('Please sign in to do that.'); return; }
+      var btn = document.getElementById('risk-btn');
+      btn.disabled = true;
+      var row = {
+        user_id: PV.user.id,
+        account_balance: parseFloat(document.getElementById('r-balance').value),
+        account_currency: document.getElementById('r-currency').value,
+        risk_per_trade_percent: parseFloat(document.getElementById('r-risk').value),
+        max_daily_loss_percent: parseFloat(document.getElementById('r-daily').value),
+        max_trades_per_day: parseInt(document.getElementById('r-maxtrades').value, 10),
+        updated_at: new Date().toISOString()
+      };
+      PV.from('risk_settings').upsert(row, { onConflict: 'user_id' }).then(function (res) {
+        btn.disabled = false;
+        if (res.error) showErr(PV.friendly(res.error)); else showOk();
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>
