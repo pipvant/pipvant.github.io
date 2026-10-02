@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Orovanta — PIPVANT</title>
+<meta name="description" content="PIPVANT admin dashboard.">
+<!-- PIPVANT-SEO -->
+<meta name="theme-color" content="#060a14">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="assets/img/icon-192.png">
+<link rel="canonical" href="https://pipvant.github.io/admin.html">
+<meta property="og:title" content="About Orovanta — PIPVANT">
+<meta property="og:description" content="Orovanta builds professional trading tools. PIPVANT is our flagship platform: tools, not signals.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://pipvant.github.io/admin.html">
+<meta property="og:image" content="https://pipvant.github.io/assets/img/logo.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="About Orovanta — PIPVANT">
+<meta name="twitter:description" content="Orovanta builds professional trading tools. PIPVANT is our flagship platform: tools, not signals.">
+<!-- /PIPVANT-SEO -->
+
+<link rel="icon" type="image/png" href="assets/img/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<meta name="robots" content="noindex, nofollow">
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap nav">
+    <a class="brand" href="index.html"><img src="assets/img/logo.png" alt="PIPVANT logo"><span class="wordcol"><span class="word">PIP<b>VANT</b></span><span class="byline">by Orovanta</span></span></a>
+    <button class="nav-toggle" aria-expanded="false" aria-label="Menu">☰</button>
+    <ul class="nav-links">
+      <li><a href="tools/matcher.html">Prop Firm Matcher</a></li>
+      <li><a href="tools/journal.html">Journal</a></li>
+      <li><a href="tools/risk-calculator.html">Risk Calculator</a></li>
+      <li><a href="pricing.html">Pricing</a></li>
+      <li><a href="about.html">About</a></li>
+      <li data-auth="out"><a href="login.html">Log in</a></li>
+      <li data-auth="out"><a class="btn btn-silver btn-sm" href="signup.html">Sign up free</a></li>
+      <li data-auth="in" hidden><a href="account.html">Account</a></li>
+      <li data-auth="in" hidden><a href="#" data-logout>Log out</a></li>
+    </ul>
+  </div>
+</header>
+
+<main>
+  <div id="admin-lock" style="display:none;text-align:center;padding:80px 20px">
+    <h2 style="font-family:var(--font-display);color:var(--silver-2)">Restricted area</h2>
+    <p class="micro">Only the founder can access this page.</p>
+    <a class="btn btn-silver btn-sm" href="login.html" style="margin-top:16px">Sign in</a>
+  </div>
+  <div id="admin-panel" style="display:none">
+  <section class="tool-head">
+    <div class="wrap">
+      <p class="eyebrow">PIPVANT — Founder only</p>
+      <h1>Admin <span class="silver-text">Dashboard</span></h1>
+      <p class="lead">Manage your platform: messages, notifications, and overview.</p>
+    </div>
+  </section>
+
+  <section class="block tight-top">
+    <div class="wrap">
+      <!-- Stats -->
+      <div class="grid-2" style="margin-bottom:24px" id="admin-stats">
+        <div class="card" style="padding:20px;text-align:center"><div style="font-size:2rem;font-weight:800;color:var(--silver-2)" id="st-users">—</div><div class="micro">Total users</div></div>
+        <div class="card" style="padding:20px;text-align:center"><div style="font-size:2rem;font-weight:800;color:var(--silver-2)" id="st-certs">—</div><div class="micro">Certificates issued</div></div>
+        <div class="card" style="padding:20px;text-align:center"><div style="font-size:2rem;font-weight:800;color:var(--silver-2)" id="st-msgs">—</div><div class="micro">Unread messages</div></div>
+        <div class="card" style="padding:20px;text-align:center"><div style="font-size:2rem;font-weight:800;color:var(--silver-2)" id="st-reviews">—</div><div class="micro">Pending reviews</div></div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="prof-tabs" role="tablist" style="margin-bottom:20px">
+        <button class="prof-tab on" data-atab="messages">Messages</button>
+        <button class="prof-tab" data-atab="notify">Send notification</button>
+        <button class="prof-tab" data-atab="reviews">Reviews</button>
+      </div>
+
+      <!-- Messages -->
+      <div id="atab-messages">
+        <div id="msg-list"></div>
+      </div>
+
+      <!-- Send notification -->
+      <div id="atab-notify" hidden>
+        <div class="card" style="padding:28px;max-width:600px">
+          <h3 style="margin-bottom:16px">Broadcast notification</h3>
+          <div class="form-err" id="n-err" style="display:none"></div>
+          <div class="form-ok" id="n-ok" style="display:none">Sent ✓</div>
+          <form id="notif-form">
+            <div class="field"><label>Type</label>
+              <select id="n-type"><option value="update">Update</option><option value="feature">New feature</option><option value="important">Important</option></select></div>
+            <div class="field"><label>Title</label><input id="n-title" maxlength="120" required></div>
+            <div class="field"><label>Message</label><textarea id="n-body" rows="4" maxlength="1000" required></textarea></div>
+            <div class="field"><label>Link (optional)</label><input id="n-link" maxlength="200" placeholder="tools/journal.html"></div>
+            <button class="btn btn-silver" type="submit">Send to all users</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Reviews moderation -->
+      <div id="atab-reviews" hidden>
+        <div id="rev-list"></div>
+      </div>
+    </div>
+  </section>
+  </div>
+</main>
+
+
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/sb-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="assets/js/supabase.js"></script>
+<script src="assets/js/site.js"></script>
+<script src="assets/js/notifications.js"></script>
+<script src="assets/js/fx.js"></script>
+<script>
+(function () {
+  'use strict';
+  var FOUNDER_ID = 'bc387bb9-36ef-4055-bf66-b828a9c1f37a';
+  function esc(s) {
+    return String(s == null ? '').replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  PV.ready.then(function (user) {
+    if (!user || user.id !== FOUNDER_ID) {
+      document.getElementById('admin-lock').style.display = '';
+      return;
+    }
+    document.getElementById('admin-panel').style.display = '';
+    loadStats(); loadMessages(); loadReviews();
+    // Tabs
+    document.querySelectorAll('[data-atab]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        document.querySelectorAll('[data-atab]').forEach(function (x) { x.classList.remove('on'); });
+        b.classList.add('on');
+        ['messages','notify','reviews'].forEach(function (t) {
+          document.getElementById('atab-' + t).hidden = t !== b.getAttribute('data-atab');
+        });
+      });
+    });
+    // Send notification
+    document.getElementById('notif-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var err = document.getElementById('n-err'), ok = document.getElementById('n-ok');
+      err.style.display = 'none'; ok.style.display = 'none';
+      PV.from('notifications').insert({
+        type: document.getElementById('n-type').value,
+        title: document.getElementById('n-title').value.trim(),
+        body: document.getElementById('n-body').value.trim(),
+        link: document.getElementById('n-link').value.trim() || null,
+        user_id: null
+      }).then(function (r) {
+        if (r.error) { err.textContent = r.error.message; err.style.display = ''; return; }
+        ok.style.display = ''; e.target.reset();
+      }).catch(function (ex) { err.textContent = ex.message; err.style.display = ''; });
+    });
+  });
+  function loadStats() {
+    PV.from('profiles').select('id', { count: 'exact', head: true }).then(function (r) {
+      document.getElementById('st-users').textContent = r.count || 0;
+    }).catch(function () {});
+    PV.from('certificates').select('id', { count: 'exact', head: true }).then(function (r) {
+      document.getElementById('st-certs').textContent = r.count || 0;
+    }).catch(function () {});
+    PV.from('contact_messages').select('id', { count: 'exact', head: true }).eq('read', false).then(function (r) {
+      document.getElementById('st-msgs').textContent = r.count || 0;
+    }).catch(function () {});
+    PV.from('reviews').select('id', { count: 'exact', head: true }).eq('approved', false).then(function (r) {
+      document.getElementById('st-reviews').textContent = r.count || 0;
+    }).catch(function () {});
+  }
+  function loadMessages() {
+    PV.from('contact_messages').select('*').order('created_at', { ascending: false }).limit(50).then(function (r) {
+      var list = document.getElementById('msg-list');
+      var msgs = r.data || [];
+      if (!msgs.length) { list.innerHTML = '<p class="micro" style="text-align:center;padding:30px">No messages yet.</p>'; return; }
+      list.innerHTML = msgs.map(function (m) {
+        return '<div class="card" style="padding:20px;margin-bottom:12px;' + (m.read ? 'opacity:.7' : 'border-color:#4a5f8a') + '">' +
+          '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">' +
+            '<strong style="color:var(--silver-2)">' + esc(m.name) + '</strong>' +
+            '<span class="micro">' + new Date(m.created_at).toLocaleDateString() + '</span></div>' +
+          '<div class="micro" style="margin-bottom:8px">' + esc(m.email) + ' · ' + esc(m.subject) + '</div>' +
+          '<p style="font-size:.9rem;color:var(--ink-2)">' + esc(m.message) + '</p>' +
+          (m.read ? '' : '<button class="btn btn-ghost btn-sm" data-read="' + m.id + '" style="margin-top:10px">Mark read</button>') +
+        '</div>';
+      }).join('');
+      list.querySelectorAll('[data-read]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          PV.from('contact_messages').update({ read: true }).eq('id', b.getAttribute('data-read')).then(function () { loadMessages(); loadStats(); });
+        });
+      });
+    }).catch(function () {});
+  }
+  function loadReviews() {
+    PV.from('reviews').select('*').eq('approved', false).order('created_at', { ascending: false }).then(function (r) {
+      var list = document.getElementById('rev-list');
+      var revs = r.data || [];
+      if (!revs.length) { list.innerHTML = '<p class="micro" style="text-align:center;padding:30px">No pending reviews.</p>'; return; }
+      list.innerHTML = revs.map(function (v) {
+        return '<div class="card" style="padding:20px;margin-bottom:12px">' +
+          '<div style="color:#e8c15a;margin-bottom:8px">' + '★'.repeat(v.stars) + '☆'.repeat(5 - v.stars) + '</div>' +
+          '<p style="font-size:.9rem;color:var(--ink-2);margin-bottom:12px">' + esc(v.text) + '</p>' +
+          '<div style="display:flex;gap:8px">' +
+            '<button class="btn btn-silver btn-sm" data-approve="' + v.id + '">Approve</button>' +
+            '<button class="btn btn-ghost btn-sm" data-reject="' + v.id + '">Reject</button>' +
+          '</div></div>';
+      }).join('');
+      list.querySelectorAll('[data-approve]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          PV.from('reviews').update({ approved: true }).eq('id', b.getAttribute('data-approve')).then(function () { loadReviews(); loadStats(); });
+        });
+      });
+      list.querySelectorAll('[data-reject]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          PV.from('reviews').delete().eq('id', b.getAttribute('data-reject')).then(function () { loadReviews(); loadStats(); });
+        });
+      });
+    }).catch(function () {});
+  }
+})();
+</script>
+</body>
+</html>
