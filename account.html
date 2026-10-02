@@ -211,6 +211,17 @@
                 </div>
               </div>
 
+              <!-- Leaderboard -->
+              <div class="card pv2-setcard" style="margin-bottom:16px">
+                <h3>Leaderboard</h3>
+                <p class="micro" style="margin-bottom:14px">Appear on the public trader leaderboard, ranked by your real journal stats. Minimum 20 trades.</p>
+                <label style="display:flex;align-items:center;gap:10px;cursor:pointer">
+                  <input type="checkbox" id="lb-optin" style="width:18px;height:18px;accent-color:var(--silver-2)">
+                  <span style="font-size:.92rem">Show me on the leaderboard</span>
+                </label>
+                <div class="form-ok" id="lb-ok" style="display:none;margin-top:10px">Saved ✓</div>
+              </div>
+
               <!-- Security -->
               <div class="card pv2-setcard" style="margin-bottom:16px">
                 <h3>Security</h3>
@@ -320,6 +331,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="assets/js/certificates.js"></script>
 <script src="assets/js/certificates-ui.js"></script>
+<script src="assets/js/leaderboard.js"></script>
 <script src="assets/js/firms.js"></script>
 <script src="assets/js/site.js"></script>
 <script src="assets/js/fx.js"></script>
@@ -556,6 +568,18 @@
 
     document.getElementById('risk-form').addEventListener('submit', onRiskSubmit);
     document.getElementById('prof-form').addEventListener('submit', onProfileSubmit);
+    var lbOpt = document.getElementById('lb-optin');
+    if (lbOpt) lbOpt.addEventListener('change', function () {
+      var on = lbOpt.checked;
+      PV.from('profiles').update({ leaderboard_opt_in: on }).eq('id', PV.user.id).then(function () {
+        var ok = document.getElementById('lb-ok');
+        if (ok) { ok.style.display = ''; setTimeout(function () { ok.style.display = 'none'; }, 2500); }
+        if (!on) {
+          /* opted out: remove leaderboard entry */
+          PV.from('leaderboard').delete().eq('user_id', PV.user.id);
+        }
+      });
+    });
     document.getElementById('pw-form').addEventListener('submit', onPasswordSubmit);
     document.getElementById('email-form').addEventListener('submit', onEmailSubmit);
     document.getElementById('export-btn').addEventListener('click', onExport);
@@ -607,6 +631,8 @@
       document.getElementById('pf-name').value = name;
       document.getElementById('pf-country').value = prof.country || '';
       document.getElementById('pf-tz').value = prof.timezone || '';
+      var lbOpt = document.getElementById('lb-optin');
+      if (lbOpt) lbOpt.checked = !!prof.leaderboard_opt_in;
       document.getElementById('em-new').value = email;
 
       return loadActivity(uid);

@@ -617,11 +617,25 @@
         closeModal(); return refresh();
       }).then(function () {
         checkCerts();
+        syncBoard();
       }).catch(function (err) {
         alert(PV.friendly(err));
       }).then(function () { setBusy(false); });
     });
   });
+
+  /* ---------- leaderboard: sync score after each save ---------- */
+  function syncBoard() {
+    if (!window.PVBoard || !window.PV || !window.PV.user) return;
+    var st = stats();
+    if (!st) return;
+    window.PV.from('profiles').select('leaderboard_opt_in,display_name,avatar_url')
+      .eq('id', window.PV.user.id).maybeSingle()
+      .then(function (res) {
+        var prof = (res && res.data) || {};
+        window.PVBoard.sync(st, prof);
+      }).catch(function () {});
+  }
 
   /* ---------- certificates: check milestones after each save ---------- */
   function checkCerts() {

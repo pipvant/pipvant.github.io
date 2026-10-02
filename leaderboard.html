@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trader Leaderboard — PIPVANT</title>
+<meta name="description" content="Top traders on PIPVANT, ranked by real journal performance. Opt-in only.">
+<link rel="icon" href="assets/img/logo.png">
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+.board-hero { text-align: center; padding: 70px 20px 40px; position: relative; }
+.board-hero::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(205,213,228,.08), transparent 70%);
+}
+.board-hero h1 {
+  font-family: var(--font-display); font-size: clamp(2.2rem, 6vw, 3.4rem);
+  color: var(--silver-2); margin: 0 0 10px;
+}
+.board-hero p { color: var(--ink-2); max-width: 560px; margin: 0 auto; }
+.board-wrap { max-width: 860px; margin: 0 auto; padding: 0 20px 80px; }
+.board-row {
+  display: grid; grid-template-columns: 56px 1fr auto; gap: 16px; align-items: center;
+  background: linear-gradient(160deg, #0d1526, #080d18);
+  border: 1px solid #22304d; border-radius: 16px; padding: 18px 22px; margin-bottom: 12px;
+  transition: transform .2s, border-color .2s, box-shadow .2s;
+}
+.board-row:hover { transform: translateY(-2px); border-color: #3a4f7a; box-shadow: 0 12px 32px rgba(0,0,0,.4); }
+.board-row.top1 { border-color: rgba(238,241,248,.45); background: linear-gradient(160deg, #141d33, #0a1020); }
+.board-row.top2 { border-color: rgba(205,213,228,.28); }
+.board-row.top3 { border-color: rgba(205,213,228,.18); }
+.rank {
+  width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-size: 1.2rem; color: var(--steel);
+  border: 1px solid #2a3a5c; background: rgba(205,213,228,.04);
+}
+.top1 .rank { color: #fff; border-color: rgba(238,241,248,.5); background: rgba(238,241,248,.08); }
+.trader { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.trader .ava {
+  width: 46px; height: 46px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, #1a2540, #0c1220);
+  border: 1px solid #2a3a5c; display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-size: 1.1rem; color: var(--silver-2); overflow: hidden;
+}
+.trader .ava img { width: 100%; height: 100%; object-fit: cover; }
+.trader .nm { font-weight: 600; color: #fff; font-size: 1.02rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.trader .st { font-size: .76rem; color: var(--ink-3); margin-top: 2px; }
+.score { text-align: right; }
+.score .n { font-family: var(--font-display); font-size: 1.7rem; color: var(--silver-2); line-height: 1; }
+.score .l { font-size: .64rem; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-3); margin-top: 4px; }
+.board-note { text-align: center; color: var(--ink-3); font-size: .82rem; margin-top: 28px; max-width: 600px; margin-left: auto; margin-right: auto; }
+.board-cta { text-align: center; margin-top: 24px; }
+@media (max-width: 560px) {
+  .board-row { grid-template-columns: 44px 1fr auto; padding: 14px 16px; gap: 12px; }
+  .rank { width: 36px; height: 36px; font-size: 1rem; }
+  .trader .ava { width: 38px; height: 38px; }
+  .score .n { font-size: 1.35rem; }
+}
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="wrap nav">
+    <a class="brand" href="index.html"><img src="assets/img/logo.png" alt="PIPVANT logo"><span class="wordcol"><span class="word">PIP<b>VANT</b></span><span class="byline">by Orovanta</span></span></a>
+    <nav class="links"><a href="tools/matcher.html">Matcher</a><a href="tools/journal.html">Journal</a><a href="leaderboard.html" class="on">Leaderboard</a><a href="account.html">Account</a></nav>
+  </div>
+</header>
+<main>
+  <div class="board-hero">
+    <p class="eyebrow" style="font-size:.68rem;letter-spacing:.32em;text-transform:uppercase;color:var(--steel);margin-bottom:12px">PIPVANT · Traders</p>
+    <h1>Leaderboard</h1>
+    <p>Ranked by real journal performance — profit factor, win rate, and consistency. Opt-in only. No fake numbers.</p>
+  </div>
+  <div class="board-wrap">
+    <div id="board-list"><p class="micro" style="text-align:center">Loading…</p></div>
+    <div class="board-cta" id="board-cta" style="display:none">
+      <a class="btn btn-silver" href="account.html">Join the leaderboard</a>
+      <p class="micro" style="margin-top:10px">Opt in from your account settings. Minimum 20 logged trades.</p>
+    </div>
+    <p class="board-note">Scores combine profit factor (40%), win rate (25%), average R (20%), and trade volume (15%). Minimum 20 trades to appear. Rankings update when traders log new trades.</p>
+  </div>
+</main>
+<script src="assets/js/config.js"></script>
+<script src="assets/js/sb-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="assets/js/supabase.js"></script>
+<script src="assets/js/site.js"></script>
+<script src="assets/js/leaderboard.js"></script>
+<script>
+(function () {
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function render(rows) {
+    var list = document.getElementById('board-list');
+    if (!rows.length) {
+      list.innerHTML = '<div class="empty"><h3>No traders yet</h3><p>Be the first to opt in and claim the top spot.</p></div>';
+      return;
+    }
+    list.innerHTML = rows.map(function (r, i) {
+      var cls = i === 0 ? ' top1' : i === 1 ? ' top2' : i === 2 ? ' top3' : '';
+      var medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1);
+      var ava = r.avatar_url
+        ? '<img src="' + esc(r.avatar_url) + '" alt="">'
+        : esc((r.display_name || 'A').charAt(0).toUpperCase());
+      return '' +
+      '<div class="board-row' + cls + '">' +
+        '<div class="rank">' + medal + '</div>' +
+        '<div class="trader"><div class="ava">' + ava + '</div>' +
+          '<div><div class="nm">' + esc(r.display_name) + '</div>' +
+          '<div class="st">' + r.total_trades + ' trades · ' + r.win_rate + '% WR · ' + r.profit_factor + ' PF</div></div>' +
+        '</div>' +
+        '<div class="score"><div class="n">' + r.score + '</div><div class="l">Score</div></div>' +
+      '</div>';
+    }).join('');
+  }
+  var tries = 0;
+  var t = setInterval(function () {
+    if (window.PVBoard) {
+      clearInterval(t);
+      window.PVBoard.load(50).then(render).catch(function () {
+        document.getElementById('board-list').innerHTML = '<p class="micro" style="text-align:center">Could not load leaderboard.</p>';
+      });
+      /* show CTA for logged-in users */
+      var t2 = setInterval(function () {
+        if (window.PV) {
+          clearInterval(t2);
+          if (window.PV.user) document.getElementById('board-cta').style.display = '';
+        }
+      }, 200);
+    }
+    if (++tries > 100) clearInterval(t);
+  }, 100);
+})();
+</script>
+</body>
+</html>

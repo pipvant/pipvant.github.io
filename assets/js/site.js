@@ -32,6 +32,7 @@
     return [
       { href: up + 'tools/matcher.html', label: 'Prop Firm Matcher', icon: 'matcher', match: ['matcher.html'] },
       { href: up + 'tools/journal.html', label: 'Journal', icon: 'journal', match: ['journal.html'] },
+      { href: up + 'leaderboard.html', label: 'Leaderboard', icon: 'trophy', match: ['leaderboard.html'] },
       { href: up + 'tools/risk-calculator.html', label: 'Risk Calculator', icon: 'risk', match: ['risk-calculator.html'] },
       { href: up + 'pricing.html', label: 'Pricing', icon: 'pricing', match: ['pricing.html'] },
       { href: up + 'about.html', label: 'About', icon: 'about', match: ['about.html'] },
@@ -169,6 +170,8 @@
       icon: '<path d="M4 7h16M4 12h16M4 17h16"/><circle cx="9" cy="7" r="2.2"/><circle cx="15" cy="12" r="2.2"/><circle cx="8" cy="17" r="2.2"/>' },
     { id: 'journal', label: 'Journal', href: 'tools/journal.html', match: ['journal.html'],
       icon: '<path d="M6 3.5h9l4 4V20.5H6z"/><path d="M15 3.5V8h4"/><path d="M9 13h6M9 16.5h6"/>' },
+    { id: 'board', label: 'Board', href: 'leaderboard.html', match: ['leaderboard.html'],
+      icon: '<path d="M7 4h10v4a5 5 0 0 1-10 0z"/><path d="M7 5H4a1 1 0 0 0-1 1c0 2.5 2 4 4 4"/><path d="M17 5h3a1 1 0 0 1 1 1c0 2.5-2 4-4 4"/><path d="M12 13v4"/><path d="M8 20h8"/>' },
     { id: 'risk', label: 'Risk', href: 'tools/risk-calculator.html', match: ['risk-calculator.html'],
       icon: '<rect x="6" y="3.5" width="12" height="17" rx="2"/><path d="M9.5 7.5h5"/><path d="M9.5 12h.8M12 12h.8M14.5 12h.8M9.5 15h.8M12 15h.8M14.5 15h.8M9.5 18h5"/>' },
     { id: 'account', label: 'Account', href: 'account.html', match: ['account.html'],
