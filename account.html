@@ -23,7 +23,7 @@
 <link rel="icon" type="image/png" href="assets/img/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
@@ -50,62 +50,116 @@
 </header>
 
 <main>
-  <section style="padding:34px 0 100px">
+  <section class="pv2-page">
     <div class="wrap">
       <div id="acct-loading" class="notice">Loading your account…</div>
 
       <div id="acct-body" style="display:none">
-        <!-- ======== PROFILE HEADER ======== -->
-        <div class="prof-card">
-          <div class="prof-cover" aria-hidden="true">
-            <img class="prof-cover-mark" src="assets/img/logo.png" alt="">
+        <!-- ======== IMMERSIVE COVER ======== -->
+        <div class="pv2-cover" aria-hidden="true">
+          <div class="pv2-aurora"></div>
+          <div class="pv2-grid"></div>
+          <svg class="pv2-eq" viewBox="0 0 1200 280" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="pv2eqg" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#5f6b87" stop-opacity=".4"/>
+                <stop offset=".55" stop-color="#cdd5e4" stop-opacity=".95"/>
+                <stop offset="1" stop-color="#eef1f8"/>
+              </linearGradient>
+              <filter id="pv2eqglow" x="-40%" y="-40%" width="180%" height="180%">
+                <feGaussianBlur stdDeviation="7" result="b"/>
+                <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+            <path id="cov-line" d="" fill="none" stroke="url(#pv2eqg)" stroke-width="3"
+                  stroke-linecap="round" filter="url(#pv2eqglow)"/>
+          </svg>
+          <img class="pv2-cover-mark" src="assets/img/logo.png" alt="">
+          <div class="pv2-vignette"></div>
+        </div>
+
+        <!-- ======== IDENTITY ======== -->
+        <div class="pv2-idrow">
+          <div class="pv2-avatarwrap">
+            <div class="pv2-ring" aria-hidden="true"></div>
+            <div class="pv2-avatar" id="p-avatar">?</div>
           </div>
-          <div class="prof-head">
-            <div class="prof-avatar" id="p-avatar" aria-hidden="true">?</div>
-            <div class="prof-id">
-              <h1 id="p-name">—</h1>
-              <div class="prof-handle" id="p-handle">—</div>
-              <div class="prof-meta">
-                <span id="p-since">—</span>
-                <span class="prof-dot" aria-hidden="true">·</span>
-                <span class="plan-badge" id="p-plan">FREE</span>
-                <a href="pricing.html" id="p-pro-link" class="prof-pro-link">Compare Pro →</a>
-              </div>
+          <div class="pv2-id">
+            <h1 id="p-name">—</h1>
+            <div class="pv2-greet" id="p-greet"></div>
+            <div class="prof-handle" id="p-handle">—</div>
+            <div class="prof-meta">
+              <span id="p-since">—</span>
+              <span class="prof-dot" aria-hidden="true">·</span>
+              <span class="plan-badge" id="p-plan">FREE</span>
+              <a href="pricing.html" id="p-pro-link" class="prof-pro-link">Compare Pro →</a>
             </div>
           </div>
+        </div>
 
-          <!-- ======== STATS ======== -->
-          <div class="prof-stats">
-            <div class="prof-stat"><div class="ps-v" id="s-trades">—</div><div class="ps-k">Journal trades</div></div>
-            <div class="prof-stat"><div class="ps-v" id="s-winrate">—</div><div class="ps-k">Win rate</div></div>
-            <div class="prof-stat"><div class="ps-v" id="s-pnl">—</div><div class="ps-k">Net P&amp;L</div></div>
-            <div class="prof-stat"><div class="ps-v" id="s-watch">—</div><div class="ps-k">Watchlist firms</div></div>
+        <!-- ======== GLASS STATS ======== -->
+        <div class="pv2-stats">
+          <div class="pv2-stat glass pv2-rise" style="animation-delay:.05s">
+            <div class="pv2-sv" id="s-trades">—</div>
+            <div class="pv2-sk">Journal trades</div>
           </div>
+          <div class="pv2-stat glass pv2-rise" style="animation-delay:.13s">
+            <div class="pv2-sv" id="s-winrate">—</div>
+            <div class="pv2-sk">Win rate</div>
+            <svg class="pv2-spark" id="spark-wr" viewBox="0 0 120 28" preserveAspectRatio="none" aria-hidden="true"></svg>
+          </div>
+          <div class="pv2-stat glass pv2-rise" style="animation-delay:.21s">
+            <div class="pv2-sv" id="s-pnl">—</div>
+            <div class="pv2-sk">Net P&amp;L</div>
+            <svg class="pv2-spark" id="spark-pnl" viewBox="0 0 120 28" preserveAspectRatio="none" aria-hidden="true"></svg>
+          </div>
+          <div class="pv2-stat glass pv2-rise" style="animation-delay:.29s">
+            <div class="pv2-sv" id="s-watch">—</div>
+            <div class="pv2-sk">Watchlist firms</div>
+          </div>
+        </div>
 
-          <!-- ======== TABS ======== -->
-          <div class="prof-tabs" role="tablist" aria-label="Account sections">
-            <button class="prof-tab on" id="tab-overview" role="tab" aria-selected="true" data-tab="overview">Overview</button>
-            <button class="prof-tab" id="tab-settings" role="tab" aria-selected="false" data-tab="settings">Settings</button>
+        <!-- ======== STREAK ======== -->
+        <div class="pv2-streak pv2-rise" style="animation-delay:.37s">
+          <svg class="pv2-flame" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/></svg>
+          <div class="pv2-streak-mid">
+            <div class="pv2-streak-t"><b id="streak-num">0</b>&nbsp;day logging streak</div>
+            <div class="pv2-streak-s" id="streak-next">Log a trade to start your streak.</div>
           </div>
+          <div class="pv2-bar"><div id="streak-bar"></div></div>
+        </div>
+
+        <!-- ======== MILESTONES ======== -->
+        <div class="pv2-sec pv2-rise" style="animation-delay:.45s">
+          <h2>Milestones</h2>
+          <p class="micro">Unlocked by your trading activity.</p>
+          <div class="pv2-ms" id="ms-grid"></div>
+        </div>
+
+        <!-- ======== TABS ======== -->
+        <div class="prof-tabs pv2-rise" role="tablist" aria-label="Account sections" style="animation-delay:.5s">
+          <button class="prof-tab on" id="tab-overview" role="tab" aria-selected="true" data-tab="overview">Overview</button>
+          <button class="prof-tab" id="tab-settings" role="tab" aria-selected="false" data-tab="settings">Settings</button>
+          <span class="pv2-tabink" id="tab-ink" aria-hidden="true"></span>
         </div>
 
         <!-- ======== OVERVIEW ======== -->
         <div id="pane-overview" role="tabpanel" aria-labelledby="tab-overview">
-          <div class="grid-2" style="align-items:start;margin-top:22px">
-            <div class="card">
-              <h3>Recent activity</h3>
-              <p class="micro" style="margin-bottom:14px">Your latest journal trades.</p>
-              <div id="ov-trades"><p class="micro">Loading…</p></div>
-              <div style="margin-top:14px"><a class="btn btn-ghost btn-sm" href="tools/journal.html">Open journal</a></div>
+          <div class="pv2-ovgrid">
+            <div class="card pv2-rise" style="animation-delay:.1s">
+              <h3>Performance</h3>
+              <p class="micro" style="margin-bottom:12px">Cumulative net P&amp;L across your journal.</p>
+              <svg id="ov-equity" viewBox="0 0 560 180" preserveAspectRatio="none" role="img" aria-label="Equity curve"></svg>
+              <div id="ov-eq-empty"></div>
             </div>
             <div>
-              <div class="card" style="margin-bottom:16px">
-                <h3>Watching</h3>
-                <p class="micro" style="margin-bottom:14px">Firms on your watchlist.</p>
-                <div id="ov-watch"><p class="micro">Loading…</p></div>
-                <div style="margin-top:14px"><a class="btn btn-ghost btn-sm" href="tools/matcher.html">Prop Firm Matcher</a></div>
+              <div class="card pv2-rise" style="margin-bottom:16px;animation-delay:.18s">
+                <h3>Activity</h3>
+                <p class="micro" style="margin-bottom:12px">Your latest moves.</p>
+                <div id="ov-timeline"><p class="micro">Loading…</p></div>
+                <div style="margin-top:14px"><a class="btn btn-ghost btn-sm" href="tools/journal.html">Open journal</a></div>
               </div>
-              <div class="card">
+              <div class="card pv2-rise" style="animation-delay:.26s">
                 <h3>Quick links</h3>
                 <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px">
                   <a class="btn btn-ghost btn-sm" href="tools/journal.html">Journal</a>
@@ -123,7 +177,7 @@
           <div class="grid-2" style="align-items:start;margin-top:22px">
             <div>
               <!-- Profile -->
-              <div class="card" style="margin-bottom:16px">
+              <div class="card pv2-setcard" style="margin-bottom:16px">
                 <h3>Profile</h3>
                 <div class="form-err" id="prof-err" role="alert"></div>
                 <div class="form-ok" id="prof-ok">Saved ✓</div>
@@ -144,7 +198,7 @@
               </div>
 
               <!-- Security -->
-              <div class="card" style="margin-bottom:16px">
+              <div class="card pv2-setcard" style="margin-bottom:16px">
                 <h3>Security</h3>
                 <div class="form-err" id="sec-err" role="alert"></div>
                 <div class="form-ok" id="sec-ok">Saved ✓</div>
@@ -166,7 +220,7 @@
               </div>
 
               <!-- Data -->
-              <div class="card">
+              <div class="card pv2-setcard">
                 <h3>Your data</h3>
                 <p class="micro" style="margin-bottom:14px">Download everything PIPVANT stores about you as JSON.</p>
                 <div class="form-err" id="data-err" role="alert"></div>
@@ -179,7 +233,7 @@
 
             <div>
               <!-- Risk defaults (existing form, unchanged behavior) -->
-              <div class="card" style="margin-bottom:16px">
+              <div class="card pv2-setcard" style="margin-bottom:16px">
                 <h3>Risk defaults</h3>
                 <p class="micro" style="margin-bottom:16px">Used to pre-fill the Risk Calculator on all your devices.</p>
                 <div class="form-err" id="risk-err" role="alert"></div>
@@ -206,7 +260,7 @@
               </div>
 
               <!-- Danger zone -->
-              <div class="card danger-card">
+              <div class="card danger-card pv2-setcard">
                 <h3>Danger zone</h3>
                 <p class="micro" style="margin-bottom:14px">Permanently erase all of your PIPVANT data: journal entries and screenshots, watchlist, saved comparisons, risk settings and your profile. This cannot be undone.</p>
                 <button class="btn btn-sm btn-danger" id="del-btn" type="button">Delete my data…</button>
@@ -258,7 +312,7 @@
         <h4>Tools</h4>
         <ul>
           <li><a href="tools/matcher.html">Prop Firm Matcher</a></li>
-          <li><a href="tools/journal.html">Journal</a></li>
+          <li><a href="tools/journal.html">Trading Journal</a></li>
           <li><a href="tools/risk-calculator.html">Risk Calculator</a></li>
         </ul>
       </div>
@@ -297,7 +351,9 @@
   'use strict';
 
   var LOCAL_KEY = 'pipvant_journal_v1';
+  var REDUCED = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  /* ================= helpers ================= */
   function esc(s) {
     return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
@@ -307,12 +363,27 @@
     var v = Math.round((Number(n) || 0) * 100) / 100;
     return (v < 0 ? '-$' : '$') + Math.abs(v).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
+  function fmtInt(n) { return Math.round(n).toLocaleString('en-US'); }
+  function fmtDate(dstr) {
+    try { return new Date(dstr + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); }
+    catch (e) { return dstr || ''; }
+  }
+  function isoLocal(d) {
+    return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+  }
   function pnlOf(t) {
     var entry = parseFloat(t.entry), exit = parseFloat(t.exit);
     var size = parseFloat(t.size) || 0;
     if (!(entry > 0) || !(exit > 0) || !size) return 0;
     var d = (exit - entry) * size * (t.side === 'Short' ? -1 : 1);
     return Math.round(d * 100) / 100;
+  }
+  function rOf(t) {
+    var r = parseFloat(t.riskR) || 0;
+    if (!r) return 0;
+    if (t.result === 'win') return r;
+    if (t.result === 'loss') return -r;
+    return 0;
   }
   function rowToLocal(r) {
     return {
@@ -323,6 +394,7 @@
       entry: parseFloat(r.entry_price),
       exit: r.exit_price == null ? parseFloat(r.entry_price) : parseFloat(r.exit_price),
       size: parseFloat(r.position_size) || 0,
+      riskR: parseFloat(r.risk_percent) || 0,
       result: r.result === 'win' ? 'win' : (r.result === 'loss' ? 'loss' : 'be')
     };
   }
@@ -349,13 +421,125 @@
     return fid;
   }
 
-  /* ---------- tabs ---------- */
+  /* ================= counters ================= */
+  function countUp(el, target, fmt, dur) {
+    if (!el) return;
+    if (REDUCED || !window.requestAnimationFrame) { el.textContent = fmt(target); return; }
+    dur = dur || 1000;
+    var t0 = performance.now();
+    function step(t) {
+      var p = Math.min(1, (t - t0) / dur);
+      var e = 1 - Math.pow(1 - p, 3);
+      el.textContent = fmt(target * e);
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  /* ================= svg builders ================= */
+  function linePath(vals, w, h, pad) {
+    pad = pad == null ? 3 : pad;
+    if (!vals.length) return '';
+    var min = Math.min.apply(null, vals), max = Math.max.apply(null, vals);
+    if (max === min) { max += 1; min -= 1; }
+    var iw = w - pad * 2, ih = h - pad * 2;
+    return vals.map(function (v, i) {
+      var x = pad + (vals.length === 1 ? iw / 2 : iw * i / (vals.length - 1));
+      var y = pad + ih * (1 - (v - min) / (max - min));
+      return (i ? 'L' : 'M') + x.toFixed(1) + ',' + y.toFixed(1);
+    }).join(' ');
+  }
+  function sparkHTML(vals, color) {
+    if (!vals || vals.length < 2) return '<span class="pv2-nospark">—</span>';
+    var d = linePath(vals, 120, 28);
+    return '<svg class="pv2-sparki" viewBox="0 0 120 28" preserveAspectRatio="none" aria-hidden="true">' +
+      '<path d="' + d + '" fill="none" stroke="' + color + '" stroke-width="2" stroke-linecap="round"/></svg>';
+  }
+  function areaHTML(vals, w, h, color, fillId) {
+    if (!vals || vals.length < 2) return '';
+    var d = linePath(vals, w, h, 6);
+    var min = Math.min.apply(null, vals), max = Math.max.apply(null, vals);
+    if (max === min) { max += 1; min -= 1; }
+    var y0 = 6 + (h - 12) * (1 - (0 - min) / (max - min));
+    var first = d.match(/^M([\d.]+),([\d.]+)/);
+    var last = d.match(/L([\d.]+),([\d.]+)\s*$/);
+    var area = d + ' L' + last[1] + ',' + y0.toFixed(1) + ' L' + first[1] + ',' + y0.toFixed(1) + ' Z';
+    return '<defs><linearGradient id="' + fillId + '" x1="0" y1="0" x2="0" y2="1">' +
+      '<stop offset="0" stop-color="' + color + '" stop-opacity=".35"/>' +
+      '<stop offset="1" stop-color="' + color + '" stop-opacity="0"/></linearGradient></defs>' +
+      '<path d="' + area + '" fill="url(#' + fillId + ')"/>' +
+      '<path class="pv2-draw" d="' + d + '" fill="none" stroke="' + color + '" stroke-width="2.5" stroke-linecap="round"/>';
+  }
+
+  /* ================= streak & milestones ================= */
+  function computeStreak(trades) {
+    var days = {};
+    trades.forEach(function (t) { if (t.date) days[t.date] = true; });
+    var d = new Date(), ds = isoLocal(d);
+    if (!days[ds]) { d.setDate(d.getDate() - 1); ds = isoLocal(d); if (!days[ds]) return 0; }
+    var n = 0;
+    while (days[ds]) { n++; d.setDate(d.getDate() - 1); ds = isoLocal(d); }
+    return n;
+  }
+  function byDateAsc(trades) {
+    return trades.slice().sort(function (a, b) { return (a.date || '') < (b.date || '') ? -1 : 1; });
+  }
+  function computeMilestones(trades, streak) {
+    var asc = byDateAsc(trades);
+    var closed = asc.filter(function (t) { return t.result === 'win' || t.result === 'loss'; });
+    function monthKey(d) { return d.slice(0, 7); }
+    var greenMonth = null;
+    if (asc.length) {
+      var per = {};
+      asc.forEach(function (t) { var k = monthKey(t.date || ''); per[k] = (per[k] || 0) + pnlOf(t); });
+      Object.keys(per).sort().forEach(function (k) {
+        if (per[k] > 0) {
+          var last = new Date(parseInt(k.slice(0, 4), 10), parseInt(k.slice(5, 7), 10), 0);
+          greenMonth = isoLocal(last);
+        }
+      });
+    }
+    var sharpDate = null;
+    var cw = 0, cc = 0;
+    for (var i = 0; i < asc.length; i++) {
+      var r = asc[i].result;
+      if (r === 'win' || r === 'loss') { cc++; if (r === 'win') cw++; }
+      if (cc >= 20 && cw / cc >= 0.6 && !sharpDate) sharpDate = asc[i].date;
+    }
+    return [
+      { id: 'first', name: 'First Trade', desc: 'Log your very first trade',
+        unlocked: asc.length >= 1, date: asc.length ? asc[0].date : null,
+        icon: '<path d="M6 3v18M6 4h11l-3 4 3 4H6"/>' },
+      { id: 'logger', name: 'Logger ×10', desc: 'Reach 10 logged trades',
+        unlocked: asc.length >= 10, date: asc.length >= 10 ? asc[9].date : null,
+        icon: '<path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>' },
+      { id: 'streak', name: 'Hot Streak', desc: '7-day logging streak',
+        unlocked: streak >= 7, date: streak >= 7 ? isoLocal(new Date()) : null,
+        icon: '<path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67z"/>' },
+      { id: 'century', name: 'Century', desc: 'Reach 100 logged trades',
+        unlocked: asc.length >= 100, date: asc.length >= 100 ? asc[99].date : null,
+        icon: '<path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.2 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8L12 2z"/>' },
+      { id: 'green', name: 'Green Month', desc: 'Finish a calendar month net positive',
+        unlocked: !!greenMonth, date: greenMonth,
+        icon: '<path d="M3 17l6-6 4 4 8-8M15 7h6v6"/>' },
+      { id: 'sharp', name: 'Sharpshooter', desc: '60%+ win rate across 20+ trades',
+        unlocked: !!sharpDate, date: sharpDate,
+        icon: '<circle cx="12" cy="12" r="7"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/>' }
+    ];
+  }
+
+  /* ================= tabs ================= */
   function paintTabs(which) {
     var tabs = document.querySelectorAll('.prof-tab');
+    var ink = document.getElementById('tab-ink');
     tabs.forEach(function (t) {
       var on = t.getAttribute('data-tab') === which;
       t.classList.toggle('on', on);
       t.setAttribute('aria-selected', on ? 'true' : 'false');
+      if (on && ink) {
+        ink.style.width = t.offsetWidth + 'px';
+        ink.style.transform = 'translateX(' + t.offsetLeft + 'px)';
+      }
     });
     document.getElementById('pane-overview').hidden = which !== 'overview';
     document.getElementById('pane-settings').hidden = which !== 'settings';
@@ -370,14 +554,20 @@
     });
     var h = (location.hash || '').replace('#', '');
     paintTabs(h === 'settings' ? 'settings' : 'overview');
+    window.addEventListener('resize', function () {
+      var cur = document.querySelector('.prof-tab.on');
+      if (cur) paintTabs(cur.getAttribute('data-tab'));
+    });
   }
 
-  /* ---------- feedback helpers ---------- */
+  /* ================= feedback ================= */
   function feedOk(id) { var el = document.getElementById(id); el.classList.add('show'); setTimeout(function () { el.classList.remove('show'); }, 2600); }
   function feedErr(id, msg) { var el = document.getElementById(id); el.textContent = msg; el.classList.add('show'); }
 
+  /* ================= boot ================= */
   document.addEventListener('DOMContentLoaded', function () {
     initTabs();
+    paintGreeting();
     PV.ready.then(function (user) {
       if (!user) { location.replace('login.html?next=account.html'); return; }
       boot(user).catch(function (err) {
@@ -385,7 +575,6 @@
       });
     });
 
-    /* risk form (existing behavior) */
     document.getElementById('risk-form').addEventListener('submit', onRiskSubmit);
     document.getElementById('prof-form').addEventListener('submit', onProfileSubmit);
     document.getElementById('pw-form').addEventListener('submit', onPasswordSubmit);
@@ -404,6 +593,12 @@
       if (e.key === 'Escape') { closeDelModal(); }
     });
   });
+
+  function paintGreeting() {
+    var h = new Date().getHours();
+    var g = h < 12 ? 'Good morning' : (h < 18 ? 'Good afternoon' : 'Good evening');
+    document.getElementById('p-greet').textContent = g + ', trader.';
+  }
 
   function boot(user) {
     var uid = user.id;
@@ -448,10 +643,12 @@
       if (r && r.error) feedErr('risk-err', PV.friendly(r.error));
       document.getElementById('acct-loading').style.display = 'none';
       document.getElementById('acct-body').style.display = 'block';
+      var cur = document.querySelector('.prof-tab.on');
+      if (cur) paintTabs(cur.getAttribute('data-tab'));
     });
   }
 
-  /* ---------- activity + stats ---------- */
+  /* ================= activity, stats, streak, milestones ================= */
   function loadActivity(uid) {
     var tradesP = PV.from('journal_entries').select('*').eq('user_id', uid)
       .order('trade_date', { ascending: false }).order('created_at', { ascending: false })
@@ -467,9 +664,13 @@
 
     return Promise.all([tradesP, watchP]).then(function (vals) {
       var trades = vals[0], watch = vals[1];
+      var streak = computeStreak(trades);
       paintStats(trades, watch.length);
-      paintRecentTrades(trades.slice(0, 5));
-      paintWatch(watch.slice(0, 5));
+      paintStreak(streak);
+      paintMilestones(computeMilestones(trades, streak));
+      paintCoverLine(trades);
+      paintEquity(trades);
+      paintTimeline(trades, watch);
     });
   }
 
@@ -477,35 +678,153 @@
     var closed = trades.filter(function (t) { return t.result === 'win' || t.result === 'loss'; });
     var wins = closed.filter(function (t) { return t.result === 'win'; }).length;
     var net = trades.reduce(function (s, t) { return s + pnlOf(t); }, 0);
-    document.getElementById('s-trades').textContent = trades.length;
-    document.getElementById('s-winrate').textContent = closed.length ? Math.round(wins / closed.length * 100) + '%' : '—';
+    var wr = closed.length ? wins / closed.length * 100 : 0;
+
+    countUp(document.getElementById('s-trades'), trades.length, fmtInt, 900);
+    countUp(document.getElementById('s-winrate'), wr, function (v) { return closed.length ? Math.round(v) + '%' : '—'; }, 1000);
+
     var pnlEl = document.getElementById('s-pnl');
-    pnlEl.textContent = fmtMoney(net);
+    countUp(pnlEl, net, fmtMoney, 1100);
     pnlEl.classList.toggle('pos', net > 0);
     pnlEl.classList.toggle('neg', net < 0);
-    document.getElementById('s-watch').textContent = watchCount;
+    pnlEl.style.textShadow = net > 0 ? '0 0 22px rgba(61,220,132,.45)' : (net < 0 ? '0 0 22px rgba(255,107,107,.45)' : '');
+
+    countUp(document.getElementById('s-watch'), watchCount, fmtInt, 900);
+
+    /* sparklines: cumulative R and cumulative P&L */
+    var asc = byDateAsc(trades).filter(function (t) { return t.result === 'win' || t.result === 'loss'; });
+    var cumR = [], acc = 0;
+    asc.forEach(function (t) { acc += rOf(t); cumR.push(Math.round(acc * 100) / 100); });
+    document.getElementById('spark-wr').outerHTML =
+      '<svg class="pv2-spark" id="spark-wr" viewBox="0 0 120 28" preserveAspectRatio="none" aria-hidden="true">' +
+      (cumR.length > 1 ? '<path d="' + linePath(cumR, 120, 28) + '" fill="none" stroke="#cdd5e4" stroke-width="2" stroke-linecap="round" opacity=".85"/>' : '') +
+      '</svg>';
+    var cumP = [], p2 = 0;
+    byDateAsc(trades).forEach(function (t) { p2 += pnlOf(t); cumP.push(Math.round(p2 * 100) / 100); });
+    var col = net >= 0 ? '#3ddc84' : '#ff6b6b';
+    document.getElementById('spark-pnl').outerHTML =
+      '<svg class="pv2-spark" id="spark-pnl" viewBox="0 0 120 28" preserveAspectRatio="none" aria-hidden="true">' +
+      (cumP.length > 1 ? '<path d="' + linePath(cumP, 120, 28) + '" fill="none" stroke="' + col + '" stroke-width="2" stroke-linecap="round" opacity=".9"/>' : '') +
+      '</svg>';
   }
 
-  function paintRecentTrades(trades) {
-    var box = document.getElementById('ov-trades');
-    if (!trades.length) { box.innerHTML = '<p class="micro">No trades yet — your latest 5 will appear here.</p>'; return; }
-    box.innerHTML = trades.map(function (t) {
-      var p = pnlOf(t);
-      var cls = p > 0 ? 'pos' : (p < 0 ? 'neg' : '');
-      var dt = '';
-      try { dt = new Date(t.date + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }); } catch (e) {}
-      return '<div class="trade-row"><div><b>' + esc(t.symbol) + '</b> <span class="micro">' +
-        esc(t.side) + ' · ' + esc(dt) + '</span></div>' +
-        '<div class="r ' + cls + '">' + fmtMoney(p) + '</div></div>';
+  function paintStreak(streak) {
+    document.getElementById('streak-num').textContent = streak;
+    var marks = [7, 14, 30, 60, 100];
+    var next = marks.filter(function (m) { return m > streak; })[0] || null;
+    var bar = document.getElementById('streak-bar');
+    var note = document.getElementById('streak-next');
+    if (!streak) {
+      note.textContent = 'Log a trade to start your streak.';
+      bar.style.width = '0%';
+    } else if (!next) {
+      note.textContent = 'Legendary — 100+ day streak. Keep it alive.';
+      bar.style.width = '100%';
+    } else {
+      var prev = marks[marks.indexOf(next) - 1] || 0;
+      var pct = Math.round((streak - prev) / (next - prev) * 100);
+      note.textContent = (next - streak) + ' more day' + (next - streak === 1 ? '' : 's') + ' to reach a ' + next + '-day streak.';
+      requestAnimationFrame(function () { bar.style.width = Math.min(100, Math.max(4, pct)) + '%'; });
+    }
+  }
+
+  function paintMilestones(list) {
+    var box = document.getElementById('ms-grid');
+    box.innerHTML = list.map(function (m, i) {
+      var st = m.unlocked
+        ? '<span class="pv2-ms-ok">Unlocked · ' + esc(fmtDate(m.date)) + '</span>'
+        : '<span class="pv2-ms-lock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Locked</span>';
+      return '<div class="pv2-ms-card pv2-rise' + (m.unlocked ? ' on' : '') + '" style="animation-delay:' + (0.05 * i).toFixed(2) + 's">' +
+        '<div class="pv2-ms-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + m.icon + '</svg></div>' +
+        '<div class="pv2-ms-n">' + esc(m.name) + '</div>' +
+        '<div class="pv2-ms-d">' + esc(m.desc) + '</div>' + st + '</div>';
     }).join('');
   }
 
-  function paintWatch(watch) {
-    var box = document.getElementById('ov-watch');
-    if (!watch.length) { box.innerHTML = '<p class="micro">Nothing watched yet — tap ♡ on any firm in the Matcher.</p>'; return; }
-    box.innerHTML = watch.map(function (w) {
-      return '<div class="trade-row"><div><b>' + esc(firmName(w.firm_id)) + '</b></div>' +
-        '<div class="r"><a href="tools/matcher.html" style="color:var(--silver-2);font-weight:600;font-size:.85rem">View →</a></div></div>';
+  function cumPnl(trades) {
+    var out = [], acc = 0;
+    byDateAsc(trades).forEach(function (t) { acc += pnlOf(t); out.push({ d: t.date, v: Math.round(acc * 100) / 100 }); });
+    return out;
+  }
+
+  function paintCoverLine(trades) {
+    var path = document.getElementById('cov-line');
+    if (!path) return;
+    var pts = cumPnl(trades).map(function (p) { return p.v; });
+    var d;
+    if (pts.length > 1) {
+      d = linePath(pts, 1200, 280, 14);
+    } else {
+      d = 'M0,205 C140,190 240,225 390,168 S660,120 830,152 S1080,128 1200,112';
+    }
+    path.setAttribute('d', d);
+    if (!REDUCED) {
+      try {
+        var len = path.getTotalLength();
+        path.style.strokeDasharray = len;
+        path.style.strokeDashoffset = len;
+        path.getBoundingClientRect();
+        path.style.transition = 'stroke-dashoffset 2.2s ease-out .3s';
+        path.style.strokeDashoffset = '0';
+      } catch (e) {}
+    }
+  }
+
+  function paintEquity(trades) {
+    var svg = document.getElementById('ov-equity');
+    var empty = document.getElementById('ov-eq-empty');
+    var pts = cumPnl(trades).map(function (p) { return p.v; });
+    if (pts.length < 2) {
+      svg.innerHTML = '';
+      empty.innerHTML = '<p class="micro">Log at least two trades to see your equity curve. <a href="tools/journal.html" style="color:var(--silver-2);font-weight:600">Open the journal →</a></p>';
+      return;
+    }
+    empty.innerHTML = '';
+    var last = pts[pts.length - 1];
+    var col = last >= 0 ? '#3ddc84' : '#ff6b6b';
+    svg.innerHTML = areaHTML(pts, 560, 180, col, 'pv2eqfill');
+    if (!REDUCED) {
+      try {
+        var p = svg.querySelector('.pv2-draw');
+        var len = p.getTotalLength();
+        p.style.strokeDasharray = len;
+        p.style.strokeDashoffset = len;
+        p.getBoundingClientRect();
+        p.style.transition = 'stroke-dashoffset 1.8s ease-out .2s';
+        p.style.strokeDashoffset = '0';
+      } catch (e) {}
+    }
+  }
+
+  function paintTimeline(trades, watch) {
+    var box = document.getElementById('ov-timeline');
+    var evs = [];
+    byDateAsc(trades).reverse().slice(0, 6).forEach(function (t) {
+      evs.push({ when: t.date || '', kind: 'trade', t: t });
+    });
+    watch.slice(0, 4).forEach(function (w) {
+      evs.push({ when: (w.created_at || '').slice(0, 10), kind: 'watch', w: w });
+    });
+    evs.sort(function (a, b) { return a.when < b.when ? 1 : -1; });
+    evs = evs.slice(0, 8);
+    if (!evs.length) {
+      box.innerHTML = '<div class="pv2-empty"><p>Nothing here yet.</p>' +
+        '<a class="btn btn-silver btn-sm" href="tools/journal.html">Log your first trade →</a></div>';
+      return;
+    }
+    box.innerHTML = evs.map(function (e) {
+      if (e.kind === 'trade') {
+        var t = e.t, p = pnlOf(t);
+        var cls = t.result === 'win' ? 'w' : (t.result === 'loss' ? 'l' : 'b');
+        var lbl = t.result === 'win' ? 'Win' : (t.result === 'loss' ? 'Loss' : 'Breakeven');
+        return '<div class="pv2-tl"><span class="pv2-dot ' + cls + '"></span><div class="pv2-tl-b">' +
+          '<div><b>' + esc(t.symbol || 'Trade') + '</b> <span class="micro">' + esc(t.side) + ' · ' + lbl + '</span></div>' +
+          '<div class="micro">' + esc(fmtDate(t.date)) + ' · <span class="' + (p > 0 ? 'pos' : (p < 0 ? 'neg' : '')) + '">' + fmtMoney(p) + '</span></div>' +
+          '</div></div>';
+      }
+      return '<div class="pv2-tl"><span class="pv2-dot f"></span><div class="pv2-tl-b">' +
+        '<div>Watching <b>' + esc(firmName(e.w.firm_id)) + '</b></div>' +
+        '<div class="micro">' + esc(fmtDate(e.when)) + '</div></div></div>';
     }).join('');
   }
 
@@ -648,9 +967,8 @@
       });
     }
     function wipeStorage() {
-      // objects live at <uid>/<entry_id>/<file>
       return storage.list(uid, { limit: 100 }).then(function (res) {
-        if (res.error) return; // nothing there or RLS — continue anyway
+        if (res.error) return;
         var folders = (res.data || []).filter(function (o) { return o.id == null; });
         var chain = Promise.resolve();
         folders.forEach(function (f) {
