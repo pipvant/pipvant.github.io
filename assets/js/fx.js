@@ -103,7 +103,7 @@
         if (e.isIntersecting) { e.target.classList.add('revealed'); revealObs.unobserve(e.target); }
       });
     }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-    document.querySelectorAll('.card, .firm-card, .plan, .principle, .stat-card, .metric, .tool-head, .faq details')
+    document.querySelectorAll('.card, .plan, .principle, .stat-card, .metric, .tool-head, .faq details')
       .forEach(function (el) { el.classList.add('revealable'); });
     armReveals(document);
   }
