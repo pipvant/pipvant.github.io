@@ -253,15 +253,6 @@ footer.site { border-top: 1px solid var(--line-soft); margin-top: 40px; backgrou
   display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
   font-size: .82rem; color: var(--ink-3);
 }
-/* Slim footer for app pages: one quiet line, legal links stay reachable */
-footer.site.slim { padding: 0; }
-.foot-slim {
-  border-top: 1px solid var(--line-soft); padding: 18px 0 26px;
-  display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;
-  font-size: .8rem; color: var(--ink-3);
-}
-.foot-slim a { color: var(--ink-2); }
-.foot-slim a:hover { color: var(--silver-2); }
 
 /* ---------- forms ---------- */
 .field { margin-bottom: 18px; }
@@ -304,12 +295,56 @@ input[type="range"] { accent-color: var(--silver); width: 100%; }
 }
 .seg button.on { background: rgba(176,190,214,.14); color: var(--silver-2); font-weight: 600; }
 .results-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+.aff-note { margin: -6px 0 20px; color: var(--ink-3); font-size: .78rem; line-height: 1.6; }
+.aff-note a { color: var(--silver-2); text-decoration: underline; text-underline-offset: 2px; }
+/* ---------- matcher v2: premium firm cards ---------- */
 .firm-card {
-  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
-  padding: 22px; margin-bottom: 18px;
+  background: linear-gradient(160deg, #0d1526 0%, #0a101f 55%, #0b1222 100%);
+  border: 1px solid var(--line); border-radius: 20px;
+  padding: 26px 26px 22px; margin-bottom: 20px;
+  position: relative; overflow: hidden;
+  transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
 }
-.firm-card .top { display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; flex-wrap: wrap; }
-.firm-card h3 { font-size: 1.5rem; margin: 0; }
+.firm-card::before {
+  content: ""; position: absolute; top: 0; left: 26px; right: 26px; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(205,213,228,.5), transparent);
+  pointer-events: none;
+}
+.firm-card:hover {
+  transform: translateY(-3px); border-color: #2c3c5e;
+  box-shadow: 0 20px 46px -18px rgba(0,0,0,.75), 0 0 0 1px rgba(205,213,228,.07);
+}
+.fc-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+.fc-firm { font-size: 1.9rem; margin: 0; color: var(--silver-2); line-height: 1.1; }
+.fc-plan { color: var(--ink-3); font-size: .78rem; letter-spacing: .16em; text-transform: uppercase; margin-top: 6px; font-weight: 600; }
+.fc-planname { font-size: 1.35rem; color: var(--silver-2); margin: 0; }
+.fc-from { text-align: right; flex-shrink: 0; }
+.fc-from-label { display: block; font-size: .66rem; letter-spacing: .22em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 2px; }
+.fc-from-price { font-family: var(--font-display); font-size: 1.9rem; font-weight: 700; color: var(--silver-2); line-height: 1.15; white-space: nowrap; }
+.fc-from-price.sm { font-size: 1.45rem; }
+hr.fc-rule { height: 1px; margin: 18px 0 2px; border: 0;
+  background: linear-gradient(90deg, rgba(205,213,228,.18), rgba(205,213,228,.03)); }
+.fc-badges { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0 6px; }
+.fc-promo {
+  display: flex; gap: 10px; align-items: flex-start;
+  margin: 12px 0 4px; padding: 11px 15px;
+  border: 1px solid rgba(205,213,228,.16); border-left: 3px solid var(--silver);
+  border-radius: 10px; background: rgba(205,213,228,.05);
+  font-size: .87rem; color: var(--ink-2); line-height: 1.55;
+}
+.fc-promo .tag { color: var(--silver-2); font-weight: 700; flex-shrink: 0; }
+.fc-specs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 16px 0 8px; }
+.fc-spec { background: rgba(6,10,20,.55); border: 1px solid var(--line-soft); border-radius: 12px; padding: 13px 14px; }
+.fc-spec .k { display: block; font-size: .64rem; letter-spacing: .15em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 5px; }
+.fc-spec .v { font-weight: 700; font-size: 1rem; color: var(--ink); line-height: 1.35; }
+.fc-verify { margin: 8px 0 0; }
+.firm-card .firm-actions { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--line-soft); }
+@media (max-width: 640px) {
+  .firm-card { padding: 20px 18px 18px; border-radius: 16px; }
+  .fc-firm { font-size: 1.55rem; }
+  .fc-from-price { font-size: 1.5rem; }
+  .fc-specs { grid-template-columns: repeat(2, 1fr); }
+}
 .badges { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0 4px; }
 .badge {
   font-size: .74rem; letter-spacing: .08em; text-transform: uppercase;
@@ -921,7 +956,8 @@ table.matrix { width: 100%; border-collapse: collapse; min-width: 600px; font-si
   border: 3px solid rgba(205,213,228,.85);
   box-shadow: 0 0 0 5px rgba(6,10,20,.9), 0 16px 44px rgba(0,0,0,.6), 0 0 34px rgba(205,213,228,.14);
 }
-.pv2-id { padding-bottom: 8px; min-width: 0; }
+.pv2-id { padding-bottom: 6px; min-width: 0; flex: 1; }
+.pv2-namerow { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .pv2-planrow { margin-top: 14px; }
 .pv2-id h1 { font-size: 30px; font-weight: 800; line-height: 1.15; margin: 0; letter-spacing: -.01em; overflow-wrap: anywhere; }
 .pv2-greet { color: var(--silver); font-size: .92rem; margin-top: 4px; font-weight: 500; }

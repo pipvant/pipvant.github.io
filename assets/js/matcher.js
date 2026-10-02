@@ -156,6 +156,29 @@
     }).join('');
   }
 
+  function fromPrice(p) {
+    var best = null;
+    (p.sizes || []).forEach(function (s) {
+      if (s.priceUsd != null && (!best || s.priceUsd < best.priceUsd)) best = s;
+    });
+    return best;
+  }
+
+  function promoStrip(p) {
+    return p.priceNote
+      ? '<div class="fc-promo"><span class="tag">✦</span><span>' + esc(p.priceNote) + '</span></div>'
+      : '';
+  }
+
+  function specTiles(p) {
+    return '<div class="fc-specs">' +
+      '<div class="fc-spec"><span class="k">Profit target</span><span class="v">' + esc(p.profitTarget) + '</span></div>' +
+      '<div class="fc-spec"><span class="k">Daily drawdown</span><span class="v">' + esc(p.dailyDD) + '</span></div>' +
+      '<div class="fc-spec"><span class="k">Max drawdown</span><span class="v">' + esc(p.totalDD) + '</span></div>' +
+      '<div class="fc-spec"><span class="k">Profit split</span><span class="v">' + esc(p.profitSplit) + '</span></div>' +
+    '</div>';
+  }
+
   function card(p) {
     var k = key(p);
     var inCmp = compareKeys.indexOf(k) >= 0;
@@ -163,26 +186,23 @@
       return '<span class="badge">' + (m === 'cfd' ? 'CFDs' : 'Futures') + '</span>';
     }).join('') + (p.ddType && p.ddType !== 'unknown' ? '<span class="badge dim">' + esc(p.ddType) + ' DD</span>' : '') +
       '<span class="badge dim">News: ' + esc(newsLabel(p.news)) + '</span>';
+    var fp = fromPrice(p);
     return '' +
       '<article class="firm-card" data-key="' + esc(k) + '">' +
-        '<div class="top"><div><h3>' + esc(p.firm) + '</h3>' +
-        '<div class="micro">' + esc(p.plan) + '</div></div></div>' +
-        '<div class="badges">' + badges + '</div>' +
-        '<div class="ttable-wrap"><table class="price-table">' +
-          '<thead><tr><th>Account</th><th>Challenge price</th></tr></thead><tbody>' +
-          priceRows(p) + '</tbody></table></div>' +
-        (p.priceNote ? '<p class="micro" style="margin-bottom:8px">' + esc(p.priceNote) + '</p>' : '') +
-        '<p class="verify">' + esc(VERIFY) + '</p>' +
-        '<div class="spec">' +
-          '<div><div class="k">Profit target</div><div class="v">' + esc(p.profitTarget) + '</div></div>' +
-          '<div><div class="k">Daily drawdown</div><div class="v">' + esc(p.dailyDD) + '</div></div>' +
-          '<div><div class="k">Max drawdown</div><div class="v">' + esc(p.totalDD) + '</div></div>' +
-          '<div><div class="k">Profit split</div><div class="v">' + esc(p.profitSplit) + '</div></div>' +
+        '<div class="fc-head">' +
+          '<div class="fc-id"><h3 class="fc-firm">' + esc(p.firm) + '</h3>' +
+          '<div class="fc-plan">' + esc(p.plan) + '</div></div>' +
+          (fp ? '<div class="fc-from"><span class="fc-from-label">From</span>' +
+            '<span class="fc-from-price">' + esc(fp.priceDisplay) + '</span></div>' : '') +
         '</div>' +
-        '<details class="terms"><summary>Full terms & conditions</summary><p style="margin-top:10px">' +
-          esc(p.terms || 'See the firm website for full terms.') +
-          (p.sourceUrl ? '<br><span class="micro">Source: ' + esc(p.sourceUrl) + '</span>' : '') +
-        '</p></details>' +
+        '<hr class="fc-rule">' +
+        '<div class="fc-badges">' + badges + '</div>' +
+        '<div class="ttable-wrap"><table class="price-table">' +
+          '<thead><tr><th>Account size</th><th>Challenge price</th></tr></thead><tbody>' +
+          priceRows(p) + '</tbody></table></div>' +
+        promoStrip(p) +
+        specTiles(p) +
+        '<p class="verify fc-verify">' + esc(VERIFY) + '</p>' +
         '<div class="firm-actions">' +
           '<button class="btn btn-ghost btn-sm watch-btn" data-firm="' + esc(p.firmId) + '">♡ Watchlist</button>' +
           '<button class="btn btn-ghost btn-sm detail-btn" data-firm="' + esc(p.firmId) + '">Details</button>' +
@@ -233,16 +253,17 @@
             ? '<span class="p">' + esc(s.priceDisplay) + '</span> <span class="micro">' + recLabel(s.recurring) + '</span>'
             : '<span class="micro">See website</span>') + '</td></tr>';
       }).join('');
+      var fp = fromPrice(p);
       return '<div class="plan-block">' +
-        '<h3>' + esc(p.plan) + '</h3>' +
-        '<div class="ttable-wrap"><table class="price-table"><thead><tr><th>Account</th><th>Challenge price</th></tr></thead>' +
+        '<div class="fc-head"><h3 class="fc-planname">' + esc(p.plan) + '</h3>' +
+        (fp ? '<div class="fc-from"><span class="fc-from-label">From</span>' +
+          '<span class="fc-from-price sm">' + esc(fp.priceDisplay) + '</span></div>' : '') +
+        '</div>' +
+        '<div class="ttable-wrap"><table class="price-table"><thead><tr><th>Account size</th><th>Challenge price</th></tr></thead>' +
         '<tbody>' + rows + '</tbody></table></div>' +
-        (p.priceNote ? '<p class="micro">' + esc(p.priceNote) + '</p>' : '') +
-        '<div class="spec">' +
-          '<div><div class="k">Profit target</div><div class="v">' + esc(p.profitTarget) + '</div></div>' +
-          '<div><div class="k">Daily drawdown</div><div class="v">' + esc(p.dailyDD) + '</div></div>' +
-          '<div><div class="k">Max drawdown</div><div class="v">' + esc(p.totalDD) + '</div></div>' +
-          '<div><div class="k">Profit split</div><div class="v">' + esc(p.profitSplit) + '</div></div>' +
+        promoStrip(p) +
+        specTiles(p) +
+        '<div class="spec" style="grid-template-columns:1fr 1fr">' +
           '<div><div class="k">News trading</div><div class="v">' + esc(newsLabel(p.news)) + '</div></div>' +
           '<div><div class="k">Drawdown type</div><div class="v">' + (p.ddType && p.ddType !== 'unknown' ? esc(p.ddType) : '—') + '</div></div>' +
         '</div>' +
