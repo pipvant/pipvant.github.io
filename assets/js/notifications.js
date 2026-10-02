@@ -90,7 +90,8 @@
         '<div style="font-size:.84rem;color:var(--ink-2);margin-top:6px;line-height:1.6">' + esc(n.body) + '</div>' +
         '</div></div>';
       var expandBtn = '<button type="button" class="notif-expand" data-expand="' + n.id + '" style="margin-top:10px;background:none;border:1px solid var(--line);color:var(--silver-2);border-radius:8px;padding:6px 14px;font-size:.76rem;cursor:pointer;font-weight:600">Read more</button>';
-      var fullBody = '<div class="notif-full" id="notif-full-' + n.id + '" style="display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--line-soft);font-size:.84rem;color:var(--ink-2);line-height:1.7">' + esc(n.body) + (n.link ? '<br><a href="' + esc(n.link) + '" style="color:var(--silver-2);font-weight:600;display:inline-block;margin-top:8px">Open →</a>' : '') + '</div>';
+      var safeLink = (n.link && /^(https?:\/\/|\.\/|#|[a-zA-Z0-9._\/-]+\.html)/.test(n.link)) ? n.link : null;
+      var fullBody = '<div class="notif-full" id="notif-full-' + n.id + '" style="display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--line-soft);font-size:.84rem;color:var(--ink-2);line-height:1.7">' + esc(n.body) + (safeLink ? '<br><a href="' + esc(safeLink) + '" style="color:var(--silver-2);font-weight:600;display:inline-block;margin-top:8px">Open →</a>' : '') + '</div>';
       // Update inner to include expand
       inner = inner.replace('</div></div>', expandBtn + fullBody + '</div></div>');
       var wrap = '<div data-notif="' + n.id + '" style="display:block;border-radius:12px;cursor:pointer">' + inner + '</div>';

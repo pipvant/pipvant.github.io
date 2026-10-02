@@ -90,7 +90,11 @@
     var tries = 0;
     var iv = setInterval(function () {
       tries++;
-      if (window.PV && window.PV.ready !== false) { clearInterval(iv); afterAuth(); }
+      // Wait for PV.ready promise to resolve (ensures PV.user is populated)
+      if (window.PV && window.PV.ready && typeof window.PV.ready.then === 'function') {
+        clearInterval(iv);
+        window.PV.ready.then(function () { afterAuth(); }).catch(function () { afterAuth(); });
+      }
       else if (tries > 40) { clearInterval(iv); afterAuth(); }
     }, 250);
     function afterAuth() {

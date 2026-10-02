@@ -288,13 +288,14 @@
         }
         document.getElementById('certs-content').style.display = '';
         var uid = window.PV.user.id;
-        window.PV.from('profiles').select('display_name').eq('id', uid).maybeSingle().then(function (r) {
+        var nameP = window.PV.from('profiles').select('display_name').eq('id', uid).maybeSingle().then(function (r) {
           if (r.data && r.data.display_name) recipientName = r.data.display_name;
         }).catch(function () {});
-        window.PV.from('certificates')
+        var certP = window.PV.from('certificates')
           .select('type,level,title,description,verify_code,earned_at')
-          .eq('user_id', uid).order('earned_at', { ascending: false })
-          .then(function (res) {
+          .eq('user_id', uid).order('earned_at', { ascending: false });
+        Promise.all([nameP, certP]).then(function (results) {
+          var res = results[1];
             var earned = res.data || [];
             /* try to get journal stats for progress bars */
             if (window.PV.from) {

@@ -612,7 +612,7 @@
       /* avatar: show uploaded image or initials */
       var avEl = document.getElementById('p-avatar');
       if (prof.avatar_url && prof.avatar_url.indexOf('data:image') === 0) {
-        avEl.innerHTML = '<img src="' + prof.avatar_url + '" alt="Profile" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
+        avEl.innerHTML = '<img src="' + esc(prof.avatar_url) + '" alt="Profile" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
       } else {
         avEl.textContent = initials(name, email);
       }
@@ -856,7 +856,7 @@
           ctx.drawImage(img, (img.width - s) / 2, (img.height - s) / 2, s, s, 0, 0, size, size);
           var dataUrl = cv.toDataURL('image/jpeg', 0.85);
           PV.from('profiles').update({ avatar_url: dataUrl }).eq('id', PV.user.id).then(function () {
-            document.getElementById('p-avatar').innerHTML = '<img src="' + dataUrl + '" alt="Profile" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
+            document.getElementById('p-avatar').innerHTML = '<img src="' + esc(dataUrl) + '" alt="Profile" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
           }).catch(function () { alert('Could not save your picture. Please try again.'); });
         };
         img.src = e.target.result;
@@ -884,7 +884,10 @@
       feedOk('prof-ok');
       var nm = row.display_name || PV.user.email.split('@')[0];
       document.getElementById('p-name').textContent = nm;
-      document.getElementById('p-avatar').textContent = initials(row.display_name, PV.user.email);
+      var avEl = document.getElementById('p-avatar');
+      if (!avEl.querySelector('img')) {
+        avEl.textContent = initials(row.display_name, PV.user.email);
+      }
     });
   }
 

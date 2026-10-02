@@ -97,7 +97,7 @@
     try {
       var n = sessionStorage.getItem('pv_next');
       sessionStorage.removeItem('pv_next');
-      if (n && n.charAt(0) !== '/' && n.indexOf('://') < 0) return n;
+      if (n && /^[a-zA-Z0-9._\/-]+\.html(\?[a-zA-Z0-9._=&%-]*)?(#[a-zA-Z0-9._-]*)?$/.test(n)) return n;
     } catch (e) {}
     return 'account.html';
   }

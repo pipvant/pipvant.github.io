@@ -179,7 +179,7 @@
     // ?next= deep-link: stash for the login page to use after sign-in.
     try {
       var next = new URLSearchParams(location.search).get('next');
-      if (next && next.charAt(0) !== '/' && next.indexOf('://') < 0) sessionStorage.setItem('pv_next', next);
+      if (next && /^[a-zA-Z0-9._\/-]+\.html(\?[a-zA-Z0-9._=&%-]*)?(#[a-zA-Z0-9._-]*)?$/.test(next)) sessionStorage.setItem('pv_next', next);
     } catch (e) {}
   });
 })();
