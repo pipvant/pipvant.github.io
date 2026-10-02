@@ -1,6 +1,6 @@
 /* PIPVANT service worker — conservative app-shell cache.
    Same-origin GET only. NEVER caches Supabase, CDN or font hosts. */
-var CACHE = 'pipvant-shell-v3';
+var CACHE = 'pipvant-shell-v4';
 var SHELL = [
   '/', '/index.html',
   '/assets/css/style.css',
