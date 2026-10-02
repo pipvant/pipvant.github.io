@@ -536,6 +536,9 @@
     if (which === 'certs' && window.PVCertsUI) window.PVCertsUI.load();
   }
   function initTabs() {
+    if (location.hash === '#certs') {
+      setTimeout(function () { paintTabs('certs'); }, 300);
+    }
     document.querySelectorAll('.prof-tab').forEach(function (t) {
       t.addEventListener('click', function () {
         var which = t.getAttribute('data-tab');

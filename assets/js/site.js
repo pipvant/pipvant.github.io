@@ -43,6 +43,7 @@
       { href: up + 'tools/matcher.html', label: 'Prop Firm Matcher', icon: 'matcher', match: ['matcher.html'] },
       { href: up + 'tools/journal.html', label: 'Journal', icon: 'journal', match: ['journal.html'] },
       { href: up + 'leaderboard.html', label: 'Leaderboard', icon: 'trophy', match: ['leaderboard.html'] },
+      { href: up + 'account.html#certs', label: 'Certificates', icon: 'trophy', match: ['account.html'] },
       { href: up + 'tools/risk-calculator.html', label: 'Risk Calculator', icon: 'risk', match: ['risk-calculator.html'] },
       { href: up + 'pricing.html', label: 'Pricing', icon: 'pricing', match: ['pricing.html'] },
       { href: up + 'about.html', label: 'About', icon: 'about', match: ['about.html'] },
