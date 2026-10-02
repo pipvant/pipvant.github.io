@@ -92,7 +92,7 @@
           prof = prof || {};
           var name = (prof.display_name || '').trim() || email.split('@')[0];
           var avatar = prof.avatar_url && prof.avatar_url.indexOf('data:image') === 0
-            ? '<img src="' + esc(prof.avatar_url) + '" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:12px">'
+            ? '<img src="' + esc(prof.avatar_url) + '" alt="">'
             : esc((name.charAt(0) || '?').toUpperCase());
           box.innerHTML =
             '<div class="du-row"><div class="du-avatar">' + avatar + '</div>' +
