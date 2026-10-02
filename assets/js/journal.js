@@ -326,9 +326,11 @@
     return loadShots().then(function () {
       var sorted = trades.slice().sort(function (a, b) { return b.date < a.date ? -1 : (b.id > a.id ? 1 : -1); });
       if (calFilter) sorted = sorted.filter(function (t) { return t.date === calFilter; });
+      sorted = applyAdvFilter(sorted);
       if (!sorted.length) {
-        box.innerHTML = calFilter
-          ? '<div class="empty"><h3>No trades on ' + esc(calFilter) + '</h3><p><a href="#" id="cal-clear2" style="color:var(--silver-2);font-weight:600">Show all trades</a></p></div>'
+        var anyFilter = calFilter || hasAdvFilter();
+        box.innerHTML = anyFilter
+          ? '<div class="empty"><h3>No trades match</h3><p><a href="#" id="cal-clear2" style="color:var(--silver-2);font-weight:600">Show all trades</a></p></div>'
           : '<div class="empty"><h3>No trades yet</h3><p>Add your first trade to start building your statistics.</p></div>';
         var c2 = document.getElementById('cal-clear2');
         if (c2) c2.addEventListener('click', function (e) {
@@ -415,6 +417,54 @@
   /* ---------- calendar heatmap ---------- */
   var calCursor = new Date(); calCursor.setDate(1);
   var calFilter = null; // 'YYYY-MM-DD' or null
+
+  /* ---------- advanced filters ---------- */
+  var advFilter = { symbol: '', result: '', session: '', direction: '', from: '', to: '', tag: '' };
+
+  function applyAdvFilter(list) {
+    return list.filter(function (t) {
+      if (advFilter.symbol && (t.symbol || '').toUpperCase().indexOf(advFilter.symbol.toUpperCase()) < 0) return false;
+      if (advFilter.result && t.result !== advFilter.result) return false;
+      if (advFilter.session && t.session !== advFilter.session) return false;
+      if (advFilter.direction && (t.side || '').toLowerCase() !== advFilter.direction) return false;
+      if (advFilter.from && t.date < advFilter.from) return false;
+      if (advFilter.to && t.date > advFilter.to) return false;
+      if (advFilter.tag) {
+        var hay = ((t.setup_tags || []).join(' ') + ' ' + (t.notes || '')).toLowerCase();
+        if (hay.indexOf(advFilter.tag.toLowerCase()) < 0) return false;
+      }
+      return true;
+    });
+  }
+
+  function hasAdvFilter() {
+    return Object.keys(advFilter).some(function (k) { return advFilter[k]; });
+  }
+
+  function wireAdvFilters() {
+    var map = { 'f-symbol': 'symbol', 'f-result': 'result', 'f-session': 'session', 'f-direction': 'direction', 'f-from': 'from', 'f-to': 'to', 'f-tag': 'tag' };
+    Object.keys(map).forEach(function (id) {
+      var input = document.getElementById(id);
+      if (!input) return;
+      input.addEventListener('input', function () {
+        advFilter[map[id]] = input.value.trim();
+        paintList();
+      });
+      input.addEventListener('change', function () {
+        advFilter[map[id]] = input.value.trim();
+        paintList();
+      });
+    });
+    var clear = document.getElementById('filter-clear');
+    if (clear) clear.addEventListener('click', function () {
+      Object.keys(advFilter).forEach(function (k) { advFilter[k] = ''; });
+      Object.keys(map).forEach(function (id) {
+        var input = document.getElementById(id);
+        if (input) input.value = '';
+      });
+      paintList();
+    });
+  }
 
   function dayKey(y, m, d) {
     return y + '-' + ('0' + (m + 1)).slice(-2) + '-' + ('0' + d).slice(-2);
@@ -544,6 +594,7 @@
 
   document.addEventListener('DOMContentLoaded', function () {
     boot();
+    wireAdvFilters();
     // If the user signs in/out in another tab, reload to switch stores.
     // Only on real SIGNED_IN/SIGNED_OUT transitions — never on INITIAL_SESSION
     // or TOKEN_REFRESHED, otherwise the page reloads itself in a loop.

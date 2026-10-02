@@ -83,6 +83,30 @@
         <p class="micro" id="cal-note" style="margin-top:12px">Click a day to filter trades.</p>
       </div>
 
+      <div class="panel" id="filter-panel" style="margin-top:24px">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+          <h3 style="margin:0">Filters</h3>
+          <button class="btn btn-ghost btn-sm" id="filter-clear" type="button">Clear</button>
+        </div>
+        <div class="grid-2" style="margin-top:14px">
+          <div class="field"><label>Symbol</label><input type="text" id="f-symbol" placeholder="e.g. US100" maxlength="20"></div>
+          <div class="field"><label>Result</label><select id="f-result">
+            <option value="">All</option><option value="win">Win</option><option value="loss">Loss</option>
+            <option value="breakeven">Breakeven</option><option value="open">Open</option>
+          </select></div>
+          <div class="field"><label>Session</label><select id="f-session">
+            <option value="">All</option><option value="asia">Asia</option><option value="london">London</option>
+            <option value="new_york">New York</option>
+          </select></div>
+          <div class="field"><label>Direction</label><select id="f-direction">
+            <option value="">All</option><option value="long">Long</option><option value="short">Short</option>
+          </select></div>
+          <div class="field"><label>From</label><input type="date" id="f-from"></div>
+          <div class="field"><label>To</label><input type="date" id="f-to"></div>
+        </div>
+        <div class="field" style="margin-top:12px"><label>Setup tag contains</label><input type="text" id="f-tag" placeholder="e.g. IFVG" maxlength="40"></div>
+      </div>
+
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:44px;flex-wrap:wrap;gap:12px">
         <h2 style="margin:0">Trades</h2>
         <div style="display:flex;gap:10px">
