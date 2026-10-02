@@ -398,6 +398,35 @@
   }
 
   /* ---------- modal ---------- */
+  /* ---------- form draft autosave (offline-friendly) ---------- */
+  var DRAFT_KEY = 'pv_trade_draft';
+  function saveDraft() {
+    try {
+      var f = document.getElementById('trade-form');
+      if (!f || editing) return; // don't autosave when editing existing
+      var data = {};
+      Array.prototype.forEach.call(f.elements, function (input) {
+        if (input.name && input.type !== 'file') data[input.name] = input.value;
+      });
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(data));
+    } catch (e) {}
+  }
+  function loadDraft() {
+    try {
+      var raw = localStorage.getItem(DRAFT_KEY);
+      if (!raw) return false;
+      var data = JSON.parse(raw);
+      var f = document.getElementById('trade-form');
+      var hasContent = Object.keys(data).some(function (k) { return data[k]; });
+      if (!hasContent) return false;
+      Object.keys(data).forEach(function (k) { if (f.elements[k]) f.elements[k].value = data[k]; });
+      return true;
+    } catch (e) { return false; }
+  }
+  function clearDraft() {
+    try { localStorage.removeItem(DRAFT_KEY); } catch (e) {}
+  }
+
   function openModal(t) {
     editing = t || null;
     document.getElementById('modal-title').textContent = t ? 'Edit trade' : 'Add trade';
@@ -409,10 +438,15 @@
       Object.keys(t).forEach(function (k) { if (f.elements[k]) f.elements[k].value = t[k]; });
     } else {
       f.elements.date.value = new Date().toISOString().slice(0, 10);
+      if (loadDraft()) {
+        // draft restored — date stays today unless draft had one
+      }
     }
     document.getElementById('modal').classList.add('show');
   }
-  function closeModal() { document.getElementById('modal').classList.remove('show'); }
+  function closeModal() {
+    document.getElementById('modal').classList.remove('show');
+  }
 
   /* ---------- calendar heatmap ---------- */
   var calCursor = new Date(); calCursor.setDate(1);
@@ -595,6 +629,12 @@
   document.addEventListener('DOMContentLoaded', function () {
     boot();
     wireAdvFilters();
+    // Draft autosave on form input
+    var form = document.getElementById('trade-form');
+    if (form) {
+      form.addEventListener('input', function () { saveDraft(); });
+      form.addEventListener('change', function () { saveDraft(); });
+    }
     // If the user signs in/out in another tab, reload to switch stores.
     // Only on real SIGNED_IN/SIGNED_OUT transitions — never on INITIAL_SESSION
     // or TOKEN_REFRESHED, otherwise the page reloads itself in a loop.
@@ -665,7 +705,7 @@
           });
         }
       }).then(function () {
-        closeModal(); return refresh();
+        closeModal(); clearDraft(); return refresh();
       }).then(function () {
         checkCerts();
         syncBoard();
