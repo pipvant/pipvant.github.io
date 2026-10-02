@@ -182,6 +182,55 @@
 
   <hr class="rule">
 
+  <!-- ANIMATED FEATURES MARQUEE -->
+  <section class="block" style="overflow:hidden">
+    <div class="wrap center">
+      <p class="eyebrow center">The Toolkit</p>
+      <h2>Everything a trader needs. <span class="silver-text">Nothing they don't.</span></h2>
+    </div>
+    <div class="marquee" id="feat-marquee">
+      <div class="marquee-track">
+        <div class="feat-card"><div class="feat-ico">📓</div><h3>Smart Journal</h3><p>Log every trade with screenshots, tags and emotions. Your cloud journal follows you everywhere.</p></div>
+        <div class="feat-card"><div class="feat-ico">🎯</div><h3>Prop Firm Matcher</h3><p>Compare 10 top firms across 33 programs. Filters, promos and real verified pricing.</p></div>
+        <div class="feat-card"><div class="feat-ico">🏆</div><h3>Certificates</h3><p>Earn luxurious verified certificates as you hit real milestones. Shareable with QR proof.</p></div>
+        <div class="feat-card"><div class="feat-ico">📊</div><h3>Leaderboard</h3><p>Opt-in rankings computed from real journal data. Compete with verified traders.</p></div>
+        <div class="feat-card"><div class="feat-ico">⚖️</div><h3>Risk Calculator</h3><p>Position sizing in seconds. Never risk more than your plan allows.</p></div>
+        <div class="feat-card"><div class="feat-ico">🔔</div><h3>Notifications</h3><p>Platform updates and achievement alerts, delivered where you are.</p></div>
+        <div class="feat-card"><div class="feat-ico">📓</div><h3>Smart Journal</h3><p>Log every trade with screenshots, tags and emotions. Your cloud journal follows you everywhere.</p></div>
+        <div class="feat-card"><div class="feat-ico">🎯</div><h3>Prop Firm Matcher</h3><p>Compare 10 top firms across 33 programs. Filters, promos and real verified pricing.</p></div>
+        <div class="feat-card"><div class="feat-ico">🏆</div><h3>Certificates</h3><p>Earn luxurious verified certificates as you hit real milestones. Shareable with QR proof.</p></div>
+        <div class="feat-card"><div class="feat-ico">📊</div><h3>Leaderboard</h3><p>Opt-in rankings computed from real journal data. Compete with verified traders.</p></div>
+        <div class="feat-card"><div class="feat-ico">⚖️</div><h3>Risk Calculator</h3><p>Position sizing in seconds. Never risk more than your plan allows.</p></div>
+        <div class="feat-card"><div class="feat-ico">🔔</div><h3>Notifications</h3><p>Platform updates and achievement alerts, delivered where you are.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <!-- COMMUNITY REVIEWS -->
+  <section class="block">
+    <div class="wrap center">
+      <p class="eyebrow center">Community</p>
+      <h2>What traders say.</h2>
+      <p class="lead" style="margin:0 auto 30px">Real reviews from real PIPVANT members. Only verified users can leave one.</p>
+      <div id="reviews-list" class="reviews-grid"></div>
+      <div id="reviews-empty" style="display:none;padding:50px 20px;border:1px dashed var(--line);border-radius:16px;color:var(--ink-3)">
+        <div style="font-size:2.5rem;margin-bottom:12px">💬</div>
+        <p style="font-size:1.05rem;color:var(--ink-2)">No reviews yet — be the first to share your experience.</p>
+      </div>
+      <div id="review-form-wrap" style="display:none;margin:30px auto 0;max-width:560px;text-align:left">
+        <h3 style="margin-bottom:16px">Leave your review</h3>
+        <div id="review-stars" style="font-size:1.8rem;cursor:pointer;margin-bottom:14px;letter-spacing:4px"></div>
+        <textarea id="review-text" rows="4" placeholder="Share your honest experience with PIPVANT..." style="width:100%;background:var(--bg-2);border:1px solid var(--line);border-radius:12px;padding:14px;color:var(--ink);font-family:inherit;resize:vertical"></textarea>
+        <button class="btn btn-silver" style="margin-top:14px" onclick="submitReview()">Publish review</button>
+      </div>
+      <div id="review-login-cta" style="margin-top:24px"><a class="btn" style="border:1px solid var(--line);color:var(--silver-2)" href="login.html">Sign in to leave a review</a></div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
   <!-- FAQ -->
   <section class="block">
     <div class="wrap">
@@ -297,5 +346,6 @@
   });
 })();
 </script>
+<script src="assets/js/reviews.js"></script>
 </body>
 </html>
