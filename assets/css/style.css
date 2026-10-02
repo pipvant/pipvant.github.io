@@ -1453,7 +1453,8 @@ table.matrix { width: 100%; border-collapse: collapse; min-width: 600px; font-si
 }
 .notif-panel {
   position: fixed; z-index: 96; top: 76px; right: 12px; width: min(360px, 94vw);
-  max-height: min(480px, 70vh); overflow-y: auto; overscroll-behavior: contain;
+  max-height: min(480px, 70vh); overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch; scrollbar-width: thin; scrollbar-color: #3d4f75 transparent;
   background:
     radial-gradient(ellipse 90% 30% at 50% 0%, rgba(205,213,228,.07), transparent),
     linear-gradient(170deg, #111c33 0%, #080d18 55%, #0a1224 100%);
@@ -1461,7 +1462,6 @@ table.matrix { width: 100%; border-collapse: collapse; min-width: 600px; font-si
   box-shadow: 0 32px 80px rgba(0,0,0,.7), 0 0 60px rgba(160,175,205,.06), inset 0 1px 0 rgba(238,241,248,.1);
   opacity: 0; transform: translateY(-12px) scale(.98); pointer-events: none;
   transition: opacity .3s cubic-bezier(.22,1,.36,1), transform .3s cubic-bezier(.22,1,.36,1);
-  overflow: hidden;
 }
 .notif-panel::before {
   content: ""; position: absolute; top: 0; left: 10%; right: 10%; height: 1px;
