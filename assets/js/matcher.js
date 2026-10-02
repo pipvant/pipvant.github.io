@@ -164,10 +164,87 @@
     return best;
   }
 
-  function promoStrip(p) {
-    return p.priceNote
-      ? '<div class="fc-promo"><span class="tag">✦</span><span>' + esc(p.priceNote) + '</span></div>'
+  var MONTHS_S = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  function fmtMD(iso) {
+    if (!iso) return '';
+    try {
+      var d = new Date(iso);
+      if (isNaN(d.getTime())) return '';
+      return MONTHS_S[d.getUTCMonth()] + ' ' + d.getUTCDate();
+    } catch (e) { return ''; }
+  }
+
+  /* Live promos from PropFirmMatch (assets/js/promos.js). The generator uses
+     slightly different firm keys than our data for 3 firms — alias them here
+     so no promo is silently dropped. Fails silently if promos.js is absent. */
+  var PROMO_ALIAS = { 'the-5ers': '5ers', 'apex-trader-funding': 'apex', 'take-profit-trader': 'tpt' };
+  function livePromos(p) {
+    try {
+      var P = window.PIPVANT_PROMOS;
+      if (!P || !P.promos) return [];
+      var arr = P.promos[p.firmId] || P.promos[PROMO_ALIAS[p.firmId]];
+      if (!Array.isArray(arr)) return [];
+      // Drop expired promos client-side so a weekly sync never shows dead deals.
+      var now = Date.now();
+      return arr.filter(function (pr) {
+        if (!pr.endDate) return true;
+        var t = Date.parse(pr.endDate);
+        return isNaN(t) || t > now;
+      });
+    } catch (e) { return []; }
+  }
+
+  function promoCodeChip(code) {
+    return code
+      ? '<span class="fc-code" title="Use this code at checkout">' + esc(code) + '</span>'
       : '';
+  }
+
+  function promoStrip(p) {
+    var out = '';
+    var live = livePromos(p);
+    if (live.length) {
+      var f = live[0];
+      out += '<div class="fc-promo live">' +
+        '<span class="fc-promo-ic">🎟</span>' +
+        '<div class="fc-promo-main">' +
+          '<div class="fc-promo-top"><strong class="fc-promo-label">' + esc(f.label) + '</strong>' +
+          promoCodeChip(f.code) +
+          (live.length > 1 ? '<span class="fc-promo-more">+' + (live.length - 1) + ' more in details</span>' : '') +
+        '</div>' +
+        '<div class="fc-promo-sub">via PropFirmMatch — verify at checkout</div>' +
+        '</div>' +
+      '</div>';
+    }
+    if (p.priceNote) {
+      out += '<div class="fc-promo"><span class="tag">✦</span><span>' + esc(p.priceNote) + '</span></div>';
+    }
+    return out;
+  }
+
+  /* Detail modal: every live promo with description + end date, then priceNote. */
+  function promoFull(p) {
+    var out = '';
+    var live = livePromos(p);
+    if (live.length) {
+      out += '<div class="fc-promos-full">' +
+        live.map(function (pr) {
+          var end = pr.endDate ? fmtMD(pr.endDate) : '';
+          return '<div class="fc-promo-item">' +
+            '<div class="fc-promo-top"><strong class="fc-promo-label">' + esc(pr.label) + '</strong>' +
+            promoCodeChip(pr.code) +
+            (end ? '<span class="fc-promo-end">ends ' + esc(end) + '</span>' : '') +
+          '</div>' +
+          (pr.description ? '<div class="fc-promo-desc">' + esc(pr.description) + '</div>' : '') +
+          '</div>';
+        }).join('') +
+        '<div class="fc-promo-sub fc-promo-src">via PropFirmMatch — verify at checkout</div>' +
+      '</div>';
+    }
+    if (p.priceNote) {
+      out += '<div class="fc-promo"><span class="tag">✦</span><span>' + esc(p.priceNote) + '</span></div>';
+    }
+    return out;
   }
 
   function specTiles(p) {
@@ -179,7 +256,7 @@
     '</div>';
   }
 
-  function card(p) {
+  function card(p, i) {
     var k = key(p);
     var inCmp = compareKeys.indexOf(k) >= 0;
     var badges = p.markets.map(function (m) {
@@ -187,22 +264,20 @@
     }).join('') + (p.ddType && p.ddType !== 'unknown' ? '<span class="badge dim">' + esc(p.ddType) + ' DD</span>' : '') +
       '<span class="badge dim">News: ' + esc(newsLabel(p.news)) + '</span>';
     var fp = fromPrice(p);
+    var mono = esc(((p.firm || '?').trim().charAt(0) || '?').toUpperCase());
+    var d = Math.min(i || 0, 12) * 45;
     return '' +
-      '<article class="firm-card" data-key="' + esc(k) + '">' +
+      '<article class="firm-card fc-v3" data-key="' + esc(k) + '" style="--d:' + d + 'ms">' +
         '<div class="fc-head">' +
+          '<div class="fc-mono" aria-hidden="true"><span class="fc-mono-ring"></span><span class="fc-mono-l">' + mono + '</span></div>' +
           '<div class="fc-id"><h3 class="fc-firm">' + esc(p.firm) + '</h3>' +
           '<div class="fc-plan">' + esc(p.plan) + '</div></div>' +
           (fp ? '<div class="fc-from"><span class="fc-from-label">From</span>' +
             '<span class="fc-from-price">' + esc(fp.priceDisplay) + '</span></div>' : '') +
         '</div>' +
-        '<hr class="fc-rule">' +
         '<div class="fc-badges">' + badges + '</div>' +
-        '<div class="ttable-wrap"><table class="price-table">' +
-          '<thead><tr><th>Account size</th><th>Challenge price</th></tr></thead><tbody>' +
-          priceRows(p) + '</tbody></table></div>' +
         promoStrip(p) +
         specTiles(p) +
-        '<p class="verify fc-verify">' + esc(VERIFY) + '</p>' +
         '<div class="firm-actions">' +
           '<button class="btn btn-ghost btn-sm watch-btn" data-firm="' + esc(p.firmId) + '">♡ Watchlist</button>' +
           '<button class="btn btn-ghost btn-sm detail-btn" data-firm="' + esc(p.firmId) + '">Details</button>' +
@@ -210,6 +285,7 @@
             (inCmp ? '✓ In comparison' : '＋ Compare') + '</button>' +
           (p.website ? '<a class="btn btn-silver btn-sm" href="' + esc(p.website) + '" target="_blank" rel="noopener">Visit ' + esc(p.firm) + ' ↗</a>' : '') +
         '</div>' +
+        '<p class="verify fc-verify">' + esc(VERIFY) + '</p>' +
       '</article>';
   }
 
@@ -219,7 +295,7 @@
     document.getElementById('res-count').textContent =
       list.length + ' program' + (list.length === 1 ? '' : 's') + ' match your filters';
     box.innerHTML = list.length
-      ? list.map(card).join('')
+      ? list.map(function (p, i) { return card(p, i); }).join('')
       : '<div class="empty"><h3>No programs match</h3><p>Try widening the price range or clearing a filter.</p></div>';
     box.querySelectorAll('.cmp-btn').forEach(function (b) {
       b.addEventListener('click', function () {
@@ -255,13 +331,13 @@
       }).join('');
       var fp = fromPrice(p);
       return '<div class="plan-block">' +
-        '<div class="fc-head"><h3 class="fc-planname">' + esc(p.plan) + '</h3>' +
+        '<div class="fc-head"><h3 class="fc-planname" style="min-width:0;flex:1">' + esc(p.plan) + '</h3>' +
         (fp ? '<div class="fc-from"><span class="fc-from-label">From</span>' +
           '<span class="fc-from-price sm">' + esc(fp.priceDisplay) + '</span></div>' : '') +
         '</div>' +
         '<div class="ttable-wrap"><table class="price-table"><thead><tr><th>Account size</th><th>Challenge price</th></tr></thead>' +
         '<tbody>' + rows + '</tbody></table></div>' +
-        promoStrip(p) +
+        promoFull(p) +
         specTiles(p) +
         '<div class="spec" style="grid-template-columns:1fr 1fr">' +
           '<div><div class="k">News trading</div><div class="v">' + esc(newsLabel(p.news)) + '</div></div>' +
@@ -272,8 +348,12 @@
           (p.sourceUrl ? '<p class="micro">Source: ' + esc(p.sourceUrl) + '</p>' : '') + '</div>' +
       '</div>';
     }).join('');
+    var fmono = esc(((first.firm || '?').trim().charAt(0) || '?').toUpperCase());
     return '<button class="modal-x" data-close aria-label="Close">×</button>' +
-      '<h2>' + esc(first.firm) + '</h2>' +
+      '<div class="fc-head" style="margin-bottom:10px">' +
+        '<div class="fc-mono" aria-hidden="true"><span class="fc-mono-ring"></span><span class="fc-mono-l">' + fmono + '</span></div>' +
+        '<div class="fc-id"><h2 style="margin:0">' + esc(first.firm) + '</h2></div>' +
+      '</div>' +
       '<div class="badges">' + badges + '</div>' +
       (first.website ? '<p><a class="btn btn-silver btn-sm" href="' + esc(first.website) + '" target="_blank" rel="noopener">Visit ' + esc(first.firm) + ' ↗</a></p>' : '') +
       body +
@@ -392,6 +472,18 @@
     });
     var md = document.getElementById('meta-date');
     if (md) md.textContent = 'verified ' + (META.lastVerified || '');
+    /* Deals refreshed line — only when promos data actually loaded. */
+    (function () {
+      var dl = document.getElementById('deals-refreshed');
+      if (!dl) return;
+      try {
+        var P = window.PIPVANT_PROMOS;
+        if (P && P.lastChecked) {
+          var d = fmtMD(P.lastChecked);
+          if (d) { dl.textContent = '🎟 Deals refreshed ' + d; dl.hidden = false; }
+        }
+      } catch (e) {}
+    })();
 
     seg('f-market', function (v) { state.market = v; });
     seg('f-dd', function (v) { state.dd = v; });

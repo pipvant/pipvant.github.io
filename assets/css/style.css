@@ -333,16 +333,111 @@ hr.fc-rule { height: 1px; margin: 18px 0 2px; border: 0;
   font-size: .87rem; color: var(--ink-2); line-height: 1.55;
 }
 .fc-promo .tag { color: var(--silver-2); font-weight: 700; flex-shrink: 0; }
+/* Live promos (PropFirmMatch deals) — premium strip */
+.fc-promo.live {
+  border: 1px solid rgba(205,213,228,.22);
+  border-left: 3px solid var(--silver);
+  background: linear-gradient(135deg, rgba(205,213,228,.10), rgba(205,213,228,.02));
+  border-radius: 12px; padding: 12px 14px;
+  display: flex; gap: 12px; align-items: center;
+  margin: 12px 0 4px;
+}
+.fc-promo-ic { font-size: 1.4rem; line-height: 1; flex-shrink: 0; }
+.fc-promo-main { min-width: 0; flex: 1; }
+.fc-promo-top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.fc-promo-label { font-weight: 800; font-size: .95rem; color: #fff; letter-spacing: .01em; }
+.fc-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: .76rem; font-weight: 700; letter-spacing: .14em;
+  color: var(--silver-2);
+  border: 1px dashed rgba(205,213,228,.45); border-radius: 8px;
+  padding: 4px 10px; background: rgba(6,10,20,.55);
+  user-select: all; white-space: nowrap; cursor: default;
+}
+.fc-promo-more { font-size: .72rem; color: var(--ink-3); font-weight: 600; }
+.fc-promo-sub { font-size: .74rem; color: var(--ink-3); margin-top: 5px; }
+.fc-promo-end { font-size: .74rem; color: var(--ink-3); font-weight: 600; white-space: nowrap; }
+/* Detail modal: full promo list */
+.fc-promos-full { margin: 12px 0 2px; display: grid; gap: 10px; }
+.fc-promo-item {
+  border: 1px solid rgba(205,213,228,.14); border-radius: 10px;
+  padding: 10px 13px; background: rgba(205,213,228,.04);
+}
+.fc-promo-desc { font-size: .83rem; color: var(--ink-2); margin-top: 5px; line-height: 1.5; }
+.fc-promo-src { margin: 2px 0 10px; }
+/* Deals refreshed micro line */
+.deals-line { margin: 0 0 14px; color: var(--ink-3); font-size: .76rem; }
 .fc-specs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 16px 0 8px; }
 .fc-spec { background: rgba(6,10,20,.55); border: 1px solid var(--line-soft); border-radius: 12px; padding: 13px 14px; }
 .fc-spec .k { display: block; font-size: .64rem; letter-spacing: .15em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 5px; }
 .fc-spec .v { font-weight: 700; font-size: 1rem; color: var(--ink); line-height: 1.35; }
 .fc-verify { margin: 8px 0 0; }
 .firm-card .firm-actions { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--line-soft); }
+
+/* ============ matcher v3: mobile-first cards, zero-overflow ============ */
+/* Overflow root causes killed: flex/grid children get min-width:0,
+   long values wrap anywhere, nothing fixed-width inside cards. */
+.firm-card, .fc-head, .fc-id, .fc-from,
+.fc-specs, .fc-specs > *, .fc-promo, .fc-promo-main,
+.firm-actions, .firm-actions > * { min-width: 0; }
+.fc-firm, .fc-spec .v, .fc-plan, .fc-promo-desc { overflow-wrap: anywhere; }
+
+/* Staggered entrance */
+.fc-v3 { animation: fcRise .45s cubic-bezier(.2,.7,.2,1) both; animation-delay: var(--d, 0ms); }
+@keyframes fcRise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+/* Firm monogram with slow platinum orbit ring */
+.fc-mono { position: relative; flex: 0 0 48px; width: 48px; height: 48px; }
+.fc-mono-l {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  border-radius: 50%; font-family: var(--font-display); font-weight: 700; font-size: 1.3rem;
+  color: var(--silver-2); background: radial-gradient(circle at 35% 30%, #1a2542, #0a0f1e 72%);
+  border: 1px solid rgba(205,213,228,.4);
+  box-shadow: 0 6px 18px rgba(0,0,0,.5), 0 0 16px rgba(205,213,228,.08);
+}
+.fc-mono-ring {
+  position: absolute; inset: -4px; border-radius: 50%;
+  background: conic-gradient(from 0deg, transparent 0deg, rgba(238,241,248,.9) 60deg, transparent 130deg, rgba(205,213,228,.5) 200deg, transparent 270deg);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
+  animation: fcSpin 9s linear infinite; pointer-events: none;
+}
+@keyframes fcSpin { to { transform: rotate(360deg); } }
+.fc-head { align-items: center; }
+.fc-id { flex: 1 1 auto; }
+.fc-firm { font-size: 1.45rem; }
+
+/* Live promo sheen sweep */
+.fc-promo.live { position: relative; overflow: hidden; }
+.fc-promo.live::after {
+  content: ""; position: absolute; top: -20%; bottom: -20%; left: 0; width: 32%;
+  background: linear-gradient(100deg, transparent, rgba(205,213,228,.13), transparent);
+  transform: skewX(-12deg) translateX(-160%); pointer-events: none;
+  animation: fcSheen 7s ease-in-out infinite;
+}
+@keyframes fcSheen {
+  0%, 52% { transform: skewX(-12deg) translateX(-160%); opacity: 0; }
+  62% { opacity: 1; }
+  90%, 100% { transform: skewX(-12deg) translateX(520%); opacity: 0; }
+}
+
+/* Card hover: lift + platinum glow */
+.fc-v3:hover { transform: translateY(-4px); border-color: #33436a;
+  box-shadow: 0 24px 52px -18px rgba(0,0,0,.8), 0 0 32px rgba(205,213,228,.10); }
+.fc-v3:hover .fc-mono-l { border-color: rgba(238,241,248,.7); }
+
+@media (max-width: 640px) {
+  .fc-mono { flex-basis: 42px; width: 42px; height: 42px; }
+  .fc-mono-l { font-size: 1.1rem; }
+  .fc-firm { font-size: 1.25rem; }
+  .fc-from-price { font-size: 1.2rem; }
+  .fc-from-label { font-size: .6rem; }
+  /* Actions become a clean 2-col grid on phones */
+  .firm-actions { display: grid; grid-template-columns: 1fr 1fr; }
+  .firm-actions .btn, .firm-actions a.btn { justify-content: center; text-align: center; }
+}
 @media (max-width: 640px) {
   .firm-card { padding: 20px 18px 18px; border-radius: 16px; }
-  .fc-firm { font-size: 1.55rem; }
-  .fc-from-price { font-size: 1.5rem; }
   .fc-specs { grid-template-columns: repeat(2, 1fr); }
 }
 .badges { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0 4px; }
@@ -353,9 +448,9 @@ hr.fc-rule { height: 1px; margin: 18px 0 2px; border: 0;
 }
 .badge.dim { border-color: var(--line); color: var(--ink-3); }
 .spec { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin: 14px 0; }
-.spec div { background: #0a0f1e; border: 1px solid var(--line-soft); border-radius: 10px; padding: 12px 14px; }
+.spec div { background: #0a0f1e; border: 1px solid var(--line-soft); border-radius: 10px; padding: 12px 14px; min-width: 0; }
 .spec .k { font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
-.spec .v { font-weight: 600; font-size: .95rem; margin-top: 3px; }
+.spec .v { font-weight: 600; font-size: .95rem; margin-top: 3px; overflow-wrap: anywhere; }
 .price-table { width: 100%; border-collapse: collapse; margin: 6px 0 8px; font-size: .92rem; }
 .price-table th { text-align: left; font-size: .74rem; letter-spacing: .08em; text-transform: uppercase;
   color: var(--ink-3); padding: 8px 10px; border-bottom: 1px solid var(--line); }
@@ -390,8 +485,8 @@ hr.fc-rule { height: 1px; margin: 18px 0 2px; border: 0;
 
 /* ---------- journal ---------- */
 .dash { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; margin: 26px 0; }
-.metric { background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px; padding: 18px 16px; text-align: center; }
-.metric .n { font-family: var(--font-display); font-size: 1.9rem; color: var(--ink); }
+.metric { background: var(--bg-2); border: 1px solid var(--line); border-radius: 12px; padding: 18px 16px; text-align: center; min-width: 0; }
+.metric .n { font-family: var(--font-display); font-size: 1.9rem; color: var(--ink); overflow-wrap: anywhere; }
 .metric .n.pos { color: var(--green); } .metric .n.neg { color: var(--red); }
 .metric .l { font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); margin-top: 4px; }
 .panel { background: var(--bg-2); border: 1px solid var(--line); border-radius: var(--radius); padding: 30px; margin-bottom: 26px; }
@@ -674,6 +769,8 @@ canvas.fx-particles {
   canvas.fx-particles { display: none !important; }
   .brand::after { animation: none !important; display: none !important; }
   .btn-silver::after { display: none !important; }
+  .fc-v3 { animation: none !important; opacity: 1 !important; }
+  .fc-mono-ring, .fc-promo.live::after { animation: none !important; display: none !important; }
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
 
@@ -931,6 +1028,18 @@ table.matrix { width: 100%; border-collapse: collapse; min-width: 600px; font-si
   position: absolute; inset: 0; pointer-events: none;
   background: linear-gradient(180deg, transparent 42%, rgba(6,10,20,.82) 100%);
 }
+/* Slow light sweep across the cover — pure transform, GPU-friendly */
+.pv2-cover::after {
+  content: ""; position: absolute; top: -20%; bottom: -20%; left: -30%; width: 34%;
+  background: linear-gradient(100deg, transparent, rgba(205,213,228,.10), transparent);
+  transform: skewX(-12deg) translateX(0); pointer-events: none;
+  animation: pv2sheen 11s ease-in-out infinite;
+}
+@keyframes pv2sheen {
+  0%, 55% { transform: skewX(-12deg) translateX(0); opacity: 0; }
+  62% { opacity: 1; }
+  88%, 100% { transform: skewX(-12deg) translateX(420%); opacity: 0; }
+}
 .pv2-cover-mark {
   position: absolute; right: 30px; top: 26px; width: 92px; height: 92px;
   object-fit: contain; opacity: .16; filter: grayscale(1); pointer-events: none;
@@ -972,7 +1081,10 @@ table.matrix { width: 100%; border-collapse: collapse; min-width: 600px; font-si
   box-shadow: 0 18px 50px rgba(0,0,0,.45), inset 0 1px 0 rgba(238,241,248,.08);
 }
 .pv2-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; padding: 24px 30px 0; }
-.pv2-stat { border-radius: 16px; padding: 18px 18px 14px; text-align: left; position: relative; overflow: hidden; }
+.pv2-stat { border-radius: 16px; padding: 18px 18px 14px; text-align: left; position: relative; overflow: hidden;
+  transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease; }
+.pv2-stat:hover { transform: translateY(-3px); border-color: rgba(205,213,228,.4);
+  box-shadow: 0 18px 50px rgba(0,0,0,.45), 0 0 26px rgba(205,213,228,.10), inset 0 1px 0 rgba(238,241,248,.08); }
 .pv2-stat::before {
   content: ""; position: absolute; inset: 0 0 auto 0; height: 2px;
   background: linear-gradient(90deg, transparent, rgba(205,213,228,.65), transparent);
@@ -1088,10 +1200,15 @@ table.matrix { width: 100%; border-collapse: collapse; min-width: 600px; font-si
 @media (max-width: 640px) {
   .pv2-cover { height: 200px; }
   .pv2-cover-mark { width: 64px; height: 64px; right: 18px; top: 18px; }
-  .pv2-pull { margin-top: -52px; }
-  .pv2-idrow { padding: 0 18px; gap: 15px; }
-  .pv2-avatarwrap { width: 96px; height: 96px; flex-basis: 96px; }
+  /* Centered stacked identity on phones: avatar straddles the cover edge,
+     name + badge + meta centered below — no cramped side-by-side rows. */
+  .pv2-pull { margin-top: -48px; }
+  .pv2-idrow { flex-direction: column; align-items: center; text-align: center; padding: 0 18px; gap: 0; }
+  .pv2-avatarwrap { width: 96px; height: 96px; flex: none; }
   .pv2-avatar { width: 96px; height: 96px; font-size: 2.1rem; }
+  .pv2-id { margin-top: 14px; padding-bottom: 0; width: 100%; }
+  .pv2-namerow { justify-content: center; }
+  .pv2-planrow { margin-top: 14px; display: flex; justify-content: center; }
   .pv2-id h1 { font-size: 1.55rem; }
   .pv2-stats { grid-template-columns: 1fr 1fr; padding: 20px 18px 0; gap: 10px; }
   .pv2-sv { font-size: 1.4rem; }
@@ -1105,6 +1222,7 @@ table.matrix { width: 100%; border-collapse: collapse; min-width: 600px; font-si
 @media (prefers-reduced-motion: reduce) {
   .pv2-aurora::before, .pv2-aurora::after { animation: none !important; }
   .pv2-ring { animation: none !important; }
+  .pv2-cover::after { animation: none !important; display: none !important; }
   .pv2-rise { opacity: 1 !important; animation: none !important; }
   #pane-overview, #pane-settings { animation: none !important; }
   .pv2-bar > div { transition: none !important; }
