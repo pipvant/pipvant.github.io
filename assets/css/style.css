@@ -1314,3 +1314,122 @@ table.matrix { width: 100%; border-collapse: collapse; min-width: 600px; font-si
   .firm-actions .btn-silver::after, .btn-silver::after { display: none !important; }
 }
 
+
+
+
+
+/* ============================================================
+   Drawer menu + notifications (2026-10-02)
+   FundingPips-style slide-out, PIPVANT platinum design.
+   ============================================================ */
+.drawer-overlay {
+  position: fixed; inset: 0; z-index: 90;
+  background: rgba(3,5,10,.6); backdrop-filter: blur(2px);
+  opacity: 0; pointer-events: none; transition: opacity .3s ease;
+}
+.drawer-overlay.show { opacity: 1; pointer-events: auto; }
+.drawer {
+  position: fixed; top: 0; bottom: 0; left: 0; z-index: 95;
+  width: min(340px, 88vw); display: flex; flex-direction: column;
+  background: linear-gradient(170deg, #0d1526, #070c17);
+  border-right: 1px solid var(--line);
+  transform: translateX(-102%); transition: transform .35s cubic-bezier(.2,.7,.2,1);
+  box-shadow: 30px 0 80px rgba(0,0,0,.5);
+}
+.drawer.show { transform: none; }
+.drawer-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 20px; border-bottom: 1px solid var(--line-soft);
+}
+.drawer-head .brand img { width: 32px; height: 32px; }
+.drawer-close {
+  background: none; border: 1px solid var(--line); color: var(--ink-2);
+  width: 36px; height: 36px; border-radius: 10px; font-size: 1.1rem;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+.drawer-close:hover { color: var(--ink); border-color: var(--steel); }
+.drawer-user { padding: 20px; border-bottom: 1px solid var(--line-soft); }
+.drawer-user .du-row { display: flex; align-items: center; gap: 14px; }
+.drawer-user .du-avatar {
+  width: 52px; height: 52px; border-radius: 16px; flex-shrink: 0;
+  background: linear-gradient(140deg, rgba(205,213,228,.2), rgba(205,213,228,.05));
+  border: 1px solid rgba(205,213,228,.3);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-size: 1.4rem; color: var(--silver-2);
+}
+.drawer-user .du-name { font-weight: 700; color: var(--silver-2); font-size: 1.02rem; }
+.drawer-user .du-mail { font-size: .8rem; color: var(--ink-3); margin-top: 2px; }
+.drawer-user .du-plan { margin-top: 10px; }
+.drawer-cta { padding: 16px 20px 4px; }
+.drawer-nav { flex: 1; overflow-y: auto; padding: 12px 12px 20px; }
+.drawer-nav a.du-link {
+  display: flex; align-items: center; gap: 14px;
+  padding: 13px 14px; border-radius: 12px; color: var(--ink-2);
+  font-size: .96rem; font-weight: 500; transition: background .15s, color .15s;
+}
+.drawer-nav a.du-link:hover { background: rgba(205,213,228,.07); color: var(--silver-2); }
+.drawer-nav a.du-link.active { background: rgba(205,213,228,.1); color: var(--silver-2); }
+.drawer-nav a.du-link svg { width: 21px; height: 21px; flex-shrink: 0; opacity: .8; }
+.drawer-sep { height: 1px; background: var(--line-soft); margin: 10px 14px; }
+.drawer-foot { padding: 14px 20px 22px; border-top: 1px solid var(--line-soft); }
+.nav-bell {
+  position: relative; background: none; border: 1px solid var(--line);
+  color: var(--ink-2); width: 40px; height: 40px; border-radius: 11px;
+  cursor: pointer; display: none; align-items: center; justify-content: center;
+  transition: border-color .15s, color .15s;
+}
+.nav-bell:hover { border-color: var(--steel); color: var(--silver-2); }
+.nav-bell svg { width: 19px; height: 19px; }
+.nav-bell .dot {
+  position: absolute; top: 8px; right: 9px; width: 8px; height: 8px;
+  border-radius: 50%; background: var(--silver-2);
+  box-shadow: 0 0 8px rgba(238,241,248,.9); display: none;
+}
+.nav-bell.has-new .dot { display: block; }
+.nav-actions { display: none; align-items: center; gap: 10px; }
+@media (max-width: 640px) {
+  .nav-actions { display: flex; }
+  .nav-bell { display: inline-flex; }
+  .nav-links { display: none !important; }
+}
+.notif-panel {
+  position: fixed; z-index: 96; top: 76px; right: 12px; width: min(340px, 92vw);
+  background: linear-gradient(170deg, #101a30, #080d18);
+  border: 1px solid var(--line); border-radius: 16px;
+  box-shadow: 0 24px 60px rgba(0,0,0,.6);
+  opacity: 0; transform: translateY(-8px); pointer-events: none;
+  transition: opacity .25s ease, transform .25s ease; overflow: hidden;
+}
+.notif-panel.show { opacity: 1; transform: none; pointer-events: auto; }
+.notif-panel .np-head {
+  padding: 14px 18px; border-bottom: 1px solid var(--line-soft);
+  font-weight: 700; color: var(--silver-2); font-size: .92rem;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.notif-panel .np-body { padding: 26px 20px; text-align: center; color: var(--ink-3); font-size: .88rem; }
+.notif-panel .np-body .np-ic { font-size: 1.8rem; display: block; margin-bottom: 10px; opacity: .6; }
+@media (prefers-reduced-motion: reduce) {
+  .drawer, .drawer-overlay, .notif-panel { transition: none !important; }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
