@@ -180,6 +180,7 @@
         '</p></details>' +
         '<div class="firm-actions">' +
           '<button class="btn btn-ghost btn-sm watch-btn" data-firm="' + esc(p.firmId) + '">♡ Watchlist</button>' +
+          '<button class="btn btn-ghost btn-sm detail-btn" data-firm="' + esc(p.firmId) + '">Details</button>' +
           '<button class="btn btn-ghost btn-sm cmp-btn"' + (inCmp || compareKeys.length >= 3 ? ' disabled' : '') + '>' +
             (inCmp ? '✓ In comparison' : '＋ Compare') + '</button>' +
           (p.website ? '<a class="btn btn-silver btn-sm" href="' + esc(p.website) + '" target="_blank" rel="noopener">Visit ' + esc(p.firm) + ' ↗</a>' : '') +
@@ -204,8 +205,76 @@
     box.querySelectorAll('.watch-btn').forEach(function (b) {
       b.addEventListener('click', function () { toggleWatch(b); });
     });
+    box.querySelectorAll('.detail-btn').forEach(function (b) {
+      b.addEventListener('click', function () { openFirmModal(b.getAttribute('data-firm')); });
+    });
     paintWatchButtons();
     renderTray();
+    if (window.PVFX) window.PVFX.armReveals(box);
+  }
+
+  /* ---------- firm detail modal (full record, all plans) ---------- */
+  function firmModalHTML(fid) {
+    var plans = PLANS.filter(function (p) { return p.firmId === fid; });
+    if (!plans.length) return '';
+    var first = plans[0];
+    var badges = first.markets.map(function (m) {
+      return '<span class="badge">' + (m === 'cfd' ? 'CFDs' : 'Futures') + '</span>';
+    }).join('');
+    var body = plans.map(function (p) {
+      var rows = p.sizes.map(function (s) {
+        return '<tr><td>' + esc(s.label) + '</td><td>' +
+          (s.priceUsd != null
+            ? '<span class="p">' + esc(s.priceDisplay) + '</span> <span class="micro">' + recLabel(s.recurring) + '</span>'
+            : '<span class="micro">See website</span>') + '</td></tr>';
+      }).join('');
+      return '<div class="plan-block">' +
+        '<h3>' + esc(p.plan) + '</h3>' +
+        '<div class="ttable-wrap"><table class="price-table"><thead><tr><th>Account</th><th>Challenge price</th></tr></thead>' +
+        '<tbody>' + rows + '</tbody></table></div>' +
+        (p.priceNote ? '<p class="micro">' + esc(p.priceNote) + '</p>' : '') +
+        '<div class="spec">' +
+          '<div><div class="k">Profit target</div><div class="v">' + esc(p.profitTarget) + '</div></div>' +
+          '<div><div class="k">Daily drawdown</div><div class="v">' + esc(p.dailyDD) + '</div></div>' +
+          '<div><div class="k">Max drawdown</div><div class="v">' + esc(p.totalDD) + '</div></div>' +
+          '<div><div class="k">Profit split</div><div class="v">' + esc(p.profitSplit) + '</div></div>' +
+          '<div><div class="k">News trading</div><div class="v">' + esc(newsLabel(p.news)) + '</div></div>' +
+          '<div><div class="k">Drawdown type</div><div class="v">' + esc(p.ddType) + '</div></div>' +
+        '</div>' +
+        '<div class="terms"><p><strong style="color:var(--silver-2)">Special terms</strong><br>' +
+          esc(p.terms || 'See the firm website for full terms.') + '</p>' +
+          (p.sourceUrl ? '<p class="micro">Source: ' + esc(p.sourceUrl) + '</p>' : '') + '</div>' +
+      '</div>';
+    }).join('');
+    return '<button class="modal-x" data-close aria-label="Close">×</button>' +
+      '<h2>' + esc(first.firm) + '</h2>' +
+      '<div class="badges">' + badges + '</div>' +
+      (first.website ? '<p><a class="btn btn-silver btn-sm" href="' + esc(first.website) + '" target="_blank" rel="noopener">Visit ' + esc(first.firm) + ' ↗</a></p>' : '') +
+      body +
+      '<p class="verify" style="margin-top:18px">' + esc(VERIFY) + '</p>';
+  }
+  function openFirmModal(fid) {
+    var m = document.getElementById('firm-modal');
+    document.getElementById('firm-modal-body').innerHTML = firmModalHTML(fid);
+    m.classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeFirmModal() {
+    document.getElementById('firm-modal').classList.remove('show');
+    document.body.style.overflow = '';
+  }
+  function initFirmModal() {
+    var m = document.createElement('div');
+    m.className = 'modal';
+    m.id = 'firm-modal';
+    m.innerHTML = '<div class="sheet wide firm-modal"><div id="firm-modal-body"></div></div>';
+    document.body.appendChild(m);
+    m.addEventListener('click', function (e) {
+      if (e.target === m || e.target.hasAttribute('data-close')) closeFirmModal();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeFirmModal();
+    });
   }
 
   /* ---------- compare ---------- */
@@ -351,6 +420,7 @@
       });
     });
     render();
+    initFirmModal();
     // cloud state after auth resolves
     PV.ready.then(function (user) {
       if (user && PV.ok) loadWatchlist().then(function () { paintWatchButtons(); return loadSaved(); });

@@ -5,6 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PIPVANT — Trading Journal | Orovanta</title>
 <meta name="description" content="Log every trade. Win rate, average R, profit factor, equity curve — computed automatically. Cloud sync when signed in, private local storage otherwise.">
+<!-- PIPVANT-SEO -->
+<meta name="theme-color" content="#060a14">
+<link rel="manifest" href="../manifest.json">
+<link rel="apple-touch-icon" href="../assets/img/icon-192.png">
+<link rel="canonical" href="https://pipvant.github.io/tools/journal.html">
+<meta property="og:title" content="PIPVANT — Trading Journal | Orovanta">
+<meta property="og:description" content="Log every trade. Win rate, average R, profit factor, equity curve — computed automatically. Cloud sync when signed in, private local storage otherwise.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://pipvant.github.io/tools/journal.html">
+<meta property="og:image" content="https://pipvant.github.io/assets/img/logo.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="PIPVANT — Trading Journal | Orovanta">
+<meta name="twitter:description" content="Log every trade. Win rate, average R, profit factor, equity curve — computed automatically. Cloud sync when signed in, private local storage otherwise.">
+<!-- /PIPVANT-SEO -->
+
 <link rel="icon" type="image/png" href="../assets/img/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -57,6 +72,16 @@
       <div id="equity-wrap" style="display:none;margin-top:24px">
         <h2>Equity curve</h2>
         <svg id="equity" viewBox="0 0 600 220" class="equity" preserveAspectRatio="none"></svg>
+      </div>
+
+      <div class="panel" id="cal-panel" style="margin-top:24px">
+        <div class="cal-head">
+          <button class="icon-btn" id="cal-prev" aria-label="Previous month">‹</button>
+          <h3 id="cal-title">Month</h3>
+          <button class="icon-btn" id="cal-next" aria-label="Next month">›</button>
+        </div>
+        <div class="cal-grid" id="cal-grid"></div>
+        <p class="micro" id="cal-note" style="margin-top:12px">Click a day to filter trades.</p>
       </div>
 
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:44px;flex-wrap:wrap;gap:12px">
@@ -155,6 +180,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="../assets/js/supabase.js"></script>
 <script src="../assets/js/site.js"></script>
+<script src="../assets/js/fx.js"></script>
 <script src="../assets/js/journal.js"></script>
 </body>
 </html>

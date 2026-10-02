@@ -502,3 +502,104 @@ table.ttable { width: 100%; border-collapse: collapse; font-size: .9rem; min-wid
   .trade-row .r { text-align: left; }
   .auth-card { padding: 30px 22px; }
 }
+
+/* ---------- v1.1: mobile bottom nav ---------- */
+.bottomnav { display: none; }
+@media (max-width: 900px) {
+  body { padding-bottom: 78px; }
+  .bottomnav {
+    display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 60;
+    background: rgba(7, 12, 23, .96);
+    -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+    border-top: 1px solid var(--line-soft);
+    padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
+  }
+  .bottomnav a {
+    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
+    color: var(--ink-3); font-size: .68rem; letter-spacing: .02em;
+    padding: 6px 2px; border-radius: 10px;
+  }
+  .bottomnav a svg { width: 23px; height: 23px; }
+  .bottomnav a.active { color: var(--silver-2); }
+  .bottomnav a.active svg { filter: drop-shadow(0 0 6px rgba(205,213,228,.5)); }
+  /* keep the compare tray above the tab bar */
+  .compare-tray { bottom: 92px; }
+}
+
+/* ---------- v1.1: journal calendar heatmap ---------- */
+.cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.cal-head h3 { margin: 0; font-family: var(--font-body); font-weight: 700; font-size: 1.05rem; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.cal-dow { font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3);
+  text-align: center; padding: 4px 0; }
+.cal-day {
+  aspect-ratio: 1; border-radius: 9px; border: 1px solid var(--line-soft);
+  background: #0a0f1e; color: var(--ink-3); font-size: .8rem;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; padding: 0; font-family: var(--font-body);
+}
+.cal-day:hover { border-color: var(--steel); }
+.cal-day.blank { visibility: hidden; cursor: default; }
+.cal-day.sel { outline: 2px solid var(--silver); outline-offset: 1px; color: var(--silver-2); }
+.cal-day .n { font-weight: 600; }
+
+/* ---------- v1.1: firm detail modal ---------- */
+.sheet.wide { max-width: 860px; }
+.firm-modal h2 { font-size: 1.8rem; margin-bottom: 4px; }
+.firm-modal .plan-block { border-top: 1px solid var(--line-soft); margin-top: 22px; padding-top: 20px; }
+.firm-modal .plan-block h3 { font-size: 1.25rem; color: var(--silver-2); margin-bottom: 12px; }
+.firm-modal .verify { margin-top: 12px; }
+.modal-x {
+  float: right; background: none; border: 1px solid var(--line); color: var(--ink-2);
+  border-radius: 8px; width: 34px; height: 34px; cursor: pointer; font-size: 1.1rem;
+}
+.modal-x:hover { border-color: var(--silver); color: var(--silver-2); }
+
+/* ---------- v1.1: visual effects (subtle, premium) ---------- */
+/* particle canvas behind hero / tool headers */
+.hero, .tool-head { position: relative; overflow: hidden; }
+canvas.fx-particles {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: .9;
+}
+.hero > .wrap, .tool-head > .wrap { position: relative; z-index: 1; }
+
+/* scroll reveals (JS adds .reveal via .revealable) */
+.reveal { opacity: 0; transform: translateY(24px);
+  transition: opacity .7s ease, transform .7s ease; will-change: opacity, transform; }
+.reveal.revealed { opacity: 1; transform: none; }
+
+/* card polish: platinum border glow on hover */
+.card:hover, .firm-card:hover, .stat-card:hover, .plan:hover {
+  box-shadow: 0 0 0 1px rgba(205,213,228,.32), 0 22px 60px rgba(0,0,0,.5);
+}
+
+/* primary button shine sweep */
+.btn-silver { position: relative; overflow: hidden; }
+.btn-silver::after {
+  content: ""; position: absolute; top: 0; bottom: 0; width: 60%; left: -80%;
+  background: linear-gradient(105deg, transparent, rgba(255,255,255,.45), transparent);
+  transform: skewX(-18deg); transition: left .6s ease; pointer-events: none;
+}
+.btn-silver:hover::after { left: 130%; }
+
+/* PV monogram shimmer in header (6s cycle, very subtle) */
+.brand { position: relative; overflow: hidden; border-radius: 10px; }
+.brand::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(105deg, transparent 42%, rgba(238,241,248,.13) 50%, transparent 58%);
+  transform: translateX(-130%);
+  animation: brandShine 6s ease-in-out infinite;
+}
+@keyframes brandShine {
+  0%, 58% { transform: translateX(-130%); }
+  88%, 100% { transform: translateX(130%); }
+}
+
+/* reduced motion: disable all of it */
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+  canvas.fx-particles { display: none !important; }
+  .brand::after { animation: none !important; display: none !important; }
+  .btn-silver::after { display: none !important; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}

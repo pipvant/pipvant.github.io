@@ -234,6 +234,7 @@
         '" stroke="#1c2740" stroke-width="1" stroke-dasharray="4 4"/>' +
       '<path d="' + d + '" fill="none" stroke="' + (up ? '#3ddc84' : '#ff6b6b') + '" stroke-width="2.5"/>' +
       '<circle cx="' + X(pts.length - 1) + '" cy="' + Y(pts[pts.length - 1]) + '" r="4" fill="' + (up ? '#3ddc84' : '#ff6b6b') + '"/>';
+    if (window.PVFX) window.PVFX.animateEquity(svg);
   }
 
   function paintList() {
@@ -244,6 +245,17 @@
     }
     return loadShots().then(function () {
       var sorted = trades.slice().sort(function (a, b) { return b.date < a.date ? -1 : (b.id > a.id ? 1 : -1); });
+      if (calFilter) sorted = sorted.filter(function (t) { return t.date === calFilter; });
+      if (!sorted.length) {
+        box.innerHTML = calFilter
+          ? '<div class="empty"><h3>No trades on ' + esc(calFilter) + '</h3><p><a href="#" id="cal-clear2" style="color:var(--silver-2);font-weight:600">Show all trades</a></p></div>'
+          : '<div class="empty"><h3>No trades yet</h3><p>Add your first trade to start building your statistics.</p></div>';
+        var c2 = document.getElementById('cal-clear2');
+        if (c2) c2.addEventListener('click', function (e) {
+          e.preventDefault(); calFilter = null; paintCal(); paintList();
+        });
+        return;
+      }
       box.innerHTML = sorted.map(function (t) {
         var p = pnl(t), cls = p > 0 ? 'pos' : (p < 0 ? 'neg' : '');
         var rc = t.result === 'win' ? 'pos' : (t.result === 'loss' ? 'neg' : '');
@@ -320,7 +332,64 @@
   }
   function closeModal() { document.getElementById('modal').classList.remove('show'); }
 
-  function refresh() { paintDash(); return paintList(); }
+  /* ---------- calendar heatmap ---------- */
+  var calCursor = new Date(); calCursor.setDate(1);
+  var calFilter = null; // 'YYYY-MM-DD' or null
+
+  function dayKey(y, m, d) {
+    return y + '-' + ('0' + (m + 1)).slice(-2) + '-' + ('0' + d).slice(-2);
+  }
+  function heatColor(pnlV, maxAbs) {
+    if (!pnlV) return '';
+    var a = Math.min(0.85, 0.18 + 0.67 * Math.abs(pnlV) / (maxAbs || 1));
+    return pnlV > 0
+      ? 'background:rgba(61,220,132,' + a.toFixed(2) + ');color:#eef1f7;'
+      : 'background:rgba(255,107,107,' + a.toFixed(2) + ');color:#eef1f7;';
+  }
+  function paintCal() {
+    var grid = document.getElementById('cal-grid');
+    var title = document.getElementById('cal-title');
+    if (!grid || !title) return;
+    var y = calCursor.getFullYear(), m = calCursor.getMonth();
+    title.textContent = calCursor.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    var byDay = {};
+    trades.forEach(function (t) { byDay[t.date] = (byDay[t.date] || 0) + pnl(t); });
+    var maxAbs = 1;
+    Object.keys(byDay).forEach(function (k) { maxAbs = Math.max(maxAbs, Math.abs(byDay[k])); });
+    var first = new Date(y, m, 1).getDay();
+    var days = new Date(y, m + 1, 0).getDate();
+    var html = ['Su','Mo','Tu','We','Th','Fr','Sa'].map(function (d) {
+      return '<div class="cal-dow">' + d + '</div>';
+    }).join('');
+    for (var i = 0; i < first; i++) html += '<div class="cal-day blank"></div>';
+    for (var d = 1; d <= days; d++) {
+      var k = dayKey(y, m, d);
+      var v = byDay[k];
+      var cls = 'cal-day' + (calFilter === k ? ' sel' : '');
+      var style = v ? heatColor(v, maxAbs) : '';
+      var tip = v ? ('Net ' + (v >= 0 ? '+' : '−') + fmtUSD(Math.abs(v))) : 'No trades';
+      html += '<button class="' + cls + '" data-day="' + k + '" style="' + style + '"' +
+        ' aria-label="' + k + ': ' + tip + '"><span class="n">' + d + '</span></button>';
+    }
+    grid.innerHTML = html;
+    grid.querySelectorAll('[data-day]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        calFilter = (calFilter === b.getAttribute('data-day')) ? null : b.getAttribute('data-day');
+        paintCal();
+        paintList();
+      });
+    });
+    var note = document.getElementById('cal-note');
+    if (note) note.innerHTML = calFilter
+      ? 'Showing trades for <strong style="color:var(--silver-2)">' + esc(calFilter) + '</strong> — <a href="#" id="cal-clear" style="color:var(--silver-2);font-weight:600">clear</a>'
+      : 'Click a day to filter trades.';
+    var clear = document.getElementById('cal-clear');
+    if (clear) clear.addEventListener('click', function (e) {
+      e.preventDefault(); calFilter = null; paintCal(); paintList();
+    });
+  }
+
+  function refresh() { paintDash(); paintCal(); return paintList(); }
 
   function csv() {
     if (!trades.length) return;
@@ -362,6 +431,12 @@
     // If auth state changes (login/logout in another tab), reload to switch stores.
     PV.onAuth(function () { location.reload(); });
     document.getElementById('add-btn').addEventListener('click', function () { openModal(null); });
+    document.getElementById('cal-prev').addEventListener('click', function () {
+      calCursor.setMonth(calCursor.getMonth() - 1); paintCal();
+    });
+    document.getElementById('cal-next').addEventListener('click', function () {
+      calCursor.setMonth(calCursor.getMonth() + 1); paintCal();
+    });
     document.getElementById('cancel-btn').addEventListener('click', closeModal);
     document.getElementById('csv-btn').addEventListener('click', csv);
     document.getElementById('modal').addEventListener('click', function (e) {
