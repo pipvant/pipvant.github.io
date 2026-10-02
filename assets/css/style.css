@@ -379,7 +379,7 @@ hr.fc-rule { height: 1px; margin: 18px 0 2px; border: 0;
 .fc-rule > span { font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3);
   font-weight: 600; flex-shrink: 0; }
 .fc-rule > b { font-size: .93rem; color: var(--silver-2); font-weight: 600; text-align: right;
-  min-width: 0; overflow-wrap: anywhere; line-height: 1.45; }
+  min-width: 0; overflow-wrap: break-word; line-height: 1.45; }
 .fc-verify { margin: 8px 0 0; }
 .firm-card .firm-actions { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--line-soft); }
 
@@ -390,6 +390,16 @@ hr.fc-rule { height: 1px; margin: 18px 0 2px; border: 0;
 .fc-specs, .fc-specs > *, .fc-promo, .fc-promo-main,
 .firm-actions, .firm-actions > * { min-width: 0; }
 .fc-firm, .fc-spec .v, .fc-plan, .fc-promo-desc { overflow-wrap: anywhere; }
+/* Card header: name column grows but never squeezes below readable width,
+   so the price wraps cleanly to its own line instead of cramping the name. */
+.fc-head { align-items: center; }
+.fc-id { flex: 1 1 140px; }
+.fc-firm { overflow-wrap: break-word; }
+.fc-from { margin-left: auto; white-space: nowrap; }
+.fc-from-price { overflow-wrap: break-word; }
+
+
+
 
 /* Staggered entrance */
 .fc-v3 { animation: fcRise .45s cubic-bezier(.2,.7,.2,1) both; animation-delay: var(--d, 0ms); }
