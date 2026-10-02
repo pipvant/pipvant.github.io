@@ -196,6 +196,7 @@
       var d = JSON.parse(localStorage.getItem(LS_KEY));
       if (d) applySettings(d.balance, d.riskPct);
     } catch (e) {}
+    hint(false);
   }
   function cloudSave() {
     if (!PV.user || !PV.ok) return;

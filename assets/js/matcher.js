@@ -161,7 +161,7 @@
     var inCmp = compareKeys.indexOf(k) >= 0;
     var badges = p.markets.map(function (m) {
       return '<span class="badge">' + (m === 'cfd' ? 'CFDs' : 'Futures') + '</span>';
-    }).join('') + '<span class="badge dim">' + esc(p.ddType) + ' DD</span>' +
+    }).join('') + (p.ddType && p.ddType !== 'unknown' ? '<span class="badge dim">' + esc(p.ddType) + ' DD</span>' : '') +
       '<span class="badge dim">News: ' + esc(newsLabel(p.news)) + '</span>';
     return '' +
       '<article class="firm-card" data-key="' + esc(k) + '">' +
@@ -244,7 +244,7 @@
           '<div><div class="k">Max drawdown</div><div class="v">' + esc(p.totalDD) + '</div></div>' +
           '<div><div class="k">Profit split</div><div class="v">' + esc(p.profitSplit) + '</div></div>' +
           '<div><div class="k">News trading</div><div class="v">' + esc(newsLabel(p.news)) + '</div></div>' +
-          '<div><div class="k">Drawdown type</div><div class="v">' + esc(p.ddType) + '</div></div>' +
+          '<div><div class="k">Drawdown type</div><div class="v">' + (p.ddType && p.ddType !== 'unknown' ? esc(p.ddType) : '—') + '</div></div>' +
         '</div>' +
         '<div class="terms"><p><strong style="color:var(--silver-2)">Special terms</strong><br>' +
           esc(p.terms || 'See the firm website for full terms.') + '</p>' +
@@ -340,7 +340,7 @@
       }) +
       row('Profit target', function (p) { return esc(p.profitTarget); }) +
       row('Daily drawdown', function (p) { return esc(p.dailyDD); }) +
-      row('Max drawdown', function (p) { return esc(p.totalDD) + ' <span class="badge dim">' + esc(p.ddType) + '</span>'; }) +
+      row('Max drawdown', function (p) { return esc(p.totalDD) + (p.ddType && p.ddType !== 'unknown' ? ' <span class="badge dim">' + esc(p.ddType) + '</span>' : ''); }) +
       row('Profit split', function (p) { return esc(p.profitSplit); }) +
       row('News trading', function (p) { return esc(newsLabel(p.news)); }) +
       row('', function (p) {

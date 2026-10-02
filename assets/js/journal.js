@@ -547,8 +547,15 @@
     // If the user signs in/out in another tab, reload to switch stores.
     // Only on real SIGNED_IN/SIGNED_OUT transitions — never on INITIAL_SESSION
     // or TOKEN_REFRESHED, otherwise the page reloads itself in a loop.
+    // Belt-and-braces: cap auth-triggered reloads per tab so a stale session
+    // can never trap the page in an infinite reload cycle.
     PV.onAuth(function (user, evt) {
-      if (evt === 'SIGNED_IN' || evt === 'SIGNED_OUT') location.reload();
+      if (evt !== 'SIGNED_IN' && evt !== 'SIGNED_OUT') return;
+      var n = 0;
+      try { n = parseInt(sessionStorage.getItem('pv-auth-reloads') || '0', 10) || 0; } catch (e) {}
+      if (n >= 2) return;
+      try { sessionStorage.setItem('pv-auth-reloads', String(n + 1)); } catch (e) {}
+      location.reload();
     });
     document.getElementById('add-btn').addEventListener('click', function () { openModal(null); });
     document.getElementById('cal-prev').addEventListener('click', function () {
