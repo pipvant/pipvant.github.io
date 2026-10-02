@@ -544,8 +544,12 @@
 
   document.addEventListener('DOMContentLoaded', function () {
     boot();
-    // If auth state changes (login/logout in another tab), reload to switch stores.
-    PV.onAuth(function () { location.reload(); });
+    // If the user signs in/out in another tab, reload to switch stores.
+    // Only on real SIGNED_IN/SIGNED_OUT transitions — never on INITIAL_SESSION
+    // or TOKEN_REFRESHED, otherwise the page reloads itself in a loop.
+    PV.onAuth(function (user, evt) {
+      if (evt === 'SIGNED_IN' || evt === 'SIGNED_OUT') location.reload();
+    });
     document.getElementById('add-btn').addEventListener('click', function () { openModal(null); });
     document.getElementById('cal-prev').addEventListener('click', function () {
       calCursor.setMonth(calCursor.getMonth() - 1); paintCal();

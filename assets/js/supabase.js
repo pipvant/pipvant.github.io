@@ -127,7 +127,7 @@
       PV.user = session ? session.user : null;
       loadPlan().then(function () {
         PV.paintNav();
-        PV._cbs.forEach(function (cb) { try { cb(PV.user); } catch (e) {} });
+        PV._cbs.forEach(function (cb) { try { cb(PV.user, _evt); } catch (e) {} });
       });
     });
 
