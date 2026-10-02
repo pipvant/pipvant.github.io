@@ -124,7 +124,7 @@
   'use strict';
   var FOUNDER_ID = 'bc387bb9-36ef-4055-bf66-b828a9c1f37a';
   function esc(s) {
-    return String(s == null ? '').replace(/[&<>"']/g, function (c) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   }
