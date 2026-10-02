@@ -36,6 +36,11 @@
   function toggleWatch(btn) {
     if (!PV.user || !PV.ok) { needLogin(); return; }
     var fid = dbFirmId(btn.getAttribute('data-firm'));
+    // Free plan: 10-firm watchlist cap (removing is always allowed)
+    if (!watchlist[fid] && !PV.isPro() && Object.keys(watchlist).length >= 10) {
+      PV.upgradeModal("Your watchlist is full at 10 firms on the Free plan. PIPVANT Pro gives you unlimited watchlists — and unlimited saved comparisons.");
+      return;
+    }
     btn.disabled = true;
     var job = watchlist[fid]
       ? PV.from('watchlist_firms').delete().eq('user_id', PV.user.id).eq('firm_id', fid)

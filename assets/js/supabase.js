@@ -11,6 +11,10 @@
      PV.storage()     — storage client
      PV.friendly(err) — human-readable error message
      PV.paintNav()    — toggles [data-auth] nav items
+     PV.plan        — 'free' | 'pro' (loaded from public.profiles after auth)
+     PV.isPro()     — true when plan === 'pro'
+     PV.requirePro(containerEl, featureName) — renders a locked-state card
+     PV.upgradeModal(reason) — friendly "Free limit reached" modal
    Degrades gracefully when the CDN or network is unavailable:
    every page keeps working in local/offline mode.
    ============================================================ */
@@ -23,7 +27,61 @@
     client: null,
     user: null,
     ready: null,
+    plan: 'free',
     _cbs: []
+  };
+
+  /* ---------- plan plumbing (Pro gates) ---------- */
+  function loadPlan() {
+    if (!PV.user || !PV.ok) { PV.plan = 'free'; return Promise.resolve('free'); }
+    try {
+      return PV.from('profiles').select('plan').eq('id', PV.user.id).maybeSingle()
+        .then(function (res) {
+          PV.plan = (res && res.data && res.data.plan) || 'free';
+          return PV.plan;
+        })
+        .catch(function () { PV.plan = 'free'; return 'free'; });
+    } catch (e) { PV.plan = 'free'; return Promise.resolve('free'); }
+  }
+  PV.isPro = function () { return PV.plan === 'pro'; };
+
+  function proLink() {
+    // pricing.html from any depth: root pages vs tools|legal subfolders
+    try {
+      return location.pathname.split('/').filter(Boolean).length > 1 ? '../pricing.html' : 'pricing.html';
+    } catch (e) { return 'pricing.html'; }
+  }
+  PV.requirePro = function (container, featureName) {
+    if (!container) return;
+    var name = featureName || 'This feature';
+    container.innerHTML =
+      '<div class="pro-lock">' +
+        '<div class="pro-lock-badge">PRO</div>' +
+        '<h3>' + name + ' is a Pro feature</h3>' +
+        '<p class="micro">PIPVANT Pro is coming soon — join the waitlist and we will write once, the day it launches.</p>' +
+        '<a class="btn btn-silver btn-sm" href="' + proLink() + '">See Pro plans</a>' +
+      '</div>';
+  };
+  PV.upgradeModal = function (reason) {
+    var old = document.getElementById('pv-upgrade-modal');
+    if (old) old.remove();
+    var m = document.createElement('div');
+    m.className = 'modal show';
+    m.id = 'pv-upgrade-modal';
+    m.innerHTML =
+      '<div class="sheet" role="dialog" aria-modal="true">' +
+        '<h2>You have hit a Free limit</h2>' +
+        '<p style="margin-top:10px;color:var(--ink-2)">' + reason + '</p>' +
+        '<p class="micro" style="margin-top:12px">PIPVANT Pro removes the limits and adds Pro Analytics, PDF reports and more. It is coming soon — join the waitlist to hear first.</p>' +
+        '<div style="display:flex;gap:10px;margin-top:22px;justify-content:flex-end;flex-wrap:wrap">' +
+          '<button class="btn btn-ghost btn-sm" id="pv-up-close">Not now</button>' +
+          '<a class="btn btn-silver btn-sm" href="' + proLink() + '">See Pro plans</a>' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(m);
+    m.addEventListener('click', function (e) { if (e.target === m) m.remove(); });
+    var c = document.getElementById('pv-up-close');
+    if (c) c.addEventListener('click', function () { m.remove(); });
   };
 
   PV.friendly = function (err) {
@@ -62,14 +120,15 @@
   if (PV.ok) {
     PV.ready = PV.client.auth.getSession().then(function (res) {
       PV.user = (res.data && res.data.session) ? res.data.session.user : null;
-      PV.paintNav();
-      return PV.user;
-    }).catch(function () { PV.user = null; PV.paintNav(); return null; });
+      return loadPlan().then(function () { PV.paintNav(); return PV.user; });
+    }).catch(function () { PV.user = null; PV.plan = 'free'; PV.paintNav(); return null; });
 
     PV.client.auth.onAuthStateChange(function (_evt, session) {
       PV.user = session ? session.user : null;
-      PV.paintNav();
-      PV._cbs.forEach(function (cb) { try { cb(PV.user); } catch (e) {} });
+      loadPlan().then(function () {
+        PV.paintNav();
+        PV._cbs.forEach(function (cb) { try { cb(PV.user); } catch (e) {} });
+      });
     });
 
     PV.signUp = function (email, pw) { return PV.client.auth.signUp({ email: email, password: pw }); };

@@ -4,20 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PIPVANT — Account | Orovanta</title>
-<meta name="description" content="Your PIPVANT account: profile, risk defaults and sign-out.">
+<meta name="description" content="Your PIPVANT profile: activity, settings, risk defaults and data controls.">
 <!-- PIPVANT-SEO -->
 <meta name="theme-color" content="#060a14">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="assets/img/icon-192.png">
 <link rel="canonical" href="https://pipvant.github.io/account.html">
 <meta property="og:title" content="PIPVANT — Account | Orovanta">
-<meta property="og:description" content="Your PIPVANT account: profile, risk defaults and sign-out.">
+<meta property="og:description" content="Your PIPVANT profile: activity, settings, risk defaults and data controls.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://pipvant.github.io/account.html">
 <meta property="og:image" content="https://pipvant.github.io/assets/img/logo.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="PIPVANT — Account | Orovanta">
-<meta name="twitter:description" content="Your PIPVANT account: profile, risk defaults and sign-out.">
+<meta name="twitter:description" content="Your PIPVANT profile: activity, settings, risk defaults and data controls.">
 <!-- /PIPVANT-SEO -->
 
 <link rel="icon" type="image/png" href="assets/img/logo.png">
@@ -50,62 +50,198 @@
 </header>
 
 <main>
-  <section class="tool-head">
-    <div class="wrap">
-      <p class="eyebrow"><span data-brand="launchline">PIPVANT — launched by Orovanta</span></p>
-      <h1>Your <span class="silver-text">account</span></h1>
-    </div>
-  </section>
-
-  <section style="padding-bottom:100px">
+  <section style="padding:34px 0 100px">
     <div class="wrap">
       <div id="acct-loading" class="notice">Loading your account…</div>
 
       <div id="acct-body" style="display:none">
-        <div class="grid-2" style="align-items:start">
-          <div class="card">
-            <h3>Profile</h3>
-            <div class="spec" style="grid-template-columns:1fr">
-              <div><div class="k">Email</div><div class="v" id="a-email">—</div></div>
-              <div><div class="k">Plan</div><div class="v" id="a-plan">Free</div></div>
-              <div><div class="k">Member since</div><div class="v" id="a-since">—</div></div>
-            </div>
-            <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">
-              <a class="btn btn-ghost btn-sm" href="tools/journal.html">Open journal</a>
-              <a class="btn btn-ghost btn-sm" href="#" data-logout>Log out</a>
+        <!-- ======== PROFILE HEADER ======== -->
+        <div class="prof-card">
+          <div class="prof-cover" aria-hidden="true">
+            <img class="prof-cover-mark" src="assets/img/logo.png" alt="">
+          </div>
+          <div class="prof-head">
+            <div class="prof-avatar" id="p-avatar" aria-hidden="true">?</div>
+            <div class="prof-id">
+              <h1 id="p-name">—</h1>
+              <div class="prof-handle" id="p-handle">—</div>
+              <div class="prof-meta">
+                <span id="p-since">—</span>
+                <span class="prof-dot" aria-hidden="true">·</span>
+                <span class="plan-badge" id="p-plan">FREE</span>
+                <a href="pricing.html" id="p-pro-link" class="prof-pro-link">Compare Pro →</a>
+              </div>
             </div>
           </div>
 
-          <div class="card">
-            <h3>Risk defaults</h3>
-            <p class="micro" style="margin-bottom:16px">Used to pre-fill the Risk Calculator on all your devices.</p>
-            <div class="form-err" id="risk-err" role="alert"></div>
-            <div class="form-ok" id="risk-ok">Saved ✓</div>
-            <form id="risk-form">
-              <div class="grid-2">
-                <div class="field"><label>Account balance</label>
-                  <input type="number" id="r-balance" min="1" step="any" required></div>
-                <div class="field"><label>Currency</label>
-                  <select id="r-currency">
-                    <option>USD</option><option>EUR</option><option>GBP</option>
-                  </select></div>
+          <!-- ======== STATS ======== -->
+          <div class="prof-stats">
+            <div class="prof-stat"><div class="ps-v" id="s-trades">—</div><div class="ps-k">Journal trades</div></div>
+            <div class="prof-stat"><div class="ps-v" id="s-winrate">—</div><div class="ps-k">Win rate</div></div>
+            <div class="prof-stat"><div class="ps-v" id="s-pnl">—</div><div class="ps-k">Net P&amp;L</div></div>
+            <div class="prof-stat"><div class="ps-v" id="s-watch">—</div><div class="ps-k">Watchlist firms</div></div>
+          </div>
+
+          <!-- ======== TABS ======== -->
+          <div class="prof-tabs" role="tablist" aria-label="Account sections">
+            <button class="prof-tab on" id="tab-overview" role="tab" aria-selected="true" data-tab="overview">Overview</button>
+            <button class="prof-tab" id="tab-settings" role="tab" aria-selected="false" data-tab="settings">Settings</button>
+          </div>
+        </div>
+
+        <!-- ======== OVERVIEW ======== -->
+        <div id="pane-overview" role="tabpanel" aria-labelledby="tab-overview">
+          <div class="grid-2" style="align-items:start;margin-top:22px">
+            <div class="card">
+              <h3>Recent activity</h3>
+              <p class="micro" style="margin-bottom:14px">Your latest journal trades.</p>
+              <div id="ov-trades"><p class="micro">Loading…</p></div>
+              <div style="margin-top:14px"><a class="btn btn-ghost btn-sm" href="tools/journal.html">Open journal</a></div>
+            </div>
+            <div>
+              <div class="card" style="margin-bottom:16px">
+                <h3>Watching</h3>
+                <p class="micro" style="margin-bottom:14px">Firms on your watchlist.</p>
+                <div id="ov-watch"><p class="micro">Loading…</p></div>
+                <div style="margin-top:14px"><a class="btn btn-ghost btn-sm" href="tools/matcher.html">Prop Firm Matcher</a></div>
               </div>
-              <div class="grid-2">
-                <div class="field"><label>Risk per trade (%)</label>
-                  <input type="number" id="r-risk" min="0.01" max="100" step="0.1" required></div>
-                <div class="field"><label>Max daily loss (%)</label>
-                  <input type="number" id="r-daily" min="0.1" max="100" step="0.1" required></div>
+              <div class="card">
+                <h3>Quick links</h3>
+                <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px">
+                  <a class="btn btn-ghost btn-sm" href="tools/journal.html">Journal</a>
+                  <a class="btn btn-ghost btn-sm" href="tools/risk-calculator.html">Risk Calculator</a>
+                  <a class="btn btn-ghost btn-sm" href="tools/matcher.html">Matcher</a>
+                  <a class="btn btn-ghost btn-sm" href="pricing.html">Pricing</a>
+                </div>
               </div>
-              <div class="field"><label>Max trades per day</label>
-                <input type="number" id="r-maxtrades" min="1" max="100" step="1" required></div>
-              <button class="btn btn-silver btn-sm" type="submit" id="risk-btn">Save defaults</button>
-            </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- ======== SETTINGS ======== -->
+        <div id="pane-settings" role="tabpanel" aria-labelledby="tab-settings" hidden>
+          <div class="grid-2" style="align-items:start;margin-top:22px">
+            <div>
+              <!-- Profile -->
+              <div class="card" style="margin-bottom:16px">
+                <h3>Profile</h3>
+                <div class="form-err" id="prof-err" role="alert"></div>
+                <div class="form-ok" id="prof-ok">Saved ✓</div>
+                <form id="prof-form">
+                  <div class="field"><label for="pf-name">Display name</label>
+                    <input type="text" id="pf-name" maxlength="60" autocomplete="name" placeholder="e.g. Sifeddine"></div>
+                  <div class="grid-2">
+                    <div class="field"><label for="pf-country">Country</label>
+                      <input type="text" id="pf-country" maxlength="60" autocomplete="country-name" placeholder="e.g. Morocco"></div>
+                    <div class="field"><label for="pf-tz">Timezone</label>
+                      <input type="text" id="pf-tz" maxlength="60" placeholder="e.g. Africa/Casablanca"></div>
+                  </div>
+                  <button class="btn btn-silver btn-sm" type="submit" id="prof-btn">Save profile</button>
+                </form>
+                <div class="spec" style="grid-template-columns:1fr;margin-top:18px">
+                  <div><div class="k">Email</div><div class="v" id="a-email">—</div></div>
+                </div>
+              </div>
+
+              <!-- Security -->
+              <div class="card" style="margin-bottom:16px">
+                <h3>Security</h3>
+                <div class="form-err" id="sec-err" role="alert"></div>
+                <div class="form-ok" id="sec-ok">Saved ✓</div>
+                <form id="pw-form">
+                  <div class="field"><label for="pw-new">New password</label>
+                    <input type="password" id="pw-new" minlength="8" autocomplete="new-password" required>
+                    <div class="hint">Minimum 8 characters.</div></div>
+                  <div class="field"><label for="pw-confirm">Confirm new password</label>
+                    <input type="password" id="pw-confirm" minlength="8" autocomplete="new-password" required></div>
+                  <button class="btn btn-ghost btn-sm" type="submit" id="pw-btn">Change password</button>
+                </form>
+                <hr class="set-hr">
+                <form id="email-form">
+                  <div class="field"><label for="em-new">Change email address</label>
+                    <input type="email" id="em-new" autocomplete="email" required>
+                    <div class="hint">We'll send a confirmation link to the new address.</div></div>
+                  <button class="btn btn-ghost btn-sm" type="submit" id="em-btn">Change email</button>
+                </form>
+              </div>
+
+              <!-- Data -->
+              <div class="card">
+                <h3>Your data</h3>
+                <p class="micro" style="margin-bottom:14px">Download everything PIPVANT stores about you as JSON.</p>
+                <div class="form-err" id="data-err" role="alert"></div>
+                <div style="display:flex;gap:10px;flex-wrap:wrap">
+                  <button class="btn btn-ghost btn-sm" id="export-btn" type="button">Export my data (JSON)</button>
+                  <a class="btn btn-ghost btn-sm" href="#" data-logout>Log out</a>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <!-- Risk defaults (existing form, unchanged behavior) -->
+              <div class="card" style="margin-bottom:16px">
+                <h3>Risk defaults</h3>
+                <p class="micro" style="margin-bottom:16px">Used to pre-fill the Risk Calculator on all your devices.</p>
+                <div class="form-err" id="risk-err" role="alert"></div>
+                <div class="form-ok" id="risk-ok">Saved ✓</div>
+                <form id="risk-form">
+                  <div class="grid-2">
+                    <div class="field"><label>Account balance</label>
+                      <input type="number" id="r-balance" min="1" step="any" required></div>
+                    <div class="field"><label>Currency</label>
+                      <select id="r-currency">
+                        <option>USD</option><option>EUR</option><option>GBP</option>
+                      </select></div>
+                  </div>
+                  <div class="grid-2">
+                    <div class="field"><label>Risk per trade (%)</label>
+                      <input type="number" id="r-risk" min="0.01" max="100" step="0.1" required></div>
+                    <div class="field"><label>Max daily loss (%)</label>
+                      <input type="number" id="r-daily" min="0.1" max="100" step="0.1" required></div>
+                  </div>
+                  <div class="field"><label>Max trades per day</label>
+                    <input type="number" id="r-maxtrades" min="1" max="100" step="1" required></div>
+                  <button class="btn btn-silver btn-sm" type="submit" id="risk-btn">Save defaults</button>
+                </form>
+              </div>
+
+              <!-- Danger zone -->
+              <div class="card danger-card">
+                <h3>Danger zone</h3>
+                <p class="micro" style="margin-bottom:14px">Permanently erase all of your PIPVANT data: journal entries and screenshots, watchlist, saved comparisons, risk settings and your profile. This cannot be undone.</p>
+                <button class="btn btn-sm btn-danger" id="del-btn" type="button">Delete my data…</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </section>
 </main>
+
+<!-- Delete-data modal -->
+<div class="modal" id="del-modal" role="dialog" aria-modal="true" aria-labelledby="del-title">
+  <div class="sheet">
+    <h3 id="del-title" style="margin-bottom:10px">Delete all my data?</h3>
+    <p class="micro" style="margin-bottom:14px">This erases your journal (entries + screenshots), watchlist, saved comparisons, risk settings and profile. It does <b>not</b> close your login itself — after the wipe, contact support to close the account login. Type <b>DELETE</b> to confirm.</p>
+    <div class="form-err" id="del-err" role="alert"></div>
+    <div class="field"><label for="del-confirm">Type DELETE to confirm</label>
+      <input type="text" id="del-confirm" autocomplete="off" placeholder="DELETE"></div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:6px">
+      <button class="btn btn-ghost btn-sm" id="del-cancel" type="button">Cancel</button>
+      <button class="btn btn-sm btn-danger" id="del-go" type="button" disabled>Erase everything</button>
+    </div>
+  </div>
+</div>
+
+<!-- Wipe-done modal -->
+<div class="modal" id="done-modal" role="dialog" aria-modal="true" aria-labelledby="done-title">
+  <div class="sheet">
+    <h3 id="done-title" style="margin-bottom:10px">Data erased</h3>
+    <p class="micro">All of your PIPVANT data has been permanently deleted and you have been signed out. To close the login itself, please contact support.</p>
+    <div style="margin-top:18px"><a class="btn btn-silver btn-sm" href="index.html">Back to home</a></div>
+  </div>
+</div>
 
 <footer class="site">
   <div class="wrap">
@@ -122,7 +258,7 @@
         <h4>Tools</h4>
         <ul>
           <li><a href="tools/matcher.html">Prop Firm Matcher</a></li>
-          <li><a href="tools/journal.html">Trading Journal</a></li>
+          <li><a href="tools/journal.html">Journal</a></li>
           <li><a href="tools/risk-calculator.html">Risk Calculator</a></li>
         </ul>
       </div>
@@ -153,61 +289,404 @@
 <script src="assets/js/sb-config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="assets/js/supabase.js"></script>
+<script src="assets/js/firms.js"></script>
 <script src="assets/js/site.js"></script>
 <script src="assets/js/fx.js"></script>
 <script>
 (function () {
-  function showErr(msg) {
-    var el = document.getElementById('risk-err');
-    el.textContent = msg; el.classList.add('show');
-    document.getElementById('risk-ok').classList.remove('show');
+  'use strict';
+
+  var LOCAL_KEY = 'pipvant_journal_v1';
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
   }
-  function showOk() {
-    document.getElementById('risk-ok').classList.add('show');
-    document.getElementById('risk-err').classList.remove('show');
-    setTimeout(function () { document.getElementById('risk-ok').classList.remove('show'); }, 2500);
+  function fmtMoney(n) {
+    var v = Math.round((Number(n) || 0) * 100) / 100;
+    return (v < 0 ? '-$' : '$') + Math.abs(v).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
+  function pnlOf(t) {
+    var entry = parseFloat(t.entry), exit = parseFloat(t.exit);
+    var size = parseFloat(t.size) || 0;
+    if (!(entry > 0) || !(exit > 0) || !size) return 0;
+    var d = (exit - entry) * size * (t.side === 'Short' ? -1 : 1);
+    return Math.round(d * 100) / 100;
+  }
+  function rowToLocal(r) {
+    return {
+      id: r.id,
+      date: r.trade_date,
+      symbol: r.symbol || '',
+      side: r.direction === 'short' ? 'Short' : 'Long',
+      entry: parseFloat(r.entry_price),
+      exit: r.exit_price == null ? parseFloat(r.entry_price) : parseFloat(r.exit_price),
+      size: parseFloat(r.position_size) || 0,
+      result: r.result === 'win' ? 'win' : (r.result === 'loss' ? 'loss' : 'be')
+    };
+  }
+  function loadLocalTrades() {
+    try { return JSON.parse(localStorage.getItem(LOCAL_KEY)) || []; }
+    catch (e) { return []; }
+  }
+  function initials(name, email) {
+    var src = (name || '').trim();
+    if (src) {
+      var parts = src.split(/\s+/).slice(0, 2);
+      return parts.map(function (p) { return p.charAt(0).toUpperCase(); }).join('');
+    }
+    var pre = String(email || '').split('@')[0].replace(/[^a-zA-Z0-9]/g, '');
+    return (pre.slice(0, 2) || '?').toUpperCase();
+  }
+  function firmName(fid) {
+    try {
+      var plans = window.PIPVANT_PLANS || [];
+      for (var i = 0; i < plans.length; i++) {
+        if (plans[i].firmId === fid) return plans[i].firm;
+      }
+    } catch (e) {}
+    return fid;
+  }
+
+  /* ---------- tabs ---------- */
+  function paintTabs(which) {
+    var tabs = document.querySelectorAll('.prof-tab');
+    tabs.forEach(function (t) {
+      var on = t.getAttribute('data-tab') === which;
+      t.classList.toggle('on', on);
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    document.getElementById('pane-overview').hidden = which !== 'overview';
+    document.getElementById('pane-settings').hidden = which !== 'settings';
+  }
+  function initTabs() {
+    document.querySelectorAll('.prof-tab').forEach(function (t) {
+      t.addEventListener('click', function () {
+        var which = t.getAttribute('data-tab');
+        paintTabs(which);
+        try { history.replaceState(null, '', which === 'settings' ? '#settings' : '#overview'); } catch (e) {}
+      });
+    });
+    var h = (location.hash || '').replace('#', '');
+    paintTabs(h === 'settings' ? 'settings' : 'overview');
+  }
+
+  /* ---------- feedback helpers ---------- */
+  function feedOk(id) { var el = document.getElementById(id); el.classList.add('show'); setTimeout(function () { el.classList.remove('show'); }, 2600); }
+  function feedErr(id, msg) { var el = document.getElementById(id); el.textContent = msg; el.classList.add('show'); }
+
   document.addEventListener('DOMContentLoaded', function () {
+    initTabs();
     PV.ready.then(function (user) {
       if (!user) { location.replace('login.html?next=account.html'); return; }
-      document.getElementById('a-email').textContent = user.email || '—';
-      document.getElementById('a-since').textContent = new Date(user.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-      var uid = user.id;
-      PV.from('profiles').select('plan').eq('id', uid).maybeSingle().then(function (r) {
-        if (r.data && r.data.plan) document.getElementById('a-plan').textContent = r.data.plan.charAt(0).toUpperCase() + r.data.plan.slice(1);
-      });
-      PV.from('risk_settings').select('*').eq('user_id', uid).maybeSingle().then(function (r) {
-        document.getElementById('acct-loading').style.display = 'none';
-        document.getElementById('acct-body').style.display = 'block';
-        var d = r.data || {};
-        document.getElementById('r-balance').value = d.account_balance != null ? d.account_balance : 5000;
-        document.getElementById('r-currency').value = d.account_currency || 'USD';
-        document.getElementById('r-risk').value = d.risk_per_trade_percent != null ? d.risk_per_trade_percent : 1;
-        document.getElementById('r-daily').value = d.max_daily_loss_percent != null ? d.max_daily_loss_percent : 3;
-        document.getElementById('r-maxtrades').value = d.max_trades_per_day != null ? d.max_trades_per_day : 3;
-        if (r.error) showErr(PV.friendly(r.error));
+      boot(user).catch(function (err) {
+        document.getElementById('acct-loading').textContent = 'Could not load your account: ' + PV.friendly(err);
       });
     });
-    document.getElementById('risk-form').addEventListener('submit', function (e) {
-      e.preventDefault();
-      if (!PV.user) { showErr('Please sign in to do that.'); return; }
-      var btn = document.getElementById('risk-btn');
-      btn.disabled = true;
-      var row = {
-        user_id: PV.user.id,
-        account_balance: parseFloat(document.getElementById('r-balance').value),
-        account_currency: document.getElementById('r-currency').value,
-        risk_per_trade_percent: parseFloat(document.getElementById('r-risk').value),
-        max_daily_loss_percent: parseFloat(document.getElementById('r-daily').value),
-        max_trades_per_day: parseInt(document.getElementById('r-maxtrades').value, 10),
-        updated_at: new Date().toISOString()
-      };
-      PV.from('risk_settings').upsert(row, { onConflict: 'user_id' }).then(function (res) {
-        btn.disabled = false;
-        if (res.error) showErr(PV.friendly(res.error)); else showOk();
-      });
+
+    /* risk form (existing behavior) */
+    document.getElementById('risk-form').addEventListener('submit', onRiskSubmit);
+    document.getElementById('prof-form').addEventListener('submit', onProfileSubmit);
+    document.getElementById('pw-form').addEventListener('submit', onPasswordSubmit);
+    document.getElementById('email-form').addEventListener('submit', onEmailSubmit);
+    document.getElementById('export-btn').addEventListener('click', onExport);
+    document.getElementById('del-btn').addEventListener('click', openDelModal);
+    document.getElementById('del-cancel').addEventListener('click', closeDelModal);
+    document.getElementById('del-confirm').addEventListener('input', function (e) {
+      document.getElementById('del-go').disabled = e.target.value.trim() !== 'DELETE';
+    });
+    document.getElementById('del-go').addEventListener('click', onDeleteAll);
+    document.getElementById('del-modal').addEventListener('click', function (e) {
+      if (e.target === this) closeDelModal();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') { closeDelModal(); }
     });
   });
+
+  function boot(user) {
+    var uid = user.id;
+    var email = user.email || '';
+    var prefix = email.split('@')[0] || 'trader';
+    var since = '—';
+    try {
+      since = new Date(user.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
+    } catch (e) {}
+
+    return PV.from('profiles').select('*').eq('id', uid).maybeSingle().then(function (pr) {
+      var prof = (pr && pr.data) || {};
+      var name = (prof.display_name || '').trim();
+      var plan = prof.plan || 'free';
+
+      document.getElementById('p-avatar').textContent = initials(name, email);
+      document.getElementById('p-name').textContent = name || prefix;
+      document.getElementById('p-handle').textContent = '@' + prefix;
+      document.getElementById('p-since').textContent = 'Member since ' + since;
+      document.getElementById('a-email').textContent = email;
+
+      var badge = document.getElementById('p-plan');
+      badge.textContent = plan === 'pro' ? 'PRO' : 'FREE';
+      badge.classList.toggle('is-pro', plan === 'pro');
+      document.getElementById('p-pro-link').style.display = plan === 'pro' ? 'none' : '';
+
+      document.getElementById('pf-name').value = name;
+      document.getElementById('pf-country').value = prof.country || '';
+      document.getElementById('pf-tz').value = prof.timezone || '';
+      document.getElementById('em-new').value = email;
+
+      return loadActivity(uid);
+    }).then(function () {
+      return PV.from('risk_settings').select('*').eq('user_id', uid).maybeSingle();
+    }).then(function (r) {
+      var d = (r && r.data) || {};
+      document.getElementById('r-balance').value = d.account_balance != null ? d.account_balance : 5000;
+      document.getElementById('r-currency').value = d.account_currency || 'USD';
+      document.getElementById('r-risk').value = d.risk_per_trade_percent != null ? d.risk_per_trade_percent : 1;
+      document.getElementById('r-daily').value = d.max_daily_loss_percent != null ? d.max_daily_loss_percent : 3;
+      document.getElementById('r-maxtrades').value = d.max_trades_per_day != null ? d.max_trades_per_day : 3;
+      if (r && r.error) feedErr('risk-err', PV.friendly(r.error));
+      document.getElementById('acct-loading').style.display = 'none';
+      document.getElementById('acct-body').style.display = 'block';
+    });
+  }
+
+  /* ---------- activity + stats ---------- */
+  function loadActivity(uid) {
+    var tradesP = PV.from('journal_entries').select('*').eq('user_id', uid)
+      .order('trade_date', { ascending: false }).order('created_at', { ascending: false })
+      .then(function (res) {
+        if (res.error) throw res.error;
+        return (res.data || []).map(rowToLocal);
+      })
+      .catch(function () { return loadLocalTrades(); });
+    var watchP = PV.from('watchlist_firms').select('firm_id,created_at').eq('user_id', uid)
+      .order('created_at', { ascending: false })
+      .then(function (res) { return res.error ? [] : (res.data || []); })
+      .catch(function () { return []; });
+
+    return Promise.all([tradesP, watchP]).then(function (vals) {
+      var trades = vals[0], watch = vals[1];
+      paintStats(trades, watch.length);
+      paintRecentTrades(trades.slice(0, 5));
+      paintWatch(watch.slice(0, 5));
+    });
+  }
+
+  function paintStats(trades, watchCount) {
+    var closed = trades.filter(function (t) { return t.result === 'win' || t.result === 'loss'; });
+    var wins = closed.filter(function (t) { return t.result === 'win'; }).length;
+    var net = trades.reduce(function (s, t) { return s + pnlOf(t); }, 0);
+    document.getElementById('s-trades').textContent = trades.length;
+    document.getElementById('s-winrate').textContent = closed.length ? Math.round(wins / closed.length * 100) + '%' : '—';
+    var pnlEl = document.getElementById('s-pnl');
+    pnlEl.textContent = fmtMoney(net);
+    pnlEl.classList.toggle('pos', net > 0);
+    pnlEl.classList.toggle('neg', net < 0);
+    document.getElementById('s-watch').textContent = watchCount;
+  }
+
+  function paintRecentTrades(trades) {
+    var box = document.getElementById('ov-trades');
+    if (!trades.length) { box.innerHTML = '<p class="micro">No trades yet — your latest 5 will appear here.</p>'; return; }
+    box.innerHTML = trades.map(function (t) {
+      var p = pnlOf(t);
+      var cls = p > 0 ? 'pos' : (p < 0 ? 'neg' : '');
+      var dt = '';
+      try { dt = new Date(t.date + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }); } catch (e) {}
+      return '<div class="trade-row"><div><b>' + esc(t.symbol) + '</b> <span class="micro">' +
+        esc(t.side) + ' · ' + esc(dt) + '</span></div>' +
+        '<div class="r ' + cls + '">' + fmtMoney(p) + '</div></div>';
+    }).join('');
+  }
+
+  function paintWatch(watch) {
+    var box = document.getElementById('ov-watch');
+    if (!watch.length) { box.innerHTML = '<p class="micro">Nothing watched yet — tap ♡ on any firm in the Matcher.</p>'; return; }
+    box.innerHTML = watch.map(function (w) {
+      return '<div class="trade-row"><div><b>' + esc(firmName(w.firm_id)) + '</b></div>' +
+        '<div class="r"><a href="tools/matcher.html" style="color:var(--silver-2);font-weight:600;font-size:.85rem">View →</a></div></div>';
+    }).join('');
+  }
+
+  /* ---------- settings: profile ---------- */
+  function onProfileSubmit(e) {
+    e.preventDefault();
+    if (!PV.user) return;
+    var btn = document.getElementById('prof-btn');
+    btn.disabled = true;
+    var row = {
+      id: PV.user.id,
+      display_name: document.getElementById('pf-name').value.trim() || null,
+      country: document.getElementById('pf-country').value.trim() || null,
+      timezone: document.getElementById('pf-tz').value.trim() || null
+    };
+    PV.from('profiles').upsert(row, { onConflict: 'id' }).then(function (res) {
+      btn.disabled = false;
+      if (res.error) { feedErr('prof-err', PV.friendly(res.error)); return; }
+      feedOk('prof-ok');
+      var nm = row.display_name || PV.user.email.split('@')[0];
+      document.getElementById('p-name').textContent = nm;
+      document.getElementById('p-avatar').textContent = initials(row.display_name, PV.user.email);
+    });
+  }
+
+  /* ---------- settings: security ---------- */
+  function onPasswordSubmit(e) {
+    e.preventDefault();
+    var np = document.getElementById('pw-new').value;
+    var cp = document.getElementById('pw-confirm').value;
+    if (np.length < 8) { feedErr('sec-err', 'Password must be at least 8 characters.'); return; }
+    if (np !== cp) { feedErr('sec-err', 'Passwords do not match.'); return; }
+    var btn = document.getElementById('pw-btn');
+    btn.disabled = true;
+    PV.client.auth.updateUser({ password: np }).then(function (res) {
+      btn.disabled = false;
+      if (res.error) { feedErr('sec-err', PV.friendly(res.error)); return; }
+      document.getElementById('pw-new').value = '';
+      document.getElementById('pw-confirm').value = '';
+      feedOk('sec-ok');
+    });
+  }
+  function onEmailSubmit(e) {
+    e.preventDefault();
+    var em = document.getElementById('em-new').value.trim();
+    if (!em || em.indexOf('@') < 0) { feedErr('sec-err', 'Enter a valid email address.'); return; }
+    var btn = document.getElementById('em-btn');
+    btn.disabled = true;
+    PV.client.auth.updateUser({ email: em }).then(function (res) {
+      btn.disabled = false;
+      if (res.error) { feedErr('sec-err', PV.friendly(res.error)); return; }
+      feedErr('sec-err', '');
+      document.getElementById('sec-err').classList.remove('show');
+      var ok = document.getElementById('sec-ok');
+      ok.textContent = 'Confirmation link sent to ' + em + ' — click it to finish the change. ✓';
+      ok.classList.add('show');
+      setTimeout(function () { ok.classList.remove('show'); ok.textContent = 'Saved ✓'; }, 6000);
+    });
+  }
+
+  /* ---------- settings: risk defaults (existing behavior) ---------- */
+  function onRiskSubmit(e) {
+    e.preventDefault();
+    if (!PV.user) { feedErr('risk-err', 'Please sign in to do that.'); return; }
+    var btn = document.getElementById('risk-btn');
+    btn.disabled = true;
+    var row = {
+      user_id: PV.user.id,
+      account_balance: parseFloat(document.getElementById('r-balance').value),
+      account_currency: document.getElementById('r-currency').value,
+      risk_per_trade_percent: parseFloat(document.getElementById('r-risk').value),
+      max_daily_loss_percent: parseFloat(document.getElementById('r-daily').value),
+      max_trades_per_day: parseInt(document.getElementById('r-maxtrades').value, 10),
+      updated_at: new Date().toISOString()
+    };
+    PV.from('risk_settings').upsert(row, { onConflict: 'user_id' }).then(function (res) {
+      btn.disabled = false;
+      if (res.error) feedErr('risk-err', PV.friendly(res.error)); else feedOk('risk-ok');
+    });
+  }
+
+  /* ---------- settings: export ---------- */
+  function onExport() {
+    var btn = document.getElementById('export-btn');
+    btn.disabled = true;
+    var uid = PV.user.id;
+    function q(table, col) {
+      return PV.from(table).select('*').eq(col, uid).then(function (r) {
+        return r.error ? { error: String(r.error.message || r.error) } : (r.data || []);
+      }).catch(function (e) { return { error: String(e && e.message || e) }; });
+    }
+    Promise.all([
+      q('profiles', 'id'), q('risk_settings', 'user_id'), q('risk_profiles', 'user_id'),
+      q('journal_entries', 'user_id'), q('journal_attachments', 'user_id'),
+      q('watchlist_firms', 'user_id'), q('saved_comparisons', 'user_id')
+    ]).then(function (vals) {
+      btn.disabled = false;
+      var payload = {
+        exported_at: new Date().toISOString(),
+        user: { id: uid, email: PV.user.email },
+        profile: vals[0], risk_settings: vals[1], risk_profiles: vals[2],
+        journal_entries: vals[3], journal_attachments: vals[4],
+        watchlist_firms: vals[5], saved_comparisons: vals[6]
+      };
+      if (!PV.ok) {
+        payload.local_journal = loadLocalTrades();
+        payload.note = 'Signed-out export: cloud tables unavailable, local journal included.';
+      }
+      var blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+      var a = document.createElement('a');
+      var d = new Date().toISOString().slice(0, 10);
+      a.href = URL.createObjectURL(blob);
+      a.download = 'pipvant-data-export-' + d + '.json';
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+    });
+  }
+
+  /* ---------- settings: delete all data ---------- */
+  function openDelModal() {
+    document.getElementById('del-confirm').value = '';
+    document.getElementById('del-go').disabled = true;
+    document.getElementById('del-err').classList.remove('show');
+    document.getElementById('del-modal').classList.add('show');
+  }
+  function closeDelModal() {
+    document.getElementById('del-modal').classList.remove('show');
+  }
+  function onDeleteAll() {
+    var btn = document.getElementById('del-go');
+    btn.disabled = true;
+    btn.textContent = 'Erasing…';
+    var uid = PV.user.id;
+    var storage = PV.client.storage.from('journal-shots');
+
+    function wipeTable(table, col) {
+      return PV.from(table).delete().eq(col, uid).then(function (r) {
+        if (r.error) throw r.error;
+      });
+    }
+    function wipeStorage() {
+      // objects live at <uid>/<entry_id>/<file>
+      return storage.list(uid, { limit: 100 }).then(function (res) {
+        if (res.error) return; // nothing there or RLS — continue anyway
+        var folders = (res.data || []).filter(function (o) { return o.id == null; });
+        var chain = Promise.resolve();
+        folders.forEach(function (f) {
+          chain = chain.then(function () {
+            return storage.list(uid + '/' + f.name, { limit: 100 }).then(function (r2) {
+              if (r2.error || !r2.data || !r2.data.length) return;
+              var paths = r2.data.map(function (o) { return uid + '/' + f.name + '/' + o.name; });
+              return storage.remove(paths);
+            });
+          });
+        });
+        return chain;
+      }).catch(function () {});
+    }
+
+    wipeStorage()
+      .then(function () { return wipeTable('journal_attachments', 'user_id'); })
+      .then(function () { return wipeTable('journal_entries', 'user_id'); })
+      .then(function () { return wipeTable('watchlist_firms', 'user_id'); })
+      .then(function () { return wipeTable('saved_comparisons', 'user_id'); })
+      .then(function () { return wipeTable('risk_settings', 'user_id'); })
+      .then(function () {
+        return wipeTable('risk_profiles', 'user_id').catch(function () {});
+      })
+      .then(function () { return wipeTable('profiles', 'id'); })
+      .then(function () { return PV.signOut(); })
+      .then(function () {
+        closeDelModal();
+        document.getElementById('done-modal').classList.add('show');
+      })
+      .catch(function (err) {
+        btn.disabled = false;
+        btn.textContent = 'Erase everything';
+        feedErr('del-err', PV.friendly(err));
+      });
+  }
 })();
 </script>
 </body>

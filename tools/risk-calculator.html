@@ -62,6 +62,17 @@
     <div class="wrap">
       <div class="calc-grid">
         <div class="card">
+          <div id="profile-bar" style="display:none;margin-bottom:18px">
+            <div class="field" style="margin-bottom:0"><label>Risk profile</label>
+              <div style="display:flex;gap:8px">
+                <select id="profile-sel" data-nopersist style="flex:1;min-width:0" aria-label="Risk profile"></select>
+                <button class="icon-btn" id="profile-add" data-nopersist aria-label="Add profile" title="Add profile">＋</button>
+                <button class="icon-btn" id="profile-rename" data-nopersist aria-label="Rename profile" title="Rename profile">✎</button>
+                <button class="icon-btn del" id="profile-del" data-nopersist aria-label="Delete profile" title="Delete profile">×</button>
+              </div>
+              <p class="micro" id="profile-note" style="margin:8px 0 0">Pro profiles — one per account or strategy.</p>
+            </div>
+          </div>
           <div class="seg" id="mode" style="margin-bottom:22px">
             <button data-v="cfd" class="on">CFD Lots</button>
             <button data-v="futures">Futures Contracts</button>

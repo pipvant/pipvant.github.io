@@ -74,6 +74,8 @@
         <svg id="equity" viewBox="0 0 600 220" class="equity" preserveAspectRatio="none"></svg>
       </div>
 
+      <div id="pro-analytics" style="margin-top:24px"></div>
+
       <div class="panel" id="cal-panel" style="margin-top:24px">
         <div class="cal-head">
           <button class="icon-btn" id="cal-prev" aria-label="Previous month">‹</button>
@@ -88,6 +90,7 @@
         <h2 style="margin:0">Trades</h2>
         <div style="display:flex;gap:10px">
           <button class="btn btn-ghost btn-sm" id="csv-btn">Export CSV</button>
+          <button class="btn btn-ghost btn-sm" id="pdf-btn">Export PDF <span class="pro-lock-badge" style="margin:0 0 0 6px">PRO</span></button>
           <button class="btn btn-silver btn-sm" id="add-btn">＋ Add trade</button>
         </div>
       </div>
@@ -120,6 +123,14 @@
         <div class="field"><label>Setup / notes</label><input type="text" name="notes" placeholder="IFVG + MSS + OB, FVG 50% target…"></div>
         <div class="field"><label>Mistake (optional)</label><select name="mistake"><option value="">None</option><option>Early entry</option><option>Late entry</option><option>Moved stop</option><option>Over-leveraged</option><option>FOMO</option><option>Revenge trade</option><option>News</option><option>Other</option></select></div>
       </div>
+      <div class="field"><label>Setup tag <span class="micro">(optional — powers Pro Analytics)</span></label>
+        <input type="text" name="setup" list="setup-list" placeholder="e.g. IFVG, MSS + OB…" autocomplete="off">
+        <datalist id="setup-list">
+          <option value="IFVG"></option><option value="MSS + OB"></option><option value="FVG entry"></option>
+          <option value="BSL raid"></option><option value="SSL raid"></option><option value="Breaker"></option>
+          <option value="Turtle soup"></option>
+        </datalist>
+      </div>
       <div class="field"><label>Result</label><select name="result"><option value="win">Win</option><option value="loss">Loss</option><option value="be">Breakeven</option></select></div>
       <div class="field"><label>Chart screenshots</label>
         <input type="file" id="shot-input" accept="image/*" multiple>
@@ -132,6 +143,8 @@
     </form>
   </div>
 </div>
+
+<div id="print-report" aria-hidden="true"></div>
 
 <footer class="site">
   <div class="wrap">

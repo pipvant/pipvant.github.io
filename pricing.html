@@ -53,12 +53,16 @@
   <section class="tool-head center">
     <div class="wrap">
       <p class="eyebrow center"><span data-brand="launchline">PIPVANT — launched by Orovanta</span></p>
-      <h1>Simple <span class="silver-text">Pricing</span></h1>
-      <p class="lead" style="margin:0 auto">The full toolkit is free — no card required. Pro is coming soon.</p>
+      <h1>Pricing that <span class="silver-text">respects traders</span></h1>
+      <p class="lead" style="margin:0 auto">Start free — no card required. Upgrade only when the data earns it.</p>
+      <div class="billing-toggle" role="tablist" aria-label="Billing period">
+        <button id="bill-mo" class="on" role="tab" aria-selected="true">Monthly</button>
+        <button id="bill-yr" role="tab" aria-selected="false">Yearly <span class="save">−33%</span></button>
+      </div>
     </div>
   </section>
 
-  <section style="padding-bottom:40px">
+  <section style="padding-bottom:20px">
     <div class="wrap">
       <div class="plans">
         <div class="plan">
@@ -67,27 +71,77 @@
           <p class="micro">Forever. No card required.</p>
           <ul class="feat">
             <li>Prop Firm Matcher — all 10 firms, 33 programs</li>
-            <li>Trading Journal — unlimited trades, local storage</li>
-            <li>Risk Calculator — CFD lots + futures contracts</li>
-            <li>Compare up to 3 programs side by side</li>
+            <li>Trading Journal — 100 trades, 20 chart screenshots / month</li>
+            <li>Risk Calculator — 1 risk profile</li>
+            <li>Watchlist — up to 10 firms</li>
+            <li>3 saved comparisons</li>
             <li>CSV export</li>
           </ul>
-          <a class="btn btn-ghost" href="tools/matcher.html" style="width:100%">Start free</a>
+          <a class="btn btn-ghost" href="signup.html" style="width:100%">Start free</a>
         </div>
-        <div class="plan pro">
-          <span class="badge-soon">Coming soon</span>
+        <div class="plan featured">
+          <span class="tag">Coming soon</span>
           <h3>PIPVANT Pro</h3>
-          <div class="amount">TBA</div>
-          <p class="micro">For traders who live in the data.</p>
+          <div class="amount"><span id="pro-price">$12</span><span class="micro" id="pro-per"> /month</span></div>
+          <p class="micro" id="pro-note">Billed monthly. Cancel anytime.</p>
           <ul class="feat">
-            <li>Everything in Free</li>
-            <li>Advanced journal analytics — streaks, session & setup breakdowns</li>
-            <li>ICT toolkit — session ranges, liquidity maps, FVG helpers</li>
-            <li>Cloud sync across devices</li>
-            <li>Priority support</li>
+            <li>Everything in Free — unlimited</li>
+            <li>Unlimited journal trades + screenshots</li>
+            <li>Pro Analytics — mistakes, setups, sessions, R-distribution</li>
+            <li>Unlimited watchlists &amp; saved comparisons</li>
+            <li>Multiple risk profiles</li>
+            <li>PDF trade reports</li>
+            <li>Priority firm-data verification</li>
+            <li>Early access to new tools</li>
           </ul>
           <a class="btn btn-silver" href="#waitlist" style="width:100%">Join the waitlist</a>
         </div>
+      </div>
+
+      <div class="matrix-wrap">
+        <table class="matrix" aria-label="Free vs Pro feature comparison">
+          <thead>
+            <tr><th>Feature</th><th class="c">Free</th><th class="c">Pro</th></tr>
+          </thead>
+          <tbody>
+            <tr class="sec"><td colspan="3">Journal</td></tr>
+            <tr><td>Logged trades</td><td class="c">100</td><td class="c yes">Unlimited</td></tr>
+            <tr><td>Chart screenshots</td><td class="c">20 / month</td><td class="c yes">Unlimited</td></tr>
+            <tr><td>Win rate, avg R, profit factor, equity curve</td><td class="c yes">✓</td><td class="c yes">✓</td></tr>
+            <tr><td>Pro Analytics — mistakes, setups, sessions, R-distribution</td><td class="c no">—</td><td class="c yes">✓</td></tr>
+            <tr><td>CSV export</td><td class="c yes">✓</td><td class="c yes">✓</td></tr>
+            <tr><td>PDF trade reports</td><td class="c no">—</td><td class="c yes">✓</td></tr>
+            <tr class="sec"><td colspan="3">Prop Firm Matcher</td></tr>
+            <tr><td>Firm &amp; program data</td><td class="c yes">✓</td><td class="c yes">✓</td></tr>
+            <tr><td>Watchlist firms</td><td class="c">10</td><td class="c yes">Unlimited</td></tr>
+            <tr><td>Saved comparisons</td><td class="c">3</td><td class="c yes">Unlimited</td></tr>
+            <tr><td>Priority firm-data verification</td><td class="c no">—</td><td class="c yes">✓</td></tr>
+            <tr class="sec"><td colspan="3">Risk &amp; extras</td></tr>
+            <tr><td>Risk profiles</td><td class="c">1</td><td class="c yes">Multiple</td></tr>
+            <tr><td>Cloud sync across devices</td><td class="c yes">✓</td><td class="c yes">✓</td></tr>
+            <tr><td>Early access to new tools</td><td class="c no">—</td><td class="c yes">✓</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="faq">
+        <h2 class="center" style="margin-bottom:22px">Questions</h2>
+        <details>
+          <summary>Why go Pro?</summary>
+          <p>If you journal every day, the Free limits will eventually feel small. Pro removes them and adds the analytics layer — mistake patterns, setup stats, session breakdowns, R-distribution — built for traders reviewing hundreds of trades. If you trade a few times a month, Free is genuinely plenty.</p>
+        </details>
+        <details>
+          <summary>Can I cancel anytime?</summary>
+          <p>Yes. Pro will be month-to-month, or yearly if you prefer the discount. Cancel in one click from your account page — you keep Pro until the end of the billing period. No calls, no dark patterns.</p>
+        </details>
+        <details>
+          <summary>What happens to my data if I downgrade?</summary>
+          <p>Nothing is deleted. Your journal, screenshots and settings stay exactly as they are. Free limits simply apply going forward — for example, you cannot add trades beyond the 100-trade Free allowance until you are under it again — but everything already saved remains readable and exportable.</p>
+        </details>
+        <details>
+          <summary>When does Pro launch?</summary>
+          <p>Soon — there is no checkout yet. Join the waitlist below and we will email you once, the day it opens. Waitlist members get first access.</p>
+        </details>
       </div>
     </div>
   </section>
@@ -153,6 +207,36 @@
 <script src="assets/js/supabase.js"></script>
 <script src="assets/js/site.js"></script>
 <script src="assets/js/fx.js"></script>
+<script>
+/* Monthly / Yearly toggle — Pro $12/mo or $96/yr ($8/mo). */
+(function () {
+  document.addEventListener('DOMContentLoaded', function () {
+    var mo = document.getElementById('bill-mo');
+    var yr = document.getElementById('bill-yr');
+    var price = document.getElementById('pro-price');
+    var per = document.getElementById('pro-per');
+    var note = document.getElementById('pro-note');
+    if (!mo || !yr) return;
+    function setMode(yearly) {
+      mo.classList.toggle('on', !yearly);
+      yr.classList.toggle('on', yearly);
+      mo.setAttribute('aria-selected', String(!yearly));
+      yr.setAttribute('aria-selected', String(yearly));
+      if (yearly) {
+        price.textContent = '$8';
+        per.textContent = ' /month';
+        note.textContent = 'Billed $96 once a year — you save 33%.';
+      } else {
+        price.textContent = '$12';
+        per.textContent = ' /month';
+        note.textContent = 'Billed monthly. Cancel anytime.';
+      }
+    }
+    mo.addEventListener('click', function () { setMode(false); });
+    yr.addEventListener('click', function () { setMode(true); });
+  });
+})();
+</script>
 <script>
 (function () {
   var KEY = 'pipvant_waitlist_v1';
