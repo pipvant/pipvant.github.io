@@ -268,9 +268,9 @@
       '<span class="badge dim">News: ' + esc(newsLabel(p.news)) + '</span>';
     var fp = fromPrice(p);
     var mono = esc(((p.firm || '?').trim().charAt(0) || '?').toUpperCase());
-    var d = Math.min(i || 0, 12) * 45;
+
     return '' +
-      '<article class="firm-card fc-v3" data-key="' + esc(k) + '" style="--d:' + d + 'ms">' +
+      '<article class="firm-card fc-v3" data-key="' + esc(k) + '">' +
         '<div class="fc-head">' +
           '<div class="fc-mono" aria-hidden="true"><span class="fc-mono-ring"></span><span class="fc-mono-l">' + mono + '</span></div>' +
           '<div class="fc-id"><h3 class="fc-firm">' + esc(p.firm) + '</h3>' +
