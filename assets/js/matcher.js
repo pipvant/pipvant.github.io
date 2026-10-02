@@ -248,11 +248,14 @@
   }
 
   function specTiles(p) {
-    return '<div class="fc-specs">' +
-      '<div class="fc-spec"><span class="k">Profit target</span><span class="v">' + esc(p.profitTarget) + '</span></div>' +
-      '<div class="fc-spec"><span class="k">Daily drawdown</span><span class="v">' + esc(p.dailyDD) + '</span></div>' +
-      '<div class="fc-spec"><span class="k">Max drawdown</span><span class="v">' + esc(p.totalDD) + '</span></div>' +
-      '<div class="fc-spec"><span class="k">Profit split</span><span class="v">' + esc(p.profitSplit) + '</span></div>' +
+    function row(k, v) {
+      return '<div class="fc-rule"><span>' + k + '</span><b>' + esc(v) + '</b></div>';
+    }
+    return '<div class="fc-rules"><div class="fc-rules-title">Key rules</div>' +
+      row('Profit target', p.profitTarget) +
+      row('Daily drawdown', p.dailyDD) +
+      row('Max drawdown', p.totalDD) +
+      row('Profit split', p.profitSplit) +
     '</div>';
   }
 
@@ -283,7 +286,7 @@
           '<button class="btn btn-ghost btn-sm detail-btn" data-firm="' + esc(p.firmId) + '">Details</button>' +
           '<button class="btn btn-ghost btn-sm cmp-btn"' + (inCmp || compareKeys.length >= 3 ? ' disabled' : '') + '>' +
             (inCmp ? '✓ In comparison' : '＋ Compare') + '</button>' +
-          (p.website ? '<a class="btn btn-silver btn-sm" href="' + esc(p.website) + '" target="_blank" rel="noopener">Visit ' + esc(p.firm) + ' ↗</a>' : '') +
+          (p.website ? '<a class="btn btn-silver btn-sm" href="' + esc(p.website) + '" target="_blank" rel="noopener">Visit site ↗</a>' : '') +
         '</div>' +
         '<p class="verify fc-verify">' + esc(VERIFY) + '</p>' +
       '</article>';
@@ -355,7 +358,7 @@
         '<div class="fc-id"><h2 style="margin:0">' + esc(first.firm) + '</h2></div>' +
       '</div>' +
       '<div class="badges">' + badges + '</div>' +
-      (first.website ? '<p><a class="btn btn-silver btn-sm" href="' + esc(first.website) + '" target="_blank" rel="noopener">Visit ' + esc(first.firm) + ' ↗</a></p>' : '') +
+      (first.website ? '<p><a class="btn btn-silver btn-sm" href="' + esc(first.website) + '" target="_blank" rel="noopener">Visit site ↗</a></p>' : '') +
       body +
       '<p class="verify" style="margin-top:18px">' + esc(VERIFY) + '</p>';
   }
