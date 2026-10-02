@@ -37,7 +37,7 @@
       '<div class="stars">' + stars(r.stars) + '</div>' +
       '<p>' + esc(r.body) + '</p>' +
       '<div class="who"><div class="avatar">' + initial + '</div>' +
-      '<div><div class="nm">' + name + '</div><div class="dt">' + d + '</div></div></div>' +
+      '<div><div class="nm">' + name + '<span class="verified">✓ verified</span></div><div class="dt">' + d + '</div></div></div>' +
     '</div>';
   }
 

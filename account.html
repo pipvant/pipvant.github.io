@@ -77,14 +77,17 @@
 
         <!-- ======== IDENTITY ======== -->
         <div class="pv2-idrow pv2-pull">
-          <div class="pv2-avatarwrap">
+          <div class="pv2-avatarwrap" id="avatar-wrap" style="cursor:pointer;position:relative" title="Change profile picture">
             <div class="pv2-ring" aria-hidden="true"></div>
             <div class="pv2-avatar" id="p-avatar">?</div>
+            <div id="avatar-edit" style="position:absolute;bottom:0;right:0;width:30px;height:30px;border-radius:50%;background:var(--silver-2);color:#0a0f1c;display:flex;align-items:center;justify-content:center;font-size:.85rem;box-shadow:0 2px 10px rgba(0,0,0,.4)">✎</div>
+            <input type="file" id="avatar-input" accept="image/*" style="display:none">
           </div>
           <div class="pv2-id">
             <div class="pv2-namerow">
               <h1 id="p-name">—</h1>
               <span class="plan-badge" id="p-plan">FREE</span>
+              <span class="plan-badge" id="p-certs" style="margin-left:8px" title="Earned certificates">🏆 <span id="p-certs-num">0</span></span>
             </div>
             <div class="prof-handle" id="p-handle">—</div>
             <div class="pv2-greet" id="p-greet"></div>
@@ -334,6 +337,7 @@
 <script src="assets/js/leaderboard.js"></script>
 <script src="assets/js/firms.js"></script>
 <script src="assets/js/site.js"></script>
+<script src="assets/js/notifications.js"></script>
 <script src="assets/js/fx.js"></script>
 <script>
 (function () {
@@ -620,7 +624,17 @@
       var name = (prof.display_name || '').trim();
       var plan = prof.plan || 'free';
 
-      document.getElementById('p-avatar').textContent = initials(name, email);
+      /* avatar: show uploaded image or initials */
+      var avEl = document.getElementById('p-avatar');
+      if (prof.avatar_url && prof.avatar_url.indexOf('data:image') === 0) {
+        avEl.innerHTML = '<img src="' + prof.avatar_url + '" alt="Profile" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
+      } else {
+        avEl.textContent = initials(name, email);
+      }
+      /* certificate count badge */
+      PV.from('certificates').select('id', { count: 'exact', head: true }).eq('user_id', uid).then(function (cr) {
+        document.getElementById('p-certs-num').textContent = cr.count || 0;
+      }).catch(function () {});
       document.getElementById('p-name').textContent = name || prefix;
       document.getElementById('p-handle').textContent = '@' + prefix;
       document.getElementById('p-since').textContent = 'Member since ' + since;
@@ -835,6 +849,37 @@
         '<div class="micro">' + esc(fmtDate(e.when)) + '</div></div></div>';
     }).join('');
   }
+
+  /* ---------- avatar upload ---------- */
+  (function () {
+    var wrap = document.getElementById('avatar-wrap');
+    var input = document.getElementById('avatar-input');
+    if (!wrap || !input) return;
+    wrap.addEventListener('click', function () { input.click(); });
+    input.addEventListener('change', function () {
+      var f = input.files && input.files[0];
+      if (!f || !window.PV || !window.PV.user) return;
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        var img = new Image();
+        img.onload = function () {
+          var size = 200;
+          var cv = document.createElement('canvas');
+          cv.width = size; cv.height = size;
+          var ctx = cv.getContext('2d');
+          var s = Math.min(img.width, img.height);
+          ctx.drawImage(img, (img.width - s) / 2, (img.height - s) / 2, s, s, 0, 0, size, size);
+          var dataUrl = cv.toDataURL('image/jpeg', 0.85);
+          PV.from('profiles').update({ avatar_url: dataUrl }).eq('id', PV.user.id).then(function () {
+            document.getElementById('p-avatar').innerHTML = '<img src="' + dataUrl + '" alt="Profile" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
+          }).catch(function () { alert('Could not save your picture. Please try again.'); });
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(f);
+      input.value = '';
+    });
+  })();
 
   /* ---------- settings: profile ---------- */
   function onProfileSubmit(e) {

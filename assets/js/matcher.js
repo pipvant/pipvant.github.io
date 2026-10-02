@@ -259,6 +259,16 @@
     '</div>';
   }
 
+  function sizeChips(p) {
+    var sizes = (p.sizes || []).filter(function (s) { return s.priceUsd != null; });
+    if (!sizes.length) return '';
+    var chips = sizes.map(function (s) {
+      var hl = (state.size !== 'any' && String(s.sizeUsd) === state.size) ? ' style="border-color:var(--silver-2);color:#fff"' : '';
+      return '<span class="size-chip"' + hl + '>' + esc(s.label) + ' · ' + esc(s.priceDisplay) + '</span>';
+    }).join('');
+    return '<div class="size-chips"><span class="size-chips-label">Account sizes</span><div class="size-chips-row">' + chips + '</div></div>';
+  }
+
   function card(p, i) {
     var k = key(p);
     var inCmp = compareKeys.indexOf(k) >= 0;
@@ -281,6 +291,7 @@
         '<div class="fc-badges">' + badges + '</div>' +
         promoStrip(p) +
         specTiles(p) +
+        sizeChips(p) +
         '<div class="firm-actions">' +
           '<button class="btn btn-ghost btn-sm watch-btn" data-firm="' + esc(p.firmId) + '">♡ Watchlist</button>' +
           '<button class="btn btn-ghost btn-sm detail-btn" data-firm="' + esc(p.firmId) + '">Details</button>' +
