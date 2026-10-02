@@ -637,6 +637,41 @@
       }).catch(function () {});
   }
 
+  /* ---------- majestic certificate celebration ---------- */
+  function showCertCelebration(cert) {
+    var overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(4,7,14,.92);backdrop-filter:blur(8px);animation:certIn .5s ease';
+    overlay.innerHTML =
+      '<style>@keyframes certIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}@keyframes glowPulse{0%,100%{box-shadow:0 0 60px rgba(205,213,228,.15)}50%{box-shadow:0 0 100px rgba(205,213,228,.3)}}@keyframes confetti{0%{transform:translateY(-10px) rotate(0)}100%{transform:translateY(100vh) rotate(720deg)}}</style>' +
+      '<div style="text-align:center;max-width:420px;padding:40px 30px;position:relative">' +
+        '<div style="font-size:4rem;margin-bottom:16px;animation:glowPulse 2s infinite;border-radius:50%;display:inline-block;padding:20px">🏆</div>' +
+        '<p style="font-size:.68rem;letter-spacing:.32em;text-transform:uppercase;color:var(--steel);margin-bottom:12px">Achievement Unlocked</p>' +
+        '<h2 style="font-family:var(--font-display);font-size:2.2rem;color:#eef1f8;margin:0 0 8px">' + esc(cert.title) + '</h2>' +
+        '<div style="display:inline-block;padding:6px 20px;border:1px solid rgba(205,213,228,.4);border-radius:999px;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--silver-2);margin-bottom:16px">Level ' + cert.level + '</div>' +
+        '<p style="color:var(--ink-2);margin-bottom:28px">' + esc(cert.description || '') + '</p>' +
+        '<div style="display:flex;gap:12px;justify-content:center">' +
+          '<a href="certificates.html" class="btn btn-silver">View Certificate</a>' +
+          '<button class="btn" style="border:1px solid var(--line);color:var(--ink-2)" onclick="this.closest(\'div\').parentElement.parentElement.remove()">Continue</button>' +
+        '</div>' +
+      '</div>';
+    /* confetti */
+    for (var i = 0; i < 30; i++) {
+      var c = document.createElement('div');
+      var colors = ['#cdd5e4', '#8a97b5', '#eef1f8', '#5a6a8f'];
+      c.style.cssText = 'position:absolute;top:-10px;left:' + (Math.random() * 100) + '%;width:8px;height:8px;background:' + colors[i % 4] + ';animation:confetti ' + (2 + Math.random() * 2) + 's linear forwards;animation-delay:' + (Math.random() * 1) + 's';
+      overlay.appendChild(c);
+    }
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', function (e) {
+      if (e.target === overlay) overlay.remove();
+    });
+  }
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
   /* ---------- certificates: check milestones after each save ---------- */
   function checkCerts() {
     if (!window.PVCerts || !window.PV || !window.PV.user) return;
@@ -668,7 +703,7 @@
     };
     window.PVCerts.check(certStats, function (earned) {
       if (earned && earned.length) {
-        alert('New achievement unlocked: ' + earned[0].title + ' (Level ' + earned[0].level + ')! Check your Certificates tab.');
+        showCertCelebration(earned[0]);
       }
     });
   }

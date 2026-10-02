@@ -9,27 +9,27 @@
     trades: {
       title: 'Trader',
       levels: [
-        { level: 1, name: 'Rising Trader', need: 10, desc: 'Logged 10 trades' },
-        { level: 2, name: 'Active Trader', need: 50, desc: 'Logged 50 trades' },
-        { level: 3, name: 'Century Trader', need: 100, desc: 'Logged 100 trades' },
-        { level: 4, name: 'Elite Trader', need: 500, desc: 'Logged 500 trades' }
+        { level: 1, name: 'Rising Trader', need: 25, desc: 'Logged 25 trades with discipline' },
+        { level: 2, name: 'Active Trader', need: 100, desc: 'Logged 100 trades with discipline' },
+        { level: 3, name: 'Century Trader', need: 250, desc: 'Logged 250 trades with discipline' },
+        { level: 4, name: 'Elite Trader', need: 1000, desc: 'Logged 1000 trades with discipline' }
       ],
       check: function (stats) { return stats.totalTrades; }
     },
     streak: {
       title: 'Consistency',
       levels: [
-        { level: 1, name: 'Consistent Week', need: 7, desc: '7-day journaling streak' },
-        { level: 2, name: 'Dedicated Month', need: 30, desc: '30-day journaling streak' },
-        { level: 3, name: 'Unstoppable', need: 100, desc: '100-day journaling streak' }
+        { level: 1, name: 'Consistent Fortnight', need: 14, desc: '14-day journaling streak' },
+        { level: 2, name: 'Dedicated Quarter', need: 90, desc: '90-day journaling streak' },
+        { level: 3, name: 'Unstoppable', need: 365, desc: '365-day journaling streak — a full year' }
       ],
       check: function (stats) { return stats.bestStreak; }
     },
     winrate: {
       title: 'Precision',
       levels: [
-        { level: 1, name: 'Sharp Shooter', need: 55, minTrades: 20, desc: '55%+ win rate over 20 trades' },
-        { level: 2, name: 'Precision Trader', need: 60, minTrades: 50, desc: '60%+ win rate over 50 trades' }
+        { level: 1, name: 'Sharp Shooter', need: 58, minTrades: 50, desc: '58%+ win rate over 50 trades' },
+        { level: 2, name: 'Precision Trader', need: 65, minTrades: 100, desc: '65%+ win rate over 100 trades' }
       ],
       check: function (stats, lvl) {
         if (stats.totalTrades < lvl.minTrades) return 0;
@@ -50,8 +50,8 @@
     profitfactor: {
       title: 'Edge',
       levels: [
-        { level: 1, name: 'Profitable', need: 1.5, minTrades: 30, desc: 'Profit factor 1.5+ over 30 trades' },
-        { level: 2, name: 'Elite Edge', need: 2.0, minTrades: 50, desc: 'Profit factor 2.0+ over 50 trades' }
+        { level: 1, name: 'Profitable', need: 1.8, minTrades: 50, desc: 'Profit factor 1.8+ over 50 trades' },
+        { level: 2, name: 'Elite Edge', need: 2.5, minTrades: 100, desc: 'Profit factor 2.5+ over 100 trades' }
       ],
       check: function (stats, lvl) {
         if (stats.totalTrades < lvl.minTrades) return 0;
@@ -96,7 +96,19 @@
         });
         if (!queue.length) return;
         (function next(i) {
-          if (i >= queue.length) { if (onNew) onNew(queue); return; }
+          if (i >= queue.length) {
+            /* send site notifications for new certificates */
+            queue.forEach(function (cert) {
+              PV.from('notifications').insert({
+                title: 'Achievement unlocked: ' + cert.title,
+                body: 'You earned the ' + cert.title + ' certificate (Level ' + cert.level + '). View it on your certificates page.',
+                type: 'achievement',
+                link: 'certificates.html'
+              }).catch(function () {});
+            });
+            if (onNew) onNew(queue);
+            return;
+          }
           PV.from('certificates').insert(queue[i]).then(function () { next(i + 1); })
             .catch(function () { next(i + 1); });
         })(0);
