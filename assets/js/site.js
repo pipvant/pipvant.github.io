@@ -47,6 +47,7 @@
       { href: up + 'tools/risk-calculator.html', label: 'Risk Calculator', icon: 'risk', match: ['risk-calculator.html'] },
       { href: up + 'pricing.html', label: 'Pricing', icon: 'pricing', match: ['pricing.html'] },
       { href: up + 'contact.html', label: 'Contact', icon: 'mail', match: ['contact.html'] },
+      { href: up + 'notifications.html', label: 'Notifications', icon: 'bell', match: ['notifications.html'] },
       { href: up + 'about.html', label: 'About', icon: 'about', match: ['about.html'] },
       { href: up + 'account.html', label: 'Account', icon: 'account', match: ['account.html'], auth: 'in' }
     ];
@@ -147,7 +148,7 @@
     var panel = document.createElement('div');
     panel.className = 'notif-panel'; panel.setAttribute('role', 'dialog');
     panel.setAttribute('aria-label', 'Notifications');
-    panel.innerHTML = '<div class="np-head"><span>Notifications</span></div>' +
+    panel.innerHTML = '<div class="np-head"><span>Notifications</span><a href="' + up + 'notifications.html" style="font-size:.78rem;color:var(--silver-2);font-weight:600">View all &rarr;</a></div>' +
       '<div class="np-body"><span class="np-ic">Notification</span>No notifications yet.<br>Stay tuned.</div>';
     document.body.appendChild(panel);
     function closeNotif() { panel.classList.remove('show'); }
