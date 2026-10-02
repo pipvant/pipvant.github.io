@@ -615,9 +615,47 @@
         }
       }).then(function () {
         closeModal(); return refresh();
+      }).then(function () {
+        checkCerts();
       }).catch(function (err) {
         alert(PV.friendly(err));
       }).then(function () { setBusy(false); });
     });
   });
+
+  /* ---------- certificates: check milestones after each save ---------- */
+  function checkCerts() {
+    if (!window.PVCerts || !window.PV || !window.PV.user) return;
+    var st = stats();
+    if (!st) return;
+    var days = {};
+    trades.forEach(function (t) {
+      var d = (t.date || t.created_at || '').slice(0, 10);
+      if (d) days[d] = 1;
+    });
+    var sorted = Object.keys(days).sort();
+    var best = 0, cur = 0, prev = null;
+    sorted.forEach(function (d) {
+      if (prev) {
+        var diff = (new Date(d) - new Date(prev)) / 86400000;
+        cur = (diff === 1) ? cur + 1 : 1;
+      } else { cur = 1; }
+      if (cur > best) best = cur;
+      prev = d;
+    });
+    var certStats = {
+      totalTrades: st.n,
+      winRate: st.wr * 100,
+      profitFactor: (st.pf === Infinity) ? 999 : st.pf,
+      bestStreak: best,
+      disciplinedTrades: function (maxRisk) {
+        return trades.filter(function (t) { return (t.riskR || 0) > 0 && t.riskR <= maxRisk; }).length;
+      }
+    };
+    window.PVCerts.check(certStats, function (earned) {
+      if (earned && earned.length) {
+        alert('New achievement unlocked: ' + earned[0].title + ' (Level ' + earned[0].level + ')! Check your Certificates tab.');
+      }
+    });
+  }
 })();
