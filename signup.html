@@ -100,7 +100,7 @@
       sessionStorage.removeItem('pv_next');
       if (n && /^[a-zA-Z0-9._\/-]+\.html(\?[a-zA-Z0-9._=&%-]*)?(#[a-zA-Z0-9._-]*)?$/.test(n)) return n;
     } catch (e) {}
-    return 'account.html';
+    return 'index.html?tour=1';
   }
   document.addEventListener('DOMContentLoaded', function () {
     PV.ready.then(function (user) { if (user) location.replace('account.html'); });
