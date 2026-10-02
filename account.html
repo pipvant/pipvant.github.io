@@ -142,7 +142,6 @@
         <!-- ======== TABS ======== -->
         <div class="prof-tabs pv2-rise" role="tablist" aria-label="Account sections" style="animation-delay:.5s">
           <button class="prof-tab on" id="tab-overview" role="tab" aria-selected="true" data-tab="overview">Overview</button>
-          <button class="prof-tab" id="tab-certs" role="tab" aria-selected="false" data-tab="certs">Certificates</button>
           <button class="prof-tab" id="tab-settings" role="tab" aria-selected="false" data-tab="settings">Settings</button>
           <span class="pv2-tabink" id="tab-ink" aria-hidden="true"></span>
         </div>
@@ -177,19 +176,6 @@
         </div>
 
         <!-- ======== SETTINGS ======== -->
-        <!-- ======== CERTIFICATES ======== -->
-        <div id="pane-certs" role="tabpanel" aria-labelledby="tab-certs" hidden>
-          <div class="pv2-sec">
-            <h3 style="font-family:var(--font-display);font-size:1.4rem;color:var(--silver-2);margin-bottom:6px">Achievement Certificates</h3>
-            <p class="micro" style="margin-bottom:20px">Earned from your journal milestones. Each certificate has a QR code for public verification.</p>
-            <div id="certs-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px"></div>
-            <div id="certs-empty" class="empty" style="display:none">
-              <h3>No certificates yet</h3>
-              <p>Log trades in your journal to earn achievement certificates.</p>
-              <a class="btn btn-silver btn-sm" href="tools/journal.html" style="margin-top:12px">Open Journal</a>
-            </div>
-          </div>
-        </div>
         <div id="pane-settings" role="tabpanel" aria-labelledby="tab-settings" hidden>
           <div class="grid-2" style="align-items:start;margin-top:22px">
             <div>
@@ -333,7 +319,6 @@
 <script src="assets/js/supabase.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="assets/js/certificates.js"></script>
-<script src="assets/js/certificates-ui.js"></script>
 <script src="assets/js/leaderboard.js"></script>
 <script src="assets/js/firms.js"></script>
 <script src="assets/js/site.js"></script>
@@ -535,9 +520,9 @@
       }
     });
     document.getElementById('pane-overview').hidden = which !== 'overview';
-    document.getElementById('pane-certs').hidden = which !== 'certs';
+
     document.getElementById('pane-settings').hidden = which !== 'settings';
-    if (which === 'certs' && window.PVCertsUI) window.PVCertsUI.load();
+
   }
   function initTabs() {
     if (location.hash === '#certs') {

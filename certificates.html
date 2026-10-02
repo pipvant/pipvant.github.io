@@ -126,13 +126,10 @@
       <a class="btn btn-silver" href="login.html">Sign in</a>
     </div>
     <div id="certs-content" style="display:none">
-      <div class="certs-section-title">Your earned certificates</div>
+      <div class="certs-section-title">Earned</div>
       <div class="certs-grid" id="certs-earned"></div>
-      <div id="certs-empty" class="empty" style="display:none;text-align:center;padding:40px 0">
-        <h3 style="font-family:var(--font-display);color:var(--silver-2);font-size:1.4rem;margin-bottom:10px">No certificates yet</h3>
-        <p class="micro" style="margin-bottom:20px">Log trades in your journal to earn achievement certificates.</p>
-        <a class="btn btn-silver btn-sm" href="tools/journal.html">Open Journal</a>
-      </div>
+      <div class="certs-section-title">Locked — keep going</div>
+      <div class="certs-grid" id="certs-locked"></div>
     </div>
   </div>
 </main>
@@ -233,17 +230,15 @@
 
   function render(earned, stats) {
     var eg = document.getElementById('certs-earned');
-    var emptyEl = document.getElementById('certs-empty');
+    var lg = document.getElementById('certs-locked');
     document.getElementById('st-earned').textContent = earned.length;
     var maxLvl = 0;
     earned.forEach(function (c) { if (c.level > maxLvl) maxLvl = c.level; });
     document.getElementById('st-level').textContent = maxLvl ? 'L' + maxLvl : '—';
 
     if (!earned.length) {
-      eg.innerHTML = '';
-      if (emptyEl) emptyEl.style.display = '';
+      eg.innerHTML = '<p class="micro" style="grid-column:1/-1;text-align:center;padding:20px">No certificates yet — log trades in your journal to earn your first one.</p>';
     } else {
-      if (emptyEl) emptyEl.style.display = 'none';
       eg.innerHTML = earned.map(earnedCard).join('');
       earned.forEach(function (c, i) {
         var el = document.getElementById('qr-' + i);
@@ -255,6 +250,31 @@
         }
       });
     }
+
+    /* locked: show next level per type */
+    var defs = window.PVCerts ? window.PVCerts.definitions : {};
+    var earnedSet = {};
+    earned.forEach(function (c) { earnedSet[c.type + '-' + c.level] = 1; });
+    var locked = [];
+    Object.keys(defs).forEach(function (type) {
+      var def = defs[type];
+      for (var i = 0; i < def.levels.length; i++) {
+        var lvl = def.levels[i];
+        if (!earnedSet[type + '-' + lvl.level]) {
+          var val = 0, label = '';
+          if (stats) {
+            try { val = def.check(stats, lvl); } catch (e) { val = 0; }
+            if (typeof lvl.need === 'number') {
+              if (lvl.need < 10) label = val.toFixed(1) + ' / ' + lvl.need;
+              else label = Math.floor(val) + ' / ' + lvl.need;
+            }
+          }
+          locked.push(lockedCard(def, lvl, lvl.need ? val / lvl.need : 0, label || lvl.desc));
+          break;
+        }
+      }
+    });
+    lg.innerHTML = locked.join('') || '<p class="micro">All certificates earned! 🏆</p>';
   }
 
   function init() {
