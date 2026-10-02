@@ -1132,15 +1132,21 @@ table.matrix { width: 100%; border-collapse: collapse; min-width: 600px; font-si
 .pv2-greet { color: var(--silver); font-size: .92rem; margin-top: 4px; font-weight: 500; }
 .pv2-id .prof-handle { margin-top: 2px; }
 .pv2-id .prof-meta { margin-top: 10px; }
+.pv2-id .prof-meta { justify-content: center; }
 .pv2-id #p-since {
   font-family: var(--font-display); font-style: italic; font-size: 1rem;
   color: var(--silver); letter-spacing: .02em;
-  display: inline-flex; align-items: center; gap: 8px;
+  display: inline-flex; align-items: center; gap: 10px;
+}
+.pv2-id #p-since::before,
+.pv2-id #p-since::after {
+  content: ""; width: 32px; height: 1px; display: inline-block;
 }
 .pv2-id #p-since::before {
-  content: ""; width: 24px; height: 1px;
   background: linear-gradient(90deg, transparent, var(--steel));
-  display: inline-block;
+}
+.pv2-id #p-since::after {
+  background: linear-gradient(90deg, var(--steel), transparent);
 }
 
 /* ---- glass stats ---- */
