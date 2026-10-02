@@ -67,53 +67,29 @@
     return s;
   }
 
+  /* Server-side trusted issuance: the database computes stats from
+     journal_entries and awards only genuinely earned certificates. */
   function checkAchievements(stats, onNew) {
     var PV = window.PV;
-    if (!PV || !PV.user || !PV.from) return;
-    var uid = PV.user.id;
-
-    PV.from('certificates').select('type,level').eq('user_id', uid)
-      .then(function (res) {
-        var earned = {};
-        (res.data || []).forEach(function (c) { earned[c.type + '-' + c.level] = 1; });
-        var queue = [];
-        Object.keys(ACHIEVEMENTS).forEach(function (type) {
-          var def = ACHIEVEMENTS[type];
-          def.levels.forEach(function (lvl) {
-            if (earned[type + '-' + lvl.level]) return;
-            var val = def.check(stats, lvl);
-            if (val >= lvl.need) {
-              queue.push({
-                user_id: uid,
-                type: type,
-                level: lvl.level,
-                title: lvl.name,
-                description: lvl.desc,
-                verify_code: genCode()
-              });
-            }
-          });
-        });
-        if (!queue.length) return;
-        (function next(i) {
-          if (i >= queue.length) {
-            /* send site notifications for new certificates */
-            queue.forEach(function (cert) {
-              PV.from('notifications').insert({
-                title: 'Achievement unlocked: ' + cert.title,
-                body: 'You earned the ' + cert.title + ' certificate (Level ' + cert.level + '). View it on your certificates page.',
-                type: 'achievement',
-                link: 'certificates.html'
-              }).catch(function () {});
-            });
-            if (onNew) onNew(queue);
-            return;
-          }
-          PV.from('certificates').insert(queue[i]).then(function () { next(i + 1); })
-            .catch(function () { next(i + 1); });
-        })(0);
-      })
-      .catch(function () {});
+    if (!PV || !PV.user || !PV.client) return;
+    PV.client.rpc('award_certificates').then(function (res) {
+      if (res.error) return;
+      var fresh = (res.data || []).filter(function (c) { return c.is_new; });
+      if (!fresh.length) return;
+      /* send site notifications for new certificates */
+      fresh.forEach(function (cert) {
+        PV.from('notifications').insert({
+          user_id: PV.user.id,
+          title: 'Achievement unlocked: ' + cert.ctitle,
+          body: 'You earned the ' + cert.ctitle + ' certificate (Level ' + cert.clevel + '). View it on your certificates page.',
+          type: 'feature',
+          link: 'certificates.html'
+        }).catch(function () {});
+      });
+      if (onNew) onNew(fresh.map(function (c) {
+        return { type: c.ctype, level: c.clevel, title: c.ctitle };
+      }));
+    }).catch(function () {});
   }
 
   window.PVCerts = {

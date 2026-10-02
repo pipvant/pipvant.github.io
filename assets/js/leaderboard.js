@@ -28,28 +28,12 @@
     return Math.round(pf * 0.40 + wr * 0.25 + ar * 0.20 + vol * 0.15);
   }
 
-  /* Sync the current user's leaderboard entry (only if opted in) */
+  /* Server-side trusted scoring: the database computes the score from
+     journal_entries. Users cannot fake their rank via console. */
   function syncEntry(stats, profile) {
     var PV = window.PV;
-    if (!PV || !PV.user || !PV.from) return Promise.resolve();
-    if (!profile || !profile.leaderboard_opt_in) {
-      /* user opted out: remove their entry */
-      return PV.from('leaderboard').delete().eq('user_id', PV.user.id).then(function () {});
-    }
-    var score = computeScore(stats);
-    if (score <= 0) return Promise.resolve();
-    var entry = {
-      user_id: PV.user.id,
-      display_name: profile.display_name || 'Anonymous Trader',
-      avatar_url: profile.avatar_url || null,
-      score: score,
-      total_trades: stats.n,
-      win_rate: Math.round(stats.wr * 1000) / 10,
-      profit_factor: stats.pf === Infinity ? 99.9 : Math.round(stats.pf * 100) / 100,
-      avg_r: Math.round(stats.avgR * 100) / 100,
-      updated_at: new Date().toISOString()
-    };
-    return PV.from('leaderboard').upsert(entry, { onConflict: 'user_id' }).then(function () {});
+    if (!PV || !PV.user || !PV.client) return Promise.resolve();
+    return PV.client.rpc('sync_leaderboard').then(function () {}).catch(function () {});
   }
 
   /* Load the public leaderboard, sorted by score */
