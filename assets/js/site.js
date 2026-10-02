@@ -17,7 +17,16 @@
 
 
   // --- smooth anchor scroll ---
-  function initAnchors() {  // --- mobile nav: slide-out drawer + notifications bell ---
+  function initAnchors() {
+    document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        var t = document.querySelector(a.getAttribute('href'));
+        if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
+      });
+    });
+  }
+
+  // --- mobile nav: slide-out drawer + notifications bell ---
   var ICONS = {
     matcher: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/><circle cx="9" cy="7" r="2.2"/><circle cx="15" cy="12" r="2.2"/><circle cx="8" cy="17" r="2.2"/></svg>',
     journal: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3.5h9l4 4V20.5H6z"/><path d="M15 3.5V8h4"/><path d="M9 13h6M9 16.5h6"/></svg>',
@@ -138,13 +147,6 @@
     if (nav) nav.querySelectorAll('a').forEach(function (a) {
       var href = a.getAttribute('href') || '';
       if (href.endsWith(page)) a.classList.add('active');
-    });
-  }
-    document.querySelectorAll('a[href^="#"]').forEach(function (a) {
-      a.addEventListener('click', function (e) {
-        var t = document.querySelector(a.getAttribute('href'));
-        if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
-      });
     });
   }
 
