@@ -264,9 +264,9 @@
     if (!sizes.length) return '';
     var chips = sizes.map(function (s) {
       var hl = (state.size !== 'any' && String(s.sizeUsd) === state.size) ? ' style="border-color:var(--silver-2);color:#fff"' : '';
-      return '<span class="size-chip"' + hl + '>' + esc(s.label) + ' · ' + esc(s.priceDisplay) + '</span>';
+      return '<button type="button" class="size-chip size-chip-btn" data-firm="' + esc(p.firmId) + '" data-size="' + esc(String(s.sizeUsd)) + '"' + hl + '>' + esc(s.label) + ' · ' + esc(s.priceDisplay) + '</button>';
     }).join('');
-    return '<div class="size-chips"><span class="size-chips-label">Account sizes</span><div class="size-chips-row">' + chips + '</div></div>';
+    return '<div class="size-chips"><span class="size-chips-label">Account sizes — tap for details</span><div class="size-chips-row">' + chips + '</div></div>';
   }
 
   function card(p, i) {
@@ -321,6 +321,9 @@
       b.addEventListener('click', function () { toggleWatch(b); });
     });
     box.querySelectorAll('.detail-btn').forEach(function (b) {
+      b.addEventListener('click', function () { openFirmModal(b.getAttribute('data-firm')); });
+    });
+    box.querySelectorAll('.size-chip-btn').forEach(function (b) {
       b.addEventListener('click', function () { openFirmModal(b.getAttribute('data-firm')); });
     });
     paintWatchButtons();

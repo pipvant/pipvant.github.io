@@ -62,16 +62,27 @@
     if (!body) return;
     body.style.textAlign = 'left';
     body.style.padding = '8px';
+    var TYPE_COLORS = {
+      update: 'color:#8fb8ff;border-color:rgba(143,184,255,.35);background:rgba(143,184,255,.08)',
+      feature: 'color:#a8e6b8;border-color:rgba(168,230,184,.35);background:rgba(168,230,184,.08)',
+      important: 'color:#ffb8b8;border-color:rgba(255,184,184,.35);background:rgba(255,184,184,.08)'
+    };
+    var TYPE_EMOJI = { update: '🔄', feature: '✨', important: '⚠️' };
     body.innerHTML = items.map(function (n) {
       var lb = TYPE_LABEL[n.type] || 'Notice';
       var tag = TYPE_ICON[n.type] || 'INFO';
+      var tc = TYPE_COLORS[n.type] || 'color:var(--silver-2);border-color:var(--line);background:rgba(205,213,228,.06)';
+      var em = TYPE_EMOJI[n.type] || '📌';
       var inner =
-        '<div style="display:flex;gap:12px;padding:12px;border-radius:12px">' +
-        '<span style="font-size:.68rem;font-weight:800;letter-spacing:.08em;flex-shrink:0;color:var(--silver-2);border:1px solid var(--line);border-radius:8px;padding:4px 8px;height:fit-content">' + tag + '</span>' +
-        '<div style="min-width:0">' +
-        '<div style="font-weight:700;color:var(--silver-2);font-size:.9rem">' + esc(n.title) + '</div>' +
-        '<div style="font-size:.82rem;color:var(--ink-2);margin-top:4px;line-height:1.5">' + esc(n.body) + '</div>' +
-        '<div style="font-size:.7rem;color:var(--ink-3);margin-top:6px">' + lb + ' - ' + timeAgo(n.created_at) + '</div>' +
+        '<div style="display:flex;gap:14px;padding:16px 14px;border-radius:16px;margin:6px;position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(205,213,228,.04),transparent);border:1px solid transparent;transition:border-color .2s">' +
+        '<span style="font-size:1.3rem;flex-shrink:0;filter:drop-shadow(0 2px 8px rgba(0,0,0,.4))">' + em + '</span>' +
+        '<div style="min-width:0;flex:1">' +
+        '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">' +
+        '<span style="font-size:.62rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;border:1px solid;border-radius:999px;padding:3px 10px;' + tc + '">' + tag + '</span>' +
+        '<span style="font-size:.68rem;color:var(--ink-3)">' + timeAgo(n.created_at) + '</span>' +
+        '</div>' +
+        '<div style="font-weight:700;color:#fff;font-size:.95rem;margin-top:8px;line-height:1.4">' + esc(n.title) + '</div>' +
+        '<div style="font-size:.84rem;color:var(--ink-2);margin-top:6px;line-height:1.6">' + esc(n.body) + '</div>' +
         '</div></div>';
       var wrap = n.link
         ? '<a data-notif="' + n.id + '" href="' + esc(n.link) + '" style="display:block;border-radius:12px">' + inner + '</a>'
@@ -79,7 +90,7 @@
       return wrap + '<div style="height:1px;background:var(--line-soft);margin:0 12px"></div>';
     }).join('');
     var st = document.createElement('style');
-    st.textContent = '.notif-panel [data-notif]:hover { background: rgba(205,213,228,.06); }';
+    st.textContent = '.notif-panel [data-notif]:hover > div { border-color: #3d4f75 !important; background: linear-gradient(135deg, rgba(205,213,228,.08), transparent) !important; }';
     document.head.appendChild(st);
   }
   function esc(s) {

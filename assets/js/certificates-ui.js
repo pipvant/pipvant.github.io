@@ -42,8 +42,8 @@
             '<p style="font-family:ui-monospace,monospace;font-size:.7rem;letter-spacing:.12em;color:var(--ink-3)">' + esc(c.verify_code) + '</p>' +
             '<p class="micro" style="margin-top:4px">' + d + '</p>' +
             '<div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--line-soft)">' +
-              '<div style="font-family:Georgia,serif;font-style:italic;font-size:1.15rem;color:var(--silver-2)">Saifeddine Ben Iaich</div>' +
-              '<div style="font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3)">Founder, PIPVANT</div>' +
+              '<img src="assets/img/signature.png" alt="Founder signature" style="height:38px;max-width:150px;object-fit:contain;filter:drop-shadow(0 0 8px rgba(205,213,228,.3))">' +
+              '<div style="font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3);margin-top:4px">Founder, PIPVANT</div>' +
             '</div>' +
           '</div>';
         }).join('');
