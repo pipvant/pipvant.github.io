@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Orovanta — PIPVANT</title>
+<meta name="description" content="Orovanta builds professional trading tools. PIPVANT is our flagship platform: tools, not signals.">
+<!-- PIPVANT-SEO -->
+<meta name="theme-color" content="#060a14">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="assets/img/icon-192.png">
+<link rel="canonical" href="https://pipvant.github.io/contact.html">
+<meta property="og:title" content="About Orovanta — PIPVANT">
+<meta property="og:description" content="Orovanta builds professional trading tools. PIPVANT is our flagship platform: tools, not signals.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://pipvant.github.io/contact.html">
+<meta property="og:image" content="https://pipvant.github.io/assets/img/logo.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="About Orovanta — PIPVANT">
+<meta name="twitter:description" content="Orovanta builds professional trading tools. PIPVANT is our flagship platform: tools, not signals.">
+<!-- /PIPVANT-SEO -->
+
+<link rel="icon" type="image/png" href="assets/img/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap nav">
+    <a class="brand" href="index.html"><img src="assets/img/logo.png" alt="PIPVANT logo"><span class="wordcol"><span class="word">PIP<b>VANT</b></span><span class="byline">by Orovanta</span></span></a>
+    <button class="nav-toggle" aria-expanded="false" aria-label="Menu">☰</button>
+    <ul class="nav-links">
+      <li><a href="tools/matcher.html">Prop Firm Matcher</a></li>
+      <li><a href="tools/journal.html">Journal</a></li>
+      <li><a href="tools/risk-calculator.html">Risk Calculator</a></li>
+      <li><a href="pricing.html">Pricing</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li data-auth="out"><a href="login.html">Log in</a></li>
+      <li data-auth="out"><a class="btn btn-silver btn-sm" href="signup.html">Sign up free</a></li>
+      <li data-auth="in" hidden><a href="account.html">Account</a></li>
+      <li data-auth="in" hidden><a href="#" data-logout>Log out</a></li>
+    </ul>
+  </div>
+</header>
+
+<main>
+  <section class="tool-head">
+    <div class="wrap">
+      <p class="eyebrow"><span data-brand="launchline">PIPVANT — launched by Orovanta</span></p>
+      <h1>Contact <span class="silver-text">us</span></h1>
+      <p class="lead">Something not working? Have a question? Send us a message — we read everything.</p>
+    </div>
+  </section>
+
+  <section class="block tight-top">
+    <div class="wrap" style="max-width:640px">
+      <div class="card" style="padding:32px 28px;margin-bottom:24px">
+        <div class="form-err" id="c-err" role="alert" style="display:none"></div>
+        <div class="form-ok" id="c-ok" style="display:none">Message sent ✓ We'll get back to you soon.</div>
+        <form id="contact-form">
+          <div class="field"><label for="c-name">Your name</label>
+            <input type="text" id="c-name" maxlength="80" required placeholder="e.g. Sifeddine"></div>
+          <div class="field"><label for="c-email">Email address</label>
+            <input type="email" id="c-email" maxlength="120" required placeholder="you@example.com"></div>
+          <div class="field"><label for="c-subject">Subject</label>
+            <select id="c-subject" required>
+              <option value="support">Technical issue</option>
+              <option value="account">Account help</option>
+              <option value="feature">Feature request</option>
+              <option value="other">Something else</option>
+            </select></div>
+          <div class="field"><label for="c-msg">Message</label>
+            <textarea id="c-msg" rows="5" maxlength="2000" required placeholder="Describe your issue or question..."></textarea></div>
+          <button class="btn btn-silver" type="submit" id="c-btn">Send message</button>
+        </form>
+      </div>
+      <div class="card" style="padding:24px;text-align:center">
+        <p class="eyebrow" style="margin-bottom:8px">Prefer email?</p>
+        <a href="mailto:beniaichsifeddine@gmail.com" style="font-size:1.1rem;color:var(--silver-2);font-weight:600">beniaichsifeddine@gmail.com</a>
+        <p class="micro" style="margin-top:8px">We usually reply within 24 hours.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+
+
+<script src="assets/js/config.js"></script>
+<script src="assets/js/sb-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="assets/js/supabase.js"></script>
+<script src="assets/js/site.js"></script>
+<script src="assets/js/notifications.js"></script>
+<script src="assets/js/fx.js"></script>
+<script>
+(function () {
+  PV.ready.then(function () {
+    var form = document.getElementById('contact-form');
+    if (!form) return;
+    // Pre-fill if logged in
+    if (PV.user && PV.user.email) document.getElementById('c-email').value = PV.user.email;
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var btn = document.getElementById('c-btn');
+      var err = document.getElementById('c-err'), ok = document.getElementById('c-ok');
+      err.style.display = 'none'; ok.style.display = 'none';
+      btn.disabled = true; btn.textContent = 'Sending...';
+      var data = {
+        name: document.getElementById('c-name').value.trim(),
+        email: document.getElementById('c-email').value.trim(),
+        subject: document.getElementById('c-subject').value,
+        message: document.getElementById('c-msg').value.trim(),
+        user_id: PV.user ? PV.user.id : null
+      };
+      PV.from('contact_messages').insert(data).then(function (res) {
+        btn.disabled = false; btn.textContent = 'Send message';
+        if (res.error) { err.textContent = 'Could not send. Please try again or email us directly.'; err.style.display = ''; return; }
+        ok.style.display = ''; form.reset();
+        if (PV.user && PV.user.email) document.getElementById('c-email').value = PV.user.email;
+      }).catch(function () {
+        btn.disabled = false; btn.textContent = 'Send message';
+        err.textContent = 'Could not send. Please try again or email us directly.'; err.style.display = '';
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>

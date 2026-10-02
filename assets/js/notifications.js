@@ -20,7 +20,7 @@
     var panel = document.querySelector('.notif-panel');
     if (!bell || !panel) return;
     PV.from('notifications')
-      .select('id,title,body,type,link,created_at')
+      .select('id,title,body,type,link,created_at,user_id')
       .order('created_at', { ascending: false })
       .limit(20)
       .then(function (res) {
@@ -89,11 +89,25 @@
         '<div style="font-weight:700;color:#fff;font-size:.95rem;margin-top:8px;line-height:1.4">' + esc(n.title) + '</div>' +
         '<div style="font-size:.84rem;color:var(--ink-2);margin-top:6px;line-height:1.6">' + esc(n.body) + '</div>' +
         '</div></div>';
-      var wrap = n.link
-        ? '<a data-notif="' + n.id + '" href="' + esc(n.link) + '" style="display:block;border-radius:12px">' + inner + '</a>'
-        : '<div data-notif="' + n.id + '">' + inner + '</div>';
+      var expandBtn = '<button type="button" class="notif-expand" data-expand="' + n.id + '" style="margin-top:10px;background:none;border:1px solid var(--line);color:var(--silver-2);border-radius:8px;padding:6px 14px;font-size:.76rem;cursor:pointer;font-weight:600">Read more</button>';
+      var fullBody = '<div class="notif-full" id="notif-full-' + n.id + '" style="display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--line-soft);font-size:.84rem;color:var(--ink-2);line-height:1.7">' + esc(n.body) + (n.link ? '<br><a href="' + esc(n.link) + '" style="color:var(--silver-2);font-weight:600;display:inline-block;margin-top:8px">Open →</a>' : '') + '</div>';
+      // Update inner to include expand
+      inner = inner.replace('</div></div>', expandBtn + fullBody + '</div></div>');
+      var wrap = '<div data-notif="' + n.id + '" style="display:block;border-radius:12px;cursor:pointer">' + inner + '</div>';
       return wrap + '<div style="height:1px;background:var(--line-soft);margin:0 12px"></div>';
     }).join('');
+    // Expand/collapse on click
+    body.querySelectorAll('[data-expand]').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var id = btn.getAttribute('data-expand');
+        var full = document.getElementById('notif-full-' + id);
+        if (!full) return;
+        var open = full.style.display !== 'none';
+        full.style.display = open ? 'none' : '';
+        btn.textContent = open ? 'Read more' : 'Show less';
+      });
+    });
     var st = document.createElement('style');
     st.textContent = '.notif-panel [data-notif]:hover > div { border-color: #3d4f75 !important; background: linear-gradient(135deg, rgba(205,213,228,.08), transparent) !important; }';
     document.head.appendChild(st);

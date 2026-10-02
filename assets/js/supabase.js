@@ -128,8 +128,31 @@
       loadPlan().then(function () {
         PV.paintNav();
         PV._cbs.forEach(function (cb) { try { cb(PV.user, _evt); } catch (e) {} });
+        if (PV.user && (_evt === 'SIGNED_IN' || _evt === 'INITIAL_SESSION')) ensureWelcome(PV.user);
       });
     });
+
+    /* Beautiful welcome notification for new users (once) */
+    function ensureWelcome(user) {
+      try {
+        var created = new Date(user.created_at).getTime();
+        if (Date.now() - created > 7 * 864e5) return; // only for new accounts
+        PV.from('notifications').select('id').eq('user_id', user.id).limit(1).then(function (r) {
+          if ((r.data || []).length) return; // already has notifications
+          // Check for existing welcome to avoid duplicates
+          PV.from('notifications').select('id').eq('user_id', user.id).eq('type', 'feature').ilike('title', '%welcome%').limit(1).then(function (r2) {
+            if ((r2.data || []).length) return;
+            PV.from('notifications').insert({
+              user_id: user.id,
+              type: 'feature',
+              title: 'Welcome to PIPVANT',
+              body: 'Your trading command center is ready. Start with your journal — log trades to earn achievement certificates, compare prop firms to find your perfect match, and calculate risk like a professional. Tap to explore.',
+              link: 'tools/journal.html'
+            }).then(function () {});
+          }).catch(function () {});
+        }).catch(function () {});
+      } catch (e) {}
+    }
 
     PV.signUp = function (email, pw) { return PV.client.auth.signUp({ email: email, password: pw }); };
     PV.signIn = function (email, pw) { return PV.client.auth.signInWithPassword({ email: email, password: pw }); };
