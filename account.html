@@ -30,10 +30,7 @@
 
 <header class="site">
   <div class="wrap nav">
-    <a class="brand" href="index.html">
-      <img src="assets/img/logo.png" alt="Orovanta logo">
-      <span class="word">Oro<b>vanta</b></span>
-    </a>
+    <a class="brand" href="index.html"><img src="assets/img/logo.png" alt="PIPVANT logo"><span class="wordcol"><span class="word">PIP<b>VANT</b></span><span class="byline">by Orovanta</span></span></a>
     <button class="nav-toggle" aria-expanded="false" aria-label="Menu">☰</button>
     <ul class="nav-links">
       <li><a href="tools/matcher.html">Prop Firm Matcher</a></li>
@@ -92,7 +89,9 @@
               <span id="p-since">—</span>
               <span class="prof-dot" aria-hidden="true">·</span>
               <span class="plan-badge" id="p-plan">FREE</span>
-              <a href="pricing.html" id="p-pro-link" class="prof-pro-link">Compare Pro →</a>
+            </div>
+            <div class="pv2-planrow">
+              <a href="pricing.html" id="p-plans-btn" class="btn btn-plat-outline btn-sm">View plans</a>
             </div>
           </div>
         </div>
@@ -297,45 +296,10 @@
   </div>
 </div>
 
-<footer class="site">
-  <div class="wrap">
-    <div class="foot-grid">
-      <div>
-        <a class="brand" href="index.html">
-          <img src="assets/img/logo.png" alt="Orovanta logo">
-          <span class="word">Oro<b>vanta</b></span>
-        </a>
-        <p class="launchline"><span data-brand="launchline">PIPVANT — launched by Orovanta</span></p>
-        <p class="micro">Professional trading tools for serious traders.<br><span data-brand="tagline">The Platinum Edge</span>.</p>
-      </div>
-      <div>
-        <h4>Tools</h4>
-        <ul>
-          <li><a href="tools/matcher.html">Prop Firm Matcher</a></li>
-          <li><a href="tools/journal.html">Trading Journal</a></li>
-          <li><a href="tools/risk-calculator.html">Risk Calculator</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Company</h4>
-        <ul>
-          <li><a href="pricing.html">Pricing</a></li>
-          <li><a href="about.html">About</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Legal</h4>
-        <ul>
-          <li><a href="legal/affiliate-disclosure.html">Affiliate Disclosure</a></li>
-          <li><a href="legal/privacy.html">Privacy</a></li>
-          <li><a href="legal/terms.html">Terms</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="foot-bottom">
-      <span>© <span data-brand="year">2026</span> <span data-brand="company">Orovanta</span>. All rights reserved.</span>
-      <span>Orovanta provides software tools, not financial advice.</span>
-    </div>
+<footer class="site slim">
+  <div class="wrap foot-slim">
+    <span>&copy; <span data-brand="year">2026</span> <span data-brand="company">Orovanta</span> &middot; <a href="legal/privacy.html">Privacy</a> &middot; <a href="legal/terms.html">Terms</a> &middot; <a href="legal/affiliate-disclosure.html">Affiliate Disclosure</a></span>
+    <span class="micro">Software tools, not financial advice.</span>
   </div>
 </footer>
 
@@ -620,10 +584,10 @@
       document.getElementById('p-since').textContent = 'Member since ' + since;
       document.getElementById('a-email').textContent = email;
 
-      var badge = document.getElementById('p-plan');
-      badge.textContent = plan === 'pro' ? 'PRO' : 'FREE';
-      badge.classList.toggle('is-pro', plan === 'pro');
-      document.getElementById('p-pro-link').style.display = plan === 'pro' ? 'none' : '';
+      document.getElementById('p-plan').textContent = plan === 'pro' ? 'PRO' : 'FREE';
+      document.getElementById('p-plan').classList.toggle('is-pro', plan === 'pro');
+      var plansBtn = document.getElementById('p-plans-btn');
+      plansBtn.textContent = plan === 'pro' ? 'Manage subscription' : 'View plans';
 
       document.getElementById('pf-name').value = name;
       document.getElementById('pf-country').value = prof.country || '';
