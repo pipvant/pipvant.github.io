@@ -80,6 +80,7 @@
 <script src="assets/js/sb-config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="assets/js/supabase.js"></script>
+<script src="assets/js/error-track.js"></script>
 <script src="assets/js/site.js"></script>
 <script src="assets/js/notifications.js"></script>
 <script src="assets/js/fx.js"></script>
@@ -111,6 +112,14 @@
     if (s < 604800) return Math.floor(s / 86400) + 'd ago';
     return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   }
+  function safeLink(url) {
+    if (!url || typeof url !== 'string') return '';
+    var u = url.trim();
+    // Only allow http(s) links or site-relative paths — block javascript:, data:, etc.
+    if (/^https?:\/\//i.test(u)) return u;
+    if (u.charAt(0) === '/' && u.charAt(1) !== '/') return u;
+    return '';
+  }
   function card(n, i) {
     var tc = TYPE_COLORS[n.type] || 'color:var(--silver-2);border-color:var(--line)';
     var svg = TYPE_SVG[n.type] || TYPE_SVG.update;
@@ -126,7 +135,7 @@
           '</div>' +
           '<h3 style="font-size:1.05rem;color:#fff;margin:0 0 8px">' + esc(n.title) + '</h3>' +
           '<p style="margin:0">' + esc(n.body) + '</p>' +
-          (n.link ? '<a href="' + esc(n.link) + '" class="btn btn-ghost btn-sm" style="margin-top:12px">Open &rarr;</a>' : '') +
+          (safeLink(n.link) ? '<a href="' + esc(safeLink(n.link)) + '" class="btn btn-ghost btn-sm" style="margin-top:12px">Open &rarr;</a>' : '') +
         '</div>' +
       '</div>' +
     '</article>';

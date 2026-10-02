@@ -93,6 +93,7 @@
 <script src="assets/js/sb-config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="assets/js/supabase.js"></script>
+<script src="assets/js/error-track.js"></script>
 <script src="assets/js/site.js"></script>
 <script src="assets/js/notifications.js"></script>
 <script src="assets/js/fx.js"></script>
@@ -108,6 +109,15 @@
       var btn = document.getElementById('c-btn');
       var err = document.getElementById('c-err'), ok = document.getElementById('c-ok');
       err.style.display = 'none'; ok.style.display = 'none';
+      // Client-side rate limit: max 3 messages per hour per browser
+      try {
+        var key = 'pv_contact_ts';
+        var now = Date.now();
+        var stamps = JSON.parse(localStorage.getItem(key) || '[]').filter(function (t) { return now - t < 3600000; });
+        if (stamps.length >= 3) { err.textContent = 'Too many messages. Please wait a while before sending another.'; err.style.display = ''; return; }
+        stamps.push(now);
+        localStorage.setItem(key, JSON.stringify(stamps));
+      } catch (ex) {}
       btn.disabled = true; btn.textContent = 'Sending...';
       var data = {
         name: document.getElementById('c-name').value.trim(),

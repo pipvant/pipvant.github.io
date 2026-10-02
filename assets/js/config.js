@@ -11,6 +11,6 @@ window.OROVANTA = {
   platform: 'PIPVANT',
   launchline: 'PIPVANT — launched by Orovanta',
   tagline: 'The Platinum Edge',
-  supportEmail: 'hello@orovanta.com',
+  supportEmail: 'beniaichsifeddine@gmail.com',
   dataVerified: '2026-10-02'
 };
