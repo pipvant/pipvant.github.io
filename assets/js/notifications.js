@@ -67,15 +67,20 @@
       feature: 'color:#a8e6b8;border-color:rgba(168,230,184,.35);background:rgba(168,230,184,.08)',
       important: 'color:#ffb8b8;border-color:rgba(255,184,184,.35);background:rgba(255,184,184,.08)'
     };
-    var TYPE_EMOJI = { update: '🔄', feature: '✨', important: '⚠️' };
+    var TYPE_SVG = {
+      update: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#8fb8ff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>',
+      feature: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#a8e6b8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9z"/></svg>',
+      important: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#ffb8b8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3L2 20h20z"/><path d="M12 10v4"/><circle cx="12" cy="17" r=".5" fill="#ffb8b8"/></svg>'
+    };
+    var DEFAULT_SVG = '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#cdd5e4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><circle cx="12" cy="8" r=".5" fill="#cdd5e4"/></svg>';
     body.innerHTML = items.map(function (n) {
       var lb = TYPE_LABEL[n.type] || 'Notice';
       var tag = TYPE_ICON[n.type] || 'INFO';
       var tc = TYPE_COLORS[n.type] || 'color:var(--silver-2);border-color:var(--line);background:rgba(205,213,228,.06)';
-      var em = TYPE_EMOJI[n.type] || '📌';
+      var em = TYPE_SVG[n.type] || DEFAULT_SVG;
       var inner =
         '<div style="display:flex;gap:14px;padding:16px 14px;border-radius:16px;margin:6px;position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(205,213,228,.04),transparent);border:1px solid transparent;transition:border-color .2s">' +
-        '<span style="font-size:1.3rem;flex-shrink:0;filter:drop-shadow(0 2px 8px rgba(0,0,0,.4))">' + em + '</span>' +
+        '<span style="flex-shrink:0;display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:12px;background:rgba(205,213,228,.06);border:1px solid rgba(205,213,228,.12)">' + em + '</span>' +
         '<div style="min-width:0;flex:1">' +
         '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">' +
         '<span style="font-size:.62rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;border:1px solid;border-radius:999px;padding:3px 10px;' + tc + '">' + tag + '</span>' +
