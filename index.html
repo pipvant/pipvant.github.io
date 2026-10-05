@@ -559,6 +559,17 @@
       .matcher-list-head{flex-wrap:wrap}
       .matcher-list-head>div:first-child{flex:1 0 100%;min-width:0}
       .notification-panel{right:0;width:min(330px,calc(100vw - 16px))}
+      /* Firm cards mobile fix: prevent name overlap */
+      .firm-expand{grid-template-columns:28px 40px minmax(0,1fr) 24px;gap:10px;padding:14px 12px;min-height:0}
+      .firm-name{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+      .firm-topline{min-width:0;overflow:hidden}
+      .firm-core{min-width:0;overflow:hidden}
+      .meta-pills{flex-wrap:wrap;gap:6px}
+      .meta-pill{font-size:10px;padding:4px 8px;white-space:nowrap}
+      .logo-slot{width:40px;height:40px;font-size:16px}
+      .allocation{min-width:0}
+      .allocation-line{flex-wrap:wrap;gap:4px}
+      .rating-block{min-width:0}
     }
     .trade-toolbar{padding:12px 14px;border-bottom:1px solid var(--line);display:grid;gap:9px}.trade-toolbar-top{display:flex;align-items:center;gap:8px}.trade-search{height:38px;flex:1;min-width:0}.trade-view,.group-tabs{display:flex;gap:3px;padding:3px;border:1px solid var(--line);border-radius:9px;background:var(--sunken)}.trade-view button,.group-tabs button{min-height:30px;padding:0 8px;border:0;border-radius:6px;background:transparent;color:var(--muted);font-size:9px;font-weight:700;cursor:pointer}.trade-view button[aria-pressed="true"],.group-tabs button[aria-pressed="true"]{background:var(--raised);color:var(--text)}.group-tabs{overflow:hidden}.group-tabs button{flex:1;white-space:nowrap}.trade-columns{display:none}.trade-list-empty{min-height:240px;padding:36px 18px;display:grid;place-items:center;text-align:center}.trade-list-empty h3{font-size:15px;margin-bottom:6px}.trade-list-empty p{margin:0;color:var(--muted);font-size:11px;line-height:1.55}.trade-schema-note{margin-top:12px;color:var(--muted);font-size:9px}
     .session-feedback{margin:-3px 0 12px;color:var(--accent);font-size:11px;line-height:1.5}.session-feedback:empty{display:none}.risk-footer-actions+.session-feedback{margin:10px 0 0;text-align:right}.trade-form .session-feedback{margin:12px 0 0;text-align:right}
