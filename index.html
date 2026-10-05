@@ -2168,6 +2168,61 @@
     if(specs[0])specs[0].textContent=sbSizeRange(plans);
     if(specs[1])specs[1].textContent=sbPlanTarget(firstRules);
     if(specs[2])specs[2].textContent=sbPlanDrawdown(firstRules);
+    // Transparent value score (0-100) based on verified plan data
+    try{
+      var ratingBlock=q('.rating-block');
+      if(ratingBlock&&plans.length){
+        var score=0,parts=0,rationale=[];
+        // Price efficiency: avg price per $10k (lower = better), 40pts
+        var totalPP=0,ppCount=0;
+        plans.forEach(function(p){
+          var sz=Number(p.account_size),pr=Number(p.price);
+          if(sz>0&&pr>0){totalPP+=pr/(sz/10000);ppCount++;}
+        });
+        if(ppCount>0){
+          var avgPP=totalPP/ppCount;
+          var ppScore=Math.max(0,Math.min(40,40*(1-Math.min(1,avgPP/200))));
+          score+=ppScore;parts++;
+          if(avgPP<50)rationale.push(currentLanguage==='ar'?'سعر منافس':'competitive pricing');
+        }
+        // Drawdown generosity: avg drawdown % (higher = better), 30pts
+        var totalDD=0,ddCount=0;
+        plans.forEach(function(p){
+          var r=p.rules||{},sz=Number(p.account_size);
+          var dd=r.max_drawdown_usd!=null?Number(r.max_drawdown_usd):(r.max_drawdown_pct!=null?sz*Number(r.max_drawdown_pct)/100:null);
+          if(dd&&sz>0){totalDD+=(dd/sz*100);ddCount++;}
+        });
+        if(ddCount>0){
+          var avgDD=totalDD/ddCount;
+          var ddScore=Math.max(0,Math.min(30,30*(Math.min(1,avgDD/10))));
+          score+=ddScore;parts++;
+          if(avgDD>=8)rationale.push(currentLanguage==='ar'?'تراجع سخي':'generous drawdown');
+        }
+        // Target achievability: avg profit target % (lower = easier), 30pts
+        var totalPT=0,ptCount=0;
+        plans.forEach(function(p){
+          var r=p.rules||{},sz=Number(p.account_size);
+          var pt=r.profit_target_usd!=null?Number(r.profit_target_usd):(r.profit_target_pct!=null?sz*Number(r.profit_target_pct)/100:null);
+          if(pt&&sz>0){totalPT+=(pt/sz*100);ptCount++;}
+        });
+        if(ptCount>0){
+          var avgPT=totalPT/ptCount;
+          var ptScore=Math.max(0,Math.min(30,30*(1-Math.min(1,avgPT/15))));
+          score+=ptScore;parts++;
+          if(avgPT<=8)rationale.push(currentLanguage==='ar'?'هدف سهل':'achievable target');
+        }
+        if(parts>0){
+          score=Math.round(score);
+          var scoreEl=ratingBlock.querySelector('strong');
+          var barEl=ratingBlock.querySelector('.rating-track i');
+          var ratEl=ratingBlock.querySelector('small');
+          if(scoreEl)scoreEl.textContent=score;
+          if(barEl)barEl.style.width=score+'%';
+          if(ratEl)ratEl.textContent=rationale.length?rationale.join(' · '):(currentLanguage==='ar'?'بناءً على البيانات الموثقة':'based on verified data');
+          ratingBlock.setAttribute('aria-label','Rating '+score+' of 100');
+        }
+      }
+    }catch(sce){}
     var details=q('.firm-details');
     if(details&&firstRules&&Array.isArray(firstRules.key_rules)&&firstRules.key_rules.length){
       var ul=document.createElement('ul');ul.style.cssText='margin:12px 0 0;padding-left:18px;font-size:12px;line-height:1.65;color:var(--secondary)';
@@ -2245,6 +2300,30 @@
     var metaSpan=document.querySelector('#matcher .matcher-meta span:last-child');
     if(metaSpan)metaSpan.textContent=(currentLanguage==='ar'?'آخر تحديث ':'Last updated ')+sbFmtDate(latest);
     sbUpdateCountChips();
+    if(typeof sbUpdateMethodologyStats==='function')sbUpdateMethodologyStats();
+  }
+  function sbUpdateMethodologyStats(){
+    try{
+      var firmsTracked=sbFirms.length;
+      var totalPlans=0;for(var fid in sbPlansByFirm){totalPlans+=(sbPlansByFirm[fid]||[]).length;}
+      // Data points: firms × core fields (name, HQ, website, source, updated) + plans × fields (size, price, target, drawdown)
+      var dataPoints=firmsTracked*5+totalPlans*4;
+      // Re-verification cadence: based on most recent update
+      var latest=null;sbFirms.forEach(function(f){if(f.updated_at&&(!latest||f.updated_at>latest))latest=f.updated_at;});
+      var cadence='—';
+      if(latest){
+        var daysAgo=Math.floor((Date.now()-new Date(latest).getTime())/86400000);
+        cadence=daysAgo===0?(currentLanguage==='ar'?'اليوم':'Today'):daysAgo===1?(currentLanguage==='ar'?'أمس':'Yesterday'):daysAgo+(currentLanguage==='ar'?' أيام':' days ago');
+      }
+      document.querySelectorAll('.method-stat').forEach(function(stat){
+        var label=stat.querySelector('span');var val=stat.querySelector('strong');
+        if(!label||!val)return;
+        var l=label.textContent.toLowerCase();
+        if(l.indexOf('firms tracked')!==-1)val.textContent=firmsTracked;
+        else if(l.indexOf('data points')!==-1)val.textContent=dataPoints;
+        else if(l.indexOf('re-verification')!==-1)val.textContent=cadence;
+      });
+    }catch(e){}
   }
   function sbUpdateCountChips(){
     var totalPlans=0;for(var fid in sbPlansByFirm){totalPlans+=(sbPlansByFirm[fid]||[]).length;}
