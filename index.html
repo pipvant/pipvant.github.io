@@ -2247,17 +2247,15 @@
     sbUpdateCountChips();
   }
   function sbUpdateCountChips(){
-    document.querySelectorAll('.trust-chip .trust-copy').forEach(function(copy){
+    var totalPlans=0;for(var fid in sbPlansByFirm){totalPlans+=(sbPlansByFirm[fid]||[]).length;}
+    // Update all trust chips by matching their label text
+    var chips=document.querySelectorAll('.trust-chip .trust-copy, .hero-trust-chip');
+    chips.forEach(function(copy){
       var small=copy.querySelector('small');var strong=copy.querySelector('strong');
-      if(small&&strong&&/verified firms/i.test(small.textContent))strong.textContent=sbFirms.length;
-      if(small&&strong&&/challenges tracked/i.test(small.textContent)){
-        var totalPlans=0;for(var fid in sbPlansByFirm){totalPlans+=(sbPlansByFirm[fid]||[]).length;}
-        strong.textContent=totalPlans;
-      }
-    });
-    document.querySelectorAll('.hero-trust-chip').forEach(function(chip){
-      var small=chip.querySelector('small');var strong=chip.querySelector('strong');
-      if(small&&strong&&/verified firms/i.test(small.textContent))strong.textContent=sbFirms.length;
+      if(!small||!strong)return;
+      var label=small.textContent.toLowerCase();
+      if(label.indexOf('verified firms')!==-1)strong.textContent=sbFirms.length;
+      else if(label.indexOf('challenges tracked')!==-1)strong.textContent=totalPlans;
     });
   }
   function sbGetShortlist(){try{return JSON.parse(localStorage.getItem('pipvant_shortlist')||'[]');}catch(e){return[];}}
