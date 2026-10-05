@@ -2097,8 +2097,8 @@
     img.alt=firm.name||'';img.loading='lazy';
     img.style.cssText='width:100%;height:100%;object-fit:contain;border-radius:6px;';
     img.onerror=function(){img.remove();el.textContent=letter;};
-    // Google favicons (Clearbit free API discontinued) — falls back to letter
-    img.src='https://www.google.com/s2/favicons?domain='+domain+'&sz=128';
+    // DuckDuckGo favicons (free, no key) — falls back to letter
+    img.src='https://icons.duckduckgo.com/ip3/'+domain+'.ico';
     el.appendChild(img);
   }
   function sbNum(v){if(v==null||v==='')return NaN;return Number(v);}
