@@ -1156,6 +1156,7 @@
         </div>
         <button class="btn primary auth-wide" id="authSubmit" type="submit">Create account</button>
       </form>
+      <p class="session-feedback" id="authFeedback" aria-live="polite"></p>
       <p class="auth-switch" id="loginSwitch" hidden>New to PIPVANT?<button class="auth-link" id="createAccountLink" type="button">Create account</button></p>
       <p class="auth-note">Your credentials protect access to your workspace.</p>
     </div>
@@ -2069,9 +2070,277 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (function(){
   var currentLanguage='en';
+  /* ================= Supabase data layer (data phase) ================= */
+  /* Public catalog reads use the anon key (public by design). Private user  */
+  /* data is protected by RLS (owner-only). Never invent data: on any fetch */
+  /* failure the honest empty states stay in place.                          */
+  var SUPABASE_URL='https://acpkzavmifjwnskiaret.supabase.co';
+  var SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFjcGt6YXZtaWZqd25za2lhcmV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyMDk1ODcsImV4cCI6MjEwNjc4NTU4N30.9-k-DoB6467EXTPKrvWUi-LRDPbSSC30f6BgrZezo2A';
+  var sb=null,sbUser=null,sbFirms=[],sbPlansByFirm={};
+  try{if(window.supabase&&window.supabase.createClient){sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);}}catch(sbInitErr){sb=null;}
+  function sbQuiet(p){if(p&&typeof p.then==='function'){p.then(function(){},function(){});}return p;}
+  function sbFmtDate(iso){try{var d=new Date(iso);if(isNaN(d.getTime()))return '—';return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});}catch(e){return '—';}}
+  function sbDomain(url){try{return String(new URL(url).hostname).replace(/^www\./,'');}catch(e){return url||'—';}}
+  function sbNum(v){if(v==null||v==='')return NaN;return Number(v);}
+  function sbFmtSize(v){var n=sbNum(v);if(!isFinite(n))return '—';return n>=1000?'$'+(n/1000)+'k':'$'+n;}
+  function sbSizeRange(plans){var s=plans.map(function(p){return sbNum(p.account_size);}).filter(isFinite).sort(function(a,b){return a-b;});if(!s.length)return '—';if(s.length===1)return sbFmtSize(s[0]);return sbFmtSize(s[0])+' – '+sbFmtSize(s[s.length-1])+' ('+s.length+')';}
+  function sbMinPrice(plans){var p=plans.map(function(x){return sbNum(x.price);}).filter(isFinite).sort(function(a,b){return a-b;});return p.length?'$'+p[0]:'—';}
+  function sbPlanTarget(rules){if(!rules)return '—';if(rules.profit_target_pct!=null&&isFinite(Number(rules.profit_target_pct)))return rules.profit_target_pct+'%';if(rules.profit_target_usd!=null&&isFinite(Number(rules.profit_target_usd)))return '$'+Number(rules.profit_target_usd).toLocaleString('en-US');return '—';}
+  function sbPlanDrawdown(rules){if(!rules)return '—';var v='—';if(rules.max_drawdown_pct!=null&&isFinite(Number(rules.max_drawdown_pct)))v=rules.max_drawdown_pct+'%';else if(rules.max_drawdown_usd!=null&&isFinite(Number(rules.max_drawdown_usd)))v='$'+Number(rules.max_drawdown_usd).toLocaleString('en-US');var t=String(rules.drawdown_type||'').toLowerCase();if(t.indexOf('trailing')!==-1)v+=' trailing';else if(t.indexOf('static')!==-1)v+=' static';return v;}
+  function sbIsMARestricted(firm){return Array.isArray(firm.countries_restricted)&&firm.countries_restricted.indexOf('MA')!==-1;}
+  function sbPricingLabel(plans){if(!plans.length||!plans[0].rules||!plans[0].rules.pricing_model)return '—';return plans[0].rules.pricing_model==='monthly subscription'?(currentLanguage==='ar'?'شهري':'Monthly'):(currentLanguage==='ar'?'دفعة واحدة':'One-time');}
+  function sbMABadge(restricted){var b=document.createElement('span');b.className='meta-pill';b.style.cssText='border-color:#C9D2DC;color:#C9D2DC;font-weight:700';b.textContent=restricted?(currentLanguage==='ar'?'غير متاح في المغرب':'Not available in Morocco'):(currentLanguage==='ar'?'متاح في المغرب':'Available in Morocco');return b;}
+  function sbSourceLine(container,firm){
+    container.textContent='';
+    container.appendChild(document.createTextNode(currentLanguage==='ar'?'المصدر: ':'Source: '));
+    var a=document.createElement('a');a.href=firm.source||firm.website||'#';a.target='_blank';a.rel='noopener';a.style.color='inherit';a.textContent=sbDomain(firm.source||firm.website);
+    container.appendChild(a);
+    container.appendChild(document.createTextNode(' · '+sbFmtDate(firm.updated_at)));
+  }
+  function sbLoadFirms(){
+    if(!sb)return;
+    sb.from('firms').select('id,name,website,countries_allowed,countries_restricted,updated_at,source').order('name')
+      .then(function(r){
+        if(r.error||!r.data||!r.data.length)return;
+        sbFirms=r.data;
+        sb.from('firm_plans').select('firm_id,account_size,price,currency,rules,source,updated_at').order('account_size')
+          .then(function(r2){
+            if(r2&&!r2.error&&Array.isArray(r2.data)){
+              sbPlansByFirm={};
+              r2.data.forEach(function(p){(sbPlansByFirm[p.firm_id]=sbPlansByFirm[p.firm_id]||[]).push(p);});
+            }
+            sbRenderFirms();
+            sbRenderDirectory();
+          })
+          .catch(function(){sbRenderFirms();sbRenderDirectory();});
+      })
+      .catch(function(){/* keep honest empty states */});
+  }
+  function sbFillFirmCard(card,firm,plans,rank){
+    function q(s){return card.querySelector(s);}
+    var rankEl=q('.rank');if(rankEl)rankEl.textContent=rank;
+    var logo=q('.logo-slot');if(logo){logo.textContent=(firm.name||'?').charAt(0).toUpperCase();logo.setAttribute('aria-label',firm.name);}
+    var nameEl=q('.firm-name');if(nameEl)nameEl.textContent=firm.name;
+    var restricted=sbIsMARestricted(firm);
+    var pills=card.querySelectorAll('.meta-pill');
+    var pillTexts=[null,sbPricingLabel(plans),plans.length?plans.length+(currentLanguage==='ar'?' أحجام':' sizes'):'—'];
+    pills.forEach(function(p,i){if(i===0){p.replaceWith(sbMABadge(restricted));}else if(pillTexts[i]!=null){p.textContent=pillTexts[i];}});
+    var ev=q('.evidence-line span');if(ev)sbSourceLine(ev,firm);
+    var maxSize=plans.reduce(function(m,p){var n=Number(p.account_size);return n>m?n:m;},0);
+    var alloc=q('.allocation strong');if(alloc)alloc.textContent=maxSize?sbFmtSize(maxSize):'—';
+    var specs=card.querySelectorAll('.spec-grid .spec strong');
+    var firstRules=plans.length?plans[0].rules:null;
+    if(specs[0])specs[0].textContent=sbSizeRange(plans);
+    if(specs[1])specs[1].textContent=sbPlanTarget(firstRules);
+    if(specs[2])specs[2].textContent=sbPlanDrawdown(firstRules);
+    var details=q('.firm-details');
+    if(details&&firstRules&&Array.isArray(firstRules.key_rules)&&firstRules.key_rules.length){
+      var ul=document.createElement('ul');ul.style.cssText='margin:12px 0 0;padding-left:18px;font-size:12px;line-height:1.65;color:var(--secondary)';
+      firstRules.key_rules.slice(0,4).forEach(function(rule){var li=document.createElement('li');li.textContent=rule;ul.appendChild(li);});
+      var grid=details.querySelector('.spec-grid');if(grid&&grid.after)grid.after(ul);else details.appendChild(ul);
+    }
+    var cta=q('.slot-cta');
+    if(cta&&firm.website){cta.disabled=false;cta.addEventListener('click',function(ev2){ev2.stopPropagation();window.open(firm.website,'_blank','noopener');});}
+    var expander=q('.firm-expand');
+    if(expander){
+      var toggle=function(){
+        var expanded=expander.getAttribute('aria-expanded')==='true';
+        document.querySelectorAll('#matcher .firm-card').forEach(function(o){o.classList.remove('expanded');var e=o.querySelector('.firm-expand');if(e)e.setAttribute('aria-expanded','false');});
+        if(!expanded){expander.closest('.firm-card').classList.add('expanded');expander.setAttribute('aria-expanded','true');}
+      };
+      expander.addEventListener('click',function(event){if(!event.target.closest('[data-methodology-trigger]'))toggle();});
+      expander.addEventListener('keydown',function(event){if((event.key==='Enter'||event.key===' ')&&!event.target.closest('[data-methodology-trigger]')){event.preventDefault();toggle();}});
+    }
+  }
+  function sbBuildTableRow(firm,plans,rank){
+    var tr=document.createElement('tr');
+    var td0=document.createElement('td');td0.className='rank-cell';var s0=document.createElement('span');s0.textContent=rank;td0.appendChild(s0);tr.appendChild(td0);
+    var td1=document.createElement('td');var wf=document.createElement('span');wf.className='table-firm';
+    var lg=document.createElement('span');lg.className='logo-slot';lg.textContent=(firm.name||'?').charAt(0).toUpperCase();
+    var st=document.createElement('span');st.className='table-firm-stack';
+    var nm=document.createElement('span');nm.textContent=firm.name;
+    var ev=document.createElement('span');ev.className='table-evidence';sbSourceLine(ev,firm);
+    st.appendChild(nm);st.appendChild(ev);wf.appendChild(lg);wf.appendChild(st);td1.appendChild(wf);tr.appendChild(td1);
+    var td2=document.createElement('td');var rt=document.createElement('span');rt.className='table-rating';var rs=document.createElement('strong');rs.textContent='—';rt.appendChild(rs);td2.appendChild(rt);tr.appendChild(td2);
+    var td3=document.createElement('td');var ds=document.createElement('span');ds.className='discount-slot';ds.textContent='—';td3.appendChild(ds);tr.appendChild(td3);
+    var td4=document.createElement('td');td4.textContent=sbSizeRange(plans);tr.appendChild(td4);
+    var td5=document.createElement('td');td5.textContent=plans.length?sbPlanTarget(plans[0].rules):'—';tr.appendChild(td5);
+    var td6=document.createElement('td');td6.textContent=plans.length?sbPlanDrawdown(plans[0].rules):'—';tr.appendChild(td6);
+    var td7=document.createElement('td');var vb=document.createElement('button');vb.className='table-view-slot';vb.type='button';vb.textContent='VIEW';
+    if(firm.website){vb.addEventListener('click',function(){window.open(firm.website,'_blank','noopener');});}else{vb.disabled=true;}
+    td7.appendChild(vb);tr.appendChild(td7);
+    return tr;
+  }
+  function sbRenderFirms(){
+    if(!sbFirms.length)return;
+    var slots=document.querySelector('#matcher .firm-slots');
+    if(slots){
+      var proto=slots.querySelector('.firm-card');
+      if(proto){
+        slots.innerHTML='';
+        sbFirms.forEach(function(firm,idx){
+          var card=proto.cloneNode(true);
+          sbFillFirmCard(card,firm,sbPlansByFirm[firm.id]||[],idx+1);
+          slots.appendChild(card);
+        });
+      }
+    }
+    var tbody=document.querySelector('#matcher .matcher-table tbody');
+    if(tbody){tbody.innerHTML='';sbFirms.forEach(function(firm,idx){tbody.appendChild(sbBuildTableRow(firm,sbPlansByFirm[firm.id]||[],idx+1));});}
+    var mEmpty=document.querySelector('#matcher .matcher-empty');if(mEmpty)mEmpty.hidden=true;
+    var preview=document.querySelector('#matcher .preview-label');if(preview)preview.textContent=sbFirms.length+(currentLanguage==='ar'?' شركات موثقة':' verified firms');
+    var latest=null;sbFirms.forEach(function(f){if(f.updated_at&&(!latest||f.updated_at>latest))latest=f.updated_at;});
+    var metaSpan=document.querySelector('#matcher .matcher-meta span:last-child');
+    if(metaSpan)metaSpan.textContent=(currentLanguage==='ar'?'آخر تحديث ':'Last updated ')+sbFmtDate(latest);
+    sbUpdateCountChips();
+  }
+  function sbUpdateCountChips(){
+    document.querySelectorAll('.trust-chip .trust-copy').forEach(function(copy){
+      var small=copy.querySelector('small');var strong=copy.querySelector('strong');
+      if(small&&strong&&/verified firms/i.test(small.textContent))strong.textContent=sbFirms.length;
+    });
+    document.querySelectorAll('.hero-trust-chip').forEach(function(chip){
+      var small=chip.querySelector('small');var strong=chip.querySelector('strong');
+      if(small&&strong&&/verified firms/i.test(small.textContent))strong.textContent=sbFirms.length;
+    });
+  }
+  function sbFillDirectoryCard(node,firm,plans){
+    node.setAttribute('data-firm-id',firm.id);
+    var titleBtn=node.querySelector('[data-open-firm-detail]');
+    if(titleBtn){
+      var st=titleBtn.querySelector('strong');if(st)st.textContent=firm.name;
+      var sm=titleBtn.querySelector('small');if(sm)sm.textContent=(currentLanguage==='ar'?'تم التحقق · ':'Verified · ')+sbFmtDate(firm.updated_at);
+    }
+    var logo=node.querySelector('.logo-slot');if(logo)logo.textContent=(firm.name||'?').charAt(0).toUpperCase();
+    var stats=node.querySelectorAll('.directory-stat strong');
+    var rules=plans.length?plans[0].rules:null;
+    if(stats[0])stats[0].textContent=sbSizeRange(plans);
+    if(stats[2])stats[2].textContent=sbPlanDrawdown(rules);
+    if(stats[3])stats[3].textContent=sbPlanTarget(rules);
+    if(stats[4])stats[4].textContent=sbMinPrice(plans);
+    if(sbIsMARestricted(firm)){
+      var head=node.querySelector('.directory-card-head');
+      if(head)head.appendChild(sbMABadge(true));
+    }
+  }
+  function sbRenderDirectory(){
+    var results=document.getElementById('directoryResults');
+    var empty=document.getElementById('directoryEmpty');
+    var tpl=document.getElementById('directoryFirmTemplate');
+    if(!results||!tpl||!sbFirms.length)return;
+    results.querySelectorAll('[data-firm-card]').forEach(function(n){n.remove();});
+    sbFirms.forEach(function(firm){
+      var node=tpl.content.firstElementChild.cloneNode(true);
+      sbFillDirectoryCard(node,firm,sbPlansByFirm[firm.id]||[]);
+      results.insertBefore(node,empty);
+    });
+    empty.hidden=true;
+    sbFilterDirectory();
+  }
+  function sbFilterDirectory(){
+    var searchEl=document.getElementById('directorySearch');
+    var q=((searchEl&&searchEl.value)||'').trim().toLowerCase();
+    var visible=0;
+    document.querySelectorAll('#directoryResults [data-firm-card]').forEach(function(card){
+      var t=card.querySelector('.directory-card-title strong');
+      var name=t?t.textContent:'';
+      var show=!q||name.toLowerCase().indexOf(q)!==-1;
+      card.hidden=!show;if(show)visible++;
+    });
+    var noMatch=document.getElementById('directoryNoMatch');
+    if(noMatch)noMatch.hidden=visible>0;
+  }
+  function sbFillDetailSheet(firmId){
+    var firm=null;sbFirms.forEach(function(f){if(String(f.id)===String(firmId))firm=f;});
+    if(!firm)return;
+    var plans=sbPlansByFirm[firm.id]||[];var rules=plans.length?plans[0].rules:null;
+    var sheet=document.getElementById('firmDetailSheet');if(!sheet)return;
+    var title=document.getElementById('firmDetailTitle');if(title)title.textContent=firm.name;
+    var sub=sheet.querySelector('.sheet-title-row div p:last-child');
+    if(sub)sub.textContent=(currentLanguage==='ar'?'تم تحديث البيانات ':'Data updated ')+sbFmtDate(firm.updated_at);
+    var vals={'Account sizes':sbSizeRange(plans),'Price from':sbMinPrice(plans),'Profit target':sbPlanTarget(rules),'Max drawdown':sbPlanDrawdown(rules)};
+    if(rules&&rules.daily_loss_pct!=null&&isFinite(Number(rules.daily_loss_pct)))vals['Daily loss limit']=rules.daily_loss_pct+'%';
+    sheet.querySelectorAll('.rule-row').forEach(function(row){
+      var label=row.querySelector('span');var strong=row.querySelector('strong');
+      if(label&&strong&&vals[label.textContent]!=null)strong.textContent=vals[label.textContent];
+    });
+    var notes=sheet.querySelectorAll('.notable-rules li span');
+    var keyRules=rules&&Array.isArray(rules.key_rules)?rules.key_rules:[];
+    notes.forEach(function(sp,i){sp.textContent=keyRules[i]||'—';});
+  }
+  function sbAuthError(msg){
+    var el=document.getElementById('authFeedback');
+    if(el){el.textContent=msg;feedbackMotion(el);}
+    showToast(msg);
+  }
+  function sbLoadProfile(cb){
+    cb=cb||function(){};
+    if(!sb||!sbUser){cb('');return;}
+    sb.from('profiles').select('display_name').eq('user_id',sbUser.id).maybeSingle()
+      .then(function(r){cb(!r.error&&r.data&&r.data.display_name?r.data.display_name:'');})
+      .catch(function(){cb('');});
+  }
+  function sbSaveProfile(name){
+    if(!sb||!sbUser||!name)return;
+    sbQuiet(sb.auth.updateUser({data:{display_name:name}}));
+    sb.from('profiles').select('id').eq('user_id',sbUser.id).maybeSingle().then(function(r){
+      if(r.error||!r.data){sbQuiet(sb.from('profiles').insert({user_id:sbUser.id,display_name:name}));}
+      else{sbQuiet(sb.from('profiles').update({display_name:name}).eq('user_id',sbUser.id));}
+    }).catch(function(){});
+  }
+  function sbLoadTrades(){
+    if(!sb||!sbUser)return;
+    sb.from('trades').select('id,symbol,direction,entry_price,position_size,notes,opened_at,created_at').order('opened_at',{ascending:false})
+      .then(function(r){
+        if(r.error||!r.data)return;
+        sessionJournalEntries=sessionJournalEntries.filter(function(en){return !en._db;});
+        r.data.forEach(function(t){
+          var ts=t.opened_at||t.created_at;
+          sessionJournalEntries.push({type:'trade',_db:true,_id:t.id,timestamp:ts?new Date(ts).getTime():Date.now(),pair:t.symbol||'—',direction:t.direction||'—',entry:t.entry_price==null?'—':String(t.entry_price),stop:'—',target:'—',size:t.position_size==null?'—':String(t.position_size),rMultiple:'—',notes:t.notes||''});
+        });
+        sessionJournalEntries.sort(function(a,b){return b.timestamp-a.timestamp;});
+        renderJournalEntries();
+      }).catch(function(){});
+  }
+  function sbSaveTrade(entry){
+    if(!sb||!sbUser)return;
+    var ep=parseFloat(entry.entry),sz=parseFloat(entry.size);
+    sb.from('trades').insert({user_id:sbUser.id,symbol:entry.pair,direction:entry.direction,entry_price:isFinite(ep)?ep:null,exit_price:null,position_size:isFinite(sz)?sz:null,pnl:null,opened_at:new Date(entry.timestamp).toISOString(),closed_at:null,notes:entry.notes||null})
+      .then(function(r){
+        var fb=document.getElementById('journalFeedback');if(!fb)return;
+        if(r.error){fb.textContent=currentLanguage==='ar'?'تعذر الحفظ في حسابك — بقيت الصفقة لهذه الجلسة فقط.':'Could not save to your account — kept for this session only.';}
+        else{entry._db=true;fb.textContent=currentLanguage==='ar'?'تم حفظ الصفقة في سجلك.':'Trade saved to your journal.';}
+        feedbackMotion(fb);showToast(fb.textContent);
+      }).catch(function(){
+        var fb2=document.getElementById('journalFeedback');if(!fb2)return;
+        fb2.textContent=currentLanguage==='ar'?'تعذر الحفظ في حسابك — بقيت الصفقة لهذه الجلسة فقط.':'Could not save to your account — kept for this session only.';
+        feedbackMotion(fb2);showToast(fb2.textContent);
+      });
+  }
+  function sbInitSession(){
+    if(!sb)return;
+    sb.auth.getSession().then(function(r){
+      var session=r.data&&r.data.session;
+      if(session&&session.user){
+        sbUser=session.user;
+        var meta=session.user.user_metadata||{};
+        sbLoadProfile(function(pname){enterProduct(pname||session.user.email||'','—');});
+        sbLoadTrades();
+      }
+    }).catch(function(){});
+  }
+  /* Fill the firm detail sheet before the existing opener runs (registered first). */
+  document.addEventListener('click',function(event){
+    if(!event.target||!event.target.closest)return;
+    var card=event.target.closest('#directoryResults [data-firm-card]');
+    if(!card)return;
+    sbFillDetailSheet(card.getAttribute('data-firm-id'));
+  });
+  /* ================= /Supabase data layer ================= */
   var titlesEn={landing:['Toolkit','Trade with a process'],matcher:['Tool 01','Prop firm matcher'],'all-firms':['Matcher','All firms'],journal:['Tool 02','Trading journal'],calculator:['Tool 03','Risk calculator'],calendar:['Tool 04','Economic Calendar'],discipline:['Parked','Discipline'],'discipline-soon':['Next version','Discipline'],notifications:['Inbox','Notifications'],profile:['Account','Profile'],settings:['Account','Settings'],certificate:['Account','Certificates'],methodology:['PIPVANT','Methodology'],support:['PIPVANT','Support'],about:['PIPVANT','About'],contact:['PIPVANT','Contact']};
   var titlesAr={landing:['الأدوات','تداول وفق منهج'],matcher:['الأداة 01','مطابق شركات التداول'],'all-firms':['المطابق','جميع الشركات'],journal:['الأداة 02','سجل التداول'],calculator:['الأداة 03','حاسبة المخاطر'],calendar:['الأداة 04','التقويم الاقتصادي'],discipline:['متوقف مؤقتاً','الانضباط'],'discipline-soon':['الإصدار القادم','الانضباط'],notifications:['الوارد','الإشعارات'],profile:['الحساب','الملف الشخصي'],settings:['الحساب','الإعدادات'],certificate:['الحساب','الشهادات'],methodology:['PIPVANT','المنهجية'],support:['PIPVANT','الدعم'],about:['PIPVANT','حول'],contact:['PIPVANT','تواصل']};
   var ar={
@@ -2109,6 +2378,7 @@
     if(typeof refreshMenuButtonLabel==='function')refreshMenuButtonLabel();
     if(typeof refreshNotificationBadge==='function')refreshNotificationBadge();
     if(typeof renderJournalEntries==='function'&&Array.isArray(sessionJournalEntries))renderJournalEntries();
+    if(typeof sbRenderFirms==='function'&&sbFirms.length){sbRenderFirms();sbRenderDirectory();}
     if(typeof updateProfileIdentity==='function'&&profileSession)updateProfileIdentity(profileSession.name,profileSession.bio);
     if(typeof renderProfileCertificates==='function'&&profileSession)renderProfileCertificates(profileSession.certificates);
   }
@@ -2336,6 +2606,7 @@
     var countEl=document.getElementById('directoryFilterCount');
     countEl.textContent=String(count);countEl.setAttribute('data-count',String(count));
     var constrained=count>0||directorySearch.value.trim().length>0;
+    if(sbFirms.length){directoryEmpty.hidden=true;sbFilterDirectory();return;}
     directoryEmpty.hidden=constrained;directoryNoMatch.hidden=!constrained;
   }
   function refreshDirectoryRange(input){
@@ -2576,7 +2847,13 @@
   document.getElementById('resetForm').addEventListener('submit',function(e){
     e.preventDefault();
     if(!e.currentTarget.reportValidity())return;
-    var recipient=document.getElementById('resetEmail').value.trim();runSuccessMorph(e.submitter,function(){document.getElementById('resetRecipient').textContent=recipient;document.getElementById('resetRequest').hidden=true;document.getElementById('resetSuccess').hidden=false;});
+    var recipient=document.getElementById('resetEmail').value.trim();
+    function showResetSent(){runSuccessMorph(e.submitter,function(){document.getElementById('resetRecipient').textContent=recipient;document.getElementById('resetRequest').hidden=true;document.getElementById('resetSuccess').hidden=false;});}
+    if(!sb){showResetSent();return;}
+    sb.auth.resetPasswordForEmail(recipient).then(function(res){
+      if(res.error){showToast(res.error.message);return;}
+      showResetSent();
+    }).catch(function(err){showToast(err&&err.message?err.message:'Could not send reset link.');});
   });
   document.getElementById('resendReset').addEventListener('click',function(){this.blur();});
   document.querySelectorAll('[data-auth-back]').forEach(function(button){button.addEventListener('click',function(){authStage(button.getAttribute('data-auth-back')==='welcome'?'authWelcome':'authSignup');});});
@@ -2585,7 +2862,32 @@
   document.getElementById('signupForm').addEventListener('submit',function(e){
     e.preventDefault();
     if(!e.currentTarget.reportValidity())return;
-    runSuccessMorph(e.submitter,function(){if(authMode==='login'){enterProduct('','—');return;}document.getElementById('setupAvatar').textContent=initials(signupName.value);authStage('authProfileSetup');});
+    var sbEmail=document.getElementById('signupEmail').value.trim();
+    var sbPassword=document.getElementById('signupPassword').value;
+    var authFeedbackEl=document.getElementById('authFeedback');if(authFeedbackEl)authFeedbackEl.textContent='';
+    function sbPrototypeFallback(){runSuccessMorph(e.submitter,function(){if(authMode==='login'){enterProduct('','—');return;}document.getElementById('setupAvatar').textContent=initials(signupName.value);authStage('authProfileSetup');});}
+    if(!sb){sbPrototypeFallback();return;}
+    if(authMode==='login'){
+      sb.auth.signInWithPassword({email:sbEmail,password:sbPassword}).then(function(res){
+        if(res.error){sbAuthError(res.error.message);return;}
+        sbUser=res.data.user;
+        runSuccessMorph(e.submitter,function(){
+          sbLoadProfile(function(pname){enterProduct(pname||sbUser.email||'','—');});
+          sbLoadTrades();
+        });
+      }).catch(function(err){sbAuthError(err&&err.message?err.message:'Sign-in failed.');});
+    }else{
+      sb.auth.signUp({email:sbEmail,password:sbPassword}).then(function(res){
+        if(res.error){sbAuthError(res.error.message);return;}
+        sbUser=res.data.user;
+        if(!res.data.session){
+          sbAuthError(currentLanguage==='ar'?'تم إنشاء الحساب — تحقق من بريدك الإلكتروني ثم سجّل الدخول.':'Account created — check your email to confirm, then log in.');
+          setAuthMode('login');
+          return;
+        }
+        runSuccessMorph(e.submitter,function(){document.getElementById('setupAvatar').textContent=initials(signupName.value);authStage('authProfileSetup');});
+      }).catch(function(err){sbAuthError(err&&err.message?err.message:'Sign-up failed.');});
+    }
   });
   function enterProduct(name,avatar){
     var authShell=document.querySelector('.auth-shell');authShell.classList.add('auth-leaving');
@@ -2595,7 +2897,7 @@
   document.getElementById('profileSetupForm').addEventListener('submit',function(e){
     e.preventDefault();
     if(!e.currentTarget.reportValidity())return;
-    var name=displayName.value.trim();runSuccessMorph(e.submitter,function(){enterProduct(name,initials(name));});
+    var name=displayName.value.trim();runSuccessMorph(e.submitter,function(){sbSaveProfile(name);enterProduct(name,initials(name));sbLoadTrades();});
   });
   function clearPrototypeState(){
     document.querySelectorAll('form').forEach(function(form){form.reset();});
@@ -2608,6 +2910,12 @@
     updateCheckProgress();if(riskPercent)setRiskValue(defaultRisk);refreshPreferenceCopy();
   }
   function logout(){
+    if(sb){sbQuiet(sb.auth.signOut());}
+    sbUser=null;
+    try{
+      sessionJournalEntries=sessionJournalEntries.filter(function(en){return !en._db;});
+      renderJournalEntries();
+    }catch(clearErr){}
     document.body.classList.remove('app-ready');
     document.body.classList.add('auth-active','auth-returning');setTimeout(function(){document.body.classList.remove('auth-returning');},210);
     document.getElementById('signupForm').reset();
@@ -2752,11 +3060,12 @@
   document.getElementById('cancelTrade').addEventListener('click',closeTradeSheet);
   document.getElementById('tradeForm').addEventListener('submit',function(e){
     e.preventDefault();if(!e.currentTarget.reportValidity())return;
+    var tradeFormEl=e.currentTarget;
     var directionButton=document.querySelector('.chip[data-direction][aria-pressed="true"]');
     if(!directionButton){document.getElementById('tradeFormFeedback').textContent=currentLanguage==='ar'?'اختر اتجاه الصفقة.':'Choose a trade direction.';document.querySelector('.chip[data-direction]').focus();return;}
     var entryValue=parseFloat(document.getElementById('tradeEntry').value),stopValue=parseFloat(document.getElementById('tradeStop').value),targetValue=parseFloat(document.getElementById('tradeTarget').value),riskDistance=Math.abs(entryValue-stopValue),rewardDistance=Math.abs(targetValue-entryValue);
     var tradeEntry={type:'trade',timestamp:Date.now(),pair:document.getElementById('tradePair').value.trim().toUpperCase(),direction:directionButton.getAttribute('data-direction'),entry:document.getElementById('tradeEntry').value,stop:document.getElementById('tradeStop').value,target:document.getElementById('tradeTarget').value,size:document.getElementById('tradeSize').value,rMultiple:riskDistance>0?units(rewardDistance/riskDistance)+'R':'—',notes:document.getElementById('tradeNotes').value.trim()};
-    runSuccessMorph(e.submitter,function(){sessionJournalEntries.unshift(tradeEntry);renderJournalEntries();e.currentTarget.reset();e.currentTarget.querySelectorAll('input,textarea').forEach(updateFloatingField);document.querySelectorAll('.chip[data-direction]').forEach(function(chip){chip.setAttribute('aria-pressed','false');});document.getElementById('tradeFormFeedback').textContent='';closeTradeSheet();var feedback=document.getElementById('journalFeedback');feedback.textContent=currentLanguage==='ar'?'تمت إضافة الصفقة لهذه الجلسة فقط.':'Trade added for this session only.';feedbackMotion(feedback);showToast(feedback.textContent);});
+    runSuccessMorph(e.submitter,function(){sessionJournalEntries.unshift(tradeEntry);renderJournalEntries();tradeFormEl.reset();tradeFormEl.querySelectorAll('input,textarea').forEach(updateFloatingField);document.querySelectorAll('.chip[data-direction]').forEach(function(chip){chip.setAttribute('aria-pressed','false');});document.getElementById('tradeFormFeedback').textContent='';closeTradeSheet();if(sb&&sbUser){sbSaveTrade(tradeEntry);}else{var feedback=document.getElementById('journalFeedback');feedback.textContent=currentLanguage==='ar'?'تمت إضافة الصفقة لهذه الجلسة فقط.':'Trade added for this session only.';feedbackMotion(feedback);showToast(feedback.textContent);}});
   });
   tradeSheet.addEventListener('click',function(e){if(e.target===tradeSheet)closeTradeSheet();});
   document.querySelectorAll('.chip[data-direction]').forEach(function(chip){chip.addEventListener('click',function(){
@@ -2849,6 +3158,9 @@
     }
   }
   document.querySelectorAll('.full-calc-input').forEach(function(el){if(el!==balanceInput&&el!==riskPercent)el.addEventListener('input',calculateFull);});
+  /* ---- Supabase boot (data phase): public catalog + persisted session ---- */
+  sbLoadFirms();
+  sbInitSession();
 })();
 </script>
 </body>
