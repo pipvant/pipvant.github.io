@@ -2711,6 +2711,29 @@
     if(disciplineStreak>=90&&earned.indexOf('Iron Discipline')===-1){
       if(awardProfileCertificate('Iron Discipline'))sbSaveCertificate('Iron Discipline');
     }
+    // Update mission progress displays
+    try{
+      var missions=[
+        {name:'Marathon',current:tradeCount,target:500,unit:currentLanguage==='ar'?'صفقة':'trades'},
+        {name:'Profitable',current:0,target:100,unit:currentLanguage==='ar'?'صفقة':'trades',note:currentLanguage==='ar'?'تحتاج P&L إيجابي':'needs positive P&L'},
+        {name:'Sharpshooter',current:0,target:100,unit:currentLanguage==='ar'?'صفقة':'trades',note:currentLanguage==='ar'?'تحتاج 60% فوز':'needs 60% win rate'},
+        {name:'Iron Discipline',current:disciplineStreak,target:90,unit:currentLanguage==='ar'?'يوم':'days'},
+        {name:'Risk Master',current:0,target:100,unit:currentLanguage==='ar'?'صفقة':'trades',note:currentLanguage==='ar'?'بدون كسر الحد':'no limit breaks'},
+        {name:'Edge Proven',current:0,target:100,unit:currentLanguage==='ar'?'صفقة':'trades',note:currentLanguage==='ar'?'تحتاج PF 1.5':'needs PF 1.5'}
+      ];
+      document.querySelectorAll('.locked-certificate').forEach(function(card){
+        var title=card.querySelector('h4');
+        var progress=card.querySelector('.mission-status strong');
+        if(!title||!progress)return;
+        var name=title.textContent.trim();
+        var m=missions.find(function(x){return x.name===name;});
+        if(m){
+          var txt=m.current+'/'+m.target+' '+m.unit;
+          if(m.note)txt+=' · '+m.note;
+          progress.textContent=txt;
+        }
+      });
+    }catch(pe){}
   }
   function awardProfileCertificate(value){var name=normalizeCertificateName(value);if(!name||profileSession.certificates.indexOf(name)!==-1)return false;renderProfileCertificates(profileSession.certificates.concat(name));showToast((currentLanguage==='ar'?'تم اكتساب شارة ':'Certificate badge earned: ')+(currentLanguage==='ar'&&ar[name]?ar[name]:name));return true;}
   function prepareProfilePrestige(screen){
@@ -2949,7 +2972,24 @@
     else{feedback.textContent=currentLanguage==='ar'?'المشاركة غير متاحة.':'Sharing is unavailable.';}
   });
   var contactForm=document.getElementById('contactForm');
-  contactForm.addEventListener('submit',function(event){event.preventDefault();if(!event.currentTarget.reportValidity())return;runSuccessMorph(event.submitter,function(){contactForm.hidden=true;var confirmation=document.getElementById('contactConfirmation');confirmation.hidden=false;confirmation.classList.remove('empty-motion');void confirmation.offsetWidth;confirmation.classList.add('empty-motion');});});
+  contactForm.addEventListener('submit',function(event){
+    event.preventDefault();if(!event.currentTarget.reportValidity())return;
+    var name=document.getElementById('contactName').value.trim();
+    var email=document.getElementById('contactEmail').value.trim();
+    var msg=document.getElementById('contactMessage').value.trim();
+    runSuccessMorph(event.submitter,function(){
+      // Open email client with pre-filled message to support
+      var subject=encodeURIComponent('PIPVANT Support - '+name);
+      var body=encodeURIComponent('Name: '+name+'\nEmail: '+email+'\n\n'+msg);
+      window.location.href='mailto:sifeddinebneiaich45@gmail.com?subject='+subject+'&body='+body;
+      contactForm.hidden=true;
+      var confirmation=document.getElementById('contactConfirmation');
+      confirmation.hidden=false;
+      confirmation.querySelector('h3').textContent=currentLanguage==='ar'?'تم تجهيز رسالتك':'Message ready';
+      confirmation.querySelector('p').textContent=currentLanguage==='ar'?'فتحنا تطبيق البريد برسالتك — أرسلها لإتمام التواصل.':'We opened your email app with the message — send it to complete.';
+      confirmation.classList.remove('empty-motion');void confirmation.offsetWidth;confirmation.classList.add('empty-motion');
+    });
+  });
   document.getElementById('editContactMessage').addEventListener('click',function(){document.getElementById('contactConfirmation').hidden=true;contactForm.hidden=false;document.getElementById('contactMessage').focus();});
 
   var app=document.querySelector('.app');
