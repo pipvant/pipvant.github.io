@@ -2142,7 +2142,12 @@
     var nameEl=q('.firm-name');if(nameEl)nameEl.textContent=firm.name;
     var pills=card.querySelectorAll('.meta-pill');
     var pillTexts=[null,sbPricingLabel(plans),plans.length?plans.length+(currentLanguage==='ar'?' أحجام':' sizes'):'—'];
-    pills.forEach(function(p,i){if(pillTexts[i]!=null){p.textContent=pillTexts[i];}});
+    pills.forEach(function(p,i){
+      if(pillTexts[i]!=null){p.textContent=pillTexts[i];}
+      // Hide placeholder pills with no real data ("Country —" etc.) for a cleaner design
+      var txt=p.textContent.trim();
+      if(/—$/.test(txt)&&txt.length<20){p.style.display='none';}else{p.style.display='';}
+    });
     var ev=q('.evidence-line span');if(ev)sbSourceLine(ev,firm);
     var maxSize=plans.reduce(function(m,p){var n=Number(p.account_size);return n>m?n:m;},0);
     var alloc=q('.allocation strong');if(alloc)alloc.textContent=maxSize?sbFmtSize(maxSize):'—';
@@ -2313,6 +2318,24 @@
   function sbFlushPendingProfile(){
     if(sb&&sbUser&&sbPendingName){var n=sbPendingName;sbPendingName='';sbSaveProfile(n);}
   }
+  function sbUpdateProfileStats(trades){
+    try{
+      var total=trades.length;
+      // Total trades
+      var totalEl=document.querySelector('#profile .profile-stat-card:nth-child(3) .profile-stat-value');
+      if(totalEl)totalEl.textContent=total>0?String(total):'—';
+      // Most traded
+      var counts={};
+      trades.forEach(function(t){var s=t.symbol||'—';counts[s]=(counts[s]||0)+1;});
+      var most='—',max=0;
+      Object.keys(counts).forEach(function(s){if(counts[s]>max){max=counts[s];most=s;}});
+      var mostEl=document.querySelector('#profile .profile-most-traded');
+      if(mostEl)mostEl.textContent=total>0?most:'—';
+      // Win rate / profit factor need PnL — stay honest "—" until trade results exist
+      // Check Marathon mission
+      if(typeof sbCheckMissions==='function')sbCheckMissions(total,0);
+    }catch(e){}
+  }
   function sbLoadTrades(){
     if(!sb||!sbUser)return;
     sb.from('trades').select('id,symbol,direction,entry_price,position_size,notes,opened_at,created_at').order('opened_at',{ascending:false})
@@ -2325,6 +2348,7 @@
         });
         sessionJournalEntries.sort(function(a,b){return b.timestamp-a.timestamp;});
         renderJournalEntries();
+        sbUpdateProfileStats(r.data);
       }).catch(function(){});
   }
   function sbSaveTrade(entry){
