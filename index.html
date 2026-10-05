@@ -2080,7 +2080,7 @@
   /* failure the honest empty states stay in place.                          */
   var SUPABASE_URL='https://acpkzavmifjwnskiaret.supabase.co';
   var SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFjcGt6YXZtaWZqd25za2lhcmV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyMDk1ODcsImV4cCI6MjEwNjc4NTU4N30.9-k-DoB6467EXTPKrvWUi-LRDPbSSC30f6BgrZezo2A';
-  var sb=null,sbUser=null,sbFirms=[],sbPlansByFirm={};
+  var sb=null,sbUser=null,sbFirms=[],sbPlansByFirm={},sbPendingName='';
   try{if(window.supabase&&window.supabase.createClient){sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);}}catch(sbInitErr){sb=null;}
   function sbQuiet(p){if(p&&typeof p.then==='function'){p.then(function(){},function(){});}return p;}
   function sbFmtDate(iso){try{var d=new Date(iso);if(isNaN(d.getTime()))return '—';return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});}catch(e){return '—';}}
@@ -2140,10 +2140,9 @@
     var rankEl=q('.rank');if(rankEl)rankEl.textContent=rank;
     var logo=q('.logo-slot');sbFirmLogo(logo,firm);
     var nameEl=q('.firm-name');if(nameEl)nameEl.textContent=firm.name;
-    var restricted=sbIsMARestricted(firm);
     var pills=card.querySelectorAll('.meta-pill');
     var pillTexts=[null,sbPricingLabel(plans),plans.length?plans.length+(currentLanguage==='ar'?' أحجام':' sizes'):'—'];
-    pills.forEach(function(p,i){if(i===0){p.replaceWith(sbMABadge(restricted));}else if(pillTexts[i]!=null){p.textContent=pillTexts[i];}});
+    pills.forEach(function(p,i){if(pillTexts[i]!=null){p.textContent=pillTexts[i];}});
     var ev=q('.evidence-line span');if(ev)sbSourceLine(ev,firm);
     var maxSize=plans.reduce(function(m,p){var n=Number(p.account_size);return n>m?n:m;},0);
     var alloc=q('.allocation strong');if(alloc)alloc.textContent=maxSize?sbFmtSize(maxSize):'—';
@@ -2237,10 +2236,6 @@
     if(stats[2])stats[2].textContent=sbPlanDrawdown(rules);
     if(stats[3])stats[3].textContent=sbPlanTarget(rules);
     if(stats[4])stats[4].textContent=sbMinPrice(plans);
-    if(sbIsMARestricted(firm)){
-      var head=node.querySelector('.directory-card-head');
-      if(head)head.appendChild(sbMABadge(true));
-    }
   }
   function sbRenderDirectory(){
     var results=document.getElementById('directoryResults');
@@ -2295,21 +2290,28 @@
   function sbLoadProfile(cb){
     cb=cb||function(){};
     if(!sb||!sbUser){cb('');return;}
-    sb.from('profiles').select('display_name,avatar_url').eq('user_id',sbUser.id).maybeSingle()
+    sb.from('profiles').select('display_name,bio,avatar_url').eq('user_id',sbUser.id).maybeSingle()
       .then(function(r){
         var d=r&&!r.error&&r.data?r.data:null;
         if(d&&d.avatar_url){profileSession.photoUrl=d.avatar_url;setAvatarSurfacePhoto(d.avatar_url);}
+        if(d&&d.bio){profileSession.bio=d.bio;var pb=document.getElementById('profileBio');if(pb)pb.textContent=d.bio;}
         cb(d&&d.display_name?d.display_name:'');
       })
       .catch(function(){cb('');});
   }
-  function sbSaveProfile(name){
-    if(!sb||!sbUser||!name)return;
-    sbQuiet(sb.auth.updateUser({data:{display_name:name}}));
+  function sbSaveProfile(name,bio){
+    if(!sb||!sbUser)return;
+    if(name)sbQuiet(sb.auth.updateUser({data:{display_name:name}}));
+    var row={user_id:sbUser.id};
+    if(name)row.display_name=name;
+    if(bio!==undefined)row.bio=bio;
     sb.from('profiles').select('id').eq('user_id',sbUser.id).maybeSingle().then(function(r){
-      if(r.error||!r.data){sbQuiet(sb.from('profiles').insert({user_id:sbUser.id,display_name:name}));}
-      else{sbQuiet(sb.from('profiles').update({display_name:name}).eq('user_id',sbUser.id));}
+      if(r.error||!r.data){sbQuiet(sb.from('profiles').insert(row));}
+      else{sbQuiet(sb.from('profiles').update(row).eq('user_id',sbUser.id));}
     }).catch(function(){});
+  }
+  function sbFlushPendingProfile(){
+    if(sb&&sbUser&&sbPendingName){var n=sbPendingName;sbPendingName='';sbSaveProfile(n);}
   }
   function sbLoadTrades(){
     if(!sb||!sbUser)return;
@@ -2347,6 +2349,7 @@
       if(session&&session.user){
         sbUser=session.user;
         var meta=session.user.user_metadata||{};
+        sbFlushPendingProfile();
         sbLoadProfile(function(pname){enterProduct(pname||session.user.email||'','—');});
         sbLoadTrades();
       }
@@ -2509,7 +2512,7 @@
   document.getElementById('profileEditorCancel').addEventListener('click',closeProfileEditor);
   profileEditor.addEventListener('click',function(event){if(event.target===profileEditor)closeProfileEditor();});
   profileBioInput.addEventListener('input',updateProfileBioCount);
-  profileEditorForm.addEventListener('submit',function(event){event.preventDefault();var submitter=event.submitter;runSuccessMorph(submitter,function(){updateProfileIdentity(profileNameInput.value,profileBioInput.value);closeProfileEditor();showToast(currentLanguage==='ar'?'تم تحديث الملف لهذه الجلسة.':'Profile updated for this session.');});});
+  profileEditorForm.addEventListener('submit',function(event){event.preventDefault();var submitter=event.submitter;runSuccessMorph(submitter,function(){var nn=profileNameInput.value,bio=profileBioInput.value;updateProfileIdentity(nn,bio);sbSaveProfile(nn,bio);closeProfileEditor();showToast(currentLanguage==='ar'?'تم تحديث الملف.':'Profile updated.');});});
   document.addEventListener('keydown',function(event){if(event.key==='Escape'&&!profileEditor.hidden)closeProfileEditor();});
   document.getElementById('profileAvatarEdit').addEventListener('click',function(){profileAvatarInput.click();});
   profileAvatarInput.addEventListener('change',function(){
@@ -2911,6 +2914,7 @@
         if(res.error){sbAuthError(res.error.message);return;}
         sbUser=res.data.user;
         runSuccessMorph(e.submitter,function(){
+          sbFlushPendingProfile();
           sbLoadProfile(function(pname){enterProduct(pname||sbUser.email||'','—');});
           sbLoadTrades();
         });
@@ -2936,7 +2940,7 @@
   document.getElementById('profileSetupForm').addEventListener('submit',function(e){
     e.preventDefault();
     if(!e.currentTarget.reportValidity())return;
-    var name=displayName.value.trim();runSuccessMorph(e.submitter,function(){sbSaveProfile(name);enterProduct(name,initials(name));sbLoadTrades();});
+    var name=displayName.value.trim();runSuccessMorph(e.submitter,function(){sbPendingName=name;sbSaveProfile(name);sbFlushPendingProfile();enterProduct(name,initials(name));sbLoadTrades();});
   });
   function clearPrototypeState(){
     document.querySelectorAll('form').forEach(function(form){form.reset();});
@@ -3198,6 +3202,28 @@
   }
   document.querySelectorAll('.full-calc-input').forEach(function(el){if(el!==balanceInput&&el!==riskPercent)el.addEventListener('input',calculateFull);});
   /* ---- Economic calendar: live feed from economic_events (public read) ---- */
+  function sbUpdateCalendarStatus(){
+    try{
+      var feed=document.getElementById('calendarFeedState');
+      if(feed)feed.textContent=currentLanguage==='ar'?'البث المباشر ●':'LIVE FEED ●';
+      var high=calendarEvents.filter(function(e){return e.impact==='high';});
+      if(!high.length)return;
+      // next high-impact = earliest by timestamp
+      var next=high[0],nextTs=next._ts||0;
+      high.forEach(function(e){if(e._ts&&(!nextTs||e._ts<nextTs)){next=e;nextTs=e._ts;}});
+      var nm=document.getElementById('nextEventName');
+      if(nm)nm.textContent=next.name||'—';
+      var mm=document.getElementById('nextEventMeta');
+      if(mm)mm.textContent=(next.currency||'')+' · '+next.dayLabel+' '+next.time+' UTC';
+      if(nextTs){
+        var diff=Math.max(0,nextTs-Date.now());
+        var dd=Math.floor(diff/86400000),hh=Math.floor(diff%86400000/3600000),mi=Math.floor(diff%3600000/60000);
+        var cd=document.getElementById('countdownDays');if(cd)cd.textContent=String(dd);
+        var ch=document.getElementById('countdownHours');if(ch)ch.textContent=String(hh);
+        var cm=document.getElementById('countdownMinutes');if(cm)cm.textContent=String(mi);
+      }
+    }catch(e){}
+  }
   function sbLoadCalendar(){
     if(!sb||typeof renderCalendar!=='function')return;
     var nowIso=new Date().toISOString();
@@ -3222,11 +3248,13 @@
             forecast: e.forecast||'—',
             previous: e.previous||'—',
             history: [],
-            past: false
+            past: false,
+            _ts: okT?dt.getTime():0
           };
         });
         calendarFeedConnected=true;
         renderCalendar();
+        sbUpdateCalendarStatus();
       })
       .catch(function(){/* keep honest empty state */});
   }
