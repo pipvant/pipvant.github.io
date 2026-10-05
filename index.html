@@ -2176,6 +2176,23 @@
     }
     var cta=q('.slot-cta');
     if(cta&&firm.website){cta.disabled=false;cta.addEventListener('click',function(ev2){ev2.stopPropagation();window.open(firm.website,'_blank','noopener');});}
+    // Shortlist button (matcher cards)
+    var slBtn=card.querySelector('.firm-detail-actions .btn.secondary');
+    if(slBtn){
+      slBtn.removeAttribute('disabled');
+      var updateSlBtn=function(){
+        var saved=sbIsShortlisted(firm.id);
+        slBtn.textContent=saved?(currentLanguage==='ar'?'✓ محفوظ':'✓ Saved'):(currentLanguage==='ar'?'حفظ في القائمة':'Save to shortlist');
+        slBtn.classList.toggle('saved',saved);
+      };
+      updateSlBtn();
+      slBtn.onclick=function(ev2){
+        if(ev2)ev2.stopPropagation();
+        var nowSaved=sbToggleShortlist(firm.id);
+        updateSlBtn();
+        if(typeof showToast==='function')showToast(nowSaved?(currentLanguage==='ar'?'تحفظات '+firm.name:'Saved '+firm.name):(currentLanguage==='ar'?'تحيدات '+firm.name:'Removed '+firm.name));
+      };
+    }
     var expander=q('.firm-expand');
     if(expander){
       var toggle=function(){
@@ -2233,11 +2250,23 @@
     document.querySelectorAll('.trust-chip .trust-copy').forEach(function(copy){
       var small=copy.querySelector('small');var strong=copy.querySelector('strong');
       if(small&&strong&&/verified firms/i.test(small.textContent))strong.textContent=sbFirms.length;
+      if(small&&strong&&/challenges tracked/i.test(small.textContent)){
+        var totalPlans=0;for(var fid in sbPlansByFirm){totalPlans+=(sbPlansByFirm[fid]||[]).length;}
+        strong.textContent=totalPlans;
+      }
     });
     document.querySelectorAll('.hero-trust-chip').forEach(function(chip){
       var small=chip.querySelector('small');var strong=chip.querySelector('strong');
       if(small&&strong&&/verified firms/i.test(small.textContent))strong.textContent=sbFirms.length;
     });
+  }
+  function sbGetShortlist(){try{return JSON.parse(localStorage.getItem('pipvant_shortlist')||'[]');}catch(e){return[];}}
+  function sbIsShortlisted(fid){return sbGetShortlist().indexOf(fid)!==-1;}
+  function sbToggleShortlist(fid){
+    var list=sbGetShortlist();var i=list.indexOf(fid);
+    if(i===-1){list.push(fid);}else{list.splice(i,1);}
+    try{localStorage.setItem('pipvant_shortlist',JSON.stringify(list));}catch(e){}
+    return i===-1;
   }
   function sbFillDirectoryCard(node,firm,plans){
     node.setAttribute('data-firm-id',firm.id);
@@ -2253,6 +2282,22 @@
     if(stats[2])stats[2].textContent=sbPlanDrawdown(rules);
     if(stats[3])stats[3].textContent=sbPlanTarget(rules);
     if(stats[4])stats[4].textContent=sbMinPrice(plans);
+    // Shortlist button
+    var slBtn=node.querySelector('.firm-detail-actions .btn.secondary');
+    if(slBtn){
+      slBtn.removeAttribute('disabled');
+      var updateSlBtn=function(){
+        var saved=sbIsShortlisted(firm.id);
+        slBtn.textContent=saved?(currentLanguage==='ar'?'✓ محفوظ':'✓ Saved'):(currentLanguage==='ar'?'حفظ في القائمة':'Save to shortlist');
+        slBtn.classList.toggle('saved',saved);
+      };
+      updateSlBtn();
+      slBtn.onclick=function(){
+        var nowSaved=sbToggleShortlist(firm.id);
+        updateSlBtn();
+        if(typeof showToast==='function')showToast(nowSaved?(currentLanguage==='ar'?'تحفظات '+firm.name:'Saved '+firm.name):(currentLanguage==='ar'?'تحيدات '+firm.name:'Removed '+firm.name));
+      };
+    }
   }
   function sbRenderDirectory(){
     var results=document.getElementById('directoryResults');
