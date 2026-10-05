@@ -3158,8 +3158,42 @@
     }
   }
   document.querySelectorAll('.full-calc-input').forEach(function(el){if(el!==balanceInput&&el!==riskPercent)el.addEventListener('input',calculateFull);});
+  /* ---- Economic calendar: live feed from economic_events (public read) ---- */
+  function sbLoadCalendar(){
+    if(!sb||typeof renderCalendar!=='function')return;
+    var nowIso=new Date().toISOString();
+    sb.from('economic_events').select('event_time,currency,impact,title,forecast,previous,source').gte('event_time',nowIso).order('event_time')
+      .then(function(r){
+        if(r.error||!r.data||!r.data.length)return;
+        calendarEvents=r.data.map(function(e){
+          var dt=new Date(e.event_time);
+          var okT=!isNaN(dt);
+          var dayLabel=okT?dt.toLocaleDateString('en-GB',{weekday:'short',day:'2-digit',month:'short'}):'—';
+          var t=okT?('0'+dt.getUTCHours()).slice(-2)+':'+('0'+dt.getUTCMinutes()).slice(-2):'—';
+          var imp=String(e.impact||'').toLowerCase();
+          return {
+            dayLabel: dayLabel,
+            time: t,
+            timeLabel: okT?(t+' UTC'):'—',
+            currency: e.currency||'—',
+            name: e.title||'—',
+            impact: imp,
+            impactLabel: e.impact||'—',
+            actual: '—',
+            forecast: e.forecast||'—',
+            previous: e.previous||'—',
+            history: [],
+            past: false
+          };
+        });
+        calendarFeedConnected=true;
+        renderCalendar();
+      })
+      .catch(function(){/* keep honest empty state */});
+  }
   /* ---- Supabase boot (data phase): public catalog + persisted session ---- */
   sbLoadFirms();
+  sbLoadCalendar();
   sbInitSession();
 })();
 </script>
