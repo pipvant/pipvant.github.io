@@ -2085,6 +2085,21 @@
   function sbQuiet(p){if(p&&typeof p.then==='function'){p.then(function(){},function(){});}return p;}
   function sbFmtDate(iso){try{var d=new Date(iso);if(isNaN(d.getTime()))return '—';return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});}catch(e){return '—';}}
   function sbDomain(url){try{return String(new URL(url).hostname).replace(/^www\./,'');}catch(e){return url||'—';}}
+  function sbFirmLogo(el,firm){
+    if(!el)return;
+    var letter=(firm.name||'?').charAt(0).toUpperCase();
+    el.setAttribute('aria-label',firm.name||'Firm');
+    var domain='';
+    try{domain=String(new URL(firm.website||'').hostname).replace(/^www\./,'');}catch(e){domain='';}
+    if(!domain){el.textContent=letter;return;}
+    el.textContent='';
+    var img=document.createElement('img');
+    img.alt=firm.name||'';img.loading='lazy';
+    img.style.cssText='width:100%;height:100%;object-fit:contain;border-radius:6px;';
+    img.onerror=function(){img.remove();el.textContent=letter;};
+    img.src='https://logo.clearbit.com/'+domain;
+    el.appendChild(img);
+  }
   function sbNum(v){if(v==null||v==='')return NaN;return Number(v);}
   function sbFmtSize(v){var n=sbNum(v);if(!isFinite(n))return '—';return n>=1000?'$'+(n/1000)+'k':'$'+n;}
   function sbSizeRange(plans){var s=plans.map(function(p){return sbNum(p.account_size);}).filter(isFinite).sort(function(a,b){return a-b;});if(!s.length)return '—';if(s.length===1)return sbFmtSize(s[0]);return sbFmtSize(s[0])+' – '+sbFmtSize(s[s.length-1])+' ('+s.length+')';}
@@ -2123,7 +2138,7 @@
   function sbFillFirmCard(card,firm,plans,rank){
     function q(s){return card.querySelector(s);}
     var rankEl=q('.rank');if(rankEl)rankEl.textContent=rank;
-    var logo=q('.logo-slot');if(logo){logo.textContent=(firm.name||'?').charAt(0).toUpperCase();logo.setAttribute('aria-label',firm.name);}
+    var logo=q('.logo-slot');sbFirmLogo(logo,firm);
     var nameEl=q('.firm-name');if(nameEl)nameEl.textContent=firm.name;
     var restricted=sbIsMARestricted(firm);
     var pills=card.querySelectorAll('.meta-pill');
@@ -2160,7 +2175,7 @@
     var tr=document.createElement('tr');
     var td0=document.createElement('td');td0.className='rank-cell';var s0=document.createElement('span');s0.textContent=rank;td0.appendChild(s0);tr.appendChild(td0);
     var td1=document.createElement('td');var wf=document.createElement('span');wf.className='table-firm';
-    var lg=document.createElement('span');lg.className='logo-slot';lg.textContent=(firm.name||'?').charAt(0).toUpperCase();
+    var lg=document.createElement('span');lg.className='logo-slot';sbFirmLogo(lg,firm);
     var st=document.createElement('span');st.className='table-firm-stack';
     var nm=document.createElement('span');nm.textContent=firm.name;
     var ev=document.createElement('span');ev.className='table-evidence';sbSourceLine(ev,firm);
@@ -2215,7 +2230,7 @@
       var st=titleBtn.querySelector('strong');if(st)st.textContent=firm.name;
       var sm=titleBtn.querySelector('small');if(sm)sm.textContent=(currentLanguage==='ar'?'تم التحقق · ':'Verified · ')+sbFmtDate(firm.updated_at);
     }
-    var logo=node.querySelector('.logo-slot');if(logo)logo.textContent=(firm.name||'?').charAt(0).toUpperCase();
+    var logo=node.querySelector('.logo-slot');sbFirmLogo(logo,firm);
     var stats=node.querySelectorAll('.directory-stat strong');
     var rules=plans.length?plans[0].rules:null;
     if(stats[0])stats[0].textContent=sbSizeRange(plans);
@@ -2280,8 +2295,12 @@
   function sbLoadProfile(cb){
     cb=cb||function(){};
     if(!sb||!sbUser){cb('');return;}
-    sb.from('profiles').select('display_name').eq('user_id',sbUser.id).maybeSingle()
-      .then(function(r){cb(!r.error&&r.data&&r.data.display_name?r.data.display_name:'');})
+    sb.from('profiles').select('display_name,avatar_url').eq('user_id',sbUser.id).maybeSingle()
+      .then(function(r){
+        var d=r&&!r.error&&r.data?r.data:null;
+        if(d&&d.avatar_url){profileSession.photoUrl=d.avatar_url;setAvatarSurfacePhoto(d.avatar_url);}
+        cb(d&&d.display_name?d.display_name:'');
+      })
       .catch(function(){cb('');});
   }
   function sbSaveProfile(name){
@@ -2497,7 +2516,27 @@
     var file=profileAvatarInput.files&&profileAvatarInput.files[0],feedback=document.getElementById('profileAvatarFeedback');if(!file)return;
     if(!/^image\/(png|jpeg|webp)$/.test(file.type)){feedback.textContent=currentLanguage==='ar'?'اختر صورة PNG أو JPEG أو WebP.':'Choose a PNG, JPEG, or WebP image.';profileAvatarInput.value='';return;}
     if(file.size>5*1024*1024){feedback.textContent=currentLanguage==='ar'?'يجب ألا يتجاوز حجم الصورة 5 MB.':'Photo must be 5 MB or smaller.';profileAvatarInput.value='';return;}
-    if(profileSession.photoUrl)URL.revokeObjectURL(profileSession.photoUrl);profileSession.photoUrl=URL.createObjectURL(file);setAvatarSurfacePhoto(profileSession.photoUrl);feedback.textContent=currentLanguage==='ar'?'تم تحديث الصورة لهذه الجلسة.':'Photo updated for this session.';feedbackMotion(feedback);profileAvatarInput.value='';
+    function setPhoto(url,msg){if(profileSession.photoUrl&&profileSession.photoUrl.indexOf('blob:')===0)URL.revokeObjectURL(profileSession.photoUrl);profileSession.photoUrl=url;setAvatarSurfacePhoto(url);feedback.textContent=msg;feedbackMotion(feedback);profileAvatarInput.value='';}
+    var doneMsg=currentLanguage==='ar'?'تم تحديث الصورة.':'Photo updated.';
+    var sessMsg=currentLanguage==='ar'?'تم تحديث الصورة لهذه الجلسة.':'Photo updated for this session.';
+    if(sb&&sbUser){
+      feedback.textContent=currentLanguage==='ar'?'جارٍ رفع الصورة...':'Uploading photo...';
+      var ext=file.type==='image/png'?'png':(file.type==='image/webp'?'webp':'jpg');
+      var path=sbUser.id+'/avatar.'+ext;
+      sb.storage.from('avatars').upload(path,file,{upsert:true,contentType:file.type}).then(function(up){
+        if(up.error)throw up.error;
+        var pub=sb.storage.from('avatars').getPublicUrl(path);
+        var url=pub.data&&pub.data.publicUrl;
+        if(!url)throw new Error('no public url');
+        sb.from('profiles').select('id').eq('user_id',sbUser.id).maybeSingle().then(function(r){
+          if(r.error||!r.data){sbQuiet(sb.from('profiles').insert({user_id:sbUser.id,avatar_url:url}));}
+          else{sbQuiet(sb.from('profiles').update({avatar_url:url}).eq('user_id',sbUser.id));}
+        }).catch(function(){});
+        setPhoto(url,doneMsg);
+      }).catch(function(){setPhoto(URL.createObjectURL(file),sessMsg);});
+      return;
+    }
+    setPhoto(URL.createObjectURL(file),sessMsg);
   });
   document.getElementById('profileAvatarRevert').addEventListener('click',function(){var feedback=document.getElementById('profileAvatarFeedback');if(profileSession.photoUrl)URL.revokeObjectURL(profileSession.photoUrl);profileSession.photoUrl='';setAvatarSurfacePhoto('');feedback.textContent=currentLanguage==='ar'?'تم إرجاع الصورة.':'Photo reverted.';feedbackMotion(feedback);});
   window.addEventListener('pipvant:certificate-earned',function(event){awardProfileCertificate(event.detail);});
