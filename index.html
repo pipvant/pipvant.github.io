@@ -2319,6 +2319,22 @@
   function sbFlushPendingProfile(){
     if(sb&&sbUser&&sbPendingName){var n=sbPendingName;sbPendingName='';sbSaveProfile(n);}
   }
+  function sbComputeTraderScore(tradeCount,disciplineStreak){
+    try{
+      // Honest activity-based score (0-100): NOT a trading performance rating
+      // 30pts: journal activity (trade count) | 40pts: discipline consistency | 30pts: profile completeness
+      var score=0;
+      score+=Math.min(30,tradeCount*3); // 10 trades = 30pts
+      score+=Math.min(40,disciplineStreak*2); // 20-day streak = 40pts
+      var complete=0;
+      if(profileSession.name&&profileSession.name.indexOf('@')===-1)complete+=10;
+      if(profileSession.bio)complete+=10;
+      if(profileSession.photoUrl)complete+=10;
+      score+=complete;
+      score=Math.min(100,Math.round(score));
+      if(typeof renderTraderScore==='function')renderTraderScore(score);
+    }catch(e){}
+  }
   function sbUpdateProfileStats(trades){
     try{
       var total=trades.length;
@@ -2335,6 +2351,7 @@
       // Win rate / profit factor need PnL — stay honest "—" until trade results exist
       // Check Marathon mission
       if(typeof sbCheckMissions==='function')sbCheckMissions(total,0);
+      if(typeof sbComputeTraderScore==='function')sbComputeTraderScore(total,0);
     }catch(e){}
   }
   function sbLoadTrades(){
