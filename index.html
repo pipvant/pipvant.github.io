@@ -2097,7 +2097,8 @@
     img.alt=firm.name||'';img.loading='lazy';
     img.style.cssText='width:100%;height:100%;object-fit:contain;border-radius:6px;';
     img.onerror=function(){img.remove();el.textContent=letter;};
-    img.src='https://logo.clearbit.com/'+domain;
+    // Google favicons (Clearbit free API discontinued) — falls back to letter
+    img.src='https://www.google.com/s2/favicons?domain='+domain+'&sz=128';
     el.appendChild(img);
   }
   function sbNum(v){if(v==null||v==='')return NaN;return Number(v);}
@@ -2106,9 +2107,7 @@
   function sbMinPrice(plans){var p=plans.map(function(x){return sbNum(x.price);}).filter(isFinite).sort(function(a,b){return a-b;});return p.length?'$'+p[0]:'—';}
   function sbPlanTarget(rules){if(!rules)return '—';if(rules.profit_target_pct!=null&&isFinite(Number(rules.profit_target_pct)))return rules.profit_target_pct+'%';if(rules.profit_target_usd!=null&&isFinite(Number(rules.profit_target_usd)))return '$'+Number(rules.profit_target_usd).toLocaleString('en-US');return '—';}
   function sbPlanDrawdown(rules){if(!rules)return '—';var v='—';if(rules.max_drawdown_pct!=null&&isFinite(Number(rules.max_drawdown_pct)))v=rules.max_drawdown_pct+'%';else if(rules.max_drawdown_usd!=null&&isFinite(Number(rules.max_drawdown_usd)))v='$'+Number(rules.max_drawdown_usd).toLocaleString('en-US');var t=String(rules.drawdown_type||'').toLowerCase();if(t.indexOf('trailing')!==-1)v+=' trailing';else if(t.indexOf('static')!==-1)v+=' static';return v;}
-  function sbIsMARestricted(firm){return Array.isArray(firm.countries_restricted)&&firm.countries_restricted.indexOf('MA')!==-1;}
   function sbPricingLabel(plans){if(!plans.length||!plans[0].rules||!plans[0].rules.pricing_model)return '—';return plans[0].rules.pricing_model==='monthly subscription'?(currentLanguage==='ar'?'شهري':'Monthly'):(currentLanguage==='ar'?'دفعة واحدة':'One-time');}
-  function sbMABadge(restricted){var b=document.createElement('span');b.className='meta-pill';b.style.cssText='border-color:#C9D2DC;color:#C9D2DC;font-weight:700';b.textContent=restricted?(currentLanguage==='ar'?'غير متاح في المغرب':'Not available in Morocco'):(currentLanguage==='ar'?'متاح في المغرب':'Available in Morocco');return b;}
   function sbSourceLine(container,firm){
     container.textContent='';
     container.appendChild(document.createTextNode(currentLanguage==='ar'?'المصدر: ':'Source: '));
@@ -2118,7 +2117,7 @@
   }
   function sbLoadFirms(){
     if(!sb)return;
-    sb.from('firms').select('id,name,website,countries_allowed,countries_restricted,updated_at,source').order('name')
+    sb.from('firms').select('id,name,website,headquarters,countries_allowed,countries_restricted,updated_at,source').order('name')
       .then(function(r){
         if(r.error||!r.data||!r.data.length)return;
         sbFirms=r.data;
@@ -2141,12 +2140,14 @@
     var logo=q('.logo-slot');sbFirmLogo(logo,firm);
     var nameEl=q('.firm-name');if(nameEl)nameEl.textContent=firm.name;
     var pills=card.querySelectorAll('.meta-pill');
-    var pillTexts=[null,sbPricingLabel(plans),plans.length?plans.length+(currentLanguage==='ar'?' أحجام':' sizes'):'—'];
+    var hq=firm.headquarters||'';
+    var pillTexts=[hq,sbPricingLabel(plans),plans.length?plans.length+(currentLanguage==='ar'?' أحجام':' sizes'):'—'];
     pills.forEach(function(p,i){
-      if(pillTexts[i]!=null){p.textContent=pillTexts[i];}
-      // Hide placeholder pills with no real data ("Country —" etc.) for a cleaner design
-      var txt=p.textContent.trim();
-      if(/—$/.test(txt)&&txt.length<20){p.style.display='none';}else{p.style.display='';}
+      if(pillTexts[i]!=null&&pillTexts[i]!==''){p.textContent=pillTexts[i];p.style.display='';}
+      else{
+        var txt=p.textContent.trim();
+        if(/—$/.test(txt)){p.style.display='none';}else{p.style.display='';}
+      }
     });
     var ev=q('.evidence-line span');if(ev)sbSourceLine(ev,firm);
     var maxSize=plans.reduce(function(m,p){var n=Number(p.account_size);return n>m?n:m;},0);
