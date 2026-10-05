@@ -2360,15 +2360,31 @@
       .catch(function(){cb('');});
   }
   function sbSaveProfile(name,bio){
-    if(!sb||!sbUser)return;
-    if(name)sbQuiet(sb.auth.updateUser({data:{display_name:name}}));
-    var row={user_id:sbUser.id};
+    if(!sb||!sbUser){
+      // Queue for when user is available
+      if(name)sbPendingName=name;
+      return Promise.resolve(false);
+    }
+    var promises=[];
+    if(name)promises.push(sb.auth.updateUser({data:{display_name:name}}).catch(function(){}));
+    var row={user_id:sbUser.id,updated_at:new Date().toISOString()};
     if(name)row.display_name=name;
     if(bio!==undefined)row.bio=bio;
-    sb.from('profiles').select('id').eq('user_id',sbUser.id).maybeSingle().then(function(r){
-      if(r.error||!r.data){sbQuiet(sb.from('profiles').insert(row));}
-      else{sbQuiet(sb.from('profiles').update(row).eq('user_id',sbUser.id));}
-    }).catch(function(){});
+    var savePromise=sb.from('profiles').select('id').eq('user_id',sbUser.id).maybeSingle().then(function(r){
+      if(r.error||!r.data){
+        return sb.from('profiles').insert(row).then(function(ir){
+          if(ir.error)console.warn('Profile insert failed:',ir.error.message);
+          return !ir.error;
+        });
+      }else{
+        return sb.from('profiles').update(row).eq('user_id',sbUser.id).then(function(ur){
+          if(ur.error)console.warn('Profile update failed:',ur.error.message);
+          return !ur.error;
+        });
+      }
+    }).catch(function(e){console.warn('Profile save failed:',e);return false;});
+    promises.push(savePromise);
+    return Promise.all(promises);
   }
   function sbFlushPendingProfile(){
     if(sb&&sbUser&&sbPendingName){var n=sbPendingName;sbPendingName='';sbSaveProfile(n);}
@@ -2440,6 +2456,19 @@
   }
   function sbInitSession(){
     if(!sb)return;
+    // Listen for auth state changes (token refresh, sign out, etc.)
+    sb.auth.onAuthStateChange(function(event,session){
+      if(event==='SIGNED_IN'&&session&&session.user){
+        sbUser=session.user;
+        sbFlushPendingProfile();
+        sbLoadProfile(function(pname){enterProduct(pname||session.user.email||'','—');});
+        sbLoadTrades();sbLoadDiscipline();sbLoadSettings();sbLoadCertificates();sbLoadNotifications();
+      }else if(event==='SIGNED_OUT'){
+        sbUser=null;
+      }else if(event==='TOKEN_REFRESHED'&&session&&session.user){
+        sbUser=session.user;
+      }
+    });
     sb.auth.getSession().then(function(r){
       var session=r.data&&r.data.session;
       if(session&&session.user){
@@ -2648,13 +2677,18 @@
       var path=sbUser.id+'/avatar.'+ext;
       sb.storage.from('avatars').upload(path,file,{upsert:true,contentType:file.type}).then(function(up){
         if(up.error)throw up.error;
-        var pub=sb.storage.from('avatars').getPublicUrl(path);
-        var url=pub.data&&pub.data.publicUrl;
-        if(!url)throw new Error('no public url');
-        sb.from('profiles').select('id').eq('user_id',sbUser.id).maybeSingle().then(function(r){
-          if(r.error||!r.data){sbQuiet(sb.from('profiles').insert({user_id:sbUser.id,avatar_url:url}));}
-          else{sbQuiet(sb.from('profiles').update({avatar_url:url}).eq('user_id',sbUser.id));}
-        }).catch(function(){});
+        // Use signed URL (bucket is private) with 1-year expiry
+        return sb.storage.from('avatars').createSignedUrl(path,31536000).then(function(signed){
+          if(signed.error||!signed.data||!signed.data.signedUrl)throw new Error('no signed url');
+          var url=signed.data.signedUrl;
+          return sb.from('profiles').select('id').eq('user_id',sbUser.id).maybeSingle().then(function(r){
+            var saveOp=(r.error||!r.data)
+              ? sb.from('profiles').insert({user_id:sbUser.id,avatar_url:url})
+              : sb.from('profiles').update({avatar_url:url,updated_at:new Date().toISOString()}).eq('user_id',sbUser.id);
+            return saveOp.then(function(){return url;});
+          }).catch(function(){return url;});
+        });
+      }).then(function(url){
         setPhoto(url,doneMsg);
       }).catch(function(){setPhoto(URL.createObjectURL(file),sessMsg);});
       return;
