@@ -2687,6 +2687,15 @@
     var list=document.getElementById('profileBadgeList'),empty=document.getElementById('profileBadgesEmpty');if(!list||!empty)return;
     list.textContent='';earned.forEach(function(name,index){var badge=document.createElement('span');badge.className='certificate-badge';badge.style.animationDelay=reduceMotion.matches?'0ms':Math.min(index,5)*45+'ms';var mark=document.createElement('span');mark.className='certificate-badge-mark';mark.setAttribute('aria-hidden','true');mark.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m7 13-1 8 6-3 6 3-1-8"/><circle cx="12" cy="8" r="5"/><path d="m10 8 1.4 1.4L14.5 6.5"/></svg>';var label=document.createElement('span');label.textContent=currentLanguage==='ar'&&ar[name]?ar[name]:name;badge.appendChild(mark);badge.appendChild(label);list.appendChild(badge);});
     var hasEarned=earned.length>0;list.hidden=!hasEarned;empty.hidden=hasEarned;
+    // Update certificate document recipient name from profile
+    try{
+      var recipient=document.querySelector('#earnedCertificate .certificate-recipient');
+      if(recipient){
+        var pname=(typeof profileSession!=='undefined'&&profileSession.name)||'';
+        if(pname&&pname.indexOf('@')===-1)recipient.textContent=pname;
+        else if(typeof sbUser!=='undefined'&&sbUser&&sbUser.email)recipient.textContent=sbUser.email.split('@')[0];
+      }
+    }catch(re){}
   }
   function sbSaveCertificate(name){
     if(!sb||!sbUser||!name)return;
