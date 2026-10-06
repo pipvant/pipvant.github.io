@@ -2271,7 +2271,7 @@
           if(firm){
             var plans=sbPlansByFirm[firm.id]||[];
             var parts=[];
-            if(firm.hq_country)parts.push(firm.hq_country);
+            if(firm.headquarters)parts.push(firm.headquarters);
             if(plans.length)parts.push(plans.length+(currentLanguage==='ar'?' خطط':' plans'));
             var minPrice=null,maxAlloc=null;
             plans.forEach(function(p){
@@ -2294,7 +2294,7 @@
         btn.style.display='';
       });
     }catch(e){}
-    /* Populate Rationale in rating blocks with factual data (not invented ratings) */ try{var rationaleEls=document.querySelectorAll('#matcher .rating-block small');rationaleEls.forEach(function(el,index){if(el&&(el.textContent.trim()==='Rationale —'||el.textContent.trim()==='—')){var firm=(sbFirms||[])[index];if(firm){var plans=sbPlansByFirm[firm.id]||[];var parts=[];if(firm.hq_country)parts.push(firm.hq_country);if(plans.length)parts.push(plans.length+' plans');el.textContent='Rationale: '+parts.join(' · ');el.closest('.rating-block').setAttribute('aria-label','Rationale available');}}});}catch(e){} // Ensure all shortlist buttons are enabled (robust fallback)
+    /* Populate Rationale in rating blocks with factual data (not invented ratings) */ try{var rationaleEls=document.querySelectorAll('#matcher .rating-block small');rationaleEls.forEach(function(el,index){if(el&&(el.textContent.trim()==='Rationale —'||el.textContent.trim()==='—')){var firm=(sbFirms||[])[index];if(firm){var plans=sbPlansByFirm[firm.id]||[];var parts=[];if(firm.headquarters)parts.push(firm.headquarters);if(plans.length)parts.push(plans.length+' plans');el.textContent='Rationale: '+parts.join(' · ');el.closest('.rating-block').setAttribute('aria-label','Rationale available');}}});}catch(e){} // Ensure all shortlist buttons are enabled (robust fallback)
     try{
       document.querySelectorAll('#matcher .firm-detail-actions .btn.secondary[disabled]').forEach(function(btn){
         btn.removeAttribute('disabled');
