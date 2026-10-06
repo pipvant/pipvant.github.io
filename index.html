@@ -3198,7 +3198,7 @@
     var recipient=document.getElementById('resetEmail').value.trim();
     function showResetSent(){runSuccessMorph(e.submitter,function(){document.getElementById('resetRecipient').textContent=recipient;document.getElementById('resetRequest').hidden=true;document.getElementById('resetSuccess').hidden=false;});}
     if(!sb){showResetSent();return;}
-    sb.auth.resetPasswordForEmail(recipient).then(function(res){
+    sb.auth.resetPasswordForEmail(recipient,{redirectTo:'https://pipvant.github.io/'}).then(function(res){
       if(res.error){showToast(res.error.message);return;}
       showResetSent();
     }).catch(function(err){showToast(err&&err.message?err.message:'Could not send reset link.');});
