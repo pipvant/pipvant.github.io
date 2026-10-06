@@ -2562,7 +2562,7 @@
   function sbSaveTrade(entry){
     if(!sb||!sbUser)return;
     var ep=parseFloat(entry.entry),sz=parseFloat(entry.size);
-    sb.from('trades').insert({user_id:sbUser.id,symbol:entry.pair,direction:entry.direction,entry_price:isFinite(ep)?ep:null,exit_price:null,position_size:isFinite(sz)?sz:null,pnl:null,opened_at:new Date(entry.timestamp).toISOString(),closed_at:null,notes:entry.notes||null})
+    sb.from('trades').insert({user_id:sbUser.id,symbol:entry.pair||'UNKNOWN',direction:entry.direction||'Long',entry_price:isFinite(ep)?ep:0,exit_price:null,position_size:isFinite(sz)?sz:0,pnl:null,opened_at:new Date(entry.timestamp||Date.now()).toISOString(),closed_at:null,notes:entry.notes||null})
       .then(function(r){
         var fb=document.getElementById('journalFeedback');if(!fb)return;
         if(r.error){fb.textContent=currentLanguage==='ar'?'تعذر الحفظ في حسابك — بقيت الصفقة لهذه الجلسة فقط.':'Could not save to your account — kept for this session only.';}
