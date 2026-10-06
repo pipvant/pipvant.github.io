@@ -2295,6 +2295,33 @@
     var tbody=document.querySelector('#matcher .matcher-table tbody');
     if(tbody){tbody.innerHTML='';sbFirms.forEach(function(firm,idx){tbody.appendChild(sbBuildTableRow(firm,sbPlansByFirm[firm.id]||[],idx+1));});}
     var mEmpty=document.querySelector('#matcher .matcher-empty');if(mEmpty)mEmpty.hidden=sbFirms.length>0;
+    // Populate "Why it matches" with real rationale
+    try{
+      document.querySelectorAll('#matcher .firm-card, #matcher .matcher-row').forEach(function(card){
+        var whyEl=card.querySelector('.why-line strong');
+        if(whyEl&&whyEl.textContent.trim()==='—'){
+          var fid=card.getAttribute('data-firm-id');
+          var firm=(sbFirms||[]).find(function(f){return String(f.id)===String(fid);});
+          if(firm){
+            var plans=sbPlansByFirm[firm.id]||[];
+            var parts=[];
+            if(firm.hq_country)parts.push(firm.hq_country);
+            if(plans.length)parts.push(plans.length+' plans');
+            var minPrice=null;
+            plans.forEach(function(p){if(p.price&&(!minPrice||p.price<minPrice))minPrice=p.price;});
+            if(minPrice)parts.push('from $'+minPrice);
+            if(firm.verified)parts.push('verified');
+            whyEl.textContent=parts.join(' · ')||firm.name;
+          }
+        }
+      });
+    }catch(e){}
+    // Hide PROMO buttons when no promo data (cleaner than disabled)
+    try{
+      document.querySelectorAll('#matcher .promo-slot[disabled]').forEach(function(btn){
+        btn.style.display='none';
+      });
+    }catch(e){}
     // Ensure all shortlist buttons are enabled (robust fallback)
     try{
       document.querySelectorAll('#matcher .firm-detail-actions .btn.secondary[disabled]').forEach(function(btn){
