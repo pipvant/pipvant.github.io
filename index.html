@@ -2295,7 +2295,7 @@
         btn.style.display='';
       });
     }catch(e){}
-    /* Populate Rationale in rating blocks with factual data (not invented ratings) */ try{var rationaleEls=document.querySelectorAll('#matcher .rating-block small');rationaleEls.forEach(function(el,index){if(el&&(el.textContent.trim()==='Rationale —'||el.textContent.trim()==='—')){var firm=(sbFirms||[])[index];if(firm){var plans=sbPlansByFirm[firm.id]||[];var parts=[];if(firm.headquarters)parts.push(firm.headquarters);if(plans.length)parts.push(plans.length+' plans');el.textContent='Rationale: '+parts.join(' · ');el.closest('.rating-block').setAttribute('aria-label','Rationale available');}}});}catch(e){} // Ensure all shortlist buttons are enabled (robust fallback)
+    /* Populate Rationale in rating blocks with factual data (not invented ratings) */ try{var rationaleEls=document.querySelectorAll('#matcher .rating-block small');rationaleEls.forEach(function(el){var card=el.closest('.firm-card')||el.closest('[data-firm-id]');var firmId=card?card.getAttribute('data-firm-id'):null;var firm=(sbFirms||[]).filter(function(f){return String(f.id)===String(firmId);})[0];if(el&&(el.textContent.trim()==='Rationale —'||el.textContent.trim()==='—'||el.textContent.indexOf('Rationale:')===0)){if(firm){var plans=sbPlansByFirm[firm.id]||[];var parts=[];if(firm.headquarters)parts.push(firm.headquarters);if(plans.length)parts.push(plans.length+' plans');var newText='Rationale: '+parts.join(' · ');if(el.textContent!==newText){el.textContent=newText;}el.closest('.rating-block').setAttribute('aria-label','Rationale available');}}});}catch(e){} // Ensure all shortlist buttons are enabled (robust fallback)
     try{
       document.querySelectorAll('#matcher .firm-detail-actions .btn.secondary[disabled]').forEach(function(btn){
         btn.removeAttribute('disabled');
@@ -3316,7 +3316,7 @@
         });
       }).catch(function(err){sbAuthError(err&&err.message?err.message:'Sign-in failed.');});
     }else{
-      sb.auth.signUp({email:sbEmail,password:sbPassword}).then(function(res){
+      sb.auth.signUp({email:sbEmail,password:sbPassword,options:{data:{display_name:signupName.value||''}}}).then(function(res){
         if(res.error){sbAuthError(res.error.message);return;}
         sbUser=res.data.user;
         if(!res.data.session){
