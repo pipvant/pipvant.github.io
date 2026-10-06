@@ -2245,6 +2245,23 @@
     var tbody=document.querySelector('#matcher .matcher-table tbody');
     if(tbody){tbody.innerHTML='';sbFirms.forEach(function(firm,idx){tbody.appendChild(sbBuildTableRow(firm,sbPlansByFirm[firm.id]||[],idx+1));});}
     var mEmpty=document.querySelector('#matcher .matcher-empty');if(mEmpty)mEmpty.style.display=sbFirms.length>0?'none':'';
+    // Hide market tabs: no verified market-type data in database (don't invent)
+    try{
+      document.querySelectorAll('.market-tabs').forEach(function(tabs){
+        tabs.style.display='none';
+      });
+    }catch(e){}
+    // Populate "Member since" from Supabase user created_at
+    try{
+      if(typeof sbUser!=='undefined'&&sbUser&&sbUser.created_at){
+        var created=new Date(sbUser.created_at);
+        var monthNames=currentLanguage==='ar'?['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر']:['January','February','March','April','May','June','July','August','September','October','November','December'];
+        var memberSince=monthNames[created.getMonth()]+' '+created.getFullYear();
+        document.querySelectorAll('.profile-member-since').forEach(function(el){
+          el.textContent=(currentLanguage==='ar'?'عضو منذ ':'Member since ')+memberSince;
+        });
+      }
+    }catch(e){}
     // Populate "Why it matches" with real rationale (robust: try multiple selectors)
     try{
       var whyEls=document.querySelectorAll('#matcher .why-line strong');
