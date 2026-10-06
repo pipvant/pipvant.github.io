@@ -3147,7 +3147,7 @@
   document.querySelectorAll('[data-currency-choice]').forEach(function(button){button.addEventListener('click',function(){
     currentCurrency=button.getAttribute('data-currency-choice');
     document.querySelectorAll('[data-currency-choice]').forEach(function(other){other.setAttribute('aria-pressed',String(other===button));});
-    refreshPreferenceCopy();sbSaveSettings();
+    refreshPreferenceCopy();refreshCurrencyDisplay();sbSaveSettings();
   });});
   document.querySelectorAll('[data-default-risk-step]').forEach(function(button){button.addEventListener('click',function(){
     defaultRisk=Math.min(10,Math.max(.1,Math.round((defaultRisk+parseFloat(button.getAttribute('data-default-risk-step')))*10)/10));
