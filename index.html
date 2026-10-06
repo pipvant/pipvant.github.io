@@ -2528,31 +2528,40 @@
   function sbUpdateProfileStats(trades){
     try{
       var total=trades.length;
-      // Total trades
+      var chip=document.querySelector('#profile .profile-status-chip');
+      if(chip){
+        if(total>0){
+          chip.textContent=currentLanguage==='ar'?'السجل متصل':'Journal connected';
+          chip.style.borderColor='var(--emerald,#10b981)';
+          chip.style.color='var(--emerald,#10b981)';
+        }else{
+          chip.textContent=currentLanguage==='ar'?'السجل غير متصل':'Journal not connected';
+          chip.style.borderColor='';
+          chip.style.color='';
+        }
+      }
       var totalEl=document.querySelector('#profile .profile-stat-card:nth-child(3) .profile-stat-value');
       if(totalEl)totalEl.textContent=total>0?String(total):'—';
-      // Most traded
       var counts={};
       trades.forEach(function(t){var s=t.symbol||'—';counts[s]=(counts[s]||0)+1;});
       var most='—',max=0;
       Object.keys(counts).forEach(function(s){if(counts[s]>max){max=counts[s];most=s;}});
       var mostEl=document.querySelector('#profile .profile-most-traded');
       if(mostEl)mostEl.textContent=total>0?most:'—';
-      // Win rate / profit factor need PnL — stay honest "—" until trade results exist
-      // Check Marathon mission
       if(typeof sbCheckMissions==='function')sbCheckMissions(total,0);
       if(typeof sbComputeTraderScore==='function')sbComputeTraderScore(total,0);
     }catch(e){}
-  }
+        }
+
   function sbLoadTrades(){
     if(!sb||!sbUser)return;
-    sb.from('trades').select('id,symbol,direction,entry_price,position_size,notes,opened_at,created_at').order('opened_at',{ascending:false})
+    sb.from('trades').select('id,symbol,direction,entry_price,stop_price,target_price,position_size,notes,opened_at,created_at').order('opened_at',{ascending:false})
       .then(function(r){
         if(r.error||!r.data)return;
         sessionJournalEntries=sessionJournalEntries.filter(function(en){return !en._db;});
         r.data.forEach(function(t){
           var ts=t.opened_at||t.created_at;
-          sessionJournalEntries.push({type:'trade',_db:true,_id:t.id,timestamp:ts?new Date(ts).getTime():Date.now(),pair:t.symbol||'—',direction:t.direction||'—',entry:t.entry_price==null?'—':String(t.entry_price),stop:'—',target:'—',size:t.position_size==null?'—':String(t.position_size),rMultiple:'—',notes:t.notes||''});
+          sessionJournalEntries.push({type:'trade',_db:true,_id:t.id,timestamp:ts?new Date(ts).getTime():Date.now(),pair:t.symbol||'—',direction:t.direction||'—',entry:t.entry_price==null?'—':String(t.entry_price),stop:t.stop_price==null?'—':String(t.stop_price),target:t.target_price==null?'—':String(t.target_price),size:t.position_size==null?'—':String(t.position_size),rMultiple:'—',notes:t.notes||''});
         });
         sessionJournalEntries.sort(function(a,b){return b.timestamp-a.timestamp;});
         renderJournalEntries();
@@ -2560,7 +2569,7 @@
       }).catch(function(){});
   }
   
-  function sbSaveTrade(entry){if(!sb)return;sb.auth.getUser().then(function(uRes){var user=uRes&&uRes.data&&uRes.data.user;if(!user){var fb0=document.getElementById('journalFeedback');if(fb0){fb0.textContent=currentLanguage==='ar'?'الجلسة منتهية — سجل الدخول مجدداً.':'Session expired — please sign in again.';feedbackMotion(fb0);showToast(fb0.textContent);}return;}sbUser=user;var ep=parseFloat(entry.entry),sz=parseFloat(entry.size);var payload={user_id:user.id,symbol:entry.pair||'UNKNOWN',direction:(entry.direction||'long').toLowerCase(),entry_price:isFinite(ep)?ep:0,exit_price:null,position_size:isFinite(sz)?sz:0,pnl:null,opened_at:new Date(entry.timestamp||Date.now()).toISOString(),closed_at:null,notes:entry.notes||null};sb.from('trades').insert(payload).then(function(r){var fb=document.getElementById('journalFeedback');if(!fb)return;if(r.error){fb.textContent=currentLanguage==='ar'?'تعذر الحفظ في حسابك — بقيت الصفقة لهذه الجلسة فقط.':'Could not save to your account — kept for this session only.';}else{entry._db=true;fb.textContent=currentLanguage==='ar'?'تم حفظ الصفقة في سجلك.':'Trade saved to your journal.';sbLoadTrades();}feedbackMotion(fb);showToast(fb.textContent);}).catch(function(){var fb2=document.getElementById('journalFeedback');if(!fb2)return;fb2.textContent=currentLanguage==='ar'?'تعذر الحفظ في حسابك — بقيت الصفقة لهذه الجلسة فقط.':'Could not save to your account — kept for this session only.';feedbackMotion(fb2);showToast(fb2.textContent);});}).catch(function(){var fb3=document.getElementById('journalFeedback');if(fb3){fb3.textContent=currentLanguage==='ar'?'تعذر الحفظ في حسابك — بقيت الصفقة لهذه الجلسة فقط.':'Could not save to your account — kept for this session only.';feedbackMotion(fb3);showToast(fb3.textContent);}});} function sbInitSession(){
+  function sbSaveTrade(entry){if(!sb)return;sb.auth.getUser().then(function(uRes){var user=uRes&&uRes.data&&uRes.data.user;if(!user){var fb0=document.getElementById('journalFeedback');if(fb0){fb0.textContent=currentLanguage==='ar'?'الجلسة منتهية — سجل الدخول مجدداً.':'Session expired — please sign in again.';feedbackMotion(fb0);showToast(fb0.textContent);}return;}sbUser=user;var ep=parseFloat(entry.entry),sz=parseFloat(entry.size),sp=parseFloat(entry.stop),tp=parseFloat(entry.target);var payload={user_id:user.id,symbol:entry.pair||'UNKNOWN',direction:(entry.direction||'long').toLowerCase(),entry_price:isFinite(ep)?ep:0,exit_price:null,position_size:isFinite(sz)?sz:0,pnl:null,stop_price:isFinite(sp)?sp:null,target_price:isFinite(tp)?tp:null,opened_at:new Date(entry.timestamp||Date.now()).toISOString(),closed_at:null,notes:entry.notes||null};sb.from('trades').insert(payload).then(function(r){var fb=document.getElementById('journalFeedback');if(!fb)return;if(r.error){fb.textContent=currentLanguage==='ar'?'تعذر الحفظ في حسابك — بقيت الصفقة لهذه الجلسة فقط.':'Could not save to your account — kept for this session only.';}else{entry._db=true;fb.textContent=currentLanguage==='ar'?'تم حفظ الصفقة في سجلك.':'Trade saved to your journal.';sbLoadTrades();}feedbackMotion(fb);showToast(fb.textContent);}).catch(function(){var fb2=document.getElementById('journalFeedback');if(!fb2)return;fb2.textContent=currentLanguage==='ar'?'تعذر الحفظ في حسابك — بقيت الصفقة لهذه الجلسة فقط.':'Could not save to your account — kept for this session only.';feedbackMotion(fb2);showToast(fb2.textContent);});}).catch(function(){var fb3=document.getElementById('journalFeedback');if(fb3){fb3.textContent=currentLanguage==='ar'?'تعذر الحفظ في حسابك — بقيت الصفقة لهذه الجلسة فقط.':'Could not save to your account — kept for this session only.';feedbackMotion(fb3);showToast(fb3.textContent);}});} function sbInitSession(){
     if(!sb)return;
     // Listen for auth state changes (token refresh, sign out, etc.)
     sb.auth.onAuthStateChange(function(event,session){
