@@ -211,7 +211,7 @@
     .check-progress{color:var(--muted);font-size:11px;white-space:nowrap}
     .review-prompts{display:grid;gap:16px}
     .review-prompts label{font-size:12px;line-height:1.45;text-transform:none;letter-spacing:0;color:var(--secondary);margin-bottom:8px}
-    body.auth-active{overflow:hidden}
+    body.auth-active{overflow:hidden} body.auth-checking .auth-shell{visibility:hidden}
     body.auth-active .app{display:none}
     body.app-ready .auth-shell{display:none}
     .auth-shell{min-height:100svh;background:var(--bg);padding:18px;display:grid;place-items:center;position:relative;overflow:hidden}
@@ -1136,7 +1136,8 @@
     }
   </style>
 </head>
-<body class="auth-active">
+<body class="auth-active auth-checking"> <div id="authLoading" style="position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:var(--bg,#0a0f1a);"><div style="text-align:center;"><img src="assets/pipvanta-logo.png" alt="PIPVANT" style="width:64px;height:64px;opacity:.9;"><div style="margin-top:12px;color:var(--muted,#888);font-size:12px;">Loading…</div></div></div>
+  
 <section class="auth-shell" id="authShell" aria-label="Account setup">
   <div class="auth-stage auth-welcome active" id="authWelcome" data-auth-stage="welcome">
     <div class="auth-welcome-inner">
@@ -2108,8 +2109,8 @@
     img.alt=firm.name||'';img.loading='lazy';
     img.style.cssText='width:100%;height:100%;object-fit:contain;border-radius:6px;';
     img.onerror=function(){img.remove();el.textContent=letter;};
-    // DuckDuckGo favicons (free, no key) — falls back to letter
-    img.src='https://icons.duckduckgo.com/ip3/'+domain+'.ico';
+    // Google favicons with high-res (free, no key) — falls back to letter
+    img.src='https://www.google.com/s2/favicons?domain='+domain+'&sz=128';
     el.appendChild(img);
   }
   function sbNum(v){if(v==null||v==='')return NaN;return Number(v);}
@@ -2566,7 +2567,7 @@
         sessionJournalEntries.sort(function(a,b){return b.timestamp-a.timestamp;});
         renderJournalEntries();
         sbUpdateProfileStats(r.data);
-      }).catch(function(){});
+      }).catch(function(){var loader=document.getElementById('authLoading');if(loader)loader.style.display='none';document.body.classList.remove('auth-checking');});
   }
   
   function sbSaveTrade(entry){if(!sb)return;sb.auth.getUser().then(function(uRes){var user=uRes&&uRes.data&&uRes.data.user;if(!user){var fb0=document.getElementById('journalFeedback');if(fb0){fb0.textContent=currentLanguage==='ar'?'الجلسة منتهية — سجل الدخول مجدداً.':'Session expired — please sign in again.';feedbackMotion(fb0);showToast(fb0.textContent);}return;}sbUser=user;var ep=parseFloat(entry.entry),sz=parseFloat(entry.size),sp=parseFloat(entry.stop),tp=parseFloat(entry.target);var payload={user_id:user.id,symbol:entry.pair||'UNKNOWN',direction:(entry.direction||'long').toLowerCase(),entry_price:isFinite(ep)?ep:0,exit_price:null,position_size:isFinite(sz)?sz:0,pnl:null,stop_price:isFinite(sp)?sp:null,target_price:isFinite(tp)?tp:null,opened_at:new Date(entry.timestamp||Date.now()).toISOString(),closed_at:null,notes:entry.notes||null};sb.from('trades').insert(payload).then(function(r){var fb=document.getElementById('journalFeedback');if(!fb)return;if(r.error){fb.textContent=currentLanguage==='ar'?'تعذر الحفظ في حسابك — بقيت الصفقة لهذه الجلسة فقط.':'Could not save to your account — kept for this session only.';}else{entry._db=true;fb.textContent=currentLanguage==='ar'?'تم حفظ الصفقة في سجلك.':'Trade saved to your journal.';sbLoadTrades();}feedbackMotion(fb);showToast(fb.textContent);}).catch(function(){var fb2=document.getElementById('journalFeedback');if(!fb2)return;fb2.textContent=currentLanguage==='ar'?'تعذر الحفظ في حسابك — بقيت الصفقة لهذه الجلسة فقط.':'Could not save to your account — kept for this session only.';feedbackMotion(fb2);showToast(fb2.textContent);});}).catch(function(){var fb3=document.getElementById('journalFeedback');if(fb3){fb3.textContent=currentLanguage==='ar'?'تعذر الحفظ في حسابك — بقيت الصفقة لهذه الجلسة فقط.':'Could not save to your account — kept for this session only.';feedbackMotion(fb3);showToast(fb3.textContent);}});} function sbInitSession(){
@@ -2585,7 +2586,7 @@
       }
     });
     sb.auth.getSession().then(function(r){
-      var session=r.data&&r.data.session;
+      var session=r.data&&r.data.session;var loader=document.getElementById('authLoading');if(loader)loader.style.display='none';document.body.classList.remove('auth-checking');
       if(session&&session.user){
         sbUser=session.user;
         var meta=session.user.user_metadata||{};
@@ -2593,7 +2594,7 @@
         sbLoadProfile(function(pname){enterProduct(pname||session.user.email||'','—');});
         sbLoadTrades();sbLoadDiscipline();sbLoadSettings();sbLoadCertificates();sbLoadNotifications();
       }
-    }).catch(function(){});
+    }).catch(function(){var loader=document.getElementById('authLoading');if(loader)loader.style.display='none';document.body.classList.remove('auth-checking');});
   }
   /* Fill the firm detail sheet before the existing opener runs (registered first). */
   document.addEventListener('click',function(event){
@@ -2745,7 +2746,7 @@
         var names=r.data.map(function(c){return c.mission;}).filter(Boolean);
         if(typeof renderProfileCertificates==='function')renderProfileCertificates(names);
         profileSession.certificates=names;
-      }).catch(function(){});
+      }).catch(function(){var loader=document.getElementById('authLoading');if(loader)loader.style.display='none';document.body.classList.remove('auth-checking');});
   }
   function sbCheckMissions(tradeCount,disciplineStreak){
     if(!sb||!sbUser)return;
@@ -3056,7 +3057,7 @@
         try{localStorage.setItem('pipvant_rates',JSON.stringify({rates:exchangeRates,ts:Date.now()}));}catch(e){}
         if(currentCurrency!=='USD')refreshCurrencyDisplay();
       }
-    }).catch(function(){});
+    }).catch(function(){var loader=document.getElementById('authLoading');if(loader)loader.style.display='none';document.body.classList.remove('auth-checking');});
     // Load cached rates
     try{
       var cached=localStorage.getItem('pipvant_rates');
@@ -3135,7 +3136,7 @@
       .then(function(r){
         var s=r&&!r.error&&r.data?r.data:null;
         if(s)applySettings(s);
-      }).catch(function(){});
+      }).catch(function(){var loader=document.getElementById('authLoading');if(loader)loader.style.display='none';document.body.classList.remove('auth-checking');});
   }
   function applyTheme(theme){
     document.documentElement.setAttribute('data-theme',theme);
@@ -3543,7 +3544,7 @@
         while(dates[d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)]){streak++;d.setDate(d.getDate()-1);}
         var streakEl=document.querySelector('.discipline-streak .streak-count');
         if(streakEl&&streak>0)streakEl.textContent=streak;
-      }).catch(function(){});
+      }).catch(function(){var loader=document.getElementById('authLoading');if(loader)loader.style.display='none';document.body.classList.remove('auth-checking');});
   }
   function updateCheckProgress(){
     var complete=Array.prototype.filter.call(checks,function(check){return check.checked;}).length;
@@ -3587,7 +3588,7 @@
         });
         groups.hidden=false;if(empty)empty.hidden=true;
         if(typeof refreshNotificationBadge==='function')refreshNotificationBadge();
-      }).catch(function(){});
+      }).catch(function(){var loader=document.getElementById('authLoading');if(loader)loader.style.display='none';document.body.classList.remove('auth-checking');});
   }
   function sbNotify(title,body){
     if(!sb||!sbUser||!title)return;
