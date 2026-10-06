@@ -1430,7 +1430,7 @@
           </tbody>
         </table>
 
-        <div class="matcher-empty"><div class="empty-mark" aria-hidden="true">—</div><div><h3>No verified firms yet</h3><p>Live results stay empty until firm rules, prices, and sources are verified.</p></div></div>
+        <div class="matcher-empty" hidden><div class="empty-mark" aria-hidden="true">—</div><div><h3>No verified firms yet</h3><p>Live results stay empty until firm rules, prices, and sources are verified.</p></div></div>
       </section>
 
       <div class="trust-row" aria-label="Matcher trust indicators">
@@ -2294,7 +2294,21 @@
     }
     var tbody=document.querySelector('#matcher .matcher-table tbody');
     if(tbody){tbody.innerHTML='';sbFirms.forEach(function(firm,idx){tbody.appendChild(sbBuildTableRow(firm,sbPlansByFirm[firm.id]||[],idx+1));});}
-    var mEmpty=document.querySelector('#matcher .matcher-empty');if(mEmpty)mEmpty.hidden=true;
+    var mEmpty=document.querySelector('#matcher .matcher-empty');if(mEmpty)mEmpty.hidden=sbFirms.length>0;
+    // Ensure all shortlist buttons are enabled (robust fallback)
+    try{
+      document.querySelectorAll('#matcher .firm-detail-actions .btn.secondary[disabled]').forEach(function(btn){
+        btn.removeAttribute('disabled');
+        if(!btn.onclick){
+          btn.addEventListener('click',function(ev){
+            if(ev)ev.stopPropagation();
+            var card=btn.closest('[data-firm-id]');
+            var fid=card?card.getAttribute('data-firm-id'):null;
+            if(fid&&typeof sbToggleShortlist==='function')sbToggleShortlist(fid,btn);
+          });
+        }
+      });
+    }catch(e){}
     var preview=document.querySelector('#matcher .preview-label');if(preview)preview.textContent=sbFirms.length+(currentLanguage==='ar'?' شركات موثقة':' verified firms');
     var latest=null;sbFirms.forEach(function(f){if(f.updated_at&&(!latest||f.updated_at>latest))latest=f.updated_at;});
     var metaSpan=document.querySelector('#matcher .matcher-meta span:last-child');
@@ -2315,6 +2329,22 @@
         var daysAgo=Math.floor((Date.now()-new Date(latest).getTime())/86400000);
         cadence=daysAgo===0?(currentLanguage==='ar'?'اليوم':'Today'):daysAgo===1?(currentLanguage==='ar'?'أمس':'Yesterday'):daysAgo+(currentLanguage==='ar'?' أيام':' days ago');
       }
+      // Update P&L calendar month label
+      try{
+        var now=new Date();
+        var monthNames=currentLanguage==='ar'?['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر']:['January','February','March','April','May','June','July','August','September','October','November','December'];
+        var monthLabel=monthNames[now.getMonth()]+' '+now.getFullYear();
+        document.querySelectorAll('#journal .calendar-card .journal-card-head p').forEach(function(p){
+          if(p.textContent.indexOf('Month')!==-1||p.textContent.indexOf('الشهر')!==-1){
+            p.textContent=monthLabel+(currentLanguage==='ar'?' · اختر يوماً لتصفية الصفقات':' · Select a day to filter trades');
+          }
+        });
+        document.querySelectorAll('#journal .calendar-card .tiny').forEach(function(t){
+          if(t.textContent.indexOf('MONTH')!==-1||t.textContent.indexOf('الشهر')!==-1){
+            t.textContent=(currentLanguage==='ar'?'الشهر ':'MONTH ')+monthLabel.toUpperCase();
+          }
+        });
+      }catch(e){}
       document.querySelectorAll('.method-stat').forEach(function(stat){
         var label=stat.querySelector('span');var val=stat.querySelector('strong');
         if(!label||!val)return;
@@ -2322,6 +2352,8 @@
         if(l.indexOf('firms tracked')!==-1)val.textContent=firmsTracked;
         else if(l.indexOf('data points')!==-1)val.textContent=dataPoints;
         else if(l.indexOf('re-verification')!==-1)val.textContent=cadence;
+        else if(l.indexOf('data sources')!==-1)val.textContent=currentLanguage==='ar'?'مواقع الشركات الرسمية':'Official firm websites';
+        else if(l.indexOf('review policy')!==-1)val.textContent=currentLanguage==='ar'?'تحقق يدوي':'Manual verification';
       });
     }catch(e){}
   }
@@ -3026,26 +3058,49 @@
     calculateQuick();calculateFull();
   }
   function sbSaveSettings(){
+    // Always save to localStorage first (synchronous, reliable)
+    try{
+      localStorage.setItem('pipvant_settings',JSON.stringify({
+        theme:document.documentElement.getAttribute('data-theme')||'dark',
+        language:currentLanguage,
+        currency:currentCurrency,
+        default_risk:defaultRisk,
+        notifications:notificationsEnabled
+      }));
+    }catch(e){}
+    // Also save to Supabase (async, best effort)
     if(!sb||!sbUser)return;
-    sbQuiet(sb.from('user_settings').upsert({
+    sb.from('user_settings').upsert({
       user_id:sbUser.id,
       theme:document.documentElement.getAttribute('data-theme')||'dark',
       language:currentLanguage,
       currency:currentCurrency,
       default_risk:defaultRisk,
       notifications:notificationsEnabled
-    },{onConflict:'user_id'}));
+    },{onConflict:'user_id'}).then(function(r){
+      if(r.error)console.warn('Settings save failed:',r.error.message);
+    }).catch(function(e){console.warn('Settings save error:',e);});
   }
   function sbLoadSettings(){
+    function applySettings(s){
+      if(!s)return;
+      if(s.theme)applyTheme(s.theme);
+      if(s.language)applyLanguage(s.language);
+      if(s.currency){currentCurrency=s.currency;refreshPreferenceCopy();}
+      if(typeof s.default_risk==='number'){defaultRisk=s.default_risk;if(typeof setRiskValue==='function')setRiskValue(defaultRisk);}
+      if(typeof s.notifications==='boolean'){notificationsEnabled=s.notifications;}
+    }
+    // Try localStorage first (fast, reliable)
+    try{
+      var local=localStorage.getItem('pipvant_settings');
+      if(local)applySettings(JSON.parse(local));
+    }catch(e){}
+    // Then try Supabase (may have newer data from other devices)
     if(!sb||!sbUser)return;
     sb.from('user_settings').select('theme,language,currency,default_risk,notifications').eq('user_id',sbUser.id).maybeSingle()
       .then(function(r){
-        var s=r&&!r.error&&r.data?r.data:null;if(!s)return;
-        if(s.theme)applyTheme(s.theme);
-        if(s.language)applyLanguage(s.language);
-        if(s.currency){currentCurrency=s.currency;refreshPreferenceCopy();}
-        if(typeof s.default_risk==='number'){defaultRisk=s.default_risk;if(typeof setRiskValue==='function')setRiskValue(defaultRisk);}
-        if(typeof s.notifications==='boolean'){notificationsEnabled=s.notifications;}
+        var s=r&&!r.error&&r.data?r.data:null;
+        if(s)applySettings(s);
       }).catch(function(){});
   }
   function applyTheme(theme){
@@ -3566,9 +3621,9 @@
       document.getElementById('riskBarValue').textContent=units(r)+'%';
       document.getElementById('equityFill').style.setProperty('--risk-scale',String(scale));
       document.getElementById('equityMarker').style.setProperty('--risk-marker-scale',String(scale));
-      document.getElementById('plainLanguage').innerHTML=currentLanguage==='ar'?('تخاطر بـ <strong>'+money(risk)+'</strong> ('+units(r)+'% من حسابك '+money(b)+') لتحقيق '+moneyBlank()+' عند —R. الخسارة تكلف <strong>'+money(risk)+'</strong>.'):('You risk <strong>'+money(risk)+'</strong> ('+units(r)+'% of your '+money(b)+' account) to make '+moneyBlank()+' at —R. A loss costs <strong>'+money(risk)+'</strong>.');
+      document.getElementById('plainLanguage').innerHTML=currentLanguage==='ar'?('تخاطر بـ <strong>'+money(risk)+'</strong> ('+units(r)+'% من حسابك '+money(b)+'). الخسارة تكلف <strong>'+money(risk)+'</strong>.'):('You risk <strong>'+money(risk)+'</strong> ('+units(r)+'% of your '+money(b)+' account). A loss costs <strong>'+money(risk)+'</strong>.');
     }else{
-      document.getElementById('sizeOutput').textContent='—';document.getElementById('riskOutput').textContent='—';document.getElementById('rOutput').textContent='—';document.getElementById('riskContext').textContent=currentLanguage==='ar'?'هذه الصفقة تخاطر بـ —% من الحساب':'This trade risks —% of account';document.getElementById('riskBarValue').textContent='—%';document.getElementById('equityFill').style.setProperty('--risk-scale','0');document.getElementById('equityMarker').style.setProperty('--risk-marker-scale','0');document.getElementById('plainLanguage').textContent=currentLanguage==='ar'?('تخاطر بـ '+moneyBlank()+' (—% من حسابك '+moneyBlank()+') لتحقيق '+moneyBlank()+' عند —R. الخسارة تكلف '+moneyBlank()+'.'):('You risk '+moneyBlank()+' (—% of your '+moneyBlank()+' account) to make '+moneyBlank()+' at —R. A loss costs '+moneyBlank()+'.');
+      document.getElementById('sizeOutput').textContent='—';document.getElementById('riskOutput').textContent='—';document.getElementById('rOutput').textContent='—';document.getElementById('riskContext').textContent=currentLanguage==='ar'?'هذه الصفقة تخاطر بـ —% من الحساب':'This trade risks —% of account';document.getElementById('riskBarValue').textContent='—%';document.getElementById('equityFill').style.setProperty('--risk-scale','0');document.getElementById('equityMarker').style.setProperty('--risk-marker-scale','0');document.getElementById('plainLanguage').textContent=currentLanguage==='ar'?'أدخل الرصيد ونسبة المخاطرة ومسافة الوقف لحساب حجم الصفقة.':'Enter balance, risk %, and stop distance to calculate position size.';
     }
   }
   document.querySelectorAll('.full-calc-input').forEach(function(el){if(el!==balanceInput&&el!==riskPercent)el.addEventListener('input',calculateFull);});
