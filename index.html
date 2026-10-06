@@ -2434,12 +2434,12 @@
   }
   function sbFilterDirectory(){
     var searchEl=document.getElementById('directorySearch');
-    var q=((searchEl&&searchEl.value)||'').trim().toLowerCase();
+    var q=((searchEl&&searchEl.value)||'').trim().toLowerCase();var savedOnly=document.querySelector('.directory-tab[data-directory-tab="saved"]').getAttribute('aria-selected')==='true';
     var visible=0;
     document.querySelectorAll('#directoryResults [data-firm-card]').forEach(function(card){
       var t=card.querySelector('.directory-card-title strong');
       var name=t?t.textContent:'';
-      var show=!q||name.toLowerCase().indexOf(q)!==-1;
+      var bookmarkBtn=card.querySelector('[data-save-firm]');var savedMatch=bookmarkBtn&&bookmarkBtn.getAttribute('aria-pressed')==='true';var show=(!q||name.toLowerCase().indexOf(q)!==-1)&&(!savedOnly||savedMatch);
       card.hidden=!show;if(show)visible++;
     });
     var noMatch=document.getElementById('directoryNoMatch');
