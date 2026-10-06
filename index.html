@@ -2316,10 +2316,13 @@
         }
       });
     }catch(e){}
-    // Hide PROMO buttons when no promo data (cleaner than disabled)
+    // Show PROMO as "PV" (promo codes coming with firms)
     try{
       document.querySelectorAll('#matcher .promo-slot[disabled]').forEach(function(btn){
-        btn.style.display='none';
+        btn.removeAttribute('disabled');
+        btn.innerHTML='PROMO&nbsp; PV';
+        btn.setAttribute('aria-label','Promotional code PV');
+        btn.style.display='';
       });
     }catch(e){}
     // Ensure all shortlist buttons are enabled (robust fallback)
