@@ -2548,7 +2548,7 @@
       var most='—',max=0;
       Object.keys(counts).forEach(function(s){if(counts[s]>max){max=counts[s];most=s;}});
       var mostEl=document.querySelector('#profile .profile-most-traded');
-      if(mostEl)mostEl.textContent=total>0?most:'—';
+      if(mostEl)mostEl.textContent=total>0?most:'—';var rtSection=document.querySelector('#profile [aria-labelledby="recent-trades-title"]');var rtEmpty=rtSection?rtSection.querySelector('.recent-trades-empty'):null;var rtList=rtSection?rtSection.querySelector('.recent-trades-list'):null;if(trades.length>0){if(rtEmpty)rtEmpty.hidden=true;if(!rtList&&rtSection){rtList=document.createElement('ul');rtList.className='recent-trades-list';rtSection.appendChild(rtList);}if(rtList){rtList.innerHTML='';trades.slice(0,5).forEach(function(t){var li=document.createElement('li');li.className='recent-trade-row';li.innerHTML='<span class="recent-trade-symbol"></span><span class="recent-trade-direction"></span><span class="recent-trade-entry"></span>';li.children[0].textContent=t.symbol||'—';li.children[1].textContent=t.direction||'—';li.children[2].textContent=(t.entry_price==null||t.entry_price==='')?'—':t.entry_price;rtList.appendChild(li);});}}else{if(rtEmpty)rtEmpty.hidden=false;if(rtList)rtList.innerHTML='';}
       if(typeof sbCheckMissions==='function')sbCheckMissions(total,0);
       if(typeof sbComputeTraderScore==='function')sbComputeTraderScore(total,0);
     }catch(e){}
@@ -3408,7 +3408,7 @@
   function openMethodology(){methodologyDisclosure.hidden=false;methodologyDisclosure.scrollIntoView({block:'nearest'});document.getElementById('closeMethodology').focus({preventScroll:true});}
   document.addEventListener('click',function(event){var trigger=event.target.closest('[data-methodology-trigger]');if(trigger){event.stopPropagation();openMethodology();}});
   document.getElementById('closeMethodology').addEventListener('click',function(){methodologyDisclosure.hidden=true;document.getElementById('matcherMethodology').scrollIntoView({block:'nearest'});});
-  document.querySelectorAll('[data-consent-choice]').forEach(function(button){button.addEventListener('click',function(){document.getElementById('consentBanner').hidden=true;});});
+  (function(){var consentBanner=document.getElementById('consentBanner');try{if(localStorage.getItem('pipvantConsent')){consentBanner.hidden=true;}}catch(e){}document.querySelectorAll('[data-consent-choice]').forEach(function(button){button.addEventListener('click',function(){try{localStorage.setItem('pipvantConsent',button.getAttribute('data-consent-choice')||'dismissed');}catch(e){}document.getElementById('consentBanner').hidden=true;});});})();
   document.querySelectorAll('[data-matcher-view]').forEach(function(button){button.addEventListener('click',function(){
     var view=button.getAttribute('data-matcher-view');
     matcherList.setAttribute('data-view',view);
