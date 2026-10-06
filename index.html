@@ -2170,58 +2170,8 @@
     if(specs[2])specs[2].textContent=sbPlanDrawdown(firstRules);
     // Transparent value score (0-100) based on verified plan data
     try{
-      var ratingBlock=q('.rating-block');
-      if(ratingBlock&&plans.length){
-        var score=0,parts=0,rationale=[];
-        // Price efficiency: avg price per $10k (lower = better), 40pts
-        var totalPP=0,ppCount=0;
-        plans.forEach(function(p){
-          var sz=Number(p.account_size),pr=Number(p.price);
-          if(sz>0&&pr>0){totalPP+=pr/(sz/10000);ppCount++;}
-        });
-        if(ppCount>0){
-          var avgPP=totalPP/ppCount;
-          var ppScore=Math.max(0,Math.min(40,40*(1-Math.min(1,avgPP/200))));
-          score+=ppScore;parts++;
-          if(avgPP<50)rationale.push(currentLanguage==='ar'?'سعر منافس':'competitive pricing');
-        }
-        // Drawdown generosity: avg drawdown % (higher = better), 30pts
-        var totalDD=0,ddCount=0;
-        plans.forEach(function(p){
-          var r=p.rules||{},sz=Number(p.account_size);
-          var dd=r.max_drawdown_usd!=null?Number(r.max_drawdown_usd):(r.max_drawdown_pct!=null?sz*Number(r.max_drawdown_pct)/100:null);
-          if(dd&&sz>0){totalDD+=(dd/sz*100);ddCount++;}
-        });
-        if(ddCount>0){
-          var avgDD=totalDD/ddCount;
-          var ddScore=Math.max(0,Math.min(30,30*(Math.min(1,avgDD/10))));
-          score+=ddScore;parts++;
-          if(avgDD>=8)rationale.push(currentLanguage==='ar'?'تراجع سخي':'generous drawdown');
-        }
-        // Target achievability: avg profit target % (lower = easier), 30pts
-        var totalPT=0,ptCount=0;
-        plans.forEach(function(p){
-          var r=p.rules||{},sz=Number(p.account_size);
-          var pt=r.profit_target_usd!=null?Number(r.profit_target_usd):(r.profit_target_pct!=null?sz*Number(r.profit_target_pct)/100:null);
-          if(pt&&sz>0){totalPT+=(pt/sz*100);ptCount++;}
-        });
-        if(ptCount>0){
-          var avgPT=totalPT/ptCount;
-          var ptScore=Math.max(0,Math.min(30,30*(1-Math.min(1,avgPT/15))));
-          score+=ptScore;parts++;
-          if(avgPT<=8)rationale.push(currentLanguage==='ar'?'هدف سهل':'achievable target');
-        }
-        if(parts>0){
-          score=Math.round(score);
-          var scoreEl=ratingBlock.querySelector('strong');
-          var barEl=ratingBlock.querySelector('.rating-track i');
-          var ratEl=ratingBlock.querySelector('small');
-          if(scoreEl)scoreEl.textContent=score;
-          if(barEl)barEl.style.width=score+'%';
-          if(ratEl)ratEl.textContent=rationale.length?rationale.join(' · '):(currentLanguage==='ar'?'بناءً على البيانات الموثقة':'based on verified data');
-          ratingBlock.setAttribute('aria-label','Rating '+score+' of 100');
-        }
-      }
+      // Ratings removed: no invented scores. Only verified data is shown.
+      // The rating block stays as "—" (unavailable) per data integrity policy.
     }catch(sce){}
     var details=q('.firm-details');
     if(details&&firstRules&&Array.isArray(firstRules.key_rules)&&firstRules.key_rules.length){
@@ -2306,11 +2256,14 @@
             var plans=sbPlansByFirm[firm.id]||[];
             var parts=[];
             if(firm.hq_country)parts.push(firm.hq_country);
-            if(plans.length)parts.push(plans.length+' plans');
-            var minPrice=null;
-            plans.forEach(function(p){if(p.price&&(!minPrice||p.price<minPrice))minPrice=p.price;});
-            if(minPrice)parts.push('from $'+minPrice);
-            if(firm.verified)parts.push('verified');
+            if(plans.length)parts.push(plans.length+(currentLanguage==='ar'?' خطط':' plans'));
+            var minPrice=null,maxAlloc=null;
+            plans.forEach(function(p){
+              if(p.price&&(!minPrice||p.price<minPrice))minPrice=p.price;
+              if(p.account_size&&(!maxAlloc||p.account_size>maxAlloc))maxAlloc=p.account_size;
+            });
+            if(minPrice)parts.push((currentLanguage==='ar'?'من $':'from $')+minPrice);
+            if(maxAlloc)parts.push((currentLanguage==='ar'?'حتى $':'up to $')+maxAlloc);
             whyEl.textContent=parts.join(' · ')||firm.name;
           }
         }
