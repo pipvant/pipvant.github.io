@@ -2140,13 +2140,13 @@
               r2.data.forEach(function(p){(sbPlansByFirm[p.firm_id]=sbPlansByFirm[p.firm_id]||[]).push(p);});
             }
             sbRenderFirms();
-            sbRenderDirectory();
+            sbRenderDirectory();sbPopulateAccountSizes();
           })
-          .catch(function(){sbRenderFirms();sbRenderDirectory();});
+          .catch(function(){sbRenderFirms();sbRenderDirectory();sbPopulateAccountSizes();});
       })
       .catch(function(){/* keep honest empty states */});
   }
-  function sbFillFirmCard(card,firm,plans,rank){
+  function sbFillFirmCard(card,firm,plans,rank){card.setAttribute('data-firm-id',firm.id);
     function q(s){return card.querySelector(s);}
     var rankEl=q('.rank');if(rankEl)rankEl.textContent=rank;
     var logo=q('.logo-slot');sbFirmLogo(logo,firm);
@@ -2229,7 +2229,7 @@
     td7.appendChild(vb);tr.appendChild(td7);
     return tr;
   }
-  function sbRenderFirms(){
+  function sbPopulateAccountSizes(){var sel=document.getElementById('accountSize');if(!sel||typeof sbPlansByFirm==='undefined')return;var seen={};Object.keys(sbPlansByFirm).forEach(function(fid){(sbPlansByFirm[fid]||[]).forEach(function(p){var n=sbNum(p.account_size);if(isFinite(n)&&n>0)seen[n]=1;});});var sizes=Object.keys(seen).map(Number).sort(function(a,b){return a-b;});var cur=sel.value;var first=sel.options[0];var anyLbl=first?first.textContent:'Any';var anyI18n=first?first.getAttribute('data-i18n'):null;sel.innerHTML='';var any=document.createElement('option');any.value='';if(anyI18n)any.setAttribute('data-i18n',anyI18n);any.textContent=anyLbl;sel.appendChild(any);sizes.forEach(function(s){var o=document.createElement('option');o.value=String(s);o.textContent=sbFmtSize(s);sel.appendChild(o);});if(cur)sel.value=cur;if(typeof applyI18n==='function')applyI18n();}function sbRenderFirms(){
     if(!sbFirms.length)return;
     var slots=document.querySelector('#matcher .firm-slots');
     if(slots){
@@ -2266,9 +2266,9 @@
     // Populate "Why it matches" with real rationale (robust: try multiple selectors)
     try{
       var whyEls=document.querySelectorAll('#matcher .why-line strong');
-      whyEls.forEach(function(whyEl,index){
+      whyEls.forEach(function(whyEl){
         if(whyEl&&whyEl.textContent.trim()==='—'){
-          var firm=(sbFirms||[])[index];
+          var firm=(function(){var el=whyEl.closest('[data-firm-id]');var id=el?el.getAttribute('data-firm-id'):null;var out=null;(sbFirms||[]).forEach(function(f){if(String(f.id)===String(id))out=f;});return out;})();
           if(firm){
             var plans=sbPlansByFirm[firm.id]||[];
             var parts=[];
@@ -2641,7 +2641,7 @@
     if(typeof refreshMenuButtonLabel==='function')refreshMenuButtonLabel();
     if(typeof refreshNotificationBadge==='function')refreshNotificationBadge();
     if(typeof renderJournalEntries==='function'&&Array.isArray(sessionJournalEntries))renderJournalEntries();
-    if(typeof sbRenderFirms==='function'&&sbFirms.length){sbRenderFirms();sbRenderDirectory();}
+    if(typeof sbRenderFirms==='function'&&sbFirms.length){sbRenderFirms();sbRenderDirectory();sbPopulateAccountSizes();}
     if(typeof updateProfileIdentity==='function'&&profileSession)updateProfileIdentity(profileSession.name,profileSession.bio);
     if(typeof renderProfileCertificates==='function'&&profileSession)renderProfileCertificates(profileSession.certificates);
   }
