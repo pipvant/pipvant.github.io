@@ -211,7 +211,7 @@
     .check-progress{color:var(--muted);font-size:11px;white-space:nowrap}
     .review-prompts{display:grid;gap:16px}
     .review-prompts label{font-size:12px;line-height:1.45;text-transform:none;letter-spacing:0;color:var(--secondary);margin-bottom:8px}
-    body.auth-active{overflow:hidden} body.auth-checking .auth-shell{visibility:hidden}
+    body.auth-active{overflow:hidden} .auth-shell{visibility:hidden} body.show-auth .auth-shell{visibility:visible}
     body.auth-active .app{display:none}
     body.app-ready .auth-shell{display:none}
     .auth-shell{min-height:100svh;background:var(--bg);padding:18px;display:grid;place-items:center;position:relative;overflow:hidden}
@@ -2593,8 +2593,11 @@
         sbFlushPendingProfile();
         sbLoadProfile(function(pname){enterProduct(pname||session.user.email||'','—');});
         sbLoadTrades();sbLoadDiscipline();sbLoadSettings();sbLoadCertificates();sbLoadNotifications();
+      }else{
+        // No session - show auth shell
+        document.body.classList.add('show-auth');
       }
-    }).catch(function(){var loader=document.getElementById('authLoading');if(loader)loader.style.display='none';document.body.classList.remove('auth-checking');});
+    }).catch(function(){var loader=document.getElementById('authLoading');if(loader)loader.style.display='none';document.body.classList.remove('auth-checking');document.body.classList.add('show-auth');});
   }
   /* Fill the firm detail sheet before the existing opener runs (registered first). */
   document.addEventListener('click',function(event){
