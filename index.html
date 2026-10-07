@@ -1638,8 +1638,8 @@
           <div class="profile-prestige-row">
             <section class="profile-balance" aria-labelledby="account-balance-title">
               <h3 class="profile-card-label" id="account-balance-title">Account balance</h3>
-              <strong class="profile-balance-value">—</strong>
-              <span class="profile-balance-range">—</span>
+              <strong class="profile-balance-value">Not tracked</strong>
+              <span class="profile-balance-range">Balance tracking not available</span>
               <div class="profile-equity-empty" id="profileEquityRegion" aria-label="No equity data yet">
                 <svg class="profile-equity-chart" id="profileEquityChart" viewBox="0 0 640 160" preserveAspectRatio="none" aria-hidden="true" hidden>
                   <defs><linearGradient id="profileEquityGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5B8DEF" stop-opacity=".22"/><stop offset="1" stop-color="#5B8DEF" stop-opacity="0"/></linearGradient></defs>
@@ -2781,6 +2781,26 @@
     document.querySelectorAll('[data-profile-name],[data-rail-name]').forEach(function(el){el.textContent=profileSession.name||'—';});
     var bioNode=document.getElementById('profileBio');if(bioNode)bioNode.textContent=profileSession.bio||'—';
     if(!profileSession.photoUrl)setAvatarSurfacePhoto('');
+    updateSetupStatus();
+  }
+  function updateSetupStatus(){
+    try{
+      var rows=document.querySelectorAll('.profile-health-row');
+      if(!rows||rows.length<3)return;
+      var checks=[
+        {done:!!(profileSession&&profileSession.name),label:currentLanguage==='ar'?'مكتمل':'Complete'},
+        {done:typeof defaultRisk!=='undefined'&&defaultRisk>0,label:currentLanguage==='ar'?'محدد':'Set'},
+        {done:typeof notificationsEnabled!=='undefined'&&!!notificationsEnabled,label:currentLanguage==='ar'?'مفعّلة':'On'}
+      ];
+      var notLabel=currentLanguage==='ar'?'غير مكتمل':'Incomplete';
+      rows.forEach(function(row,i){
+        if(i>=checks.length)return;
+        var glyph=row.querySelector('.profile-health-glyph');
+        var value=row.querySelector('.profile-health-value');
+        if(glyph)glyph.textContent=checks[i].done?'✓':'—';
+        if(value)value.textContent=checks[i].done?checks[i].label:notLabel;
+      });
+    }catch(e){}
   }
   function normalizeCertificateName(value){
     var raw=typeof value==='string'?value:(value&&typeof value==='object'?(value.name||value.id||''):'');var compact=String(raw).trim().toLowerCase().replace(/[\s_-]+/g,'');
@@ -3192,6 +3212,7 @@
       if(s.currency){currentCurrency=s.currency;refreshPreferenceCopy();}
       if(typeof s.default_risk==='number'){defaultRisk=s.default_risk;if(typeof setRiskValue==='function')setRiskValue(defaultRisk);}
       if(typeof s.notifications==='boolean'){notificationsEnabled=s.notifications;}
+      if(typeof updateSetupStatus==='function')updateSetupStatus();
     }
     // Try localStorage first (fast, reliable)
     try{
