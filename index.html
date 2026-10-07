@@ -2133,9 +2133,9 @@
     el.appendChild(img);
   }
   function sbNum(v){if(v==null||v==='')return NaN;return Number(v);}
-  function sbFmtSize(v){var n=sbNum(v);if(!isFinite(n))return '—';return n>=1000?'$'+(n/1000)+'k':'$'+n;}
+  function sbFmtSize(v){var n=sbNum(v);if(!isFinite(n))return '—';var sym='$',val=n;if(typeof convertPrice==='function'&&typeof currentCurrency!=='undefined'&&currentCurrency!=='USD'){val=convertPrice(n);sym=currentCurrency==='EUR'?'€':'MAD ';}return val>=1000?sym+(val/1000)+'k':sym+val;}
   function sbSizeRange(plans){var s=plans.map(function(p){return sbNum(p.account_size);}).filter(isFinite).sort(function(a,b){return a-b;});if(!s.length)return '—';if(s.length===1)return sbFmtSize(s[0]);return sbFmtSize(s[0])+' – '+sbFmtSize(s[s.length-1])+' ('+s.length+')';}
-  function sbMinPrice(plans){var p=plans.map(function(x){return sbNum(x.price);}).filter(isFinite).sort(function(a,b){return a-b;});return p.length?(typeof formatPrice==='function'?formatPrice(p[0]):'$'+p[0]):'—';}
+  function sbMinPrice(plans){var p=plans.map(function(x){return sbNum(x.price);}).filter(isFinite).sort(function(a,b){return a-b;});if(!p.length)return '—';if(typeof formatPrice==='function')return formatPrice(p[0]);return sbFmtUSD(p[0]);}
   function sbFmtUSD(usd){var n=Number(usd);if(!isFinite(n))return '—';if(typeof convertPrice==='function'&&typeof currentCurrency!=='undefined'&&currentCurrency!=='USD'){var c=convertPrice(n);var sym=currentCurrency==='EUR'?'€':'MAD ';return sym+c.toLocaleString('en-US');}return '$'+n.toLocaleString('en-US');}function sbPlanTarget(rules){if(!rules)return '—';if(rules.profit_target_pct!=null&&isFinite(Number(rules.profit_target_pct)))return rules.profit_target_pct+'%';if(rules.profit_target_usd!=null&&isFinite(Number(rules.profit_target_usd)))return sbFmtUSD(rules.profit_target_usd);return '—';}
   function sbPlanDrawdown(rules){if(!rules)return '—';var v='—';if(rules.max_drawdown_pct!=null&&isFinite(Number(rules.max_drawdown_pct)))v=rules.max_drawdown_pct+'%';else if(rules.max_drawdown_usd!=null&&isFinite(Number(rules.max_drawdown_usd)))v=sbFmtUSD(rules.max_drawdown_usd);var t=String(rules.drawdown_type||'').toLowerCase();if(t.indexOf('trailing')!==-1)v+=' trailing';else if(t.indexOf('static')!==-1)v+=' static';return v;}
   function sbPricingLabel(plans){if(!plans.length||!plans[0].rules||!plans[0].rules.pricing_model)return '—';return plans[0].rules.pricing_model==='monthly subscription'?(currentLanguage==='ar'?'شهري':'Monthly'):(currentLanguage==='ar'?'دفعة واحدة':'One-time');}
@@ -2269,7 +2269,39 @@
     }
     return true;
   }
+  var sbTableSortCol=null,sbTableSortDir='asc';
+  function sbFirmSortVal(firm,col){
+    var plans=sbPlansByFirm[firm.id]||[];
+    var rules=plans.length?plans[0].rules:null;
+    switch(col){
+      case 'Firm':return String(firm.name||'').toLowerCase();
+      case 'Account sizes':{var s=plans.map(function(p){return sbNum(p.account_size);}).filter(isFinite);return s.length?Math.max.apply(null,s):-1;}
+      case 'Profit target':return rules&&isFinite(Number(rules.profit_target_pct))?Number(rules.profit_target_pct):-1;
+      case 'Max drawdown':return rules&&isFinite(Number(rules.max_drawdown_pct))?Number(rules.max_drawdown_pct):-1;
+      default:return 0;
+    }
+  }
+  function sbSortFirmsForTable(firms){
+    if(!sbTableSortCol||sbTableSortCol==='Rank')return firms;
+    var dir=sbTableSortDir==='desc'?-1:1;
+    return firms.slice().sort(function(a,b){
+      var va=sbFirmSortVal(a,sbTableSortCol),vb=sbFirmSortVal(b,sbTableSortCol);
+      if(typeof va==='string')return va.localeCompare(vb)*dir;
+      return (va-vb)*dir;
+    });
+  }
+  function sbHideMarketUI(){
+    // Hide market tabs + market filter: no verified market-type data in database (don't invent)
+    try{
+      document.querySelectorAll('.market-tabs').forEach(function(tabs){
+        tabs.style.display='none';
+      });
+      var marketSel=document.getElementById('market');
+      if(marketSel&&marketSel.parentElement)marketSel.parentElement.style.display='none';
+    }catch(e){}
+  }
   function sbRenderFirms(){
+    sbHideMarketUI();
     if(!sbFirms.length)return;
     var filters=sbGetMatcherFilters();
     var firms=sbFirms.filter(function(f){return sbFirmMatchesFilters(f,sbPlansByFirm[f.id]||[],filters);});
@@ -2286,14 +2318,8 @@
       }
     }
     var tbody=document.querySelector('#matcher .matcher-table tbody');
-    if(tbody){tbody.innerHTML='';firms.forEach(function(firm,idx){tbody.appendChild(sbBuildTableRow(firm,sbPlansByFirm[firm.id]||[],idx+1));});}
+    if(tbody){tbody.innerHTML='';sbSortFirmsForTable(firms).forEach(function(firm,idx){tbody.appendChild(sbBuildTableRow(firm,sbPlansByFirm[firm.id]||[],idx+1));});}
     var mEmpty=document.querySelector('#matcher .matcher-empty');if(mEmpty)mEmpty.style.display=firms.length>0?'none':'';
-    // Hide market tabs: no verified market-type data in database (don't invent)
-    try{
-      document.querySelectorAll('.market-tabs').forEach(function(tabs){
-        tabs.style.display='none';
-      });
-    }catch(e){}
     // Populate "Member since" from Supabase user created_at
     try{
       if(typeof sbUser!=='undefined'&&sbUser&&sbUser.created_at){
@@ -2321,8 +2347,8 @@
               if(p.price&&(!minPrice||p.price<minPrice))minPrice=p.price;
               if(p.account_size&&(!maxAlloc||p.account_size>maxAlloc))maxAlloc=p.account_size;
             });
-            if(minPrice)parts.push((currentLanguage==='ar'?'من $':'from $')+minPrice);
-            if(maxAlloc)parts.push((currentLanguage==='ar'?'حتى $':'up to $')+maxAlloc);
+            if(minPrice)parts.push((currentLanguage==='ar'?'من ':'from ')+(typeof formatPrice==='function'?formatPrice(minPrice):sbFmtUSD(minPrice)));
+            if(maxAlloc)parts.push((currentLanguage==='ar'?'حتى ':'up to ')+sbFmtSize(maxAlloc));
             whyEl.textContent=parts.join(' · ')||firm.name;
           }
         }
@@ -2469,11 +2495,48 @@
   function sbFilterDirectory(){
     var searchEl=document.getElementById('directorySearch');
     var q=((searchEl&&searchEl.value)||'').trim().toLowerCase();var savedOnly=document.querySelector('.directory-tab[data-directory-tab="saved"]').getAttribute('aria-selected')==='true';
+    // Active slider/chip filters (only those backed by verified data)
+    function rangeVal(id){var el=document.getElementById(id);if(!el)return 0;return el.value!==el.getAttribute('data-default')?parseFloat(el.value):0;}
+    var maxPrice=rangeVal('dirMaxPrice'),maxTarget=rangeVal('dirMaxProfitTarget'),minDd=rangeVal('dirMinDrawdown');
+    var ddTypes=[];
+    try{
+      document.querySelectorAll('.directory-chip-group').forEach(function(group){
+        var chips=Array.prototype.map.call(group.querySelectorAll('.directory-chip'),function(c){return c.textContent.trim();}).join('|');
+        if(/Static|Trailing/.test(chips)){
+          group.querySelectorAll('.directory-chip[aria-pressed="true"]').forEach(function(chip){ddTypes.push(chip.textContent.trim().toLowerCase());});
+        }
+      });
+    }catch(e){}
+    var hasRuleFilters=maxPrice>0||maxTarget>0||minDd>0||ddTypes.length>0;
     var visible=0;
     document.querySelectorAll('#directoryResults [data-firm-card]').forEach(function(card){
       var t=card.querySelector('.directory-card-title strong');
       var name=t?t.textContent:'';
       var bookmarkBtn=card.querySelector('[data-save-firm]');var savedMatch=bookmarkBtn&&bookmarkBtn.getAttribute('aria-pressed')==='true';var show=(!q||name.toLowerCase().indexOf(q)!==-1)&&(!savedOnly||savedMatch);
+      if(show&&hasRuleFilters){
+        var fid=card.getAttribute('data-firm-id');var firm=null;
+        (sbFirms||[]).forEach(function(f){if(String(f.id)===String(fid))firm=f;});
+        var plans=firm?(sbPlansByFirm[firm.id]||[]):[];
+        var rules=plans.length?plans[0].rules:null;
+        if(maxPrice>0){
+          var prices=plans.map(function(p){return sbNum(p.price);}).filter(isFinite);
+          if(!prices.length||Math.min.apply(null,prices)>maxPrice)show=false;
+        }
+        if(show&&maxTarget>0){
+          var pt=rules?Number(rules.profit_target_pct):NaN;
+          if(!isFinite(pt)||pt>maxTarget)show=false;
+        }
+        if(show&&minDd>0){
+          var dd=rules?Number(rules.max_drawdown_pct):NaN;
+          if(!isFinite(dd)||dd<minDd)show=false;
+        }
+        if(show&&ddTypes.length){
+          var dt=String((rules&&rules.drawdown_type)||'').toLowerCase();
+          var ok=false;
+          ddTypes.forEach(function(ty){if(dt.indexOf(ty)!==-1)ok=true;});
+          if(!ok)show=false;
+        }
+      }
       card.hidden=!show;if(show)visible++;
     });
     var noMatch=document.getElementById('directoryNoMatch');
@@ -3023,6 +3086,17 @@
   var directoryEmpty=document.getElementById('directoryEmpty');
   var directoryNoMatch=document.getElementById('directoryNoMatch');
   var directoryRangeConfig={dirMaxPrice:{currency:true,anyAt:'max'},dirMinProfitSplit:{suffix:'%',anyAt:'min'},dirMaxProfitTarget:{suffix:'%',anyAt:'max'},dirMinDrawdown:{suffix:'%',anyAt:'min'},dirMinLeverage:{suffix:':1',anyAt:'min'}};
+  // Hide directory filters with no verified data in database (don't invent): profit split, leverage, program type
+  try{
+    ['dirMinProfitSplit','dirMinLeverage'].forEach(function(id){
+      var el=document.getElementById(id);
+      if(el&&el.parentElement)el.parentElement.style.display='none';
+    });
+    document.querySelectorAll('.directory-chip-group').forEach(function(group){
+      var chips=Array.prototype.map.call(group.querySelectorAll('.directory-chip'),function(c){return c.textContent.trim();}).join('|');
+      if(/Instant/.test(chips)&&group.parentElement)group.parentElement.style.display='none';
+    });
+  }catch(e){}
   function closeDirectoryFilters(){if(directoryFilterSheet)directoryFilterSheet.classList.remove('open');}
   function closeFirmDetail(){if(firmDetailSheet)firmDetailSheet.classList.remove('open');}
   function directoryActiveCount(){
@@ -3060,6 +3134,43 @@
   firmDetailSheet.addEventListener('click',function(event){if(event.target===firmDetailSheet)closeFirmDetail();});
   document.getElementById('closeFirmDetail').addEventListener('click',closeFirmDetail);
   directorySearch.addEventListener('input',refreshDirectory);
+  // Directory sort: "Profit split" option removed (no verified data); sort by min price or recommended
+  try{
+    var dirSort=document.getElementById('directorySort');
+    if(dirSort){
+      Array.prototype.forEach.call(dirSort.options,function(o){
+        if(/profit split/i.test(o.textContent))o.remove();
+      });
+      dirSort.addEventListener('change',function(){
+        var mode=dirSort.value||dirSort.options[dirSort.selectedIndex].textContent;
+        var results=document.getElementById('directoryResults');
+        var empty=document.getElementById('directoryEmpty');
+        if(!results)return;
+        var cards=Array.prototype.slice.call(results.querySelectorAll('[data-firm-card]'));
+        function firmOf(card){
+          var fid=card.getAttribute('data-firm-id');var firm=null;
+          (sbFirms||[]).forEach(function(f){if(String(f.id)===String(fid))firm=f;});
+          return firm;
+        }
+        function minPriceOf(firm){
+          if(!firm)return Infinity;
+          var prices=(sbPlansByFirm[firm.id]||[]).map(function(p){return sbNum(p.price);}).filter(isFinite);
+          return prices.length?Math.min.apply(null,prices):Infinity;
+        }
+        if(/price/i.test(mode)){
+          cards.sort(function(a,b){return minPriceOf(firmOf(a))-minPriceOf(firmOf(b));});
+        }else{
+          // Recommended: original load order (by firm name from Supabase)
+          cards.sort(function(a,b){
+            var fa=firmOf(a),fb=firmOf(b);
+            return String(fa&&fa.name||'').localeCompare(String(fb&&fb.name||''));
+          });
+        }
+        cards.forEach(function(c){results.insertBefore(c,empty);});
+        if(typeof sbFilterDirectory==='function')sbFilterDirectory();
+      });
+    }
+  }catch(e){}
   document.querySelectorAll('.directory-filter-list input[type="range"]').forEach(function(input){input.addEventListener('input',function(){refreshDirectoryRange(input);refreshDirectory();});});
   document.querySelectorAll('.directory-chip').forEach(function(chip){chip.addEventListener('click',function(){chip.setAttribute('aria-pressed',String(chip.getAttribute('aria-pressed')!=='true'));refreshDirectory();});});
   document.querySelectorAll('.directory-tab').forEach(function(tab){tab.addEventListener('click',function(){document.querySelectorAll('.directory-tab').forEach(function(other){other.setAttribute('aria-selected',String(other===tab));});refreshDirectory();});});
@@ -3523,9 +3634,14 @@
     document.querySelectorAll('[data-matcher-view]').forEach(function(other){other.setAttribute('aria-pressed',String(other===button));});
   });});
   document.querySelectorAll('.sort-button').forEach(function(button){button.addEventListener('click',function(){
+    var col=button.getAttribute('data-sort-column');
     var next=button.getAttribute('aria-sort')==='ascending'?'descending':'ascending';
     document.querySelectorAll('.sort-button').forEach(function(other){other.removeAttribute('aria-sort');});
     button.setAttribute('aria-sort',next);
+    // Rating/Discount columns have no verified data; sorting them is a no-op
+    if(col==='Rating'||col==='Discount'){sbTableSortCol=null;}
+    else{sbTableSortCol=col;sbTableSortDir=next;}
+    if(typeof sbRenderFirms==='function')sbRenderFirms();
   });});
 
   document.querySelectorAll('.range-btn').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.range-btn').forEach(function(other){other.setAttribute('aria-pressed',String(other===button));});var range=button.textContent.trim();var now=Date.now();var cutoff=0;if(range==='1W')cutoff=now-7*24*60*60*1000;else if(range==='1M')cutoff=now-30*24*60*60*1000;else if(range==='3M')cutoff=now-90*24*60*60*1000;else if(range==='1Y')cutoff=now-365*24*60*60*1000;else if(range==='Custom'){var startStr=prompt(currentLanguage==='ar'?'تاريخ البداية (YYYY-MM-DD):':'Start date (YYYY-MM-DD):');var endStr=prompt(currentLanguage==='ar'?'تاريخ النهاية (YYYY-MM-DD):':'End date (YYYY-MM-DD):');if(startStr){var sd=new Date(startStr);if(!isNaN(sd.getTime()))cutoff=sd.getTime();}var _endCutoff=0;if(endStr){var _ed=new Date(endStr);if(!isNaN(_ed.getTime())){_ed.setHours(23,59,59,999);_endCutoff=_ed.getTime();}}window.journalDateEnd=_endCutoff;}else{window.journalDateEnd=0;}window.journalDateCutoff=cutoff;if(typeof renderJournalEntries==='function')renderJournalEntries();});});
