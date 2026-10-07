@@ -1678,7 +1678,7 @@
             <article class="profile-stat-card">
               <h3 class="profile-card-label">Total trades</h3>
               <strong class="profile-stat-value">—</strong>
-              <div class="trade-breakdown"><span>Winning <b>—</b></span><span>Breakeven <b>—</b></span><span>Losing <b>—</b></span></div>
+              <div class="trade-breakdown"><span>Winning <b class="profile-win-count">—</b></span><span>Breakeven <b class="profile-be-count">—</b></span><span>Losing <b class="profile-loss-count">—</b></span></div>
             </article>
             <article class="profile-stat-card">
               <h3 class="profile-card-label">Most traded</h3>
@@ -2564,6 +2564,7 @@
       var closedTrades=trades.filter(function(t){return t.pnl!=null&&isFinite(Number(t.pnl));});
       var wins=closedTrades.filter(function(t){return Number(t.pnl)>0;}).length;
       var losses=closedTrades.filter(function(t){return Number(t.pnl)<0;}).length;
+      var breakevens=closedTrades.filter(function(t){return Number(t.pnl)===0;}).length;
       var winRate=closedTrades.length>0?Math.round((wins/closedTrades.length)*100):null;
       var totalPnl=closedTrades.reduce(function(sum,t){return sum+Number(t.pnl);},0);
       var chip=document.querySelector('#profile .profile-status-chip');
@@ -2583,12 +2584,24 @@
       // Win rate
       var winRateEl=document.querySelector('#profile .profile-stat-card:nth-child(1) .profile-empty-ring span');
       if(winRateEl)winRateEl.textContent=winRate!=null?winRate+'%':'—';
-      // Winning/Losing counts
+      // Profit factor
+      try{
+        var pfEl=document.querySelector('#profile .profile-stat-card:nth-child(2) .profile-stat-value');
+        if(pfEl){
+          var grossP=closedTrades.filter(function(t){return Number(t.pnl)>0;}).reduce(function(s,t){return s+Number(t.pnl);},0);
+          var grossL=closedTrades.filter(function(t){return Number(t.pnl)<0;}).reduce(function(s,t){return s+Math.abs(Number(t.pnl));},0);
+          var pf=grossL>0?(grossP/grossL):(grossP>0?Infinity:0);
+          pfEl.textContent=closedTrades.length>0?(!isFinite(pf)?'∞':pf.toFixed(2)):'—';
+        }
+      }catch(e3){}
+      // Winning/Losing/Breakeven counts
       try{
         var winEl=document.querySelector('#profile .profile-win-count');
         var lossEl=document.querySelector('#profile .profile-loss-count');
+        var beEl=document.querySelector('#profile .profile-be-count');
         if(winEl)winEl.textContent=wins;
         if(lossEl)lossEl.textContent=losses;
+        if(beEl)beEl.textContent=typeof breakevens!=='undefined'?breakevens:'—';
       }catch(e2){}
       var counts={};
       trades.forEach(function(t){var s=t.symbol||'—';counts[s]=(counts[s]||0)+1;});
