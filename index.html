@@ -2245,14 +2245,37 @@
     td7.appendChild(vb);tr.appendChild(td7);
     return tr;
   }
-  function sbPopulateAccountSizes(){var sel=document.getElementById('accountSize');if(!sel||typeof sbPlansByFirm==='undefined')return;var seen={};Object.keys(sbPlansByFirm).forEach(function(fid){(sbPlansByFirm[fid]||[]).forEach(function(p){var n=sbNum(p.account_size);if(isFinite(n)&&n>0)seen[n]=1;});});var sizes=Object.keys(seen).map(Number).sort(function(a,b){return a-b;});var cur=sel.value;var first=sel.options[0];var anyLbl=first?first.textContent:'Any';var anyI18n=first?first.getAttribute('data-i18n'):null;sel.innerHTML='';var any=document.createElement('option');any.value='';if(anyI18n)any.setAttribute('data-i18n',anyI18n);any.textContent=anyLbl;sel.appendChild(any);sizes.forEach(function(s){var o=document.createElement('option');o.value=String(s);o.textContent=sbFmtSize(s);sel.appendChild(o);});if(cur)sel.value=cur;if(typeof applyI18n==='function')applyI18n();}function sbRenderFirms(){
+  function sbPopulateAccountSizes(){var sel=document.getElementById('accountSize');if(!sel||typeof sbPlansByFirm==='undefined')return;var seen={};Object.keys(sbPlansByFirm).forEach(function(fid){(sbPlansByFirm[fid]||[]).forEach(function(p){var n=sbNum(p.account_size);if(isFinite(n)&&n>0)seen[n]=1;});});var sizes=Object.keys(seen).map(Number).sort(function(a,b){return a-b;});var cur=sel.value;var first=sel.options[0];var anyLbl=first?first.textContent:'Any';var anyI18n=first?first.getAttribute('data-i18n'):null;sel.innerHTML='';var any=document.createElement('option');any.value='';if(anyI18n)any.setAttribute('data-i18n',anyI18n);any.textContent=anyLbl;sel.appendChild(any);sizes.forEach(function(s){var o=document.createElement('option');o.value=String(s);o.textContent=sbFmtSize(s);sel.appendChild(o);});if(cur)sel.value=cur;if(typeof applyI18n==='function')applyI18n();}
+  /* Matcher filters: real filtering from account size + max price */
+  function sbGetMatcherFilters(){
+    var sizeSel=document.getElementById('accountSize');
+    var priceInput=document.getElementById('maxPrice');
+    return {
+      size:sizeSel&&sizeSel.value?Number(sizeSel.value):0,
+      maxPrice:priceInput&&priceInput.value?parseFloat(priceInput.value):0
+    };
+  }
+  function sbFirmMatchesFilters(firm,plans,filters){
+    if(filters.size>0){
+      var hasSize=plans.some(function(p){return sbNum(p.account_size)===filters.size;});
+      if(!hasSize)return false;
+    }
+    if(filters.maxPrice>0){
+      var minP=plans.map(function(p){return sbNum(p.price);}).filter(isFinite);
+      if(!minP.length||Math.min.apply(null,minP)>filters.maxPrice)return false;
+    }
+    return true;
+  }
+  function sbRenderFirms(){
     if(!sbFirms.length)return;
+    var filters=sbGetMatcherFilters();
+    var firms=sbFirms.filter(function(f){return sbFirmMatchesFilters(f,sbPlansByFirm[f.id]||[],filters);});
     var slots=document.querySelector('#matcher .firm-slots');
     if(slots){
       var proto=slots.querySelector('.firm-card');
       if(proto){
         slots.innerHTML='';
-        sbFirms.forEach(function(firm,idx){
+        firms.forEach(function(firm,idx){
           var card=proto.cloneNode(true);
           sbFillFirmCard(card,firm,sbPlansByFirm[firm.id]||[],idx+1);
           slots.appendChild(card);
@@ -2260,8 +2283,8 @@
       }
     }
     var tbody=document.querySelector('#matcher .matcher-table tbody');
-    if(tbody){tbody.innerHTML='';sbFirms.forEach(function(firm,idx){tbody.appendChild(sbBuildTableRow(firm,sbPlansByFirm[firm.id]||[],idx+1));});}
-    var mEmpty=document.querySelector('#matcher .matcher-empty');if(mEmpty)mEmpty.style.display=sbFirms.length>0?'none':'';
+    if(tbody){tbody.innerHTML='';firms.forEach(function(firm,idx){tbody.appendChild(sbBuildTableRow(firm,sbPlansByFirm[firm.id]||[],idx+1));});}
+    var mEmpty=document.querySelector('#matcher .matcher-empty');if(mEmpty)mEmpty.style.display=firms.length>0?'none':'';
     // Hide market tabs: no verified market-type data in database (don't invent)
     try{
       document.querySelectorAll('.market-tabs').forEach(function(tabs){
@@ -3179,6 +3202,13 @@
     refreshPreferenceCopy();refreshCurrencyDisplay();sbSaveSettings();
     if(typeof calculateFull==='function')calculateFull();
   });});
+  /* Matcher filter controls: re-render on change */
+  ['accountSize','maxPrice'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el)el.addEventListener(id==='maxPrice'?'input':'change',function(){
+      if(typeof sbRenderFirms==='function')sbRenderFirms();
+    });
+  });
   document.querySelectorAll('[data-default-risk-step]').forEach(function(button){button.addEventListener('click',function(){
     defaultRisk=Math.min(10,Math.max(.1,Math.round((defaultRisk+parseFloat(button.getAttribute('data-default-risk-step')))*10)/10));
     document.getElementById('defaultRiskValue').textContent=defaultRisk.toFixed(1)+'%';
