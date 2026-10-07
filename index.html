@@ -2909,7 +2909,7 @@
     }
     setPhoto(URL.createObjectURL(file),sessMsg);
   });
-  document.getElementById('profileAvatarRevert').addEventListener('click',function(){var feedback=document.getElementById('profileAvatarFeedback');if(profileSession.photoUrl)URL.revokeObjectURL(profileSession.photoUrl);profileSession.photoUrl='';setAvatarSurfacePhoto('');feedback.textContent=currentLanguage==='ar'?'تم إرجاع الصورة.':'Photo reverted.';feedbackMotion(feedback);});
+  document.getElementById('profileAvatarRevert').addEventListener('click',function(){var feedback=document.getElementById('profileAvatarFeedback');if(profileSession.photoUrl)URL.revokeObjectURL(profileSession.photoUrl);profileSession.photoUrl='';setAvatarSurfacePhoto('');if(sb&&sbUser){sb.from('profiles').update({avatar_url:null}).eq('user_id',sbUser.id).then(function(r){if(r.error)console.warn('Avatar revert failed:',r.error.message);}).catch(function(e){console.warn('Avatar revert failed:',e);});}feedback.textContent=currentLanguage==='ar'?'تم إرجاع الصورة.':'Photo reverted.';feedbackMotion(feedback);});
   window.addEventListener('pipvant:certificate-earned',function(event){awardProfileCertificate(event.detail);});
   window.PIPVANTProfile=Object.freeze({awardCertificate:awardProfileCertificate,setCertificates:renderProfileCertificates,setIdentity:updateProfileIdentity});
   renderProfileCertificates(window.PIPVANT_PROFILE_DATA&&window.PIPVANT_PROFILE_DATA.certificates);
@@ -3610,7 +3610,7 @@
       });list.appendChild(row);
     });
     var hasEntries=filtered.length>0;list.hidden=!hasEntries;empty.hidden=hasEntries;count.textContent=hasEntries?(filtered.length+(currentLanguage==='ar'?' إدخالات':' ENTRIES')):(currentLanguage==='ar'?'0 صفقات':'0 TRADES');
-    updateJournalKPIs();updateJournalCalendar();renderFacetOptions();updateProfileFromSession();
+    updateJournalKPIs();updateJournalCalendar();updateJournalEquity();renderFacetOptions();updateProfileFromSession();
   }
   /* ---- Profile stats from session data (robust fallback) ---- */
   function updateProfileFromSession(){
@@ -3722,6 +3722,30 @@
       var expSign=expectancy>=0?'+':'−';
       set('kpiExpectancy',expSign+Math.abs(expectancy).toFixed(2));
       set('kpiExpectancyNote',(currentLanguage==='ar'?'متوسط لكل صفقة · ':'Avg per trade · ')+n+(currentLanguage==='ar'?' صفقات':' trades'));
+    }catch(e){}
+  }
+  /* ---- Journal equity curve: cumulative P&L from real trades ---- */
+  function updateJournalEquity(){
+    try{
+      var container=document.querySelector('.equity-card .equity-empty');
+      if(!container)return;
+      var trades=(window.sessionJournalEntries||[]).filter(function(t){return t.closed&&isFinite(parseFloat(t.pnl));});
+      if(trades.length===0){
+        container.innerHTML='<div><div class="empty-glyph" aria-hidden="true"><svg width="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 18 9 13l3 2 7-9"/></svg></div><h3>'+(currentLanguage==='ar'?'لا يوجد سجل صفقات':'No trade history available')+'</h3><p>'+(currentLanguage==='ar'?'سيظهر الرسم بعد تسجيل نتيجة أول صفقة.':'The chart will populate after the first trade result is recorded.')+'</p></div>';
+        return;
+      }
+      trades.sort(function(a,b){return new Date(a.closedAt||a.date)-new Date(b.closedAt||b.date);});
+      var cum=0,points=trades.map(function(t){cum+=parseFloat(t.pnl);return cum;});
+      var min=Math.min.apply(null,[0].concat(points)),max=Math.max.apply(null,[0].concat(points));
+      var spread=(max-min)||1,W=560,H=180,P=12;
+      var coords=points.map(function(v,i){
+        var x=P+(i/(points.length-1||1))*(W-2*P);
+        var y=P+(1-(v-min)/spread)*(H-2*P);
+        return x.toFixed(1)+','+y.toFixed(1);
+      }).join(' ');
+      var zeroY=(P+(1-(0-min)/spread)*(H-2*P)).toFixed(1);
+      var color=points[points.length-1]>=0?'var(--accent)':'var(--danger,#ef4444)';
+      container.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block" role="img" aria-label="Equity curve"><line x1="'+P+'" y1="'+zeroY+'" x2="'+(W-P)+'" y2="'+zeroY+'" stroke="var(--line)" stroke-width="1" stroke-dasharray="4 4"/><polyline points="'+coords+'" fill="none" stroke="'+color+'" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/></svg><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:8px"><span>'+trades.length+' trades</span><strong style="color:'+color+'">'+(points[points.length-1]>=0?'+':'')+points[points.length-1].toFixed(2)+'</strong></div>';
     }catch(e){}
   }
   /* ---- Journal P&L calendar: real per-day trade data ---- */
@@ -4053,6 +4077,7 @@
   /* ---- Supabase boot (data phase): public catalog + persisted session ---- */
   sbLoadFirms();
   sbLoadCalendar();
+  setInterval(function(){try{sbUpdateCalendarStatus();}catch(e){}},30000);
   sbInitSession();
 })();
 </script>
