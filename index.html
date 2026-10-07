@@ -3791,6 +3791,12 @@
   var accountForm=document.getElementById('accountForm');
   var accountSwitch=document.getElementById('accountSwitch');
   var tradingAccounts=[];
+  try{
+    var savedAccts=localStorage.getItem('pipvant_accounts');
+    if(savedAccts)tradingAccounts=JSON.parse(savedAccts)||[];
+    var savedSel=localStorage.getItem('pipvant_selected_account');
+    if(savedSel)selectedAccountId=savedSel;
+  }catch(e){}
   var selectedAccountId='all';
   function accountStat(label,value){var wrap=document.createElement('span');var labelNode=document.createElement('span');var valueNode=document.createElement('strong');labelNode.textContent=label;valueNode.textContent=value===''?'—':money(Number(value));wrap.appendChild(labelNode);wrap.appendChild(valueNode);return wrap;}
   function accountOption(id,name,firm,size,maxLoss,target){
@@ -3821,7 +3827,7 @@
   accountForm.addEventListener('submit',function(event){
     event.preventDefault();if(!event.currentTarget.reportValidity())return;
     var account={id:'account-'+Date.now(),name:document.getElementById('accountName').value.trim(),size:document.getElementById('accountStartingBalance').value,maxLoss:document.getElementById('accountMaxLoss').value,target:document.getElementById('accountProfitTarget').value,firm:document.getElementById('accountFirm').value.trim()};
-    runSuccessMorph(event.submitter,function(){tradingAccounts.push(account);selectedAccountId=account.id;renderAccountList();updateAccountSwitchLabel();showAccountBrowser();showToast(currentLanguage==='ar'?'تمت إضافة الحساب لهذه الجلسة.':'Account added for this session.');});
+    runSuccessMorph(event.submitter,function(){tradingAccounts.push(account);selectedAccountId=account.id;try{localStorage.setItem('pipvant_accounts',JSON.stringify(tradingAccounts));localStorage.setItem('pipvant_selected_account',account.id);}catch(e){}renderAccountList();updateAccountSwitchLabel();showAccountBrowser();if(typeof updateJournalEquity==='function')updateJournalEquity();showToast(currentLanguage==='ar'?'تمت إضافة الحساب.':'Account added.');});
   });
   renderAccountList();
 
@@ -4158,9 +4164,15 @@
         svgBody='<polygon points="'+area2+'" fill="rgba(239,68,68,.18)"/><polyline points="'+coords2+'" fill="none" stroke="var(--danger,#ef4444)" stroke-width="2.5" stroke-linejoin="round"/>';
         footer='<span>Max drawdown</span><strong style="color:var(--danger,#ef4444)">-'+maxDD.toFixed(2)+'</strong>';
       }else{
-        // Cumulative (default)
-        var cum=0,points=trades.map(function(t){cum+=parseFloat(t.pnl);return cum;});
-        var min=Math.min.apply(null,[0].concat(points)),max=Math.max.apply(null,[0].concat(points));
+        // Cumulative (default) - start from account balance if set
+        var startBal=0;
+        try{
+          var selAcct=(typeof tradingAccounts!=='undefined'?tradingAccounts:[]).filter(function(a){return a.id===(typeof selectedAccountId!=='undefined'?selectedAccountId:'');})[0];
+          if(selAcct&&isFinite(parseFloat(selAcct.size)))startBal=parseFloat(selAcct.size);
+        }catch(be){}
+        var cum=startBal,points=trades.map(function(t){cum+=parseFloat(t.pnl);return cum;});
+        if(startBal>0)points.unshift(startBal);
+        var min=Math.min.apply(null,points),max=Math.max.apply(null,points);
         var spread=(max-min)||1;
         var coords=points.map(function(v,i){
           var x=P+(i/(points.length-1||1))*(W-2*P);
