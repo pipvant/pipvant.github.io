@@ -2612,8 +2612,8 @@
       Object.keys(counts).forEach(function(s){if(counts[s]>max){max=counts[s];most=s;}});
       var mostEl=document.querySelector('#profile .profile-most-traded');
       if(mostEl)mostEl.textContent=total>0?most:'—';var rtSection=document.querySelector('#profile [aria-labelledby="recent-trades-title"]');var rtEmpty=rtSection?rtSection.querySelector('.recent-trades-empty'):null;var rtList=rtSection?rtSection.querySelector('.recent-trades-list'):null;if(trades.length>0){if(rtEmpty)rtEmpty.hidden=true;if(!rtList&&rtSection){rtList=document.createElement('ul');rtList.className='recent-trades-list';rtSection.appendChild(rtList);}if(rtList){rtList.innerHTML='';trades.slice(0,5).forEach(function(t){var li=document.createElement('li');li.className='recent-trade-row';li.innerHTML='<span class="recent-trade-symbol"></span><span class="recent-trade-direction"></span><span class="recent-trade-entry"></span>';li.children[0].textContent=t.symbol||'—';li.children[1].textContent=t.direction||'—';li.children[2].textContent=(t.entry_price==null||t.entry_price==='')?'—':t.entry_price;rtList.appendChild(li);});}}else{if(rtEmpty)rtEmpty.hidden=false;if(rtList)rtList.innerHTML='';}
-      if(typeof sbCheckMissions==='function')sbCheckMissions(total,0);
-      if(typeof sbComputeTraderScore==='function')sbComputeTraderScore(total,0);
+      if(typeof sbCheckMissions==='function')sbCheckMissions(total,pipvantDisciplineStreak);
+      if(typeof sbComputeTraderScore==='function')sbComputeTraderScore(total,pipvantDisciplineStreak);
     }catch(e){}
         }
 
@@ -2765,6 +2765,7 @@
     return true;
   }
   var profileSession={name:'',bio:'',photoUrl:'',certificates:[]};
+  var pipvantDisciplineStreak=0;
   var certificateCatalog=['Marathon','Profitable','Sharpshooter','Iron Discipline','Risk Master','Edge Proven'];
   function profileInitials(value){
     var parts=String(value||'').trim().split(/\s+/).filter(Boolean);return parts.length?parts.slice(0,2).map(function(part){return part.charAt(0).toUpperCase();}).join(''):'—';
@@ -3072,10 +3073,10 @@
     surface.addEventListener('pointerup',function(event){if(event.pointerType!=='touch')end();});
     surface.addEventListener('pointercancel',function(event){if(event.pointerType!=='touch'&&!refreshing)resetIndicator();});
   }
-  setupPullRefresh('calendar','.refresh-content',renderCalendar);
+  setupPullRefresh('calendar','.refresh-content',function(){sbLoadCalendar();});
   setupPullRefresh('all-firms','.refresh-content',refreshDirectory);
 
-  function certificateText(){return 'PIPVANT by Orovanta\n\nCERTIFICATE OF ACHIEVEMENT\nMARATHON\n\nProudly presented to: —\nAwarded for demonstrating exceptional consistency by logging 500 trades in the PIPVANT Journal.\n\nVerification ID: —\nDate: —\nChief Executive Officer: —';}
+  function certificateText(){var recipient=(profileSession&&profileSession.name)||'—';var titleEl=document.querySelector('.achievement-title');var title=titleEl?titleEl.textContent.trim():'Marathon';var citeEl=document.querySelector('.certificate-citation');var citation=citeEl?citeEl.textContent.trim():'';var dateEl=document.querySelector('.certificate-date strong');var dateStr=dateEl&&dateEl.textContent.trim()!=='—'?dateEl.textContent.trim():new Date().toISOString().slice(0,10);var verEl=document.querySelector('.verification-block strong');var verId=verEl&&verEl.textContent.trim()!=='—'?verEl.textContent.trim():'—';return 'PIPVANT by Orovanta\n\nCERTIFICATE OF ACHIEVEMENT\n'+title.toUpperCase()+'\n\nProudly presented to: '+recipient+'\n'+citation+'\n\nVerification ID: '+verId+'\nDate: '+dateStr+'\nChief Executive Officer: Sifeddine Beniaich';}
   document.getElementById('downloadCertificate').addEventListener('click',function(){var url=URL.createObjectURL(new Blob([certificateText()],{type:'text/plain'}));var link=document.createElement('a');link.href=url;link.download='pipvant-certificate.txt';document.body.appendChild(link);link.click();link.remove();setTimeout(function(){URL.revokeObjectURL(url);},0);});
   document.getElementById('shareCertificate').addEventListener('click',function(){
     var feedback=document.getElementById('certificateFeedback');
@@ -3506,7 +3507,7 @@
     button.setAttribute('aria-sort',next);
   });});
 
-  document.querySelectorAll('.range-btn').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.range-btn').forEach(function(other){other.setAttribute('aria-pressed',String(other===button));});var range=button.textContent.trim();var now=Date.now();var cutoff=0;if(range==='1W')cutoff=now-7*24*60*60*1000;else if(range==='1M')cutoff=now-30*24*60*60*1000;else if(range==='3M')cutoff=now-90*24*60*60*1000;else if(range==='1Y')cutoff=now-365*24*60*60*1000;else if(range==='Custom'){var startStr=prompt(currentLanguage==='ar'?'تاريخ البداية (YYYY-MM-DD):':'Start date (YYYY-MM-DD):');if(startStr){var sd=new Date(startStr);if(!isNaN(sd.getTime()))cutoff=sd.getTime();}}window.journalDateCutoff=cutoff;if(typeof renderJournalEntries==='function')renderJournalEntries();});});
+  document.querySelectorAll('.range-btn').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.range-btn').forEach(function(other){other.setAttribute('aria-pressed',String(other===button));});var range=button.textContent.trim();var now=Date.now();var cutoff=0;if(range==='1W')cutoff=now-7*24*60*60*1000;else if(range==='1M')cutoff=now-30*24*60*60*1000;else if(range==='3M')cutoff=now-90*24*60*60*1000;else if(range==='1Y')cutoff=now-365*24*60*60*1000;else if(range==='Custom'){var startStr=prompt(currentLanguage==='ar'?'تاريخ البداية (YYYY-MM-DD):':'Start date (YYYY-MM-DD):');var endStr=prompt(currentLanguage==='ar'?'تاريخ النهاية (YYYY-MM-DD):':'End date (YYYY-MM-DD):');if(startStr){var sd=new Date(startStr);if(!isNaN(sd.getTime()))cutoff=sd.getTime();}var _endCutoff=0;if(endStr){var _ed=new Date(endStr);if(!isNaN(_ed.getTime())){_ed.setHours(23,59,59,999);_endCutoff=_ed.getTime();}}window.journalDateEnd=_endCutoff;}else{window.journalDateEnd=0;}window.journalDateCutoff=cutoff;if(typeof renderJournalEntries==='function')renderJournalEntries();});});
   // Chart toggles
   document.querySelectorAll('.chart-toggle').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.chart-toggle').forEach(function(other){other.setAttribute('aria-pressed',String(other===button));});showToast(currentLanguage==='ar'?'تم تبديل الرسم.':'Chart switched.');});});
   // Day cells - filter by day
@@ -3528,7 +3529,7 @@
       window.journalDayFilter=null;chip.textContent=(currentLanguage==='ar'?'اليوم —':'Day —');chip.classList.remove('show');
     }else{
       button.classList.add('active');
-      window.journalDayFilter=parseInt(day,10);chip.textContent=(currentLanguage==='ar'?'اليوم ':'Day ')+day;chip.classList.add('show');
+      var _nowD=new Date();window.journalDayFilter={y:_nowD.getFullYear(),m:_nowD.getMonth(),d:parseInt(day,10)};chip.textContent=(currentLanguage==='ar'?'اليوم ':'Day ')+day;chip.classList.add('show');
     }
     if(typeof renderJournalEntries==='function')renderJournalEntries();
   });});
@@ -3582,7 +3583,7 @@
     var list=document.getElementById('journalEntryList'),empty=document.getElementById('journalEntryEmpty'),count=document.getElementById('journalEntryCount');
     if(!list||!empty||!count)return;list.replaceChildren();
     var labels=currentLanguage==='ar'?['التاريخ / الوقت','الرمز','الاتجاه','الإعداد','الدخول / الخطة','الكمية','صافي الربح والخسارة','مضاعف R','التقييم','الملاحظات','']:['Date / time','Symbol','Side','Setup','Entry / plan','Qty','Net P&L','R multiple','Rating','Notes',''];
-    var q=journalSearchQuery.trim().toLowerCase();var dateCutoff=window.journalDateCutoff||0;var dayFilter=window.journalDayFilter||null;var facets=window.journalFacets||{symbol:null,side:null};var filtered=sessionJournalEntries.filter(function(entry){var matchQ=true,matchD=true,matchDay=true,matchSym=true,matchSide=true;if(q){var haystack=((entry.pair||'')+' '+(entry.notes||'')+' '+(entry.direction||'')).toLowerCase();matchQ=haystack.indexOf(q)!==-1;}if(dateCutoff){matchD=(entry.timestamp||0)>=dateCutoff;}if(dayFilter){var d=new Date(entry.timestamp||0);matchDay=d.getDate()===dayFilter;}if(facets.symbol&&entry.type==='trade'){matchSym=String(entry.pair||'').toUpperCase()===facets.symbol;}if(facets.side&&entry.type==='trade'){matchSide=String(entry.direction||'').toLowerCase()===facets.side;}return matchQ&&matchD&&matchDay&&matchSym&&matchSide;});filtered.forEach(function(entry){
+    var q=journalSearchQuery.trim().toLowerCase();var dateCutoff=window.journalDateCutoff||0;var dateEnd=window.journalDateEnd||0;var dayFilter=window.journalDayFilter||null;var facets=window.journalFacets||{symbol:null,side:null};var filtered=sessionJournalEntries.filter(function(entry){var matchQ=true,matchD=true,matchDay=true,matchSym=true,matchSide=true;if(q){var haystack=((entry.pair||'')+' '+(entry.notes||'')+' '+(entry.direction||'')).toLowerCase();matchQ=haystack.indexOf(q)!==-1;}if(dateCutoff){matchD=(entry.timestamp||0)>=dateCutoff;}if(dateEnd){matchD=matchD&&(entry.timestamp||0)<=dateEnd;}if(dayFilter){var d=new Date(entry.timestamp||0);matchDay=d.getFullYear()===dayFilter.y&&d.getMonth()===dayFilter.m&&d.getDate()===dayFilter.d;}if(facets.symbol&&entry.type==='trade'){matchSym=String(entry.pair||'').toUpperCase()===facets.symbol;}if(facets.side&&entry.type==='trade'){matchSide=String(entry.direction||'').toLowerCase()===facets.side;}return matchQ&&matchD&&matchDay&&matchSym&&matchSide;});filtered.forEach(function(entry){
       var row=document.createElement('article');row.className='journal-entry-row';
       var values;
       if(entry.type==='trade'){
@@ -3898,6 +3899,8 @@
         while(dates[d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)]){streak++;d.setDate(d.getDate()-1);}
         var streakEl=document.querySelector('.discipline-streak .streak-count');
         if(streakEl&&streak>0)streakEl.textContent=streak;
+        pipvantDisciplineStreak=streak;
+        try{if(typeof sbComputeTraderScore==='function'&&typeof sessionJournalEntries!=='undefined'){var tc=sessionJournalEntries.filter(function(e){return e.type==='trade';}).length;sbComputeTraderScore(tc,streak);}if(typeof sbCheckMissions==='function'&&typeof sessionJournalEntries!=='undefined'){var tc2=sessionJournalEntries.filter(function(e){return e.type==='trade';}).length;sbCheckMissions(tc2,streak);}}catch(e2){}
       }).catch(function(){var loader=document.getElementById('authLoading');if(loader)loader.style.display='none';document.body.classList.remove('auth-checking');});
   }
   function updateCheckProgress(){
