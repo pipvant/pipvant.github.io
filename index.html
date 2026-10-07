@@ -4053,6 +4053,22 @@
       var expSign=expectancy>=0?'+':'−';
       set('kpiExpectancy',expSign+Math.abs(expectancy).toFixed(2));
       set('kpiExpectancyNote',(currentLanguage==='ar'?'متوسط لكل صفقة · ':'Avg per trade · ')+n+(currentLanguage==='ar'?' صفقات':' trades'));
+      try{
+        var spark=document.getElementById('kpiNetPnlSpark');
+        if(spark){
+          var sTrades=(window.sessionJournalEntries||[]).filter(function(t){return t.closed&&isFinite(parseFloat(t.pnl));});
+          if(sTrades.length>1){
+            sTrades.sort(function(a,b){return new Date(a.closedAt||a.date)-new Date(b.closedAt||b.date);});
+            var sCum=0,sPts=sTrades.map(function(t){sCum+=parseFloat(t.pnl);return sCum;});
+            var sMin=Math.min.apply(null,[0].concat(sPts)),sMax=Math.max.apply(null,[0].concat(sPts)),sSp=(sMax-sMin)||1;
+            var sW=120,sH=36;
+            var sCoords=sPts.map(function(v,i){return (i/(sPts.length-1)*sW).toFixed(1)+','+(sH-4-((v-sMin)/sSp)*(sH-8)).toFixed(1);}).join(' ');
+            var sCol=sPts[sPts.length-1]>=0?'var(--accent)':'var(--danger,#ef4444)';
+            spark.innerHTML='<svg viewBox="0 0 '+sW+' '+sH+'" style="width:100%;height:36px;display:block"><polyline points="'+sCoords+'" fill="none" stroke="'+sCol+'" stroke-width="2" stroke-linejoin="round"/></svg>';
+            spark.classList.remove('sparkline-empty');
+          }
+        }
+      }catch(se){}
     }catch(e){}
   }
   /* ---- Journal Trading Score: 6-dimension radar from real trades ---- */
