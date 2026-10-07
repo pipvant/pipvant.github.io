@@ -891,6 +891,8 @@
     .motion-cascade>*{opacity:0;animation:itemRise var(--screen) var(--ease-enter) both;animation-delay:var(--motion-delay,0ms)}
     .firm-slots.motion-cascade>.firm-card,.journal-kpis.motion-cascade>.kpi-card,.profile-stat-grid.motion-cascade>.profile-stat-card,.certificate-path.motion-cascade>.locked-certificate,.methodology-stack.motion-cascade>.methodology-section{opacity:0}
     .screen:not(.motion-enter) .motion-cascade>*{opacity:1;animation:none}
+    /* Safety: never leave content invisible if animation fails */
+    .screen.active .motion-cascade>*{opacity:1 !important;}
 
     .auth-stage.active .auth-welcome-inner>.pv-mark{animation:identityScale var(--hero) var(--ease-enter) both}
     .auth-stage.active .auth-welcome-inner>.eyebrow{animation:itemRise var(--screen) var(--ease-enter) 60ms both}
