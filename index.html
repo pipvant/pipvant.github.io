@@ -884,9 +884,6 @@
 
     .screen{animation:none}
     .screen.active.motion-enter{animation:screenRise var(--screen) var(--ease-enter) both}
-    /* Disable entrance animations entirely: they hide content on some devices */
-    .screen.active.motion-enter,.screen.active.motion-exit{animation:none !important;opacity:1 !important;transform:none !important;}
-    .motion-cascade>*{opacity:1 !important;animation:none !important;transform:none !important;}
     .screen.active.motion-exit{animation:screenOut var(--screen-exit) var(--ease-move) both}
     #landing.screen.active.motion-enter .hero-copy,#landing.screen.active.motion-enter .calc-card{animation:heroReveal var(--hero) var(--ease-enter) both}
     #landing.screen.active.motion-enter .calc-card{animation-delay:var(--stagger)}
