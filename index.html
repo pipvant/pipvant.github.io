@@ -3453,7 +3453,11 @@
     button.setAttribute('aria-sort',next);
   });});
 
-  document.querySelectorAll('.range-btn').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.range-btn').forEach(function(other){other.setAttribute('aria-pressed',String(other===button));});});});
+  document.querySelectorAll('.range-btn').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.range-btn').forEach(function(other){other.setAttribute('aria-pressed',String(other===button));});var range=button.textContent.trim();var now=Date.now();var cutoff=0;if(range==='1W')cutoff=now-7*24*60*60*1000;else if(range==='1M')cutoff=now-30*24*60*60*1000;else if(range==='3M')cutoff=now-90*24*60*60*1000;else if(range==='1Y')cutoff=now-365*24*60*60*1000;window.journalDateCutoff=cutoff;if(typeof renderJournalEntries==='function')renderJournalEntries();});});
+  // Chart toggles
+  document.querySelectorAll('.chart-toggle').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.chart-toggle').forEach(function(other){other.setAttribute('aria-pressed',String(other===button));});showToast(currentLanguage==='ar'?'تم تبديل الرسم.':'Chart switched.');});});
+  // Day cells - filter by day
+  document.querySelectorAll('[data-journal-day]').forEach(function(cell){cell.addEventListener('click',function(){var day=cell.getAttribute('data-journal-day');showToast((currentLanguage==='ar'?'اليوم ':'Day ')+day);});});
   document.querySelectorAll('.chart-toggle').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.chart-toggle').forEach(function(other){other.setAttribute('aria-pressed',String(other===button));});});});
   document.querySelectorAll('.trade-view button').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.trade-view button').forEach(function(other){other.setAttribute('aria-pressed',String(other===button));});});});
   document.querySelectorAll('.group-tabs button').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.group-tabs button').forEach(function(other){other.setAttribute('aria-pressed',String(other===button));});});});
@@ -3510,7 +3514,7 @@
     var list=document.getElementById('journalEntryList'),empty=document.getElementById('journalEntryEmpty'),count=document.getElementById('journalEntryCount');
     if(!list||!empty||!count)return;list.replaceChildren();
     var labels=currentLanguage==='ar'?['التاريخ / الوقت','الرمز','الاتجاه','الإعداد','الدخول / الخطة','الكمية','صافي الربح والخسارة','مضاعف R','التقييم','الملاحظات','']:['Date / time','Symbol','Side','Setup','Entry / plan','Qty','Net P&L','R multiple','Rating','Notes',''];
-    var q=journalSearchQuery.trim().toLowerCase();var filtered=sessionJournalEntries.filter(function(entry){if(!q)return true;var haystack=((entry.pair||'')+' '+(entry.notes||'')+' '+(entry.direction||'')).toLowerCase();return haystack.indexOf(q)!==-1;});filtered.forEach(function(entry){
+    var q=journalSearchQuery.trim().toLowerCase();var dateCutoff=window.journalDateCutoff||0;var filtered=sessionJournalEntries.filter(function(entry){if(!q&&!dateCutoff)return true;var matchQ=true,matchD=true;if(q){var haystack=((entry.pair||'')+' '+(entry.notes||'')+' '+(entry.direction||'')).toLowerCase();matchQ=haystack.indexOf(q)!==-1;}if(dateCutoff){matchD=(entry.timestamp||0)>=dateCutoff;}return matchQ&&matchD;});filtered.forEach(function(entry){
       var row=document.createElement('article');row.className='journal-entry-row';
       var values;
       if(entry.type==='trade'){
