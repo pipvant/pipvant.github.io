@@ -2543,6 +2543,12 @@
   function sbUpdateProfileStats(trades){
     try{
       var total=trades.length;
+      // Calculate stats from closed trades
+      var closedTrades=trades.filter(function(t){return t.pnl!=null&&isFinite(Number(t.pnl));});
+      var wins=closedTrades.filter(function(t){return Number(t.pnl)>0;}).length;
+      var losses=closedTrades.filter(function(t){return Number(t.pnl)<0;}).length;
+      var winRate=closedTrades.length>0?Math.round((wins/closedTrades.length)*100):null;
+      var totalPnl=closedTrades.reduce(function(sum,t){return sum+Number(t.pnl);},0);
       var chip=document.querySelector('#profile .profile-status-chip');
       if(chip){
         if(total>0){
@@ -2557,6 +2563,16 @@
       }
       var totalEl=document.querySelector('#profile .profile-stat-card:nth-child(3) .profile-stat-value');
       if(totalEl)totalEl.textContent=total>0?String(total):'—';
+      // Win rate
+      var winRateEl=document.querySelector('#profile .profile-stat-card:nth-child(1) .profile-empty-ring span');
+      if(winRateEl)winRateEl.textContent=winRate!=null?winRate+'%':'—';
+      // Winning/Losing counts
+      try{
+        var winEl=document.querySelector('#profile .profile-win-count');
+        var lossEl=document.querySelector('#profile .profile-loss-count');
+        if(winEl)winEl.textContent=wins;
+        if(lossEl)lossEl.textContent=losses;
+      }catch(e2){}
       var counts={};
       trades.forEach(function(t){var s=t.symbol||'—';counts[s]=(counts[s]||0)+1;});
       var most='—',max=0;
@@ -3542,7 +3558,7 @@
     currentCloseEntry.closed=true;currentCloseEntry.exitPrice=exitPrice;currentCloseEntry.pnl=pnl;currentCloseEntry.result=result;
     // Update DB if saved
     if(sb&&sbUser&&currentCloseEntry._dbId){
-      sb.from('trades').update({exit_price:exitPrice,pnl:pnl,closed_at:new Date().toISOString()}).eq('id',currentCloseEntry._dbId).then(function(){});
+      sb.from('trades').update({exit_price:exitPrice,pnl:pnl,closed_at:new Date().toISOString()}).eq('id',currentCloseEntry._dbId).then(function(){sbLoadTrades();});
     }
     hideCloseTradeModal();renderJournalEntries();showToast(currentLanguage==='ar'?'تم إغلاق الصفقة.':'Trade closed.');
   });
