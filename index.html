@@ -2081,6 +2081,20 @@
     </form>
   </div>
 </div>
+<div class="trade-sheet" id="closeTradeSheet" role="dialog" aria-modal="true" aria-labelledby="closeTradeSheetTitle">
+  <div class="trade-form">
+    <div class="grabber"></div>
+    <div class="sheet-head"><div><span class="tiny">CLOSE TRADE</span><h3 id="closeTradeSheetTitle">Close trade</h3></div><button class="btn icon secondary" id="closeCloseTradeSheet" type="button" aria-label="Close"><svg width="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+    <form id="closeTradeForm">
+      <div class="form-grid">
+        <div><label for="closeExitPrice">Exit price</label><input id="closeExitPrice" type="number" step="any" inputmode="decimal" required></div>
+        <div><label for="closeResult">Result</label><select id="closeResult"><option value="win">Win</option><option value="loss">Loss</option><option value="breakeven">Breakeven</option></select></div>
+      </div>
+      <div id="closeTradeFeedback" style="min-height:20px;color:var(--danger,#ef4444);font-size:12px;"></div>
+      <div class="form-actions"><button class="btn secondary" id="cancelCloseTrade" type="button">Cancel</button><button class="btn primary" type="submit">Close trade</button></div>
+    </form>
+  </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -2556,13 +2570,13 @@
 
   function sbLoadTrades(){
     if(!sb||!sbUser)return;
-    sb.from('trades').select('id,symbol,direction,entry_price,stop_price,target_price,position_size,notes,opened_at,created_at').order('opened_at',{ascending:false})
+    sb.from('trades').select('id,symbol,direction,entry_price,stop_price,target_price,position_size,notes,opened_at,created_at,exit_price,pnl,closed_at').order('opened_at',{ascending:false})
       .then(function(r){
         if(r.error||!r.data)return;
         sessionJournalEntries=sessionJournalEntries.filter(function(en){return !en._db;});
         r.data.forEach(function(t){
           var ts=t.opened_at||t.created_at;
-          var fmtNum=function(v){if(v==null||v==='')return '—';var n=Number(v);if(!isFinite(n))return '—';return String(Math.round(n*100000)/100000);};sessionJournalEntries.push({type:'trade',_db:true,_id:t.id,timestamp:ts?new Date(ts).getTime():Date.now(),pair:t.symbol||'—',direction:t.direction||'—',entry:fmtNum(t.entry_price),stop:fmtNum(t.stop_price),target:fmtNum(t.target_price),size:t.position_size==null?'—':String(t.position_size),rMultiple:'—',notes:t.notes||''});
+          var fmtNum=function(v){if(v==null||v==='')return '—';var n=Number(v);if(!isFinite(n))return '—';return String(Math.round(n*100000)/100000);};var isClosed=t.closed_at!=null;sessionJournalEntries.push({type:'trade',_db:true,_dbId:t.id,_id:t.id,timestamp:ts?new Date(ts).getTime():Date.now(),pair:t.symbol||'—',direction:t.direction||'—',entry:fmtNum(t.entry_price),stop:fmtNum(t.stop_price),target:fmtNum(t.target_price),size:t.position_size==null?'—':String(t.position_size),rMultiple:'—',notes:t.notes||'',closed:isClosed,exitPrice:t.exit_price!=null?fmtNum(t.exit_price):null,pnl:t.pnl});
         });
         sessionJournalEntries.sort(function(a,b){return b.timestamp-a.timestamp;});
         renderJournalEntries();
@@ -3485,16 +3499,53 @@
       var values;
       if(entry.type==='trade'){
         var dirLower=String(entry.direction||'').toLowerCase(); var side=currentLanguage==='ar'?(dirLower==='long'?'شراء':'بيع'):(dirLower==='long'?'Long':dirLower==='short'?'Short':entry.direction);
-        values=[journalDate(entry.timestamp),entry.pair,side,'—','E '+entry.entry+' · S '+entry.stop+' · T '+entry.target,entry.size,'—',entry.rMultiple,'—',entry.notes||'—',''];
+        var pnlDisplay='—';
+        if(entry.closed&&entry.pnl!=null&&isFinite(Number(entry.pnl))){
+          var pnlNum=Number(entry.pnl);
+          pnlDisplay=(pnlNum>0?'+':'')+pnlNum.toFixed(2);
+        }
+        values=[journalDate(entry.timestamp),entry.pair,side,'—','E '+entry.entry+' · S '+entry.stop+' · T '+entry.target+(entry.closed&&entry.exitPrice?' · X '+entry.exitPrice:''),entry.size,pnlDisplay,entry.rMultiple,'—',entry.notes||'—',''];
       }else{
         values=[journalDate(entry.timestamp),entry.pair,currentLanguage==='ar'?'ملاحظة مخاطرة':'Risk note',currentLanguage==='ar'?'حساب':'Calculation','SL '+entry.stop+' '+(currentLanguage==='ar'?'نقطة':'pips'),entry.size,'—','1R','—',(currentLanguage==='ar'?'مخاطرة ':'Risk ')+entry.riskLabel+' · '+entry.riskPercent+'% '+(currentLanguage==='ar'?'من ':'of ')+entry.accountLabel,''];
       }
-      values.forEach(function(value,index){row.appendChild(journalCell(labels[index],value,index===1?'primary':index===9?'note':''));});list.appendChild(row);
+      values.forEach(function(value,index){
+        if(index===10 && entry.type==='trade' && !entry.closed){
+          var cell=document.createElement('div');cell.className='journal-entry-cell';
+          var btn=document.createElement('button');btn.type='button';btn.className='btn secondary';btn.style.cssText='min-height:28px;padding:4px 10px;font-size:10px;';
+          btn.textContent=currentLanguage==='ar'?'إغلاق':'Close';
+          btn.setAttribute('data-close-trade', entry._id || entry.timestamp);
+          btn.addEventListener('click', function(e){e.stopPropagation();openCloseTradeModal(entry);});
+          cell.appendChild(btn);row.appendChild(cell);
+        }else{
+          row.appendChild(journalCell(labels[index],value,index===1?'primary':index===9?'note':''));
+        }
+      });list.appendChild(row);
     });
     var hasEntries=filtered.length>0;list.hidden=!hasEntries;empty.hidden=hasEntries;count.textContent=hasEntries?(filtered.length+(currentLanguage==='ar'?' إدخالات':' ENTRIES')):(currentLanguage==='ar'?'0 صفقات':'0 TRADES');
   }
   /* Journal search handler */document.addEventListener('input',function(event){if(event.target&&event.target.classList&&event.target.classList.contains('trade-search')){journalSearchQuery=event.target.value||'';renderJournalEntries();}});function openTradeSheet(){document.getElementById('tradeFormFeedback').textContent='';tradeSheet.classList.add('open');document.getElementById('tradePair').focus();}
   function closeTradeSheet(){tradeSheet.classList.remove('open');if(document.getElementById('journal').classList.contains('active'))logTradeButton.focus();}
+  var closeTradeSheetEl=document.getElementById('closeTradeSheet');var currentCloseEntry=null;
+  function openCloseTradeModal(entry){currentCloseEntry=entry;document.getElementById('closeTradeFeedback').textContent='';document.getElementById('closeExitPrice').value='';closeTradeSheetEl.classList.add('open');document.getElementById('closeExitPrice').focus();}
+  function hideCloseTradeModal(){closeTradeSheetEl.classList.remove('open');currentCloseEntry=null;}
+  document.getElementById('closeCloseTradeSheet').addEventListener('click',hideCloseTradeModal);
+  document.getElementById('cancelCloseTrade').addEventListener('click',hideCloseTradeModal);
+  closeTradeSheetEl.addEventListener('click',function(e){if(e.target===closeTradeSheetEl)hideCloseTradeModal();});
+  document.getElementById('closeTradeForm').addEventListener('submit',function(e){
+    e.preventDefault();if(!currentCloseEntry)return;
+    var exitPrice=parseFloat(document.getElementById('closeExitPrice').value);
+    var result=document.getElementById('closeResult').value;
+    if(!isFinite(exitPrice)){document.getElementById('closeTradeFeedback').textContent=currentLanguage==='ar'?'أدخل سعر الخروج.':'Enter exit price.';return;}
+    var entry=parseFloat(currentCloseEntry.entry)||0;var dir=String(currentCloseEntry.direction||'').toLowerCase();
+    var pnl=dir==='long'?(exitPrice-entry):(entry-exitPrice);
+    if(result==='breakeven')pnl=0;
+    currentCloseEntry.closed=true;currentCloseEntry.exitPrice=exitPrice;currentCloseEntry.pnl=pnl;currentCloseEntry.result=result;
+    // Update DB if saved
+    if(sb&&sbUser&&currentCloseEntry._dbId){
+      sb.from('trades').update({exit_price:exitPrice,pnl:pnl,closed_at:new Date().toISOString()}).eq('id',currentCloseEntry._dbId).then(function(){});
+    }
+    hideCloseTradeModal();renderJournalEntries();showToast(currentLanguage==='ar'?'تم إغلاق الصفقة.':'Trade closed.');
+  });
   logTradeButton.addEventListener('click',openTradeSheet);
   document.getElementById('desktopAddTrade').addEventListener('click',openTradeSheet);
   document.getElementById('railLogout').addEventListener('click',function(){logout();closeRail();});
