@@ -1512,11 +1512,11 @@
       <p class="session-feedback" id="journalFeedback" aria-live="polite"></p>
 
       <section class="journal-kpis" aria-label="Performance metrics">
-        <article class="kpi-card"><div class="kpi-top"><div><span class="kpi-label">Net P&amp;L</span><strong class="kpi-value">—</strong></div><span class="tiny" id="journalCurrencyLabel">USD</span></div><div><div class="sparkline-empty" aria-label="No Net P and L history"></div><span class="kpi-note">vs prior period —</span></div></article>
-        <article class="kpi-card"><div class="kpi-top"><div><span class="kpi-label">Win Rate</span><strong class="kpi-value">—</strong></div><div class="donut"><strong>—</strong></div></div><div><div class="donut-legend"><span><i style="background:var(--accent)"></i>Win</span><span><i style="background:var(--silver)"></i>Loss</span><span><i style="background:var(--platinum)"></i>BE</span></div><span class="kpi-note">—W · —L · —BE</span></div></article>
-        <article class="kpi-card"><div class="kpi-top"><div><span class="kpi-label">Profit Factor</span><strong class="kpi-value">—</strong></div></div><div class="kpi-visual"><div class="gauge"><svg viewBox="0 0 120 62" fill="none" aria-label="Empty profit factor gauge"><path d="M12 54a48 48 0 0 1 96 0" stroke="var(--line-strong)" stroke-width="8" stroke-linecap="round"/><path d="M60 7v7M87 15l-4 6" stroke="var(--silver)" opacity=".55"/></svg><div class="gauge-labels"><span>1.0</span><span>2.0</span></div></div></div><span class="kpi-note">Performance label —</span></article>
-        <article class="kpi-card"><div class="kpi-top"><div><span class="kpi-label">Avg Win vs Avg Loss</span><strong class="kpi-value">—</strong></div><span class="tiny">RATIO —</span></div><div><div class="split-track"><span></span><span></span></div><div class="split-labels"><span>Avg win —</span><span>Avg loss —</span></div></div></article>
-        <article class="kpi-card"><div class="kpi-top"><div><span class="kpi-label">Expectancy</span><strong class="kpi-value">+—R</strong></div><span class="tiny">PER TRADE</span></div><div><div class="sparkline-empty" aria-label="No cumulative R history"></div><span class="kpi-note">Cumulative R —</span></div></article>
+        <article class="kpi-card"><div class="kpi-top"><div><span class="kpi-label">Net P&amp;L</span><strong class="kpi-value" id="kpiNetPnl">—</strong></div><span class="tiny" id="journalCurrencyLabel">USD</span></div><div><div class="sparkline-empty" id="kpiNetPnlSpark" aria-label="No Net P and L history"></div><span class="kpi-note" id="kpiNetPnlNote">vs prior period —</span></div></article>
+        <article class="kpi-card"><div class="kpi-top"><div><span class="kpi-label">Win Rate</span><strong class="kpi-value" id="kpiWinRate">—</strong></div><div class="donut" id="kpiWinDonut"><strong id="kpiWinDonutVal">—</strong></div></div><div><div class="donut-legend"><span><i style="background:var(--accent)"></i>Win</span><span><i style="background:var(--silver)"></i>Loss</span><span><i style="background:var(--platinum)"></i>BE</span></div><span class="kpi-note" id="kpiWinNote">—W · —L · —BE</span></div></article>
+        <article class="kpi-card"><div class="kpi-top"><div><span class="kpi-label">Profit Factor</span><strong class="kpi-value" id="kpiProfitFactor">—</strong></div></div><div class="kpi-visual"><div class="gauge"><svg viewBox="0 0 120 62" fill="none" aria-label="Profit factor gauge"><path d="M12 54a48 48 0 0 1 96 0" stroke="var(--line-strong)" stroke-width="8" stroke-linecap="round"/><path id="kpiPfNeedle" d="M60 54 L60 14" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/></svg><div class="gauge-labels"><span>1.0</span><span>2.0</span></div></div></div><span class="kpi-note" id="kpiPfNote">Performance label —</span></div></article>
+        <article class="kpi-card"><div class="kpi-top"><div><span class="kpi-label">Avg Win vs Avg Loss</span><strong class="kpi-value" id="kpiAvgWL">—</strong></div><span class="tiny" id="kpiAvgWLLabel">RATIO —</span></div><div><div class="split-track"><span id="kpiAvgWinBar"></span><span id="kpiAvgLossBar"></span></div><div class="split-labels"><span id="kpiAvgWinLbl">Avg win —</span><span id="kpiAvgLossLbl">Avg loss —</span></div></div></article>
+        <article class="kpi-card"><div class="kpi-top"><div><span class="kpi-label">Expectancy</span><strong class="kpi-value" id="kpiExpectancy">+—R</strong></div><span class="tiny">PER TRADE</span></div><div><div class="sparkline-empty" aria-label="No cumulative R history"></div><span class="kpi-note" id="kpiExpectancyNote">Cumulative R —</span></div></article>
       </section>
 
       <section class="journal-analytics" aria-label="Performance charts">
@@ -3552,6 +3552,56 @@
       });list.appendChild(row);
     });
     var hasEntries=filtered.length>0;list.hidden=!hasEntries;empty.hidden=hasEntries;count.textContent=hasEntries?(filtered.length+(currentLanguage==='ar'?' إدخالات':' ENTRIES')):(currentLanguage==='ar'?'0 صفقات':'0 TRADES');
+    updateJournalKPIs();
+  }
+  /* ---- Journal KPI cards: computed from real closed-trade P&L ---- */
+  function updateJournalKPIs(){
+    try{
+      var closed=sessionJournalEntries.filter(function(e){return e.type==='trade'&&e.pnl!=null&&isFinite(Number(e.pnl));});
+      var n=closed.length;
+      var set=function(id,txt){var el=document.getElementById(id);if(el)el.textContent=txt;};
+      if(!n){
+        set('kpiNetPnl','—');set('kpiWinRate','—');set('kpiWinDonutVal','—');set('kpiWinNote','—W · —L · —BE');
+        set('kpiProfitFactor','—');set('kpiPfNote',currentLanguage==='ar'?'لا توجد صفقات مغلقة':'No closed trades');
+        set('kpiAvgWL','—');set('kpiAvgWLLabel','RATIO —');set('kpiAvgWinLbl','Avg win —');set('kpiAvgLossLbl','Avg loss —');
+        set('kpiExpectancy','+—R');set('kpiExpectancyNote',currentLanguage==='ar'?'لا توجد صفقات مغلقة':'No closed trades');
+        var donut=document.getElementById('kpiWinDonut');if(donut)donut.style.background='conic-gradient(var(--line-strong) 0 100%)';
+        return;
+      }
+      var wins=0,losses=0,bes=0,grossProfit=0,grossLoss=0,net=0;
+      closed.forEach(function(e){var p=Number(e.pnl);net+=p;if(p>0){wins++;grossProfit+=p;}else if(p<0){losses++;grossLoss+=-p;}else{bes++;}});
+      var winRate=Math.round(wins/n*100);
+      var pf=grossLoss>0?(grossProfit/grossLoss):(grossProfit>0?Infinity:0);
+      var avgWin=wins?grossProfit/wins:0, avgLoss=losses?grossLoss/losses:0;
+      var expectancy=net/n;
+      var sym=currentCurrency==='MAD'?' MAD':(currencyMeta[currentCurrency]?currencyMeta[currentCurrency].symbol:'$');
+      var fmtNet=(net>=0?'+':'−')+sym.replace(' ','')+Math.abs(net).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+      if(currentCurrency==='MAD')fmtNet=(net>=0?'+':'−')+Math.abs(net).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})+' MAD';
+      set('kpiNetPnl',fmtNet);
+      set('kpiNetPnlNote',n+(currentLanguage==='ar'?' صفقات مغلقة':' closed trades'));
+      set('kpiWinRate',winRate+'%');
+      set('kpiWinDonutVal',winRate+'%');
+      set('kpiWinNote',wins+'W · '+losses+'L · '+bes+'BE');
+      var donut2=document.getElementById('kpiWinDonut');
+      if(donut2){var wr=winRate,lr=Math.round(losses/n*100);donut2.style.background='conic-gradient(var(--accent) 0 '+wr+'%, var(--silver) '+wr+'% '+(wr+lr)+'%, var(--platinum) '+(wr+lr)+'% 100%)';}
+      var pfTxt=!isFinite(pf)?'∞':pf.toFixed(2);
+      set('kpiProfitFactor',pfTxt);
+      var pfLabel=!isFinite(pf)?(currentLanguage==='ar'?'لا خسائر مسجلة':'No losses recorded'):(pf>=2?(currentLanguage==='ar'?'ممتاز':'Excellent'):(pf>=1.5?(currentLanguage==='ar'?'جيد':'Good'):(pf>=1?(currentLanguage==='ar'?'مقبول':'Fair'):(currentLanguage==='ar'?'سلبي':'Negative'))));
+      set('kpiPfNote',pfLabel);
+      var needle=document.getElementById('kpiPfNeedle');
+      if(needle){var ang=pf>=3?0:(pf<=0?180:180-(Math.min(pf,3)/3)*180);var rad=ang*Math.PI/180;var x2=60+40*Math.cos(rad),y2=54-40*Math.sin(rad);needle.setAttribute('d','M60 54 L'+x2.toFixed(1)+' '+y2.toFixed(1));}
+      var ratio=(avgWin>0&&avgLoss>0)?(avgWin/avgLoss).toFixed(2)+'R':(avgWin>0?'∞':'—');
+      set('kpiAvgWL',ratio);
+      set('kpiAvgWLLabel','RATIO');
+      var aSym=currentCurrency==='MAD'?'':'$';
+      set('kpiAvgWinLbl','Avg win '+(currentCurrency==='MAD'?avgWin.toFixed(2)+' MAD':aSym+avgWin.toFixed(2)));
+      set('kpiAvgLossLbl','Avg loss '+(currentCurrency==='MAD'?avgLoss.toFixed(2)+' MAD':aSym+avgLoss.toFixed(2)));
+      var wb=document.getElementById('kpiAvgWinBar'),lb=document.getElementById('kpiAvgLossBar');
+      if(wb&&lb){var tot=avgWin+avgLoss;if(tot>0){wb.style.width=(avgWin/tot*100)+'%';lb.style.width=(avgLoss/tot*100)+'%';wb.style.background='var(--accent)';lb.style.background='var(--silver)';}}
+      var expSign=expectancy>=0?'+':'−';
+      set('kpiExpectancy',expSign+Math.abs(expectancy).toFixed(2));
+      set('kpiExpectancyNote',(currentLanguage==='ar'?'متوسط لكل صفقة · ':'Avg per trade · ')+n+(currentLanguage==='ar'?' صفقات':' trades'));
+    }catch(e){}
   }
   /* Journal search handler */document.addEventListener('input',function(event){if(event.target&&event.target.classList&&event.target.classList.contains('trade-search')){journalSearchQuery=event.target.value||'';renderJournalEntries();}});function openTradeSheet(){document.getElementById('tradeFormFeedback').textContent='';tradeSheet.classList.add('open');document.getElementById('tradePair').focus();}
   function closeTradeSheet(){tradeSheet.classList.remove('open');if(document.getElementById('journal').classList.contains('active'))logTradeButton.focus();}
