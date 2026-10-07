@@ -3216,9 +3216,18 @@
     if(typeof calculateFull==='function')calculateFull();
   });});
   /* Matcher filter controls: re-render on change */
+  function sbUpdateMatcherFilterBadge(){
+    try{
+      var f=sbGetMatcherFilters();
+      var n=(f.size>0?1:0)+(f.maxPrice>0?1:0);
+      var badge=document.querySelector('#matcher .filter-state .tiny');
+      if(badge)badge.textContent=n+' · '+(f.size>0?sbFmtSize(f.size):'ANY');
+    }catch(e){}
+  }
   ['accountSize','maxPrice'].forEach(function(id){
     var el=document.getElementById(id);
     if(el)el.addEventListener(id==='maxPrice'?'input':'change',function(){
+      sbUpdateMatcherFilterBadge();
       if(typeof sbRenderFirms==='function')sbRenderFirms();
     });
   });
@@ -3596,7 +3605,24 @@
       });list.appendChild(row);
     });
     var hasEntries=filtered.length>0;list.hidden=!hasEntries;empty.hidden=hasEntries;count.textContent=hasEntries?(filtered.length+(currentLanguage==='ar'?' إدخالات':' ENTRIES')):(currentLanguage==='ar'?'0 صفقات':'0 TRADES');
-    updateJournalKPIs();updateJournalCalendar();renderFacetOptions();
+    updateJournalKPIs();updateJournalCalendar();renderFacetOptions();updateProfileFromSession();
+  }
+  /* ---- Profile stats from session data (robust fallback) ---- */
+  function updateProfileFromSession(){
+    try{
+      var closed=sessionJournalEntries.filter(function(e){return e.type==='trade'&&e.pnl!=null&&isFinite(Number(e.pnl));});
+      var wins=closed.filter(function(e){return Number(e.pnl)>0;}).length;
+      var losses=closed.filter(function(e){return Number(e.pnl)<0;}).length;
+      var bes=closed.filter(function(e){return Number(e.pnl)===0;}).length;
+      var set=function(sel,txt){var el=document.querySelector(sel);if(el)el.textContent=txt;};
+      set('#profile .profile-win-count',String(wins));
+      set('#profile .profile-loss-count',String(losses));
+      set('#profile .profile-be-count',String(bes));
+      var grossP=closed.filter(function(e){return Number(e.pnl)>0;}).reduce(function(s,e){return s+Number(e.pnl);},0);
+      var grossL=closed.filter(function(e){return Number(e.pnl)<0;}).reduce(function(s,e){return s+Math.abs(Number(e.pnl));},0);
+      var pf=grossL>0?(grossP/grossL):(grossP>0?Infinity:0);
+      set('#profile .profile-stat-card:nth-child(2) .profile-stat-value',closed.length>0?(!isFinite(pf)?'∞':pf.toFixed(2)):'—');
+    }catch(e){}
   }
   /* ---- Facet filters: real options with counts from trade data ---- */
   function renderFacetOptions(){
