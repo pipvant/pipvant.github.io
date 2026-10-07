@@ -2081,7 +2081,7 @@
     </form>
   </div>
 </div>
-<div class="trade-sheet" id="closeTradeSheet" role="dialog" aria-modal="true" aria-labelledby="closeTradeSheetTitle">
+<div class="trade-sheet" id="closeTradeModal" role="dialog" aria-modal="true" aria-labelledby="closeTradeSheetTitle">
   <div class="trade-form">
     <div class="grabber"></div>
     <div class="sheet-head"><div><span class="tiny">CLOSE TRADE</span><h3 id="closeTradeSheetTitle">Close trade</h3></div><button class="btn icon secondary" id="closeCloseTradeSheet" type="button" aria-label="Close"><svg width="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
@@ -3525,7 +3525,7 @@
   }
   /* Journal search handler */document.addEventListener('input',function(event){if(event.target&&event.target.classList&&event.target.classList.contains('trade-search')){journalSearchQuery=event.target.value||'';renderJournalEntries();}});function openTradeSheet(){document.getElementById('tradeFormFeedback').textContent='';tradeSheet.classList.add('open');document.getElementById('tradePair').focus();}
   function closeTradeSheet(){tradeSheet.classList.remove('open');if(document.getElementById('journal').classList.contains('active'))logTradeButton.focus();}
-  var closeTradeSheetEl=document.getElementById('closeTradeSheet');var currentCloseEntry=null;
+  var closeTradeSheetEl=document.getElementById('closeTradeModal');var currentCloseEntry=null;
   function openCloseTradeModal(entry){currentCloseEntry=entry;document.getElementById('closeTradeFeedback').textContent='';document.getElementById('closeExitPrice').value='';closeTradeSheetEl.classList.add('open');document.getElementById('closeExitPrice').focus();}
   function hideCloseTradeModal(){closeTradeSheetEl.classList.remove('open');currentCloseEntry=null;}
   document.getElementById('closeCloseTradeSheet').addEventListener('click',hideCloseTradeModal);
@@ -3549,7 +3549,7 @@
   logTradeButton.addEventListener('click',openTradeSheet);
   document.getElementById('desktopAddTrade').addEventListener('click',openTradeSheet);
   document.getElementById('railLogout').addEventListener('click',function(){logout();closeRail();});
-  document.getElementById('closeTradeSheet').addEventListener('click',closeTradeSheet);
+  document.querySelector('#tradeSheet #closeTradeSheet').addEventListener('click',closeTradeSheet);
   document.getElementById('cancelTrade').addEventListener('click',closeTradeSheet);
   document.getElementById('tradeForm').addEventListener('submit',function(e){
     e.preventDefault();if(!e.currentTarget.reportValidity())return;
