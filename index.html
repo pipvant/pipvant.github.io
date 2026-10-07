@@ -1233,8 +1233,8 @@
       <button class="rail-btn nav-coming-soon" data-screen="discipline-soon" type="button" title="Discipline — Soon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="8"/><path d="m8.5 12 2.2 2.2 4.8-5"/></svg><span>Discipline</span><small class="nav-soon-badge">Soon</small></button>
     </nav>
     <div class="rail-widgets" aria-label="Account overview">
-      <div class="rail-widget"><span>Trading score</span><svg class="rail-spider" viewBox="0 0 60 48" fill="none"><path d="M30 3 52 15v22L30 47 8 37V15Z" stroke="currentColor" opacity=".34"/><path d="M30 3v44M8 15l44 22M52 15 8 37" stroke="currentColor" opacity=".18"/></svg><strong>—</strong></div>
-      <div class="rail-widget"><span>Current streak</span><strong>—</strong><span>trading days</span></div>
+      <div class="rail-widget"><span>Trading score</span><svg class="rail-spider" viewBox="0 0 60 48" fill="none"><path d="M30 3 52 15v22L30 47 8 37V15Z" stroke="currentColor" opacity=".34"/><path d="M30 3v44M8 15l44 22M52 15 8 37" stroke="currentColor" opacity=".18"/></svg><strong id="railTradingScore">—</strong></div>
+      <div class="rail-widget"><span>Current streak</span><strong id="railStreak">—</strong><span>trading days</span></div>
     </div>
     <div class="rail-bottom rail-bottom-spacer">
       <button class="rail-utility" data-screen="settings" type="button" title="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.83 2.83-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .6 1.7 1.7 0 0 0-.4 1.1V21H9.6v-.09A1.7 1.7 0 0 0 8.5 19.4a1.7 1.7 0 0 0-1.88.34l-.06.06-2.83-2.83.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-.6-1 1.7 1.7 0 0 0-1.1-.4H3V9.6h.09A1.7 1.7 0 0 0 4.6 8.5a1.7 1.7 0 0 0-.34-1.88l-.06-.06 2.83-2.83.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-.6 1.7 1.7 0 0 0 .4-1.1V3h4v.09A1.7 1.7 0 0 0 15.5 4.6a1.7 1.7 0 0 0 1.88-.34l.06-.06 2.83 2.83-.06.06A1.7 1.7 0 0 0 19.4 9c.17.37.39.7.7.96.3.25.68.39 1.07.4H21v4h-.09A1.7 1.7 0 0 0 19.4 15Z"/></svg><span>Settings</span></button>
@@ -2816,6 +2816,7 @@
     var numeric=Number(score),card=document.getElementById('traderScoreCard'),ring=document.getElementById('traderScoreRing'),value=document.getElementById('traderScoreValue'),state=document.getElementById('traderScoreState'),caption=document.getElementById('traderScoreCaption'),gauge=card&&card.querySelector('.trader-score-gauge');
     if(!card||!ring||!value||score===null||score===''||typeof score==='boolean'||!Number.isFinite(numeric)||numeric<0||numeric>100)return false;
     var rounded=Math.round(numeric);card.classList.add('has-score');ring.style.setProperty('--score-offset',String(1-rounded/100));value.textContent=String(rounded);state.textContent='Verified';caption.textContent='Calculated from connected Journal performance.';if(gauge)gauge.setAttribute('aria-label','Trader score '+rounded+' out of 100');
+    var railScore=document.getElementById('railTradingScore');if(railScore)railScore.textContent=String(rounded);
     if(reduceMotion.matches){ring.style.strokeDashoffset=String(1-rounded/100);}else if(!ring.dataset.drawn){ring.dataset.drawn='true';ring.classList.add('is-drawing');setTimeout(function(){ring.classList.remove('is-drawing');},300);}
     return true;
   }
@@ -4333,6 +4334,7 @@
         var streakEl=document.querySelector('.discipline-streak .streak-count');
         if(streakEl&&streak>0)streakEl.textContent=streak;
         pipvantDisciplineStreak=streak;
+        var railStreak=document.getElementById('railStreak');if(railStreak)railStreak.textContent=String(streak);
         try{if(typeof sbComputeTraderScore==='function'&&typeof sessionJournalEntries!=='undefined'){var tc=sessionJournalEntries.filter(function(e){return e.type==='trade';}).length;sbComputeTraderScore(tc,streak);}if(typeof sbCheckMissions==='function'&&typeof sessionJournalEntries!=='undefined'){var tc2=sessionJournalEntries.filter(function(e){return e.type==='trade';}).length;sbCheckMissions(tc2,streak);}}catch(e2){}
       }).catch(function(){var loader=document.getElementById('authLoading');if(loader)loader.style.display='none';document.body.classList.remove('auth-checking');});
   }
