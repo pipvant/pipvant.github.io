@@ -3552,7 +3552,7 @@
       });list.appendChild(row);
     });
     var hasEntries=filtered.length>0;list.hidden=!hasEntries;empty.hidden=hasEntries;count.textContent=hasEntries?(filtered.length+(currentLanguage==='ar'?' إدخالات':' ENTRIES')):(currentLanguage==='ar'?'0 صفقات':'0 TRADES');
-    updateJournalKPIs();
+    updateJournalKPIs();updateJournalCalendar();
   }
   /* ---- Journal KPI cards: computed from real closed-trade P&L ---- */
   function updateJournalKPIs(){
@@ -3601,6 +3601,56 @@
       var expSign=expectancy>=0?'+':'−';
       set('kpiExpectancy',expSign+Math.abs(expectancy).toFixed(2));
       set('kpiExpectancyNote',(currentLanguage==='ar'?'متوسط لكل صفقة · ':'Avg per trade · ')+n+(currentLanguage==='ar'?' صفقات':' trades'));
+    }catch(e){}
+  }
+  /* ---- Journal P&L calendar: real per-day trade data ---- */
+  function updateJournalCalendar(){
+    try{
+      var now=new Date(),curMonth=now.getMonth(),curYear=now.getFullYear();
+      var byDay={};
+      sessionJournalEntries.forEach(function(e){
+        if(e.type!=='trade'||e.pnl==null||!isFinite(Number(e.pnl)))return;
+        var d=new Date(e.timestamp||0);
+        if(d.getMonth()!==curMonth||d.getFullYear()!==curYear)return;
+        var day=d.getDate(),p=Number(e.pnl);
+        if(!byDay[day])byDay[day]={pnl:0,trades:0,wins:0};
+        byDay[day].pnl+=p;byDay[day].trades++;if(p>0)byDay[day].wins++;
+      });
+      var colorFor=function(p){return p>0?'var(--accent)':(p<0?'var(--silver)':'var(--muted)');};
+      document.querySelectorAll('[data-journal-day]').forEach(function(cell){
+        var day=parseInt(cell.getAttribute('data-journal-day'),10);
+        var smalls=cell.querySelectorAll('small');
+        if(smalls.length<2)return;
+        var agg=byDay[day];
+        if(agg){
+          var pTxt=(agg.pnl>=0?'+':'−')+Math.abs(agg.pnl).toFixed(2);
+          smalls[0].textContent=pTxt;smalls[0].style.color=colorFor(agg.pnl);
+          var wr=Math.round(agg.wins/agg.trades*100);
+          smalls[1].textContent=agg.trades+(currentLanguage==='ar'?' صفقات · ':' trades · ')+wr+' win%';
+          cell.classList.add('has-data');
+        }else{
+          smalls[0].textContent='— P&L';smalls[0].style.color='';
+          smalls[1].textContent='— trades · — win%';
+          cell.classList.remove('has-data');
+        }
+      });
+      var weeks=[0,0,0,0,0],weekHas=[false,false,false,false,false];
+      Object.keys(byDay).forEach(function(k){
+        var wi=Math.min(4,Math.floor((parseInt(k,10)-1)/7));
+        weeks[wi]+=byDay[k].pnl;weekHas[wi]=true;
+      });
+      document.querySelectorAll('.week-total strong').forEach(function(el,i){
+        if(i>=weeks.length)return;
+        if(weekHas[i]){
+          el.textContent=(weeks[i]>=0?'+':'−')+Math.abs(weeks[i]).toFixed(2);
+          el.style.color=colorFor(weeks[i]);
+        }else{el.textContent='—';el.style.color='';}
+      });
+      var monthNames=['January','February','March','April','May','June','July','August','September','October','November','December'];
+      var mLabel=monthNames[curMonth]+' '+curYear;
+      document.querySelectorAll('.calendar-card .tiny').forEach(function(el){
+        if(/MONTH/i.test(el.textContent)||/—/.test(el.textContent))el.textContent=mLabel.toUpperCase();
+      });
     }catch(e){}
   }
   /* Journal search handler */document.addEventListener('input',function(event){if(event.target&&event.target.classList&&event.target.classList.contains('trade-search')){journalSearchQuery=event.target.value||'';renderJournalEntries();}});function openTradeSheet(){document.getElementById('tradeFormFeedback').textContent='';tradeSheet.classList.add('open');document.getElementById('tradePair').focus();}
