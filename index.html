@@ -2874,7 +2874,7 @@
   document.getElementById('profileEditorCancel').addEventListener('click',closeProfileEditor);
   profileEditor.addEventListener('click',function(event){if(event.target===profileEditor)closeProfileEditor();});
   profileBioInput.addEventListener('input',updateProfileBioCount);
-  profileEditorForm.addEventListener('submit',function(event){event.preventDefault();var submitter=event.submitter;runSuccessMorph(submitter,function(){var nn=profileNameInput.value,bio=profileBioInput.value;updateProfileIdentity(nn,bio);sbSaveProfile(nn,bio);closeProfileEditor();showToast(currentLanguage==='ar'?'تم تحديث الملف.':'Profile updated.');});});
+  profileEditorForm.addEventListener('submit',function(event){event.preventDefault();var submitter=event.submitter;var nn=profileNameInput.value,bio=profileBioInput.value;updateProfileIdentity(nn,bio);Promise.resolve(sbSaveProfile(nn,bio)).then(function(ok){if(ok===false){showToast(currentLanguage==='ar'?'فشل الحفظ. حاول مرة أخرى.':'Save failed. Try again.');}else{showToast(currentLanguage==='ar'?'تم تحديث الملف.':'Profile updated.');}closeProfileEditor();}).catch(function(){showToast(currentLanguage==='ar'?'فشل الحفظ.':'Save failed.');closeProfileEditor();});});
   document.addEventListener('keydown',function(event){if(event.key==='Escape'&&!profileEditor.hidden)closeProfileEditor();});
   document.getElementById('profileAvatarEdit').addEventListener('click',function(){profileAvatarInput.click();});
   profileAvatarInput.addEventListener('change',function(){
@@ -3414,7 +3414,7 @@
   function enterProduct(name,avatar){
     var authShell=document.querySelector('.auth-shell');authShell.classList.add('auth-leaving');
     setTimeout(function(){document.body.classList.remove('auth-active');document.body.classList.add('app-ready','app-revealing');authShell.classList.remove('auth-leaving');showScreen('matcher');setTimeout(function(){document.body.classList.remove('app-revealing');},410);},reduceMotion.matches?0:170);
-    updateProfileIdentity(name,'');
+    updateProfileIdentity(name,profileSession.bio||'');
   }
   document.getElementById('profileSetupForm').addEventListener('submit',function(e){
     e.preventDefault();
