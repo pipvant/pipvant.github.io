@@ -1533,7 +1533,7 @@
 
       <div class="journal-filter" aria-label="Trade filters"><div class="journal-filter-row"><button class="filter-action" id="journalFilterButton" type="button" aria-expanded="false"><svg width="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 6h16M7 12h10m-7 6h4"/></svg>Filters</button><div class="active-filter-slot"><span class="active-filter-chip" id="dayFilterChip">Day —</span><span class="active-filter-chip" id="facetFilterChip">All symbols · All sides</span></div></div><div class="facet-panel" id="facetPanel"><div class="facet-group" id="facetSymbol"><strong>Symbol</strong></div><div class="facet-group" id="facetSide"><strong>Side</strong></div><div class="facet-group"><strong>Setup</strong><span class="facet-option" aria-disabled="true"><span>Not tracked</span><span>—</span></span></div><div class="facet-group"><strong>Mistake</strong><span class="facet-option" aria-disabled="true"><span>Not tracked</span><span>—</span></span></div><div class="facet-group"><strong>Session</strong><span class="facet-option" aria-disabled="true"><span>Not tracked</span><span>—</span></span></div><div class="facet-group"><strong>Tag</strong><span class="facet-option" aria-disabled="true"><span>Not tracked</span><span>—</span></span></div></div></div>
 
-      <section class="trades-card" aria-labelledby="trade-list-title"><div class="journal-card-head"><div><h3 id="trade-list-title">Trade Log</h3><p>Execution records and review context</p></div><span class="tiny" id="journalEntryCount">0 TRADES</span></div><div class="trade-toolbar"><div class="trade-toolbar-top"><input class="trade-search" type="search" placeholder="Search symbol or note" aria-label="Search trades"><div class="trade-view" role="group" aria-label="Trade view"><button type="button" aria-pressed="true">Table</button><button type="button" aria-pressed="false">Chart</button><button type="button" aria-pressed="false">Unified</button></div></div><div class="group-tabs" role="group" aria-label="Group trades"><button type="button" aria-pressed="true">All</button><button type="button" aria-pressed="false">By Symbol</button><button type="button" aria-pressed="false">By Day</button><button type="button" aria-pressed="false">By Tag</button></div></div><div class="trade-columns" aria-hidden="true"><span>Date / time</span><span>Symbol</span><span>Side</span><span>Setup</span><span>Entry / exit</span><span>Qty</span><span>Net P&amp;L</span><span>R multiple</span><span>Rating</span><span>Notes</span><span></span></div><div class="journal-entry-list" id="journalEntryList" hidden></div><div class="trade-list-empty" id="journalEntryEmpty"><div><div class="empty-glyph" aria-hidden="true"><svg width="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6M9 11h6M9 15h3"/></svg></div><h3>No trades recorded</h3><p>Record the first trade to populate P&amp;L, MAE/MFE, tags, ratings, and linked notes from actual entries.</p><div class="trade-schema-note">Direction markers: Long — steel-blue &nbsp; / &nbsp; Short — silver</div></div></div></section>
+      <section class="trades-card" aria-labelledby="trade-list-title"><div class="journal-card-head"><div><h3 id="trade-list-title">Trade Log</h3><p>Execution records and review context</p></div><span class="tiny" id="journalEntryCount">0 TRADES</span></div><div class="trade-toolbar"><div class="trade-toolbar-top"><input class="trade-search" type="search" placeholder="Search symbol or note" aria-label="Search trades"><div class="trade-view" role="group" aria-label="Trade view"><button type="button" aria-pressed="true">Table</button><button type="button" aria-pressed="false">Chart</button><button type="button" aria-pressed="false">Unified</button></div></div><div class="group-tabs" role="group" aria-label="Group trades"><button type="button" aria-pressed="true">All</button><button type="button" aria-pressed="false">By Symbol</button><button type="button" aria-pressed="false">By Day</button><button type="button" aria-pressed="false">By Tag</button></div></div><div class="trade-columns" aria-hidden="true"><span>Date / time</span><span>Symbol</span><span>Side</span><span>Setup</span><span>Entry / exit</span><span>Qty</span><span>Net P&amp;L</span><span>R multiple</span><span>Rating</span><span>Notes</span><span></span></div><div class="journal-entry-list" id="journalEntryList" hidden></div><div class="journal-chart-view" id="journalChartView" hidden style="padding:16px"></div><div class="trade-list-empty" id="journalEntryEmpty"><div><div class="empty-glyph" aria-hidden="true"><svg width="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6M9 11h6M9 15h3"/></svg></div><h3>No trades recorded</h3><p>Record the first trade to populate P&amp;L, MAE/MFE, tags, ratings, and linked notes from actual entries.</p><div class="trade-schema-note">Direction markers: Long — steel-blue &nbsp; / &nbsp; Short — silver</div></div></div></section>
 
       <button class="journal-fab" id="logTradeButton" type="button"><svg width="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Log trade</button>
       <footer class="desktop-footer">Journal statistics are calculated only from logged trades.</footer>
@@ -1801,6 +1801,8 @@
             <h3 class="settings-group-title" id="settings-data-title">Data</h3>
             <div class="settings-card">
               <button class="settings-action" id="exportData" type="button"><span class="settings-copy"><strong>Export my data</strong><small>Download your current PIPVANT data as JSON.</small></span><svg width="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 19h14"/></svg></button>
+              <button class="settings-action" id="importData" type="button"><span class="settings-copy"><strong>Import my data</strong><small>Restore settings and profile from a JSON file.</small></span><svg width="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 15V3m0 12 4-4m-4 4-4-4M5 19h14"/></svg></button>
+              <input type="file" id="importDataFile" accept="application/json,.json" hidden>
               <button class="settings-action settings-danger" type="button" data-settings-modal="deleteModal"><span class="settings-copy"><strong>Delete account</strong><small>Erase the current account state and return to welcome.</small></span><svg width="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m9 6 6 6-6 6"/></svg></button>
             </div>
             <p class="settings-feedback" id="settingsFeedback" aria-live="polite"></p>
@@ -2907,15 +2909,44 @@
     if(disciplineStreak>=90&&earned.indexOf('Iron Discipline')===-1){
       if(awardProfileCertificate('Iron Discipline'))sbSaveCertificate('Iron Discipline');
     }
+    // Real mission progress from sessionJournalEntries
+    var mTrades=[],mClosed=[];
+    try{
+      mTrades=sessionJournalEntries.filter(function(e){return e.type==='trade';});
+      mClosed=mTrades.filter(function(e){return e.pnl!=null&&isFinite(Number(e.pnl));});
+    }catch(me){}
+    var mWins=mClosed.filter(function(e){return Number(e.pnl)>0;}).length;
+    var mWinRate=mClosed.length?Math.round(mWins/mClosed.length*100):0;
+    var mGrossP=mClosed.filter(function(e){return Number(e.pnl)>0;}).reduce(function(s,e){return s+Number(e.pnl);},0);
+    var mGrossL=mClosed.filter(function(e){return Number(e.pnl)<0;}).reduce(function(s,e){return s+Math.abs(Number(e.pnl));},0);
+    var mPf=mGrossL>0?(mGrossP/mGrossL):(mGrossP>0?Infinity:0);
+    var mByMonth={};
+    mClosed.forEach(function(e){var d=new Date(e.timestamp||0);var k=d.getFullYear()+'-'+d.getMonth();mByMonth[k]=(mByMonth[k]||0)+Number(e.pnl);});
+    var mProfitableMonths=Object.keys(mByMonth).filter(function(k){return mByMonth[k]>0;}).length;
+    var mWithStop=mTrades.filter(function(e){return e.stop!==undefined&&e.stop!==null&&e.stop!==''&&isFinite(parseFloat(e.stop));}).length;
+    var mStopPct=mTrades.length?Math.round(mWithStop/mTrades.length*100):0;
+    var mPfPct=isFinite(mPf)?Math.min(100,Math.round(mPf/1.5*100)):100;
+    if(mProfitableMonths>=3&&earned.indexOf('Profitable')===-1){
+      if(awardProfileCertificate('Profitable'))sbSaveCertificate('Profitable');
+    }
+    if(mWinRate>=60&&mClosed.length>=10&&earned.indexOf('Sharpshooter')===-1){
+      if(awardProfileCertificate('Sharpshooter'))sbSaveCertificate('Sharpshooter');
+    }
+    if(mStopPct>=100&&mTrades.length>=10&&earned.indexOf('Risk Master')===-1){
+      if(awardProfileCertificate('Risk Master'))sbSaveCertificate('Risk Master');
+    }
+    if(isFinite(mPf)&&mPf>=1.5&&mClosed.length>=10&&earned.indexOf('Edge Proven')===-1){
+      if(awardProfileCertificate('Edge Proven'))sbSaveCertificate('Edge Proven');
+    }
     // Update mission progress displays
     try{
       var missions=[
         {name:'Marathon',current:tradeCount,target:500,unit:currentLanguage==='ar'?'صفقة':'trades'},
-        {name:'Profitable',current:0,target:100,unit:currentLanguage==='ar'?'صفقة':'trades',note:currentLanguage==='ar'?'تحتاج P&L إيجابي':'needs positive P&L'},
-        {name:'Sharpshooter',current:0,target:100,unit:currentLanguage==='ar'?'صفقة':'trades',note:currentLanguage==='ar'?'تحتاج 60% فوز':'needs 60% win rate'},
+        {name:'Profitable',current:mProfitableMonths,target:3,unit:currentLanguage==='ar'?'أشهر رابحة':'profitable months'},
+        {name:'Sharpshooter',current:mWinRate,target:60,unit:'%'},
         {name:'Iron Discipline',current:disciplineStreak,target:90,unit:currentLanguage==='ar'?'يوم':'days'},
-        {name:'Risk Master',current:0,target:100,unit:currentLanguage==='ar'?'صفقة':'trades',note:currentLanguage==='ar'?'بدون كسر الحد':'no limit breaks'},
-        {name:'Edge Proven',current:0,target:100,unit:currentLanguage==='ar'?'صفقة':'trades',note:currentLanguage==='ar'?'تحتاج PF 1.5':'needs PF 1.5'}
+        {name:'Risk Master',current:mStopPct,target:100,unit:'%'},
+        {name:'Edge Proven',current:mPfPct,target:100,unit:'%'}
       ];
       document.querySelectorAll('.locked-certificate').forEach(function(card){
         var title=card.querySelector('h4');
@@ -3383,6 +3414,52 @@
     var data={exportedAt:new Date().toISOString(),profile:{displayName:profileSession.name,bio:profileSession.bio,certificates:profileSession.certificates.slice()},preferences:{appearance:document.documentElement.getAttribute('data-theme')||'dark',language:currentLanguage,currency:currentCurrency,defaultRiskPercent:defaultRisk,notifications:notificationsEnabled},riskCalculator:{accountSize:document.getElementById('balance').value,riskPercent:document.getElementById('riskPercent').value,stopLossPips:document.getElementById('stopDistance').value,symbol:document.getElementById('riskSymbol').value},discipline:{checklist:Array.prototype.map.call(document.querySelectorAll('.discipline-check'),function(check){return check.checked;}),weeklyReview:{followed:document.getElementById('reviewWorked').value,notFollowed:document.getElementById('reviewBroke').value,nextPriority:document.getElementById('reviewChange').value}},tradeDraft:{pair:document.getElementById('tradePair').value,direction:direction?direction.getAttribute('data-direction'):'',entry:document.getElementById('tradeEntry').value,stop:document.getElementById('tradeStop').value,target:document.getElementById('tradeTarget').value,size:document.getElementById('tradeSize').value,notes:document.getElementById('tradeNotes').value}};
     var url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));var link=document.createElement('a');link.href=url;link.download='pipvant-data.json';document.body.appendChild(link);link.click();link.remove();setTimeout(function(){URL.revokeObjectURL(url);},0);document.getElementById('settingsFeedback').textContent=currentLanguage==='ar'?'التصدير جاهز':'Export ready';
   });
+  document.getElementById('importData').addEventListener('click',function(){
+    document.getElementById('importDataFile').click();
+  });
+  document.getElementById('importDataFile').addEventListener('change',function(e){
+    var file=e.target.files&&e.target.files[0];if(!file)return;
+    var feedback=document.getElementById('settingsFeedback');
+    var reader=new FileReader();
+    reader.onload=function(){
+      try{
+        var data=JSON.parse(reader.result);
+        if(!data||typeof data!=='object')throw new Error('bad');
+        var restored=[];
+        if(data.profile&&typeof data.profile==='object'){
+          if(typeof data.profile.displayName==='string'&&data.profile.displayName){profileSession.name=data.profile.displayName;if(typeof updateProfileIdentity==='function')updateProfileIdentity(profileSession.name,profileSession.bio);restored.push(currentLanguage==='ar'?'الاسم':'name');}
+          if(typeof data.profile.bio==='string'){profileSession.bio=data.profile.bio;var pb=document.getElementById('profileBio');if(pb)pb.textContent=profileSession.bio||'—';if(typeof sbSaveProfile==='function')sbSaveProfile(profileSession.name,profileSession.bio);restored.push(currentLanguage==='ar'?'البيو':'bio');}
+        }
+        if(data.preferences&&typeof data.preferences==='object'){
+          var p=data.preferences;
+          if(p.appearance==='light'||p.appearance==='dark'){document.documentElement.setAttribute('data-theme',p.appearance);restored.push(currentLanguage==='ar'?'المظهر':'theme');}
+          if(p.language==='ar'||p.language==='en'){currentLanguage=p.language;if(typeof applyLanguage==='function')applyLanguage();restored.push(currentLanguage==='ar'?'اللغة':'language');}
+          if(typeof p.currency==='string'&&p.currency){currentCurrency=p.currency;if(typeof refreshCurrencyDisplay==='function')refreshCurrencyDisplay();restored.push(currentLanguage==='ar'?'العملة':'currency');}
+          if(isFinite(Number(p.defaultRiskPercent))){defaultRisk=Number(p.defaultRiskPercent);var drEl=document.getElementById('defaultRiskValue');if(drEl)drEl.textContent=defaultRisk+'%';restored.push(currentLanguage==='ar'?'المخاطرة':'risk');}
+          if(typeof p.notifications==='boolean'){notificationsEnabled=p.notifications;var ntEl=document.getElementById('notificationsToggle');if(ntEl)ntEl.setAttribute('aria-pressed',String(notificationsEnabled));restored.push(currentLanguage==='ar'?'التنبيهات':'notifications');}
+          if(typeof sbSaveSettings==='function')sbSaveSettings();
+        }
+        if(data.riskCalculator&&typeof data.riskCalculator==='object'){
+          var rc=data.riskCalculator;
+          var setVal=function(id,v){if(v!==undefined&&v!==null&&v!==''){var el=document.getElementById(id);if(el)el.value=v;}};
+          setVal('balance',rc.accountSize);setVal('riskPercent',rc.riskPercent);setVal('stopDistance',rc.stopLossPips);setVal('riskSymbol',rc.symbol);
+          if(typeof calculateFull==='function')calculateFull();
+          restored.push(currentLanguage==='ar'?'الحاسبة':'calculator');
+        }
+        feedback.textContent=restored.length?(currentLanguage==='ar'?'تم الاستيراد: ':'Imported: ')+restored.join(', '):(currentLanguage==='ar'?'لا توجد بيانات صالحة.':'No valid data found.');
+        if(typeof showToast==='function')showToast(feedback.textContent);
+      }catch(err){
+        feedback.textContent=currentLanguage==='ar'?'ملف غير صالح.':'Invalid file.';
+        if(typeof showToast==='function')showToast(feedback.textContent);
+      }
+      e.target.value='';
+    };
+    reader.onerror=function(){
+      feedback.textContent=currentLanguage==='ar'?'تعذر قراءة الملف.':'Could not read file.';
+      e.target.value='';
+    };
+    reader.readAsText(file);
+  });
   var activeSettingsModal=null;
   function openSettingsModal(id){
     var modal=document.getElementById(id);if(!modal)return;activeSettingsModal=modal;modal.hidden=false;var input=modal.querySelector('input');if(input)setTimeout(function(){input.focus();},30);
@@ -3646,12 +3723,49 @@
 
   document.querySelectorAll('.range-btn').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.range-btn').forEach(function(other){other.setAttribute('aria-pressed',String(other===button));});var range=button.textContent.trim();var now=Date.now();var cutoff=0;if(range==='1W')cutoff=now-7*24*60*60*1000;else if(range==='1M')cutoff=now-30*24*60*60*1000;else if(range==='3M')cutoff=now-90*24*60*60*1000;else if(range==='1Y')cutoff=now-365*24*60*60*1000;else if(range==='Custom'){var startStr=prompt(currentLanguage==='ar'?'تاريخ البداية (YYYY-MM-DD):':'Start date (YYYY-MM-DD):');var endStr=prompt(currentLanguage==='ar'?'تاريخ النهاية (YYYY-MM-DD):':'End date (YYYY-MM-DD):');if(startStr){var sd=new Date(startStr);if(!isNaN(sd.getTime()))cutoff=sd.getTime();}var _endCutoff=0;if(endStr){var _ed=new Date(endStr);if(!isNaN(_ed.getTime())){_ed.setHours(23,59,59,999);_endCutoff=_ed.getTime();}}window.journalDateEnd=_endCutoff;}else{window.journalDateEnd=0;}window.journalDateCutoff=cutoff;if(typeof renderJournalEntries==='function')renderJournalEntries();});});
   // Chart toggles
-  document.querySelectorAll('.chart-toggle').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.chart-toggle').forEach(function(other){other.setAttribute('aria-pressed',String(other===button));});showToast(currentLanguage==='ar'?'تم تبديل الرسم.':'Chart switched.');});});
+  window.journalChartMode='cumulative';
+  document.querySelectorAll('.chart-toggle').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.chart-toggle').forEach(function(other){other.setAttribute('aria-pressed',String(other===button));});var label=(button.textContent||'').trim().toLowerCase();window.journalChartMode=label.indexOf('per-trade')===0?'pertrade':(label.indexOf('drawdown')===0?'drawdown':'cumulative');if(typeof updateJournalEquity==='function')updateJournalEquity();});});
   // Day cells - filter by day
   document.querySelectorAll('[data-journal-day]').forEach(function(cell){cell.addEventListener('click',function(){var day=cell.getAttribute('data-journal-day');showToast((currentLanguage==='ar'?'اليوم ':'Day ')+day);});});
-  document.querySelectorAll('.chart-toggle').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.chart-toggle').forEach(function(other){other.setAttribute('aria-pressed',String(other===button));});});});
-  document.querySelectorAll('.trade-view button').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.trade-view button').forEach(function(other){other.setAttribute('aria-pressed',String(other===button));});});});
-  document.querySelectorAll('.group-tabs button').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.group-tabs button').forEach(function(other){other.setAttribute('aria-pressed',String(other===button));});});});
+
+  window.journalViewMode='table';
+  document.querySelectorAll('.trade-view button').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.trade-view button').forEach(function(other){other.setAttribute('aria-pressed',String(other===button));});var label=(button.textContent||'').trim().toLowerCase();window.journalViewMode=label.indexOf('chart')===0?'chart':(label.indexOf('unified')===0?'unified':'table');applyJournalViewMode();});});
+  function applyJournalViewMode(){
+    try{
+      var mode=window.journalViewMode||'table';
+      var list=document.getElementById('journalEntryList'),chart=document.getElementById('journalChartView'),empty=document.getElementById('journalEntryEmpty'),cols=document.querySelector('.trades-card .trade-columns');
+      if(!list||!chart)return;
+      if(mode==='chart'){list.hidden=true;if(cols)cols.style.display='none';chart.hidden=false;renderJournalChartView();}
+      else if(mode==='unified'){list.hidden=false;if(cols)cols.style.display='';chart.hidden=false;renderJournalChartView();}
+      else{list.hidden=false;if(cols)cols.style.display='';chart.hidden=true;}
+      // Re-apply empty state logic
+      if(typeof renderJournalEntries==='function'){var has=list.children.length>0;if(mode!=='chart'){empty.hidden=has;if(!has)list.hidden=true;}}
+    }catch(e){}
+  }
+  function renderJournalChartView(){
+    try{
+      var chart=document.getElementById('journalChartView');if(!chart)return;
+      var trades=(window.sessionJournalEntries||[]).filter(function(e){return e.type==='trade'&&e.pnl!=null&&isFinite(Number(e.pnl));});
+      if(!trades.length){chart.innerHTML='<p style="color:var(--muted);font-size:12px;text-align:center;padding:24px">'+(currentLanguage==='ar'?'لا توجد صفقات مغلقة':'No closed trades yet')+'</p>';return;}
+      trades.sort(function(a,b){return (a.timestamp||0)-(b.timestamp||0);});
+      var vals=trades.map(function(t){return Number(t.pnl);});
+      var mx=Math.max.apply(null,vals.concat([0])),mn=Math.min.apply(null,vals.concat([0]));
+      var sp=(mx-mn)||1,W=560,H=200,P=16;
+      var bw=(W-2*P)/vals.length;
+      var bars=vals.map(function(v,i){
+        var h=Math.max(2,Math.abs(v)/sp*(H-2*P-20));
+        var x=(P+i*bw+1).toFixed(1);
+        var y=v>=0?(H-P-10-h).toFixed(1):(H-P-10).toFixed(1);
+        var c=v>=0?'var(--accent)':'var(--danger,#ef4444)';
+        var lbl=(trades[i].pair||'')+' '+(v>=0?'+':'')+v.toFixed(0);
+        return '<g><rect x="'+x+'" y="'+y+'" width="'+Math.max(2,bw-2).toFixed(1)+'" height="'+h.toFixed(1)+'" fill="'+c+'" rx="2"><title>'+lbl+'</title></rect></g>';
+      }).join('');
+      var zeroY=(H-P-10).toFixed(1);
+      chart.innerHTML='<h4 style="font-size:12px;margin:0 0 8px;color:var(--muted)">'+(currentLanguage==='ar'?'الربح والخسارة لكل صفقة':'P&L per trade')+' ('+trades.length+')</h4><svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block" role="img"><line x1="'+P+'" y1="'+zeroY+'" x2="'+(W-P)+'" y2="'+zeroY+'" stroke="var(--line)" stroke-width="1"/>'+bars+'</svg>';
+    }catch(e){}
+  }
+  window.journalGroupBy='all';
+  document.querySelectorAll('.group-tabs button').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.group-tabs button').forEach(function(other){other.setAttribute('aria-pressed',String(other===button));});var label=(button.textContent||'').trim().toLowerCase();window.journalGroupBy=label.indexOf('by symbol')===0?'symbol':(label.indexOf('by day')===0?'day':(label.indexOf('by tag')===0?'tag':'all'));if(typeof renderJournalEntries==='function')renderJournalEntries();});});
   var facetPanel=document.getElementById('facetPanel');
   var journalFilterButton=document.getElementById('journalFilterButton');
   journalFilterButton.addEventListener('click',function(){var open=facetPanel.classList.toggle('open');journalFilterButton.setAttribute('aria-expanded',String(open));});
@@ -3716,11 +3830,78 @@
   function journalCell(label,value,className){var cell=document.createElement('span');cell.className='journal-entry-cell'+(className?' '+className:'');var small=document.createElement('small');var strong=document.createElement('strong');small.textContent=label;strong.textContent=value;cell.appendChild(small);cell.appendChild(strong);return cell;}
   function journalDate(timestamp){return new Date(timestamp).toLocaleString(currentLanguage==='ar'?'ar-MA':'en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});}
   var journalSearchQuery=''; window.journalFacets={symbol:null,side:null};
+  /* ---- Edit / Delete trade ---- */
+  window.editingTradeId=null;
+  function startEditTrade(entry){
+    if(!entry||entry.type!=='trade')return;
+    window.editingTradeId=entry._id||entry._dbId||entry.timestamp;
+    document.getElementById('tradePair').value=entry.pair||'';
+    document.getElementById('tradeEntry').value=entry.entry||'';
+    document.getElementById('tradeStop').value=entry.stop||'';
+    document.getElementById('tradeTarget').value=entry.target||'';
+    document.getElementById('tradeSize').value=entry.size||'';
+    document.getElementById('tradeExit').value=entry.exitPrice||'';
+    document.getElementById('tradeResult').value=entry.result||'';
+    document.getElementById('tradeNotes').value=entry.notes||'';
+    var dir=String(entry.direction||'Long').toLowerCase();
+    document.querySelectorAll('.chip[data-direction]').forEach(function(chip){
+      chip.setAttribute('aria-pressed',String(chip.getAttribute('data-direction').toLowerCase()===dir));
+    });
+    document.querySelectorAll('#tradeForm input,#tradeForm textarea').forEach(function(el){if(typeof updateFloatingField==='function')updateFloatingField(el);});
+    var submitBtn=document.querySelector('#tradeForm button[type="submit"]');
+    if(submitBtn)submitBtn.textContent=currentLanguage==='ar'?'حفظ التعديلات':'Save changes';
+    document.getElementById('tradeFormFeedback').textContent='';
+    if(typeof openTradeSheet==='function')openTradeSheet();
+  }
+  function cancelEditTrade(){
+    window.editingTradeId=null;
+    var submitBtn=document.querySelector('#tradeForm button[type="submit"]');
+    if(submitBtn)submitBtn.textContent=currentLanguage==='ar'?'تسجيل صفقة':'Log trade';
+  }
+  function deleteTradeEntry(entry){
+    if(!entry||entry.type!=='trade')return;
+    var label=(entry.pair||'')+' '+(entry.direction||'');
+    var msg=currentLanguage==='ar'?('حذف الصفقة '+label+'؟ لا يمكن التراجع.'):'Delete trade '+label+'? This cannot be undone.';
+    if(!window.confirm(msg))return;
+    var id=entry._id||entry._dbId||entry.timestamp;
+    sessionJournalEntries=sessionJournalEntries.filter(function(e){
+      var eid=e._id||e._dbId||e.timestamp;
+      return eid!==id;
+    });
+    if(window.editingTradeId===id)cancelEditTrade();
+    if(entry._dbId&&typeof sb!=='undefined'&&sb){
+      sb.from('trades').delete().eq('id',entry._dbId).then(function(r){
+        if(r.error&&typeof showToast==='function')showToast(currentLanguage==='ar'?'حُذفت محلياً فقط.':'Deleted locally only.');
+      }).catch(function(){});
+    }
+    renderJournalEntries();
+    if(typeof showToast==='function')showToast(currentLanguage==='ar'?'تم حذف الصفقة.':'Trade deleted.');
+  }
   function renderJournalEntries(){
     var list=document.getElementById('journalEntryList'),empty=document.getElementById('journalEntryEmpty'),count=document.getElementById('journalEntryCount');
     if(!list||!empty||!count)return;list.replaceChildren();
     var labels=currentLanguage==='ar'?['التاريخ / الوقت','الرمز','الاتجاه','الإعداد','الدخول / الخطة','الكمية','صافي الربح والخسارة','مضاعف R','التقييم','الملاحظات','']:['Date / time','Symbol','Side','Setup','Entry / plan','Qty','Net P&L','R multiple','Rating','Notes',''];
-    var q=journalSearchQuery.trim().toLowerCase();var dateCutoff=window.journalDateCutoff||0;var dateEnd=window.journalDateEnd||0;var dayFilter=window.journalDayFilter||null;var facets=window.journalFacets||{symbol:null,side:null};var filtered=sessionJournalEntries.filter(function(entry){var matchQ=true,matchD=true,matchDay=true,matchSym=true,matchSide=true;if(q){var haystack=((entry.pair||'')+' '+(entry.notes||'')+' '+(entry.direction||'')).toLowerCase();matchQ=haystack.indexOf(q)!==-1;}if(dateCutoff){matchD=(entry.timestamp||0)>=dateCutoff;}if(dateEnd){matchD=matchD&&(entry.timestamp||0)<=dateEnd;}if(dayFilter){var d=new Date(entry.timestamp||0);matchDay=d.getFullYear()===dayFilter.y&&d.getMonth()===dayFilter.m&&d.getDate()===dayFilter.d;}if(facets.symbol&&entry.type==='trade'){matchSym=String(entry.pair||'').toUpperCase()===facets.symbol;}if(facets.side&&entry.type==='trade'){matchSide=String(entry.direction||'').toLowerCase()===facets.side;}return matchQ&&matchD&&matchDay&&matchSym&&matchSide;});filtered.forEach(function(entry){
+    var q=journalSearchQuery.trim().toLowerCase();var dateCutoff=window.journalDateCutoff||0;var dateEnd=window.journalDateEnd||0;var dayFilter=window.journalDayFilter||null;var facets=window.journalFacets||{symbol:null,side:null};var filtered=sessionJournalEntries.filter(function(entry){var matchQ=true,matchD=true,matchDay=true,matchSym=true,matchSide=true;if(q){var haystack=((entry.pair||'')+' '+(entry.notes||'')+' '+(entry.direction||'')).toLowerCase();matchQ=haystack.indexOf(q)!==-1;}if(dateCutoff){matchD=(entry.timestamp||0)>=dateCutoff;}if(dateEnd){matchD=matchD&&(entry.timestamp||0)<=dateEnd;}if(dayFilter){var d=new Date(entry.timestamp||0);matchDay=d.getFullYear()===dayFilter.y&&d.getMonth()===dayFilter.m&&d.getDate()===dayFilter.d;}if(facets.symbol&&entry.type==='trade'){matchSym=String(entry.pair||'').toUpperCase()===facets.symbol;}if(facets.side&&entry.type==='trade'){matchSide=String(entry.direction||'').toLowerCase()===facets.side;}return matchQ&&matchD&&matchDay&&matchSym&&matchSide;});(function(){
+      var groupBy=window.journalGroupBy||'all';
+      if(groupBy!=='all'&&filtered.length){
+        var groups={};
+        filtered.forEach(function(entry){
+          var key='—';
+          if(groupBy==='symbol'){key=String(entry.pair||'—').toUpperCase();}
+          else if(groupBy==='day'){var d=new Date(entry.timestamp||0);key=d.toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});}
+          else if(groupBy==='tag'){key=(entry.tags&&entry.tags.length?entry.tags.join(', '):(currentLanguage==='ar'?'بدون وسم':'Untagged'));}
+          if(!groups[key])groups[key]=[];
+          groups[key].push(entry);
+        });
+        var ordered=Object.keys(groups).sort();
+        var regrouped=[];
+        ordered.forEach(function(k){regrouped.push({__groupHeader:k});groups[k].forEach(function(e){regrouped.push(e);});});
+        filtered=regrouped;
+      }
+    })();filtered.forEach(function(entry){
+      if(entry.__groupHeader){
+        var gh=document.createElement('div');gh.className='journal-group-header';gh.style.cssText='padding:10px 14px;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);background:var(--sunken);border-top:1px solid var(--line);border-bottom:1px solid var(--line)';gh.textContent=entry.__groupHeader;list.appendChild(gh);return;
+      }
       var row=document.createElement('article');row.className='journal-entry-row';
       var values;
       if(entry.type==='trade'){
@@ -3735,20 +3916,31 @@
         values=[journalDate(entry.timestamp),entry.pair,currentLanguage==='ar'?'ملاحظة مخاطرة':'Risk note',currentLanguage==='ar'?'حساب':'Calculation','SL '+entry.stop+' '+(currentLanguage==='ar'?'نقطة':'pips'),entry.size,'—','1R','—',(currentLanguage==='ar'?'مخاطرة ':'Risk ')+entry.riskLabel+' · '+entry.riskPercent+'% '+(currentLanguage==='ar'?'من ':'of ')+entry.accountLabel,''];
       }
       values.forEach(function(value,index){
-        if(index===10 && entry.type==='trade' && !entry.closed){
-          var cell=document.createElement('div');cell.className='journal-entry-cell';
-          var btn=document.createElement('button');btn.type='button';btn.className='btn secondary';btn.style.cssText='min-height:28px;padding:4px 10px;font-size:10px;';
-          btn.textContent=currentLanguage==='ar'?'إغلاق':'Close';
-          btn.setAttribute('data-close-trade', entry._id || entry.timestamp);
-          btn.addEventListener('click', function(e){e.stopPropagation();openCloseTradeModal(entry);});
-          cell.appendChild(btn);row.appendChild(cell);
+        if(index===10 && entry.type==='trade'){
+          var cell=document.createElement('div');cell.className='journal-entry-cell';cell.style.cssText='display:flex;gap:4px;flex-wrap:wrap;align-items:center;';
+          var mkSmallBtn=function(label,action){
+            var b=document.createElement('button');b.type='button';b.className='btn secondary';b.style.cssText='min-height:28px;padding:4px 10px;font-size:10px;';
+            b.textContent=label;
+            b.addEventListener('click',function(e){e.stopPropagation();action();});
+            return b;
+          };
+          cell.appendChild(mkSmallBtn(currentLanguage==='ar'?'تعديل':'Edit',function(){startEditTrade(entry);}));
+          var delBtn=mkSmallBtn(currentLanguage==='ar'?'حذف':'Delete',function(){deleteTradeEntry(entry);});
+          delBtn.style.color='var(--danger,#ef4444)';
+          cell.appendChild(delBtn);
+          if(!entry.closed){
+            var btn=mkSmallBtn(currentLanguage==='ar'?'إغلاق':'Close',function(){openCloseTradeModal(entry);});
+            btn.setAttribute('data-close-trade', entry._id || entry.timestamp);
+            cell.appendChild(btn);
+          }
+          row.appendChild(cell);
         }else{
           row.appendChild(journalCell(labels[index],value,index===1?'primary':index===9?'note':''));
         }
       });list.appendChild(row);
     });
     var hasEntries=filtered.length>0;list.hidden=!hasEntries;empty.hidden=hasEntries;count.textContent=hasEntries?(filtered.length+(currentLanguage==='ar'?' إدخالات':' ENTRIES')):(currentLanguage==='ar'?'0 صفقات':'0 TRADES');
-    updateJournalKPIs();updateJournalCalendar();updateJournalEquity();renderFacetOptions();updateProfileFromSession();
+    updateJournalKPIs();updateJournalCalendar();updateJournalEquity();updateJournalScore();renderFacetOptions();updateProfileFromSession();if(typeof applyJournalViewMode==='function'&&(window.journalViewMode==='chart'||window.journalViewMode==='unified'))applyJournalViewMode();
   }
   /* ---- Profile stats from session data (robust fallback) ---- */
   function updateProfileFromSession(){
@@ -3862,6 +4054,49 @@
       set('kpiExpectancyNote',(currentLanguage==='ar'?'متوسط لكل صفقة · ':'Avg per trade · ')+n+(currentLanguage==='ar'?' صفقات':' trades'));
     }catch(e){}
   }
+  /* ---- Journal Trading Score: 6-dimension radar from real trades ---- */
+  function updateJournalScore(){
+    try{
+      var card=document.querySelector('.score-card');if(!card)return;
+      var fill=card.querySelector('.score-fill'),metaStrong=card.querySelector('.score-meta strong'),metaLabel=card.querySelector('.score-meta span');
+      var svg=card.querySelector('.radar-svg');
+      var closed=(window.sessionJournalEntries||[]).filter(function(e){return e.type==='trade'&&e.pnl!=null&&isFinite(Number(e.pnl));});
+      var n=closed.length;
+      function reset(){if(fill)fill.style.width='0';if(metaStrong)metaStrong.textContent='—';if(metaLabel)metaLabel.textContent=currentLanguage==='ar'?'لا توجد صفقات':'No trades yet';var poly=svg&&svg.querySelector('.score-polygon');if(poly)poly.setAttribute('points','');}
+      if(!n){reset();return;}
+      var wins=0,grossProfit=0,grossLoss=0,net=0;
+      closed.forEach(function(e){var p=Number(e.pnl);net+=p;if(p>0){wins++;grossProfit+=p;}else if(p<0){grossLoss+=-p;}});
+      var winPct=wins/n*100;
+      var pf=grossLoss>0?grossProfit/grossLoss:(grossProfit>0?Infinity:0);
+      var pfScore=!isFinite(pf)?100:Math.min(100,pf/5*100);
+      var avgWin=wins?grossProfit/wins:0,avgLoss=(n-wins)>0?grossLoss/(n-wins):0;
+      var wlRatio=(avgWin>0&&avgLoss>0)?avgWin/avgLoss:(avgWin>0?3:0);
+      var wlScore=Math.min(100,wlRatio/3*100);
+      // Recovery factor: net / max drawdown (simplified from equity curve)
+      var cum=0,peak=0,maxDD=0;
+      var sorted=closed.slice().sort(function(a,b){return (a.timestamp||0)-(b.timestamp||0);});
+      sorted.forEach(function(e){cum+=Number(e.pnl);if(cum>peak)peak=cum;var dd=peak-cum;if(dd>maxDD)maxDD=dd;});
+      var recScore=maxDD>0?Math.min(100,Math.max(0,net/maxDD/3*100)):(net>0?100:50);
+      // Consistency: based on win-rate stability (simplified)
+      var conScore=Math.min(100,Math.max(0,100-Math.abs(winPct-50)*1.2));
+      // Discipline: from global streak if available
+      var streak=(typeof pipvantDisciplineStreak!=='undefined'&&isFinite(Number(pipvantDisciplineStreak)))?Number(pipvantDisciplineStreak):50;
+      var discScore=Math.min(100,Math.max(0,streak));
+      var dims=[winPct,pfScore,wlScore,recScore,discScore,conScore];
+      var overall=Math.round(dims.reduce(function(a,b){return a+b;},0)/6);
+      if(fill)fill.style.width=overall+'%';
+      if(metaStrong)metaStrong.textContent=String(overall);
+      var label=overall>=80?(currentLanguage==='ar'?'ممتاز':'Excellent'):overall>=60?(currentLanguage==='ar'?'جيد':'Good'):overall>=40?(currentLanguage==='ar'?'متوسط':'Developing'):(currentLanguage==='ar'?'يحتاج عمل':'Needs work');
+      if(metaLabel)metaLabel.textContent=label;
+      // Update radar polygon: 6 axes, center (110,95)
+      var cx=110,cy=95;
+      var verts=[[110,12],[194,54],[194,136],[110,178],[26,136],[26,54]];
+      var pts=dims.map(function(s,i){var v=verts[i];var x=cx+(v[0]-cx)*s/100;var y=cy+(v[1]-cy)*s/100;return x.toFixed(1)+','+y.toFixed(1);}).join(' ');
+      if(svg){var poly=svg.querySelector('.score-polygon');if(!poly){poly=document.createElementNS('http://www.w3.org/2000/svg','polygon');poly.setAttribute('class','score-polygon');poly.setAttribute('fill','rgba(91,141,239,.25)');poly.setAttribute('stroke','var(--accent)');poly.setAttribute('stroke-width','2');svg.appendChild(poly);}poly.setAttribute('points',pts);}
+      // Update r5 label to Discipline
+      var r5=card.querySelector('.radar-label.r5');if(r5)r5.textContent=currentLanguage==='ar'?'الانضباط':'Discipline';
+    }catch(e){}
+  }
   /* ---- Journal equity curve: cumulative P&L from real trades ---- */
   function updateJournalEquity(){
     try{
@@ -3873,17 +4108,55 @@
         return;
       }
       trades.sort(function(a,b){return new Date(a.closedAt||a.date)-new Date(b.closedAt||b.date);});
-      var cum=0,points=trades.map(function(t){cum+=parseFloat(t.pnl);return cum;});
-      var min=Math.min.apply(null,[0].concat(points)),max=Math.max.apply(null,[0].concat(points));
-      var spread=(max-min)||1,W=560,H=180,P=12;
-      var coords=points.map(function(v,i){
-        var x=P+(i/(points.length-1||1))*(W-2*P);
-        var y=P+(1-(v-min)/spread)*(H-2*P);
-        return x.toFixed(1)+','+y.toFixed(1);
-      }).join(' ');
-      var zeroY=(P+(1-(0-min)/spread)*(H-2*P)).toFixed(1);
-      var color=points[points.length-1]>=0?'var(--accent)':'var(--danger,#ef4444)';
-      container.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block" role="img" aria-label="Equity curve"><line x1="'+P+'" y1="'+zeroY+'" x2="'+(W-P)+'" y2="'+zeroY+'" stroke="var(--line)" stroke-width="1" stroke-dasharray="4 4"/><polyline points="'+coords+'" fill="none" stroke="'+color+'" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/></svg><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:8px"><span>'+trades.length+' trades</span><strong style="color:'+color+'">'+(points[points.length-1]>=0?'+':'')+points[points.length-1].toFixed(2)+'</strong></div>';
+      var mode=window.journalChartMode||'cumulative';
+      var W=560,H=180,P=12;
+      var svgBody='',footer='';
+      if(mode==='pertrade'){
+        // Per-trade P&L as bars
+        var vals=trades.map(function(t){return parseFloat(t.pnl);});
+        var mx=Math.max.apply(null,vals.concat([0])),mn=Math.min.apply(null,vals.concat([0]));
+        var sp=(mx-mn)||1;
+        var bw=(W-2*P)/vals.length;
+        var bars=vals.map(function(v,i){
+          var h=Math.abs(v)/sp*(H-2*P);
+          var x=(P+i*bw+1).toFixed(1);
+          var y=v>=0?(P+(1-(v-mn)/sp)*(H-2*P)).toFixed(1):(P+(1-(0-mn)/sp)*(H-2*P)).toFixed(1);
+          var c=v>=0?'var(--accent)':'var(--danger,#ef4444)';
+          return '<rect x="'+x+'" y="'+y+'" width="'+Math.max(1,bw-2).toFixed(1)+'" height="'+Math.max(1,h).toFixed(1)+'" fill="'+c+'" rx="2"/>';
+        }).join('');
+        var zeroY=(P+(1-(0-mn)/sp)*(H-2*P)).toFixed(1);
+        svgBody='<line x1="'+P+'" y1="'+zeroY+'" x2="'+(W-P)+'" y2="'+zeroY+'" stroke="var(--line)" stroke-width="1"/>'+bars;
+        footer='<span>'+trades.length+' trades</span><span>Per-trade P&L</span>';
+      }else if(mode==='drawdown'){
+        // Drawdown from peak
+        var cum2=0,peak2=0;
+        var dds=trades.map(function(t){cum2+=parseFloat(t.pnl);if(cum2>peak2)peak2=cum2;return peak2-cum2;});
+        var maxDD=Math.max.apply(null,dds.concat([0]))||1;
+        var coords2=dds.map(function(v,i){
+          var x=P+(i/(dds.length-1||1))*(W-2*P);
+          var y=P+(v/maxDD)*(H-2*P);
+          return x.toFixed(1)+','+y.toFixed(1);
+        }).join(' ');
+        var area2=P+','+(H-P)+' '+coords2+' '+(W-P)+','+(H-P);
+        svgBody='<polygon points="'+area2+'" fill="rgba(239,68,68,.18)"/><polyline points="'+coords2+'" fill="none" stroke="var(--danger,#ef4444)" stroke-width="2.5" stroke-linejoin="round"/>';
+        footer='<span>Max drawdown</span><strong style="color:var(--danger,#ef4444)">-'+maxDD.toFixed(2)+'</strong>';
+      }else{
+        // Cumulative (default)
+        var cum=0,points=trades.map(function(t){cum+=parseFloat(t.pnl);return cum;});
+        var min=Math.min.apply(null,[0].concat(points)),max=Math.max.apply(null,[0].concat(points));
+        var spread=(max-min)||1;
+        var coords=points.map(function(v,i){
+          var x=P+(i/(points.length-1||1))*(W-2*P);
+          var y=P+(1-(v-min)/spread)*(H-2*P);
+          return x.toFixed(1)+','+y.toFixed(1);
+        }).join(' ');
+        var zeroY2=(P+(1-(0-min)/spread)*(H-2*P)).toFixed(1);
+        var color=points[points.length-1]>=0?'var(--accent)':'var(--danger,#ef4444)';
+        var area=P+','+zeroY2+' '+coords+' '+(W-P)+','+zeroY2;
+        svgBody='<line x1="'+P+'" y1="'+zeroY2+'" x2="'+(W-P)+'" y2="'+zeroY2+'" stroke="var(--line)" stroke-width="1" stroke-dasharray="4 4"/><polygon points="'+area+'" fill="'+color+'" opacity="0.12"/><polyline points="'+coords+'" fill="none" stroke="'+color+'" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>';
+        footer='<span>'+trades.length+' trades</span><strong style="color:'+color+'">'+(points[points.length-1]>=0?'+':'')+points[points.length-1].toFixed(2)+'</strong>';
+      }
+      container.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block" role="img" aria-label="Equity chart"><rect x="0" y="0" width="'+W+'" height="'+H+'" fill="none"/>'+svgBody+'</svg><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:8px">'+footer+'</div>';
     }catch(e){}
   }
   /* ---- Journal P&L calendar: real per-day trade data ---- */
@@ -3937,7 +4210,7 @@
     }catch(e){}
   }
   /* Journal search handler */document.addEventListener('input',function(event){if(event.target&&event.target.classList&&event.target.classList.contains('trade-search')){journalSearchQuery=event.target.value||'';renderJournalEntries();}});function openTradeSheet(){document.getElementById('tradeFormFeedback').textContent='';tradeSheet.classList.add('open');document.getElementById('tradePair').focus();}
-  function closeTradeSheet(){tradeSheet.classList.remove('open');if(document.getElementById('journal').classList.contains('active'))logTradeButton.focus();}
+  function closeTradeSheet(){tradeSheet.classList.remove('open');if(typeof cancelEditTrade==='function')cancelEditTrade();if(document.getElementById('journal').classList.contains('active'))logTradeButton.focus();}
   var closeTradeSheetEl=document.getElementById('closeTradeModal');var currentCloseEntry=null;
   function openCloseTradeModal(entry){currentCloseEntry=entry;document.getElementById('closeTradeFeedback').textContent='';document.getElementById('closeExitPrice').value='';var rp=document.getElementById('closeRealizedPnl');if(rp)rp.value='';closeTradeSheetEl.classList.add('open');document.getElementById('closeExitPrice').focus();}
   function hideCloseTradeModal(){closeTradeSheetEl.classList.remove('open');currentCloseEntry=null;}
@@ -3996,7 +4269,30 @@
       if(resultVal==='breakeven')pnl=0;
     }
     var tradeEntry={type:'trade',timestamp:Date.now(),pair:document.getElementById('tradePair').value.trim().toUpperCase(),direction:directionButton.getAttribute('data-direction'),entry:document.getElementById('tradeEntry').value,stop:document.getElementById('tradeStop').value,target:document.getElementById('tradeTarget').value,size:document.getElementById('tradeSize').value,rMultiple:riskDistance>0?units(rewardDistance/riskDistance)+'R':'—',notes:document.getElementById('tradeNotes').value.trim(),closed:isClosed,exitPrice:isFinite(exitPrice)?exitVal:null,pnl:pnl,result:resultVal||null};
-    runSuccessMorph(e.submitter,function(){sessionJournalEntries.unshift(tradeEntry);renderJournalEntries();tradeFormEl.reset();tradeFormEl.querySelectorAll('input,textarea').forEach(updateFloatingField);document.querySelectorAll('.chip[data-direction]').forEach(function(chip){chip.setAttribute('aria-pressed','false');});document.getElementById('tradeFormFeedback').textContent='';closeTradeSheet();if(sb&&sbUser){sbSaveTrade(tradeEntry);}else{var feedback=document.getElementById('journalFeedback');feedback.textContent=currentLanguage==='ar'?'تمت إضافة الصفقة لهذه الجلسة فقط.':'Trade added for this session only.';feedbackMotion(feedback);showToast(feedback.textContent);}});
+    var editingId=window.editingTradeId;
+    runSuccessMorph(e.submitter,function(){
+      if(editingId){
+        var updated=false;
+        sessionJournalEntries.forEach(function(en){
+          var eid=en._id||en._dbId||en.timestamp;
+          if(eid===editingId&&en.type==='trade'){
+            en.pair=tradeEntry.pair;en.direction=tradeEntry.direction;en.entry=tradeEntry.entry;en.stop=tradeEntry.stop;en.target=tradeEntry.target;en.size=tradeEntry.size;en.rMultiple=tradeEntry.rMultiple;en.notes=tradeEntry.notes;en.closed=tradeEntry.closed;en.exitPrice=tradeEntry.exitPrice;en.pnl=tradeEntry.pnl;en.result=tradeEntry.result;
+            updated=true;
+            if(en._dbId&&sb&&sbUser){
+              var ep2=parseFloat(en.entry),sz2=parseFloat(en.size),sp2=parseFloat(en.stop),tp2=parseFloat(en.target),xp2=parseFloat(en.exitPrice);
+              sb.from('trades').update({symbol:en.pair||'UNKNOWN',direction:(en.direction||'long').toLowerCase(),entry_price:isFinite(ep2)?ep2:0,exit_price:isFinite(xp2)?xp2:null,position_size:isFinite(sz2)?sz2:0,pnl:(en.pnl!=null&&isFinite(Number(en.pnl)))?Number(en.pnl):null,stop_price:isFinite(sp2)?sp2:null,target_price:isFinite(tp2)?tp2:null,closed_at:en.closed?new Date().toISOString():null,notes:en.notes||null}).eq('id',en._dbId).then(function(){sbLoadTrades();}).catch(function(){});
+            }
+          }
+        });
+        if(typeof cancelEditTrade==='function')cancelEditTrade();
+        var fbU=document.getElementById('journalFeedback');
+        if(fbU){fbU.textContent=updated?(currentLanguage==='ar'?'تم حفظ التعديلات.':'Trade updated.'):(currentLanguage==='ar'?'تعذر العثور على الصفقة.':'Trade not found.');feedbackMotion(fbU);showToast(fbU.textContent);}
+      }else{
+        sessionJournalEntries.unshift(tradeEntry);
+        if(sb&&sbUser){sbSaveTrade(tradeEntry);}else{var feedback=document.getElementById('journalFeedback');feedback.textContent=currentLanguage==='ar'?'تمت إضافة الصفقة لهذه الجلسة فقط.':'Trade added for this session only.';feedbackMotion(feedback);showToast(feedback.textContent);}
+      }
+      renderJournalEntries();tradeFormEl.reset();tradeFormEl.querySelectorAll('input,textarea').forEach(updateFloatingField);document.querySelectorAll('.chip[data-direction]').forEach(function(chip){chip.setAttribute('aria-pressed','false');});document.getElementById('tradeFormFeedback').textContent='';closeTradeSheet();
+    });
   });
   tradeSheet.addEventListener('click',function(e){if(e.target===tradeSheet)closeTradeSheet();});
   document.querySelectorAll('.chip[data-direction]').forEach(function(chip){chip.addEventListener('click',function(){
