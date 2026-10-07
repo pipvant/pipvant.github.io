@@ -2093,6 +2093,7 @@
       <div class="form-grid">
         <div><label for="closeExitPrice">Exit price</label><input id="closeExitPrice" type="number" step="any" inputmode="decimal" required></div>
         <div><label for="closeResult">Result</label><select id="closeResult"><option value="win">Win</option><option value="loss">Loss</option><option value="breakeven">Breakeven</option></select></div>
+        <div class="span-2"><label for="closeRealizedPnl">Realized P&L ($) <span style="color:var(--muted);font-weight:400">— actual from your broker</span></label><input id="closeRealizedPnl" type="number" step="any" inputmode="decimal" placeholder="e.g. 25.50 or -10.00"></div>
       </div>
       <div id="closeTradeFeedback" style="min-height:20px;color:var(--danger,#ef4444);font-size:12px;"></div>
       <div class="form-actions"><button class="btn secondary" id="cancelCloseTrade" type="button">Cancel</button><button class="btn primary" type="submit">Close trade</button></div>
@@ -3237,10 +3238,12 @@
     defaultRisk=Math.min(10,Math.max(.1,Math.round((defaultRisk+parseFloat(button.getAttribute('data-default-risk-step')))*10)/10));
     document.getElementById('defaultRiskValue').textContent=defaultRisk.toFixed(1)+'%';
     setRiskValue(defaultRisk);
+    if(typeof sbSaveSettings==='function')sbSaveSettings();
   });});
   document.getElementById('notificationsToggle').addEventListener('click',function(){
     notificationsEnabled=!notificationsEnabled;this.setAttribute('aria-checked',String(notificationsEnabled));notificationButton.disabled=!notificationsEnabled;notificationButton.setAttribute('aria-disabled',String(!notificationsEnabled));
     if(!notificationsEnabled)closeNotifications();refreshNotificationBadge();var feedback=document.getElementById('settingsFeedback');feedback.textContent=currentLanguage==='ar'?(notificationsEnabled?'الإشعارات مفعلة':'الإشعارات متوقفة'):(notificationsEnabled?'Notifications on':'Notifications off');feedbackMotion(feedback);showToast(feedback.textContent);
+    if(typeof sbSaveSettings==='function')sbSaveSettings();
   });
   document.getElementById('exportData').addEventListener('click',function(){
     var direction=document.querySelector('.chip[data-direction][aria-pressed="true"]');
@@ -3774,7 +3777,7 @@
   /* Journal search handler */document.addEventListener('input',function(event){if(event.target&&event.target.classList&&event.target.classList.contains('trade-search')){journalSearchQuery=event.target.value||'';renderJournalEntries();}});function openTradeSheet(){document.getElementById('tradeFormFeedback').textContent='';tradeSheet.classList.add('open');document.getElementById('tradePair').focus();}
   function closeTradeSheet(){tradeSheet.classList.remove('open');if(document.getElementById('journal').classList.contains('active'))logTradeButton.focus();}
   var closeTradeSheetEl=document.getElementById('closeTradeModal');var currentCloseEntry=null;
-  function openCloseTradeModal(entry){currentCloseEntry=entry;document.getElementById('closeTradeFeedback').textContent='';document.getElementById('closeExitPrice').value='';closeTradeSheetEl.classList.add('open');document.getElementById('closeExitPrice').focus();}
+  function openCloseTradeModal(entry){currentCloseEntry=entry;document.getElementById('closeTradeFeedback').textContent='';document.getElementById('closeExitPrice').value='';var rp=document.getElementById('closeRealizedPnl');if(rp)rp.value='';closeTradeSheetEl.classList.add('open');document.getElementById('closeExitPrice').focus();}
   function hideCloseTradeModal(){closeTradeSheetEl.classList.remove('open');currentCloseEntry=null;}
   document.getElementById('closeCloseTradeSheet').addEventListener('click',hideCloseTradeModal);
   document.getElementById('cancelCloseTrade').addEventListener('click',hideCloseTradeModal);
@@ -3783,9 +3786,16 @@
     e.preventDefault();if(!currentCloseEntry)return;
     var exitPrice=parseFloat(document.getElementById('closeExitPrice').value);
     var result=document.getElementById('closeResult').value;
+    var realizedInput=document.getElementById('closeRealizedPnl');
+    var realizedPnl=realizedInput?parseFloat(realizedInput.value):NaN;
     if(!isFinite(exitPrice)){document.getElementById('closeTradeFeedback').textContent=currentLanguage==='ar'?'أدخل سعر الخروج.':'Enter exit price.';return;}
     var entry=parseFloat(currentCloseEntry.entry)||0;var dir=String(currentCloseEntry.direction||'').toLowerCase();
-    var pnl=dir==='long'?(exitPrice-entry):(entry-exitPrice);
+    var pnl;
+    if(isFinite(realizedPnl)){
+      pnl=realizedPnl;
+    }else{
+      pnl=dir==='long'?(exitPrice-entry):(entry-exitPrice);
+    }
     if(result==='breakeven')pnl=0;
     var closeDone=function(){
       currentCloseEntry.closed=true;currentCloseEntry.exitPrice=exitPrice;currentCloseEntry.pnl=pnl;currentCloseEntry.result=result;
