@@ -3333,14 +3333,20 @@
   function sbSaveSettings(){
     // Always save to localStorage first (synchronous, reliable)
     try{
-      localStorage.setItem('pipvant_settings',JSON.stringify({
+      var settingsData={
         theme:document.documentElement.getAttribute('data-theme')||'dark',
-        language:currentLanguage,
-        currency:currentCurrency,
-        default_risk:defaultRisk,
-        notifications:notificationsEnabled
-      }));
-    }catch(e){}
+        language:typeof currentLanguage!=='undefined'?currentLanguage:'en',
+        currency:typeof currentCurrency!=='undefined'?currentCurrency:'USD',
+        default_risk:typeof defaultRisk!=='undefined'?defaultRisk:1,
+        notifications:typeof notificationsEnabled!=='undefined'?notificationsEnabled:true
+      };
+      localStorage.setItem('pipvant_settings',JSON.stringify(settingsData));
+      // Verify save worked
+      var verify=localStorage.getItem('pipvant_settings');
+      if(!verify)console.warn('Settings save verification failed');
+    }catch(e){
+      console.warn('Settings save failed:',e.message);
+    }
     // Also save to Supabase (async, best effort)
     if(!sb||!sbUser)return;
     sb.from('user_settings').upsert({
