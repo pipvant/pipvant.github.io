@@ -2695,6 +2695,12 @@
         sessionJournalEntries.sort(function(a,b){return b.timestamp-a.timestamp;});
         renderJournalEntries();
         sbUpdateProfileStats(r.data);
+        // Also compute trader score from trades (don't wait for discipline)
+        try{
+          var tc=sessionJournalEntries.filter(function(e){return e.type==='trade';}).length;
+          var streak=typeof pipvantDisciplineStreak!=='undefined'?pipvantDisciplineStreak:0;
+          if(typeof sbComputeTraderScore==='function')sbComputeTraderScore(tc,streak);
+        }catch(sce){}
       }).catch(function(){var loader=document.getElementById('authLoading');if(loader)loader.style.display='none';document.body.classList.remove('auth-checking');});
   }
   
