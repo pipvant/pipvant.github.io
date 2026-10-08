@@ -3908,6 +3908,10 @@
     document.getElementById('tradeSize').value=entry.size||'';
     document.getElementById('tradeExit').value=entry.exitPrice||'';
     document.getElementById('tradeResult').value=entry.result||'';
+    document.getElementById('tradeSetup').value=entry.setup||'';
+    document.getElementById('tradeTag').value=entry.tag||'';
+    document.getElementById('tradeRating').value=entry.rating||'';
+    if(entry.timestamp){var d=new Date(entry.timestamp);var pad=function(n){return String(n).padStart(2,'0');};document.getElementById('tradeDate').value=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'T'+pad(d.getHours())+':'+pad(d.getMinutes());}
     document.getElementById('tradeNotes').value=entry.notes||'';
     var dir=String(entry.direction||'Long').toLowerCase();
     document.querySelectorAll('.chip[data-direction]').forEach(function(chip){
@@ -4337,21 +4341,27 @@
       return Math.round(pnl*100)/100;
     }catch(e){return null;}
   }
-  function openCloseTradeModal(entry){currentCloseEntry=entry;document.getElementById('closeTradeFeedback').textContent='';document.getElementById('closeExitPrice').value='';var rp=document.getElementById('closeRealizedPnl');if(rp)rp.value='';closeTradeSheetEl.classList.add('open');document.getElementById('closeExitPrice').focus();
-    // Auto-estimate P&L when exit price is entered
+  function openCloseTradeModal(entry){currentCloseEntry=entry;document.getElementById('closeTradeFeedback').textContent='';document.getElementById('closeExitPrice').value='';var rp=document.getElementById('closeRealizedPnl');if(rp){rp.value='';rp.dataset.auto='1';}closeTradeSheetEl.classList.add('open');document.getElementById('closeExitPrice').focus();
+    // Auto-estimate P&L when exit price is entered (updates until user manually edits)
     var exitInput=document.getElementById('closeExitPrice');
+    var pnlInput=document.getElementById('closeRealizedPnl');
+    if(pnlInput&&!pnlInput.dataset.manualBound){
+      pnlInput.dataset.manualBound='1';
+      pnlInput.addEventListener('input',function(){pnlInput.dataset.auto='';}); // user took over
+    }
     if(exitInput&&!exitInput.dataset.pnlBound){
       exitInput.dataset.pnlBound='1';
       exitInput.addEventListener('input',function(){
         try{
           var xv=parseFloat(exitInput.value);
           var rp2=document.getElementById('closeRealizedPnl');
-          if(!isFinite(xv)||!rp2||rp2.value!=='')return; // don't override manual entry
+          if(!isFinite(xv)||!rp2)return;
+          if(rp2.dataset.auto===''&&rp2.value!=='')return; // user manually entered, don't override
           if(!currentCloseEntry)return;
           var est=estimatePnl(currentCloseEntry.pair,currentCloseEntry.direction,currentCloseEntry.entry,xv,currentCloseEntry.size);
           if(est!==null&&isFinite(est)){
             rp2.value=est;
-            rp2.placeholder='Est. '+est+' (edit if needed)';
+            rp2.dataset.auto='1';
           }
         }catch(e){}
       });
@@ -4421,7 +4431,7 @@
         sessionJournalEntries.forEach(function(en){
           var eid=en._id||en._dbId||en.timestamp;
           if(eid===editingId&&en.type==='trade'){
-            en.pair=tradeEntry.pair;en.direction=tradeEntry.direction;en.entry=tradeEntry.entry;en.stop=tradeEntry.stop;en.target=tradeEntry.target;en.size=tradeEntry.size;en.rMultiple=tradeEntry.rMultiple;en.notes=tradeEntry.notes;en.closed=tradeEntry.closed;en.exitPrice=tradeEntry.exitPrice;en.pnl=tradeEntry.pnl;en.result=tradeEntry.result;
+            en.pair=tradeEntry.pair;en.direction=tradeEntry.direction;en.entry=tradeEntry.entry;en.stop=tradeEntry.stop;en.target=tradeEntry.target;en.size=tradeEntry.size;en.rMultiple=tradeEntry.rMultiple;en.setup=tradeEntry.setup;en.tag=tradeEntry.tag;en.rating=tradeEntry.rating;en.timestamp=tradeEntry.timestamp;en.notes=tradeEntry.notes;en.closed=tradeEntry.closed;en.exitPrice=tradeEntry.exitPrice;en.pnl=tradeEntry.pnl;en.result=tradeEntry.result;
             updated=true;
             if(en._dbId&&sb&&sbUser){
               var ep2=parseFloat(en.entry),sz2=parseFloat(en.size),sp2=parseFloat(en.stop),tp2=parseFloat(en.target),xp2=parseFloat(en.exitPrice);
