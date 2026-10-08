@@ -2322,6 +2322,7 @@
     if(!sbFirms.length)return;
     var filters=sbGetMatcherFilters();
     var firms=sbFirms.filter(function(f){return sbFirmMatchesFilters(f,sbPlansByFirm[f.id]||[],filters);});
+    window._filteredFirmsCount=firms.length;
     var _pv=document.querySelector('#matcher .preview-label');if(_pv)_pv.textContent=firms.length+(currentLanguage==='ar'?' شركات موثقة':' verified firms');
     var slots=document.querySelector('#matcher .firm-slots');
     if(slots){
@@ -2454,7 +2455,7 @@
       var small=copy.querySelector('small');var strong=copy.querySelector('strong');
       if(!small||!strong)return;
       var label=small.textContent.toLowerCase();
-      if(label.indexOf('verified firms')!==-1)strong.textContent=sbFirms.length;
+      if(label.indexOf('verified firms')!==-1)strong.textContent=(typeof window._filteredFirmsCount==='number'?window._filteredFirmsCount:sbFirms.length);
       else if(label.indexOf('challenges tracked')!==-1)strong.textContent=totalPlans;
     });
   }
