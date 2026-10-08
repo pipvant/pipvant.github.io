@@ -4050,7 +4050,7 @@
           var key='—';
           if(groupBy==='symbol'){key=String(entry.pair||'—').toUpperCase();}
           else if(groupBy==='day'){var d=new Date(entry.timestamp||0);key=d.toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});}
-          else if(groupBy==='tag'){key=(entry.tags&&entry.tags.length?entry.tags.join(', '):(currentLanguage==='ar'?'بدون وسم':'Untagged'));}
+          else if(groupBy==='tag'){var _tg=entry.tag||(entry.tags&&entry.tags.length?entry.tags.join(', '):'');key=_tg||(currentLanguage==='ar'?'بدون وسم':'Untagged');}
           if(!groups[key])groups[key]=[];
           groups[key].push(entry);
         });
