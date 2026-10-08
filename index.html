@@ -3032,11 +3032,28 @@
           var txt=m.current+'/'+m.target+' '+m.unit;
           if(m.note)txt+=' · '+m.note;
           progress.textContent=txt;
+          // Add claim button if mission complete and not yet claimed
+          var isComplete = m.current >= m.target;
+          var isClaimed = profileSession.certificates.indexOf(name) !== -1;
+          var existingBtn = card.querySelector('.claim-cert-btn');
+          if(isComplete && !isClaimed && !existingBtn){
+            var btn = document.createElement('button');
+            btn.className = 'btn primary claim-cert-btn';
+            btn.type = 'button';
+            btn.style.cssText = 'margin-top:12px;width:100%;';
+            btn.textContent = currentLanguage==='ar' ? 'استلام الشهادة' : 'Claim Certificate';
+            btn.onclick = function(){ awardProfileCertificate(name); };
+            card.appendChild(btn);
+            card.style.opacity = '1';
+            card.style.borderColor = 'var(--accent)';
+          } else if(existingBtn && (isClaimed || !isComplete)){
+            existingBtn.remove();
+          }
         }
       });
     }catch(pe){}
   }
-  function awardProfileCertificate(value){var name=normalizeCertificateName(value);if(!name||profileSession.certificates.indexOf(name)!==-1)return false;renderProfileCertificates(profileSession.certificates.concat(name));showToast((currentLanguage==='ar'?'تم اكتساب شارة ':'Certificate badge earned: ')+(currentLanguage==='ar'&&ar[name]?ar[name]:name));return true;}
+  function awardProfileCertificate(value){var name=normalizeCertificateName(value);if(!name||profileSession.certificates.indexOf(name)!==-1)return false;profileSession.certificates=profileSession.certificates.concat(name);try{if(typeof saveProfileSession==='function')saveProfileSession();}catch(e){}renderProfileCertificates(profileSession.certificates);showToast((currentLanguage==='ar'?'تم اكتساب شارة ':'Certificate badge earned: ')+(currentLanguage==='ar'&&ar[name]?ar[name]:name));return true;}
   function prepareProfilePrestige(screen){
     if(!screen||screen.id!=='profile')return;if(!screen.dataset.prestigeEntered){screen.dataset.prestigeEntered='true';if(!reduceMotion.matches){void screen.offsetWidth;screen.classList.add('profile-prestige-entered');}}
     var profileData=window.PIPVANT_PROFILE_DATA;if(!profileData||typeof profileData!=='object')return;if(Number.isFinite(Number(profileData.traderScore)))renderTraderScore(profileData.traderScore);if(Array.isArray(profileData.equity))renderProfileEquity(profileData.equity);if(Array.isArray(profileData.certificates))renderProfileCertificates(profileData.certificates);
