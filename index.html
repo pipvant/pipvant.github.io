@@ -2950,6 +2950,28 @@
     var list=document.getElementById('profileBadgeList'),empty=document.getElementById('profileBadgesEmpty');if(!list||!empty)return;
     list.textContent='';earned.forEach(function(name,index){var badge=document.createElement('span');badge.className='certificate-badge';badge.style.animationDelay=reduceMotion.matches?'0ms':Math.min(index,5)*45+'ms';var mark=document.createElement('span');mark.className='certificate-badge-mark';mark.setAttribute('aria-hidden','true');mark.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m7 13-1 8 6-3 6 3-1-8"/><circle cx="12" cy="8" r="5"/><path d="m10 8 1.4 1.4L14.5 6.5"/></svg>';var label=document.createElement('span');label.textContent=currentLanguage==='ar'&&ar[name]?ar[name]:name;badge.appendChild(mark);badge.appendChild(label);list.appendChild(badge);});
     var hasEarned=earned.length>0;list.hidden=!hasEarned;empty.hidden=hasEarned;
+    // Update Certificates page earned section
+    try{
+      var certCount=document.getElementById('certificateCount');
+      if(certCount){
+        var label=earned.length+' '+(earned.length===1?'CERTIFICATE':'CERTIFICATES');
+        if(currentLanguage==='ar')label=earned.length+' '+(earned.length===1?'شهادة':'شهادات');
+        certCount.textContent=label;
+      }
+      var certEmpty=document.querySelector('#certificates .certificate-empty');
+      var certList=document.getElementById('earnedCertificateList');
+      if(certEmpty)certEmpty.hidden=hasEarned;
+      if(certList){
+        certList.textContent='';
+        earned.forEach(function(name){
+          var item=document.createElement('div');
+          item.className='earned-cert-item';
+          item.innerHTML='<strong>'+name+'</strong>';
+          certList.appendChild(item);
+        });
+        certList.hidden=!hasEarned;
+      }
+    }catch(ce){}
     // Update certificate document recipient name from profile
     try{
       var recipient=document.querySelector('#earnedCertificate .certificate-recipient');
@@ -4686,7 +4708,7 @@
     document.querySelectorAll('.risk-preset').forEach(function(button){button.setAttribute('aria-pressed',String(parseFloat(button.getAttribute('data-risk-preset'))===parseFloat(riskPercent.value)));});
     calculateFull();
   }
-  document.querySelectorAll('[data-risk-step]').forEach(function(button){button.addEventListener('click',function(){var current=parseFloat(riskPercent.value)||0;setRiskValue(Math.max(.1,current+parseFloat(button.getAttribute('data-risk-step'))));});});
+  document.querySelectorAll('[data-risk-step]').forEach(function(button){button.addEventListener('click',function(){var current=parseFloat(riskPercent.value)||0;var next=Math.max(.1,current+parseFloat(button.getAttribute('data-risk-step')));setRiskValue(Math.round(next*10)/10);});});
   document.querySelectorAll('[data-risk-preset]').forEach(function(button){button.addEventListener('click',function(){setRiskValue(parseFloat(button.getAttribute('data-risk-preset')));});});
   riskPercent.addEventListener('input',function(){document.querySelectorAll('.risk-preset').forEach(function(button){button.setAttribute('aria-pressed',String(parseFloat(button.getAttribute('data-risk-preset'))===parseFloat(riskPercent.value)));});calculateFull();});
   function calculateFull(){
