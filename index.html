@@ -550,10 +550,11 @@
     .range-segment{width:100%;display:flex;gap:3px;padding:3px;border:1px solid var(--line);border-radius:10px;background:var(--sunken);overflow:hidden}.range-btn{height:32px;min-width:0;flex:1;padding:0 7px;border:0;border-radius:7px;background:transparent;color:var(--muted);font-size:10px;font-weight:700;cursor:pointer}.range-btn[aria-pressed="true"]{background:var(--platinum);color:var(--bg)}
     .journal-add{display:none;margin-left:auto;min-height:40px}
     .journal-kpis{display:grid;grid-template-columns:1fr;gap:var(--journal-gap);margin-bottom:var(--journal-gap)}
-    .kpi-card{min-height:168px;padding:17px;border:1px solid var(--line);border-radius:12px;background:var(--surface);display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}.kpi-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}.kpi-label{color:var(--secondary);font-size:11px;font-weight:700}.kpi-value{display:block;margin-top:8px;font:600 28px/1 "Space Grotesk",sans-serif;font-variant-numeric:tabular-nums}.kpi-note{color:var(--muted);font-size:10px}.kpi-visual{min-height:54px;display:flex;align-items:flex-end;justify-content:flex-end}.donut{width:58px;height:58px;border-radius:50%;background:conic-gradient(var(--line-strong) 0 100%);position:relative;display:grid;place-items:center}.donut:after{content:"";position:absolute;inset:8px;border-radius:50%;background:var(--surface)}.donut strong{position:relative;z-index:1;font:600 15px/1 "Space Grotesk",sans-serif}.donut-legend{display:flex;gap:8px;flex-wrap:wrap;color:var(--muted);font-size:8px}.donut-legend i{display:inline-block;width:6px;height:6px;margin-right:3px;border-radius:50%}.gauge{width:110px}.gauge svg{width:100%;height:60px}.gauge-labels{display:flex;justify-content:space-around;margin-top:-4px;color:var(--muted);font:500 8px/1 "IBM Plex Mono",monospace}.split-track{width:100%;height:8px;border-radius:99px;background:var(--sunken);border:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr;gap:3px;padding:1px}.split-track span:first-child{background:var(--platinum);opacity:.28;border-radius:99px}.split-track span:last-child{background:var(--silver);opacity:.24;border-radius:99px}.split-labels{width:100%;display:flex;justify-content:space-between;margin-top:7px;color:var(--muted);font-size:8px}.sparkline-empty{width:100%;height:44px;border-bottom:1px solid var(--line-strong);background:linear-gradient(180deg,transparent,rgba(91,141,239,.035));position:relative}.sparkline-empty:after{content:"";position:absolute;left:0;right:0;top:50%;border-top:1px dashed var(--line)}
+    .kpi-card{min-height:168px;padding:17px;border:1px solid var(--line);border-radius:12px;background:var(--surface);display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}.kpi-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}.kpi-top>div{min-width:0}.kpi-value{overflow-wrap:anywhere}.kpi-label{color:var(--secondary);font-size:11px;font-weight:700}.kpi-value{display:block;margin-top:8px;font:600 28px/1 "Space Grotesk",sans-serif;font-variant-numeric:tabular-nums}.kpi-note{color:var(--muted);font-size:10px}.kpi-visual{min-height:54px;display:flex;align-items:flex-end;justify-content:flex-end}.donut{width:58px;height:58px;border-radius:50%;background:conic-gradient(var(--line-strong) 0 100%);position:relative;display:grid;place-items:center}.donut:after{content:"";position:absolute;inset:8px;border-radius:50%;background:var(--surface)}.donut strong{position:relative;z-index:1;font:600 15px/1 "Space Grotesk",sans-serif}.donut-legend{display:flex;gap:8px;flex-wrap:wrap;color:var(--muted);font-size:8px}.donut-legend i{display:inline-block;width:6px;height:6px;margin-right:3px;border-radius:50%}.gauge{width:110px}.gauge svg{width:100%;height:60px}.gauge-labels{display:flex;justify-content:space-around;margin-top:-4px;color:var(--muted);font:500 8px/1 "IBM Plex Mono",monospace}.split-track{width:100%;height:8px;border-radius:99px;background:var(--sunken);border:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr;gap:3px;padding:1px}.split-track span:first-child{background:var(--platinum);opacity:.28;border-radius:99px}.split-track span:last-child{background:var(--silver);opacity:.24;border-radius:99px}.split-labels{width:100%;display:flex;justify-content:space-between;margin-top:7px;color:var(--muted);font-size:8px}.sparkline-empty{width:100%;height:44px;border-bottom:1px solid var(--line-strong);background:linear-gradient(180deg,transparent,rgba(91,141,239,.035));position:relative}.sparkline-empty:after{content:"";position:absolute;left:0;right:0;top:50%;border-top:1px dashed var(--line)}
     .journal-analytics{display:grid;gap:var(--journal-gap);margin-bottom:var(--journal-gap)}
     .equity-card,.score-card,.calendar-card,.trades-card{border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden}.journal-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:16px;border-bottom:1px solid var(--line)}.journal-card-head h3{font-size:15px;margin:0 0 4px}.journal-card-head p{margin:0;color:var(--muted);font-size:10px}.chart-toggles{display:flex;gap:4px;flex-wrap:wrap}.chart-toggle{min-height:29px;padding:0 9px;border:1px solid var(--line);border-radius:999px;background:transparent;color:var(--muted);font-size:9px;font-weight:700;cursor:pointer}.chart-toggle[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
     .equity-empty{position:relative;min-height:260px;display:grid;place-items:center;text-align:center;padding:30px 20px;background:linear-gradient(180deg,rgba(91,141,239,.035),transparent 62%)}.equity-empty:before{content:"";position:absolute;inset:20px;background:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:100% 25%,20% 100%;opacity:.34}.equity-empty>div{position:relative;z-index:1}.equity-empty h3{font-size:14px;margin-bottom:5px}.equity-empty p{margin:0;color:var(--muted);font-size:10px}.drawdown-strip{height:46px;border-top:1px solid var(--line);background:var(--sunken);position:relative}.drawdown-strip:before{content:"DRAWDOWN";position:absolute;left:12px;top:10px;color:var(--muted);font:500 8px/1 "IBM Plex Mono",monospace}.drawdown-strip:after{content:"";position:absolute;left:12px;right:12px;bottom:12px;border-top:1px dashed var(--line-strong)}
+    .eq-tip{position:absolute;z-index:6;pointer-events:none;background:var(--raised);border:1px solid var(--line-strong);border-radius:9px;padding:7px 10px;font-size:10px;line-height:1.55;color:var(--text);box-shadow:var(--shadow);white-space:nowrap;transform:translate(-50%,-118%)}.eq-tip[hidden]{display:none}.eq-tip b{color:var(--platinum)}
     .score-body{padding:17px}.radar-wrap{position:relative;display:grid;place-items:center;min-height:210px}.radar-svg{width:190px;max-width:100%;height:auto}.radar-label{position:absolute;color:var(--muted);font-size:8px;line-height:1.15;text-align:center;max-width:70px}.radar-label.r1{top:0}.radar-label.r2{right:0;top:42px}.radar-label.r3{right:0;bottom:35px}.radar-label.r4{bottom:0}.radar-label.r5{left:0;bottom:35px}.radar-label.r6{left:0;top:42px}.score-track{height:8px;border-radius:99px;background:var(--sunken);border:1px solid var(--line);overflow:hidden}.score-fill{width:0;height:100%;background:var(--accent)}.score-meta{display:flex;align-items:center;justify-content:space-between;margin-top:9px}.score-meta strong{font:600 22px/1 "Space Grotesk",sans-serif}.score-meta span{color:var(--muted);font-size:9px}
     .calendar-card{margin-bottom:var(--journal-gap)}.calendar-layout{display:grid}.calendar-main{min-width:0;padding:14px}.calendar-weekdays,.calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}.calendar-weekdays span{text-align:center;color:var(--muted);font:500 8px/1 "IBM Plex Mono",monospace;padding:4px 0 8px}.day-cell{min-width:0;min-height:66px;padding:6px;border:1px solid var(--line);border-radius:7px;background:color-mix(in srgb,var(--surface) 86%,var(--sunken));color:inherit;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:4px;transition:transform var(--micro) var(--ease-move),opacity var(--micro) var(--ease-move)}.day-cell:active{transform:scale(.97)}.day-cell.active{border-color:var(--accent);background:var(--accent-soft)}.day-date{font:600 9px/1 "IBM Plex Mono",monospace;color:var(--platinum)}.day-cell small{display:block;color:var(--muted);font-size:7px;line-height:1}.day-note{margin-top:auto;align-self:flex-end;color:var(--silver);opacity:.6}.week-rail{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;border-top:1px solid var(--line);background:var(--line)}.week-total{padding:10px 7px;background:var(--sunken);text-align:center}.week-total span{display:block;color:var(--muted);font-size:8px}.week-total strong{display:block;margin-top:5px;font:600 11px/1 "Space Grotesk",sans-serif}
     .journal-filter{position:sticky;top:170px;z-index:12;margin-bottom:var(--journal-gap);border:1px solid var(--line);border-radius:11px;background:color-mix(in srgb,var(--surface) 96%,transparent);backdrop-filter:blur(18px)}.journal-filter-row{display:flex;align-items:center;gap:7px;padding:9px}.filter-action{height:38px;padding:0 12px;border:1px solid var(--line-strong);border-radius:9px;background:var(--sunken);color:var(--text);display:flex;align-items:center;gap:7px;font-size:10px;font-weight:700;cursor:pointer}.active-filter-slot{display:flex;gap:5px;min-width:0;overflow:hidden;flex:1}.active-filter-chip{display:none;min-height:30px;padding:0 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-size:9px;align-items:center;white-space:nowrap}.active-filter-chip.show{display:inline-flex}.facet-panel{display:none;padding:14px;border-top:1px solid var(--line)}.facet-panel.open{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.facet-group strong{display:block;margin-bottom:7px;color:var(--secondary);font-size:9px}.facet-option{display:flex;justify-content:space-between;gap:8px;padding:7px 0;border-top:1px solid color-mix(in srgb,var(--line) 65%,transparent);color:var(--muted);font-size:9px}.facet-option span:last-child{font-family:"IBM Plex Mono",monospace}button.facet-option{width:100%;background:none;border:none;border-top:1px solid color-mix(in srgb,var(--line) 65%,transparent);cursor:pointer;text-align:left;font:inherit;color:var(--muted)}button.facet-option:hover{color:var(--text)}button.facet-option[aria-pressed="true"]{color:var(--accent);font-weight:700}.facet-option[aria-disabled="true"]{opacity:.55;cursor:default}
@@ -2705,6 +2706,7 @@
       if(mostEl)mostEl.textContent=total>0?most:'—';var rtSection=document.querySelector('#profile [aria-labelledby="recent-trades-title"]');var rtEmpty=rtSection?rtSection.querySelector('.recent-trades-empty'):null;var rtList=rtSection?rtSection.querySelector('.recent-trades-list'):null;if(trades.length>0){if(rtEmpty)rtEmpty.hidden=true;if(!rtList&&rtSection){rtList=document.createElement('ul');rtList.className='recent-trades-list';rtSection.appendChild(rtList);}if(rtList){rtList.innerHTML='';trades.slice(0,5).forEach(function(t){var li=document.createElement('li');li.className='recent-trade-row';li.innerHTML='<span class="recent-trade-symbol"></span><span class="recent-trade-direction"></span><span class="recent-trade-entry"></span>';li.children[0].textContent=t.symbol||t.pair||'—';li.children[1].textContent=t.direction||'—';var _ep=(t.entry_price==null||t.entry_price==='')?t.entry:t.entry_price;li.children[2].textContent=(_ep==null||_ep==='')?'—':_ep;rtList.appendChild(li);});}}else{if(rtEmpty)rtEmpty.hidden=false;if(rtList)rtList.innerHTML='';}
       if(typeof sbCheckMissions==='function')sbCheckMissions(total,pipvantDisciplineStreak);
       if(typeof sbComputeTraderScore==='function')sbComputeTraderScore(total,pipvantDisciplineStreak);
+      if(typeof updateProfileBalance==='function')updateProfileBalance();
     }catch(e){}
         }
 
@@ -2717,14 +2719,12 @@
         r.data.forEach(function(t){
           var ts=t.opened_at||t.created_at;
           var fmtNum=function(v){if(v==null||v==='')return '—';var n=Number(v);if(!isFinite(n))return '—';return String(Math.round(n*100000)/100000);};var isClosed=t.closed_at!=null;var _ep=parseFloat(t.entry_price),_sp=parseFloat(t.stop_price),_tp=parseFloat(t.target_price),_rd=Math.abs(_ep-_sp),_rwd=Math.abs(_tp-_ep);var _rM='—';
-          // For closed trades: realized R = P&L / risk$. For open: planned R = reward/risk
-          var _pnl=parseFloat(t.pnl);
-          if(isClosed&&isFinite(_pnl)&&_rd>0){
-            var _sz=parseFloat(t.position_size)||0;
-            var _sym=String(t.symbol||'').toUpperCase();
-            var _mult=100000;if(_sym.indexOf('XAU')===0)_mult=100;else if(_sym.indexOf('XAG')===0)_mult=5000;else if(_sym.indexOf('JPY')>=0)_mult=1000;
-            var _riskAmt=_rd*_sz*_mult;
-            if(_riskAmt>0)_rM=(Math.round(_pnl/_riskAmt*100)/100)+'R';
+          // Realized R from price distances (mult-independent) — same definition as the trade form
+          var _xp=parseFloat(t.exit_price);
+          var _dirL=String(t.direction||'long').toLowerCase();
+          if(isClosed&&isFinite(_xp)&&isFinite(_ep)&&_rd>0){
+            var _realized=_dirL==='long'?(_xp-_ep):(_ep-_xp);
+            _rM=(Math.round(_realized/_rd*100)/100)+'R';
           }else if(_rd>0&&isFinite(_ep)&&isFinite(_sp)&&isFinite(_tp)){
             _rM=(Math.round(_rwd/_rd*100)/100)+'R';
           }
@@ -3971,7 +3971,7 @@
       del.addEventListener('click',function(e){e.stopPropagation();deleteTradingAccount(id);});
       row.appendChild(del);
     }
-    row.addEventListener('click',function(){selectedAccountId=id;try{localStorage.setItem('pipvant_selected_account',id);}catch(e){}renderAccountList();updateAccountSwitchLabel();closeAccountSheet();accountSwitch.focus();});return row;
+    row.addEventListener('click',function(){selectedAccountId=id;try{localStorage.setItem('pipvant_selected_account',id);}catch(e){}renderAccountList();updateAccountSwitchLabel();closeAccountSheet();accountSwitch.focus();if(typeof updateProfileBalance==='function')updateProfileBalance();});return row;
   }
   function deleteTradingAccount(id){
     var acct=null;for(var i=0;i<tradingAccounts.length;i++){if(tradingAccounts[i].id===id){acct=tradingAccounts[i];break;}}
@@ -4005,7 +4005,7 @@
   accountForm.addEventListener('submit',function(event){
     event.preventDefault();if(!event.currentTarget.reportValidity())return;
     var account={id:'account-'+Date.now(),name:document.getElementById('accountName').value.trim(),size:document.getElementById('accountStartingBalance').value,maxLoss:document.getElementById('accountMaxLoss').value,target:document.getElementById('accountProfitTarget').value,firm:document.getElementById('accountFirm').value.trim()};
-    runSuccessMorph(event.submitter,function(){tradingAccounts.push(account);selectedAccountId=account.id;try{localStorage.setItem('pipvant_accounts',JSON.stringify(tradingAccounts));localStorage.setItem('pipvant_selected_account',account.id);}catch(e){}renderAccountList();updateAccountSwitchLabel();showAccountBrowser();if(typeof updateJournalEquity==='function')updateJournalEquity();showToast(currentLanguage==='ar'?'تمت إضافة الحساب.':'Account added.');});
+    runSuccessMorph(event.submitter,function(){tradingAccounts.push(account);selectedAccountId=account.id;try{localStorage.setItem('pipvant_accounts',JSON.stringify(tradingAccounts));localStorage.setItem('pipvant_selected_account',account.id);}catch(e){}renderAccountList();updateAccountSwitchLabel();showAccountBrowser();if(typeof updateJournalEquity==='function')updateJournalEquity();if(typeof updateProfileBalance==='function')updateProfileBalance();showToast(currentLanguage==='ar'?'تمت إضافة الحساب.':'Account added.');});
   });
   renderAccountList();
 
@@ -4174,7 +4174,7 @@
         }
       });list.appendChild(row);
     });
-    var hasEntries=tradeCount>0;list.hidden=!hasEntries;empty.hidden=hasEntries;count.textContent=hasEntries?(tradeCount+(currentLanguage==='ar'?' إدخالات':' ENTRIES')):(currentLanguage==='ar'?'0 صفقات':'0 TRADES');
+    var hasEntries=tradeCount>0;list.hidden=!hasEntries;empty.hidden=hasEntries;count.textContent=hasEntries?(tradeCount+(currentLanguage==='ar'?' إدخالات':(tradeCount===1?' ENTRY':' ENTRIES'))):(currentLanguage==='ar'?'0 صفقات':'0 TRADES');
     updateJournalKPIs();updateJournalCalendar();updateJournalEquity();updateJournalScore();renderFacetOptions();updateProfileFromSession();if(typeof applyJournalViewMode==='function'&&(window.journalViewMode==='chart'||window.journalViewMode==='unified'))applyJournalViewMode();
   }
   /* ---- Profile stats from session data (robust fallback) ---- */
@@ -4192,6 +4192,49 @@
       var grossL=closed.filter(function(e){return Number(e.pnl)<0;}).reduce(function(s,e){return s+Math.abs(Number(e.pnl));},0);
       var pf=grossL>0?(grossP/grossL):(grossP>0?Infinity:0);
       set('#profile .profile-stat-card:nth-child(2) .profile-stat-value',closed.length>0?(!isFinite(pf)?'∞':pf.toFixed(2)):'—');
+    }catch(e){}
+    updateProfileBalance();
+  }
+  /* ---- Account Balance card: real data from selected account + journal P&L ---- */
+  function updateProfileBalance(){
+    try{
+      var valEl=document.querySelector('#profile .profile-balance-value');
+      var rangeEl=document.querySelector('#profile .profile-balance-range');
+      var region=document.getElementById('profileEquityRegion');
+      var chart=document.getElementById('profileEquityChart');
+      if(!valEl||!rangeEl)return;
+      var accts=(typeof tradingAccounts!=='undefined'&&Array.isArray(tradingAccounts))?tradingAccounts:[];
+      var selId=(typeof selectedAccountId!=='undefined')?selectedAccountId:'';
+      var sel=accts.filter(function(a){return a.id===selId;})[0];
+      var size=sel?parseFloat(sel.size):NaN;
+      var sym=currentCurrency==='EUR'?'€':(currentCurrency==='MAD'?'MAD ':'$');
+      var fmtAbs=function(v){var a=Math.abs(v).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});return currentCurrency==='MAD'?a+' MAD':sym+a;};
+      var clearEquity=function(){if(chart)chart.hidden=true;if(region){region.classList.remove('has-equity');region.setAttribute('aria-label',currentLanguage==='ar'?'لا توجد بيانات رصيد بعد':'No equity data yet');}};
+      if(!(size>0)){
+        valEl.textContent=currentLanguage==='ar'?'غير مضبوط':'Not set';
+        rangeEl.textContent='';
+        var btn=document.createElement('button');
+        btn.type='button';btn.className='btn secondary';btn.style.minHeight='34px';
+        btn.textContent=currentLanguage==='ar'?'تحديد حجم الحساب':'Set account size';
+        btn.addEventListener('click',function(){if(typeof openAccountSheet==='function')openAccountSheet();});
+        rangeEl.appendChild(btn);
+        clearEquity();
+        return;
+      }
+      var closed=sessionJournalEntries.filter(function(e){return e.type==='trade'&&e.pnl!=null&&isFinite(Number(e.pnl));});
+      closed.sort(function(a,b){return (a.timestamp||0)-(b.timestamp||0);});
+      var cum=size,pts=[size];
+      closed.forEach(function(t){cum+=Number(t.pnl);pts.push(cum);});
+      var diff=cum-size;
+      valEl.textContent=fmtAbs(cum);
+      rangeEl.textContent='';
+      var dSpan=document.createElement('span');
+      dSpan.textContent=(diff>0?'+':(diff<0?'\u2212':''))+fmtAbs(diff)+' '+(currentLanguage==='ar'?'مقارنة بالبداية':'vs start');
+      dSpan.style.color=diff>0?'var(--success,#10b981)':(diff<0?'var(--danger,#ef4444)':'var(--muted)');
+      dSpan.style.fontWeight='700';
+      rangeEl.appendChild(dSpan);
+      if(sel&&sel.name){var nSpan=document.createElement('span');nSpan.textContent=' \u00b7 '+sel.name;rangeEl.appendChild(nSpan);}
+      if(pts.length>=2){renderProfileEquity(pts);}else{clearEquity();}
     }catch(e){}
   }
   /* ---- Facet filters: real options with counts from trade data ---- */
@@ -4286,7 +4329,7 @@
       if(wb&&lb){var tot=avgWin+avgLoss;if(tot>0){wb.style.width=(avgWin/tot*100)+'%';lb.style.width=(avgLoss/tot*100)+'%';wb.style.background='var(--accent)';lb.style.background='var(--silver)';}}
       var expSign=expectancy>=0?'+':'−';
       set('kpiExpectancy',expSign+Math.abs(expectancy).toFixed(2));
-      set('kpiExpectancyNote',(currentLanguage==='ar'?'متوسط لكل صفقة · ':'Avg per trade · ')+n+(currentLanguage==='ar'?' صفقات':' trades'));
+      set('kpiExpectancyNote',(currentLanguage==='ar'?'متوسط لكل صفقة · ':'Avg per trade · ')+n+(currentLanguage==='ar'?' صفقات':(n===1?' trade':' trades')));
       try{
         var spark=document.getElementById('kpiNetPnlSpark');
         if(spark){
@@ -4358,41 +4401,79 @@
         container.innerHTML='<div><div class="empty-glyph" aria-hidden="true"><svg width="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 18 9 13l3 2 7-9"/></svg></div><h3>'+(currentLanguage==='ar'?'لا يوجد سجل صفقات':'No trade history available')+'</h3><p>'+(currentLanguage==='ar'?'سيظهر الرسم بعد تسجيل نتيجة أول صفقة.':'The chart will populate after the first trade result is recorded.')+'</p></div>';
         return;
       }
-      trades.sort(function(a,b){return new Date(a.closedAt||a.date)-new Date(b.closedAt||b.date);});
+      trades.sort(function(a,b){return (a.timestamp||0)-(b.timestamp||0);});
       var mode=window.journalChartMode||'cumulative';
-      var W=560,H=180,P=12;
-      var svgBody='',footer='';
+      var W=560,H=210,PL=48,PR=14,PT=18,PB=24;
+      var iw=W-PL-PR,ih=H-PT-PB;
+      var f1=function(v){return (Math.round(v*10)/10).toFixed(1);};
+      var tickFmt=function(v){var a=Math.abs(v);if(a>=1000000)return (Math.round(v/10000)/100)+'M';if(a>=1000)return (Math.round(v/10)/100)+'k';if(a>=100)return String(Math.round(v));return v.toFixed(2).replace(/\.?0+$/,'');};
+      var escT=function(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');};
+      var dateFmt=function(ts){try{var d=new Date(ts||Date.now());return d.toLocaleDateString(undefined,{month:'short',day:'numeric'});}catch(e){return '';};};
+      // Catmull-Rom -> bezier smooth path
+      var smooth=function(pts){
+        if(pts.length<3)return 'M'+pts.map(function(p){return f1(p[0])+' '+f1(p[1]);}).join(' L');
+        var d='M'+f1(pts[0][0])+' '+f1(pts[0][1]);
+        for(var i=0;i<pts.length-1;i++){
+          var p0=pts[Math.max(0,i-1)],p1=pts[i],p2=pts[i+1],p3=pts[Math.min(pts.length-1,i+2)];
+          var c1x=p1[0]+(p2[0]-p0[0])/6,c1y=p1[1]+(p2[1]-p0[1])/6;
+          var c2x=p2[0]-(p3[0]-p1[0])/6,c2y=p2[1]-(p3[1]-p1[1])/6;
+          d+='C'+f1(c1x)+' '+f1(c1y)+' '+f1(c2x)+' '+f1(c2y)+' '+f1(p2[0])+' '+f1(p2[1]);
+        }
+        return d;
+      };
+      var gridY=function(min,spread){
+        var g='';
+        for(var k=0;k<=3;k++){
+          var v=min+spread*k/3,y=(PT+(1-k/3)*ih).toFixed(1);
+          g+='<line x1="'+PL+'" y1="'+y+'" x2="'+(W-PR)+'" y2="'+y+'" stroke="var(--line)" stroke-width="1" opacity="0.55"/>';
+          g+='<text x="'+(PL-7)+'" y="'+(+y+3)+'" text-anchor="end" font-size="9" fill="var(--muted)" font-family="IBM Plex Mono,monospace">'+tickFmt(v)+'</text>';
+        }
+        return g;
+      };
+      var svgBody='',footer='',tipData=[];
+      var GREEN='#10b981',RED='#ef4444';
       if(mode==='pertrade'){
-        // Per-trade P&L as bars
+        // Per-trade P&L: professional bars, clear zero line, R value above each bar
         var vals=trades.map(function(t){return parseFloat(t.pnl);});
         var mx=Math.max.apply(null,vals.concat([0])),mn=Math.min.apply(null,vals.concat([0]));
         var sp=(mx-mn)||1;
-        var bw=(W-2*P)/vals.length;
+        var yOf=function(v){return PT+(1-(v-mn)/sp)*ih;};
+        var bw=iw/vals.length;
+        var showR=bw>30;
         var bars=vals.map(function(v,i){
-          var h=Math.abs(v)/sp*(H-2*P);
-          var x=(P+i*bw+1).toFixed(1);
-          var y=v>=0?(P+(1-(v-mn)/sp)*(H-2*P)).toFixed(1):(P+(1-(0-mn)/sp)*(H-2*P)).toFixed(1);
-          var c=v>=0?'var(--accent)':'var(--danger,#ef4444)';
-          return '<rect x="'+x+'" y="'+y+'" width="'+Math.max(1,bw-2).toFixed(1)+'" height="'+Math.max(1,h).toFixed(1)+'" fill="'+c+'" rx="2"/>';
+          var h=Math.max(2,Math.abs(v)/sp*ih);
+          var x=(PL+i*bw+1).toFixed(1);
+          var y=v>=0?(yOf(v)).toFixed(1):(yOf(0)).toFixed(1);
+          var col=v>0?GREEN:(v<0?RED:'var(--silver)');
+          var r=v+'|'+(trades[i].rMultiple||'—')+'|'+dateFmt(trades[i].timestamp);
+          var label=showR?'<text x="'+(PL+i*bw+bw/2).toFixed(1)+'" y="'+(Math.max(PT+2,yOf(v)>=yOf(0)?yOf(v)-5:yOf(0)-5)).toFixed(1)+'" text-anchor="middle" font-size="9" font-weight="700" fill="var(--text)" font-family="IBM Plex Mono,monospace">'+escT(trades[i].rMultiple||'')+'</text>':'';
+          tipData.push({x:PL+i*bw+bw/2,y:v>=0?yOf(v):yOf(0),h:'<b>'+dateFmt(trades[i].timestamp)+'</b><br>P&L '+(v>=0?'+':'')+v.toFixed(2)+'<br>R '+(escT(trades[i].rMultiple||'—'))});
+          return label+'<rect class="eq-hit" data-tip="'+i+'" x="'+x+'" y="'+y+'" width="'+Math.max(2,bw-2).toFixed(1)+'" height="'+h.toFixed(1)+'" fill="'+col+'" rx="3"/>';
         }).join('');
-        var zeroY=(P+(1-(0-mn)/sp)*(H-2*P)).toFixed(1);
-        svgBody='<line x1="'+P+'" y1="'+zeroY+'" x2="'+(W-P)+'" y2="'+zeroY+'" stroke="var(--line)" stroke-width="1"/>'+bars;
-        footer='<span>'+trades.length+' trades</span><span>Per-trade P&L</span>';
+        var zeroY=yOf(0).toFixed(1);
+        svgBody=gridY(mn,sp)+'<line x1="'+PL+'" y1="'+zeroY+'" x2="'+(W-PR)+'" y2="'+zeroY+'" stroke="var(--line-strong)" stroke-width="1.5"/>'+bars;
+        footer='<span>'+trades.length+(trades.length===1?' trade':' trades')+'</span><span>Per-trade P&L</span>';
       }else if(mode==='drawdown'){
-        // Drawdown from peak
-        var cum2=0,peak2=0;
-        var dds=trades.map(function(t){cum2+=parseFloat(t.pnl);if(cum2>peak2)peak2=cum2;return peak2-cum2;});
-        var maxDD=Math.max.apply(null,dds.concat([0]))||1;
-        var coords2=dds.map(function(v,i){
-          var x=P+(i/(dds.length-1||1))*(W-2*P);
-          var y=P+(v/maxDD)*(H-2*P);
-          return x.toFixed(1)+','+y.toFixed(1);
-        }).join(' ');
-        var area2=P+','+(H-P)+' '+coords2+' '+(W-P)+','+(H-P);
-        svgBody='<polygon points="'+area2+'" fill="rgba(239,68,68,.18)"/><polyline points="'+coords2+'" fill="none" stroke="var(--danger,#ef4444)" stroke-width="2.5" stroke-linejoin="round"/>';
-        footer='<span>Max drawdown</span><strong style="color:var(--danger,#ef4444)">-'+maxDD.toFixed(2)+'</strong>';
+        // Drawdown from peak: red gradient area + max annotation
+        var cum2=0,peak2=0,maxDD=0,maxDIdx=0;
+        var dds=trades.map(function(t,i){cum2+=parseFloat(t.pnl);if(cum2>peak2)peak2=cum2;var dd=peak2-cum2;if(dd>maxDD){maxDD=dd;maxDIdx=i;}return dd;});
+        var ddMax=Math.max.apply(null,dds.concat([0]))||1;
+        var dx=function(i){return PL+(i/(dds.length-1||1))*iw;};
+        var dy=function(v){return PT+(v/ddMax)*ih;};
+        var pts=dds.map(function(v,i){return [dx(i),dy(v)];});
+        var area2='M'+f1(PL)+' '+f1(PT+ih)+' L'+pts.map(function(p){return f1(p[0])+' '+f1(p[1]);}).join(' L')+' L'+f1(PL+iw)+' '+f1(PT+ih)+' Z';
+        var annX=dx(maxDIdx),annY=dy(maxDD);
+        svgBody='<defs><linearGradient id="eqDDGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+RED+'" stop-opacity="0.35"/><stop offset="1" stop-color="'+RED+'" stop-opacity="0.03"/></linearGradient></defs>'
+          +gridY(0,ddMax)
+          +'<path d="'+area2+'" fill="url(#eqDDGrad)"/>'
+          +'<path d="'+smooth(pts)+'" fill="none" stroke="'+RED+'" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>'
+          +'<circle cx="'+f1(annX)+'" cy="'+f1(annY)+'" r="4" fill="'+RED+'" stroke="var(--bg)" stroke-width="2"/>'
+          +'<text x="'+f1(Math.min(annX+8,W-PR-92))+'" y="'+f1(Math.max(annY-10,PT+4))+'" font-size="10" font-weight="700" fill="'+RED+'" font-family="IBM Plex Mono,monospace">Max DD −'+maxDD.toFixed(2)+'</text>';
+        dds.forEach(function(v,i){tipData.push({x:dx(i),y:dy(v),h:'<b>'+dateFmt(trades[i].timestamp)+'</b><br>Drawdown −'+v.toFixed(2)});});
+        svgBody+=tipData.map(function(td,i){return '<circle class="eq-hit" data-tip="'+i+'" cx="'+f1(td.x)+'" cy="'+f1(td.y)+'" r="11" fill="transparent"/>';}).join('');
+        footer='<span>Max drawdown</span><strong style="color:'+RED+'">−'+maxDD.toFixed(2)+'</strong>';
       }else{
-        // Cumulative (default) - start from account balance if set
+        // Cumulative: grid, gradient, smooth line, trade arrows, start/end dots, min/max + final labels
         var startBal=0;
         try{
           var selAcct=(typeof tradingAccounts!=='undefined'?tradingAccounts:[]).filter(function(a){return a.id===(typeof selectedAccountId!=='undefined'?selectedAccountId:'');})[0];
@@ -4401,19 +4482,65 @@
         var cum=startBal,points=trades.map(function(t){cum+=parseFloat(t.pnl);return cum;});
         if(startBal>0)points.unshift(startBal);
         var min=Math.min.apply(null,points),max=Math.max.apply(null,points);
-        var spread=(max-min)||1;
-        var coords=points.map(function(v,i){
-          var x=P+(i/(points.length-1||1))*(W-2*P);
-          var y=P+(1-(v-min)/spread)*(H-2*P);
-          return x.toFixed(1)+','+y.toFixed(1);
-        }).join(' ');
-        var zeroY2=(P+(1-(0-min)/spread)*(H-2*P)).toFixed(1);
-        var color=points[points.length-1]>=0?'var(--accent)':'var(--danger,#ef4444)';
-        var area=P+','+zeroY2+' '+coords+' '+(W-P)+','+zeroY2;
-        svgBody='<line x1="'+P+'" y1="'+zeroY2+'" x2="'+(W-P)+'" y2="'+zeroY2+'" stroke="var(--line)" stroke-width="1" stroke-dasharray="4 4"/><polygon points="'+area+'" fill="'+color+'" opacity="0.12"/><polyline points="'+coords+'" fill="none" stroke="'+color+'" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>';
-        footer='<span>'+trades.length+' trades</span><strong style="color:'+color+'">'+(points[points.length-1]>=0?'+':'')+points[points.length-1].toFixed(2)+'</strong>';
+        var spread=(max-min)||1;min-=spread*0.08;max+=spread*0.08;spread=(max-min)||1;
+        var cx=function(i){return PL+(i/(points.length-1||1))*iw;};
+        var cy=function(v){return PT+(1-(v-min)/spread)*ih;};
+        var coords=points.map(function(v,i){return [cx(i),cy(v)];});
+        var up=points[points.length-1]>=points[0];
+        var color=up?'var(--accent)':RED;
+        var linePath=smooth(coords);
+        var areaPath=linePath+' L'+f1(cx(points.length-1))+' '+f1(PT+ih)+' L'+f1(cx(0))+' '+f1(PT+ih)+' Z';
+        svgBody='<defs><linearGradient id="eqGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+(up?'#5B8DEF':RED)+'" stop-opacity="0.30"/><stop offset="1" stop-color="'+(up?'#5B8DEF':RED)+'" stop-opacity="0.02"/></linearGradient></defs>'
+          +gridY(min,spread)
+          +'<path d="'+areaPath+'" fill="url(#eqGrad)"/>'
+          +'<path d="'+linePath+'" fill="none" stroke="'+color+'" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>';
+        // trade markers: arrow direction = Long/Short, color = win/loss
+        var off=startBal>0?1:0;
+        trades.forEach(function(t,i){
+          var p=coords[i+off];if(!p)return;
+          var v=parseFloat(t.pnl),dir=String(t.direction||'').toLowerCase();
+          var col=v>0?GREEN:(v<0?RED:'var(--silver)');
+          var ay=p[1]-13;
+          if(dir==='short')svgBody+='<path d="M'+f1(p[0])+' '+f1(ay+7)+' L'+f1(p[0]+5)+' '+f1(ay-3)+' L'+f1(p[0]-5)+' '+f1(ay-3)+' Z" fill="'+col+'"/>';
+          else if(dir==='long')svgBody+='<path d="M'+f1(p[0])+' '+f1(ay-7)+' L'+f1(p[0]+5)+' '+f1(ay+3)+' L'+f1(p[0]-5)+' '+f1(ay+3)+' Z" fill="'+col+'"/>';
+          else svgBody+='<circle cx="'+f1(p[0])+'" cy="'+f1(ay)+'" r="3" fill="'+col+'"/>';
+          tipData.push({x:p[0],y:p[1],h:'<b>'+dateFmt(t.timestamp)+'</b><br>'+escT(String(t.pair||''))+' '+(dir==='long'?'Long':dir==='short'?'Short':'')+'<br>P&L '+(v>=0?'+':'')+v.toFixed(2)+'<br>Cum '+points[i+off].toFixed(2)});
+        });
+        // start + end dots
+        svgBody+='<circle cx="'+f1(coords[0][0])+'" cy="'+f1(coords[0][1])+'" r="3.5" fill="var(--bg)" stroke="'+color+'" stroke-width="2.5"/>';
+        var le=coords[coords.length-1];
+        svgBody+='<circle cx="'+f1(le[0])+'" cy="'+f1(le[1])+'" r="4" fill="'+color+'" stroke="var(--bg)" stroke-width="2"/>';
+        // min / max / final labels
+        var minI=points.indexOf(Math.min.apply(null,points)),maxI=points.indexOf(Math.max.apply(null,points));
+        svgBody+='<text x="'+f1(cx(minI))+'" y="'+f1(cy(points[minI])+16)+'" text-anchor="middle" font-size="9" fill="var(--muted)" font-family="IBM Plex Mono,monospace">min '+tickFmt(points[minI])+'</text>';
+        svgBody+='<text x="'+f1(cx(maxI))+'" y="'+f1(cy(points[maxI])-8)+'" text-anchor="middle" font-size="9" fill="var(--muted)" font-family="IBM Plex Mono,monospace">max '+tickFmt(points[maxI])+'</text>';
+        svgBody+='<text x="'+f1(Math.min(le[0]+8,W-PR-70))+'" y="'+f1(Math.max(le[1]-10,PT+2))+'" font-size="10" font-weight="700" fill="'+color+'" font-family="IBM Plex Mono,monospace">'+(points[points.length-1]>=0?'+':'')+tickFmt(points[points.length-1])+'</text>';
+        // invisible hit areas for tooltip
+        svgBody+=tipData.map(function(td,i){return '<circle class="eq-hit" data-tip="'+i+'" cx="'+f1(td.x)+'" cy="'+f1(td.y)+'" r="12" fill="transparent"/>';}).join('');
+        footer='<span>'+trades.length+(trades.length===1?' trade':' trades')+'</span><strong style="color:'+color+'">'+(points[points.length-1]>=0?'+':'')+points[points.length-1].toFixed(2)+'</strong>';
       }
-      container.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block" role="img" aria-label="Equity chart"><rect x="0" y="0" width="'+W+'" height="'+H+'" fill="none"/>'+svgBody+'</svg><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:8px">'+footer+'</div>';
+      container.style.position='relative';
+      container.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block" role="img" aria-label="Equity chart">'+svgBody+'</svg><div class="eq-tip" hidden></div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:8px">'+footer+'</div>';
+      // tooltip wiring (hover + tap)
+      try{
+        var svgEl=container.querySelector('svg'),tipEl=container.querySelector('.eq-tip');
+        var showTip=function(i){
+          var td=tipData[+i];if(!td||!svgEl||!tipEl)return;
+          tipEl.innerHTML=td.h;tipEl.hidden=false;
+          var r=svgEl.getBoundingClientRect(),cr=container.getBoundingClientRect();
+          var sx=r.width/W,sy=r.height/H;
+          var lx=(r.left-cr.left)+td.x*sx,ly=(r.top-cr.top)+td.y*sy;
+          lx=Math.max(60,Math.min(cr.width-60,lx));
+          tipEl.style.left=lx+'px';tipEl.style.top=Math.max(44,ly)+'px';
+        };
+        var hideTip=function(){if(tipEl)tipEl.hidden=true;};
+        container.querySelectorAll('.eq-hit').forEach(function(h){
+          h.addEventListener('mouseenter',function(){showTip(h.getAttribute('data-tip'));});
+          h.addEventListener('mouseleave',hideTip);
+          h.addEventListener('click',function(ev){ev.stopPropagation();showTip(h.getAttribute('data-tip'));});
+        });
+        container.addEventListener('mouseleave',hideTip);
+      }catch(te){}
     }catch(e){}
   }
   /* ---- Journal P&L calendar: real per-day trade data ---- */
