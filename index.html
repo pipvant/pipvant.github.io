@@ -285,7 +285,7 @@
     .nav-btn.active{color:var(--accent);background:linear-gradient(180deg,rgba(91,141,239,.14),rgba(91,141,239,.055));text-shadow:0 0 16px rgba(91,141,239,.5)}
     .nav-btn.active svg{filter:drop-shadow(0 0 7px rgba(91,141,239,.42))}
     .nav-btn[aria-disabled=true]{opacity:.55}
-    .desktop-footer{display:none}
+    .desktop-footer{display:none}.desktop-footer .footer-links a{color:inherit;text-decoration:none}.desktop-footer .footer-links a:hover{color:var(--text)}
     .visually-hidden{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
     @media (min-width:640px){
       .content{padding:0 24px}.hero{padding-top:64px}.tool-grid{grid-template-columns:1fr 1fr}.principles{grid-template-columns:repeat(3,1fr)}.filter-grid{grid-template-columns:repeat(3,1fr)}.stat-strip{margin-left:-24px;margin-right:-24px}.form-grid{grid-template-columns:1fr 1fr}.form-grid .span-2{grid-column:1/-1}
@@ -1356,7 +1356,7 @@
         </div>
       </section>
       <section class="final-cta" aria-labelledby="final-cta-title"><div><p class="eyebrow">Structured execution</p><h2 id="final-cta-title">Bring the process into one place.</h2><p>Begin with verified firm criteria or calculate risk from your own inputs.</p></div><button class="btn primary" data-screen="matcher" type="button">Open Matcher <span aria-hidden="true">→</span></button></section>
-      <footer class="desktop-footer">PIPVANT by Orovanta · Trading tools only</footer>
+      <footer class="desktop-footer"><span>PIPVANT by Orovanta · Trading tools only</span><span class="footer-links"><a href="#" data-nav="about">About</a> · <a href="#" data-nav="methodology">Methodology</a> · <a href="#" data-nav="support">Support</a> · <a href="#" data-nav="contact">Contact</a></span></footer>
     </section>
 
     <section class="screen" id="matcher" aria-label="Prop firm matcher">
@@ -1864,7 +1864,7 @@
             <article class="locked-certificate"><div class="locked-top"><span class="lock-glyph" aria-hidden="true"><svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="6" y="10" width="12" height="9" rx="2"/><path d="M9 10V7a3 3 0 0 1 6 0v3"/></svg></span><span class="locked-index">01</span></div><h4>Marathon</h4><p>Log 500 trades in the Journal.</p><div class="mission-status"><span>Progress</span><strong>—</strong></div></article>
             <article class="locked-certificate"><div class="locked-top"><span class="lock-glyph" aria-hidden="true"><svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="6" y="10" width="12" height="9" rx="2"/><path d="M9 10V7a3 3 0 0 1 6 0v3"/></svg></span><span class="locked-index">02</span></div><h4>Profitable</h4><p>Net positive P&amp;L across at least 100 trades.</p><div class="mission-status"><span>Progress</span><strong>—</strong></div></article>
             <article class="locked-certificate"><div class="locked-top"><span class="lock-glyph" aria-hidden="true"><svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="6" y="10" width="12" height="9" rx="2"/><path d="M9 10V7a3 3 0 0 1 6 0v3"/></svg></span><span class="locked-index">03</span></div><h4>Sharpshooter</h4><p>Win rate of 60% or higher across at least 100 trades.</p><div class="mission-status"><span>Progress</span><strong>—</strong></div></article>
-            <article class="locked-certificate"><div class="locked-top"><span class="lock-glyph" aria-hidden="true"><svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="6" y="10" width="12" height="9" rx="2"/><path d="M9 10V7a3 3 0 0 1 6 0v3"/></svg></span><span class="locked-index">04</span></div><h4>Iron Discipline</h4><p>90 consecutive days of discipline check-ins.</p><div class="mission-status"><span>Progress</span><strong>—</strong></div></article>
+            <article class="locked-certificate"><div class="locked-top"><span class="lock-glyph" aria-hidden="true"><svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="6" y="10" width="12" height="9" rx="2"/><path d="M9 10V7a3 3 0 0 1 6 0v3"/></svg></span><span class="locked-index">04</span></div><h4>Iron Discipline</h4><p>90 consecutive days of discipline check-ins. <em style="color:var(--accent);font-style:normal;">Discipline feature coming soon.</em></p><div class="mission-status"><span>Progress</span><strong>—</strong></div></article>
             <article class="locked-certificate"><div class="locked-top"><span class="lock-glyph" aria-hidden="true"><svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="6" y="10" width="12" height="9" rx="2"/><path d="M9 10V7a3 3 0 0 1 6 0v3"/></svg></span><span class="locked-index">05</span></div><h4>Risk Master</h4><p>100 consecutive trades without breaking your risk limit.</p><div class="mission-status"><span>Progress</span><strong>—</strong></div></article>
             <article class="locked-certificate"><div class="locked-top"><span class="lock-glyph" aria-hidden="true"><svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="6" y="10" width="12" height="9" rx="2"/><path d="M9 10V7a3 3 0 0 1 6 0v3"/></svg></span><span class="locked-index">06</span></div><h4>Edge Proven</h4><p>Profit factor of 1.5 or higher across at least 100 trades.</p><div class="mission-status"><span>Progress</span><strong>—</strong></div></article>
           </div>
@@ -3099,6 +3099,7 @@
   window.PIPVANTProfile=Object.freeze({awardCertificate:awardProfileCertificate,setCertificates:renderProfileCertificates,setIdentity:updateProfileIdentity});
   renderProfileCertificates(window.PIPVANT_PROFILE_DATA&&window.PIPVANT_PROFILE_DATA.certificates);
   var screenSequence=0;
+  document.addEventListener('click',function(e){var a=e.target&&e.target.closest?e.target.closest('a[data-nav]'):null;if(a){e.preventDefault();var s=a.getAttribute('data-nav');if(s&&typeof showScreen==='function')showScreen(s);}});
   function showScreen(id,instant){
     var previous=document.querySelector('.screen.active');
     if(previous&&previous.id===id){window.scrollTo({top:0,behavior:'auto'});return;}
