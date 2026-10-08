@@ -2705,7 +2705,7 @@
           if(isClosed&&isFinite(_pnl)&&_rd>0){
             var _sz=parseFloat(t.position_size)||0;
             var _sym=String(t.symbol||'').toUpperCase();
-            var _mult=100000;if(_sym.indexOf('XAU')===0)_mult=100;else if(_sym.indexOf('XAG')===0)_mult=5000;
+            var _mult=100000;if(_sym.indexOf('XAU')===0)_mult=100;else if(_sym.indexOf('XAG')===0)_mult=5000;else if(_sym.indexOf('JPY')>=0)_mult=1000;
             var _riskAmt=_rd*_sz*_mult;
             if(_riskAmt>0)_rM=(Math.round(_pnl/_riskAmt*100)/100)+'R';
           }else if(_rd>0&&isFinite(_ep)&&isFinite(_sp)&&isFinite(_tp)){
@@ -3944,7 +3944,7 @@
     document.getElementById('tradeEntry').value=entry.entry||'';
     document.getElementById('tradeStop').value=entry.stop||'';
     document.getElementById('tradeTarget').value=entry.target||'';
-    document.getElementById('tradeSize').value=entry.size||'';
+    var _sz=parseFloat(entry.size);document.getElementById('tradeSize').value=isFinite(_sz)?String(Math.round(_sz*1000000)/1000000):(entry.size||'');
     document.getElementById('tradeExit').value=entry.exitPrice||'';
     document.getElementById('tradeResult').value=entry.result||'';
     document.getElementById('tradeSetup').value=entry.setup||'';
@@ -4043,7 +4043,7 @@
           var pnlNum=Number(entry.pnl);
           pnlDisplay=(pnlNum>0?'+':'')+pnlNum.toFixed(2);
         }
-        values=[journalDate(entry.timestamp),entry.pair,side,entry.setup||'—','E '+entry.entry+' · S '+entry.stop+' · T '+entry.target+(entry.closed&&entry.exitPrice?' · X '+entry.exitPrice:''),entry.size,pnlDisplay,entry.rMultiple,entry.rating||'—',entry.notes||'—',''];
+        values=[journalDate(entry.timestamp),entry.pair,side,(entry.setup||'—')+(entry.tag?' #'+entry.tag:''),'E '+entry.entry+' · S '+entry.stop+' · T '+entry.target+(entry.closed&&entry.exitPrice?' · X '+entry.exitPrice:''),entry.size,pnlDisplay,entry.rMultiple,entry.rating||'—',entry.notes||'—',''];
       }else{
         values=[journalDate(entry.timestamp),entry.pair,currentLanguage==='ar'?'ملاحظة مخاطرة':'Risk note',currentLanguage==='ar'?'حساب':'Calculation','SL '+entry.stop+' '+(currentLanguage==='ar'?'نقطة':'pips'),entry.size,'—','1R','—',(currentLanguage==='ar'?'مخاطرة ':'Risk ')+entry.riskLabel+' · '+entry.riskPercent+'% '+(currentLanguage==='ar'?'من ':'of ')+entry.accountLabel,''];
       }
