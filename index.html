@@ -3359,9 +3359,15 @@
       if(!s)return;
       if(s.theme)applyTheme(s.theme);
       if(s.language)applyLanguage(s.language);
-      if(s.currency){currentCurrency=s.currency;refreshPreferenceCopy();}
-      if(typeof s.default_risk==='number'){defaultRisk=s.default_risk;if(typeof setRiskValue==='function')setRiskValue(defaultRisk);}
-      if(typeof s.notifications==='boolean'){notificationsEnabled=s.notifications;}
+      if(s.currency){currentCurrency=s.currency;refreshPreferenceCopy();if(typeof refreshCurrencyDisplay==='function')refreshCurrencyDisplay();}
+      if(typeof s.default_risk==='number'){defaultRisk=s.default_risk;var drv=document.getElementById('defaultRiskValue');if(drv)drv.textContent=defaultRisk.toFixed(1)+'%';}
+      if(typeof s.notifications==='boolean'){
+        notificationsEnabled=s.notifications;
+        var nt=document.getElementById('notificationsToggle');
+        if(nt)nt.setAttribute('aria-checked',String(notificationsEnabled));
+        var nb=document.getElementById('notificationButton');
+        if(nb){nb.disabled=!notificationsEnabled;nb.setAttribute('aria-disabled',String(!notificationsEnabled));}
+      }
       if(typeof updateSetupStatus==='function')updateSetupStatus();
     }
     // Try localStorage first (fast, reliable)
