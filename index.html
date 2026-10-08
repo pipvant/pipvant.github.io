@@ -3427,17 +3427,23 @@
       if(local)applySettings(JSON.parse(local));
     }catch(e){}
     // Then try Supabase (may have newer data from other devices)
-    if(!sb||!sbUser)return;
+    // Only apply if localStorage is empty (local takes precedence for same-device changes)
+    if(!sb||!sbUser){themeHydrating=false;return;}
+    var hasLocal=false;
+    try{hasLocal=!!localStorage.getItem('pipvant_settings');}catch(e){}
+    if(hasLocal){themeHydrating=false;return;}
     sb.from('user_settings').select('theme,language,currency,default_risk,notifications').eq('user_id',sbUser.id).maybeSingle()
       .then(function(r){
         var s=r&&!r.error&&r.data?r.data:null;
         if(s)applySettings(s);
-      }).catch(function(){var loader=document.getElementById('authLoading');if(loader)loader.style.display='none';document.body.classList.remove('auth-checking');});
+        themeHydrating=false;
+      }).catch(function(){themeHydrating=false;var loader=document.getElementById('authLoading');if(loader)loader.style.display='none';document.body.classList.remove('auth-checking');});
   }
-  function applyTheme(theme){
+  var themeHydrating=true; // prevent save during initial load
+  function applyTheme(theme,skipSave){
     document.documentElement.setAttribute('data-theme',theme);
     document.querySelectorAll('[data-theme-choice]').forEach(function(button){button.setAttribute('aria-pressed',String(button.getAttribute('data-theme-choice')===theme));});
-    sbSaveSettings();
+    if(!skipSave&&!themeHydrating)sbSaveSettings();
   }
   document.querySelectorAll('[data-theme-choice]').forEach(function(button){button.addEventListener('click',function(){applyTheme(button.getAttribute('data-theme-choice'));});});
   document.querySelectorAll('[data-language-choice]').forEach(function(button){button.addEventListener('click',function(){applyLanguage(button.getAttribute('data-language-choice'));applyTheme(document.documentElement.getAttribute('data-theme')||'dark');sbSaveSettings();});});
