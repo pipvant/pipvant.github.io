@@ -4257,13 +4257,13 @@
   var accountForm=document.getElementById('accountForm');
   var accountSwitch=document.getElementById('accountSwitch');
   var tradingAccounts=[];
+  var selectedAccountId='all';
   try{
     var savedAccts=localStorage.getItem('pipvant_accounts');
     if(savedAccts)tradingAccounts=JSON.parse(savedAccts)||[];
     var savedSel=localStorage.getItem('pipvant_selected_account');
     if(savedSel)selectedAccountId=savedSel;
   }catch(e){}
-  var selectedAccountId='all';
   function accountStat(label,value){var wrap=document.createElement('span');var labelNode=document.createElement('span');var valueNode=document.createElement('strong');labelNode.textContent=label;valueNode.textContent=value===''?'—':money(Number(value));wrap.appendChild(labelNode);wrap.appendChild(valueNode);return wrap;}
   function accountOption(id,name,firm,size,maxLoss,target){
     var row=document.createElement('button');row.type='button';row.className='account-row';row.setAttribute('role','option');row.setAttribute('aria-selected',String(selectedAccountId===id));
