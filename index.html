@@ -3991,11 +3991,16 @@
     var submitBtn=document.querySelector('#tradeForm button[type="submit"]');
     if(submitBtn)submitBtn.textContent=currentLanguage==='ar'?'تسجيل صفقة':'Log trade';
   }
-  function deleteTradeEntry(entry){
+  function deleteTradeEntry(entry,btn){
     if(!entry||entry.type!=='trade')return;
-    var label=(entry.pair||'')+' '+(entry.direction||'');
-    var msg=currentLanguage==='ar'?('حذف الصفقة '+label+'؟ لا يمكن التراجع.'):'Delete trade '+label+'? This cannot be undone.';
-    if(!window.confirm(msg))return;
+    if(btn&&!btn.getAttribute('data-confirm-armed')){
+      btn.setAttribute('data-confirm-armed','1');
+      var orig=btn.textContent;
+      btn.textContent=currentLanguage==='ar'?'تأكيد الحذف؟':'Confirm delete?';
+      btn.style.color='var(--danger,#ef4444)';btn.style.fontWeight='800';
+      setTimeout(function(){if(btn.isConnected){btn.removeAttribute('data-confirm-armed');btn.textContent=orig;}},3000);
+      return;
+    }
     var id=entry._id||entry._dbId||entry.timestamp;
     sessionJournalEntries=sessionJournalEntries.filter(function(e){
       var eid=e._id||e._dbId||e.timestamp;
@@ -4081,7 +4086,7 @@
             return b;
           };
           cell.appendChild(mkSmallBtn(currentLanguage==='ar'?'تعديل':'Edit',function(){startEditTrade(entry);}));
-          var delBtn=mkSmallBtn(currentLanguage==='ar'?'حذف':'Delete',function(){deleteTradeEntry(entry);});
+          var delBtn=mkSmallBtn(currentLanguage==='ar'?'حذف':'Delete',function(){deleteTradeEntry(entry,delBtn);});
           delBtn.style.color='var(--danger,#ef4444)';
           cell.appendChild(delBtn);
           if(!entry.closed){
@@ -4486,11 +4491,15 @@
     if(isFinite(exitPrice)&&resultVal){
       isClosed=true;
       var dirLow=directionButton.getAttribute('data-direction').toLowerCase();
-      pnl=dirLow==='long'?(exitPrice-entryValue):(entryValue-exitPrice);
+      var priceDiff=dirLow==='long'?(exitPrice-entryValue):(entryValue-exitPrice);
+      var lotSize=parseFloat(document.getElementById('tradeSize').value)||0;
+      var pairUp=document.getElementById('tradePair').value.trim().toUpperCase();
+      var mult=100000;if(pairUp.indexOf('XAU')===0)mult=100;else if(pairUp.indexOf('XAG')===0)mult=5000;else if(pairUp.indexOf('JPY')>=0)mult=1000;
+      pnl=priceDiff*lotSize*mult;
       if(resultVal==='breakeven')pnl=0;
     }
     var tradeDateInput=document.getElementById('tradeDate');var tradeTs=tradeDateInput&&tradeDateInput.value?new Date(tradeDateInput.value).getTime():Date.now();
-    var tradeEntry={type:'trade',timestamp:tradeTs,pair:document.getElementById('tradePair').value.trim().toUpperCase(),direction:directionButton.getAttribute('data-direction'),entry:document.getElementById('tradeEntry').value,stop:document.getElementById('tradeStop').value,target:document.getElementById('tradeTarget').value,size:document.getElementById('tradeSize').value,rMultiple:riskDistance>0?units(rewardDistance/riskDistance)+'R':'—',setup:document.getElementById('tradeSetup').value.trim(),tag:document.getElementById('tradeTag').value.trim(),rating:document.getElementById('tradeRating').value,notes:document.getElementById('tradeNotes').value.trim(),closed:isClosed,exitPrice:isFinite(exitPrice)?exitVal:null,pnl:pnl,result:resultVal||null};
+    var tradeEntry={type:'trade',timestamp:tradeTs,pair:document.getElementById('tradePair').value.trim().toUpperCase(),direction:directionButton.getAttribute('data-direction'),entry:document.getElementById('tradeEntry').value,stop:document.getElementById('tradeStop').value,target:document.getElementById('tradeTarget').value,size:document.getElementById('tradeSize').value,rMultiple:(function(){if(isClosed&&isFinite(exitPrice)&&riskDistance>0){var dirL=directionButton.getAttribute('data-direction').toLowerCase();var realized=dirL==='long'?(exitPrice-entryValue):(entryValue-exitPrice);return units(realized/riskDistance)+'R';}return riskDistance>0?units(rewardDistance/riskDistance)+'R':'—';})(),setup:document.getElementById('tradeSetup').value.trim(),tag:document.getElementById('tradeTag').value.trim(),rating:document.getElementById('tradeRating').value,notes:document.getElementById('tradeNotes').value.trim(),closed:isClosed,exitPrice:isFinite(exitPrice)?exitVal:null,pnl:pnl,result:resultVal||null};
     var editingId=window.editingTradeId;
     runSuccessMorph(e.submitter,function(){
       if(editingId){
