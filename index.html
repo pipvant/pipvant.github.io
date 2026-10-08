@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <title>PIPVANT by Orovanta — Trading Decision Tools</title>
   <style>
+    [hidden]{display:none!important;}
     :root {
       color-scheme: dark;
       --bg:#0A1628; --surface:#0F1D33; --raised:#14253F; --sunken:#060D1A;
@@ -2687,10 +2688,10 @@
     sb.from('trades').select('id,symbol,direction,entry_price,stop_price,target_price,position_size,notes,opened_at,created_at,exit_price,pnl,closed_at').order('opened_at',{ascending:false})
       .then(function(r){
         if(r.error||!r.data)return;
-        sessionJournalEntries=sessionJournalEntries.filter(function(en){return !en._db;});
+        sessionJournalEntries=sessionJournalEntries.filter(function(en){return !en._db;}); window.sessionJournalEntries=sessionJournalEntries; window.sessionJournalEntries=sessionJournalEntries;
         r.data.forEach(function(t){
           var ts=t.opened_at||t.created_at;
-          var fmtNum=function(v){if(v==null||v==='')return '—';var n=Number(v);if(!isFinite(n))return '—';return String(Math.round(n*100000)/100000);};var isClosed=t.closed_at!=null;sessionJournalEntries.push({type:'trade',_db:true,_dbId:t.id,_id:t.id,timestamp:ts?new Date(ts).getTime():Date.now(),pair:t.symbol||'—',direction:t.direction||'—',entry:fmtNum(t.entry_price),stop:fmtNum(t.stop_price),target:fmtNum(t.target_price),size:t.position_size==null?'—':String(t.position_size),rMultiple:'—',notes:t.notes||'',closed:isClosed,exitPrice:t.exit_price!=null?fmtNum(t.exit_price):null,pnl:t.pnl});
+          var fmtNum=function(v){if(v==null||v==='')return '—';var n=Number(v);if(!isFinite(n))return '—';return String(Math.round(n*100000)/100000);};var isClosed=t.closed_at!=null;var _ep=parseFloat(t.entry_price),_sp=parseFloat(t.stop_price),_tp=parseFloat(t.target_price),_rd=Math.abs(_ep-_sp),_rwd=Math.abs(_tp-_ep),_rM=(_rd>0&&isFinite(_ep)&&isFinite(_sp)&&isFinite(_tp))?((Math.round(_rwd/_rd*100)/100)+'R'):'—';sessionJournalEntries.push({type:'trade',_db:true,_dbId:t.id,_id:t.id,timestamp:ts?new Date(ts).getTime():Date.now(),pair:t.symbol||'—',direction:t.direction||'—',entry:fmtNum(t.entry_price),stop:fmtNum(t.stop_price),target:fmtNum(t.target_price),size:t.position_size==null?'—':String(t.position_size),rMultiple:_rM,notes:t.notes||'',closed:isClosed,exitPrice:t.exit_price!=null?fmtNum(t.exit_price):null,pnl:t.pnl});
         });
         sessionJournalEntries.sort(function(a,b){return b.timestamp-a.timestamp;});
         renderJournalEntries();
@@ -3655,7 +3656,7 @@
     if(sb){sbQuiet(sb.auth.signOut());}
     sbUser=null;
     try{
-      sessionJournalEntries=sessionJournalEntries.filter(function(en){return !en._db;});
+      sessionJournalEntries=sessionJournalEntries.filter(function(en){return !en._db;}); window.sessionJournalEntries=sessionJournalEntries;
       renderJournalEntries();
     }catch(clearErr){}
     document.body.classList.remove('app-ready');
@@ -3855,7 +3856,7 @@
 
   var tradeSheet=document.getElementById('tradeSheet');
   var logTradeButton=document.getElementById('logTradeButton');
-  var sessionJournalEntries=[];
+  var sessionJournalEntries=[]; window.sessionJournalEntries=sessionJournalEntries;
   function journalCell(label,value,className){var cell=document.createElement('span');cell.className='journal-entry-cell'+(className?' '+className:'');var small=document.createElement('small');var strong=document.createElement('strong');small.textContent=label;strong.textContent=value;cell.appendChild(small);cell.appendChild(strong);return cell;}
   function journalDate(timestamp){return new Date(timestamp).toLocaleString(currentLanguage==='ar'?'ar-MA':'en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});}
   var journalSearchQuery=''; window.journalFacets={symbol:null,side:null};
@@ -3896,7 +3897,7 @@
     sessionJournalEntries=sessionJournalEntries.filter(function(e){
       var eid=e._id||e._dbId||e.timestamp;
       return eid!==id;
-    });
+    }); window.sessionJournalEntries=sessionJournalEntries;
     if(window.editingTradeId===id)cancelEditTrade();
     if(entry._dbId&&typeof sb!=='undefined'&&sb){
       sb.from('trades').delete().eq('id',entry._dbId).then(function(r){
