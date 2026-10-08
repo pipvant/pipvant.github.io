@@ -3804,7 +3804,23 @@
     var identity=document.createElement('span');var nameNode=document.createElement('span');var firmNode=document.createElement('span');nameNode.className='account-row-name';nameNode.textContent=name;firmNode.className='account-row-firm';firmNode.textContent=firm|| (currentLanguage==='ar'?'بدون شركة / وسيط':'No firm / broker');identity.appendChild(nameNode);identity.appendChild(firmNode);
     var selected=document.createElement('span');selected.className='account-selected';selected.textContent=selectedAccountId===id?(currentLanguage==='ar'?'محدد':'SELECTED'):'';
     var stats=document.createElement('span');stats.className='account-row-stats';stats.appendChild(accountStat(currentLanguage==='ar'?'الحجم':'SIZE',size));stats.appendChild(accountStat(currentLanguage==='ar'?'أقصى خسارة':'MAX LOSS',maxLoss));stats.appendChild(accountStat(currentLanguage==='ar'?'الهدف':'TARGET',target));row.appendChild(identity);row.appendChild(selected);row.appendChild(stats);
-    row.addEventListener('click',function(){selectedAccountId=id;renderAccountList();updateAccountSwitchLabel();closeAccountSheet();accountSwitch.focus();});return row;
+    if(id!=='all'){
+      var del=document.createElement('span');del.className='account-delete';del.textContent='✕';del.title=currentLanguage==='ar'?'حذف الحساب':'Delete account';del.style.cssText='margin-left:8px;color:var(--danger,#ef4444);font-weight:700;cursor:pointer;padding:4px 8px;';
+      del.addEventListener('click',function(e){e.stopPropagation();deleteTradingAccount(id);});
+      row.appendChild(del);
+    }
+    row.addEventListener('click',function(){selectedAccountId=id;try{localStorage.setItem('pipvant_selected_account',id);}catch(e){}renderAccountList();updateAccountSwitchLabel();closeAccountSheet();accountSwitch.focus();});return row;
+  }
+  function deleteTradingAccount(id){
+    var acct=null;for(var i=0;i<tradingAccounts.length;i++){if(tradingAccounts[i].id===id){acct=tradingAccounts[i];break;}}
+    var label=acct?acct.name:id;
+    if(!confirm((currentLanguage==='ar'?'حذف الحساب "':'Delete account "')+label+'"?'))return;
+    tradingAccounts=tradingAccounts.filter(function(a){return a.id!==id;});
+    if(selectedAccountId===id)selectedAccountId='all';
+    try{localStorage.setItem('pipvant_accounts',JSON.stringify(tradingAccounts));localStorage.setItem('pipvant_selected_account',selectedAccountId);}catch(e){}
+    renderAccountList();updateAccountSwitchLabel();
+    if(typeof updateJournalEquity==='function')updateJournalEquity();
+    showToast(currentLanguage==='ar'?'تم حذف الحساب.':'Account deleted.');
   }
   function renderAccountList(){
     var list=document.getElementById('accountList');if(!list)return;list.replaceChildren();
