@@ -3954,6 +3954,8 @@
       }
     }
     document.getElementById('tradeSize').value=_szClean;
+    document.getElementById('tradeSize').setAttribute('data-debug-szclean',_szClean);
+    document.getElementById('tradeSize').setAttribute('data-debug-szraw',_szRaw);
     document.getElementById('tradeExit').value=entry.exitPrice||'';
     document.getElementById('tradeResult').value=entry.result||'';
     document.getElementById('tradeSetup').value=entry.setup||'';
