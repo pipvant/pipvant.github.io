@@ -2081,6 +2081,10 @@
         <div><label for="tradeSize">Size</label><input id="tradeSize" name="size" type="number" min="0" step="any" inputmode="decimal" placeholder="" required></div>
         <div><label for="tradeExit">Exit price (optional)</label><input id="tradeExit" name="exit" type="number" step="any" inputmode="decimal" placeholder=""></div>
         <div><label for="tradeResult">Result</label><select id="tradeResult"><option value="">Open</option><option value="win">Win</option><option value="loss">Loss</option><option value="breakeven">Breakeven</option></select></div>
+        <div><label for="tradeSetup">Setup</label><input id="tradeSetup" name="setup" type="text" placeholder="e.g. Breakout, Pullback" autocomplete="off"></div>
+        <div><label for="tradeTag">Tag</label><input id="tradeTag" name="tag" type="text" placeholder="e.g. A+, FOMC" autocomplete="off"></div>
+        <div><label for="tradeRating">Rating (1-5)</label><select id="tradeRating"><option value="">—</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></div>
+        <div><label for="tradeDate">Date</label><input id="tradeDate" name="date" type="datetime-local"></div>
         <div class="span-2"><label for="tradeNotes">Notes</label><textarea id="tradeNotes" name="notes" placeholder=""></textarea></div>
       </div>
       <p class="session-feedback" id="tradeFormFeedback" aria-live="polite"></p>
@@ -3963,7 +3967,7 @@
           var pnlNum=Number(entry.pnl);
           pnlDisplay=(pnlNum>0?'+':'')+pnlNum.toFixed(2);
         }
-        values=[journalDate(entry.timestamp),entry.pair,side,'—','E '+entry.entry+' · S '+entry.stop+' · T '+entry.target+(entry.closed&&entry.exitPrice?' · X '+entry.exitPrice:''),entry.size,pnlDisplay,entry.rMultiple,'—',entry.notes||'—',''];
+        values=[journalDate(entry.timestamp),entry.pair,side,entry.setup||'—','E '+entry.entry+' · S '+entry.stop+' · T '+entry.target+(entry.closed&&entry.exitPrice?' · X '+entry.exitPrice:''),entry.size,pnlDisplay,entry.rMultiple,entry.rating||'—',entry.notes||'—',''];
       }else{
         values=[journalDate(entry.timestamp),entry.pair,currentLanguage==='ar'?'ملاحظة مخاطرة':'Risk note',currentLanguage==='ar'?'حساب':'Calculation','SL '+entry.stop+' '+(currentLanguage==='ar'?'نقطة':'pips'),entry.size,'—','1R','—',(currentLanguage==='ar'?'مخاطرة ':'Risk ')+entry.riskLabel+' · '+entry.riskPercent+'% '+(currentLanguage==='ar'?'من ':'of ')+entry.accountLabel,''];
       }
@@ -4286,7 +4290,40 @@
   /* Journal search handler */document.addEventListener('input',function(event){if(event.target&&event.target.classList&&event.target.classList.contains('trade-search')){journalSearchQuery=event.target.value||'';renderJournalEntries();}});function openTradeSheet(){document.getElementById('tradeFormFeedback').textContent='';tradeSheet.classList.add('open');document.getElementById('tradePair').focus();}
   function closeTradeSheet(){tradeSheet.classList.remove('open');if(typeof cancelEditTrade==='function')cancelEditTrade();if(document.getElementById('journal').classList.contains('active'))logTradeButton.focus();}
   var closeTradeSheetEl=document.getElementById('closeTradeModal');var currentCloseEntry=null;
-  function openCloseTradeModal(entry){currentCloseEntry=entry;document.getElementById('closeTradeFeedback').textContent='';document.getElementById('closeExitPrice').value='';var rp=document.getElementById('closeRealizedPnl');if(rp)rp.value='';closeTradeSheetEl.classList.add('open');document.getElementById('closeExitPrice').focus();}
+  function estimatePnl(symbol, direction, entry, exit, size){
+    try{
+      var sym=String(symbol||'').toUpperCase(), dir=String(direction||'').toLowerCase();
+      var e=parseFloat(entry), x=parseFloat(exit), s=parseFloat(size);
+      if(!isFinite(e)||!isFinite(x)||!isFinite(s)||s<=0)return null;
+      var diff=dir==='long'?(x-e):(e-x);
+      var mult=100000; // default forex
+      if(sym.indexOf('XAU')===0)mult=100;
+      else if(sym.indexOf('XAG')===0)mult=5000;
+      else if(sym.indexOf('JPY')>=0)mult=100000/x; // approx for JPY pairs
+      var pnl=diff*s*mult;
+      return Math.round(pnl*100)/100;
+    }catch(e){return null;}
+  }
+  function openCloseTradeModal(entry){currentCloseEntry=entry;document.getElementById('closeTradeFeedback').textContent='';document.getElementById('closeExitPrice').value='';var rp=document.getElementById('closeRealizedPnl');if(rp)rp.value='';closeTradeSheetEl.classList.add('open');document.getElementById('closeExitPrice').focus();
+    // Auto-estimate P&L when exit price is entered
+    var exitInput=document.getElementById('closeExitPrice');
+    if(exitInput&&!exitInput.dataset.pnlBound){
+      exitInput.dataset.pnlBound='1';
+      exitInput.addEventListener('input',function(){
+        try{
+          var xv=parseFloat(exitInput.value);
+          var rp2=document.getElementById('closeRealizedPnl');
+          if(!isFinite(xv)||!rp2||rp2.value!=='')return; // don't override manual entry
+          if(!currentCloseEntry)return;
+          var est=estimatePnl(currentCloseEntry.pair,currentCloseEntry.direction,currentCloseEntry.entry,xv,currentCloseEntry.size);
+          if(est!==null&&isFinite(est)){
+            rp2.value=est;
+            rp2.placeholder='Est. '+est+' (edit if needed)';
+          }
+        }catch(e){}
+      });
+    }
+  }
   function hideCloseTradeModal(){closeTradeSheetEl.classList.remove('open');currentCloseEntry=null;}
   document.getElementById('closeCloseTradeSheet').addEventListener('click',hideCloseTradeModal);
   document.getElementById('cancelCloseTrade').addEventListener('click',hideCloseTradeModal);
@@ -4342,7 +4379,8 @@
       pnl=dirLow==='long'?(exitPrice-entryValue):(entryValue-exitPrice);
       if(resultVal==='breakeven')pnl=0;
     }
-    var tradeEntry={type:'trade',timestamp:Date.now(),pair:document.getElementById('tradePair').value.trim().toUpperCase(),direction:directionButton.getAttribute('data-direction'),entry:document.getElementById('tradeEntry').value,stop:document.getElementById('tradeStop').value,target:document.getElementById('tradeTarget').value,size:document.getElementById('tradeSize').value,rMultiple:riskDistance>0?units(rewardDistance/riskDistance)+'R':'—',notes:document.getElementById('tradeNotes').value.trim(),closed:isClosed,exitPrice:isFinite(exitPrice)?exitVal:null,pnl:pnl,result:resultVal||null};
+    var tradeDateInput=document.getElementById('tradeDate');var tradeTs=tradeDateInput&&tradeDateInput.value?new Date(tradeDateInput.value).getTime():Date.now();
+    var tradeEntry={type:'trade',timestamp:tradeTs,pair:document.getElementById('tradePair').value.trim().toUpperCase(),direction:directionButton.getAttribute('data-direction'),entry:document.getElementById('tradeEntry').value,stop:document.getElementById('tradeStop').value,target:document.getElementById('tradeTarget').value,size:document.getElementById('tradeSize').value,rMultiple:riskDistance>0?units(rewardDistance/riskDistance)+'R':'—',setup:document.getElementById('tradeSetup').value.trim(),tag:document.getElementById('tradeTag').value.trim(),rating:document.getElementById('tradeRating').value,notes:document.getElementById('tradeNotes').value.trim(),closed:isClosed,exitPrice:isFinite(exitPrice)?exitVal:null,pnl:pnl,result:resultVal||null};
     var editingId=window.editingTradeId;
     runSuccessMorph(e.submitter,function(){
       if(editingId){
