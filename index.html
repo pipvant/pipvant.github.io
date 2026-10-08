@@ -1140,9 +1140,245 @@
       .skeleton:after,.motion-toast-progress{animation:none!important}
       .bottom-nav:before,.segmented:before,.range-segment:before,.settings-segmented:before,.directory-tabs:before{transition:none!important}
     }
+
+    /* ============ PUBLIC LANDING (pre-auth) ============ */
+    #siteLanding{display:none;background:#04090f;color:#eef3f8;font-family:"Space Grotesk",system-ui,sans-serif;overflow-x:clip}
+    body.show-landing #siteLanding{display:block}
+    body.app-ready #siteLanding{display:none}
+    body.auth-active.show-landing{overflow:auto}
+    #siteLanding .lp-grain{position:fixed;inset:-50%;z-index:60;pointer-events:none;opacity:.07;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");animation:lpGrain 1.2s steps(4) infinite}
+    @keyframes lpGrain{0%{transform:translate(0,0)}25%{transform:translate(-2%,1%)}50%{transform:translate(1%,-2%)}75%{transform:translate(-1%,2%)}100%{transform:translate(0,0)}}
+    .lp-wrap{max-width:1160px;margin:0 auto;padding:0 22px}
+    /* nav */
+    .lp-nav{position:fixed;top:0;left:0;right:0;z-index:55;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);background:rgba(4,9,15,.62);border-bottom:1px solid rgba(255,255,255,.07)}
+    .lp-nav-inner{max-width:1160px;margin:0 auto;padding:14px 22px;display:flex;align-items:center;gap:26px}
+    .lp-brand{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-weight:700;letter-spacing:.14em;font-size:14px}
+    .lp-brand img{width:30px;height:30px}
+    .lp-links{display:flex;gap:24px;margin-left:12px}
+    .lp-links a{color:#a9b6c6;text-decoration:none;font-size:13px;font-weight:600;letter-spacing:.02em;transition:color .2s}
+    .lp-links a:hover{color:#fff}
+    .lp-nav-cta{margin-left:auto;display:flex;gap:10px;align-items:center}
+    .lp-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:999px;font-weight:700;font-size:13px;padding:11px 22px;cursor:pointer;border:1px solid transparent;text-decoration:none;transition:transform .18s,box-shadow .18s,background .18s;white-space:nowrap}
+    .lp-btn.primary{background:linear-gradient(135deg,#5b8def,#3a6fde);color:#fff;box-shadow:0 8px 28px rgba(91,141,239,.35)}
+    .lp-btn.primary:hover{transform:translateY(-2px);box-shadow:0 12px 34px rgba(91,141,239,.5)}
+    .lp-btn.ghost{background:transparent;color:#dfe7f0;border-color:rgba(255,255,255,.22)}
+    .lp-btn.ghost:hover{border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.06)}
+    .lp-burger{display:none;margin-left:auto;background:none;border:1px solid rgba(255,255,255,.2);border-radius:10px;width:42px;height:42px;color:#fff;cursor:pointer}
+    .lp-mobile-menu{display:none;position:fixed;top:70px;left:12px;right:12px;z-index:56;background:#0a1424;border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:10px;box-shadow:0 24px 60px rgba(0,0,0,.6)}
+    .lp-mobile-menu.open{display:block}
+    .lp-mobile-menu a,.lp-mobile-menu button{display:flex;width:100%;text-align:left;padding:13px 14px;border-radius:10px;color:#dfe7f0;text-decoration:none;font-size:14px;font-weight:600;background:none;border:0;cursor:pointer}
+    .lp-mobile-menu a:hover,.lp-mobile-menu button:hover{background:rgba(255,255,255,.06)}
+    /* hero */
+    .lp-hero{position:relative;padding:172px 0 110px;overflow:hidden}
+    .lp-glow{position:absolute;border-radius:50%;filter:blur(90px);opacity:.5;pointer-events:none}
+    .lp-glow.g1{width:520px;height:520px;left:-140px;top:-120px;background:radial-gradient(circle,rgba(91,141,239,.35),transparent 65%);animation:lpDrift 14s ease-in-out infinite alternate}
+    .lp-glow.g2{width:460px;height:460px;right:-120px;top:20%;background:radial-gradient(circle,rgba(45,212,191,.22),transparent 65%);animation:lpDrift 18s ease-in-out infinite alternate-reverse}
+    .lp-glow.g3{width:600px;height:300px;left:30%;bottom:-160px;background:radial-gradient(circle,rgba(124,93,250,.18),transparent 65%);animation:lpDrift 20s ease-in-out infinite alternate}
+    @keyframes lpDrift{from{transform:translate(0,0) scale(1)}to{transform:translate(60px,40px) scale(1.12)}}
+    .lp-equity{position:absolute;left:0;right:0;bottom:0;height:220px;opacity:.5;pointer-events:none}
+    .lp-equity path{stroke-dasharray:1200;stroke-dashoffset:1200;animation:lpDraw 3.2s .4s cubic-bezier(.6,0,.2,1) forwards}
+    @keyframes lpDraw{to{stroke-dashoffset:0}}
+    .lp-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.28em;color:#7ee8d6;text-transform:uppercase;margin:0 0 22px}
+    .lp-eyebrow:before{content:"";width:26px;height:1px;background:#7ee8d6;display:inline-block}
+    .lp-hero h1{margin:0 0 20px;font-size:clamp(2.6rem,7.2vw,5.2rem);line-height:1.02;letter-spacing:-.03em;font-weight:700;color:#fff;max-width:14ch}
+    .lp-hero h1 .grad{background:linear-gradient(100deg,#9dbcf7,#5b8def 45%,#7ee8d6);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .lp-lede{margin:0 0 34px;max-width:56ch;color:#a9b6c6;font-size:clamp(1rem,2.4vw,1.2rem);line-height:1.65}
+    .lp-hero-cta{display:flex;gap:12px;flex-wrap:wrap}
+    .lp-hero-cta .lp-btn{padding:15px 32px;font-size:15px}
+    .lp-trust{display:flex;gap:10px;flex-wrap:wrap;margin-top:30px}
+    .lp-trust span{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:600;letter-spacing:.06em;color:#8b9ab0;border:1px solid rgba(255,255,255,.1);border-radius:999px;padding:8px 14px;background:rgba(255,255,255,.03)}
+    .lp-trust svg{flex:0 0 auto}
+    /* reveal */
+    .rv{opacity:0;transform:translateY(34px);transition:opacity .8s cubic-bezier(.2,.6,.2,1),transform .8s cubic-bezier(.2,.6,.2,1);transition-delay:var(--d,0s)}
+    .rv.in{opacity:1;transform:none}
+    /* stats */
+    .lp-stats{border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.015)}
+    .lp-stats-inner{display:grid;grid-template-columns:repeat(4,1fr);max-width:1160px;margin:0 auto}
+    .lp-stat{padding:30px 22px;text-align:center;border-left:1px solid rgba(255,255,255,.07)}
+    .lp-stat:first-child{border-left:0}
+    .lp-stat strong{display:block;font-size:clamp(1.7rem,4vw,2.6rem);font-weight:700;letter-spacing:-.02em;color:#fff;font-variant-numeric:tabular-nums}
+    .lp-stat span{display:block;margin-top:6px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#8b9ab0}
+    /* sections */
+    .lp-section{padding:104px 0}
+    .lp-kicker{font-size:11px;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:#5b8def;margin:0 0 14px}
+    .lp-h2{margin:0 0 16px;font-size:clamp(1.9rem,4.6vw,3rem);letter-spacing:-.02em;line-height:1.08;color:#fff;max-width:20ch}
+    .lp-sub{margin:0 0 48px;color:#a9b6c6;font-size:1.02rem;line-height:1.65;max-width:62ch}
+    /* tools */
+    .lp-tools-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .lp-tool{border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:28px 24px;background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.008));transition:transform .25s,border-color .25s,box-shadow .25s}
+    .lp-tool:hover{transform:translateY(-5px);border-color:rgba(91,141,239,.45);box-shadow:0 20px 50px rgba(0,0,0,.45)}
+    .lp-tool-icon{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:rgba(91,141,239,.12);border:1px solid rgba(91,141,239,.3);margin-bottom:18px}
+    .lp-tool h3{margin:0 0 8px;font-size:1.08rem;color:#fff;letter-spacing:-.01em}
+    .lp-tool p{margin:0;color:#8b9ab0;font-size:.92rem;line-height:1.6}
+    .lp-tool .lp-num{display:block;margin-bottom:14px;font-size:10px;font-weight:700;letter-spacing:.24em;color:#5b8def}
+    /* how */
+    .lp-how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;counter-reset:lpstep}
+    .lp-step{position:relative;border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:32px 26px;background:rgba(255,255,255,.015)}
+    .lp-step:before{counter-increment:lpstep;content:"0" counter(lpstep);display:block;font-size:12px;font-weight:700;letter-spacing:.24em;color:#7ee8d6;margin-bottom:16px}
+    .lp-step h3{margin:0 0 10px;font-size:1.15rem;color:#fff}
+    .lp-step p{margin:0;color:#8b9ab0;font-size:.93rem;line-height:1.65}
+    /* manifesto */
+    .lp-manifesto{border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08);padding:72px 0;text-align:center;background:radial-gradient(60% 120% at 50% 50%,rgba(91,141,239,.1),transparent)}
+    .lp-manifesto p{margin:0;font-size:clamp(1.4rem,3.6vw,2.3rem);letter-spacing:-.015em;line-height:1.5;color:#fff;max-width:24ch;margin-left:auto;margin-right:auto}
+    .lp-manifesto p em{font-style:normal;color:#7ee8d6}
+    /* faq */
+    .lp-faq-list{max-width:760px;display:grid;gap:10px}
+    .lp-faq{border:1px solid rgba(255,255,255,.09);border-radius:14px;background:rgba(255,255,255,.02);overflow:hidden}
+    .lp-faq summary{list-style:none;cursor:pointer;padding:20px 22px;font-weight:600;font-size:.98rem;color:#eef3f8;display:flex;justify-content:space-between;align-items:center;gap:14px}
+    .lp-faq summary::-webkit-details-marker{display:none}
+    .lp-faq summary .lp-plus{flex:0 0 auto;width:26px;height:26px;border-radius:50%;border:1px solid rgba(255,255,255,.25);display:grid;place-items:center;font-size:15px;color:#7ee8d6;transition:transform .25s}
+    .lp-faq[open] summary .lp-plus{transform:rotate(45deg)}
+    .lp-faq .lp-a{padding:0 22px 22px;color:#a9b6c6;font-size:.93rem;line-height:1.7}
+    /* final cta */
+    .lp-final{text-align:center;padding:110px 0;border-top:1px solid rgba(255,255,255,.08);background:radial-gradient(70% 100% at 50% 0%,rgba(91,141,239,.12),transparent)}
+    .lp-final h2{margin:0 0 16px;font-size:clamp(2rem,5vw,3.2rem);letter-spacing:-.02em;color:#fff}
+    .lp-final p{margin:0 0 32px;color:#a9b6c6}
+    /* footer */
+    .lp-footer{border-top:1px solid rgba(255,255,255,.08);padding:34px 0 44px}
+    .lp-footer-inner{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;max-width:1160px;margin:0 auto;padding:0 22px}
+    .lp-footer nav{display:flex;gap:22px;flex-wrap:wrap}
+    .lp-footer nav button{background:none;border:0;color:#8b9ab0;font-size:13px;font-weight:600;cursor:pointer;padding:4px 0}
+    .lp-footer nav button:hover{color:#fff}
+    .lp-footer small{color:#5b6b80;font-size:11px;letter-spacing:.08em}
+    .lp-section{scroll-margin-top:84px}
+    @media (max-width:900px){.lp-tools-grid{grid-template-columns:repeat(2,1fr)}.lp-how-grid{grid-template-columns:1fr}.lp-stats-inner{grid-template-columns:repeat(2,1fr)}.lp-stat:nth-child(3){border-left:0}.lp-stat{border-top:1px solid rgba(255,255,255,.07)}.lp-stat:nth-child(-n+2){border-top:0}}
+    @media (max-width:720px){.lp-links,.lp-nav-cta{display:none}.lp-burger{display:block}.lp-hero{padding:140px 0 84px}.lp-section{padding:72px 0}.lp-tools-grid{grid-template-columns:1fr}}
+    @media (prefers-reduced-motion:reduce){.lp-grain,.lp-glow,.lp-equity path{animation:none!important}.rv{opacity:1;transform:none;transition:none}}
   </style>
 </head>
-<body class="auth-active auth-checking"> <div id="authLoading" style="position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:var(--bg,#0a0f1a);"><div style="text-align:center;"><img src="assets/pipvanta-logo.png" alt="PIPVANT" style="width:64px;height:64px;opacity:.9;"><div style="margin-top:12px;color:var(--muted,#888);font-size:12px;">Loading…</div></div></div>
+<body class="auth-active auth-checking">
+<div id="siteLanding" aria-label="PIPVANT landing page">
+  <div class="lp-grain" aria-hidden="true"></div>
+
+  <header class="lp-nav">
+    <div class="lp-nav-inner">
+      <a class="lp-brand" href="#lpTop" data-lp-scroll><img src="assets/pipvanta-logo.png" alt="PIPVANT logo">PIPVANT</a>
+      <nav class="lp-links" aria-label="Landing sections">
+        <a href="#lpTools" data-lp-scroll>Tools</a>
+        <a href="#lpHow" data-lp-scroll>How it works</a>
+        <a href="#lpFaq" data-lp-scroll>FAQ</a>
+      </nav>
+      <div class="lp-nav-cta">
+        <button class="lp-btn ghost" type="button" data-landing-auth="login">Log in</button>
+        <button class="lp-btn primary" type="button" data-landing-auth="signup">Get started</button>
+      </div>
+      <button class="lp-burger" type="button" id="lpBurger" aria-label="Open menu" aria-expanded="false"><svg width="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    </div>
+  </header>
+  <div class="lp-mobile-menu" id="lpMobileMenu">
+    <a href="#lpTools" data-lp-scroll>Tools</a>
+    <a href="#lpHow" data-lp-scroll>How it works</a>
+    <a href="#lpFaq" data-lp-scroll>FAQ</a>
+    <button type="button" data-landing-auth="login">Log in</button>
+    <button type="button" data-landing-auth="signup" style="color:#7ee8d6">Get started →</button>
+  </div>
+
+  <main id="lpTop">
+    <section class="lp-hero">
+      <div class="lp-glow g1" aria-hidden="true"></div>
+      <div class="lp-glow g2" aria-hidden="true"></div>
+      <div class="lp-glow g3" aria-hidden="true"></div>
+      <svg class="lp-equity" viewBox="0 0 1200 220" preserveAspectRatio="none" aria-hidden="true">
+        <defs><linearGradient id="lpEqGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5b8def" stop-opacity=".35"/><stop offset="1" stop-color="#5b8def" stop-opacity="0"/></linearGradient></defs>
+        <path d="M0,220 L0,190 L80,182 L160,188 L240,160 L320,168 L400,140 L480,150 L560,118 L640,128 L720,96 L800,106 L880,74 L960,84 L1040,52 L1120,60 L1200,28 L1200,220 Z" fill="url(#lpEqGrad)"/>
+        <path d="M0,190 L80,182 L160,188 L240,160 L320,168 L400,140 L480,150 L560,118 L640,128 L720,96 L800,106 L880,74 L960,84 L1040,52 L1120,60 L1200,28" fill="none" stroke="#7ee8d6" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+      <div class="lp-wrap">
+        <p class="lp-eyebrow rv">PIPVANT by Orovanta</p>
+        <h1 class="rv" style="--d:.08s">Trade with a process,<br><span class="grad">not a prediction.</span></h1>
+        <p class="lp-lede rv" style="--d:.16s">PIPVANT is a focused toolkit for prop-firm traders: compare verified firm rules, size risk precisely, journal every trade, and earn certificates for real consistency.</p>
+        <div class="lp-hero-cta rv" style="--d:.24s">
+          <button class="lp-btn primary" type="button" data-landing-auth="signup">Create free account</button>
+          <button class="lp-btn ghost" type="button" data-landing-auth="login">Enter the app</button>
+        </div>
+        <div class="lp-trust rv" style="--d:.32s">
+          <span><svg width="12" viewBox="0 0 24 24" fill="none" stroke="#7ee8d6" stroke-width="2.4"><path d="m5 13 4 4L19 7"/></svg>Free forever</span>
+          <span><svg width="12" viewBox="0 0 24 24" fill="none" stroke="#7ee8d6" stroke-width="2.4"><path d="m5 13 4 4L19 7"/></svg>No signals, no noise</span>
+          <span><svg width="12" viewBox="0 0 24 24" fill="none" stroke="#7ee8d6" stroke-width="2.4"><path d="m5 13 4 4L19 7"/></svg>Real data only</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="lp-stats" aria-label="Platform data">
+      <div class="lp-stats-inner">
+        <div class="lp-stat rv"><strong id="lpStatFirms">···</strong><span>Verified prop firms</span></div>
+        <div class="lp-stat rv" style="--d:.08s"><strong id="lpStatPlans">···</strong><span>Funding plans tracked</span></div>
+        <div class="lp-stat rv" style="--d:.16s"><strong id="lpStatEvents">···</strong><span>Economic events monitored</span></div>
+        <div class="lp-stat rv" style="--d:.24s"><strong>5</strong><span>Pro trading tools</span></div>
+      </div>
+    </section>
+
+    <section class="lp-section" id="lpTools">
+      <div class="lp-wrap">
+        <p class="lp-kicker rv">The toolkit</p>
+        <h2 class="lp-h2 rv" style="--d:.06s">Five tools. One process.</h2>
+        <p class="lp-sub rv" style="--d:.12s">Everything a disciplined trader needs before, during, and after the trade — in one focused workspace.</p>
+        <div class="lp-tools-grid">
+          <article class="lp-tool rv"><span class="lp-num">01</span><div class="lp-tool-icon"><svg width="22" viewBox="0 0 24 24" fill="none" stroke="#7ee8d6" stroke-width="1.8"><path d="M12 3v18M5 8l7-5 7 5M5 16l7 5 7-5"/></svg></div><h3>Prop Firm Matcher</h3><p>Compare verified firm rules side by side — prices, drawdowns, and targets, honestly presented.</p></article>
+          <article class="lp-tool rv" style="--d:.08s"><span class="lp-num">02</span><div class="lp-tool-icon"><svg width="22" viewBox="0 0 24 24" fill="none" stroke="#7ee8d6" stroke-width="1.8"><path d="M4 19V5m0 14h16M7 15l3-4 3 2 4-6"/></svg></div><h3>Trading Journal</h3><p>Log every trade with stats, equity curves, and a calendar that shows your real edge.</p></article>
+          <article class="lp-tool rv" style="--d:.16s"><span class="lp-num">03</span><div class="lp-tool-icon"><svg width="22" viewBox="0 0 24 24" fill="none" stroke="#7ee8d6" stroke-width="1.8"><circle cx="12" cy="13" r="8"/><path d="M12 13l3-3M9 3h6"/></svg></div><h3>Risk Calculator</h3><p>Exact position size from your account, risk percent, and stop distance. No guesswork.</p></article>
+          <article class="lp-tool rv" style="--d:.24s"><span class="lp-num">04</span><div class="lp-tool-icon"><svg width="22" viewBox="0 0 24 24" fill="none" stroke="#7ee8d6" stroke-width="1.8"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg></div><h3>Economic Calendar</h3><p>High-impact events with countdowns and impact filters, so news never blindsides you.</p></article>
+          <article class="lp-tool rv" style="--d:.32s"><span class="lp-num">05</span><div class="lp-tool-icon"><svg width="22" viewBox="0 0 24 24" fill="none" stroke="#7ee8d6" stroke-width="1.8"><circle cx="12" cy="9" r="5"/><path d="m9 13-1 8 4-2 4 2-1-8"/></svg></div><h3>Certificates</h3><p>Verifiable documents for real milestones — consistency you can prove, not claim.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="lp-section" id="lpHow" style="padding-top:0">
+      <div class="lp-wrap">
+        <p class="lp-kicker rv">How it works</p>
+        <h2 class="lp-h2 rv" style="--d:.06s">From signup to certified, in three steps.</h2>
+        <div class="lp-how-grid">
+          <article class="lp-step rv"><h3>Create your free account</h3><p>Thirty seconds. No card, no trial clock — the full toolkit is free from the first click.</p></article>
+          <article class="lp-step rv" style="--d:.1s"><h3>Log your trades</h3><p>Record entries, exits, and risk. PIPVANT turns them into stats, equity curves, and review insights.</p></article>
+          <article class="lp-step rv" style="--d:.2s"><h3>Review &amp; earn certificates</h3><p>Hit real milestones — 500 logged trades, 90 disciplined days — and earn verifiable certificates.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="lp-manifesto">
+      <div class="lp-wrap">
+        <p class="rv">Disciplined process. <em>Honest design.</em> Real data only.</p>
+      </div>
+    </section>
+
+    <section class="lp-section" id="lpFaq">
+      <div class="lp-wrap">
+        <p class="lp-kicker rv">FAQ</p>
+        <h2 class="lp-h2 rv" style="--d:.06s">Questions, answered.</h2>
+        <div class="lp-faq-list">
+          <details class="lp-faq rv"><summary>What is PIPVANT?<span class="lp-plus">+</span></summary><div class="lp-a">PIPVANT is a free toolkit for traders built by Orovanta: a prop-firm matcher with verified rules, a trading journal with real stats, a precision risk calculator, an economic calendar, and verifiable certificates for consistency milestones.</div></details>
+          <details class="lp-faq rv" style="--d:.06s"><summary>Is it really free?<span class="lp-plus">+</span></summary><div class="lp-a">Yes. There are no paid tiers and no locked features. The full toolkit — matcher, journal, calculator, calendar, certificates — is free for every account.</div></details>
+          <details class="lp-faq rv" style="--d:.12s"><summary>Does PIPVANT give trading signals?<span class="lp-plus">+</span></summary><div class="lp-a">No — and that's deliberate. PIPVANT gives you process tools: compare firm rules, size your risk, journal your trades, review your edge. It never predicts the market or tells you what to buy or sell.</div></details>
+          <details class="lp-faq rv" style="--d:.18s"><summary>Where does my data go?<span class="lp-plus">+</span></summary><div class="lp-a">Your journal entries, settings, and profile live in your own private account database. Your data is yours — it's never sold, and firm data shown in the app comes only from published, verifiable sources.</div></details>
+          <details class="lp-faq rv" style="--d:.24s"><summary>Do I need a funded account to use it?<span class="lp-plus">+</span></summary><div class="lp-a">No. PIPVANT works for any trader — demo, personal, or funded. The matcher helps you compare prop firms when you're ready for a challenge; the journal and calculator are useful from your very first trade.</div></details>
+          <details class="lp-faq rv" style="--d:.3s"><summary>Which prop firms are listed?<span class="lp-plus">+</span></summary><div class="lp-a">Firms with published, verifiable rules. Every card shows the firm's headquarters country, and every plan shows real prices and conditions — never invented ratings or guessed numbers.</div></details>
+        </div>
+      </div>
+    </section>
+
+    <section class="lp-final">
+      <div class="lp-wrap">
+        <h2 class="rv">Start trading with a process.</h2>
+        <p class="rv" style="--d:.08s">Join free. Your first logged trade is the beginning of your verifiable track record.</p>
+        <div class="rv" style="--d:.16s"><button class="lp-btn primary" type="button" data-landing-auth="signup" style="padding:15px 40px;font-size:15px">Create free account</button></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="lp-footer">
+    <div class="lp-footer-inner">
+      <a class="lp-brand" href="#lpTop" data-lp-scroll style="font-size:12px"><img src="assets/pipvanta-logo.png" alt="PIPVANT logo" style="width:24px;height:24px">PIPVANT</a>
+      <nav aria-label="Footer">
+        <button type="button" data-landing-nav="about">About</button>
+        <button type="button" data-landing-nav="methodology">Methodology</button>
+        <button type="button" data-landing-nav="support">Support</button>
+        <button type="button" data-landing-nav="contact">Contact</button>
+      </nav>
+      <small>PIPVANT BY OROVANTA</small>
+    </div>
+  </footer>
+</div>
+ <div id="authLoading" style="position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:var(--bg,#0a0f1a);"><div style="text-align:center;"><img src="assets/pipvanta-logo.png" alt="PIPVANT" style="width:64px;height:64px;opacity:.9;"><div style="margin-top:12px;color:var(--muted,#888);font-size:12px;">Loading…</div></div></div>
   
 <section class="auth-shell" id="authShell" aria-label="Account setup">
   <div class="auth-stage auth-welcome active" id="authWelcome" data-auth-stage="welcome">
@@ -2795,10 +3031,11 @@
         sbLoadProfile(function(pname){enterProduct(pname||session.user.email||'','—');});
         sbLoadTrades();sbLoadDiscipline();sbLoadSettings();sbLoadCertificates();sbLoadNotifications();
       }else{
-        // No session - show auth shell
-        document.body.classList.add('show-auth');
+        // No session - show the public landing page first
+        document.body.classList.add('show-landing');
+        if(typeof initSiteLanding==='function')initSiteLanding();
       }
-    }).catch(function(){var loader=document.getElementById('authLoading');if(loader)loader.style.display='none';document.body.classList.remove('auth-checking');document.body.classList.add('show-auth');});
+    }).catch(function(){var loader=document.getElementById('authLoading');if(loader)loader.style.display='none';document.body.classList.remove('auth-checking');document.body.classList.add('show-landing');if(typeof initSiteLanding==='function')initSiteLanding();});
   }
   /* Fill the firm detail sheet before the existing opener runs (registered first). */
   document.addEventListener('click',function(event){
@@ -3753,7 +3990,73 @@
     }).catch(function(err){showToast(err&&err.message?err.message:'Could not send reset link.');});
   });
   document.getElementById('resendReset').addEventListener('click',function(){this.blur();});
-  document.querySelectorAll('[data-auth-back]').forEach(function(button){button.addEventListener('click',function(){authStage(button.getAttribute('data-auth-back')==='welcome'?'authWelcome':'authSignup');});});
+  document.querySelectorAll('[data-auth-back]').forEach(function(button){button.addEventListener('click',function(){
+    if(document.body.classList.contains('from-landing')&&button.getAttribute('data-auth-back')==='welcome'){backToLanding();return;}
+    authStage(button.getAttribute('data-auth-back')==='welcome'?'authWelcome':'authSignup');
+  });});
+  /* ---- Public landing page (pre-auth) ---- */
+  var pendingLandingNav=null;
+  function enterAuth(mode){
+    document.body.classList.remove('show-landing');
+    document.body.classList.add('show-auth','from-landing');
+    try{setAuthMode(mode==='login'?'login':'signup');}catch(e){authStage('authSignup');}
+    window.scrollTo(0,0);
+  }
+  function backToLanding(){
+    document.body.classList.remove('show-auth');
+    document.body.classList.add('show-landing');
+    window.scrollTo(0,0);
+  }
+  function initSiteLanding(){
+    try{
+      if(document.body.dataset.lpInit==='1')return;
+      document.body.dataset.lpInit='1';
+      // CTA buttons -> existing auth stages
+      document.querySelectorAll('#siteLanding [data-landing-auth]').forEach(function(btn){
+        btn.addEventListener('click',function(){enterAuth(btn.getAttribute('data-landing-auth'));closeLpMenu();});
+      });
+      // smooth scroll to sections
+      document.querySelectorAll('#siteLanding [data-lp-scroll]').forEach(function(a){
+        a.addEventListener('click',function(e){
+          var href=a.getAttribute('href');
+          if(href&&href.charAt(0)==='#'){
+            var t=document.querySelector(href);
+            if(t){e.preventDefault();closeLpMenu();t.scrollIntoView({behavior:reduceMotion.matches?'auto':'smooth',block:'start'});}
+          }
+        });
+      });
+      // mobile menu
+      var burger=document.getElementById('lpBurger'),menu=document.getElementById('lpMobileMenu');
+      function closeLpMenu(){if(menu)menu.classList.remove('open');if(burger)burger.setAttribute('aria-expanded','false');}
+      window.closeLpMenu=closeLpMenu;
+      if(burger&&menu)burger.addEventListener('click',function(){
+        var open=menu.classList.toggle('open');
+        burger.setAttribute('aria-expanded',String(open));
+      });
+      // staggered reveal on scroll
+      var io=('IntersectionObserver' in window)?new IntersectionObserver(function(entries){
+        entries.forEach(function(en){if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}});
+      },{threshold:.12,rootMargin:'0px 0px -6% 0px'}):null;
+      document.querySelectorAll('#siteLanding .rv').forEach(function(el){if(io)io.observe(el);else el.classList.add('in');});
+      // footer links -> enter auth, then land on the requested screen after login
+      document.querySelectorAll('#siteLanding [data-landing-nav]').forEach(function(btn){
+        btn.addEventListener('click',function(){
+          pendingLandingNav=btn.getAttribute('data-landing-nav');
+          enterAuth('login');
+        });
+      });
+      // live platform stats (real DB counts only; neutral labels on failure)
+      var setStat=function(id,val){var el=document.getElementById(id);if(el)el.textContent=val;};
+      var statFail=function(id){var el=document.getElementById(id);if(el){el.textContent='';el.setAttribute('aria-label','live count unavailable');}};
+      try{
+        if(typeof sb!=='undefined'&&sb){
+          sb.from('firms').select('id',{count:'exact',head:true}).then(function(r){if(!r.error&&typeof r.count==='number')setStat('lpStatFirms',String(r.count));else statFail('lpStatFirms');}).catch(function(){statFail('lpStatFirms');});
+          sb.from('firm_plans').select('id',{count:'exact',head:true}).then(function(r){if(!r.error&&typeof r.count==='number')setStat('lpStatPlans',String(r.count));else statFail('lpStatPlans');}).catch(function(){statFail('lpStatPlans');});
+          sb.from('economic_events').select('id',{count:'exact',head:true}).then(function(r){if(!r.error&&typeof r.count==='number')setStat('lpStatEvents',String(r.count));else statFail('lpStatEvents');}).catch(function(){statFail('lpStatEvents');});
+        }else{['lpStatFirms','lpStatPlans','lpStatEvents'].forEach(statFail);}
+      }catch(se){['lpStatFirms','lpStatPlans','lpStatEvents'].forEach(statFail);}
+    }catch(e){}
+  }
   signupName.addEventListener('input',function(){document.getElementById('setupAvatar').textContent=initials(signupName.value);});
   displayName.addEventListener('input',function(){document.getElementById('setupAvatar').textContent=initials(displayName.value||signupName.value);});
   document.getElementById('signupForm').addEventListener('submit',function(e){
@@ -3789,7 +4092,7 @@
   });
   function enterProduct(name,avatar){
     var authShell=document.querySelector('.auth-shell');authShell.classList.add('auth-leaving');
-    setTimeout(function(){document.body.classList.remove('auth-active');document.body.classList.add('app-ready','app-revealing');authShell.classList.remove('auth-leaving');showScreen('matcher');setTimeout(function(){document.body.classList.remove('app-revealing');},410);},reduceMotion.matches?0:170);
+    setTimeout(function(){document.body.classList.remove('auth-active','show-auth','show-landing','from-landing');document.body.classList.add('app-ready','app-revealing');authShell.classList.remove('auth-leaving');showScreen('matcher');if(pendingLandingNav&&typeof showScreen==='function'){try{showScreen(pendingLandingNav);}catch(e){}pendingLandingNav=null;}setTimeout(function(){document.body.classList.remove('app-revealing');},410);},reduceMotion.matches?0:170);
     updateProfileIdentity(name,profileSession.bio||'');
   }
   document.getElementById('profileSetupForm').addEventListener('submit',function(e){
@@ -3815,7 +4118,8 @@
       renderJournalEntries();
     }catch(clearErr){}
     document.body.classList.remove('app-ready');
-    document.body.classList.add('auth-active','auth-returning');setTimeout(function(){document.body.classList.remove('auth-returning');},210);
+    document.body.classList.add('auth-active','auth-returning','show-landing');setTimeout(function(){document.body.classList.remove('auth-returning');},210);
+    if(typeof initSiteLanding==='function')initSiteLanding();
     document.getElementById('signupForm').reset();
     document.getElementById('profileSetupForm').reset();
     document.getElementById('setupAvatar').textContent='—';
