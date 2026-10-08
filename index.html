@@ -3856,7 +3856,15 @@
 
   var tradeSheet=document.getElementById('tradeSheet');
   var logTradeButton=document.getElementById('logTradeButton');
-  var sessionJournalEntries=[]; window.sessionJournalEntries=sessionJournalEntries;
+  var sessionJournalEntries=[]; 
+  // Keep window reference in sync via getter (fixes scope/timing issues)
+  try{
+    Object.defineProperty(window,'sessionJournalEntries',{
+      get:function(){return sessionJournalEntries;},
+      set:function(v){sessionJournalEntries=v;},
+      configurable:true
+    });
+  }catch(e){ window.sessionJournalEntries=sessionJournalEntries; }
   function journalCell(label,value,className){var cell=document.createElement('span');cell.className='journal-entry-cell'+(className?' '+className:'');var small=document.createElement('small');var strong=document.createElement('strong');small.textContent=label;strong.textContent=value;cell.appendChild(small);cell.appendChild(strong);return cell;}
   function journalDate(timestamp){return new Date(timestamp).toLocaleString(currentLanguage==='ar'?'ar-MA':'en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});}
   var journalSearchQuery=''; window.journalFacets={symbol:null,side:null};
