@@ -2307,6 +2307,9 @@
       if(marketSel&&marketSel.parentElement)marketSel.parentElement.style.display='none';
     }catch(e){}
   }
+  /* Cached firm-card template: survives slots.innerHTML='' clears (bug: the prototype was
+     destroyed on the first filtered render, so clearing the filter left an empty list until reload). */
+  var sbFirmCardProto=null;
   function sbRenderFirms(){
     sbHideMarketUI();
     if(!sbFirms.length)return;
@@ -2314,7 +2317,8 @@
     var firms=sbFirms.filter(function(f){return sbFirmMatchesFilters(f,sbPlansByFirm[f.id]||[],filters);});
     var slots=document.querySelector('#matcher .firm-slots');
     if(slots){
-      var proto=slots.querySelector('.firm-card');
+      if(!sbFirmCardProto){var _sbProtoCard=slots.querySelector('.firm-card');if(_sbProtoCard)sbFirmCardProto=_sbProtoCard.cloneNode(true);}
+      var proto=sbFirmCardProto||slots.querySelector('.firm-card');
       if(proto){
         slots.innerHTML='';
         firms.forEach(function(firm,idx){
