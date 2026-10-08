@@ -2962,7 +2962,7 @@
   }
   function sbSaveCertificate(name){
     if(!sb||!sbUser||!name)return;
-    sbQuiet(sb.from('certificates').insert({user_id:sbUser.id,mission:name,awarded_at:new Date().toISOString()}));
+    sbQuiet(sb.from('certificates').insert({user_id:sbUser.id,mission:name,earned_at:new Date().toISOString()}));
   }
   function sbLoadCertificates(){
     if(!sb||!sbUser)return;
