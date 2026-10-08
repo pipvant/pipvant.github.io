@@ -2258,7 +2258,7 @@
     var td5=document.createElement('td');td5.textContent=plans.length?sbPlanTarget(plans[0].rules):'—';tr.appendChild(td5);
     var td6=document.createElement('td');td6.textContent=plans.length?sbPlanDrawdown(plans[0].rules):'—';tr.appendChild(td6);
     var td7=document.createElement('td');var vb=document.createElement('button');vb.className='table-view-slot';vb.type='button';vb.textContent='VIEW';
-    if(firm.website){vb.addEventListener('click',function(){window.open(firm.website,'_blank','noopener');});}else{vb.disabled=true;}
+    vb.addEventListener('click',function(){var cardEl=document.querySelector('.firm-card[data-firm-id=+firm.id+]');if(cardEl){cardEl.classList.add('expanded');var ex=cardEl.querySelector('.firm-expand');if(ex)ex.setAttribute('aria-expanded','true');cardEl.scrollIntoView({behavior:'smooth',block:'center'});}});
     td7.appendChild(vb);tr.appendChild(td7);
     return tr;
   }
