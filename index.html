@@ -2322,6 +2322,7 @@
     if(!sbFirms.length)return;
     var filters=sbGetMatcherFilters();
     var firms=sbFirms.filter(function(f){return sbFirmMatchesFilters(f,sbPlansByFirm[f.id]||[],filters);});
+    var _pv=document.querySelector('#matcher .preview-label');if(_pv)_pv.textContent=firms.length+(currentLanguage==='ar'?' شركات موثقة':' verified firms');
     var slots=document.querySelector('#matcher .firm-slots');
     if(slots){
       if(!sbFirmCardProto){var _sbProtoCard=slots.querySelector('.firm-card');if(_sbProtoCard)sbFirmCardProto=_sbProtoCard.cloneNode(true);}
