@@ -1153,6 +1153,12 @@
         <button class="btn primary auth-wide" id="getStarted" type="button">Get started <span aria-hidden="true">→</span></button>
         <button class="text-button" id="loginLink" type="button">Log in</button>
       </div>
+      <div class="auth-features" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:28px;text-align:left;">
+        <div><strong style="display:block;font-size:13px;margin-bottom:4px;">Compare firms</strong><span style="font-size:11px;color:var(--muted);line-height:1.5;">Verified prop-firm rules, side by side.</span></div>
+        <div><strong style="display:block;font-size:13px;margin-bottom:4px;">Size risk</strong><span style="font-size:11px;color:var(--muted);line-height:1.5;">Exact position size from your inputs.</span></div>
+        <div><strong style="display:block;font-size:13px;margin-bottom:4px;">Journal trades</strong><span style="font-size:11px;color:var(--muted);line-height:1.5;">Stats, equity curve, and review.</span></div>
+        <div><strong style="display:block;font-size:13px;margin-bottom:4px;">Track events</strong><span style="font-size:11px;color:var(--muted);line-height:1.5;">Economic calendar with impact filters.</span></div>
+      </div>
       <span class="auth-step">1 / 3</span>
     </div>
   </div>
@@ -1550,7 +1556,7 @@
               <div class="risk-field"><label for="balance">Account size</label><div class="field-shell money-entry"><span class="currency-prefix">$</span><input id="balance" class="full-calc-input" type="text" inputmode="decimal" autocomplete="off" placeholder="—" aria-label="Account size"></div></div>
               <div class="risk-field"><label for="riskPercent">Risk %</label><div class="risk-stepper"><button class="step-button" type="button" data-risk-step="-0.1" aria-label="Decrease risk percentage">−</button><div class="field-shell"><input id="riskPercent" class="full-calc-input" type="number" min="0.1" max="100" step="0.1" inputmode="decimal" placeholder="—" aria-label="Risk percentage"><span class="suffix">%</span></div><button class="step-button" type="button" data-risk-step="0.1" aria-label="Increase risk percentage">+</button></div><div class="risk-presets" aria-label="Risk presets"><button class="risk-preset" type="button" data-risk-preset="0.5" aria-pressed="false">0.5%</button><button class="risk-preset" type="button" data-risk-preset="1" aria-pressed="false">1%</button><button class="risk-preset" type="button" data-risk-preset="2" aria-pressed="false">2%</button></div></div>
               <div class="risk-field"><label for="stopDistance">Stop-loss pips</label><div class="field-shell"><input id="stopDistance" class="suffixed full-calc-input" type="number" min="0" step="0.1" inputmode="decimal" placeholder="—"><span class="suffix">pips</span></div></div>
-              <div class="risk-field"><label for="riskSymbol">Symbol / pair</label><select id="riskSymbol" class="full-calc-input"><option value="">Select pair</option><option value="EUR/USD">EUR/USD</option><option value="GBP/USD">GBP/USD</option><option value="AUD/USD">AUD/USD</option><option value="NZD/USD">NZD/USD</option></select><p class="helper">USD-quoted FX pairs use the standard $10 pip value per lot.</p></div>
+              <div class="risk-field"><label for="riskSymbol">Symbol / pair</label><select id="riskSymbol" class="full-calc-input"><option value="">Select pair</option><option value="EUR/USD">EUR/USD</option><option value="GBP/USD">GBP/USD</option><option value="AUD/USD">AUD/USD</option><option value="NZD/USD">NZD/USD</option><option value="USD/JPY">USD/JPY</option><option value="EUR/JPY">EUR/JPY</option><option value="GBP/JPY">GBP/JPY</option><option value="XAU/USD">XAU/USD (Gold)</option><option value="US30">US30</option><option value="NAS100">NAS100</option><option value="SPX500">SPX500</option></select><p class="helper">Enter the correct point value for your broker and pair below.</p></div>
             </div>
           </section>
           <section class="risk-results" aria-labelledby="output-title">
@@ -2208,7 +2214,7 @@
       var grid=details.querySelector('.spec-grid');if(grid&&grid.after)grid.after(ul);else details.appendChild(ul);
     }
     var cta=q('.slot-cta');
-    if(cta&&firm.website){cta.disabled=false;cta.addEventListener('click',function(ev2){ev2.stopPropagation();window.open(firm.website,'_blank','noopener');});}
+    if(cta){cta.disabled=false;cta.addEventListener('click',function(ev2){ev2.stopPropagation();card.classList.toggle('expanded');card.querySelector('.firm-expand').setAttribute('aria-expanded',String(card.classList.contains('expanded')));});}
     // Shortlist button (matcher cards)
     var slBtn=card.querySelector('.firm-detail-actions .btn.secondary');
     if(slBtn){
