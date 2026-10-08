@@ -3954,8 +3954,6 @@
       }
     }
     document.getElementById('tradeSize').value=_szClean;
-    document.getElementById('tradeSize').setAttribute('data-debug-szclean',_szClean);
-    document.getElementById('tradeSize').setAttribute('data-debug-szraw',_szRaw);
     document.getElementById('tradeExit').value=entry.exitPrice||'';
     document.getElementById('tradeResult').value=entry.result||'';
     document.getElementById('tradeSetup').value=entry.setup||'';
@@ -3972,7 +3970,7 @@
     if(submitBtn)submitBtn.textContent=currentLanguage==='ar'?'حفظ التعديلات':'Save changes';
     document.getElementById('tradeFormFeedback').textContent='';
     if(typeof openTradeSheet==='function')openTradeSheet();
-    try{var _sEl=document.getElementById('tradeSize');if(_sEl&&_sEl.value&&_sEl.value.length>10){var _sN=Number(_sEl.value);if(isFinite(_sN)){_sEl.value=String(_sN.toFixed(6)).replace(/\.?0+$/,'');}}}catch(_e){}
+    try{var _sEl=document.getElementById('tradeSize');if(_sEl){var _sV=String(_sEl.value||'');if(_sV.length>10){var _sN=Number(_sV);if(isFinite(_sN)){_sEl.value='';_sEl.value=String(_sN.toFixed(6)).replace(/\.?0+$/,'');}}}}catch(_e){}
   }
   function cancelEditTrade(){
     window.editingTradeId=null;
