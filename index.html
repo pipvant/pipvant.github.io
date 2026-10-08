@@ -3944,7 +3944,16 @@
     document.getElementById('tradeEntry').value=entry.entry||'';
     document.getElementById('tradeStop').value=entry.stop||'';
     document.getElementById('tradeTarget').value=entry.target||'';
-    var _sz=parseFloat(entry.size);document.getElementById('tradeSize').value=isFinite(_sz)?String(Math.round(_sz*1000000)/1000000):(entry.size||'');
+    var _szRaw=String(entry.size||'').trim();
+    var _szNum=Number(_szRaw);
+    var _szClean=_szRaw;
+    if(isFinite(_szNum)){
+      _szClean=String(_szNum);
+      if(_szClean.indexOf('e')<0&&_szClean.length>10){
+        _szClean=_szNum.toFixed(6).replace(/\.?0+$/,'');
+      }
+    }
+    document.getElementById('tradeSize').value=_szClean;
     document.getElementById('tradeExit').value=entry.exitPrice||'';
     document.getElementById('tradeResult').value=entry.result||'';
     document.getElementById('tradeSetup').value=entry.setup||'';
