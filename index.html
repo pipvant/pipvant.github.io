@@ -4287,7 +4287,12 @@
     var head=panel.querySelector('.notification-head');
     var existing=panel.querySelector('.notification-panel-list');
     if(existing)existing.remove();
-    if(!all.length)return; // keep empty state
+    var emptyState=panel.querySelector('.notification-empty');
+    if(!all.length){
+      if(emptyState)emptyState.style.display='';
+      return; // keep empty state
+    }
+    if(emptyState)emptyState.style.display='none';
     var list=document.createElement('div');list.className='notification-panel-list';
     all.forEach(function(n){
       var btn=document.createElement('button');
