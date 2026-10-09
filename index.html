@@ -4355,47 +4355,59 @@
     var html='';
     var L=currentLanguage==='ar';
     function row(k,v,mono){return '<div class="notif-detail-row"><span class="k">'+k+'</span><span class="v'+(mono?' mono':'')+'">'+v+'</span></div>';}
-    if(n.type==='news'&&n.ref&&n.ref.eventTs&&typeof calendarEvents!=='undefined'){
-      // Find the REAL event from calendar data
+    if(n.type==='news'&&n.ref&&n.ref.eventName){
+      // Real event data stored at creation time (from the economic calendar)
+      var rd=n.ref;
+      // Try live lookup first for freshest data, fall back to stored
       var ev=null;
-      for(var i=0;i<calendarEvents.length;i++){
-        if(calendarEvents[i]._ts===n.ref.eventTs){ev=calendarEvents[i];break;}
-      }
-      if(ev){
-        html+='<p class="notif-detail-desc">'+(L?'تفاصيل الخبر من التقويم الاقتصادي الحقيقي:':'Real event details from the economic calendar:')+'</p>';
-        html+=row(L?'الحدث':'Event',ev.name||'—');
-        html+=row(L?'العملة':'Currency',ev.currency||'—',true);
-        html+=row(L?'التأثير':'Impact',ev.impactLabel||ev.impact||'—');
-        html+=row(L?'الوقت':'Time',(ev.dayLabel||'')+' '+(ev.time||'')+' '+calendarTimezoneLabel(),true);
-        html+=row(L?'المتوقع':'Forecast',ev.forecast||'—',true);
-        html+=row(L?'السابق':'Previous',ev.previous||'—',true);
-      }else{
-        html+='<p class="notif-detail-desc">'+(n.message||'')+'</p>';
-        html+=row(L?'الحالة':'Status',L?'انتهى الحدث':'Event passed');
-      }
-    }else if((n.type==='trade'||n.type==='win'||n.type==='loss'||n.type==='be')&&n.ref&&n.ref.tradeId&&typeof sessionJournalEntries!=='undefined'){
-      // Find the REAL trade from journal
-      var tr=null;
-      for(var j=0;j<sessionJournalEntries.length;j++){
-        var e=sessionJournalEntries[j];
-        if(e._localId===n.ref.tradeId||e._dbId===n.ref.tradeId||e._id===n.ref.tradeId){tr=e;break;}
-      }
-      if(tr){
-        html+='<p class="notif-detail-desc">'+(L?'تفاصيل الصفقة الحقيقية من الجورنال:':'Real trade details from your journal:')+'</p>';
-        html+=row(L?'الزوج':'Pair',tr.pair||'—',true);
-        html+=row(L?'الاتجاه':'Direction',tr.direction||'—');
-        html+=row(L?'الدخول':'Entry',tr.entry||'—',true);
-        html+=row(L?'الوقف':'Stop',tr.stop||'—',true);
-        html+=row(L?'الهدف':'Target',tr.target||'—',true);
-        if(tr.exitPrice)html+=row(L?'الخروج':'Exit',tr.exitPrice,true);
-        if(tr.pnl!=null&&isFinite(Number(tr.pnl))){
-          var _pv=Number(tr.pnl);
-          html+=row(L?'الربح/الخسارة':'P&L',(_pv>=0?'+$':'−$')+Math.abs(_pv).toFixed(2),true);
+      if(typeof calendarEvents!=='undefined'){
+        for(var i=0;i<calendarEvents.length;i++){
+          if(calendarEvents[i]._ts===rd.eventTs){ev=calendarEvents[i];break;}
         }
-        if(tr.size)html+=row(L?'الحجم':'Size',tr.size,true);
-      }else{
-        html+='<p class="notif-detail-desc">'+(n.message||'')+'</p>';
       }
+      var _name=(ev&&ev.name)||rd.eventName||'—';
+      var _curr=(ev&&ev.currency)||rd.currency||'—';
+      var _imp=(ev&&(ev.impactLabel||ev.impact))||rd.impact||'—';
+      var _time=(ev&&ev.time)||rd.time||'—';
+      var _day=(ev&&ev.dayLabel)||rd.dayLabel||'';
+      var _fc=(ev&&ev.forecast)||rd.forecast||'—';
+      var _pr=(ev&&ev.previous)||rd.previous||'—';
+      html+='<p class="notif-detail-desc">'+(L?'تفاصيل الخبر من التقويم الاقتصادي:':'Event details from the economic calendar:')+'</p>';
+      html+=row(L?'الحدث':'Event',_name);
+      html+=row(L?'العملة':'Currency',_curr,true);
+      html+=row(L?'التأثير':'Impact',_imp);
+      html+=row(L?'الوقت':'Time',(_day+' '+_time+' '+calendarTimezoneLabel()).trim(),true);
+      html+=row(L?'المتوقع':'Forecast',_fc,true);
+      html+=row(L?'السابق':'Previous',_pr,true);
+    }else if((n.type==='trade'||n.type==='win'||n.type==='loss'||n.type==='be')&&n.ref){
+      // Find the REAL trade: live lookup first, stored data as fallback
+      var tr=null;
+      if(n.ref.tradeId&&typeof sessionJournalEntries!=='undefined'){
+        for(var j=0;j<sessionJournalEntries.length;j++){
+          var e=sessionJournalEntries[j];
+          if(e._localId===n.ref.tradeId||e._dbId===n.ref.tradeId||e._id===n.ref.tradeId){tr=e;break;}
+        }
+      }
+      var _pair=(tr&&tr.pair)||n.ref.pair||'—';
+      var _dir=(tr&&tr.direction)||n.ref.direction||'—';
+      var _entry=(tr&&tr.entry)||n.ref.entry||'—';
+      var _stop=(tr&&tr.stop)||n.ref.stop||'—';
+      var _tgt=(tr&&tr.target)||n.ref.target||'—';
+      var _size=(tr&&tr.size)||n.ref.size||'';
+      var _exit=tr&&tr.exitPrice?tr.exitPrice:'';
+      var _pnlv=tr&&tr.pnl!=null?tr.pnl:(n.ref.pnl!=null?n.ref.pnl:null);
+      html+='<p class="notif-detail-desc">'+(L?'تفاصيل الصفقة الحقيقية من الجورنال:':'Real trade details from your journal:')+'</p>';
+      html+=row(L?'الزوج':'Pair',_pair,true);
+      html+=row(L?'الاتجاه':'Direction',_dir);
+      html+=row(L?'الدخول':'Entry',_entry,true);
+      html+=row(L?'الوقف':'Stop',_stop,true);
+      html+=row(L?'الهدف':'Target',_tgt,true);
+      if(_exit)html+=row(L?'الخروج':'Exit',_exit,true);
+      if(_pnlv!=null&&isFinite(Number(_pnlv))){
+        var _pv=Number(_pnlv);
+        html+=row(L?'الربح/الخسارة':'P&L',(_pv>=0?'+$':'−$')+Math.abs(_pv).toFixed(2),true);
+      }
+      if(_size)html+=row(L?'الحجم':'Size',_size,true);
     }else{
       // Global or generic: show full message (real data from notifications.json)
       html+='<p class="notif-detail-desc">'+(n.message||'')+'</p>';
@@ -5568,7 +5580,10 @@
             currentLanguage==='ar'?'صفقة جديدة مسجلة':'New trade logged',
             _np+' '+(tradeEntry.direction||'')+' @ '+(tradeEntry.entry||'—'),
             'trade',
-            {tradeId:tradeEntry._localId||tradeEntry._dbId||tradeEntry._id}
+            {tradeId:tradeEntry._localId||tradeEntry._dbId||tradeEntry._id,
+             pair:tradeEntry.pair,direction:tradeEntry.direction,
+             entry:tradeEntry.entry,stop:tradeEntry.stop,target:tradeEntry.target,
+             size:tradeEntry.size}
           );
         }
         if(sb&&sbUser){sbSaveTrade(tradeEntry);}else{var feedback=document.getElementById('journalFeedback');if(feedback){feedback.textContent=currentLanguage==='ar'?'تم حفظ الصفقة محلياً — ستُزامَن مع حسابك عند تسجيل الدخول.':'Trade saved locally — will sync to your account when you sign in.';if(typeof feedbackMotion==='function')feedbackMotion(feedback);if(typeof showToast==='function')showToast(feedback.textContent);}}
@@ -5816,7 +5831,10 @@
                     currentLanguage==='ar'?'خبر عالي التأثير قريب':'High-impact news soon',
                     (ev.currency||'')+' '+(ev.name||'')+' — '+ev.time+' '+calendarTimezoneLabel(),
                     'news',
-                    {eventTs:ev._ts,eventName:ev.name}
+                    {eventTs:ev._ts,eventName:ev.name,
+                     currency:ev.currency,impact:ev.impactLabel||ev.impact,
+                     time:ev.time,dayLabel:ev.dayLabel,
+                     forecast:ev.forecast,previous:ev.previous}
                   );
                 }
               }
