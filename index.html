@@ -3245,7 +3245,7 @@
           card.removeAttribute('id');
           card.classList.add('issuing');
           var doc=card.querySelector('.certificate-document');
-          if(doc)doc.setAttribute('aria-label',name+' certificate');
+          if(doc){doc.setAttribute('aria-label',name+' certificate');doc.setAttribute('data-en-aria-label',name+' certificate');}
           var titleEl=card.querySelector('.achievement-title');
           if(titleEl)titleEl.textContent=(currentLanguage==='ar'&&ar[name])?ar[name]:name;
           var citeEl=card.querySelector('.certificate-citation');
