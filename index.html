@@ -5512,7 +5512,11 @@
         addPersonalNotif(
           currentLanguage==='ar'?'صفقة مغلقة':'Trade closed',
           _cp+' '+_pl,
-          _pnl>0?'win':(_pnl<0?'loss':'be')
+          _pnl>0?'win':(_pnl<0?'loss':'be'),
+          {tradeId:currentCloseEntry._localId||currentCloseEntry._dbId||currentCloseEntry._id,
+           pair:currentCloseEntry.pair,direction:currentCloseEntry.direction,
+           entry:currentCloseEntry.entry,stop:currentCloseEntry.stop,target:currentCloseEntry.target,
+           size:currentCloseEntry.size,pnl:currentCloseEntry.pnl,exitPrice:currentCloseEntry.exitPrice}
         );
       }
     };
