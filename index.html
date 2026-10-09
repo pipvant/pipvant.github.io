@@ -2970,7 +2970,21 @@
     sbResolveUser().then(function(u){
       if(!u){
         var nfb=document.getElementById('journalFeedback');
-        if(nfb){nfb.textContent=currentLanguage==='ar'?'انتهت الجلسة — سجل الدخول مجدداً لرؤية صفقاتك.':'Session expired — sign in again to see your trades.';if(typeof feedbackMotion==='function')feedbackMotion(nfb);}
+        function showExpired(){if(nfb){nfb.textContent=currentLanguage==='ar'?'انتهت الجلسة — سجل الدخول مجدداً لرؤية صفقاتك.':'Session expired — sign in again to see your trades.';if(typeof feedbackMotion==='function')feedbackMotion(nfb);}}
+        /* Right after login the session can still be settling: if a session
+           exists locally but getUser() didn't validate it, retry once instead
+           of flashing "Session expired". Genuine no-session stays honest. */
+        try{
+          sb.auth.getSession().then(function(sr){
+            var sess=sr&&sr.data&&sr.data.session;
+            if(sess&&sess.user&&!window._sbTradesAuthRetry){
+              window._sbTradesAuthRetry=true;
+              setTimeout(function(){window._sbTradesAuthRetry=false;sbLoadTrades();},1500);
+              return;
+            }
+            showExpired();
+          }).catch(function(){showExpired();});
+        }catch(e){showExpired();}
         return;
       }
       sbLoadTradesQuery();
@@ -2987,6 +3001,8 @@
           return;
         }
         window._sbTradesRetry=false;
+        /* Clear any stale "Session expired" flash: the session validated now. */
+        try{var _fbOk=document.getElementById('journalFeedback');if(_fbOk){var _ft=_fbOk.textContent||'';if(_ft.indexOf('Session expired')>=0||_ft.indexOf('انتهت الجلسة')>=0)_fbOk.textContent='';}}catch(_fbe){}
         sessionJournalEntries=sessionJournalEntries.filter(function(en){return !en._db;}); window.sessionJournalEntries=sessionJournalEntries; window.sessionJournalEntries=sessionJournalEntries;
         r.data.forEach(function(t){
           var ts=t.opened_at||t.created_at;
