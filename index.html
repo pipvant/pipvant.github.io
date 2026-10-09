@@ -4243,8 +4243,12 @@
       btn.className='notification-item'+(n.read?' read':' unread');
       btn.type='button';
       btn.innerHTML='<span class="notification-copy"><strong></strong><span></span></span>';
-      btn.querySelector('strong').textContent=n.title||'—';
+      var _t=btn.querySelector('strong');_t.textContent=n.title||'—';
       btn.querySelector('span span').textContent=(n.message||'').slice(0,80);
+      if(n.type==='news'&&n.message){
+        var _m2=n.message.match(/^(USD|EUR|GBP|JPY|CAD|AUD|NZD|CHF)\b/);
+        if(_m2){var _b2=document.createElement('span');_b2.className='notif-curr';_b2.textContent=_m2[1];_t.insertBefore(_b2,_t.firstChild);}
+      }
       btn.addEventListener('click',function(){markNotifRead(n.id);closeNotifications();});
       list.appendChild(btn);
     });
