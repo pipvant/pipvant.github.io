@@ -3005,7 +3005,8 @@
         sessionJournalEntries.sort(function(a,b){return b.timestamp-a.timestamp;});
         if(typeof applyTradeExtras==='function')applyTradeExtras();
         renderJournalEntries();
-        sbUpdateProfileStats(r.data);
+        /* Unified source: session (not raw r.data) so Journal and Profile always agree. */
+        if(typeof sbUpdateProfileStats==='function')sbUpdateProfileStats(sessionJournalEntries);
         // Also compute trader score from trades (don't wait for discipline)
         try{
           var tc=sessionJournalEntries.filter(function(e){return e.type==='trade';}).length;
