@@ -2955,7 +2955,14 @@
     if(!sb||!sbUser)return;
     sb.from('trades').select('id,symbol,direction,entry_price,stop_price,target_price,position_size,notes,opened_at,created_at,exit_price,pnl,closed_at,setup,tag,account_id').order('opened_at',{ascending:false})
       .then(function(r){
-        if(r.error||!r.data)return;
+        if(r.error||!r.data){
+          var _fb=document.getElementById('journalFeedback');
+          if(r&&r.error&&_fb){_fb.textContent=(currentLanguage==='ar'?'تعذر تحميل الصفقات — جارٍ إعادة المحاولة…':'Could not load trades — retrying…');if(typeof feedbackMotion==='function')feedbackMotion(_fb);}
+          if(!window._sbTradesRetry){window._sbTradesRetry=true;setTimeout(function(){window._sbTradesRetry=false;sbLoadTrades();},2500);}
+          else if(r&&r.error&&_fb){_fb.textContent=(currentLanguage==='ar'?'تعذر تحميل الصفقات: ':'Could not load trades: ')+(r.error.message||r.error.code||'');}
+          return;
+        }
+        window._sbTradesRetry=false;
         sessionJournalEntries=sessionJournalEntries.filter(function(en){return !en._db;}); window.sessionJournalEntries=sessionJournalEntries; window.sessionJournalEntries=sessionJournalEntries;
         r.data.forEach(function(t){
           var ts=t.opened_at||t.created_at;
