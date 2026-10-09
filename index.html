@@ -549,6 +549,26 @@
     .notif-curr-chip{min-height:32px;padding:0 14px;border-radius:20px;border:1px solid var(--line-strong);background:var(--surface);color:var(--platinum);font:700 11px/1 "IBM Plex Mono",monospace;cursor:pointer;transition:all .15s}
     .notif-curr-chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
     .notif-curr-chip:hover{border-color:var(--accent)}
+    /* Notification detail modal */
+    .notif-detail-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+    .notif-detail-overlay.open{display:flex;animation:notifFadeIn .2s}
+    @keyframes notifFadeIn{from{opacity:0}to{opacity:1}}
+    .notif-detail{background:var(--raised);border:1px solid var(--line-strong);border-radius:20px;max-width:440px;width:100%;max-height:84vh;overflow-y:auto;box-shadow:0 24px 70px rgba(0,0,0,.5);animation:notifSlideIn .25s cubic-bezier(.2,.9,.3,1.15)}
+    .notif-detail-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:20px 20px 0}
+    .notif-detail-head h3{font-size:17px;font-weight:800;margin:0;line-height:1.4}
+    .notif-detail-close{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--muted);font-size:18px;cursor:pointer;flex-shrink:0;display:grid;place-items:center}
+    .notif-detail-close:hover{color:var(--text);border-color:var(--line-strong)}
+    .notif-detail-body{padding:16px 20px 24px}
+    .notif-detail-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+    .notif-detail-row:last-child{border-bottom:0}
+    .notif-detail-row .k{color:var(--muted);font-size:12px;font-weight:600}
+    .notif-detail-row .v{font-size:13px;font-weight:700;text-align:right}
+    .notif-detail-row .v.mono{font-family:"IBM Plex Mono",monospace}
+    .notif-detail-desc{color:var(--muted);font-size:13px;line-height:1.6;margin:0 0 8px}
+    @media (max-width:639px){
+      .notif-detail-overlay{align-items:flex-end;padding:0}
+      .notif-detail{border-radius:24px 24px 0 0;max-height:88vh}
+    }
     /* Mobile: bottom sheet */
     @media (max-width:639px){
       .notification-panel{position:fixed;left:0;right:0;top:auto;bottom:0;width:100%;max-width:100%;max-height:84vh;border-radius:24px 24px 0 0;z-index:100}
@@ -1533,6 +1553,12 @@
     <div class="header-actions">
       <button class="header-icon" id="notificationButton" type="button" aria-label="Notifications" aria-expanded="false"><svg width="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 8h18c0-1-3-1-3-8M10 20h4"/></svg><span class="notification-badge" id="notificationBadge" aria-hidden="true"></span></button>
       <div class="notification-panel" id="notificationPanel" role="dialog" aria-label="Notifications"><div class="notification-head"><h3>Notifications</h3><span id="notificationPanelCount">— NEW</span></div><div class="notification-empty"><div><div class="empty-glyph" aria-hidden="true"><svg width="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 8h18c0-1-3-1-3-8M10 20h4"/></svg></div><h3>No pending notifications</h3><p>Account and tool alerts will appear here.</p></div></div><button class="notification-footer" id="viewAllNotifications" type="button"><span>View all notifications</span><span aria-hidden="true">→</span></button></div>
+    <div class="notif-detail-overlay" id="notifDetailOverlay" role="dialog" aria-modal="true" aria-label="Notification details">
+      <div class="notif-detail">
+        <div class="notif-detail-head"><h3 id="notifDetailTitle">—</h3><button class="notif-detail-close" id="notifDetailClose" type="button" aria-label="Close">×</button></div>
+        <div class="notif-detail-body" id="notifDetailBody"></div>
+      </div>
+    </div>
       <button class="header-avatar" data-screen="profile" type="button" aria-label="Open profile" data-header-avatar>—</button>
     </div>
   </header>
@@ -4119,11 +4145,11 @@
   function notifUserKey(){try{var u=sessionUser&&sessionUser.id?sessionUser.id:'anon';return 'pipvant_notif_'+u;}catch(e){return 'pipvant_notif_anon';}}
   function getPersonalNotifs(){try{return JSON.parse(localStorage.getItem(notifUserKey())||'[]');}catch(e){return [];}}
   function savePersonalNotifs(list){try{localStorage.setItem(notifUserKey(),JSON.stringify(list.slice(0,50)));}catch(e){}}
-  function addPersonalNotif(title,message,type){
+  function addPersonalNotif(title,message,type,ref){
     if(!notificationsEnabled)return;
     var list=getPersonalNotifs();
     var id='p'+Date.now()+Math.floor(Math.random()*9999);
-    list.unshift({id:id,scope:'personal',title:title,message:message,type:type||'info',ts:Date.now(),read:false});
+    list.unshift({id:id,scope:'personal',title:title,message:message,type:type||'info',ts:Date.now(),read:false,ref:ref||null});
     savePersonalNotifs(list);
     renderNotifications();
   }
@@ -4244,7 +4270,7 @@
           }
           var dt=new Date(n.ts||Date.now());
           btn.querySelector('.notification-meta span').textContent=dt.toLocaleDateString(currentLanguage==='ar'?'ar-MA':'en-GB',{day:'2-digit',month:'short'});
-          btn.addEventListener('click',function(){markNotifRead(n.id);});
+          btn.addEventListener('click',function(){openNotifDetail(n);});
           sec.appendChild(btn);
         });
         groups.appendChild(sec);
@@ -4278,7 +4304,7 @@
         var _m2=n.message.match(/^(USD|EUR|GBP|JPY|CAD|AUD|NZD|CHF)\b/);
         if(_m2){var _b2=document.createElement('span');_b2.className='notif-curr';_b2.textContent=_m2[1];_t.insertBefore(_b2,_t.firstChild);}
       }
-      btn.addEventListener('click',function(){markNotifRead(n.id);closeNotifications();});
+      btn.addEventListener('click',function(){openNotifDetail(n);});
       list.appendChild(btn);
     });
     if(head&&head.nextSibling)panel.insertBefore(list,head.nextSibling);
@@ -4312,6 +4338,76 @@
   // mark all read
   var markAllBtn=document.querySelector('#notifications .mark-all');
   if(markAllBtn)markAllBtn.addEventListener('click',markAllNotifsRead);
+  /* ---- Notification detail: real data, never invented ---- */
+  function openNotifDetail(n){
+    if(!n)return;
+    markNotifRead(n.id);
+    var overlay=document.getElementById('notifDetailOverlay');
+    var titleEl=document.getElementById('notifDetailTitle');
+    var bodyEl=document.getElementById('notifDetailBody');
+    if(!overlay||!titleEl||!bodyEl)return;
+    titleEl.textContent=n.title||'—';
+    var html='';
+    var L=currentLanguage==='ar';
+    function row(k,v,mono){return '<div class="notif-detail-row"><span class="k">'+k+'</span><span class="v'+(mono?' mono':'')+'">'+v+'</span></div>';}
+    if(n.type==='news'&&n.ref&&n.ref.eventTs&&typeof calendarEvents!=='undefined'){
+      // Find the REAL event from calendar data
+      var ev=null;
+      for(var i=0;i<calendarEvents.length;i++){
+        if(calendarEvents[i]._ts===n.ref.eventTs){ev=calendarEvents[i];break;}
+      }
+      if(ev){
+        html+='<p class="notif-detail-desc">'+(L?'تفاصيل الخبر من التقويم الاقتصادي الحقيقي:':'Real event details from the economic calendar:')+'</p>';
+        html+=row(L?'الحدث':'Event',ev.name||'—');
+        html+=row(L?'العملة':'Currency',ev.currency||'—',true);
+        html+=row(L?'التأثير':'Impact',ev.impactLabel||ev.impact||'—');
+        html+=row(L?'الوقت':'Time',(ev.dayLabel||'')+' '+(ev.time||'')+' '+calendarTimezoneLabel(),true);
+        html+=row(L?'المتوقع':'Forecast',ev.forecast||'—',true);
+        html+=row(L?'السابق':'Previous',ev.previous||'—',true);
+      }else{
+        html+='<p class="notif-detail-desc">'+(n.message||'')+'</p>';
+        html+=row(L?'الحالة':'Status',L?'انتهى الحدث':'Event passed');
+      }
+    }else if((n.type==='trade'||n.type==='win'||n.type==='loss'||n.type==='be')&&n.ref&&n.ref.tradeId&&typeof sessionJournalEntries!=='undefined'){
+      // Find the REAL trade from journal
+      var tr=null;
+      for(var j=0;j<sessionJournalEntries.length;j++){
+        var e=sessionJournalEntries[j];
+        if(e._localId===n.ref.tradeId||e._dbId===n.ref.tradeId||e._id===n.ref.tradeId){tr=e;break;}
+      }
+      if(tr){
+        html+='<p class="notif-detail-desc">'+(L?'تفاصيل الصفقة الحقيقية من الجورنال:':'Real trade details from your journal:')+'</p>';
+        html+=row(L?'الزوج':'Pair',tr.pair||'—',true);
+        html+=row(L?'الاتجاه':'Direction',tr.direction||'—');
+        html+=row(L?'الدخول':'Entry',tr.entry||'—',true);
+        html+=row(L?'الوقف':'Stop',tr.stop||'—',true);
+        html+=row(L?'الهدف':'Target',tr.target||'—',true);
+        if(tr.exitPrice)html+=row(L?'الخروج':'Exit',tr.exitPrice,true);
+        if(tr.pnl!=null&&isFinite(Number(tr.pnl))){
+          var _pv=Number(tr.pnl);
+          html+=row(L?'الربح/الخسارة':'P&L',(_pv>=0?'+$':'−$')+Math.abs(_pv).toFixed(2),true);
+        }
+        if(tr.size)html+=row(L?'الحجم':'Size',tr.size,true);
+      }else{
+        html+='<p class="notif-detail-desc">'+(n.message||'')+'</p>';
+      }
+    }else{
+      // Global or generic: show full message (real data from notifications.json)
+      html+='<p class="notif-detail-desc">'+(n.message||'')+'</p>';
+      html+=row(L?'النوع':'Type',n.scope==='everyone'?(L?'للجميع':'Everyone'):(L?'شخصي':'Personal'));
+      var _d=new Date(n.ts||Date.now());
+      html+=row(L?'التاريخ':'Date',_d.toLocaleDateString(L?'ar-MA':'en-GB',{weekday:'long',day:'2-digit',month:'long',year:'numeric'}));
+    }
+    bodyEl.innerHTML=html;
+    overlay.classList.add('open');
+    closeNotifications();
+  }
+  function closeNotifDetail(){var o=document.getElementById('notifDetailOverlay');if(o)o.classList.remove('open');}
+  var _ndc=document.getElementById('notifDetailClose');
+  if(_ndc)_ndc.addEventListener('click',closeNotifDetail);
+  var _ndo=document.getElementById('notifDetailOverlay');
+  if(_ndo)_ndo.addEventListener('click',function(e){if(e.target===_ndo)closeNotifDetail();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')closeNotifDetail();});
   // load global on start
   loadGlobalNotifs();
   // Data phase: real push delivery should update the session notification collection, render the rows, then call refreshNotificationBadge().
@@ -5466,7 +5562,8 @@
           addPersonalNotif(
             currentLanguage==='ar'?'صفقة جديدة مسجلة':'New trade logged',
             _np+' '+(tradeEntry.direction||'')+' @ '+(tradeEntry.entry||'—'),
-            'trade'
+            'trade',
+            {tradeId:tradeEntry._localId||tradeEntry._dbId||tradeEntry._id}
           );
         }
         if(sb&&sbUser){sbSaveTrade(tradeEntry);}else{var feedback=document.getElementById('journalFeedback');if(feedback){feedback.textContent=currentLanguage==='ar'?'تم حفظ الصفقة محلياً — ستُزامَن مع حسابك عند تسجيل الدخول.':'Trade saved locally — will sync to your account when you sign in.';if(typeof feedbackMotion==='function')feedbackMotion(feedback);if(typeof showToast==='function')showToast(feedback.textContent);}}
@@ -5673,12 +5770,13 @@
           var dt=new Date(e.event_time);
           var okT=!isNaN(dt);
           var dayLabel=okT?dt.toLocaleDateString('en-GB',{weekday:'short',day:'2-digit',month:'short'}):'—';
-          var t=okT?('0'+dt.getUTCHours()).slice(-2)+':'+('0'+dt.getUTCMinutes()).slice(-2):'—';
+          // DEVICE LOCAL timezone (matches the GMT+X label) — not UTC
+          var t=okT?('0'+dt.getHours()).slice(-2)+':'+('0'+dt.getMinutes()).slice(-2):'—';
           var imp=String(e.impact||'').toLowerCase();
           return {
             dayLabel: dayLabel,
             time: t,
-            timeLabel: okT?(t+' UTC'):'—',
+            timeLabel: okT?t:'—',
             currency: e.currency||'—',
             name: e.title||'—',
             impact: imp,
@@ -5711,8 +5809,9 @@
                   _alerted[_key]=1;
                   addPersonalNotif(
                     currentLanguage==='ar'?'خبر عالي التأثير قريب':'High-impact news soon',
-                    (ev.currency||'')+' '+(ev.name||'')+' — '+ev.time+' UTC',
-                    'news'
+                    (ev.currency||'')+' '+(ev.name||'')+' — '+ev.time+' '+calendarTimezoneLabel(),
+                    'news',
+                    {eventTs:ev._ts,eventName:ev.name}
                   );
                 }
               }
