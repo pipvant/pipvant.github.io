@@ -4364,6 +4364,12 @@
         for(var i=0;i<calendarEvents.length;i++){
           if(calendarEvents[i]._ts===rd.eventTs){ev=calendarEvents[i];break;}
         }
+        // fallback: match by name for old notifications
+        if(!ev&&rd.eventName){
+          for(var i2=0;i2<calendarEvents.length;i2++){
+            if(calendarEvents[i2].name===rd.eventName){ev=calendarEvents[i2];break;}
+          }
+        }
       }
       var _name=(ev&&ev.name)||rd.eventName||'—';
       var _curr=(ev&&ev.currency)||rd.currency||'—';
