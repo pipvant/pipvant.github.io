@@ -497,7 +497,7 @@
     .rating-block>strong{grid-row:1/3;color:var(--platinum);font:600 31px/.92 "Space Grotesk",sans-serif;font-variant-numeric:tabular-nums;letter-spacing:-.05em}
     .rating-track{height:3px;border-radius:999px;background:color-mix(in srgb,var(--market-accent) 24%,var(--sunken));box-shadow:inset 0 0 0 1px var(--line);overflow:hidden}
     .rating-track i{display:block;width:100%;height:100%;transform:scaleX(0);transform-origin:left;background:var(--market-accent)}
-    .rating-block small{color:var(--muted);font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .rating-block small{color:var(--muted);font-size:9px;line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
     .promo-slot{min-height:38px;padding:0 12px;border:1px dashed color-mix(in srgb,var(--platinum) 72%,var(--line));border-radius:8px;background:var(--sunken);color:var(--platinum);font:500 11px/1 "IBM Plex Mono",monospace;display:inline-flex;align-items:center;gap:8px;cursor:pointer;transition:opacity .15s,border-color .15s}.promo-slot:hover{opacity:1;border-color:var(--accent)}
     .methodology-panel{margin-top:18px;padding:20px;border:1px solid var(--line-strong);border-radius:16px;background:linear-gradient(145deg,var(--surface),var(--sunken));scroll-margin-top:150px}
     .methodology-panel[hidden]{display:none}.methodology-panel h3{margin-bottom:8px}.methodology-panel>p{margin:0;color:var(--secondary);font-size:12px;line-height:1.6}
@@ -3496,16 +3496,16 @@
     var mWithStop=mTrades.filter(function(e){return e.stop!==undefined&&e.stop!==null&&e.stop!==''&&isFinite(parseFloat(e.stop));}).length;
     var mStopPct=mTrades.length?Math.round(mWithStop/mTrades.length*100):0;
     var mPfPct=mClosed.length===0?0:(isFinite(mPf)?Math.min(100,Math.round(mPf/1.5*100)):100);
-    if(mProfitableMonths>=3&&earned.indexOf('Profitable')===-1){
+    if(mProfitableMonths>=3&&mClosed.length>=100&&earned.indexOf('Profitable')===-1){
       if(awardProfileCertificate('Profitable'))sbSaveCertificate('Profitable');
     }
-    if(mWinRate>=60&&mClosed.length>=10&&earned.indexOf('Sharpshooter')===-1){
+    if(mWinRate>=60&&mClosed.length>=100&&earned.indexOf('Sharpshooter')===-1){
       if(awardProfileCertificate('Sharpshooter'))sbSaveCertificate('Sharpshooter');
     }
-    if(mStopPct>=100&&mTrades.length>=10&&earned.indexOf('Risk Master')===-1){
+    if(mStopPct>=100&&mTrades.length>=100&&earned.indexOf('Risk Master')===-1){
       if(awardProfileCertificate('Risk Master'))sbSaveCertificate('Risk Master');
     }
-    if(isFinite(mPf)&&mPf>=1.5&&mClosed.length>=10&&earned.indexOf('Edge Proven')===-1){
+    if(isFinite(mPf)&&mPf>=1.5&&mClosed.length>=100&&earned.indexOf('Edge Proven')===-1){
       if(awardProfileCertificate('Edge Proven'))sbSaveCertificate('Edge Proven');
     }
     // Update mission progress displays
@@ -3513,10 +3513,10 @@
       var missions=[
         {name:'Marathon',current:tradeCount,target:500,unit:currentLanguage==='ar'?'صفقة':'trades'},
         {name:'Profitable',current:mProfitableMonths,target:3,unit:currentLanguage==='ar'?'أشهر رابحة':'profitable months'},
-        {name:'Sharpshooter',current:mWinRate,target:60,unit:'%'},
+        {name:'Sharpshooter',current:mClosed.length,target:100,unit:currentLanguage==='ar'?'صفقة':'trades',extra:mWinRate+'% WR'},
         {name:'Iron Discipline',current:disciplineStreak,target:90,unit:currentLanguage==='ar'?'يوم':'days'},
-        {name:'Risk Master',current:mStopPct,target:100,unit:'%'},
-        {name:'Edge Proven',current:mPfPct,target:100,unit:'%'}
+        {name:'Risk Master',current:mTrades.length,target:100,unit:currentLanguage==='ar'?'صفقة':'trades',extra:mStopPct+'%'},
+        {name:'Edge Proven',current:mClosed.length,target:100,unit:currentLanguage==='ar'?'صفقة':'trades',extra:'PF '+(isFinite(mPf)?mPf.toFixed(2):'—')}
       ];
       document.querySelectorAll('.locked-certificate').forEach(function(card){
         var title=card.querySelector('h4');
@@ -5169,7 +5169,7 @@
       set('kpiWinNote',wins+'W · '+losses+'L · '+bes+'BE');
       var donut2=document.getElementById('kpiWinDonut');
       if(donut2){var wr=winRate,lr=Math.round(losses/n*100);donut2.style.background='conic-gradient(var(--accent) 0 '+wr+'%, var(--silver) '+wr+'% '+(wr+lr)+'%, var(--platinum) '+(wr+lr)+'% 100%)';}
-      var pfTxt=!isFinite(pf)?'∞':pf.toFixed(2);
+      var pfTxt=!isFinite(pf)?'—':pf.toFixed(2);
       set('kpiProfitFactor',pfTxt);
       var pfLabel=!isFinite(pf)?(currentLanguage==='ar'?'لا خسائر مسجلة':'No losses recorded'):(pf>=2?(currentLanguage==='ar'?'ممتاز':'Excellent'):(pf>=1.5?(currentLanguage==='ar'?'جيد':'Good'):(pf>=1?(currentLanguage==='ar'?'مقبول':'Fair'):(currentLanguage==='ar'?'سلبي':'Negative'))));
       set('kpiPfNote',pfLabel);
@@ -5779,9 +5779,15 @@
     try{
       var feed=document.getElementById('calendarFeedState');
       if(feed)feed.textContent=currentLanguage==='ar'?'البث المباشر ●':'LIVE FEED ●';
-      var high=calendarEvents.filter(function(e){return e.impact==='high';});
-      if(!high.length)return;
-      // next high-impact = earliest by timestamp
+      var _nowTs=Date.now();
+      var high=calendarEvents.filter(function(e){return e.impact==='high'&&e._ts&&e._ts>_nowTs;});
+      if(!high.length){
+        // No upcoming high-impact: clear the banner honestly
+        var nm0=document.getElementById('nextEventName');if(nm0)nm0.textContent='—';
+        var mm0=document.getElementById('nextEventMeta');if(mm0)mm0.textContent=currentLanguage==='ar'?'لا أحداث قادمة':'No upcoming events';
+        return;
+      }
+      // next high-impact = earliest FUTURE by timestamp
       var next=high[0],nextTs=next._ts||0;
       high.forEach(function(e){if(e._ts&&(!nextTs||e._ts<nextTs)){next=e;nextTs=e._ts;}});
       var nm=document.getElementById('nextEventName');
@@ -5807,7 +5813,14 @@
     sb.from('economic_events').select('event_time,currency,impact,title,forecast,previous,source').gte('event_time',weekIso).order('event_time')
       .then(function(r){
         if(r.error||!r.data||!r.data.length)return;
-        calendarEvents=r.data.map(function(e){
+        // Deduplicate: same title + same minute (DB has dupes from feed)
+        var _seen={};
+        var _uniq=r.data.filter(function(e){
+          var _k=(e.title||'')+'|'+String(e.event_time||'').slice(0,16);
+          if(_seen[_k])return false;
+          _seen[_k]=1;return true;
+        });
+        calendarEvents=_uniq.map(function(e){
           var dt=new Date(e.event_time);
           var okT=!isNaN(dt);
           var dayLabel=okT?dt.toLocaleDateString('en-GB',{weekday:'short',day:'2-digit',month:'short'}):'—';
