@@ -4508,6 +4508,7 @@
     document.getElementById('tradeFormFeedback').textContent='';
     if(typeof openTradeSheet==='function')openTradeSheet();
     try{var _sEl=document.getElementById('tradeSize');if(_sEl){var _sV=String(_sEl.value||'');if(_sV.length>10){var _sN=Number(_sV);if(isFinite(_sN)){_sEl.value='';_sEl.value=String(_sN.toFixed(6)).replace(/\.?0+$/,'');}}}}catch(_e){}
+    try{['tradeEntry','tradeStop','tradeTarget','tradeExitPrice','closeExitPrice'].forEach(function(fid){var el=document.getElementById(fid);if(!el||el.dataset.floatFix)return;el.dataset.floatFix='1';el.addEventListener('blur',function(){var v=String(el.value||'').trim();if(!v)return;var n=Number(v);if(!isFinite(n))return;if(v.length>12||/\.\d{7,}/.test(v)){var s=String(Math.round(n*100000)/100000);el.value=s;}});});}catch(_e2){}
   }
   function cancelEditTrade(){
     window.editingTradeId=null;
@@ -4987,7 +4988,7 @@
         svgBody+='<text x="'+f1(Math.min(le[0]+8,W-PR-70))+'" y="'+f1(Math.max(le[1]-10,PT+2))+'" font-size="10" font-weight="700" fill="'+color+'" font-family="IBM Plex Mono,monospace">'+(points[points.length-1]>=0?'+':'')+tickFmt(points[points.length-1])+'</text>';
         // invisible hit areas for tooltip
         svgBody+=tipData.map(function(td,i){return '<circle class="eq-hit" data-tip="'+i+'" cx="'+f1(td.x)+'" cy="'+f1(td.y)+'" r="12" fill="transparent"/>';}).join('');
-        footer='<span>'+trades.length+(trades.length===1?' trade':' trades')+'</span><strong style="color:'+color+'">'+(points[points.length-1]>=0?'+':'')+points[points.length-1].toFixed(2)+'</strong>';
+        var _netPnl=points[points.length-1]-points[0];footer='<span>'+trades.length+(trades.length===1?' trade':' trades')+'</span><strong style="color:'+color+'">'+(_netPnl>=0?'+':'')+_netPnl.toFixed(2)+'</strong>';
       }
       container.style.position='relative';
       container.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block" role="img" aria-label="Equity chart">'+svgBody+'</svg><div class="eq-tip" hidden></div><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:8px">'+footer+'</div>';
