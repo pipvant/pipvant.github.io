@@ -3144,11 +3144,18 @@
         if(typeof syncLocalTradesToCloud==='function')syncLocalTradesToCloud();
         sbLoadTrades();sbLoadDiscipline();sbLoadSettings();sbLoadCertificates();sbLoadNotifications();
       }else{
-        // No session - show the public landing page first
-        document.body.classList.add('show-landing');
-        if(typeof initSiteLanding==='function')initSiteLanding();
+        // No session: first-time visitors see the landing once; returning users go straight to login
+        var seenLp=false;try{seenLp=!!localStorage.getItem('pipvant_seen_landing');}catch(e){}
+        if(seenLp){
+          document.body.classList.add('auth-active','show-auth');
+          if(typeof setAuthMode==='function')setAuthMode('login');
+          if(typeof authStage==='function')authStage('authSignup');
+        }else{
+          document.body.classList.add('show-landing');
+          if(typeof initSiteLanding==='function')initSiteLanding();
+        }
       }
-    }).catch(function(){var loader=document.getElementById('authLoading');if(loader)loader.style.display='none';document.body.classList.remove('auth-checking');document.body.classList.add('show-landing');if(typeof initSiteLanding==='function')initSiteLanding();});
+    }).catch(function(){var loader=document.getElementById('authLoading');if(loader)loader.style.display='none';document.body.classList.remove('auth-checking');var seenLp2=false;try{seenLp2=!!localStorage.getItem('pipvant_seen_landing');}catch(e){}if(seenLp2){document.body.classList.add('auth-active','show-auth');if(typeof setAuthMode==='function')setAuthMode('login');if(typeof authStage==='function')authStage('authSignup');}else{document.body.classList.add('show-landing');if(typeof initSiteLanding==='function')initSiteLanding();}});
   }
   /* Fill the firm detail sheet before the existing opener runs (registered first). */
   document.addEventListener('click',function(event){
@@ -4125,6 +4132,7 @@
   /* ---- Public landing page (pre-auth) ---- */
   var pendingLandingNav=null;
   function enterAuth(mode){
+    try{localStorage.setItem('pipvant_seen_landing','1');}catch(e){}
     document.body.classList.remove('show-landing');
     document.body.classList.add('show-auth','from-landing');
     try{setAuthMode(mode==='login'?'login':'signup');}catch(e){authStage('authSignup');}
@@ -4245,13 +4253,15 @@
       sessionJournalEntries=sessionJournalEntries.filter(function(en){return !en._db;}); window.sessionJournalEntries=sessionJournalEntries;
       renderJournalEntries();
     }catch(clearErr){}
-    document.body.classList.remove('app-ready');
-    document.body.classList.add('auth-active','auth-returning','show-landing');setTimeout(function(){document.body.classList.remove('auth-returning');},210);
-    if(typeof initSiteLanding==='function')initSiteLanding();
+    document.body.classList.remove('app-ready','show-landing');
+    document.body.classList.add('auth-active','show-auth','auth-returning');setTimeout(function(){document.body.classList.remove('auth-returning');},210);
+    try{localStorage.setItem('pipvant_seen_landing','1');}catch(e){}
     document.getElementById('signupForm').reset();
     document.getElementById('profileSetupForm').reset();
     document.getElementById('setupAvatar').textContent='—';
-    authStage('authWelcome');
+    if(typeof setAuthMode==='function')setAuthMode('login');
+    authStage('authSignup');
+    window.scrollTo(0,0);
   }
 
   var marketTints={Forex:'#5B8DEF',Futures:'#C9D2DC','Crypto-Perps':'#9FC1FF'};
