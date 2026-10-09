@@ -3000,7 +3000,7 @@
           }else if(_rd>0&&isFinite(_ep)&&isFinite(_sp)&&isFinite(_tp)){
             _rM=(Math.round(_rwd/_rd*100)/100)+'R';
           }
-          var _res='';if(isClosed&&isFinite(_pnl)){_res=_pnl>0?'win':(_pnl<0?'loss':'breakeven');}sessionJournalEntries.push({type:'trade',_db:true,_dbId:t.id,_id:t.id,timestamp:ts?new Date(ts).getTime():Date.now(),pair:t.symbol||'—',direction:t.direction||'—',entry:fmtNum(t.entry_price),stop:fmtNum(t.stop_price),target:fmtNum(t.target_price),size:t.position_size==null?'—':String(Math.round(Number(t.position_size)*1000000)/1000000),rMultiple:_rM,notes:t.notes||'',setup:t.setup||'',tag:t.tag||'',account_id:t.account_id||null,closed:isClosed,exitPrice:t.exit_price!=null?fmtNum(t.exit_price):null,pnl:t.pnl,result:_res});
+          var _pnl=parseFloat(t.pnl);var _res='';if(isClosed&&isFinite(_pnl)){_res=_pnl>0?'win':(_pnl<0?'loss':'breakeven');}sessionJournalEntries.push({type:'trade',_db:true,_dbId:t.id,_id:t.id,timestamp:ts?new Date(ts).getTime():Date.now(),pair:t.symbol||'—',direction:t.direction||'—',entry:fmtNum(t.entry_price),stop:fmtNum(t.stop_price),target:fmtNum(t.target_price),size:t.position_size==null?'—':String(Math.round(Number(t.position_size)*1000000)/1000000),rMultiple:_rM,notes:t.notes||'',setup:t.setup||'',tag:t.tag||'',account_id:t.account_id||null,closed:isClosed,exitPrice:t.exit_price!=null?fmtNum(t.exit_price):null,pnl:t.pnl,result:_res});
         });
         sessionJournalEntries.sort(function(a,b){return b.timestamp-a.timestamp;});
         if(typeof applyTradeExtras==='function')applyTradeExtras();
