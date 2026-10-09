@@ -1845,7 +1845,7 @@
     <section class="screen" id="notifications" aria-label="Notifications">
       <div class="notification-header">
         <div class="notification-title-row"><button class="mark-all" type="button">Mark all read</button></div>
-        <div class="notification-tabs" role="tablist" aria-label="Notification views"><button class="notification-tab" type="button" role="tab" aria-selected="true">Action needed —</button><button class="notification-tab" type="button" role="tab" aria-selected="false">Earlier —</button></div>
+        <div class="notification-tabs" role="tablist" aria-label="Notification views"><button class="notification-tab" type="button" role="tab" aria-selected="true" data-ntab="all">All</button><button class="notification-tab" type="button" role="tab" aria-selected="false" data-ntab="everyone">Everyone</button><button class="notification-tab" type="button" role="tab" aria-selected="false" data-ntab="personal">Personal</button></div>
         <div class="notification-tools"><input class="notification-search" type="search" placeholder="Search notifications" aria-label="Search notifications"><button class="display-button" id="notificationDisplay" type="button" aria-pressed="false"><svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 7h16M7 12h10m-7 5h4"/></svg>Display</button></div>
       </div>
       <div class="notification-filters" role="group" aria-label="Notification filters"><button class="notification-filter" type="button" aria-pressed="true">All</button><button class="notification-filter" type="button" aria-pressed="false">Risk</button><button class="notification-filter" type="button" aria-pressed="false">Discipline</button><button class="notification-filter" type="button" aria-pressed="false">System</button></div>
@@ -4079,6 +4079,147 @@
     notificationButton.setAttribute('aria-label',currentLanguage==='ar'?(unreadCount?('الإشعارات، '+unreadCount+' غير مقروءة'):'الإشعارات'):(unreadCount?('Notifications, '+unreadCount+' unread'):'Notifications'));
     var panelCount=document.getElementById('notificationPanelCount');if(panelCount)panelCount.textContent=unreadCount?unreadCount+' NEW':'— NEW';
   }
+  /* ---- Notification data: global (everyone) + personal ---- */
+  var notifStore=[];
+  function notifUserKey(){try{var u=sessionUser&&sessionUser.id?sessionUser.id:'anon';return 'pipvant_notif_'+u;}catch(e){return 'pipvant_notif_anon';}}
+  function getPersonalNotifs(){try{return JSON.parse(localStorage.getItem(notifUserKey())||'[]');}catch(e){return [];}}
+  function savePersonalNotifs(list){try{localStorage.setItem(notifUserKey(),JSON.stringify(list.slice(0,50)));}catch(e){}}
+  function addPersonalNotif(title,message,type){
+    if(!notificationsEnabled)return;
+    var list=getPersonalNotifs();
+    var id='p'+Date.now()+Math.floor(Math.random()*9999);
+    list.unshift({id:id,scope:'personal',title:title,message:message,type:type||'info',ts:Date.now(),read:false});
+    savePersonalNotifs(list);
+    renderNotifications();
+  }
+  function loadGlobalNotifs(){
+    fetch('notifications.json',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
+      var arr=(d&&d.notifications)||[];
+      var lang=currentLanguage==='ar'?'ar':'en';
+      arr.forEach(function(g){
+        var title=lang==='ar'?(g.title_ar||g.title):g.title;
+        var msg=lang==='ar'?(g.message_ar||g.message):g.message;
+        // avoid duplicates
+        if(!notifStore.some(function(x){return x.id==='g_'+g.id;})){
+          notifStore.push({id:'g_'+g.id,scope:'everyone',title:title,message:msg,type:g.type||'info',ts:new Date(g.date||Date.now()).getTime(),read:isNotifRead('g_'+g.id)});
+        }
+      });
+      renderNotifications();
+    }).catch(function(){});
+  }
+  function isNotifRead(id){
+    try{var r=JSON.parse(localStorage.getItem('pipvant_notif_read')||'{}');return !!r[id];}catch(e){return false;}
+  }
+  function markNotifRead(id){
+    try{
+      var r=JSON.parse(localStorage.getItem('pipvant_notif_read')||'{}');r[id]=1;
+      localStorage.setItem('pipvant_notif_read',JSON.stringify(r));
+    }catch(e){}
+    // personal
+    var list=getPersonalNotifs();var changed=false;
+    list.forEach(function(x){if(x.id===id&&!x.read){x.read=true;changed=true;}});
+    if(changed)savePersonalNotifs(list);
+    notifStore.forEach(function(x){if(x.id===id)x.read=true;});
+    renderNotifications();
+  }
+  function markAllNotifsRead(){
+    var list=getPersonalNotifs();list.forEach(function(x){x.read=true;});savePersonalNotifs(list);
+    notifStore.forEach(function(x){if(x.scope==='everyone')markNotifRead(x.id);x.read=true;});
+    renderNotifications();
+  }
+  var activeNTab='all';
+  function renderNotifications(){
+    var groups=document.getElementById('notificationGroups');
+    var empty=document.getElementById('notificationEmpty');
+    var shell=document.getElementById('notificationShell');
+    if(!groups)return;
+    // combine: global + personal
+    var all=notifStore.concat(getPersonalNotifs());
+    // filter by tab
+    if(activeNTab!=='all')all=all.filter(function(x){return x.scope===activeNTab;});
+    // sort newest first
+    all.sort(function(a,b){return (b.ts||0)-(a.ts||0);});
+    groups.replaceChildren();
+    if(!all.length){
+      groups.hidden=true;
+      if(empty)empty.hidden=false;
+      if(shell)shell.classList.add('is-empty');
+    }else{
+      groups.hidden=false;
+      if(empty)empty.hidden=true;
+      if(shell)shell.classList.remove('is-empty');
+      // group by today/yesterday/earlier
+      var now=new Date();var todayStart=new Date(now.getFullYear(),now.getMonth(),now.getDate()).getTime();
+      var yestStart=todayStart-86400000;
+      var buckets={today:[],yesterday:[],earlier:[]};
+      all.forEach(function(n){
+        var t=n.ts||0;
+        if(t>=todayStart)buckets.today.push(n);
+        else if(t>=yestStart)buckets.yesterday.push(n);
+        else buckets.earlier.push(n);
+      });
+      var labels={today:currentLanguage==='ar'?'اليوم':'Today',yesterday:currentLanguage==='ar'?'أمس':'Yesterday',earlier:currentLanguage==='ar'?'سابقاً':'Earlier'};
+      ['today','yesterday','earlier'].forEach(function(k){
+        if(!buckets[k].length)return;
+        var sec=document.createElement('section');
+        var h=document.createElement('h3');h.className='notification-group-title';h.textContent=labels[k];sec.appendChild(h);
+        buckets[k].forEach(function(n){
+          var btn=document.createElement('button');
+          btn.className='notification-item'+(n.read?' read':' unread');
+          btn.type='button';
+          var scopeLabel=n.scope==='everyone'?(currentLanguage==='ar'?'للجميع':'Everyone'):(currentLanguage==='ar'?'شخصي':'Personal');
+          btn.innerHTML='<span class="notification-status" aria-hidden="true"><svg width="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 8h18c0-1-3-1-3-8M10 20h4"/></svg></span><span class="notification-copy"><strong></strong><span></span></span><span class="notification-meta"><strong></strong><span></span></span>';
+          btn.querySelector('.notification-copy strong').textContent=n.title||'—';
+          btn.querySelector('.notification-copy span').textContent=n.message||'';
+          btn.querySelector('.notification-meta strong').textContent=scopeLabel;
+          var dt=new Date(n.ts||Date.now());
+          btn.querySelector('.notification-meta span').textContent=dt.toLocaleDateString(currentLanguage==='ar'?'ar-MA':'en-GB',{day:'2-digit',month:'short'});
+          btn.addEventListener('click',function(){markNotifRead(n.id);});
+          sec.appendChild(btn);
+        });
+        groups.appendChild(sec);
+      });
+    }
+    refreshNotificationBadge();
+    renderNotifPanel();
+  }
+  function renderNotifPanel(){
+    var panel=document.getElementById('notificationPanel');
+    if(!panel)return;
+    // show latest 5 in the dropdown panel
+    var all=notifStore.concat(getPersonalNotifs()).sort(function(a,b){return (b.ts||0)-(a.ts||0);}).slice(0,5);
+    var head=panel.querySelector('.notification-head');
+    var existing=panel.querySelector('.notification-panel-list');
+    if(existing)existing.remove();
+    if(!all.length)return; // keep empty state
+    var list=document.createElement('div');list.className='notification-panel-list';
+    all.forEach(function(n){
+      var btn=document.createElement('button');
+      btn.className='notification-item'+(n.read?' read':' unread');
+      btn.type='button';
+      btn.innerHTML='<span class="notification-copy"><strong></strong><span></span></span>';
+      btn.querySelector('strong').textContent=n.title||'—';
+      btn.querySelector('span span').textContent=(n.message||'').slice(0,80);
+      btn.addEventListener('click',function(){markNotifRead(n.id);closeNotifications();});
+      list.appendChild(btn);
+    });
+    if(head&&head.nextSibling)panel.insertBefore(list,head.nextSibling);
+    else panel.appendChild(list);
+  }
+  // tab switching
+  document.querySelectorAll('[data-ntab]').forEach(function(tab){
+    tab.addEventListener('click',function(){
+      document.querySelectorAll('[data-ntab]').forEach(function(t){t.setAttribute('aria-selected','false');});
+      tab.setAttribute('aria-selected','true');
+      activeNTab=tab.getAttribute('data-ntab');
+      renderNotifications();
+    });
+  });
+  // mark all read
+  var markAllBtn=document.querySelector('#notifications .mark-all');
+  if(markAllBtn)markAllBtn.addEventListener('click',markAllNotifsRead);
+  // load global on start
+  loadGlobalNotifs();
   // Data phase: real push delivery should update the session notification collection, render the rows, then call refreshNotificationBadge().
   menuButton.addEventListener('click',function(){
     closeNotifications();
@@ -5157,6 +5298,16 @@
       hideCloseTradeModal();
       if(typeof refreshAllTradeUI==='function')refreshAllTradeUI();else renderJournalEntries();
       showToast(currentLanguage==='ar'?'تم إغلاق الصفقة.':'Trade closed.');
+      if(typeof addPersonalNotif==='function'){
+        var _cp=currentCloseEntry.pair||'Trade';
+        var _pnl=parseFloat(currentCloseEntry.pnl);
+        var _pl=isFinite(_pnl)?((_pnl>=0?'+$':'-$')+Math.abs(_pnl).toFixed(2)):'';
+        addPersonalNotif(
+          currentLanguage==='ar'?'صفقة مغلقة':'Trade closed',
+          _cp+' '+_pl,
+          _pnl>0?'win':(_pnl<0?'loss':'be')
+        );
+      }
     };
     var closeFailMsg=currentLanguage==='ar'?'تعذر حفظ الإغلاق في حسابك — بقيت الصفقة مفتوحة.':'Could not save the close — trade kept open.';
     // Update DB if saved
@@ -5216,6 +5367,14 @@
       }else{
         if(typeof persistLocalTrade==='function')persistLocalTrade(tradeEntry);
         sessionJournalEntries.unshift(tradeEntry);
+        if(typeof addPersonalNotif==='function'){
+          var _np=tradeEntry.pair||'Trade';
+          addPersonalNotif(
+            currentLanguage==='ar'?'صفقة جديدة مسجلة':'New trade logged',
+            _np+' '+(tradeEntry.direction||'')+' @ '+(tradeEntry.entry||'—'),
+            'trade'
+          );
+        }
         if(sb&&sbUser){sbSaveTrade(tradeEntry);}else{var feedback=document.getElementById('journalFeedback');if(feedback){feedback.textContent=currentLanguage==='ar'?'تم حفظ الصفقة محلياً — ستُزامَن مع حسابك عند تسجيل الدخول.':'Trade saved locally — will sync to your account when you sign in.';if(typeof feedbackMotion==='function')feedbackMotion(feedback);if(typeof showToast==='function')showToast(feedback.textContent);}}
       }
       if(typeof refreshAllTradeUI==='function')refreshAllTradeUI();else renderJournalEntries();tradeFormEl.reset();tradeFormEl.querySelectorAll('input,textarea').forEach(updateFloatingField);document.querySelectorAll('.chip[data-direction]').forEach(function(chip){chip.setAttribute('aria-pressed','false');});document.getElementById('tradeFormFeedback').textContent='';closeTradeSheet();
@@ -5441,6 +5600,30 @@
         calendarFeedConnected=true;
         renderCalendar();
         sbUpdateCalendarStatus();
+        // Personal notification: high-impact news within 60 min
+        try{
+          if(typeof addPersonalNotif==='function'){
+            var _now=Date.now();
+            var _alerted={};
+            try{_alerted=JSON.parse(localStorage.getItem('pipvant_news_alerted')||'{}');}catch(e){}
+            calendarEvents.forEach(function(ev){
+              if(ev.impact!=='high'||!ev._ts)return;
+              var _diff=ev._ts-_now;
+              if(_diff>0&&_diff<3600000){
+                var _key=ev.name+'_'+ev._ts;
+                if(!_alerted[_key]){
+                  _alerted[_key]=1;
+                  addPersonalNotif(
+                    currentLanguage==='ar'?'خبر عالي التأثير قريب':'High-impact news soon',
+                    (ev.currency||'')+' '+(ev.name||'')+' — '+ev.time+' UTC',
+                    'news'
+                  );
+                }
+              }
+            });
+            try{localStorage.setItem('pipvant_news_alerted',JSON.stringify(_alerted));}catch(e){}
+          }
+        }catch(e){}
       })
       .catch(function(){/* keep honest empty state */});
   }

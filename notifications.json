@@ -1,0 +1,13 @@
+{
+  "notifications": [
+    {
+      "id": "welcome-pv",
+      "title": "Welcome to PIPVANT",
+      "title_ar": "مرحباً بك في PIPVANT",
+      "message": "Use code PV on firm cards for exclusive offers.",
+      "message_ar": "استعمل كود PV على بطاقات الشركات للعروض الحصرية.",
+      "date": "2026-10-09",
+      "type": "info"
+    }
+  ]
+}
