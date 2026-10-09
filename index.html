@@ -4355,9 +4355,14 @@
     var html='';
     var L=currentLanguage==='ar';
     function row(k,v,mono){return '<div class="notif-detail-row"><span class="k">'+k+'</span><span class="v'+(mono?' mono':'')+'">'+v+'</span></div>';}
-    if(n.type==='news'&&n.ref&&n.ref.eventName){
-      // Real event data stored at creation time (from the economic calendar)
-      var rd=n.ref;
+    if(n.type==='news'){
+      // Real event data: from ref (v2+), or extract from message + live lookup (v1)
+      var rd=n.ref||{};
+      if(!rd.eventName&&n.message&&typeof calendarEvents!=='undefined'){
+        // v1: message format "CAD Event Name — 12:30 UTC" or "CAD Event Name — 12:30 GMT+1"
+        var _mm=n.message.match(/^[A-Z]{3}\s+(.+?)\s+[—-]\s+\d{1,2}:\d{2}/);
+        if(_mm)rd={eventName:_mm[1].trim()};
+      }
       // Try live lookup first for freshest data, fall back to stored
       var ev=null;
       if(typeof calendarEvents!=='undefined'){
