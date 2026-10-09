@@ -5408,8 +5408,12 @@
   }
   function sbLoadCalendar(){
     if(!sb||typeof renderCalendar!=='function')return;
-    var nowIso=new Date().toISOString();
-    sb.from('economic_events').select('event_time,currency,impact,title,forecast,previous,source').gte('event_time',nowIso).order('event_time')
+    // Show the full current week (Mon-Sun) so each week's news is visible, not just future
+    var now=new Date();
+    var dow=(now.getUTCDay()+6)%7; // 0=Mon
+    var weekStart=new Date(Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate()-dow,0,0,0));
+    var weekIso=weekStart.toISOString();
+    sb.from('economic_events').select('event_time,currency,impact,title,forecast,previous,source').gte('event_time',weekIso).order('event_time')
       .then(function(r){
         if(r.error||!r.data||!r.data.length)return;
         calendarEvents=r.data.map(function(e){
@@ -5430,7 +5434,7 @@
             forecast: e.forecast||'—',
             previous: e.previous||'—',
             history: [],
-            past: false,
+            past: okT&&dt.getTime()<Date.now(),
             _ts: okT?dt.getTime():0
           };
         });
