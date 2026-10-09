@@ -2955,12 +2955,15 @@
      Never fails silently: if no valid session exists, the caller is told. */
   function sbResolveUser(){
     try{
-      return sb.auth.getSession().then(function(sr){
-        var u=sr&&sr.data&&sr.data.session&&sr.data.session.user;
-        if(u)sbUser=u;
-        return u||null;
-      }).catch(function(){return sbUser||null;});
-    }catch(e){return Promise.resolve(sbUser||null);}
+      /* getSession() returns stored session even if token is expired.
+         Validate via getUser() which hits the server. If invalid, clear
+         sbUser so callers show "session expired" instead of 0 rows. */
+      return sb.auth.getUser().then(function(ur){
+        var u=ur&&ur.data&&ur.data.user;
+        if(u){sbUser=u;return u;}
+        sbUser=null;return null;
+      }).catch(function(){sbUser=null;return null;});
+    }catch(e){return Promise.resolve(null);}
   }
   function sbLoadTrades(){
     if(!sb)return;
