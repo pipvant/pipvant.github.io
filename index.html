@@ -2953,6 +2953,14 @@
 
   function sbLoadTrades(){
     if(!sb||!sbUser)return;
+    /* TEMP-DIAG: visible session check */
+    try{
+      var _dfb=document.getElementById('journalFeedback');
+      sb.auth.getSession().then(function(_sr){
+        var _sess=_sr&&_sr.data&&_sr.data.session;
+        if(_dfb){_dfb.textContent='[diag] sbUser='+(sbUser?sbUser.email:'null')+' session='+( _sess?'yes:'+(_sess.user&&_sess.user.email):'NO')+' token='+( _sess&&_sess.access_token?'len'+_sess.access_token.length:'none');}
+      }).catch(function(){});
+    }catch(_de){}
     sb.from('trades').select('id,symbol,direction,entry_price,stop_price,target_price,position_size,notes,opened_at,created_at,exit_price,pnl,closed_at,setup,tag,account_id').order('opened_at',{ascending:false})
       .then(function(r){
         if(r.error||!r.data){
