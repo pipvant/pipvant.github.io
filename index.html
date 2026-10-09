@@ -3249,6 +3249,7 @@
       // Load public data
       if(typeof sbLoadFirms==='function')sbLoadFirms();
       if(typeof sbLoadCalendar==='function')sbLoadCalendar();
+      try{var gs=localStorage.getItem('pipvant_last_screen');if((gs==='calendar'||gs==='matcher')&&typeof showScreen==='function')showScreen(gs,true);}catch(ge){}
     }
   });
   /* Fill the firm detail sheet before the existing opener runs (registered first). */
@@ -3633,6 +3634,7 @@
   function showScreen(id,instant){
     var previous=document.querySelector('.screen.active');
     if(previous&&previous.id===id){window.scrollTo({top:0,behavior:'auto'});return;}
+    try{if(document.getElementById(id))localStorage.setItem('pipvant_last_screen',id);}catch(se){}
     var sequence=++screenSequence,skip=instant||reduceMotion.matches||!previous;
     function activate(){
       if(sequence!==screenSequence)return;window.scrollTo({top:0,behavior:'auto'});document.querySelectorAll('.screen').forEach(function(el){el.classList.remove('motion-enter','motion-exit');el.classList.toggle('active',el.id===id);});
@@ -4624,9 +4626,13 @@
       }).catch(function(err){sbAuthError(err&&err.message?err.message:'Sign-up failed.');});
     }
   });
+  function getLastScreen(fallback){
+    try{var s=localStorage.getItem('pipvant_last_screen');if(s&&document.getElementById(s))return s;}catch(e){}
+    return fallback||'matcher';
+  }
   function enterProduct(name,avatar){
     var authShell=document.querySelector('.auth-shell');authShell.classList.add('auth-leaving');
-    setTimeout(function(){document.body.classList.remove('auth-active','show-auth','show-landing','from-landing');document.body.classList.add('app-ready','app-revealing');authShell.classList.remove('auth-leaving');showScreen('matcher');if(pendingLandingNav&&typeof showScreen==='function'){try{showScreen(pendingLandingNav);}catch(e){}pendingLandingNav=null;}setTimeout(function(){document.body.classList.remove('app-revealing');},410);},reduceMotion.matches?0:170);
+    setTimeout(function(){document.body.classList.remove('auth-active','show-auth','show-landing','from-landing');document.body.classList.add('app-ready','app-revealing');authShell.classList.remove('auth-leaving');showScreen(getLastScreen('matcher'));if(pendingLandingNav&&typeof showScreen==='function'){try{showScreen(pendingLandingNav);}catch(e){}pendingLandingNav=null;}setTimeout(function(){document.body.classList.remove('app-revealing');},410);},reduceMotion.matches?0:170);
     updateProfileIdentity(name,profileSession.bio||'');
   }
   document.getElementById('profileSetupForm').addEventListener('submit',function(e){
