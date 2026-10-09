@@ -5088,7 +5088,7 @@
         clearEquity();
         return;
       }
-      var closed=sessionJournalEntries.filter(function(e){return e.type==='trade'&&e.pnl!=null&&isFinite(Number(e.pnl))&&(isAll||String(e.account_id||'')===String(selId));});
+      var closed=sessionJournalEntries.filter(function(e){return e.type==='trade'&&e.pnl!=null&&isFinite(Number(e.pnl))&&(isAll||!e.account_id||String(e.account_id||'')===String(selId));});
       closed.sort(function(a,b){return (a.timestamp||0)-(b.timestamp||0);});
       var cum=size,pts=[size];
       closed.forEach(function(t){cum+=Number(t.pnl);pts.push(cum);});
@@ -5271,7 +5271,7 @@
       var container=document.querySelector('.equity-card .equity-empty');
       if(!container)return;
       var _selA=(typeof selectedAccountId!=='undefined')?selectedAccountId:'all';
-      var trades=(window.sessionJournalEntries||[]).filter(function(t){return t.closed&&isFinite(parseFloat(t.pnl))&&(!_selA||_selA==='all'||String(t.account_id||'')===String(_selA));});
+      var trades=(window.sessionJournalEntries||[]).filter(function(t){return t.closed&&isFinite(parseFloat(t.pnl))&&(!_selA||_selA==='all'||!t.account_id||String(t.account_id||'')===String(_selA));});
       if(trades.length===0){
         container.innerHTML='<div><div class="empty-glyph" aria-hidden="true"><svg width="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 18 9 13l3 2 7-9"/></svg></div><h3>'+(currentLanguage==='ar'?'لا يوجد سجل صفقات':'No trade history available')+'</h3><p>'+(currentLanguage==='ar'?'سيظهر الرسم بعد تسجيل نتيجة أول صفقة.':'The chart will populate after the first trade result is recorded.')+'</p></div>';
         return;
@@ -5422,9 +5422,12 @@
   function updateJournalCalendar(){
     try{
       var now=new Date(),curMonth=now.getMonth(),curYear=now.getFullYear();
+      var _calSel=(typeof selectedAccountId!=='undefined')?selectedAccountId:'all';
+      var _calIsAll=!_calSel||_calSel==='all';
       var byDay={};
       sessionJournalEntries.forEach(function(e){
         if(e.type!=='trade'||e.pnl==null||!isFinite(Number(e.pnl)))return;
+        if(!_calIsAll&&e.account_id&&String(e.account_id)!==String(_calSel))return;
         var d=new Date(e.timestamp||0);
         if(d.getMonth()!==curMonth||d.getFullYear()!==curYear)return;
         var day=d.getDate(),p=Number(e.pnl);
