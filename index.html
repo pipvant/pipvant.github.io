@@ -3053,6 +3053,7 @@
         sbLoadTrades();sbLoadDiscipline();sbLoadSettings();sbLoadCertificates();sbLoadNotifications();
       }else if(event==='SIGNED_OUT'){
         sbUser=null;
+        try{sessionJournalEntries=[];window.sessionJournalEntries=[];if(typeof renderJournalEntries==='function')renderJournalEntries();}catch(_so){}
       }else if(event==='TOKEN_REFRESHED'&&session&&session.user){
         sbUser=session.user;
       }
