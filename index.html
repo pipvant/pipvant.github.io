@@ -3005,8 +3005,10 @@
         sessionJournalEntries.sort(function(a,b){return b.timestamp-a.timestamp;});
         if(typeof applyTradeExtras==='function')applyTradeExtras();
         renderJournalEntries();
-        /* Unified source: session (not raw r.data) so Journal and Profile always agree. */
-        if(typeof sbUpdateProfileStats==='function')sbUpdateProfileStats(sessionJournalEntries);
+        /* Unified source: session (not raw r.data) so Journal and Profile always agree.
+           Guard: never overwrite a populated profile with empty data (stale query). */
+        if(sessionJournalEntries.length>0){window._profileHasData=true;}
+        if(typeof sbUpdateProfileStats==='function'&&(sessionJournalEntries.length>0||!window._profileHasData))sbUpdateProfileStats(sessionJournalEntries);
         // Also compute trader score from trades (don't wait for discipline)
         try{
           var tc=sessionJournalEntries.filter(function(e){return e.type==='trade';}).length;
@@ -4605,7 +4607,8 @@
     try{
       if(typeof renderJournalEntries==='function')renderJournalEntries();
       if(typeof sbUpdateProfileStats==='function'&&typeof sessionJournalEntries!=='undefined'){
-        sbUpdateProfileStats(sessionJournalEntries);
+        if(sessionJournalEntries.length>0){window._profileHasData=true;}
+        if(sessionJournalEntries.length>0||!window._profileHasData)sbUpdateProfileStats(sessionJournalEntries);
       }
     }catch(e){}
   }
