@@ -2951,16 +2951,31 @@
     }catch(e){}
         }
 
-  function sbLoadTrades(){
-    if(!sb||!sbUser)return;
-    /* TEMP-DIAG: visible session check */
+  /* Resolve the current user from the live session before any data load.
+     Never fails silently: if no valid session exists, the caller is told. */
+  function sbResolveUser(){
     try{
-      var _dfb=document.getElementById('journalFeedback');
-      sb.auth.getSession().then(function(_sr){
-        var _sess=_sr&&_sr.data&&_sr.data.session;
-        if(_dfb){_dfb.textContent='[diag] sbUser='+(sbUser?sbUser.email:'null')+' session='+( _sess?'yes:'+(_sess.user&&_sess.user.email):'NO')+' token='+( _sess&&_sess.access_token?'len'+_sess.access_token.length:'none');}
-      }).catch(function(){});
-    }catch(_de){}
+      return sb.auth.getSession().then(function(sr){
+        var u=sr&&sr.data&&sr.data.session&&sr.data.session.user;
+        if(u)sbUser=u;
+        return u||null;
+      }).catch(function(){return sbUser||null;});
+    }catch(e){return Promise.resolve(sbUser||null);}
+  }
+  function sbLoadTrades(){
+    if(!sb)return;
+    var run=function(){
+      if(!sbUser){
+        var nfb=document.getElementById('journalFeedback');
+        if(nfb){nfb.textContent=currentLanguage==='ar'?'انتهت الجلسة — سجل الدخول مجدداً لرؤية صفقاتك.':'Session expired — sign in again to see your trades.';if(typeof feedbackMotion==='function')feedbackMotion(nfb);}
+        return;
+      }
+      sbLoadTradesQuery();
+    };
+    if(sbUser){run();return;}
+    sbResolveUser().then(run);
+  }
+  function sbLoadTradesQuery(){
     sb.from('trades').select('id,symbol,direction,entry_price,stop_price,target_price,position_size,notes,opened_at,created_at,exit_price,pnl,closed_at,setup,tag,account_id').order('opened_at',{ascending:false})
       .then(function(r){
         if(r.error||!r.data){
@@ -3267,8 +3282,15 @@
     sbQuiet(sb.from('certificates').insert({user_id:sbUser.id,mission:name,earned_at:new Date().toISOString()}));
     setTimeout(function(){try{if(typeof sbLoadCertificates==='function')sbLoadCertificates();}catch(e){}},2000);
   }
+  /* Generic guard for data loaders: resolve user from live session first,
+     never silently skip when auth state is still settling. */
+  function sbLoadWithUser(run){
+    if(!sb||typeof run!=='function')return;
+    if(sbUser){run();return;}
+    sbResolveUser().then(function(u){if(u)run();});
+  }
   function sbLoadCertificates(){
-    if(!sb||!sbUser)return;
+    sbLoadWithUser(function(){
     sb.from('certificates').select('mission,id,earned_at').eq('user_id',sbUser.id)
       .then(function(r){
         if(r.error||!r.data)return;
@@ -3279,9 +3301,10 @@
         if(typeof renderProfileCertificates==='function')renderProfileCertificates(names);
         profileSession.certificates=names;
       }).catch(function(){var loader=document.getElementById('authLoading');if(loader)loader.style.display='none';document.body.classList.remove('auth-checking');});
+    });
   }
   function sbCheckMissions(tradeCount,disciplineStreak){
-    if(!sb||!sbUser)return;
+    sbLoadWithUser(function(){
     var earned=profileSession.certificates||[];
     if(tradeCount>=500&&earned.indexOf('Marathon')===-1){
       if(awardProfileCertificate('Marathon'))sbSaveCertificate('Marathon');
@@ -3358,6 +3381,7 @@
         }
       });
     }catch(pe){}
+    });
   }
   function awardProfileCertificate(value){var name=normalizeCertificateName(value);if(!name||profileSession.certificates.indexOf(name)!==-1)return false;profileSession.certificates=profileSession.certificates.concat(name);try{if(typeof saveProfileSession==='function')saveProfileSession();}catch(e){}renderProfileCertificates(profileSession.certificates);showToast((currentLanguage==='ar'?'تم اكتساب شارة ':'Certificate badge earned: ')+(currentLanguage==='ar'&&ar[name]?ar[name]:name));return true;}
   function prepareProfilePrestige(screen){
@@ -5091,7 +5115,7 @@
     sbQuiet(sb.from('discipline_checkins').upsert({user_id:sbUser.id,checkin_date:sbDisciplineToday(),completed:complete,details:{checks:state}},{onConflict:'user_id,checkin_date'}));
   }
   function sbLoadDiscipline(){
-    if(!sb||!sbUser)return;
+    sbLoadWithUser(function(){
     sb.from('discipline_checkins').select('checkin_date,completed,details').eq('user_id',sbUser.id).order('checkin_date',{ascending:false}).limit(120)
       .then(function(r){
         if(r.error||!r.data)return;
@@ -5113,6 +5137,7 @@
         var railStreak=document.getElementById('railStreak');if(railStreak)railStreak.textContent=String(streak);
         try{if(typeof sbComputeTraderScore==='function'&&typeof sessionJournalEntries!=='undefined'){var tc=sessionJournalEntries.filter(function(e){return e.type==='trade';}).length;sbComputeTraderScore(tc,streak);}if(typeof sbCheckMissions==='function'&&typeof sessionJournalEntries!=='undefined'){var tc2=sessionJournalEntries.filter(function(e){return e.type==='trade';}).length;sbCheckMissions(tc2,streak);}}catch(e2){}
       }).catch(function(){var loader=document.getElementById('authLoading');if(loader)loader.style.display='none';document.body.classList.remove('auth-checking');});
+    });
   }
   function updateCheckProgress(){
     var complete=Array.prototype.filter.call(checks,function(check){return check.checked;}).length;
@@ -5126,7 +5151,7 @@
   checks.forEach(function(check){check.addEventListener('change',function(){updateCheckProgress();sbSaveDiscipline();});});
 
   function sbLoadNotifications(){
-    if(!sb||!sbUser)return;
+    sbLoadWithUser(function(){
     sb.from('notifications').select('id,title,body,created_at,read').eq('user_id',sbUser.id).order('created_at',{ascending:false}).limit(30)
       .then(function(r){
         if(r.error||!r.data||!r.data.length)return;
@@ -5157,6 +5182,7 @@
         groups.hidden=false;if(empty)empty.hidden=true;
         if(typeof refreshNotificationBadge==='function')refreshNotificationBadge();
       }).catch(function(){var loader=document.getElementById('authLoading');if(loader)loader.style.display='none';document.body.classList.remove('auth-checking');});
+    });
   }
   function sbNotify(title,body){
     if(!sb||!sbUser||!title)return;
