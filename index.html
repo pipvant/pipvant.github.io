@@ -2964,16 +2964,14 @@
   }
   function sbLoadTrades(){
     if(!sb)return;
-    var run=function(){
-      if(!sbUser){
+    sbResolveUser().then(function(u){
+      if(!u){
         var nfb=document.getElementById('journalFeedback');
         if(nfb){nfb.textContent=currentLanguage==='ar'?'انتهت الجلسة — سجل الدخول مجدداً لرؤية صفقاتك.':'Session expired — sign in again to see your trades.';if(typeof feedbackMotion==='function')feedbackMotion(nfb);}
         return;
       }
       sbLoadTradesQuery();
-    };
-    if(sbUser){run();return;}
-    sbResolveUser().then(run);
+    });
   }
   function sbLoadTradesQuery(){
     sb.from('trades').select('id,symbol,direction,entry_price,stop_price,target_price,position_size,notes,opened_at,created_at,exit_price,pnl,closed_at,setup,tag,account_id').order('opened_at',{ascending:false})
