@@ -4360,8 +4360,8 @@
       var rd=n.ref||{};
       if(!rd.eventName&&n.message&&typeof calendarEvents!=='undefined'){
         // v1: message format "CAD Event Name — 12:30 UTC" or "CAD Event Name — 12:30 GMT+1"
-        var _mm=n.message.match(/^[A-Z]{3}\s+(.+?)\s+[—-]\s+\d{1,2}:\d{2}/);
-        if(_mm)rd={eventName:_mm[1].trim()};
+        var _mm=n.message.match(/^([A-Z]{3})\s+(.+?)\s+[—-]\s+\d{1,2}:\d{2}/);
+        if(_mm)rd={eventName:_mm[2].trim(),currency:_mm[1]};
       }
       // Try live lookup first for freshest data, fall back to stored
       var ev=null;
@@ -4369,10 +4369,16 @@
         for(var i=0;i<calendarEvents.length;i++){
           if(calendarEvents[i]._ts===rd.eventTs){ev=calendarEvents[i];break;}
         }
-        // fallback: match by name for old notifications
+        // fallback: match by name + currency for old notifications (names repeat across currencies)
         if(!ev&&rd.eventName){
           for(var i2=0;i2<calendarEvents.length;i2++){
-            if(calendarEvents[i2].name===rd.eventName){ev=calendarEvents[i2];break;}
+            if(calendarEvents[i2].name===rd.eventName&&(!rd.currency||calendarEvents[i2].currency===rd.currency)){ev=calendarEvents[i2];break;}
+          }
+          // last resort: name only
+          if(!ev){
+            for(var i3=0;i3<calendarEvents.length;i3++){
+              if(calendarEvents[i3].name===rd.eventName){ev=calendarEvents[i3];break;}
+            }
           }
         }
       }
