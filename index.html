@@ -2940,7 +2940,7 @@
         if(beEl)beEl.textContent=typeof breakevens!=='undefined'?breakevens:'—';
       }catch(e2){}
       var counts={};
-      trades.forEach(function(t){var s=t.symbol||'—';counts[s]=(counts[s]||0)+1;});
+      trades.forEach(function(t){var s=t.symbol||t.pair||'—';counts[s]=(counts[s]||0)+1;});
       var most='—',max=0;
       Object.keys(counts).forEach(function(s){if(counts[s]>max){max=counts[s];most=s;}});
       var mostEl=document.querySelector('#profile .profile-most-traded');
@@ -3028,6 +3028,61 @@
       localStorage.setItem('pipvant_trade_extras',JSON.stringify(all));
     }catch(e){}
   }
+  /* ---- Local-first trade persistence: trades never lost ---- */
+  var LOCAL_TRADES_KEY='pipvant_trades_local';
+  function loadLocalTrades(){try{var a=JSON.parse(localStorage.getItem(LOCAL_TRADES_KEY)||'[]');return Array.isArray(a)?a:[];}catch(e){return[];}}
+  function saveLocalTrades(arr){try{localStorage.setItem(LOCAL_TRADES_KEY,JSON.stringify(arr||[]));}catch(e){}}
+  function persistLocalTrade(entry){
+    try{
+      if(!entry||entry.type!=='trade')return null;
+      if(!entry._localId)entry._localId='loc-'+Date.now()+'-'+Math.floor(Math.random()*1e6);
+      var all=loadLocalTrades();
+      var found=false;
+      for(var i=0;i<all.length;i++){if(all[i]._localId===entry._localId){all[i]=JSON.parse(JSON.stringify(entry));found=true;break;}}
+      if(!found)all.push(JSON.parse(JSON.stringify(entry)));
+      saveLocalTrades(all);
+      return entry._localId;
+    }catch(e){return null;}
+  }
+  function removeLocalTrade(localId){
+    try{
+      if(!localId)return;
+      var all=loadLocalTrades().filter(function(t){return t._localId!==localId;});
+      saveLocalTrades(all);
+    }catch(e){}
+  }
+  function mergeLocalTradesIntoSession(){
+    try{
+      var all=loadLocalTrades();
+      var have={};
+      sessionJournalEntries.forEach(function(e){var k=e._dbId||e._id;if(k)have[String(k)]=1;if(e._localId)have['L:'+e._localId]=1;});
+      all.forEach(function(t){
+        if(!t||have['L:'+t._localId])return;
+        t._localOnly=true;
+        sessionJournalEntries.push(t);
+      });
+      sessionJournalEntries.sort(function(a,b){return (b.timestamp||0)-(a.timestamp||0);});
+    }catch(e){}
+  }
+  function syncLocalTradesToCloud(){
+    try{
+      if(!sb||!sbUser)return;
+      var all=loadLocalTrades();
+      var pending=all.filter(function(t){return t&&!t._dbId&&!t._synced;});
+      if(!pending.length)return;
+      pending.forEach(function(t){
+        var ep=parseFloat(t.entry),sz=parseFloat(t.size),sp=parseFloat(t.stop),tp=parseFloat(t.target),xp=parseFloat(t.exitPrice);
+        var payload={user_id:sbUser.id,symbol:t.pair||'UNKNOWN',direction:(t.direction||'long').toLowerCase(),entry_price:isFinite(ep)?ep:0,exit_price:isFinite(xp)?xp:null,position_size:isFinite(sz)?sz:0,pnl:(t.pnl!=null&&isFinite(Number(t.pnl)))?Number(t.pnl):null,stop_price:isFinite(sp)?sp:null,target_price:isFinite(tp)?tp:null,opened_at:new Date(t.timestamp||Date.now()).toISOString(),closed_at:t.closed?new Date().toISOString():null,notes:t.notes||null,setup:t.setup||null,tag:t.tag||null,account_id:t.account_id||null};
+        sb.from('trades').insert(payload).select('id').then(function(r){
+          if(!r.error&&r.data&&r.data[0]&&r.data[0].id){
+            removeLocalTrade(t._localId);
+            for(var i=0;i<sessionJournalEntries.length;i++){var e=sessionJournalEntries[i];if(e._localId===t._localId){e._db=true;e._dbId=r.data[0].id;e._id=r.data[0].id;e._localOnly=false;break;}}
+            if(typeof refreshAllTradeUI==='function')refreshAllTradeUI();
+          }
+        }).catch(function(){});
+      });
+    }catch(e){}
+  }
   function applyTradeExtras(){
     try{
       var all=JSON.parse(localStorage.getItem('pipvant_trade_extras')||'{}');
@@ -3042,7 +3097,7 @@
       });
     }catch(e){}
   }
-  function sbSaveTrade(entry){if(!sb)return;sb.auth.getUser().then(function(uRes){var user=uRes&&uRes.data&&uRes.data.user;if(!user){var fb0=document.getElementById('journalFeedback');if(fb0){fb0.textContent=currentLanguage==='ar'?'الجلسة منتهية — سجل الدخول مجدداً.':'Session expired — please sign in again.';feedbackMotion(fb0);showToast(fb0.textContent);}return;}sbUser=user;var ep=parseFloat(entry.entry),sz=parseFloat(entry.size),sp=parseFloat(entry.stop),tp=parseFloat(entry.target),xp=parseFloat(entry.exitPrice);var payload={user_id:user.id,symbol:entry.pair||'UNKNOWN',direction:(entry.direction||'long').toLowerCase(),entry_price:isFinite(ep)?ep:0,exit_price:isFinite(xp)?xp:null,position_size:isFinite(sz)?sz:0,pnl:(entry.pnl!=null&&isFinite(Number(entry.pnl)))?Number(entry.pnl):null,stop_price:isFinite(sp)?sp:null,target_price:isFinite(tp)?tp:null,opened_at:new Date(entry.timestamp||Date.now()).toISOString(),closed_at:entry.closed?new Date().toISOString():null,notes:entry.notes||null,setup:entry.setup||null,tag:entry.tag||null,account_id:entry.account_id||null};sb.from('trades').insert(payload).select().then(function(r){var fb=document.getElementById('journalFeedback');if(!fb)return;if(r.error){fb.textContent=currentLanguage==='ar'?'تعذر الحفظ في حسابك — بقيت الصفقة لهذه الجلسة فقط.':'Could not save to your account — kept for this session only.';}else{entry._db=true;if(r.data&&r.data[0]&&r.data[0].id){entry._dbId=r.data[0].id;entry._id=r.data[0].id;}saveTradeExtras(entry);fb.textContent=currentLanguage==='ar'?'تم حفظ الصفقة في سجلك.':'Trade saved to your journal.';sbLoadTrades();}feedbackMotion(fb);showToast(fb.textContent);}).catch(function(){var fb2=document.getElementById('journalFeedback');if(!fb2)return;fb2.textContent=currentLanguage==='ar'?'تعذر الحفظ في حسابك — بقيت الصفقة لهذه الجلسة فقط.':'Could not save to your account — kept for this session only.';feedbackMotion(fb2);showToast(fb2.textContent);});}).catch(function(){var fb3=document.getElementById('journalFeedback');if(fb3){fb3.textContent=currentLanguage==='ar'?'تعذر الحفظ في حسابك — بقيت الصفقة لهذه الجلسة فقط.':'Could not save to your account — kept for this session only.';feedbackMotion(fb3);showToast(fb3.textContent);}});} function sbInitSession(){
+  function sbSaveTrade(entry){if(!sb)return;sb.auth.getUser().then(function(uRes){var user=uRes&&uRes.data&&uRes.data.user;if(!user){var fb0=document.getElementById('journalFeedback');if(fb0){fb0.textContent=currentLanguage==='ar'?'الجلسة منتهية — سجل الدخول مجدداً.':'Session expired — please sign in again.';feedbackMotion(fb0);showToast(fb0.textContent);}return;}sbUser=user;var ep=parseFloat(entry.entry),sz=parseFloat(entry.size),sp=parseFloat(entry.stop),tp=parseFloat(entry.target),xp=parseFloat(entry.exitPrice);var payload={user_id:user.id,symbol:entry.pair||'UNKNOWN',direction:(entry.direction||'long').toLowerCase(),entry_price:isFinite(ep)?ep:0,exit_price:isFinite(xp)?xp:null,position_size:isFinite(sz)?sz:0,pnl:(entry.pnl!=null&&isFinite(Number(entry.pnl)))?Number(entry.pnl):null,stop_price:isFinite(sp)?sp:null,target_price:isFinite(tp)?tp:null,opened_at:new Date(entry.timestamp||Date.now()).toISOString(),closed_at:entry.closed?new Date().toISOString():null,notes:entry.notes||null,setup:entry.setup||null,tag:entry.tag||null,account_id:entry.account_id||null};sb.from('trades').insert(payload).select().then(function(r){var fb=document.getElementById('journalFeedback');if(!fb)return;if(r.error){fb.textContent=currentLanguage==='ar'?'تعذر الحفظ في حسابك — محفوظة محلياً وستُزامَن تلقائياً.':'Could not save to your account — saved locally, will sync automatically.';}else{entry._db=true;if(r.data&&r.data[0]&&r.data[0].id){entry._dbId=r.data[0].id;entry._id=r.data[0].id;}if(typeof removeLocalTrade==='function'&&entry._localId)removeLocalTrade(entry._localId);entry._localOnly=false;saveTradeExtras(entry);fb.textContent=currentLanguage==='ar'?'تم حفظ الصفقة في حسابك.':'Trade saved to your account.';sbLoadTrades();}feedbackMotion(fb);showToast(fb.textContent);}).catch(function(){var fb2=document.getElementById('journalFeedback');if(!fb2)return;fb2.textContent=currentLanguage==='ar'?'تعذر الحفظ في حسابك — بقيت الصفقة لهذه الجلسة فقط.':'Could not save to your account — kept for this session only.';feedbackMotion(fb2);showToast(fb2.textContent);});}).catch(function(){var fb3=document.getElementById('journalFeedback');if(fb3){fb3.textContent=currentLanguage==='ar'?'تعذر الحفظ في حسابك — بقيت الصفقة لهذه الجلسة فقط.':'Could not save to your account — kept for this session only.';feedbackMotion(fb3);showToast(fb3.textContent);}});} function sbInitSession(){
     if(!sb)return;
     // Listen for auth state changes (token refresh, sign out, etc.)
     sb.auth.onAuthStateChange(function(event,session){
@@ -3050,6 +3105,7 @@
         sbUser=session.user;
         sbFlushPendingProfile();
         sbLoadProfile(function(pname){enterProduct(pname||session.user.email||'','—');});
+        if(typeof syncLocalTradesToCloud==='function')syncLocalTradesToCloud();
         sbLoadTrades();sbLoadDiscipline();sbLoadSettings();sbLoadCertificates();sbLoadNotifications();
       }else if(event==='SIGNED_OUT'){
         sbUser=null;
@@ -3065,6 +3121,7 @@
         var meta=session.user.user_metadata||{};
         sbFlushPendingProfile();
         sbLoadProfile(function(pname){enterProduct(pname||session.user.email||'','—');});
+        if(typeof syncLocalTradesToCloud==='function')syncLocalTradesToCloud();
         sbLoadTrades();sbLoadDiscipline();sbLoadSettings();sbLoadCertificates();sbLoadNotifications();
       }else{
         // No session - show the public landing page first
@@ -4372,7 +4429,8 @@
 
   var tradeSheet=document.getElementById('tradeSheet');
   var logTradeButton=document.getElementById('logTradeButton');
-  var sessionJournalEntries=[]; 
+  var sessionJournalEntries=[];
+  try{if(typeof mergeLocalTradesIntoSession==='function'){mergeLocalTradesIntoSession();}}catch(_mlt){}
   // Keep window reference in sync via getter (fixes scope/timing issues)
   try{
     Object.defineProperty(window,'sessionJournalEntries',{
@@ -4442,12 +4500,13 @@
       return eid!==id;
     }); window.sessionJournalEntries=sessionJournalEntries;
     if(window.editingTradeId===id)cancelEditTrade();
+    if(typeof removeLocalTrade==='function'&&entry._localId)removeLocalTrade(entry._localId);
     if(entry._dbId&&typeof sb!=='undefined'&&sb){
       sb.from('trades').delete().eq('id',entry._dbId).then(function(r){
         if(r.error&&typeof showToast==='function')showToast(currentLanguage==='ar'?'حُذفت محلياً فقط.':'Deleted locally only.');
       }).catch(function(){});
     }
-    renderJournalEntries();
+    if(typeof refreshAllTradeUI==='function')refreshAllTradeUI();else renderJournalEntries();
     if(typeof showToast==='function')showToast(currentLanguage==='ar'?'تم حذف الصفقة.':'Trade deleted.');
   }
   function exportTradesCsv(){
@@ -4537,6 +4596,16 @@
     });
     var hasEntries=tradeCount>0;list.hidden=!hasEntries;empty.hidden=hasEntries;count.textContent=hasEntries?(tradeCount+(currentLanguage==='ar'?' إدخالات':(tradeCount===1?' ENTRY':' ENTRIES'))):(currentLanguage==='ar'?'0 صفقات':'0 TRADES');
     updateJournalKPIs();updateJournalCalendar();updateJournalEquity();updateJournalScore();renderFacetOptions();updateProfileFromSession();if(typeof applyJournalViewMode==='function'&&(window.journalViewMode==='chart'||window.journalViewMode==='unified'))applyJournalViewMode();
+  }
+  /* Central refresh: after any trade save/load/delete, update EVERYTHING.
+     Journal (list/KPIs/calendar/equity/score/facets) + profile (stats/missions/score/balance/recent). */
+  function refreshAllTradeUI(){
+    try{
+      if(typeof renderJournalEntries==='function')renderJournalEntries();
+      if(typeof sbUpdateProfileStats==='function'&&typeof sessionJournalEntries!=='undefined'){
+        sbUpdateProfileStats(sessionJournalEntries);
+      }
+    }catch(e){}
   }
   /* ---- Profile stats from session data (robust fallback) ---- */
   function updateProfileFromSession(){
@@ -5031,7 +5100,9 @@
     if(result==='breakeven')pnl=0;
     var closeDone=function(){
       currentCloseEntry.closed=true;currentCloseEntry.exitPrice=exitPrice;currentCloseEntry.pnl=pnl;currentCloseEntry.result=result;
-      hideCloseTradeModal();renderJournalEntries();
+      if(typeof persistLocalTrade==='function')persistLocalTrade(currentCloseEntry);
+      hideCloseTradeModal();
+      if(typeof refreshAllTradeUI==='function')refreshAllTradeUI();else renderJournalEntries();
       showToast(currentLanguage==='ar'?'تم إغلاق الصفقة.':'Trade closed.');
     };
     var closeFailMsg=currentLanguage==='ar'?'تعذر حفظ الإغلاق في حسابك — بقيت الصفقة مفتوحة.':'Could not save the close — trade kept open.';
@@ -5090,10 +5161,11 @@
         var fbU=document.getElementById('journalFeedback');
         if(fbU){fbU.textContent=updated?(currentLanguage==='ar'?'تم حفظ التعديلات.':'Trade updated.'):(currentLanguage==='ar'?'تعذر العثور على الصفقة.':'Trade not found.');feedbackMotion(fbU);showToast(fbU.textContent);}
       }else{
+        if(typeof persistLocalTrade==='function')persistLocalTrade(tradeEntry);
         sessionJournalEntries.unshift(tradeEntry);
-        if(sb&&sbUser){sbSaveTrade(tradeEntry);}else{var feedback=document.getElementById('journalFeedback');feedback.textContent=currentLanguage==='ar'?'تمت إضافة الصفقة لهذه الجلسة فقط.':'Trade added for this session only.';feedbackMotion(feedback);showToast(feedback.textContent);}
+        if(sb&&sbUser){sbSaveTrade(tradeEntry);}else{var feedback=document.getElementById('journalFeedback');if(feedback){feedback.textContent=currentLanguage==='ar'?'تم حفظ الصفقة محلياً — ستُزامَن مع حسابك عند تسجيل الدخول.':'Trade saved locally — will sync to your account when you sign in.';if(typeof feedbackMotion==='function')feedbackMotion(feedback);if(typeof showToast==='function')showToast(feedback.textContent);}}
       }
-      renderJournalEntries();tradeFormEl.reset();tradeFormEl.querySelectorAll('input,textarea').forEach(updateFloatingField);document.querySelectorAll('.chip[data-direction]').forEach(function(chip){chip.setAttribute('aria-pressed','false');});document.getElementById('tradeFormFeedback').textContent='';closeTradeSheet();
+      if(typeof refreshAllTradeUI==='function')refreshAllTradeUI();else renderJournalEntries();tradeFormEl.reset();tradeFormEl.querySelectorAll('input,textarea').forEach(updateFloatingField);document.querySelectorAll('.chip[data-direction]').forEach(function(chip){chip.setAttribute('aria-pressed','false');});document.getElementById('tradeFormFeedback').textContent='';closeTradeSheet();
     });
   });
   tradeSheet.addEventListener('click',function(e){if(e.target===tradeSheet)closeTradeSheet();});
