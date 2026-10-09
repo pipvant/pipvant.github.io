@@ -498,7 +498,7 @@
     .rating-track{height:3px;border-radius:999px;background:color-mix(in srgb,var(--market-accent) 24%,var(--sunken));box-shadow:inset 0 0 0 1px var(--line);overflow:hidden}
     .rating-track i{display:block;width:100%;height:100%;transform:scaleX(0);transform-origin:left;background:var(--market-accent)}
     .rating-block small{color:var(--muted);font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .promo-slot{min-height:38px;padding:0 12px;border:1px dashed color-mix(in srgb,var(--platinum) 72%,var(--line));border-radius:8px;background:var(--sunken);color:var(--platinum);font:500 11px/1 "IBM Plex Mono",monospace;display:inline-flex;align-items:center;gap:8px;opacity:.7}
+    .promo-slot{min-height:38px;padding:0 12px;border:1px dashed color-mix(in srgb,var(--platinum) 72%,var(--line));border-radius:8px;background:var(--sunken);color:var(--platinum);font:500 11px/1 "IBM Plex Mono",monospace;display:inline-flex;align-items:center;gap:8px;cursor:pointer;transition:opacity .15s,border-color .15s}.promo-slot:hover{opacity:1;border-color:var(--accent)}
     .methodology-panel{margin-top:18px;padding:20px;border:1px solid var(--line-strong);border-radius:16px;background:linear-gradient(145deg,var(--surface),var(--sunken));scroll-margin-top:150px}
     .methodology-panel[hidden]{display:none}.methodology-panel h3{margin-bottom:8px}.methodology-panel>p{margin:0;color:var(--secondary);font-size:12px;line-height:1.6}
     .methodology-points{display:grid;gap:10px;margin-top:18px}.method-point{padding:14px;border-top:1px solid var(--line)}.method-point strong{display:block;margin-bottom:5px;font-size:12px}.method-point span{color:var(--muted);font-size:11px;line-height:1.5}
@@ -1643,7 +1643,7 @@
             <div class="firm-details">
               <div class="spec-grid"><div class="spec"><label>Account sizes</label><strong>—</strong></div><div class="spec"><label>Profit target</label><strong>—</strong></div><div class="spec"><label>Max drawdown</label><strong>—</strong></div></div>
               <div class="why-line"><span>Why it matches</span><strong>—</strong></div>
-              <div class="firm-detail-actions"><button class="what-check-btn" type="button" data-methodology-trigger>What we check</button><button class="promo-slot" type="button" disabled aria-label="Promotional offer unavailable">PROMO&nbsp; —</button><button class="btn secondary" type="button" disabled>Save to shortlist</button></div>
+              <div class="firm-detail-actions"><button class="what-check-btn" type="button" data-methodology-trigger>What we check</button><button class="promo-slot" type="button" data-promo-code="PV" aria-label="Copy promo code PV">PROMO&nbsp; PV <svg width="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button><button class="btn secondary" type="button" disabled>Save to shortlist</button></div>
             </div>
           </article>
           <article class="firm-card">
@@ -1654,7 +1654,7 @@
             <div class="firm-details">
               <div class="spec-grid"><div class="spec"><label>Account sizes</label><strong>—</strong></div><div class="spec"><label>Profit target</label><strong>—</strong></div><div class="spec"><label>Max drawdown</label><strong>—</strong></div></div>
               <div class="why-line"><span>Why it matches</span><strong>—</strong></div>
-              <div class="firm-detail-actions"><button class="what-check-btn" type="button" data-methodology-trigger>What we check</button><button class="promo-slot" type="button" disabled aria-label="Promotional offer unavailable">PROMO&nbsp; —</button><button class="btn secondary" type="button" disabled>Save to shortlist</button></div>
+              <div class="firm-detail-actions"><button class="what-check-btn" type="button" data-methodology-trigger>What we check</button><button class="promo-slot" type="button" data-promo-code="PV" aria-label="Copy promo code PV">PROMO&nbsp; PV <svg width="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button><button class="btn secondary" type="button" disabled>Save to shortlist</button></div>
             </div>
           </article>
           <article class="firm-card">
@@ -1665,7 +1665,7 @@
             <div class="firm-details">
               <div class="spec-grid"><div class="spec"><label>Account sizes</label><strong>—</strong></div><div class="spec"><label>Profit target</label><strong>—</strong></div><div class="spec"><label>Max drawdown</label><strong>—</strong></div></div>
               <div class="why-line"><span>Why it matches</span><strong>—</strong></div>
-              <div class="firm-detail-actions"><button class="what-check-btn" type="button" data-methodology-trigger>What we check</button><button class="promo-slot" type="button" disabled aria-label="Promotional offer unavailable">PROMO&nbsp; —</button><button class="btn secondary" type="button" disabled>Save to shortlist</button></div>
+              <div class="firm-detail-actions"><button class="what-check-btn" type="button" data-methodology-trigger>What we check</button><button class="promo-slot" type="button" data-promo-code="PV" aria-label="Copy promo code PV">PROMO&nbsp; PV <svg width="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button><button class="btn secondary" type="button" disabled>Save to shortlist</button></div>
             </div>
           </article>
         </div>
@@ -2616,7 +2616,28 @@
         }
       });
     }catch(e){}
-    /* Promo slots stay honest: disabled "PROMO —" unless a real code exists in data */
+    /* Promo code PV: click to copy */
+    document.addEventListener('click',function(ev){
+      var btn=ev.target&&ev.target.closest?ev.target.closest('[data-promo-code]'):null;
+      if(!btn)return;
+      var code=btn.getAttribute('data-promo-code')||'PV';
+      var done=function(){
+        var orig=btn.innerHTML;
+        btn.innerHTML=(currentLanguage==='ar'?'تم النسخ!':'Copied!');
+        setTimeout(function(){btn.innerHTML=orig;},1500);
+        if(typeof showToast==='function')showToast((currentLanguage==='ar'?'تم نسخ الكود: ':'Code copied: ')+code);
+      };
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(code).then(done).catch(function(){fallbackCopy();});
+      }else{fallbackCopy();}
+      function fallbackCopy(){
+        try{
+          var ta=document.createElement('textarea');ta.value=code;ta.style.position='fixed';ta.style.opacity='0';
+          document.body.appendChild(ta);ta.select();
+          document.execCommand('copy');document.body.removeChild(ta);done();
+        }catch(e){}
+      }
+    });
     /* Populate Rationale in rating blocks with factual data (not invented ratings) */ try{var rationaleEls=document.querySelectorAll('#matcher .rating-block small');rationaleEls.forEach(function(el){var card=el.closest('.firm-card')||el.closest('[data-firm-id]');var firmId=card?card.getAttribute('data-firm-id'):null;var firm=(sbFirms||[]).filter(function(f){return String(f.id)===String(firmId);})[0];if(el&&(el.textContent.trim()==='Rationale —'||el.textContent.trim()==='—'||el.textContent.indexOf('Rationale:')===0)){if(firm){var plans=sbPlansByFirm[firm.id]||[];var parts=[];if(firm.headquarters)parts.push(firm.headquarters);if(plans.length)parts.push(plans.length+(plans.length===1?' plan':' plans'));var newText='Rationale: '+parts.join(' · ');if(el.textContent!==newText){el.textContent=newText;}el.closest('.rating-block').setAttribute('aria-label','Rationale available');}}});}catch(e){} // Ensure all shortlist buttons are enabled (robust fallback)
     try{
       document.querySelectorAll('#matcher .firm-detail-actions .btn.secondary[disabled]').forEach(function(btn){
