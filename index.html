@@ -1445,6 +1445,7 @@
       <div class="auth-actions">
         <button class="btn primary auth-wide" id="getStarted" type="button">Get started <span aria-hidden="true">→</span></button>
         <button class="text-button" id="loginLink" type="button">Log in</button>
+        <div style="margin-top:16px;text-align:center"><button class="text-button" id="guestBrowse" type="button" style="color:var(--muted)">Browse public tools →</button></div>
       </div>
       <div class="auth-features" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:28px;text-align:left;">
         <div><strong style="display:block;font-size:13px;margin-bottom:4px;">Compare firms</strong><span style="font-size:11px;color:var(--muted);line-height:1.5;">Verified prop-firm rules, side by side.</span></div>
@@ -3239,6 +3240,17 @@
       }
     }).catch(function(){var loader=document.getElementById('authLoading');if(loader)loader.style.display='none';document.body.classList.remove('auth-checking');var seenLp2=false;try{seenLp2=!!localStorage.getItem('pipvant_seen_landing');}catch(e){}if(seenLp2){document.body.classList.add('auth-active','show-auth');if(typeof setAuthMode==='function')setAuthMode('login');if(typeof authStage==='function')authStage('authSignup');}else{document.body.classList.add('show-landing');if(typeof initSiteLanding==='function')initSiteLanding();}});
   }
+  /* Guest browse: skip auth gate for public tools (matcher, calendar) */
+  document.addEventListener('click',function(e){
+    if(e.target&&e.target.id==='guestBrowse'){
+      document.body.classList.remove('auth-active','show-auth');
+      document.body.classList.add('app-ready');
+      try{localStorage.setItem('pipvant_seen_landing','1');}catch(err){}
+      // Load public data
+      if(typeof sbLoadFirms==='function')sbLoadFirms();
+      if(typeof sbLoadCalendar==='function')sbLoadCalendar();
+    }
+  });
   /* Fill the firm detail sheet before the existing opener runs (registered first). */
   document.addEventListener('click',function(event){
     if(!event.target||!event.target.closest)return;
