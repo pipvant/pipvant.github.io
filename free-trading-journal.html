@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Free Trading Journal — The TradeZella Alternative | PIPVANT</title>
+  <meta name="description" content="A free trading journal with automatic stats, P&L charts and performance analytics. The free alternative to TradeZella & TraderSync — no subscription, ever.">
+  <link rel="canonical" href="https://pipvant.github.io/free-trading-journal.html">
+  <meta property="og:title" content="Free Trading Journal — The TradeZella Alternative">
+  <meta property="og:description" content="Automatic stats, P&L charts, performance analytics. Free forever — no $30/month subscription.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pipvant.github.io/free-trading-journal.html">
+  <meta property="og:image" content="https://pipvant.github.io/assets/pipvanta-logo.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Free Trading Journal — TradeZella Alternative | PIPVANT">
+  <meta name="twitter:description" content="Smart journal with automatic stats. Free forever, no subscription.">
+  <link rel="icon" type="image/png" href="assets/pipvanta-logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {"@type": "Question", "name": "Is there a free alternative to TradeZella?", "acceptedAnswer": {"@type": "Answer", "text": "Yes — PIPVANT's trading journal is free forever with automatic statistics, P&L charts and performance analytics. No subscription, no trial that expires."}},
+      {"@type": "Question", "name": "Why should I keep a trading journal?", "acceptedAnswer": {"@type": "Answer", "text": "A journal turns random trades into data. It reveals which setups actually make money, when you revenge-trade, and whether your risk management holds — the difference between guessing and a real process."}},
+      {"@type": "Question", "name": "Is my trading data private?", "acceptedAnswer": {"@type": "Answer", "text": "PIPVANT's journal is local-first: your trades save on your device first, then sync to your private account. Nobody else sees your data."}}
+    ]
+  }
+  </script>
+  <style>
+    :root{--bg:#0A1628;--surface:#0F1D33;--raised:#14253F;--line:#1C2F4D;--line-strong:#2B4266;--text:#F4F6F8;--secondary:#A9B6C6;--muted:#8B9AB0;--accent:#5B8DEF;--accent-strong:#3A6FDE;--gold:#D4AF37}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+    h1,h2,h3{font-family:"Space Grotesk",sans-serif;letter-spacing:-.02em}
+    .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+    header.top{position:sticky;top:0;z-index:10;background:rgba(10,22,40,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+    header.top .wrap{display:flex;align-items:center;justify-content:space-between;padding:14px 20px}
+    .brand{display:flex;align-items:center;gap:10px;font-family:"Space Grotesk";font-weight:700;font-size:18px;text-decoration:none;color:var(--text)}
+    .brand img{width:30px;height:30px;border-radius:8px}
+    .cta-btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 20px;border-radius:10px;background:var(--accent-strong);color:#fff;font-weight:700;text-decoration:none;border:1px solid var(--accent-strong)}
+    .hero{padding:64px 0 40px;text-align:center}
+    .eyebrow{color:var(--accent);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}
+    h1{font-size:clamp(2.2rem,6vw,3.6rem);line-height:1.05;margin:0 0 16px}
+    h1 .gold{background:linear-gradient(135deg,#F5D67B,#D4AF37);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .lede{color:var(--secondary);font-size:17px;line-height:1.7;max-width:680px;margin:0 auto 28px}
+    .price-tag{display:inline-block;background:rgba(212,175,55,.1);border:1px solid rgba(212,175,55,.4);color:#F5D67B;font-weight:700;font-size:14px;padding:8px 18px;border-radius:999px;margin-bottom:20px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;padding:20px 0 40px}
+    .card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px}
+    .card h3{margin:0 0 8px;font-size:18px}
+    .card p{color:var(--secondary);font-size:14px;line-height:1.65;margin:0}
+    .vs{margin:24px 0;background:var(--surface);border-radius:14px;overflow:hidden}
+    .vs table{width:100%;border-collapse:collapse;font-size:14px}
+    .vs th,.vs td{text-align:left;padding:13px 16px;border-bottom:1px solid var(--line)}
+    .vs th{background:var(--raised)}
+    .vs td{color:var(--secondary)}
+    .vs tr:last-child td{border-bottom:none}
+    .yes{color:#7EE2A8;font-weight:700}.no{color:#E28A7E;font-weight:700}
+    .section{padding:44px 0}
+    h2{font-size:clamp(1.6rem,4vw,2.4rem);margin:0 0 14px}
+    .section p.body{color:var(--secondary);line-height:1.75;max-width:720px}
+    .faq{max-width:760px}
+    .faq details{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin-bottom:10px}
+    .faq summary{font-weight:600;cursor:pointer;font-size:15px}
+    .faq p{color:var(--secondary);line-height:1.7;font-size:14px;margin:10px 0 0}
+    .final{text-align:center;padding:56px 0 72px}
+    footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted);font-size:13px}
+    footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    footer a{color:var(--muted);text-decoration:none;margin-left:16px}
+    @media(max-width:640px){.vs table{font-size:12px}.vs th,.vs td{padding:10px}}
+  </style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="/"><img src="assets/pipvanta-logo.png" alt="PIPVANT logo">PIPVANT</a>
+  <a class="cta-btn" href="/">Open free journal</a>
+</div></header>
+
+<div class="wrap">
+  <section class="hero">
+    <div class="eyebrow">Smart trading journal</div>
+    <div class="price-tag">$0 forever — no subscription</div>
+    <h1>Your trading deserves better than a <span class="gold">$30/month</span> journal.</h1>
+    <p class="lede">PIPVANT's journal logs every trade with automatic statistics, P&L charts and performance analytics — the same insight paid tools sell you, free forever. Trade with a process, not a prediction.</p>
+    <a class="cta-btn" href="/">Start journaling free →</a>
+  </section>
+
+  <section class="grid" aria-label="Journal features">
+    <div class="card"><h3>📊 Automatic statistics</h3><p>Win rate, profit factor, average win/loss, expectancy — computed the moment you save a trade. No spreadsheets, no manual math.</p></div>
+    <div class="card"><h3>📈 P&L charts</h3><p>Daily net P&L and cumulative equity curve, rendered beautifully. See your progress — and your drawdowns — at a glance.</p></div>
+    <div class="card"><h3>🎯 Setup tagging</h3><p>Tag every trade by strategy and setup. Discover which of your plays actually make money and which quietly bleed you.</p></div>
+    <div class="card"><h3>🔒 Local-first & private</h3><p>Trades save on your device first, then sync to your private account. Your data is yours — nobody else sees it.</p></div>
+    <div class="card"><h3>⚡ Instant, no reload</h3><p>Add a trade and your dashboard updates immediately. Built for traders who journal between sessions, not after.</p></div>
+    <div class="card"><h3>🏆 Certificates</h3><p>Hit 100 logged trades and earn a cinematic gold certificate — proof of discipline you can actually show.</p></div>
+  </section>
+
+  <section class="section">
+    <h2>PIPVANT vs paid journals</h2>
+    <div class="vs"><table>
+      <tr><th></th><th>PIPVANT</th><th>TradeZella</th><th>TraderSync</th></tr>
+      <tr><td>Price</td><td class="yes">$0 forever</td><td class="no">$29–59/mo</td><td class="no">$29–79/mo</td></tr>
+      <tr><td>Automatic stats</td><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+      <tr><td>P&L charts</td><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+      <tr><td>Prop firm matcher</td><td class="yes">Built in</td><td class="no">—</td><td class="no">—</td></tr>
+      <tr><td>Risk calculator</td><td class="yes">Built in</td><td class="no">—</td><td class="no">—</td></tr>
+      <tr><td>Economic calendar</td><td class="yes">Built in</td><td class="no">—</td><td class="no">—</td></tr>
+    </table></div>
+    <p class="body">Paid journals charge you every month for analytics. PIPVANT gives you the journal <em>plus</em> the prop firm matcher, risk calculator and economic calendar — one free toolkit instead of three subscriptions.</p>
+  </section>
+
+  <section class="section faq">
+    <h2>Journal FAQs</h2>
+    <details><summary>Is there really a free alternative to TradeZella?</summary><p>Yes. PIPVANT's journal includes automatic statistics, P&L charts and performance analytics — free forever, no trial that expires, no card required.</p></details>
+    <details><summary>Why should I keep a trading journal?</summary><p>A journal turns random trades into data. It reveals which setups make money, when you revenge-trade, and whether your risk management actually holds. That is the difference between guessing and having a process.</p></details>
+    <details><summary>Is my trading data private?</summary><p>Yes — the journal is local-first. Trades save on your device first, then sync to your private account. Nobody else can see them.</p></details>
+    <details><summary>Do I need to sign up?</summary><p>You can explore the toolkit without an account. Signing up (free) unlocks syncing your journal across devices.</p></details>
+  </section>
+
+  <section class="final">
+    <h2>Stop paying to track your trades.</h2>
+    <p class="body" style="text-align:center;margin:0 auto 24px;max-width:560px;color:var(--secondary);line-height:1.7">Log your first trade in under a minute. Watch your stats build themselves.</p>
+    <a class="cta-btn" href="/">Open the free journal →</a>
+    <p style="margin-top:28px;color:var(--muted);font-size:13px">Also free: <a href="prop-firm-comparison.html" style="color:var(--accent)">prop firm comparison</a> · <a href="forex-risk-calculator.html" style="color:var(--accent)">risk calculator</a></p>
+  </section>
+</div>
+
+<footer><div class="wrap">
+  <span>© 2026 PIPVANT by Orovanta — Trade with a process, not a prediction.</span>
+  <span><a href="/">Toolkit</a><a href="prop-firm-comparison.html">Prop firms</a><a href="forex-risk-calculator.html">Calculator</a></span>
+</div></footer>
+</body>
+</html>
