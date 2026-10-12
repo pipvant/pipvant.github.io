@@ -150,8 +150,11 @@
   function boot(){
     sb.auth.getUser().then(function(r){
       var em=r.data&&r.data.user&&r.data.user.email;
-      if(em&&em.toLowerCase()===FOUNDER){ showDash(); }
-      else{ sb.auth.signOut(); deny(); }
+      if(em){
+        if(em.toLowerCase()===FOUNDER){ showDash(); }
+        else{ sb.auth.signOut(); deny(); }
+      }
+      /* no session: just show the login form */
     });
   }
 
