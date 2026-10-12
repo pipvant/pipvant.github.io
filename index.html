@@ -4644,6 +4644,7 @@
       sb.auth.signUp({email:sbEmail,password:sbPassword,options:{data:{display_name:signupName.value||''}}}).then(function(res){
         if(res.error){sbAuthError(res.error.message);return;}
         sbUser=res.data.user;
+        try{sb.from('page_views').insert({page:'/signup',referrer:null});}catch(e){}
         if(!res.data.session){
           sbAuthError(currentLanguage==='ar'?'تم إنشاء الحساب — تحقق من بريدك الإلكتروني ثم سجّل الدخول.':'Account created — check your email to confirm, then log in.');
           setAuthMode('login');

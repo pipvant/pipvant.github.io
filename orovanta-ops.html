@@ -321,11 +321,13 @@
   function hideErr(){ document.getElementById('err').style.display='none'; }
 
   function render(){
+    var weekAgo=new Date(Date.now()-7*86400000).toISOString();
     Promise.all([
       sb.from('company_stats').select('*').single(),
       sb.from('daily_trend').select('*'),
       sb.from('page_breakdown').select('*'),
-      sb.from('signup_stats').select('*').single()
+      sb.from('page_views').select('id',{count:'exact',head:true}).eq('page','/signup'),
+      sb.from('page_views').select('id',{count:'exact',head:true}).eq('page','/signup').gte('created_at',weekAgo)
     ]).then(function(res){
       if(res[0].error) throw res[0].error;
       if(res[1].error) throw res[1].error;
@@ -333,16 +335,17 @@
       hideErr();
       var s=res[0].data||{}, trend=res[1].data||[];
       var rows=res[2].data||[];
-      var sg=(res[3].error||!res[3].data)?{total_signups:0,signups_7d:0}:res[3].data;
+      var sgTotal=(res[3].error||res[3].count==null)?0:res[3].count;
+      var sg7=(res[4].error||res[4].count==null)?0:res[4].count;
       var testViews=rows.filter(function(x){return x.page===TEST;}).reduce(function(a,x){return a+x.views;},0);
-      var pages=rows.filter(function(x){return x.page!==TEST;});
+      var pages=rows.filter(function(x){return x.page!==TEST&&x.page!=='/signup';});
 
-      document.getElementById('k-total').textContent=Math.max(0,(s.total_views||0)-testViews);
-      document.getElementById('k-7d').textContent=Math.max(0,(s.views_7d||0)-testViews);
+      document.getElementById('k-total').textContent=Math.max(0,(s.total_views||0)-testViews-sgTotal);
+      document.getElementById('k-7d').textContent=Math.max(0,(s.views_7d||0)-testViews-sg7);
       document.getElementById('k-subs').textContent=s.subs_total||0;
       document.getElementById('k-subs7').textContent=s.subs_7d||0;
-      document.getElementById('k-users').textContent=sg.total_signups||0;
-      document.getElementById('k-users7').textContent=sg.signups_7d||0;
+      document.getElementById('k-users').textContent=sgTotal;
+      document.getElementById('k-users7').textContent=sg7;
 
       var ch=document.getElementById('chart'); ch.innerHTML='';
       if(!trend.length){ ch.innerHTML='<div class="empty">No traffic yet — the machines are running.</div>'; }
