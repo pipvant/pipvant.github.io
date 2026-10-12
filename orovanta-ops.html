@@ -216,7 +216,7 @@
     </div>
     <div class="panel">
       <h2>📈 Traffic · last 14 days</h2>
-      <p class="desc">Daily visits. Spot strong days and rising trends.</p>
+      <p class="desc">Daily visits, test pings and signup events excluded. Spot strong days and rising trends.</p>
       <div class="chart" id="chart"><div class="empty">Loading…</div></div>
     </div>
     <div class="panel">
@@ -335,9 +335,14 @@
 
   function render(){
     var weekAgo=new Date(Date.now()-7*86400000).toISOString();
+    var fortnightAgo=new Date(Date.now()-14*86400000).toISOString();
     Promise.all([
       sb.from('company_stats').select('*').single(),
-      sb.from('daily_trend').select('*'),
+      /* Honest trend: raw page_views, client-side — system test pings and
+         signup events are excluded here so they never count as traffic. */
+      sb.from('page_views').select('created_at,page')
+        .gte('created_at',fortnightAgo)
+        .not('page','in','("/__system_test__","/signup")'),
       sb.from('page_breakdown').select('*'),
       sb.from('page_views').select('id',{count:'exact',head:true}).eq('page','/signup'),
       sb.from('page_views').select('id',{count:'exact',head:true}).eq('page','/signup').gte('created_at',weekAgo)
@@ -346,7 +351,20 @@
       if(res[1].error) throw res[1].error;
       if(res[2].error) throw res[2].error;
       hideErr();
-      var s=res[0].data||{}, trend=res[1].data||[];
+      var s=res[0].data||{};
+      var pv=res[1].data||[];
+      /* Build the 14-day series from raw rows — test pings and signup
+         events were already excluded by the query above. */
+      var buckets={}, bi, bk;
+      for(bi=13;bi>=0;bi--){
+        bk=new Date(Date.now()-bi*86400000).toISOString().slice(0,10);
+        buckets[bk]=0;
+      }
+      pv.forEach(function(r){
+        var k=String(r.created_at||'').slice(0,10);
+        if(Object.prototype.hasOwnProperty.call(buckets,k)) buckets[k]++;
+      });
+      var trend=Object.keys(buckets).sort().map(function(k){return{day:k,views:buckets[k]};});
       var rows=res[2].data||[];
       var sgTotal=(res[3].error||res[3].count==null)?0:res[3].count;
       var sg7=(res[4].error||res[4].count==null)?0:res[4].count;

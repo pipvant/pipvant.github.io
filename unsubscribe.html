@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Unsubscribe — PIPVANT</title>
+  <meta name="description" content="Unsubscribe from PIPVANT's weekly trading insights email. One click, no questions.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/png" href="assets/pipvanta-logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0A1628;--surface:#0F1D33;--raised:#14253F;--line:#1C2F4D;--text:#F4F6F8;--secondary:#A9B6C6;--muted:#8B9AB0;--accent:#5B8DEF;--accent-strong:#3A6FDE;--green:#7EE2A8;--red:#E28A7E}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column}
+    h1{font-family:"Space Grotesk",sans-serif;letter-spacing:-.02em}
+    header.top{background:rgba(10,22,40,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+    header.top .wrap{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;max-width:1080px;margin:0 auto}
+    .brand{display:flex;align-items:center;gap:10px;font-family:"Space Grotesk";font-weight:700;font-size:18px;text-decoration:none;color:var(--text)}
+    .brand img{width:30px;height:30px;border-radius:8px}
+    main{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px}
+    .card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:44px 40px;max-width:460px;width:100%;text-align:center}
+    .card h1{font-size:1.7rem;margin:0 0 10px}
+    .card p{color:var(--secondary);font-size:14.5px;line-height:1.7;margin:0 0 24px}
+    .card input{width:100%;background:var(--raised);border:1px solid var(--line);border-radius:11px;color:var(--text);font-size:15px;padding:13px 16px;margin-bottom:12px;font-family:inherit}
+    .card input:focus{outline:none;border-color:var(--accent)}
+    .card button{width:100%;min-height:48px;border-radius:11px;border:none;cursor:pointer;font-family:inherit;font-weight:700;font-size:15px;color:#fff;background:var(--accent-strong)}
+    .card button:disabled{opacity:.5;cursor:wait}
+    #msg{min-height:24px;margin-top:14px;font-size:14px;line-height:1.6}
+    footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-size:13px;text-align:center}
+    footer a{color:var(--muted);text-decoration:none}
+  </style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="/"><img src="assets/pipvanta-logo.png" alt="PIPVANT logo">PIPVANT</a>
+</div></header>
+<main>
+  <div class="card">
+    <h1>Unsubscribe</h1>
+    <p>Enter the email you subscribed with. You will be removed from the weekly insights list immediately — no questions, no tricks.</p>
+    <input type="email" id="em" placeholder="you@example.com" autocomplete="email" aria-label="Email address">
+    <button id="go">Unsubscribe me</button>
+    <div id="msg" role="status"></div>
+  </div>
+</main>
+<footer><a href="/">← Back to PIPVANT</a></footer>
+<script>
+(function(){
+  'use strict';
+  var SB_URL='https://acpkzavmifjwnskiaret.supabase.co/rest/v1';
+  var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFjcGt6YXZtaWZqd25za2lhcmV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyMDk1ODcsImV4cCI6MjEwNjc4NTU4N30.9-k-DoB6467EXTPKrvWUi-LRDPbSSC30f6BgrZezo2A';
+  var em=document.getElementById('em'), go=document.getElementById('go'), msg=document.getElementById('msg');
+  function say(t,ok){ msg.textContent=t; msg.style.color=ok?'#7EE2A8':'#E28A7E'; }
+  function valid(e){ return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(e||'').trim()); }
+  go.addEventListener('click',function(){
+    var email=em.value.trim().toLowerCase();
+    if(!valid(email)){ say('Please enter a valid email address.',false); return; }
+    go.disabled=true; say('');
+    fetch(SB_URL+'/unsub_requests',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({email:email}),
+      keepalive:true
+    }).then(function(r){
+      go.disabled=false;
+      if(r.ok){ em.value=''; say('Done — '+email+' is unsubscribed. You will not receive the weekly email again.',true); }
+      else{ say('Something went wrong — please try again in a minute.',false); }
+    }).catch(function(){ go.disabled=false; say('Something went wrong — please try again in a minute.',false); });
+  });
+  em.addEventListener('keydown',function(e){ if(e.key==='Enter') go.click(); });
+})();
+</script>
+</body>
+</html>
