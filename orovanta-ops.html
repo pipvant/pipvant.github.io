@@ -11,73 +11,152 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    :root{--bg:#0A1628;--surface:#0F1D33;--raised:#14253F;--line:#1C2F4D;--line-strong:#2B4266;--text:#F4F6F8;--secondary:#A9B6C6;--muted:#8B9AB0;--accent:#5B8DEF;--gold1:#F5D67B;--gold2:#D4AF37}
-    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh}
-    h1,h2{font-family:"Space Grotesk",sans-serif;letter-spacing:-.02em}
+    :root{
+      --bg:#070D18; --surface:#0C1526; --raised:#12203A; --line:#1B2C4A; --line-strong:#2C4468;
+      --text:#F5F7FA; --secondary:#A9B6C6; --muted:#7E8DA3;
+      --accent:#5B8DEF; --gold1:#F7DC8B; --gold2:#C9972B; --green:#7EE2A8; --red:#E28A7E;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; color:var(--text); font-family:Inter,system-ui,sans-serif;
+      -webkit-font-smoothing:antialiased; min-height:100vh;
+      background:
+        radial-gradient(1100px 480px at 50% -120px, rgba(201,151,43,.14), transparent 65%),
+        radial-gradient(800px 500px at 85% 110%, rgba(91,141,239,.08), transparent 60%),
+        var(--bg);
+    }
+    h1,h2,h3{font-family:"Space Grotesk",sans-serif; letter-spacing:-.02em}
     [hidden]{display:none!important}
-    .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
-    /* login */
+    .wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+
+    /* ---------- login gate ---------- */
     .gate{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-    .gate-card{background:var(--surface);border:1px solid var(--line-strong);border-radius:20px;padding:40px 36px;max-width:400px;width:100%;text-align:center}
-    .gate-card img{width:56px;height:56px;border-radius:14px;margin-bottom:16px}
-    .gate-card h1{font-size:1.6rem;margin:0 0 8px}
-    .gate-card p{color:var(--muted);font-size:14px;margin:0 0 24px;line-height:1.6}
-    .gate-card input{width:100%;background:var(--raised);border:1px solid var(--line);border-radius:10px;color:var(--text);font-size:15px;padding:13px 16px;margin-bottom:12px;font-family:inherit}
-    .gate-card input:focus{outline:none;border-color:var(--accent)}
-    .gate-card button{width:100%;min-height:48px;border-radius:10px;border:1px solid var(--accent-strong,#3A6FDE);background:#3A6FDE;color:#fff;font-weight:700;font-size:15px;cursor:pointer;font-family:inherit}
+    .gate-card{
+      background:linear-gradient(180deg, rgba(18,32,58,.92), rgba(12,21,38,.94));
+      border:1px solid var(--line-strong); border-radius:22px; padding:44px 38px;
+      max-width:410px;width:100%;text-align:center;
+      box-shadow:0 30px 80px rgba(0,0,0,.5), inset 0 1px 0 rgba(247,220,139,.08);
+    }
+    .gate-card img{width:58px;height:58px;border-radius:15px;margin-bottom:16px;box-shadow:0 8px 24px rgba(201,151,43,.25)}
+    .gate-card h1{font-size:1.65rem;margin:0 0 8px}
+    .gate-card p{color:var(--muted);font-size:14px;margin:0 0 24px;line-height:1.65}
+    .gate-card input{width:100%;background:var(--raised);border:1px solid var(--line);border-radius:11px;color:var(--text);font-size:15px;padding:13px 16px;margin-bottom:12px;font-family:inherit}
+    .gate-card input:focus{outline:none;border-color:var(--gold2)}
+    .gate-card button{width:100%;min-height:48px;border-radius:11px;border:none;cursor:pointer;font-family:inherit;font-weight:700;font-size:15px;color:#0A0F1A;
+      background:linear-gradient(135deg,var(--gold1),var(--gold2));box-shadow:0 10px 28px rgba(201,151,43,.3)}
     .gate-card button:disabled{opacity:.5;cursor:wait}
-    .gate-msg{min-height:22px;margin-top:12px;font-size:13px;color:#E28A7E}
-    .lock{font-size:13px;color:var(--muted);margin-top:18px}
-    /* dashboard */
-    header{border-bottom:1px solid var(--line);padding:22px 0;margin-bottom:28px}
-    header .wrap{display:flex;align-items:center;justify-content:space-between}
-    .brand{display:flex;align-items:center;gap:10px;font-family:"Space Grotesk";font-weight:700;font-size:18px}
-    .brand img{width:30px;height:30px;border-radius:8px}
+    .gate-msg{min-height:22px;margin-top:12px;font-size:13px;color:var(--red)}
+    .lock{font-size:12.5px;color:var(--muted);margin-top:18px}
+
+    /* ---------- header ---------- */
+    header.top{position:sticky;top:0;z-index:20;backdrop-filter:blur(16px);
+      background:rgba(7,13,24,.82);border-bottom:1px solid var(--line)}
+    header.top .wrap{display:flex;align-items:center;justify-content:space-between;padding:14px 20px}
+    .brand{display:flex;align-items:center;gap:11px;font-family:"Space Grotesk";font-weight:700;font-size:17px}
+    .brand img{width:32px;height:32px;border-radius:9px;box-shadow:0 4px 14px rgba(201,151,43,.3)}
+    .brand small{display:block;font-family:Inter;font-weight:500;font-size:10.5px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase}
     .hbtns{display:flex;align-items:center;gap:12px}
-    .live{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:13px}
-    .dot{width:9px;height:9px;border-radius:50%;background:#7EE2A8;box-shadow:0 0 10px #7EE2A8;animation:pulse 2s infinite}
-    @keyframes pulse{50%{opacity:.5}}
-    .signout{background:transparent;border:1px solid var(--line-strong);color:var(--muted);border-radius:8px;padding:8px 14px;font-size:13px;cursor:pointer;font-family:inherit}
-    .signout:hover{color:var(--text);border-color:var(--accent)}
-    h1.title{font-size:clamp(1.8rem,4vw,2.6rem);margin:0 0 6px}
-    .sub{color:var(--muted);margin:0 0 28px;font-size:14px}
-    .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:28px}
-    .kpi{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px}
-    .kpi .lbl{color:var(--muted);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
-    .kpi .num{font-family:"Space Grotesk";font-size:2.2rem;font-weight:700}
+    .live{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12.5px}
+    .dot{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:pulse 2s infinite}
+    @keyframes pulse{50%{opacity:.45}}
+    .signout{background:transparent;border:1px solid var(--line-strong);color:var(--muted);border-radius:9px;padding:8px 15px;font-size:13px;cursor:pointer;font-family:inherit;transition:.15s}
+    .signout:hover{color:var(--text);border-color:var(--gold2)}
+
+    /* ---------- tabs ---------- */
+    .tabs{display:flex;gap:8px;padding:18px 0 4px;flex-wrap:wrap}
+    .tab{
+      display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:12px;cursor:pointer;
+      background:transparent;border:1px solid transparent;color:var(--muted);
+      font-family:inherit;font-size:14px;font-weight:600;transition:.18s;
+    }
+    .tab:hover{color:var(--text);background:rgba(255,255,255,.03)}
+    .tab.active{
+      color:var(--text);background:linear-gradient(180deg,rgba(201,151,43,.14),rgba(201,151,43,.05));
+      border-color:rgba(201,151,43,.4);box-shadow:0 6px 20px rgba(201,151,43,.12), inset 0 1px 0 rgba(247,220,139,.15);
+    }
+    .tab .n{font-size:12px;background:rgba(255,255,255,.08);border-radius:99px;padding:2px 9px;color:var(--secondary)}
+    .tab.active .n{background:rgba(201,151,43,.2);color:var(--gold1)}
+
+    /* ---------- hero ---------- */
+    .hero{padding:26px 0 6px}
+    .hero h1{font-size:clamp(1.9rem,4.5vw,2.7rem);margin:0 0 6px}
+    .hero h1 .gold{background:linear-gradient(135deg,var(--gold1),var(--gold2));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .hero p{color:var(--muted);margin:0 0 22px;font-size:14px}
+
+    /* ---------- cards ---------- */
+    .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-bottom:22px}
+    .kpi{
+      position:relative;overflow:hidden;background:linear-gradient(180deg,rgba(24,38,66,.6),rgba(12,21,38,.9));
+      border:1px solid var(--line);border-radius:18px;padding:22px;transition:.18s;
+    }
+    .kpi:hover{transform:translateY(-2px);border-color:var(--line-strong)}
+    .kpi::before{content:"";position:absolute;top:0;left:22px;right:22px;height:1px;
+      background:linear-gradient(90deg,transparent,rgba(247,220,139,.5),transparent)}
+    .kpi .lbl{color:var(--muted);font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
+    .kpi .num{font-family:"Space Grotesk";font-size:2.5rem;font-weight:700;line-height:1}
     .kpi .num.gold{background:linear-gradient(135deg,var(--gold1),var(--gold2));-webkit-background-clip:text;background-clip:text;color:transparent}
     .kpi .num.blue{color:var(--accent)}
-    .panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px;margin-bottom:20px}
-    .panel h2{font-size:18px;margin:0 0 18px}
-    .chart{display:flex;align-items:flex-end;gap:6px;height:160px}
+    .kpi .hint{color:var(--muted);font-size:12px;margin-top:8px;line-height:1.5}
+
+    .panel{
+      background:linear-gradient(180deg,rgba(20,33,57,.55),rgba(12,21,38,.9));
+      border:1px solid var(--line);border-radius:18px;padding:26px;margin-bottom:18px;
+      box-shadow:0 18px 50px rgba(0,0,0,.3);
+    }
+    .panel h2{font-size:17px;margin:0 0 6px;display:flex;align-items:center;gap:9px}
+    .panel .desc{color:var(--muted);font-size:13px;margin:0 0 18px;line-height:1.6}
+
+    /* chart */
+    .chart{display:flex;align-items:flex-end;gap:6px;height:170px;padding-top:8px}
     .bar{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:0}
-    .bar .fill{width:100%;max-width:34px;border-radius:6px 6px 0 0;background:linear-gradient(180deg,var(--gold1),var(--gold2));min-height:3px}
-    .bar .d{color:var(--muted);font-size:10px;margin-top:6px;white-space:nowrap}
-    .bar .v{color:var(--secondary);font-size:11px;font-weight:600;margin-bottom:4px}
+    .bar .fill{width:100%;max-width:36px;border-radius:7px 7px 3px 3px;min-height:3px;
+      background:linear-gradient(180deg,var(--gold1),var(--gold2));box-shadow:0 4px 14px rgba(201,151,43,.25);transition:height .5s cubic-bezier(.23,1,.32,1)}
+    .bar .d{color:var(--muted);font-size:10px;margin-top:7px;white-space:nowrap}
+    .bar .v{color:var(--secondary);font-size:11px;font-weight:600;margin-bottom:5px}
+
+    /* table */
     table{width:100%;border-collapse:collapse;font-size:14px}
-    th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line)}
-    th{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+    th,td{text-align:left;padding:13px 14px;border-bottom:1px solid var(--line)}
+    th{color:var(--muted);font-size:11.5px;text-transform:uppercase;letter-spacing:.07em;font-weight:600}
     td{color:var(--secondary)}
     td:first-child{color:var(--text);font-family:ui-monospace,monospace;font-size:13px}
     tr:last-child td{border-bottom:none}
-    .empty{color:var(--muted);text-align:center;padding:30px;font-size:14px}
-    .foot{color:var(--muted);font-size:12px;text-align:center;padding:24px 0 40px}
-    .err{background:rgba(226,138,126,.08);border:1px solid rgba(226,138,126,.3);color:#E28A7E;border-radius:12px;padding:16px;margin-bottom:20px;font-size:14px;display:none}
-    .bc-form input,.bc-form textarea,.bc-form select{background:var(--raised);border:1px solid var(--line);border-radius:10px;color:var(--text);font-size:14px;padding:11px 14px;margin-bottom:10px;font-family:inherit;width:100%}
-    .bc-form input:focus,.bc-form textarea:focus,.bc-form select:focus{outline:none;border-color:var(--accent)}
+    tr:hover td{background:rgba(255,255,255,.015)}
+    .empty{color:var(--muted);text-align:center;padding:32px;font-size:14px}
+
+    /* broadcast */
+    .bc-form input,.bc-form textarea,.bc-form select{
+      background:var(--raised);border:1px solid var(--line);border-radius:11px;color:var(--text);
+      font-size:14px;padding:12px 15px;margin-bottom:10px;font-family:inherit;width:100%;transition:.15s;
+    }
+    .bc-form input:focus,.bc-form textarea:focus,.bc-form select:focus{outline:none;border-color:var(--gold2);box-shadow:0 0 0 3px rgba(201,151,43,.12)}
     .bc-form textarea{resize:vertical}
-    .bc-form select{width:auto}
+    .bc-form select{width:auto;cursor:pointer}
     .bc-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-    .cta-btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 20px;border-radius:10px;background:#3A6FDE;border:1px solid #3A6FDE;color:#fff;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit}
-    .cta-btn:disabled{opacity:.5;cursor:wait}
-    .bc-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;font-size:13px}
+    .cta-btn{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 24px;border-radius:11px;
+      border:none;cursor:pointer;font-family:inherit;font-weight:700;font-size:14px;color:#0A0F1A;
+      background:linear-gradient(135deg,var(--gold1),var(--gold2));box-shadow:0 10px 26px rgba(201,151,43,.28);transition:.15s}
+    .cta-btn:hover{transform:translateY(-1px);box-shadow:0 14px 32px rgba(201,151,43,.35)}
+    .cta-btn:disabled{opacity:.5;cursor:wait;transform:none}
+    .bc-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 15px;
+      border:1px solid var(--line);border-radius:12px;margin-bottom:8px;font-size:13px;background:rgba(255,255,255,.012)}
     .bc-item .t{color:var(--text);font-weight:600}
-    .bc-item .m{color:var(--muted);font-size:12px;margin-top:2px}
-    .bc-item button{background:transparent;border:1px solid var(--line-strong);color:var(--muted);border-radius:8px;padding:6px 12px;font-size:12px;cursor:pointer;font-family:inherit;white-space:nowrap}
-    .bc-item button:hover{color:#E28A7E;border-color:#E28A7E}
-    .links{display:flex;gap:10px;flex-wrap:wrap}
-    .links a{display:inline-flex;align-items:center;gap:6px;background:var(--raised);border:1px solid var(--line);border-radius:10px;padding:10px 16px;color:var(--secondary);text-decoration:none;font-size:14px;font-weight:600}
-    .links a:hover{border-color:var(--accent);color:var(--text)}
+    .bc-item .m{color:var(--muted);font-size:12px;margin-top:3px}
+    .bc-item button{background:transparent;border:1px solid var(--line-strong);color:var(--muted);border-radius:8px;
+      padding:7px 13px;font-size:12px;cursor:pointer;font-family:inherit;white-space:nowrap;transition:.15s}
+    .bc-item button:hover{color:var(--red);border-color:var(--red)}
+
+    /* links */
+    .links{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+    .links a{display:flex;align-items:center;gap:11px;background:var(--raised);border:1px solid var(--line);
+      border-radius:13px;padding:16px;color:var(--secondary);text-decoration:none;font-size:14px;font-weight:600;transition:.18s}
+    .links a:hover{border-color:var(--gold2);color:var(--text);transform:translateY(-2px);box-shadow:0 10px 26px rgba(0,0,0,.3)}
+    .links a .ic{font-size:20px}
+
+    .foot{color:var(--muted);font-size:12px;text-align:center;padding:26px 0 44px}
+    .err{background:rgba(226,138,126,.07);border:1px solid rgba(226,138,126,.3);color:var(--red);
+      border-radius:12px;padding:15px 17px;margin-bottom:18px;font-size:13.5px;display:none}
+    @media(max-width:560px){.kpi .num{font-size:2rem}.panel{padding:20px 16px}}
   </style>
 </head>
 <body>
@@ -87,19 +166,21 @@
   <div class="gate-card">
     <img src="assets/pipvanta-logo.png" alt="PIPVANT">
     <h1>Founder access</h1>
-    <p>This dashboard is private. Sign in with your founder account to view company numbers.</p>
+    <p>The ops room is private. Sign in with your founder account to enter.</p>
     <input type="email" id="em" placeholder="Founder email" autocomplete="username">
     <input type="password" id="pw" placeholder="Password" autocomplete="current-password">
-    <button id="loginBtn">Sign in</button>
+    <button id="loginBtn">Enter ops room</button>
     <div class="gate-msg" id="gateMsg"></div>
-    <div class="lock">🔒 Protected by Supabase Auth · only the founder account can read these numbers</div>
+    <div class="lock">🔒 Protected by Supabase Auth · founder account only</div>
   </div>
 </div>
 
-<!-- ============ DASHBOARD ============ -->
+<!-- ============ OPS ROOM ============ -->
 <div id="dash" hidden>
-<header><div class="wrap">
-  <div class="brand"><img src="assets/pipvanta-logo.png" alt="">PIPVANT · Operations</div>
+<header class="top"><div class="wrap">
+  <div class="brand"><img src="assets/pipvanta-logo.png" alt="">
+    <span>PIPVANT<small>Ops Room</small></span>
+  </div>
   <div class="hbtns">
     <div class="live"><span class="dot"></span><span id="upd">connecting…</span></div>
     <button class="signout" id="outBtn">Sign out</button>
@@ -107,59 +188,86 @@
 </div></header>
 
 <div class="wrap">
-  <h1 class="title">Company dashboard</h1>
-  <p class="sub">Real numbers, updated every minute. No vanity metrics.</p>
-  <div class="err" id="err"></div>
+  <nav class="tabs">
+    <button class="tab active" data-tab="overview">📊 Overview</button>
+    <button class="tab" data-tab="broadcast">📣 Broadcast <span class="n" id="bc-count">0</span></button>
+    <button class="tab" data-tab="links">🔗 Links</button>
+  </nav>
 
-  <div class="kpis">
-    <div class="kpi"><div class="lbl">Total views</div><div class="num gold" id="k-total">—</div></div>
-    <div class="kpi"><div class="lbl">Views · last 7 days</div><div class="num gold" id="k-7d">—</div></div>
-    <div class="kpi"><div class="lbl">Newsletter subs</div><div class="num blue" id="k-subs">—</div></div>
-    <div class="kpi"><div class="lbl">Subs · last 7 days</div><div class="num blue" id="k-subs7">—</div></div>
-  </div>
+  <!-- OVERVIEW -->
+  <section id="tab-overview">
+    <div class="hero">
+      <h1>Command <span class="gold">center</span></h1>
+      <p>Every number that matters, live. No vanity metrics.</p>
+    </div>
+    <div class="err" id="err"></div>
+    <div class="kpis">
+      <div class="kpi"><div class="lbl">Total views</div><div class="num gold" id="k-total">—</div><div class="hint">All visits since tracking began.</div></div>
+      <div class="kpi"><div class="lbl">Views · 7 days</div><div class="num gold" id="k-7d">—</div><div class="hint">The growth signal. Is this week better?</div></div>
+      <div class="kpi"><div class="lbl">Newsletter subs</div><div class="num blue" id="k-subs">—</div><div class="hint">Your owned audience. No middleman.</div></div>
+      <div class="kpi"><div class="lbl">Subs · 7 days</div><div class="num blue" id="k-subs7">—</div><div class="hint">List growth this week.</div></div>
+    </div>
+    <div class="panel">
+      <h2>📈 Traffic · last 14 days</h2>
+      <p class="desc">Daily visits. Spot strong days and rising trends.</p>
+      <div class="chart" id="chart"><div class="empty">Loading…</div></div>
+    </div>
+    <div class="panel">
+      <h2>📄 Views by page</h2>
+      <p class="desc">Which pages pull traffic — invest where it works.</p>
+      <div id="pages"><div class="empty">Loading…</div></div>
+    </div>
+  </section>
 
-  <div class="panel">
-    <h2>📣 Broadcast notification</h2>
-    <p style="color:var(--muted);font-size:13px;margin:0 0 16px">Send a notification to <strong style="color:var(--text)">every PIPVANT user</strong>. It appears in their notification center instantly.</p>
-    <div class="bc-form">
-      <input id="bc-title" placeholder="Title (English)" maxlength="80">
-      <input id="bc-title-ar" placeholder="العنوان (عربي — اختياري)" maxlength="80" dir="rtl">
-      <textarea id="bc-msg" placeholder="Message (English)" rows="2" maxlength="300"></textarea>
-      <textarea id="bc-msg-ar" placeholder="الرسالة (عربي — اختياري)" rows="2" maxlength="300" dir="rtl"></textarea>
-      <div class="bc-row">
-        <select id="bc-type">
-          <option value="info">ℹ️ Info</option>
-          <option value="success">✅ Success</option>
-          <option value="warning">⚠️ Warning</option>
-        </select>
-        <button class="cta-btn" id="bc-send">Broadcast now</button>
+  <!-- BROADCAST -->
+  <section id="tab-broadcast" hidden>
+    <div class="hero">
+      <h1>Broadcast <span class="gold">center</span></h1>
+      <p>One message — every PIPVANT user sees it instantly.</p>
+    </div>
+    <div class="panel">
+      <h2>📣 New broadcast</h2>
+      <p class="desc">Write in English and Arabic. It appears in every user's notification center within seconds.</p>
+      <div class="bc-form">
+        <input id="bc-title" placeholder="Title (English)" maxlength="80">
+        <input id="bc-title-ar" placeholder="العنوان بالعربية (اختياري)" maxlength="80" dir="rtl">
+        <textarea id="bc-msg" placeholder="Message (English)" rows="2" maxlength="300"></textarea>
+        <textarea id="bc-msg-ar" placeholder="الرسالة بالعربية (اختياري)" rows="2" maxlength="300" dir="rtl"></textarea>
+        <div class="bc-row">
+          <select id="bc-type">
+            <option value="info">ℹ️ Info</option>
+            <option value="success">✅ Success</option>
+            <option value="warning">⚠️ Warning</option>
+          </select>
+          <button class="cta-btn" id="bc-send">Broadcast now</button>
+        </div>
+        <div id="bc-status" style="min-height:20px;font-size:13px;margin-top:8px"></div>
       </div>
-      <div id="bc-status" style="min-height:20px;font-size:13px;margin-top:8px"></div>
     </div>
-    <h3 style="font-size:15px;margin:20px 0 10px">History</h3>
-    <div id="bc-history"><div class="empty">Loading…</div></div>
-  </div>
-
-  <div class="panel">
-    <h2>🔗 Operations links</h2>
-    <div class="links">
-      <a href="https://x.com/pipvant" target="_blank" rel="noopener">𝕏 @pipvant</a>
-      <a href="https://www.instagram.com/pipvant.app/" target="_blank" rel="noopener">📸 Instagram</a>
-      <a href="https://github.com/pipvant/pipvant.github.io" target="_blank" rel="noopener">💻 GitHub repo</a>
-      <a href="https://supabase.com/dashboard/project/acpkzavmifjwnskiaret" target="_blank" rel="noopener">🗄️ Supabase</a>
-      <a href="/" target="_blank" rel="noopener">🌐 PIPVANT site</a>
+    <div class="panel">
+      <h2>🕘 History</h2>
+      <p class="desc">Past broadcasts. Turn any of them off at any time.</p>
+      <div id="bc-history"><div class="empty">Loading…</div></div>
     </div>
-  </div>
+  </section>
 
-  <div class="panel">
-    <h2>Traffic · last 14 days</h2>
-    <div class="chart" id="chart"><div class="empty">Loading…</div></div>
-  </div>
-
-  <div class="panel">
-    <h2>Views by page</h2>
-    <div id="pages"><div class="empty">Loading…</div></div>
-  </div>
+  <!-- LINKS -->
+  <section id="tab-links" hidden>
+    <div class="hero">
+      <h1>Mission <span class="gold">control</span></h1>
+      <p>Every property, one tap away.</p>
+    </div>
+    <div class="panel">
+      <div class="links">
+        <a href="https://pipvant.github.io/" target="_blank" rel="noopener"><span class="ic">🌐</span>PIPVANT site</a>
+        <a href="https://x.com/pipvant" target="_blank" rel="noopener"><span class="ic">𝕏</span>@pipvant</a>
+        <a href="https://www.instagram.com/pipvant.app/" target="_blank" rel="noopener"><span class="ic">📸</span>Instagram</a>
+        <a href="https://github.com/pipvant/pipvant.github.io" target="_blank" rel="noopener"><span class="ic">💻</span>GitHub repo</a>
+        <a href="https://supabase.com/dashboard/project/acpkzavmifjwnskiaret" target="_blank" rel="noopener"><span class="ic">🗄️</span>Supabase</a>
+        <a href="https://orovanta.github.io/" target="_blank" rel="noopener"><span class="ic">🏛️</span>Orovanta</a>
+      </div>
+    </div>
+  </section>
 
   <p class="foot">PIPVANT by Orovanta · founder-only — this page is not linked anywhere public</p>
 </div>
@@ -176,7 +284,26 @@
   var gate=document.getElementById('gate'), dash=document.getElementById('dash');
   var msg=document.getElementById('gateMsg'), btn=document.getElementById('loginBtn');
 
-  function showDash(){ gate.hidden=true; dash.hidden=false; render(); loadHistory(); wireBroadcast(); setInterval(render,60000); }
+  /* ---------- tabs ---------- */
+  function wireTabs(){
+    var tabs=document.querySelectorAll('.tab');
+    tabs.forEach(function(t){
+      t.addEventListener('click',function(){
+        tabs.forEach(function(x){x.classList.remove('active');});
+        t.classList.add('active');
+        ['overview','broadcast','links'].forEach(function(name){
+          document.getElementById('tab-'+name).hidden = (name!==t.dataset.tab);
+        });
+      });
+    });
+  }
+
+  /* ---------- gate ---------- */
+  function showDash(){
+    gate.hidden=true; dash.hidden=false;
+    wireTabs(); render(); loadHistory(); wireBroadcast();
+    setInterval(render,60000);
+  }
   function deny(t){ msg.textContent=t||'Access denied — founder account only.'; }
 
   btn.addEventListener('click',function(){
@@ -202,10 +329,10 @@
         if(em.toLowerCase()===FOUNDER){ showDash(); }
         else{ sb.auth.signOut(); deny(); }
       }
-      /* no session: just show the login form */
     });
   }
 
+  /* ---------- overview ---------- */
   function pageName(p){
     if(p==='/'||p==='/index.html') return 'Home';
     return p.replace(/^\//,'').replace(/\.html$/,'').replace(/-/g,' ');
@@ -244,7 +371,7 @@
         trend.forEach(function(t){
           var d=new Date(t.day+'T12:00:00'), lbl=d.toLocaleDateString('en-GB',{day:'2-digit',month:'short'});
           var b=document.createElement('div'); b.className='bar';
-          b.innerHTML='<div class="v">'+t.views+'</div><div class="fill" style="height:'+Math.max(3,Math.round(t.views/max*120))+'px"></div><div class="d">'+lbl+'</div>';
+          b.innerHTML='<div class="v">'+t.views+'</div><div class="fill" style="height:'+Math.max(3,Math.round(t.views/max*130))+'px"></div><div class="d">'+lbl+'</div>';
           ch.appendChild(b);
         });
       }
@@ -260,34 +387,36 @@
     }).catch(showErr);
   }
 
-      /* ============ BROADCAST CONTROL ============ */
+  /* ---------- broadcast ---------- */
   function bcSay(t,ok){
     var s=document.getElementById('bc-status');
     s.textContent=t; s.style.color=ok?'#7EE2A8':'#E28A7E';
   }
+  function escapeHtml(s){
+    return String(s||'').replace(/[&<>"']/g,function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
   function wireBroadcast(){
-    var btn=document.getElementById('bc-send');
-    if(!btn||btn.__wired) return; btn.__wired=true;
-    btn.addEventListener('click',function(){
+    var b=document.getElementById('bc-send');
+    if(!b||b.__wired) return; b.__wired=true;
+    b.addEventListener('click',function(){
       var title=document.getElementById('bc-title').value.trim();
-      var msg=document.getElementById('bc-msg').value.trim();
-      if(!title||!msg){ bcSay('Title and message are required.',false); return; }
-      btn.disabled=true; bcSay('Broadcasting…');
+      var gmsg=document.getElementById('bc-msg').value.trim();
+      if(!title||!gmsg){ bcSay('Title and message are required.',false); return; }
+      b.disabled=true; bcSay('Broadcasting…');
       sb.from('broadcasts').insert({
         title:title,
         title_ar:document.getElementById('bc-title-ar').value.trim()||null,
-        message:msg,
+        message:gmsg,
         message_ar:document.getElementById('bc-msg-ar').value.trim()||null,
         type:document.getElementById('bc-type').value,
         active:true
       }).then(function(r){
-        btn.disabled=false;
+        b.disabled=false;
         if(r.error){ bcSay('Failed: '+r.error.message,false); return; }
         bcSay('Broadcast sent to all users. ✅',true);
-        document.getElementById('bc-title').value='';
-        document.getElementById('bc-title-ar').value='';
-        document.getElementById('bc-msg').value='';
-        document.getElementById('bc-msg-ar').value='';
+        ['bc-title','bc-title-ar','bc-msg','bc-msg-ar'].forEach(function(id){document.getElementById(id).value='';});
         loadHistory();
       });
     });
@@ -298,6 +427,8 @@
     .then(function(r){
       if(r.error){ h.innerHTML='<div class="empty">Could not load history.</div>'; return; }
       var arr=r.data||[];
+      var active=arr.filter(function(b){return b.active;}).length;
+      document.getElementById('bc-count').textContent=active;
       if(!arr.length){ h.innerHTML='<div class="empty">No broadcasts yet.</div>'; return; }
       h.innerHTML='';
       arr.forEach(function(b){
@@ -317,12 +448,6 @@
       });
     });
   }
-  function escapeHtml(s){
-    return String(s||'').replace(/[&<>"']/g,function(c){
-      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
-    });
-  }
-
 
   boot();
 })();
