@@ -63,6 +63,21 @@
     .empty{color:var(--muted);text-align:center;padding:30px;font-size:14px}
     .foot{color:var(--muted);font-size:12px;text-align:center;padding:24px 0 40px}
     .err{background:rgba(226,138,126,.08);border:1px solid rgba(226,138,126,.3);color:#E28A7E;border-radius:12px;padding:16px;margin-bottom:20px;font-size:14px;display:none}
+    .bc-form input,.bc-form textarea,.bc-form select{background:var(--raised);border:1px solid var(--line);border-radius:10px;color:var(--text);font-size:14px;padding:11px 14px;margin-bottom:10px;font-family:inherit;width:100%}
+    .bc-form input:focus,.bc-form textarea:focus,.bc-form select:focus{outline:none;border-color:var(--accent)}
+    .bc-form textarea{resize:vertical}
+    .bc-form select{width:auto}
+    .bc-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .cta-btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 20px;border-radius:10px;background:#3A6FDE;border:1px solid #3A6FDE;color:#fff;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit}
+    .cta-btn:disabled{opacity:.5;cursor:wait}
+    .bc-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;font-size:13px}
+    .bc-item .t{color:var(--text);font-weight:600}
+    .bc-item .m{color:var(--muted);font-size:12px;margin-top:2px}
+    .bc-item button{background:transparent;border:1px solid var(--line-strong);color:var(--muted);border-radius:8px;padding:6px 12px;font-size:12px;cursor:pointer;font-family:inherit;white-space:nowrap}
+    .bc-item button:hover{color:#E28A7E;border-color:#E28A7E}
+    .links{display:flex;gap:10px;flex-wrap:wrap}
+    .links a{display:inline-flex;align-items:center;gap:6px;background:var(--raised);border:1px solid var(--line);border-radius:10px;padding:10px 16px;color:var(--secondary);text-decoration:none;font-size:14px;font-weight:600}
+    .links a:hover{border-color:var(--accent);color:var(--text)}
   </style>
 </head>
 <body>
@@ -104,6 +119,39 @@
   </div>
 
   <div class="panel">
+    <h2>📣 Broadcast notification</h2>
+    <p style="color:var(--muted);font-size:13px;margin:0 0 16px">Send a notification to <strong style="color:var(--text)">every PIPVANT user</strong>. It appears in their notification center instantly.</p>
+    <div class="bc-form">
+      <input id="bc-title" placeholder="Title (English)" maxlength="80">
+      <input id="bc-title-ar" placeholder="العنوان (عربي — اختياري)" maxlength="80" dir="rtl">
+      <textarea id="bc-msg" placeholder="Message (English)" rows="2" maxlength="300"></textarea>
+      <textarea id="bc-msg-ar" placeholder="الرسالة (عربي — اختياري)" rows="2" maxlength="300" dir="rtl"></textarea>
+      <div class="bc-row">
+        <select id="bc-type">
+          <option value="info">ℹ️ Info</option>
+          <option value="success">✅ Success</option>
+          <option value="warning">⚠️ Warning</option>
+        </select>
+        <button class="cta-btn" id="bc-send">Broadcast now</button>
+      </div>
+      <div id="bc-status" style="min-height:20px;font-size:13px;margin-top:8px"></div>
+    </div>
+    <h3 style="font-size:15px;margin:20px 0 10px">History</h3>
+    <div id="bc-history"><div class="empty">Loading…</div></div>
+  </div>
+
+  <div class="panel">
+    <h2>🔗 Operations links</h2>
+    <div class="links">
+      <a href="https://x.com/pipvant" target="_blank" rel="noopener">𝕏 @pipvant</a>
+      <a href="https://www.instagram.com/pipvant.app/" target="_blank" rel="noopener">📸 Instagram</a>
+      <a href="https://github.com/pipvant/pipvant.github.io" target="_blank" rel="noopener">💻 GitHub repo</a>
+      <a href="https://supabase.com/dashboard/project/acpkzavmifjwnskiaret" target="_blank" rel="noopener">🗄️ Supabase</a>
+      <a href="/" target="_blank" rel="noopener">🌐 PIPVANT site</a>
+    </div>
+  </div>
+
+  <div class="panel">
     <h2>Traffic · last 14 days</h2>
     <div class="chart" id="chart"><div class="empty">Loading…</div></div>
   </div>
@@ -128,7 +176,7 @@
   var gate=document.getElementById('gate'), dash=document.getElementById('dash');
   var msg=document.getElementById('gateMsg'), btn=document.getElementById('loginBtn');
 
-  function showDash(){ gate.hidden=true; dash.hidden=false; render(); setInterval(render,60000); }
+  function showDash(){ gate.hidden=true; dash.hidden=false; render(); loadHistory(); wireBroadcast(); setInterval(render,60000); }
   function deny(t){ msg.textContent=t||'Access denied — founder account only.'; }
 
   btn.addEventListener('click',function(){
@@ -211,6 +259,70 @@
       document.getElementById('upd').textContent='live · '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
     }).catch(showErr);
   }
+
+      /* ============ BROADCAST CONTROL ============ */
+  function bcSay(t,ok){
+    var s=document.getElementById('bc-status');
+    s.textContent=t; s.style.color=ok?'#7EE2A8':'#E28A7E';
+  }
+  function wireBroadcast(){
+    var btn=document.getElementById('bc-send');
+    if(!btn||btn.__wired) return; btn.__wired=true;
+    btn.addEventListener('click',function(){
+      var title=document.getElementById('bc-title').value.trim();
+      var msg=document.getElementById('bc-msg').value.trim();
+      if(!title||!msg){ bcSay('Title and message are required.',false); return; }
+      btn.disabled=true; bcSay('Broadcasting…');
+      sb.from('broadcasts').insert({
+        title:title,
+        title_ar:document.getElementById('bc-title-ar').value.trim()||null,
+        message:msg,
+        message_ar:document.getElementById('bc-msg-ar').value.trim()||null,
+        type:document.getElementById('bc-type').value,
+        active:true
+      }).then(function(r){
+        btn.disabled=false;
+        if(r.error){ bcSay('Failed: '+r.error.message,false); return; }
+        bcSay('Broadcast sent to all users. ✅',true);
+        document.getElementById('bc-title').value='';
+        document.getElementById('bc-title-ar').value='';
+        document.getElementById('bc-msg').value='';
+        document.getElementById('bc-msg-ar').value='';
+        loadHistory();
+      });
+    });
+  }
+  function loadHistory(){
+    var h=document.getElementById('bc-history');
+    sb.from('broadcasts').select('*').order('created_at',{ascending:false}).limit(20)
+    .then(function(r){
+      if(r.error){ h.innerHTML='<div class="empty">Could not load history.</div>'; return; }
+      var arr=r.data||[];
+      if(!arr.length){ h.innerHTML='<div class="empty">No broadcasts yet.</div>'; return; }
+      h.innerHTML='';
+      arr.forEach(function(b){
+        var d=document.createElement('div'); d.className='bc-item';
+        var dt=new Date(b.created_at).toLocaleDateString('en-GB',{day:'2-digit',month:'short'});
+        d.innerHTML='<div><div class="t">'+escapeHtml(b.title)+
+          (b.active?'':' <span style="color:var(--muted)">(off)</span>')+
+          '</div><div class="m">'+dt+' · '+escapeHtml((b.message||'').slice(0,80))+'</div></div>';
+        if(b.active){
+          var off=document.createElement('button'); off.textContent='Turn off';
+          off.addEventListener('click',function(){
+            sb.from('broadcasts').update({active:false}).eq('id',b.id).then(function(){ loadHistory(); });
+          });
+          d.appendChild(off);
+        }
+        h.appendChild(d);
+      });
+    });
+  }
+  function escapeHtml(s){
+    return String(s||'').replace(/[&<>"']/g,function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+
 
   boot();
 })();

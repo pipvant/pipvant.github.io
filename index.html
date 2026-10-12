@@ -4190,6 +4190,24 @@
       });
       renderNotifications();
     }).catch(function(){});
+    // live broadcasts from the founder's ops room (Supabase) — fail silently
+    try{
+      if(typeof sb!=='undefined'&&sb){
+        sb.from('broadcasts').select('*').eq('active',true).order('created_at',{ascending:false}).limit(10)
+        .then(function(res){
+          var arr=(res&&res.data)||[];
+          var lang=currentLanguage==='ar'?'ar':'en';
+          arr.forEach(function(g){
+            var title=lang==='ar'?(g.title_ar||g.title):g.title;
+            var msg=lang==='ar'?(g.message_ar||g.message):g.message;
+            if(!notifStore.some(function(x){return x.id==='b_'+g.id;})){
+              notifStore.push({id:'b_'+g.id,scope:'everyone',title:title,message:msg,type:g.type||'info',ts:new Date(g.created_at||Date.now()).getTime(),read:isNotifRead('b_'+g.id)});
+            }
+          });
+          renderNotifications();
+        },function(){});
+      }
+    }catch(e){}
   }
   function isNotifRead(id){
     try{var r=JSON.parse(localStorage.getItem('pipvant_notif_read')||'{}');return !!r[id];}catch(e){return false;}
