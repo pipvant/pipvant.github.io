@@ -123,6 +123,12 @@
     tr:last-child td{border-bottom:none}
     tr:hover td{background:rgba(255,255,255,.015)}
     .empty{color:var(--muted);text-align:center;padding:32px;font-size:14px}
+    /* targets */
+    .trow{display:grid;grid-template-columns:110px 1fr 92px;gap:12px;align-items:center;margin:11px 0;font-size:13px}
+    .trow span{color:var(--secondary)}
+    .tbar{height:9px;background:#0f1c33;border-radius:6px;overflow:hidden;border:1px solid var(--line)}
+    .tfill{height:100%;width:0;border-radius:6px;background:linear-gradient(90deg,var(--gold2),var(--gold));transition:width .8s ease}
+    .trow b{color:var(--gold);text-align:right;font-variant-numeric:tabular-nums}
 
     /* broadcast */
     .bc-form input,.bc-form textarea,.bc-form select{
@@ -200,6 +206,13 @@
       <div class="kpi"><div class="lbl">Subs · 7 days</div><div class="num blue" id="k-subs7">—</div><div class="hint">List growth this week.</div></div>
       <div class="kpi"><div class="lbl">Registered users</div><div class="num gold" id="k-users">—</div><div class="hint">Accounts created. Tracked from today.</div></div>
       <div class="kpi"><div class="lbl">Users · 7 days</div><div class="num gold" id="k-users7">—</div><div class="hint">New accounts this week.</div></div>
+    </div>
+    <div class="panel">
+      <h2>🎯 October targets <span class="live" id="days-left"></span></h2>
+      <p class="desc">Company goals for the month. Proposed by the operator — adjust anytime.</p>
+      <div class="trow"><span>Visits</span><div class="tbar"><div class="tfill" id="t-visits"></div></div><b id="t-visits-n">—</b></div>
+      <div class="trow"><span>Signups</span><div class="tbar"><div class="tfill" id="t-signups"></div></div><b id="t-signups-n">—</b></div>
+      <div class="trow"><span>Newsletter</span><div class="tbar"><div class="tfill" id="t-subs"></div></div><b id="t-subs-n">—</b></div>
     </div>
     <div class="panel">
       <h2>📈 Traffic · last 14 days</h2>
@@ -346,6 +359,20 @@
       document.getElementById('k-subs7').textContent=s.subs_7d||0;
       document.getElementById('k-users').textContent=sgTotal;
       document.getElementById('k-users7').textContent=sg7;
+
+      /* monthly targets */
+      var TARGETS={visits:300,signups:20,subs:10};
+      var realViews=Math.max(0,(s.total_views||0)-testViews-sgTotal);
+      function tbar(fillId,numId,actual,target){
+        var pct=Math.min(100,Math.round(actual/target*100));
+        document.getElementById(fillId).style.width=pct+'%';
+        document.getElementById(numId).textContent=actual+' / '+target;
+      }
+      tbar('t-visits','t-visits-n',realViews,TARGETS.visits);
+      tbar('t-signups','t-signups-n',sgTotal,TARGETS.signups);
+      tbar('t-subs','t-subs-n',s.subs_total||0,TARGETS.subs);
+      var daysLeft=Math.max(0,Math.ceil((new Date(2026,9,31,23,59)-Date.now())/86400000));
+      document.getElementById('days-left').textContent='· '+daysLeft+' days left';
 
       var ch=document.getElementById('chart'); ch.innerHTML='';
       if(!trend.length){ ch.innerHTML='<div class="empty">No traffic yet — the machines are running.</div>'; }
