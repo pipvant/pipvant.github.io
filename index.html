@@ -4170,6 +4170,21 @@
   function savePersonalNotifs(list){try{localStorage.setItem(notifUserKey(),JSON.stringify(list.slice(0,50)));}catch(e){}}
   function addPersonalNotif(title,message,type,ref){
     if(!notificationsEnabled)return;
+    // Logged in → Supabase is the source of truth (persists across data-clear).
+    // Falls back to localStorage if the insert fails (e.g. migration not run yet).
+    if(typeof sb!=='undefined'&&sb&&typeof sbUser!=='undefined'&&sbUser){
+      var p=sbNotify(title,message,ref);
+      if(p&&typeof p.then==='function'){
+        p.then(function(r){
+          if(r&&r.error){addPersonalNotifLocal(title,message,type,ref);}
+          else if(typeof sbLoadNotifications==='function'){sbLoadNotifications();}
+        },function(){addPersonalNotifLocal(title,message,type,ref);});
+        return;
+      }
+    }
+    addPersonalNotifLocal(title,message,type,ref);
+  }
+  function addPersonalNotifLocal(title,message,type,ref){
     var list=getPersonalNotifs();
     var id='p'+Date.now()+Math.floor(Math.random()*9999);
     list.unshift({id:id,scope:'personal',title:title,message:message,type:type||'info',ts:Date.now(),read:false,ref:ref||null});
@@ -4222,11 +4237,20 @@
     list.forEach(function(x){if(x.id===id&&!x.read){x.read=true;changed=true;}});
     if(changed)savePersonalNotifs(list);
     notifStore.forEach(function(x){if(x.id===id)x.read=true;});
+    // persist read for Supabase personal items (s_<row id>)
+    if(id&&id.indexOf('s_')===0&&typeof sb!=='undefined'&&sb&&typeof sbUser!=='undefined'&&sbUser){
+      sbQuiet(sb.from('notifications').update({read:true}).eq('id',id.slice(2)));
+    }
     renderNotifications();
   }
   function markAllNotifsRead(){
     var list=getPersonalNotifs();list.forEach(function(x){x.read=true;});savePersonalNotifs(list);
     notifStore.forEach(function(x){if(x.scope==='everyone')markNotifRead(x.id);x.read=true;});
+    // persist read for Supabase personal items (one bulk update)
+    try{
+      var sIds=notifStore.filter(function(x){return x.id&&x.id.indexOf('s_')===0;}).map(function(x){return x.id.slice(2);});
+      if(sIds.length&&typeof sb!=='undefined'&&sb&&typeof sbUser!=='undefined'&&sbUser)sbQuiet(sb.from('notifications').update({read:true}).in('id',sIds));
+    }catch(e){}
     renderNotifications();
   }
   var activeNTab='all';
@@ -5739,41 +5763,36 @@
 
   function sbLoadNotifications(){
     sbLoadWithUser(function(){
-    sb.from('notifications').select('id,title,body,created_at,read').eq('user_id',sbUser.id).order('created_at',{ascending:false}).limit(30)
+    if(!sb||!sbUser)return;
+    sb.from('notifications').select('id,title,body,created_at,read,data').eq('user_id',sbUser.id).order('created_at',{ascending:false}).limit(30)
       .then(function(r){
-        if(r.error||!r.data||!r.data.length)return;
-        var groups=document.getElementById('notificationGroups');
-        var empty=document.getElementById('notificationEmpty');
-        if(!groups)return;
-        // clear placeholder items
-        groups.querySelectorAll('.notification-item').forEach(function(n){n.remove();});
-        var today=new Date().toDateString();
-        var sections={today:groups.querySelector('#notify-today').parentNode,yesterday:groups.querySelector('#notify-yesterday').parentNode,earlier:groups.querySelector('#notify-earlier').parentNode};
-        r.data.forEach(function(n){
-          var d=new Date(n.created_at),ds=d.toDateString();
-          var sec=ds===today?sections.today:(ds===new Date(Date.now()-86400000).toDateString()?sections.yesterday:sections.earlier);
-          if(!sec)return;
-          var b=document.createElement('button');
-          b.className='notification-item '+(n.read?'read':'unread');b.type='button';b.setAttribute('data-notification-item','');
-          b.innerHTML='<span class="notification-copy"><strong></strong><span></span></span><span class="notification-meta"><strong></strong></span>';
-          b.querySelector('strong').textContent=n.title||'—';
-          b.querySelector('.notification-copy span').textContent=n.body||'';
-          b.querySelector('.notification-meta strong').textContent=d.toLocaleDateString();
-          b.addEventListener('click',function(){
-            b.classList.remove('unread');b.classList.add('read');
-            sbQuiet(sb.from('notifications').update({read:true}).eq('id',n.id));
-            if(typeof refreshNotificationBadge==='function')refreshNotificationBadge();
-          });
-          sec.appendChild(b);
+        var rows=(r&&!r.error&&r.data)?r.data:[];
+        // Merge Supabase personal notifications into notifStore (single renderer).
+        rows.forEach(function(n){
+          var id='s_'+n.id;
+          if(!notifStore.some(function(x){return x.id===id;})){
+            notifStore.push({id:id,scope:'personal',title:n.title||'—',message:n.body||'',type:'info',ts:new Date(n.created_at||Date.now()).getTime(),read:!!n.read,ref:n.data||null});
+          }
         });
-        groups.hidden=false;if(empty)empty.hidden=true;
-        if(typeof refreshNotificationBadge==='function')refreshNotificationBadge();
+        // Welcome: NEW USERS ONLY, once. (It used to be global in
+        // notifications.json with read-state in localStorage, so it
+        // re-appeared as NEW after every data-clear for existing users.)
+        if(!window._welcomeAttempted){
+          var hasWelcome=rows.some(function(n){return n.title==='Welcome to PIPVANT';});
+          var createdAt=sbUser.created_at?new Date(sbUser.created_at).getTime():0;
+          if(!hasWelcome&&createdAt&&(Date.now()-createdAt)<7*24*3600*1000){
+            window._welcomeAttempted=true;
+            var wp=sbNotify('Welcome to PIPVANT','Use code PV on firm cards for exclusive offers.',null);
+            if(wp&&typeof wp.then==='function')wp.then(function(wr){if(!wr||!wr.error)sbLoadNotifications();},function(){});
+          }
+        }
+        renderNotifications();
       }).catch(function(){var loader=document.getElementById('authLoading');if(loader)loader.style.display='none';document.body.classList.remove('auth-checking');});
     });
   }
-  function sbNotify(title,body){
+  function sbNotify(title,body,data){
     if(!sb||!sbUser||!title)return;
-    sbQuiet(sb.from('notifications').insert({user_id:sbUser.id,title:title,body:body||null}));
+    return sb.from('notifications').insert({user_id:sbUser.id,title:title,body:body||null,data:data||null});
   }
   document.querySelectorAll('.notification-tab').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.notification-tab').forEach(function(other){other.setAttribute('aria-selected',String(other===button));});});});
   document.querySelectorAll('.notification-filter').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.notification-filter').forEach(function(other){other.setAttribute('aria-pressed',String(other===button));});});});
