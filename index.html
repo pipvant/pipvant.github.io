@@ -2799,6 +2799,7 @@
     var list=sbGetShortlist();var i=list.indexOf(fid);
     if(i===-1){list.push(fid);}else{list.splice(i,1);}
     try{localStorage.setItem('pipvant_shortlist',JSON.stringify(list));}catch(e){}
+    if(typeof sbSyncUserPref==='function')sbSyncUserPref('shortlist',list);
     return i===-1;
   }
   function sbFillDirectoryCard(node,firm,plans){
@@ -3138,6 +3139,7 @@
       try{all=JSON.parse(localStorage.getItem('pipvant_trade_extras')||'{}');}catch(e){}
       all[String(id)]=extras;
       localStorage.setItem('pipvant_trade_extras',JSON.stringify(all));
+      if(typeof sbSyncUserPref==='function')sbSyncUserPref('trade_extras',all);
     }catch(e){}
   }
   /* ---- Local-first trade persistence: trades never lost ---- */
@@ -3218,7 +3220,7 @@
         sbFlushPendingProfile();
         sbLoadProfile(function(pname){enterProduct(pname||session.user.email||'','—');});
         if(typeof syncLocalTradesToCloud==='function')syncLocalTradesToCloud();
-        sbLoadTrades();sbLoadDiscipline();sbLoadSettings();sbLoadAccounts();sbLoadCertificates();sbLoadNotifications();
+        sbLoadTrades();sbLoadDiscipline();sbLoadSettings();sbLoadAccounts();sbLoadUserPrefs();sbLoadCertificates();sbLoadNotifications();
       }else if(event==='SIGNED_OUT'){
         sbUser=null;
         try{sessionJournalEntries=[];window.sessionJournalEntries=[];if(typeof renderJournalEntries==='function')renderJournalEntries();}catch(_so){}
@@ -3234,7 +3236,7 @@
         sbFlushPendingProfile();
         sbLoadProfile(function(pname){enterProduct(pname||session.user.email||'','—');});
         if(typeof syncLocalTradesToCloud==='function')syncLocalTradesToCloud();
-        sbLoadTrades();sbLoadDiscipline();sbLoadSettings();sbLoadAccounts();sbLoadCertificates();sbLoadNotifications();
+        sbLoadTrades();sbLoadDiscipline();sbLoadSettings();sbLoadAccounts();sbLoadUserPrefs();sbLoadCertificates();sbLoadNotifications();
       }else{
         // No session: first-time visitors see the landing once; returning users go straight to login
         var seenLp=false;try{seenLp=!!localStorage.getItem('pipvant_seen_landing');}catch(e){}
@@ -4008,6 +4010,26 @@
         themeHydrating=false;
       }).catch(function(){themeHydrating=false;var loader=document.getElementById('authLoading');if(loader)loader.style.display='none';document.body.classList.remove('auth-checking');});
   }
+  // Sync small user preferences to Supabase (same class as the accounts fix:
+  // shortlist, notification currencies, broadcast read-state, and trade
+  // extras were all localStorage-only and lost on data-clear).
+  function sbSyncUserPref(key,value){
+    if(!sb||!sbUser)return;
+    var payload={user_id:sbUser.id};payload[key]=value;
+    sb.from('user_settings').upsert(payload,{onConflict:'user_id'}).then(function(r){if(r.error)console.warn('Pref sync failed:',key,r.error.message);}).catch(function(e){console.warn('Pref sync error:',e);});
+  }
+  function sbLoadUserPrefs(){
+    if(!sb||!sbUser)return;
+    sb.from('user_settings').select('shortlist,notif_currencies,read_broadcasts,trade_extras').eq('user_id',sbUser.id).maybeSingle().then(function(r){
+      var d=r&&!r.error&&r.data?r.data:null;if(!d)return;
+      try{
+        if(Array.isArray(d.shortlist)&&d.shortlist.length&&!localStorage.getItem('pipvant_shortlist'))localStorage.setItem('pipvant_shortlist',JSON.stringify(d.shortlist));
+        if(Array.isArray(d.notif_currencies)&&d.notif_currencies.length){var ck=notifUserKey()+'_currs';if(!localStorage.getItem(ck))localStorage.setItem(ck,JSON.stringify(d.notif_currencies));}
+        if(Array.isArray(d.read_broadcasts)&&d.read_broadcasts.length&&!localStorage.getItem('pipvant_notif_read')){var m={};d.read_broadcasts.forEach(function(id){m[id]=1;});localStorage.setItem('pipvant_notif_read',JSON.stringify(m));}
+        if(d.trade_extras&&typeof d.trade_extras==='object'&&Object.keys(d.trade_extras).length&&!localStorage.getItem('pipvant_trade_extras')){localStorage.setItem('pipvant_trade_extras',JSON.stringify(d.trade_extras));if(typeof applyTradeExtras==='function')applyTradeExtras();}
+      }catch(e){}
+    }).catch(function(){});
+  }
   var themeHydrating=true; // prevent save during initial load
   function applyTheme(theme,skipSave){
     document.documentElement.setAttribute('data-theme',theme);
@@ -4232,6 +4254,10 @@
       var r=JSON.parse(localStorage.getItem('pipvant_notif_read')||'{}');r[id]=1;
       localStorage.setItem('pipvant_notif_read',JSON.stringify(r));
     }catch(e){}
+    // sync broadcast/global read-state (b_/g_ only; personal read lives in the notifications table)
+    if((id.indexOf('b_')===0||id.indexOf('g_')===0)&&typeof sbSyncUserPref==='function'){
+      try{var _rm=JSON.parse(localStorage.getItem('pipvant_notif_read')||'{}');var _arr=Object.keys(_rm).filter(function(k){return k.indexOf('b_')===0||k.indexOf('g_')===0;});sbSyncUserPref('read_broadcasts',_arr);}catch(e){}
+    }
     // personal
     var list=getPersonalNotifs();var changed=false;
     list.forEach(function(x){if(x.id===id&&!x.read){x.read=true;changed=true;}});
@@ -4265,6 +4291,7 @@
   }
   function setNotifCurrPrefs(arr){
     try{localStorage.setItem(notifUserKey()+'_currs',JSON.stringify(arr));}catch(e){}
+    if(typeof sbSyncUserPref==='function')sbSyncUserPref('notif_currencies',arr);
   }
   function toggleNotifCurr(cur){
     var prefs=getNotifCurrPrefs();
@@ -4661,7 +4688,7 @@
         runSuccessMorph(e.submitter,function(){
           sbFlushPendingProfile();
           sbLoadProfile(function(pname){enterProduct(pname||sbUser.email||'','—');});
-          sbLoadTrades();sbLoadDiscipline();sbLoadSettings();sbLoadAccounts();sbLoadCertificates();sbLoadNotifications();
+          sbLoadTrades();sbLoadDiscipline();sbLoadSettings();sbLoadAccounts();sbLoadUserPrefs();sbLoadCertificates();sbLoadNotifications();
         });
       }).catch(function(err){sbAuthError(err&&err.message?err.message:'Sign-in failed.');});
     }else{
@@ -4690,7 +4717,7 @@
   document.getElementById('profileSetupForm').addEventListener('submit',function(e){
     e.preventDefault();
     if(!e.currentTarget.reportValidity())return;
-    var name=displayName.value.trim();runSuccessMorph(e.submitter,function(){sbPendingName=name;sbSaveProfile(name);sbFlushPendingProfile();enterProduct(name,initials(name));sbLoadTrades();sbLoadDiscipline();sbLoadSettings();sbLoadCertificates();sbLoadNotifications();});
+    var name=displayName.value.trim();runSuccessMorph(e.submitter,function(){sbPendingName=name;sbSaveProfile(name);sbFlushPendingProfile();enterProduct(name,initials(name));sbLoadTrades();sbLoadDiscipline();sbLoadSettings();sbLoadAccounts();sbLoadUserPrefs();sbLoadCertificates();sbLoadNotifications();});
   });
   function clearPrototypeState(){
     document.querySelectorAll('form').forEach(function(form){form.reset();});
