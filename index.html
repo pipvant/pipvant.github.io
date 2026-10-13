@@ -3218,7 +3218,7 @@
         sbFlushPendingProfile();
         sbLoadProfile(function(pname){enterProduct(pname||session.user.email||'','—');});
         if(typeof syncLocalTradesToCloud==='function')syncLocalTradesToCloud();
-        sbLoadTrades();sbLoadDiscipline();sbLoadSettings();sbLoadCertificates();sbLoadNotifications();
+        sbLoadTrades();sbLoadDiscipline();sbLoadSettings();sbLoadAccounts();sbLoadCertificates();sbLoadNotifications();
       }else if(event==='SIGNED_OUT'){
         sbUser=null;
         try{sessionJournalEntries=[];window.sessionJournalEntries=[];if(typeof renderJournalEntries==='function')renderJournalEntries();}catch(_so){}
@@ -3234,7 +3234,7 @@
         sbFlushPendingProfile();
         sbLoadProfile(function(pname){enterProduct(pname||session.user.email||'','—');});
         if(typeof syncLocalTradesToCloud==='function')syncLocalTradesToCloud();
-        sbLoadTrades();sbLoadDiscipline();sbLoadSettings();sbLoadCertificates();sbLoadNotifications();
+        sbLoadTrades();sbLoadDiscipline();sbLoadSettings();sbLoadAccounts();sbLoadCertificates();sbLoadNotifications();
       }else{
         // No session: first-time visitors see the landing once; returning users go straight to login
         var seenLp=false;try{seenLp=!!localStorage.getItem('pipvant_seen_landing');}catch(e){}
@@ -4637,7 +4637,7 @@
         runSuccessMorph(e.submitter,function(){
           sbFlushPendingProfile();
           sbLoadProfile(function(pname){enterProduct(pname||sbUser.email||'','—');});
-          sbLoadTrades();sbLoadDiscipline();sbLoadSettings();sbLoadCertificates();sbLoadNotifications();
+          sbLoadTrades();sbLoadDiscipline();sbLoadSettings();sbLoadAccounts();sbLoadCertificates();sbLoadNotifications();
         });
       }).catch(function(err){sbAuthError(err&&err.message?err.message:'Sign-in failed.');});
     }else{
@@ -4838,7 +4838,7 @@
     if(savedSel)selectedAccountId=savedSel;
     var _idMap={},_mig=false;
     tradingAccounts.forEach(function(a){if(a&&a.id&&!isAccountUuid(a.id)){var _nu=newAccountId();_idMap[String(a.id)]=_nu;a.id=_nu;_mig=true;}});
-    if(_mig){if(_idMap[selectedAccountId])selectedAccountId=_idMap[selectedAccountId];try{localStorage.setItem('pipvant_accounts',JSON.stringify(tradingAccounts));localStorage.setItem('pipvant_selected_account',selectedAccountId);}catch(_e2){}}
+    if(_mig){if(_idMap[selectedAccountId])selectedAccountId=_idMap[selectedAccountId];sbSaveAccounts();}
   }catch(e){}
   function accountStat(label,value){var wrap=document.createElement('span');var labelNode=document.createElement('span');var valueNode=document.createElement('strong');labelNode.textContent=label;valueNode.textContent=value===''?'—':money(Number(value));wrap.appendChild(labelNode);wrap.appendChild(valueNode);return wrap;}
   function accountOption(id,name,firm,size,maxLoss,target){
@@ -4851,7 +4851,7 @@
       del.addEventListener('click',function(e){e.stopPropagation();deleteTradingAccount(id);});
       row.appendChild(del);
     }
-    row.addEventListener('click',function(){selectedAccountId=id;try{localStorage.setItem('pipvant_selected_account',id);}catch(e){}renderAccountList();updateAccountSwitchLabel();closeAccountSheet();accountSwitch.focus();if(typeof updateProfileBalance==='function')updateProfileBalance();});return row;
+    row.addEventListener('click',function(){selectedAccountId=id;sbSaveAccounts();renderAccountList();updateAccountSwitchLabel();closeAccountSheet();accountSwitch.focus();if(typeof updateProfileBalance==='function')updateProfileBalance();});return row;
   }
   function deleteTradingAccount(id){
     var acct=null;for(var i=0;i<tradingAccounts.length;i++){if(tradingAccounts[i].id===id){acct=tradingAccounts[i];break;}}
@@ -4859,7 +4859,7 @@
     if(!confirm((currentLanguage==='ar'?'حذف الحساب "':'Delete account "')+label+'"?'))return;
     tradingAccounts=tradingAccounts.filter(function(a){return a.id!==id;});
     if(selectedAccountId===id)selectedAccountId='all';
-    try{localStorage.setItem('pipvant_accounts',JSON.stringify(tradingAccounts));localStorage.setItem('pipvant_selected_account',selectedAccountId);}catch(e){}
+    sbSaveAccounts();
     renderAccountList();updateAccountSwitchLabel();
     if(typeof updateJournalEquity==='function')updateJournalEquity();
     showToast(currentLanguage==='ar'?'تم حذف الحساب.':'Account deleted.');
@@ -4885,9 +4885,30 @@
   accountForm.addEventListener('submit',function(event){
     event.preventDefault();if(!event.currentTarget.reportValidity())return;
     var account={id:newAccountId(),name:document.getElementById('accountName').value.trim(),size:document.getElementById('accountStartingBalance').value,maxLoss:document.getElementById('accountMaxLoss').value,target:document.getElementById('accountProfitTarget').value,firm:document.getElementById('accountFirm').value.trim()};
-    runSuccessMorph(event.submitter,function(){tradingAccounts.push(account);selectedAccountId=account.id;try{localStorage.setItem('pipvant_accounts',JSON.stringify(tradingAccounts));localStorage.setItem('pipvant_selected_account',account.id);}catch(e){}renderAccountList();updateAccountSwitchLabel();showAccountBrowser();if(typeof updateJournalEquity==='function')updateJournalEquity();if(typeof updateProfileBalance==='function')updateProfileBalance();showToast(currentLanguage==='ar'?'تمت إضافة الحساب.':'Account added.');});
+    runSuccessMorph(event.submitter,function(){tradingAccounts.push(account);selectedAccountId=account.id;sbSaveAccounts();renderAccountList();updateAccountSwitchLabel();showAccountBrowser();if(typeof updateJournalEquity==='function')updateJournalEquity();if(typeof updateProfileBalance==='function')updateProfileBalance();showToast(currentLanguage==='ar'?'تمت إضافة الحساب.':'Account added.');});
   });
   renderAccountList();
+  // Sync trading accounts to Supabase (fix: accounts were localStorage-only,
+  // so clearing site data deleted them while trades survived).
+  function sbSaveAccounts(){
+    try{localStorage.setItem('pipvant_accounts',JSON.stringify(tradingAccounts));localStorage.setItem('pipvant_selected_account',selectedAccountId);}catch(e){}
+    if(!sb||!sbUser)return;
+    sb.from('user_settings').upsert({user_id:sbUser.id,accounts:tradingAccounts,selected_account:selectedAccountId},{onConflict:'user_id'}).then(function(r){if(r.error)console.warn('Accounts sync failed:',r.error.message);}).catch(function(e){console.warn('Accounts sync error:',e);});
+  }
+  function sbLoadAccounts(){
+    var hasLocal=false;
+    try{hasLocal=!!localStorage.getItem('pipvant_accounts');}catch(e){}
+    if(hasLocal)return;
+    if(!sb||!sbUser)return;
+    sb.from('user_settings').select('accounts,selected_account').eq('user_id',sbUser.id).maybeSingle().then(function(r){
+      var d=r&&!r.error&&r.data?r.data:null;if(!d)return;
+      if(Array.isArray(d.accounts)&&d.accounts.length){tradingAccounts=d.accounts;try{localStorage.setItem('pipvant_accounts',JSON.stringify(tradingAccounts));}catch(e){}}
+      if(typeof d.selected_account==='string'&&d.selected_account){selectedAccountId=d.selected_account;try{localStorage.setItem('pipvant_selected_account',selectedAccountId);}catch(e){}}
+      if(typeof renderAccountList==='function')renderAccountList();
+      if(typeof updateAccountSwitchLabel==='function')updateAccountSwitchLabel();
+      if(typeof updateProfileBalance==='function')updateProfileBalance();
+    }).catch(function(){});
+  }
 
   var tradeSheet=document.getElementById('tradeSheet');
   var logTradeButton=document.getElementById('logTradeButton');
