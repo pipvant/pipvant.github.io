@@ -4479,6 +4479,19 @@
         var _mm=n.message.match(/^([A-Z]{3})\s+(.+?)\s+[—-]\s+\d{1,2}:\d{2}/);
         if(_mm)rd={eventName:_mm[2].trim(),currency:_mm[1]};
       }
+      // Grouped notification (2026-10-15): several events at the same time —
+      // list every event with its real forecast/previous from the live calendar.
+      if(rd.eventNames&&rd.eventNames.length>1&&typeof calendarEvents!=='undefined'){
+        html+='<p class="notif-detail-desc">'+(L?'أخبار عالية التأثير في نفس التوقيت:':'High-impact news at the same time:')+'</p>';
+        rd.eventNames.forEach(function(nm){
+          var mev=null;
+          for(var k=0;k<calendarEvents.length;k++){
+            if(calendarEvents[k].name===nm&&(!rd.currency||calendarEvents[k].currency===rd.currency)){mev=calendarEvents[k];break;}
+          }
+          html+=row(nm,(L?'متوقع: ':'Forecast: ')+((mev&&mev.forecast)||'—')+(L?' — سابق: ':' / Prev: ')+((mev&&mev.previous)||'—'),true);
+        });
+        html+=row(L?'الوقت':'Time',((rd.dayLabel||'')+' '+(rd.time||'')+' '+calendarTimezoneLabel()).trim(),true);
+      }else{
       // Try live lookup first for freshest data, fall back to stored
       var ev=null;
       if(typeof calendarEvents!=='undefined'){
@@ -4512,6 +4525,7 @@
       html+=row(L?'الوقت':'Time',(_day+' '+_time+' '+calendarTimezoneLabel()).trim(),true);
       html+=row(L?'المتوقع':'Forecast',_fc,true);
       html+=row(L?'السابق':'Previous',_pr,true);
+      }
     }else if((n.type==='trade'||n.type==='win'||n.type==='loss'||n.type==='be')&&n.ref){
       // Find the REAL trade: live lookup first, stored data as fallback
       var tr=null;
@@ -5996,25 +6010,46 @@
             var _alerted={};
             try{_alerted=JSON.parse(localStorage.getItem('pipvant_news_alerted')||'{}');}catch(e){}
             var _prefs=getNotifCurrPrefs();
+            // Group same-time events into ONE notification (2026-10-15 fix):
+            // 4 news at 12:30 (PPI, Core PPI, Retail Sales, Core Retail Sales)
+            // used to fire 4 separate notifications in the same second.
+            var _groups={};
             calendarEvents.forEach(function(ev){
               if(ev.impact!=='high'||!ev._ts)return;
               if(_prefs.indexOf(ev.currency)<0)return;
               var _diff=ev._ts-_now;
               if(_diff>0&&_diff<3600000){
-                var _key=ev.name+'_'+ev._ts;
-                if(!_alerted[_key]){
-                  _alerted[_key]=1;
-                  addPersonalNotif(
-                    currentLanguage==='ar'?'خبر عالي التأثير قريب':'High-impact news soon',
-                    (ev.currency||'')+' '+(ev.name||'')+' — '+ev.time+' '+calendarTimezoneLabel(),
-                    'news',
-                    {eventTs:ev._ts,eventName:ev.name,
-                     currency:ev.currency,impact:ev.impactLabel||ev.impact,
-                     time:ev.time,dayLabel:ev.dayLabel,
-                     forecast:ev.forecast,previous:ev.previous}
-                  );
-                }
+                var _g=_groups[ev._ts]||(_groups[ev._ts]={ts:ev._ts,items:[],_seen:{}});
+                // Dedupe exact duplicate rows client-side (edge-function
+                // redeploy still pending): same title+currency+time = 1 event.
+                var _ek=(ev.name||'')+'|'+(ev.currency||'');
+                if(!_g._seen[_ek]){_g._seen[_ek]=1;_g.items.push(ev);}
               }
+            });
+            Object.keys(_groups).forEach(function(ts){
+              var _g=_groups[ts];if(!_g.items.length)return;
+              var _names=_g.items.map(function(e){return e.name||'';}).sort().join('|');
+              var _key='grp_'+ts+'_'+_names; // group-level dedupe key
+              if(_alerted[_key])return;
+              _alerted[_key]=1;
+              var _ev0=_g.items[0];
+              var _title,_body,_ref;
+              if(_g.items.length===1){
+                _title=currentLanguage==='ar'?'خبر عالي التأثير قريب':'High-impact news soon';
+                _body=(_ev0.currency||'')+' '+(_ev0.name||'')+' — '+_ev0.time+' '+calendarTimezoneLabel();
+                _ref={eventTs:_ev0._ts,eventName:_ev0.name,
+                      currency:_ev0.currency,impact:_ev0.impactLabel||_ev0.impact,
+                      time:_ev0.time,dayLabel:_ev0.dayLabel,
+                      forecast:_ev0.forecast,previous:_ev0.previous};
+              }else{
+                _title=(currentLanguage==='ar'?_g.items.length+' أخبار عالية التأثير قريبة':'High-impact news soon ('+_g.items.length+')');
+                _body=(_ev0.currency||'')+' '+_g.items.map(function(e){return e.name||'';}).join(currentLanguage==='ar'?'، ':', ')+' — '+_ev0.time+' '+calendarTimezoneLabel();
+                _ref={eventTs:_g.ts,eventCount:_g.items.length,
+                      eventNames:_g.items.map(function(e){return e.name||'';}),
+                      currency:_ev0.currency,impact:_ev0.impactLabel||_ev0.impact,
+                      time:_ev0.time,dayLabel:_ev0.dayLabel};
+              }
+              addPersonalNotif(_title,_body,'news',_ref);
             });
             try{localStorage.setItem('pipvant_news_alerted',JSON.stringify(_alerted));}catch(e){}
           }
