@@ -204,8 +204,8 @@
       <div class="kpi"><div class="lbl">Views · 7 days</div><div class="num gold" id="k-7d">—</div><div class="hint">The growth signal. Is this week better?</div></div>
       <div class="kpi"><div class="lbl">Newsletter subs</div><div class="num blue" id="k-subs">—</div><div class="hint">Your owned audience. No middleman.</div></div>
       <div class="kpi"><div class="lbl">Subs · 7 days</div><div class="num blue" id="k-subs7">—</div><div class="hint">List growth this week.</div></div>
-      <div class="kpi"><div class="lbl">Registered users</div><div class="num gold" id="k-users">—</div><div class="hint">Accounts created. Tracked from today.</div></div>
-      <div class="kpi"><div class="lbl">Users · 7 days</div><div class="num gold" id="k-users7">—</div><div class="hint">New accounts this week.</div></div>
+      <div class="kpi"><div class="lbl">Registered users</div><div class="num gold" id="k-users">—</div><div class="hint">Real accounts created (profiles table).</div></div>
+      <div class="kpi"><div class="lbl">Users · 7 days</div><div class="num gold" id="k-users7">—</div><div class="hint">New real accounts this week.</div></div>
     </div>
     <div class="panel">
       <h2>🎯 October targets <span class="live" id="days-left"></span></h2>
@@ -345,7 +345,11 @@
         .not('page','in','("/__system_test__","/signup")'),
       sb.from('page_breakdown').select('*'),
       sb.from('page_views').select('id',{count:'exact',head:true}).eq('page','/signup'),
-      sb.from('page_views').select('id',{count:'exact',head:true}).eq('page','/signup').gte('created_at',weekAgo)
+      sb.from('page_views').select('id',{count:'exact',head:true}).eq('page','/signup').gte('created_at',weekAgo),
+      /* REAL registrations: profiles table (one row per auth user, created by
+         DB trigger on signup + backfilled). Founder-only read via RLS policy. */
+      sb.from('profiles').select('id',{count:'exact',head:true}),
+      sb.from('profiles').select('id',{count:'exact',head:true}).gte('created_at',weekAgo)
     ]).then(function(res){
       if(res[0].error) throw res[0].error;
       if(res[1].error) throw res[1].error;
@@ -368,6 +372,9 @@
       var rows=res[2].data||[];
       var sgTotal=(res[3].error||res[3].count==null)?0:res[3].count;
       var sg7=(res[4].error||res[4].count==null)?0:res[4].count;
+      /* Real registered users (profiles table) — the signup KPI the founder sees. */
+      var regTotal=(res[5].error||res[5].count==null)?null:res[5].count;
+      var reg7=(res[6].error||res[6].count==null)?null:res[6].count;
       var testViews=rows.filter(function(x){return x.page===TEST;}).reduce(function(a,x){return a+x.views;},0);
       var pages=rows.filter(function(x){return x.page!==TEST&&x.page!=='/signup';});
 
@@ -375,8 +382,8 @@
       document.getElementById('k-7d').textContent=Math.max(0,(s.views_7d||0)-testViews-sg7);
       document.getElementById('k-subs').textContent=s.subs_total||0;
       document.getElementById('k-subs7').textContent=s.subs_7d||0;
-      document.getElementById('k-users').textContent=sgTotal;
-      document.getElementById('k-users7').textContent=sg7;
+      document.getElementById('k-users').textContent=(regTotal==null?'—':regTotal);
+      document.getElementById('k-users7').textContent=(reg7==null?'—':reg7);
 
       /* monthly targets */
       var TARGETS={visits:300,signups:20,subs:10};
@@ -387,7 +394,7 @@
         document.getElementById(numId).textContent=actual+' / '+target;
       }
       tbar('t-visits','t-visits-n',realViews,TARGETS.visits);
-      tbar('t-signups','t-signups-n',sgTotal,TARGETS.signups);
+      tbar('t-signups','t-signups-n',(regTotal==null?0:regTotal),TARGETS.signups);
       tbar('t-subs','t-subs-n',s.subs_total||0,TARGETS.subs);
       var daysLeft=Math.max(0,Math.ceil((new Date(2026,9,31,23,59)-Date.now())/86400000));
       document.getElementById('days-left').textContent='· '+daysLeft+' days left';

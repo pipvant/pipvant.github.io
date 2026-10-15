@@ -2986,6 +2986,30 @@
       if(typeof renderTraderScore==='function')renderTraderScore(score,tradeCount>0);
     }catch(e){}
   }
+  /* Real trading-days streak for the sidebar: consecutive days (ending today
+     or yesterday) with at least one logged trade. Honest data from the journal,
+     not discipline check-ins (the discipline screen keeps its own streak). */
+  function updateRailTradingStreak(){
+    try{
+      var days={},i,e,d,k;
+      var list=(typeof sessionJournalEntries!=='undefined'&&Array.isArray(sessionJournalEntries))?sessionJournalEntries:[];
+      for(i=0;i<list.length;i++){
+        e=list[i];
+        if(e&&e.type==='trade'&&e.timestamp){
+          d=new Date(e.timestamp);
+          k=d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);
+          days[k]=1;
+        }
+      }
+      function kk(dt){return dt.getFullYear()+'-'+('0'+(dt.getMonth()+1)).slice(-2)+'-'+('0'+dt.getDate()).slice(-2);}
+      var cur=new Date();cur.setHours(0,0,0,0);
+      var streak=0;
+      if(!days[kk(cur)])cur.setDate(cur.getDate()-1);
+      while(days[kk(cur)]){streak++;cur.setDate(cur.getDate()-1);}
+      var el=document.getElementById('railStreak');
+      if(el)el.textContent=String(streak);
+    }catch(err){}
+  }
   function sbUpdateProfileStats(trades){
     try{
       var total=trades.length;
@@ -5141,6 +5165,7 @@
         if(sessionJournalEntries.length>0){window._profileHasData=true;}
         if(sessionJournalEntries.length>0||!window._profileHasData)sbUpdateProfileStats(sessionJournalEntries);
       }
+      if(typeof updateRailTradingStreak==='function')updateRailTradingStreak();
     }catch(e){}
   }
   /* ---- Profile stats from session data (robust fallback) ---- */
@@ -5772,7 +5797,9 @@
         var streakEl=document.querySelector('.discipline-streak .streak-count');
         if(streakEl&&streak>0)streakEl.textContent=streak;
         pipvantDisciplineStreak=streak;
-        var railStreak=document.getElementById('railStreak');if(railStreak)railStreak.textContent=String(streak);
+        /* Sidebar "Current streak" shows REAL trading days (from journal trades),
+           not discipline check-ins — the discipline screen keeps its own streak. */
+        if(typeof updateRailTradingStreak==='function')updateRailTradingStreak();
         try{if(typeof sbComputeTraderScore==='function'&&typeof sessionJournalEntries!=='undefined'){var tc=sessionJournalEntries.filter(function(e){return e.type==='trade';}).length;sbComputeTraderScore(tc,streak);}if(typeof sbCheckMissions==='function'&&typeof sessionJournalEntries!=='undefined'){var tc2=sessionJournalEntries.filter(function(e){return e.type==='trade';}).length;sbCheckMissions(tc2,streak);}}catch(e2){}
       }).catch(function(){var loader=document.getElementById('authLoading');if(loader)loader.style.display='none';document.body.classList.remove('auth-checking');});
     });
