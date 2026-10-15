@@ -21,11 +21,38 @@
   }
 
   /* ---- page view (once per load) ---- */
+  /* Founder exclusion: the founder's own visits must NEVER pollute analytics.
+     1) If a Supabase session for one of the founder's emails is stored, skip.
+     2) Manual opt-out: opening any page with ?notrack=1 sets a permanent
+        localStorage flag on that browser (for logged-out visits). */
+  function isFounderSession() {
+    try {
+      var raw = localStorage.getItem('sb-acpkzavmifjwnskiaret-auth-token');
+      if (!raw) return false;
+      var sess = JSON.parse(raw);
+      var email = String((sess && sess.user && sess.user.email) || '').toLowerCase();
+      if (!email) return false;
+      return email === 'bniaichsifdin110@gmail.com'
+          || email === 'beniaichsifeddine@gmail.com'
+          || email.indexOf('beniaichsifeddine+') === 0;
+    } catch (e) { return false; }
+  }
+  try {
+    if (/(?:\?|&)notrack=1(?:&|$)/.test(location.search)) {
+      try { localStorage.setItem('pipv_dnt', '1'); } catch (e) {}
+      try { history.replaceState(null, '', location.pathname + location.hash); } catch (e) {}
+    }
+  } catch (e) {}
+  function isDnt() {
+    try { return localStorage.getItem('pipv_dnt') === '1'; } catch (e) { return false; }
+  }
   try {
     if (!window.__pipvTracked) {
       window.__pipvTracked = true;
-      post('page_views', { page: location.pathname, referrer: document.referrer || null })
-        .catch(function () { /* silent: analytics never breaks the app */ });
+      if (!isDnt() && !isFounderSession()) {
+        post('page_views', { page: location.pathname, referrer: document.referrer || null })
+          .catch(function () { /* silent: analytics never breaks the app */ });
+      }
     }
   } catch (e) {}
 
