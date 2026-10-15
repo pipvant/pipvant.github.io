@@ -1,5 +1,6 @@
 /* PIPVANT Company OS — privacy-friendly analytics + newsletter.
-   No cookies, no fingerprinting. Only page + referrer are logged.
+   No cookies, no fingerprinting. Only page + referrer + an anonymous random
+   visitor ID (localStorage, per-browser, no personal data) are logged.
    The anon key below is public by design (same as the main app). */
 (function () {
   'use strict';
@@ -46,11 +47,26 @@
   function isDnt() {
     try { return localStorage.getItem('pipv_dnt') === '1'; } catch (e) { return false; }
   }
+  /* Anonymous visitor ID: one random ID per browser, so the dashboard can
+     count UNIQUE visitors (one person = 1) instead of raw page views. */
+  function getVisitorId() {
+    try {
+      var v = localStorage.getItem('pipv_vid');
+      if (!v) {
+        v = 'v' + Date.now().toString(36) + Math.random().toString(36).slice(2, 12);
+        try { localStorage.setItem('pipv_vid', v); } catch (e) {}
+      }
+      return v;
+    } catch (e) { return null; }
+  }
   try {
     if (!window.__pipvTracked) {
       window.__pipvTracked = true;
       if (!isDnt() && !isFounderSession()) {
-        post('page_views', { page: location.pathname, referrer: document.referrer || null })
+        var row = { page: location.pathname, referrer: document.referrer || null };
+        var vid = getVisitorId();
+        if (vid) row.visitor_id = vid;
+        post('page_views', row)
           .catch(function () { /* silent: analytics never breaks the app */ });
       }
     }

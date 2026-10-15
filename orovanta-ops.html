@@ -200,8 +200,8 @@
     </div>
     <div class="err" id="err"></div>
     <div class="kpis">
-      <div class="kpi"><div class="lbl">Total views</div><div class="num gold" id="k-total">—</div><div class="hint">All visits since tracking began.</div></div>
-      <div class="kpi"><div class="lbl">Views · 7 days</div><div class="num gold" id="k-7d">—</div><div class="hint">The growth signal. Is this week better?</div></div>
+      <div class="kpi"><div class="lbl">Visitors</div><div class="num gold" id="k-total">—</div><div class="hint">Unique people. One person = 1, ever.</div></div>
+      <div class="kpi"><div class="lbl">Visitors · 7 days</div><div class="num gold" id="k-7d">—</div><div class="hint">Unique people this week. The growth signal.</div></div>
       <div class="kpi"><div class="lbl">Newsletter subs</div><div class="num blue" id="k-subs">—</div><div class="hint">Your owned audience. No middleman.</div></div>
       <div class="kpi"><div class="lbl">Subs · 7 days</div><div class="num blue" id="k-subs7">—</div><div class="hint">List growth this week.</div></div>
       <div class="kpi"><div class="lbl">Registered users</div><div class="num gold" id="k-users">—</div><div class="hint">Real users (test accounts excluded).</div></div>
@@ -210,7 +210,7 @@
     <div class="panel">
       <h2>🎯 October targets <span class="live" id="days-left"></span></h2>
       <p class="desc">Company goals for the month. Proposed by the operator — adjust anytime.</p>
-      <div class="trow"><span>Visits</span><div class="tbar"><div class="tfill" id="t-visits"></div></div><b id="t-visits-n">—</b></div>
+      <div class="trow"><span>Visitors</span><div class="tbar"><div class="tfill" id="t-visits"></div></div><b id="t-visits-n">—</b></div>
       <div class="trow"><span>Signups</span><div class="tbar"><div class="tfill" id="t-signups"></div></div><b id="t-signups-n">—</b></div>
       <div class="trow"><span>Newsletter</span><div class="tbar"><div class="tfill" id="t-subs"></div></div><b id="t-subs-n">—</b></div>
     </div>
@@ -340,7 +340,7 @@
       sb.from('company_stats').select('*').single(),
       /* Honest trend: raw page_views, client-side — system test pings and
          signup events are excluded here so they never count as traffic. */
-      sb.from('page_views').select('created_at,page')
+      sb.from('page_views').select('created_at,page,visitor_id')
         .gte('created_at',fortnightAgo)
         .not('page','in','("/__system_test__","/signup")'),
       sb.from('page_breakdown').select('*'),
@@ -350,7 +350,12 @@
          DB trigger on signup + backfilled). Founder-only read via RLS policy.
          is_test=false excludes internal test/QA/system accounts. */
       sb.from('profiles').select('id',{count:'exact',head:true}).eq('is_test',false),
-      sb.from('profiles').select('id',{count:'exact',head:true}).eq('is_test',false).gte('created_at',weekAgo)
+      sb.from('profiles').select('id',{count:'exact',head:true}).eq('is_test',false).gte('created_at',weekAgo),
+      /* UNIQUE VISITORS: one person = 1, no matter how many pages they open.
+         RPC counts distinct visitor_id (rows from before the visitor_id
+         rollout count 1 each — the 7-day window self-cleans within a week). */
+      sb.rpc('unique_visitors',{}),
+      sb.rpc('unique_visitors',{since:weekAgo})
     ]).then(function(res){
       if(res[0].error) throw res[0].error;
       if(res[1].error) throw res[1].error;
@@ -359,17 +364,21 @@
       var s=res[0].data||{};
       var pv=res[1].data||[];
       /* Build the 14-day series from raw rows — test pings and signup
-         events were already excluded by the query above. */
+         events were already excluded by the query above.
+         UNIQUE visitors per day (one person = 1 per day). */
       var buckets={}, bi, bk;
       for(bi=13;bi>=0;bi--){
         bk=new Date(Date.now()-bi*86400000).toISOString().slice(0,10);
-        buckets[bk]=0;
+        buckets[bk]={ids:{},nulls:0};
       }
       pv.forEach(function(r){
         var k=String(r.created_at||'').slice(0,10);
-        if(Object.prototype.hasOwnProperty.call(buckets,k)) buckets[k]++;
+        if(Object.prototype.hasOwnProperty.call(buckets,k)){
+          if(r.visitor_id)buckets[k].ids[r.visitor_id]=1;
+          else buckets[k].nulls++;
+        }
       });
-      var trend=Object.keys(buckets).sort().map(function(k){return{day:k,views:buckets[k]};});
+      var trend=Object.keys(buckets).sort().map(function(k){var b=buckets[k];return{day:k,views:Object.keys(b.ids).length+b.nulls};});
       var rows=res[2].data||[];
       var sgTotal=(res[3].error||res[3].count==null)?0:res[3].count;
       var sg7=(res[4].error||res[4].count==null)?0:res[4].count;
@@ -378,9 +387,12 @@
       var reg7=(res[6].error||res[6].count==null)?null:res[6].count;
       var testViews=rows.filter(function(x){return x.page===TEST;}).reduce(function(a,x){return a+x.views;},0);
       var pages=rows.filter(function(x){return x.page!==TEST&&x.page!=='/signup';});
+      /* Unique visitors (one person = 1). Falls back to — if the RPC fails. */
+      var uniqTotal=(res[7]&&!res[7].error&&res[7].data!=null)?res[7].data:null;
+      var uniq7=(res[8]&&!res[8].error&&res[8].data!=null)?res[8].data:null;
 
-      document.getElementById('k-total').textContent=Math.max(0,(s.total_views||0)-testViews-sgTotal);
-      document.getElementById('k-7d').textContent=Math.max(0,(s.views_7d||0)-testViews-sg7);
+      document.getElementById('k-total').textContent=(uniqTotal==null?'—':uniqTotal);
+      document.getElementById('k-7d').textContent=(uniq7==null?'—':uniq7);
       document.getElementById('k-subs').textContent=s.subs_total||0;
       document.getElementById('k-subs7').textContent=s.subs_7d||0;
       document.getElementById('k-users').textContent=(regTotal==null?'—':regTotal);
@@ -388,7 +400,7 @@
 
       /* monthly targets */
       var TARGETS={visits:300,signups:20,subs:10};
-      var realViews=Math.max(0,(s.total_views||0)-testViews-sgTotal);
+      var realViews=(uniqTotal==null?0:uniqTotal);
       function tbar(fillId,numId,actual,target){
         var pct=Math.min(100,Math.round(actual/target*100));
         document.getElementById(fillId).style.width=pct+'%';
