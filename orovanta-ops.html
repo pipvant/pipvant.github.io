@@ -204,8 +204,8 @@
       <div class="kpi"><div class="lbl">Views · 7 days</div><div class="num gold" id="k-7d">—</div><div class="hint">The growth signal. Is this week better?</div></div>
       <div class="kpi"><div class="lbl">Newsletter subs</div><div class="num blue" id="k-subs">—</div><div class="hint">Your owned audience. No middleman.</div></div>
       <div class="kpi"><div class="lbl">Subs · 7 days</div><div class="num blue" id="k-subs7">—</div><div class="hint">List growth this week.</div></div>
-      <div class="kpi"><div class="lbl">Registered users</div><div class="num gold" id="k-users">—</div><div class="hint">Real accounts created (profiles table).</div></div>
-      <div class="kpi"><div class="lbl">Users · 7 days</div><div class="num gold" id="k-users7">—</div><div class="hint">New real accounts this week.</div></div>
+      <div class="kpi"><div class="lbl">Registered users</div><div class="num gold" id="k-users">—</div><div class="hint">Real users (test accounts excluded).</div></div>
+      <div class="kpi"><div class="lbl">Users · 7 days</div><div class="num gold" id="k-users7">—</div><div class="hint">New real users this week.</div></div>
     </div>
     <div class="panel">
       <h2>🎯 October targets <span class="live" id="days-left"></span></h2>
@@ -347,9 +347,10 @@
       sb.from('page_views').select('id',{count:'exact',head:true}).eq('page','/signup'),
       sb.from('page_views').select('id',{count:'exact',head:true}).eq('page','/signup').gte('created_at',weekAgo),
       /* REAL registrations: profiles table (one row per auth user, created by
-         DB trigger on signup + backfilled). Founder-only read via RLS policy. */
-      sb.from('profiles').select('id',{count:'exact',head:true}),
-      sb.from('profiles').select('id',{count:'exact',head:true}).gte('created_at',weekAgo)
+         DB trigger on signup + backfilled). Founder-only read via RLS policy.
+         is_test=false excludes internal test/QA/system accounts. */
+      sb.from('profiles').select('id',{count:'exact',head:true}).eq('is_test',false),
+      sb.from('profiles').select('id',{count:'exact',head:true}).eq('is_test',false).gte('created_at',weekAgo)
     ]).then(function(res){
       if(res[0].error) throw res[0].error;
       if(res[1].error) throw res[1].error;
