@@ -6050,8 +6050,16 @@
       var priceDiff=dirLow==='long'?(exitPrice-entryValue):(entryValue-exitPrice);
       var lotSize=parseFloat(document.getElementById('tradeSize').value)||0;
       var pairUp=document.getElementById('tradePair').value.trim().toUpperCase();
-      var mult=100000;if(pairUp.indexOf('XAU')===0)mult=100;else if(pairUp.indexOf('XAG')===0)mult=5000;else if(pairUp.indexOf('JPY')>=0)mult=1000;
-      pnl=Math.round(priceDiff*lotSize*mult*100)/100;
+      // T-C1 fix: reuse estimatePnl (has index guards + absurd-value cap).
+      // Was hardcoded forex multiplier: US100 50pt x 1 lot = $5,000,000!
+      var _estPnl=null;
+      try{_estPnl=typeof estimatePnl==='function'?estimatePnl(pairUp,dirLow,entryValue,exitPrice,lotSize):null;}catch(_e){}
+      if(_estPnl!=null){
+        pnl=Math.round(_estPnl*100)/100;
+      }else{
+        // Can't estimate (index/unknown) — leave empty, don't store garbage.
+        pnl=null;
+      }
       if(resultVal==='breakeven')pnl=0;
     }
     var tradeDateInput=document.getElementById('tradeDate');var tradeTs=tradeDateInput&&tradeDateInput.value?new Date(tradeDateInput.value).getTime():Date.now();
