@@ -3132,7 +3132,8 @@
     });
   }
   function sbLoadTradesQuery(){
-    sb.from('trades').select('id,symbol,direction,entry_price,stop_price,target_price,position_size,notes,opened_at,created_at,exit_price,pnl,closed_at,setup,tag,account_id').order('opened_at',{ascending:false})
+    if(!sb||!sbUser)return;
+    sb.from('trades').select('id,symbol,direction,entry_price,stop_price,target_price,position_size,notes,opened_at,created_at,exit_price,pnl,closed_at,setup,tag,account_id').eq('user_id',sbUser.id).order('opened_at',{ascending:false})
       .then(function(r){
         if(r.error||!r.data){
           var _fb=document.getElementById('journalFeedback');
@@ -4324,7 +4325,7 @@
     notifStore.forEach(function(x){if(x.id===id)x.read=true;});
     // persist read for Supabase personal items (s_<row id>)
     if(id&&id.indexOf('s_')===0&&typeof sb!=='undefined'&&sb&&typeof sbUser!=='undefined'&&sbUser){
-      sbQuiet(sb.from('notifications').update({read:true}).eq('id',id.slice(2)));
+      sbQuiet(sb.from('notifications').update({read:true}).eq('id',id.slice(2)).eq('user_id',sbUser.id));
     }
     renderNotifications();
   }
@@ -4334,7 +4335,7 @@
     // persist read for Supabase personal items (one bulk update)
     try{
       var sIds=notifStore.filter(function(x){return x.id&&x.id.indexOf('s_')===0;}).map(function(x){return x.id.slice(2);});
-      if(sIds.length&&typeof sb!=='undefined'&&sb&&typeof sbUser!=='undefined'&&sbUser)sbQuiet(sb.from('notifications').update({read:true}).in('id',sIds));
+      if(sIds.length&&typeof sb!=='undefined'&&sb&&typeof sbUser!=='undefined'&&sbUser)sbQuiet(sb.from('notifications').update({read:true}).in('id',sIds).eq('user_id',sbUser.id));
     }catch(e){}
     renderNotifications();
   }
@@ -5136,8 +5137,8 @@
     }); window.sessionJournalEntries=sessionJournalEntries;
     if(window.editingTradeId===id)cancelEditTrade();
     if(typeof removeLocalTrade==='function'&&entry._localId)removeLocalTrade(entry._localId);
-    if(entry._dbId&&typeof sb!=='undefined'&&sb){
-      sb.from('trades').delete().eq('id',entry._dbId).then(function(r){
+    if(entry._dbId&&typeof sb!=='undefined'&&sb&&typeof sbUser!=='undefined'&&sbUser){
+      sb.from('trades').delete().eq('id',entry._dbId).eq('user_id',sbUser.id).then(function(r){
         if(r.error&&typeof showToast==='function')showToast(currentLanguage==='ar'?'حُذفت محلياً فقط.':'Deleted locally only.');
       }).catch(function(){});
     }
@@ -5762,7 +5763,7 @@
     var closeFailMsg=currentLanguage==='ar'?'تعذر حفظ الإغلاق في حسابك — بقيت الصفقة مفتوحة.':'Could not save the close — trade kept open.';
     // Update DB if saved
     if(sb&&sbUser&&currentCloseEntry._dbId){
-      sb.from('trades').update({exit_price:exitPrice,pnl:pnl,closed_at:new Date().toISOString()}).eq('id',currentCloseEntry._dbId).then(function(res){
+      sb.from('trades').update({exit_price:exitPrice,pnl:pnl,closed_at:new Date().toISOString()}).eq('id',currentCloseEntry._dbId).eq('user_id',sbUser.id).then(function(res){
         if(res&&res.error){document.getElementById('closeTradeFeedback').textContent=closeFailMsg;showToast(closeFailMsg);return;}
         sbLoadTrades();closeDone();
       }).catch(function(){document.getElementById('closeTradeFeedback').textContent=closeFailMsg;showToast(closeFailMsg);});
@@ -5807,7 +5808,7 @@
             updated=true;
             if(en._dbId&&sb&&sbUser){
               var ep2=parseFloat(en.entry),sz2=parseFloat(en.size),sp2=parseFloat(en.stop),tp2=parseFloat(en.target),xp2=parseFloat(en.exitPrice);
-              sb.from('trades').update({symbol:en.pair||'UNKNOWN',direction:(en.direction||'long').toLowerCase(),entry_price:isFinite(ep2)?ep2:0,exit_price:isFinite(xp2)?xp2:null,position_size:isFinite(sz2)?sz2:0,pnl:(en.pnl!=null&&isFinite(Number(en.pnl)))?Number(en.pnl):null,stop_price:isFinite(sp2)?sp2:null,target_price:isFinite(tp2)?tp2:null,closed_at:en.closed?new Date().toISOString():null,notes:en.notes||null,setup:en.setup||null,tag:en.tag||null}).eq('id',en._dbId).then(function(){sbLoadTrades();}).catch(function(){});
+              sb.from('trades').update({symbol:en.pair||'UNKNOWN',direction:(en.direction||'long').toLowerCase(),entry_price:isFinite(ep2)?ep2:0,exit_price:isFinite(xp2)?xp2:null,position_size:isFinite(sz2)?sz2:0,pnl:(en.pnl!=null&&isFinite(Number(en.pnl)))?Number(en.pnl):null,stop_price:isFinite(sp2)?sp2:null,target_price:isFinite(tp2)?tp2:null,closed_at:en.closed?new Date().toISOString():null,notes:en.notes||null,setup:en.setup||null,tag:en.tag||null}).eq('id',en._dbId).eq('user_id',sbUser.id).then(function(){sbLoadTrades();}).catch(function(){});
             }
           }
         });
