@@ -1530,6 +1530,22 @@
     </div>
   </div>
 
+  <div class="auth-stage" id="authNewPassword" data-auth-stage="newpassword">
+    <div class="auth-card">
+      <p class="eyebrow">Account recovery</p>
+      <h2>Set a new password</h2>
+      <p class="auth-copy">Choose a strong password for your account.</p>
+      <form id="recoveryPasswordForm">
+        <div class="auth-fields">
+          <div><label for="recoveryPassword">New password</label><input id="recoveryPassword" name="password" type="password" autocomplete="new-password" minlength="6" required></div>
+          <div><label for="recoveryPasswordConfirm">Confirm password</label><input id="recoveryPasswordConfirm" name="password_confirm" type="password" autocomplete="new-password" minlength="6" required></div>
+        </div>
+        <div class="auth-feedback" id="recoveryPasswordFeedback"></div>
+        <button class="btn primary auth-wide" type="submit">Update password</button>
+      </form>
+    </div>
+  </div>
+
   <div class="auth-stage" id="authProfileSetup" data-auth-stage="setup">
     <div class="auth-card">
       <button class="auth-back" type="button" data-auth-back="signup" aria-label="Back to account details"><svg width="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m15 18-6-6 6-6"/></svg></button>
@@ -4269,7 +4285,20 @@
   document.getElementById('passwordForm').addEventListener('submit',function(event){
     event.preventDefault();if(!event.currentTarget.reportValidity())return;
     if(document.getElementById('newPassword').value!==document.getElementById('confirmPassword').value){var passwordError=document.getElementById('passwordFormError');passwordError.textContent=currentLanguage==='ar'?'كلمتا المرور غير متطابقتين.':'Passwords do not match.';feedbackMotion(passwordError);return;}
-    runSuccessMorph(event.submitter,function(){prototypeAccount.passwordChanged=true;closeSettingsModal();var feedback=document.getElementById('settingsFeedback');feedback.textContent=currentLanguage==='ar'?'تم تحديث كلمة المرور لهذه الجلسة.':'Password updated for this session.';feedbackMotion(feedback);showToast(feedback.textContent);});
+    // C2 fix: actually change the password via Supabase (was fake prototype).
+    var _pw=document.getElementById('newPassword').value;
+    var _btn=event.submitter;if(_btn)_btn.disabled=true;
+    function _done(ok,msg){
+      if(_btn)_btn.disabled=false;
+      var feedback=document.getElementById('settingsFeedback');
+      feedback.textContent=msg;feedbackMotion(feedback);showToast(msg);
+      if(ok)closeSettingsModal();
+    }
+    if(!sb||!sbUser){_done(false,currentLanguage==='ar'?'غير متصل.':'Offline.');return;}
+    sb.auth.updateUser({password:_pw}).then(function(res){
+      if(res.error)_done(false,res.error.message);
+      else _done(true,currentLanguage==='ar'?'تم تحديث كلمة المرور.':'Password updated.');
+    }).catch(function(err){_done(false,err&&err.message?err.message:'Failed.');});
   });
   document.getElementById('emailForm').addEventListener('submit',function(event){
     event.preventDefault();if(!event.currentTarget.reportValidity())return;
@@ -4745,6 +4774,42 @@
     authStage('authReset');
   });
   function returnToLogin(){setAuthMode('login');}
+  // C1 fix: handle the recovery link. When the user clicks the emailed link,
+  // Supabase puts type=recovery in location.hash. Show the new-password form.
+  (function _checkRecoveryLink(){
+    try{
+      var h=window.location.hash||'';
+      if(h.indexOf('type=recovery')>=0){
+        document.body.classList.add('auth-active','show-auth');
+        document.body.classList.remove('show-landing','app-ready');
+        authStage('authNewPassword');
+        // Clear the token from the URL for security (prevents history hijack).
+        if(history.replaceState)history.replaceState(null,'',window.location.pathname+window.location.search);
+      }
+    }catch(e){}
+  })();
+  document.getElementById('recoveryPasswordForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    if(!e.currentTarget.reportValidity())return;
+    var p1=document.getElementById('recoveryPassword').value;
+    var p2=document.getElementById('recoveryPasswordConfirm').value;
+    var fb=document.getElementById('recoveryPasswordFeedback');
+    if(p1!==p2){if(fb)fb.textContent=currentLanguage==='ar'?'كلمتا السر غير متطابقتين.':'Passwords do not match.';return;}
+    if(!sb){if(fb)fb.textContent=currentLanguage==='ar'?'غير متصل.':'Offline.';return;}
+    var btn=e.submitter||e.currentTarget.querySelector('[type="submit"]');
+    if(btn)btn.disabled=true;
+    sb.auth.updateUser({password:p1}).then(function(res){
+      if(btn)btn.disabled=false;
+      if(res.error){if(fb)fb.textContent=res.error.message;return;}
+      if(fb)fb.textContent='';
+      showToast(currentLanguage==='ar'?'تم تحديث كلمة السر.':'Password updated.');
+      try{sb.auth.signOut();}catch(_x){}
+      setAuthMode('login');authStage('authSignup');
+    }).catch(function(err){
+      if(btn)btn.disabled=false;
+      if(fb)fb.textContent=err&&err.message?err.message:'Failed.';
+    });
+  });
   document.getElementById('resetBack').addEventListener('click',returnToLogin);
   document.getElementById('backToLogin').addEventListener('click',returnToLogin);
   document.getElementById('resetForm').addEventListener('submit',function(e){
@@ -4902,6 +4967,16 @@
     window._welcomeAttempted=false;
     tradingAccounts=[];selectedAccountId='all';
     sessionJournalEntries=[];window.sessionJournalEntries=[];
+    // H4-discipline fix: reset discipline UI and state (was leaking between users).
+    try{
+      document.querySelectorAll('.discipline-check').forEach(function(c){c.checked=false;});
+      var _cp=document.getElementById('checkProgress');if(_cp)_cp.textContent='0 / 4';
+      var _td=document.getElementById('todayDot');if(_td)_td.classList.remove('done');
+      var _sd=document.getElementById('streakDays');if(_sd)_sd.textContent='—';
+      if(typeof disciplineWasComplete!=='undefined')disciplineWasComplete=false;
+      if(typeof pipvantDisciplineStreak!=='undefined')pipvantDisciplineStreak=0;
+      else window.pipvantDisciplineStreak=0;
+    }catch(e){}
     try{renderJournalEntries();}catch(e){}
     try{renderAccountList();}catch(e){}
     try{updateAccountSwitchLabel();}catch(e){}
@@ -5101,12 +5176,28 @@
   function deleteTradingAccount(id){
     var acct=null;for(var i=0;i<tradingAccounts.length;i++){if(tradingAccounts[i].id===id){acct=tradingAccounts[i];break;}}
     var label=acct?acct.name:id;
-    if(!confirm((currentLanguage==='ar'?'حذف الحساب "':'Delete account "')+label+'"?'))return;
+    // C1-accounts fix: count affected trades and warn; unassign them on delete.
+    var affected=0;
+    try{
+      affected=sessionJournalEntries.filter(function(e){return e&&String(e.account_id||'')===String(id);}).length;
+    }catch(e){}
+    var msg=(currentLanguage==='ar'?'حذف الحساب "':'Delete account "')+label+'"?';
+    if(affected>0)msg+='\n'+(currentLanguage==='ar'?'سيتم إلغاء ربط ':'This will unassign ')+affected+(currentLanguage==='ar'?' صفقة.':' trade(s).');
+    if(!confirm(msg))return;
     tradingAccounts=tradingAccounts.filter(function(a){return a.id!==id;});
     if(selectedAccountId===id)selectedAccountId='all';
+    // Unassign account_id on affected trades (memory + local + cloud).
+    try{
+      sessionJournalEntries.forEach(function(e){if(e&&String(e.account_id||'')===String(id))e.account_id=null;});
+      var _lt=loadLocalTrades();var _chg=false;
+      _lt.forEach(function(t){if(t&&String(t.account_id||'')===String(id)){t.account_id=null;_chg=true;}});
+      if(_chg)saveLocalTrades(_lt);
+      if(sb&&sbUser)sb.from('trades').update({account_id:null}).eq('account_id',id).eq('user_id',sbUser.id).then(function(){}).catch(function(){});
+    }catch(e){}
     sbSaveAccounts();
     renderAccountList();updateAccountSwitchLabel();
     if(typeof updateJournalEquity==='function')updateJournalEquity();
+    if(typeof refreshAllTradeUI==='function')refreshAllTradeUI();
     showToast(currentLanguage==='ar'?'تم حذف الحساب.':'Account deleted.');
   }
   function renderAccountList(){
@@ -5785,7 +5876,16 @@
       });
     }catch(e){}
   }
-  /* Journal search handler */document.addEventListener('input',function(event){if(event.target&&event.target.classList&&event.target.classList.contains('trade-search')){journalSearchQuery=event.target.value||'';renderJournalEntries();}});function openTradeSheet(){document.getElementById('tradeFormFeedback').textContent='';tradeSheet.classList.add('open');document.getElementById('tradePair').focus();}
+  /* Journal search handler */document.addEventListener('input',function(event){if(event.target&&event.target.classList&&event.target.classList.contains('trade-search')){journalSearchQuery=event.target.value||'';renderJournalEntries();}});function openTradeSheet(){document.getElementById('tradeFormFeedback').textContent='';
+    // E3 fix: when opening for a NEW trade (not editing), reset stale values
+    // left over from a cancelled edit.
+    if(!window.editingTradeId){
+      try{
+        var _tf=document.getElementById('tradeForm');if(_tf)_tf.reset();
+        document.querySelectorAll('.chip[data-direction]').forEach(function(chip){chip.setAttribute('aria-pressed','false');});
+      }catch(e){}
+    }
+    tradeSheet.classList.add('open');document.getElementById('tradePair').focus();}
   function closeTradeSheet(){tradeSheet.classList.remove('open');if(typeof cancelEditTrade==='function')cancelEditTrade();if(document.getElementById('journal').classList.contains('active'))logTradeButton.focus();}
   var closeTradeSheetEl=document.getElementById('closeTradeModal');var currentCloseEntry=null;
   function estimatePnl(symbol, direction, entry, exit, size){
@@ -5918,13 +6018,22 @@
       if(editingId){
         var updated=false;
         sessionJournalEntries.forEach(function(en){
-          var eid=en._id||en._dbId||en.timestamp;
+          // E5 fix: key by _localId first to avoid timestamp collisions.
+          var eid=en._localId||en._id||en._dbId||en.timestamp;
           if(eid===editingId&&en.type==='trade'){
             en.pair=tradeEntry.pair;en.direction=tradeEntry.direction;en.entry=tradeEntry.entry;en.stop=tradeEntry.stop;en.target=tradeEntry.target;en.size=tradeEntry.size;en.rMultiple=tradeEntry.rMultiple;en.setup=tradeEntry.setup;en.tag=tradeEntry.tag;en.rating=tradeEntry.rating;en.timestamp=tradeEntry.timestamp;en.notes=tradeEntry.notes;en.closed=tradeEntry.closed;en.exitPrice=tradeEntry.exitPrice;en.pnl=tradeEntry.pnl;en.result=tradeEntry.result;
+            // E8 fix: allow changing the account.
+            if(typeof tradeEntry.account_id!=='undefined')en.account_id=tradeEntry.account_id;
             updated=true;
+            // E1 fix: persist extras (setup/tag/rating) so they don't revert.
+            if(typeof saveTradeExtras==='function')saveTradeExtras(en);
+            // E2 fix: persist local-only edits so they survive refresh.
+            if(!en._dbId&&typeof persistLocalTrade==='function')persistLocalTrade(en);
             if(en._dbId&&sb&&sbUser){
               var ep2=parseFloat(en.entry),sz2=parseFloat(en.size),sp2=parseFloat(en.stop),tp2=parseFloat(en.target),xp2=parseFloat(en.exitPrice);
-              sb.from('trades').update({symbol:en.pair||'UNKNOWN',direction:(en.direction||'long').toLowerCase(),entry_price:isFinite(ep2)?ep2:0,exit_price:isFinite(xp2)?xp2:null,position_size:isFinite(sz2)?sz2:0,pnl:(en.pnl!=null&&isFinite(Number(en.pnl)))?Number(en.pnl):null,stop_price:isFinite(sp2)?sp2:null,target_price:isFinite(tp2)?tp2:null,closed_at:en.closed?new Date().toISOString():null,notes:en.notes||null,setup:en.setup||null,tag:en.tag||null}).eq('id',en._dbId).eq('user_id',sbUser.id).then(function(){sbLoadTrades();}).catch(function(){});
+              // E4 fix: include opened_at so date edits persist.
+              // E6 fix: toast on failure instead of silent vanish.
+              sb.from('trades').update({symbol:en.pair||'UNKNOWN',direction:(en.direction||'long').toLowerCase(),entry_price:isFinite(ep2)?ep2:0,exit_price:isFinite(xp2)?xp2:null,position_size:isFinite(sz2)?sz2:0,pnl:(en.pnl!=null&&isFinite(Number(en.pnl)))?Number(en.pnl):null,stop_price:isFinite(sp2)?sp2:null,target_price:isFinite(tp2)?tp2:null,opened_at:new Date(en.timestamp||Date.now()).toISOString(),closed_at:en.closed?new Date().toISOString():null,notes:en.notes||null,setup:en.setup||null,tag:en.tag||null,account_id:en.account_id||null}).eq('id',en._dbId).eq('user_id',sbUser.id).then(function(){sbLoadTrades();}).catch(function(){if(typeof showToast==='function')showToast(currentLanguage==='ar'?'حُفظ محلياً — تعذر المزامنة.':'Saved locally — could not sync.');});
             }
           }
         });
