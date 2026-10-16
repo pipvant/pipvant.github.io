@@ -2122,6 +2122,68 @@
         <p class="risk-method">We show verification age, not claimed changes. A red row means our data is older than 60 days — treat its rules with caution until re-verified.</p>
       </section>
 
+      <!-- WAVE 4a — Breach Guard -->
+      <section class="lab-tool" aria-labelledby="bg-title">
+        <div class="lab-tool-head"><div><p class="eyebrow">Guard 04</p><h3 id="bg-title">Breach Guard</h3>
+        <p class="helper">Enter your live P&amp;L — we tell you how close you are to the edge. Manual input, honest math.</p></div></div>
+        <div class="lab-grid">
+          <div class="lab-inputs">
+            <div class="risk-field"><label for="bgFirm">Firm</label><select id="bgFirm" class="full-calc-input"></select></div>
+            <div class="risk-field"><label for="bgPlan">Plan / account size</label><select id="bgPlan" class="full-calc-input"></select></div>
+            <div class="risk-field"><label for="bgTotal">Current total P&amp;L ($) — negative if down</label><input id="bgTotal" class="full-calc-input" type="number" step="any" value="0"><p class="helper">Your floating + closed P&amp;L today vs the account start.</p></div>
+            <div class="risk-field"><label for="bgDaily">Today's P&amp;L ($) — negative if down</label><input id="bgDaily" class="full-calc-input" type="number" step="any" value="0"><p class="helper">Just today's session result.</p></div>
+          </div>
+          <div class="lab-results">
+            <div class="risk-section-head"><div><h3>Distance to breach</h3><p class="helper">% of each limit already used</p></div></div>
+            <div style="margin-bottom:18px"><div style="display:flex;justify-content:space-between;font-size:13px"><span>Daily loss used</span><strong id="bgDailyPct">—</strong></div><div class="breach-gauge"><div class="breach-fill" id="bgDailyFill" style="width:0%"></div></div></div>
+            <div style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;font-size:13px"><span>Max drawdown used</span><strong id="bgTotalPct">—</strong></div><div class="breach-gauge"><div class="breach-fill" id="bgTotalFill" style="width:0%"></div></div></div>
+            <div class="breach-msg" id="bgMsg">—</div>
+            <p class="risk-method">Method: used % = |negative P&amp;L| ÷ (limit % × account size). Based on the plan's published rules and your manual inputs.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- WAVE 4b — Trading DNA Quiz -->
+      <section class="lab-tool" aria-labelledby="dna-title">
+        <div class="lab-tool-head"><div><p class="eyebrow">Quiz 05</p><h3 id="dna-title">Trading DNA — find your match</h3>
+        <p class="helper">5 questions. We score every real plan against your style — top 3 with the reason why.</p></div></div>
+        <div id="dnaQuiz">
+          <div class="dna-q" data-dna-q="style"><p>1. Your trading style?</p><div class="dna-opts">
+            <button class="dna-opt" type="button" data-dna-v="scalper">Scalper</button>
+            <button class="dna-opt" type="button" data-dna-v="day">Day trader</button>
+            <button class="dna-opt" type="button" data-dna-v="swing">Swing trader</button>
+          </div></div>
+          <div class="dna-q" data-dna-q="risk"><p>2. Risk per trade?</p><div class="dna-opts">
+            <button class="dna-opt" type="button" data-dna-v="low">Under 1%</button>
+            <button class="dna-opt" type="button" data-dna-v="mid">1–2%</button>
+            <button class="dna-opt" type="button" data-dna-v="high">Over 2%</button>
+          </div></div>
+          <div class="dna-q" data-dna-q="overnight"><p>3. Hold positions overnight?</p><div class="dna-opts">
+            <button class="dna-opt" type="button" data-dna-v="yes">Yes</button>
+            <button class="dna-opt" type="button" data-dna-v="no">No</button>
+          </div></div>
+          <div class="dna-q" data-dna-q="news"><p>4. Trade during high-impact news?</p><div class="dna-opts">
+            <button class="dna-opt" type="button" data-dna-v="yes">Yes</button>
+            <button class="dna-opt" type="button" data-dna-v="no">No</button>
+          </div></div>
+          <div class="dna-q" data-dna-q="payout"><p>5. How fast do you need payouts?</p><div class="dna-opts">
+            <button class="dna-opt" type="button" data-dna-v="fast">Weekly or faster</button>
+            <button class="dna-opt" type="button" data-dna-v="slow">Monthly is fine</button>
+          </div></div>
+        </div>
+        <div id="dnaResults" style="margin-top:8px"></div>
+      </section>
+
+      <!-- WAVE 4c — Payout Leaderboard -->
+      <section class="lab-tool" aria-labelledby="po-title">
+        <div class="lab-tool-head"><div><p class="eyebrow">Board 06</p><h3 id="po-title">Payout Leaderboard</h3>
+        <p class="helper">Ranked by profit split. Real published data only — no estimates.</p></div></div>
+        <div style="overflow-x:auto"><table class="payout-table" aria-label="Payout leaderboard">
+          <thead><tr><th>Firm</th><th>Split</th><th>Payout freq.</th><th>Model</th><th>Min price</th></tr></thead>
+          <tbody id="payoutBody"></tbody>
+        </table></div>
+      </section>
+
       <footer class="desktop-footer"><span>All Lab tools compute from verified data or your own inputs — nothing invented.</span></footer>
     </section>
 
@@ -3228,7 +3290,143 @@
       list.appendChild(div);
     });
   }
-  /* Lab wiring */
+  /* ============ WAVE 4 — Moats ============ */
+  /* WAVE 4a — Breach Guard v1 (manual-input honesty tool) */
+  function sbBreachCalc(){
+    var plan=sbLabGetPlan('bgFirm','bgPlan');
+    var msg=document.getElementById('bgMsg');if(!msg)return;
+    var ar=currentLanguage==='ar';
+    if(!plan||!plan.rules){msg.textContent='—';return;}
+    var r=plan.rules;
+    var sz=sbNum(plan.account_size);if(!isFinite(sz)||sz<=0){msg.textContent='—';return;}
+    var totalP=Number(document.getElementById('bgTotal').value)||0;
+    var dailyP=Number(document.getElementById('bgDaily').value)||0;
+    var maxDD=Number(r.max_drawdown_pct),dailyL=Number(r.daily_loss_pct);
+    function gauge(pct,fillId,pctId){
+      var p=Math.max(0,Math.min(100,pct));
+      var f=document.getElementById(fillId),t=document.getElementById(pctId);
+      if(f){f.style.width=p+'%';f.className='breach-fill '+(p<50?'breach-ok':p<80?'breach-warn':'breach-stop');}
+      if(t)t.textContent=Math.round(p)+'%';
+      return p;
+    }
+    var dUsed=isFinite(dailyL)&&dailyL>0?gauge(Math.abs(Math.min(0,dailyP))/(dailyL/100*sz)*100,'bgDailyFill','bgDailyPct'):-1;
+    var tUsed=isFinite(maxDD)&&maxDD>0?gauge(Math.abs(Math.min(0,totalP))/(maxDD/100*sz)*100,'bgTotalFill','bgTotalPct'):-1;
+    var worst=Math.max(dUsed,tUsed);
+    if(worst<0){msg.textContent=ar?'لا توجد حدود منشورة لهذه الخطة.':'No published limits for this plan.';msg.style.color='var(--muted)';}
+    else if(worst>=100){msg.textContent=ar?'🛑 تم اختراق الحد — توقف فوراً':'🛑 LIMIT BREACHED — stop now';msg.style.color='var(--red,#d64545)';}
+    else if(worst>=80){msg.textContent=ar?'🛑 خطر — توقف عن التداول اليوم':'🛑 DANGER — stop trading today';msg.style.color='var(--red,#d64545)';}
+    else if(worst>=50){msg.textContent=ar?'⚠️ حذر — قلّص المخاطرة':'⚠️ CAUTION — reduce risk';msg.style.color='#e8a13c';}
+    else{msg.textContent=ar?'✅ آمن — واصل بانضباط':'✅ SAFE — stay disciplined';msg.style.color='var(--green,#1d9d63)';}
+  }
+  /* WAVE 4b — Trading DNA quiz: score every plan 0-100 from real rules */
+  var sbDnaAnswers={};
+  function sbDnaScore(plan,ans){
+    var r=plan.rules||{},score=50,why=[];
+    var ar=currentLanguage==='ar';
+    var dd=Number(r.max_drawdown_pct),dl=Number(r.daily_loss_pct);
+    // risk tolerance vs drawdown room
+    if(ans.risk==='high'&&isFinite(dd)&&dd>=8){score+=12;why.push(ar?'تراجع واسع يناسب مخاطرتك':'wide drawdown fits your risk');}
+    if(ans.risk==='low'&&isFinite(dl)&&dl<=5){score+=10;why.push(ar?'حد يومي ضيق يحميك':'tight daily limit protects you');}
+    if(ans.risk==='high'&&isFinite(dl)&&dl<4){score-=12;why.push(ar?'الحد اليومي ضيق لمخاطرتك':'daily limit too tight for your risk');}
+    // news trading
+    var kr=Array.isArray(r.key_rules)?r.key_rules.join(' ').toLowerCase():'';
+    if(ans.news==='yes'){
+      if(/news/.test(kr)&&/allow|permit/.test(kr)){score+=10;why.push(ar?'التداول وقت الأخبار مسموح':'news trading allowed');}
+      else if(/news/.test(kr)){score-=8;why.push(ar?'قيود على تداول الأخبار':'news trading restricted');}
+    }
+    // overnight
+    if(ans.overnight==='yes'&&/overnight|hold/.test(kr)&&/allow|permit/.test(kr)){score+=6;why.push(ar?'الاحتفاط الليلي مسموح':'overnight holding allowed');}
+    // payout speed
+    var pf=String(r.payout_frequency||'').toLowerCase();
+    if(ans.payout==='fast'){
+      if(/week|bi-?week|instant|on-demand/.test(pf)){score+=10;why.push(ar?'دفع سريع':'fast payouts');}
+      else if(/month/.test(pf)){score-=6;why.push(ar?'الدفع شهري':'monthly payouts');}
+    }
+    // scalper vs consistency rules
+    if(ans.style==='scalper'){
+      if(/consist/.test(kr)){score-=8;why.push(ar?'قواعد اتساق صارمة':'strict consistency rules');}
+      else{score+=6;why.push(ar?'بلا قواعد اتساق خانقة':'no choking consistency rules');}
+    }
+    // split preference (everyone likes high split)
+    var sp=Number(r.profit_split);
+    if(isFinite(sp)){score+=Math.max(0,Math.min(8,(sp-80)/2));}
+    return {score:Math.max(0,Math.min(100,Math.round(score))),why:why.slice(0,2)};
+  }
+  function sbDnaRender(){
+    var res=document.getElementById('dnaResults');if(!res)return;
+    var keys=['style','risk','overnight','news','payout'];
+    var done=keys.every(function(k){return sbDnaAnswers[k];});
+    if(!done){res.innerHTML='<p style="color:var(--muted);font-size:13px">'+(currentLanguage==='ar'?'أجب عن الأسئلة الخمسة لعرض توصياتك.':'Answer all 5 questions to see your matches.')+'</p>';return;}
+    var scored=[];
+    (sbFirms||[]).forEach(function(f){
+      (sbPlansByFirm[f.id]||[]).forEach(function(p){
+        var s=sbDnaScore(p,sbDnaAnswers);
+        scored.push({firm:f,plan:p,score:s.score,why:s.why});
+      });
+    });
+    scored.sort(function(a,b){return b.score-a.score;});
+    var top=scored.slice(0,3),ar=currentLanguage==='ar';
+    res.innerHTML='';
+    top.forEach(function(t,i){
+      var div=document.createElement('div');div.className='dna-result';
+      var sc=document.createElement('div');sc.className='dna-score';sc.textContent=t.score;
+      var tx=document.createElement('div');
+      var sz=sbNum(t.plan.account_size);
+      var nm=document.createElement('div');nm.style.fontWeight='700';nm.style.color='var(--text)';
+      nm.textContent=(i+1)+'. '+t.firm.name+' · '+(isFinite(sz)?sbFmtSize(sz):'');
+      var wh=document.createElement('div');wh.className='dna-why';
+      wh.textContent=t.why.length?t.why.join(' · '):(ar?'توافق عام جيد':'good general fit');
+      tx.appendChild(nm);tx.appendChild(wh);
+      div.appendChild(sc);div.appendChild(tx);
+      res.appendChild(div);
+    });
+  }
+  /* WAVE 4c — Payout leaderboard (real data only, sorted by split desc) */
+  function sbRenderPayoutBoard(){
+    var tb=document.getElementById('payoutBody');if(!tb||typeof sbFirms==='undefined')return;
+    tb.innerHTML='';
+    var rows=(sbFirms||[]).map(function(f){
+      var plans=sbPlansByFirm[f.id]||[];
+      var bestSplit=null,bestFreq=null,model=null,minPrice=null;
+      plans.forEach(function(p){
+        var r=p.rules||{};
+        var sp=Number(r.profit_split);
+        if(isFinite(sp)&&(bestSplit===null||sp>bestSplit)){bestSplit=sp;bestFreq=r.payout_frequency||bestFreq;}
+        if(!model&&r.pricing_model)model=r.pricing_model;
+        var pr=sbNum(p.price);
+        if(isFinite(pr)&&(minPrice===null||pr<minPrice))minPrice=pr;
+      });
+      return {firm:f,split:bestSplit,freq:bestFreq,model:model,price:minPrice};
+    }).sort(function(a,b){return (b.split||-1)-(a.split||-1);});
+    rows.forEach(function(row){
+      var tr=document.createElement('tr');
+      function td(t,cls){var c=document.createElement('td');if(cls)c.className=cls;c.textContent=t;return c;}
+      tr.appendChild(td(row.firm.name||'—'));
+      tr.appendChild(td(row.split!=null?row.split+'%':'—','p-split'));
+      tr.appendChild(td(row.freq||'—'));
+      tr.appendChild(td(row.model||'—'));
+      tr.appendChild(td(row.price!=null?sbFmtUSD(row.price):'—'));
+      tb.appendChild(tr);
+    });
+  }
+  /* Lab wiring — Wave 4 additions */
+  function sbInitLabWave4(){
+    sbLabFillFirms('bgFirm','bgPlan');
+    ['bgFirm','bgPlan','bgTotal','bgDaily'].forEach(function(id){
+      var e=document.getElementById(id);if(e)e.addEventListener('input',sbBreachCalc);
+    });
+    document.querySelectorAll('.dna-opt').forEach(function(btn){
+      btn.addEventListener('click',function(){
+        var q=btn.closest('.dna-q'),key=q.getAttribute('data-dna-q');
+        q.querySelectorAll('.dna-opt').forEach(function(o){o.setAttribute('aria-pressed','false');});
+        btn.setAttribute('aria-pressed','true');
+        sbDnaAnswers[key]=btn.getAttribute('data-dna-v');
+        sbDnaRender();
+      });
+    });
+    sbBreachCalc();sbDnaRender();sbRenderPayoutBoard();
+  }
+  /* Lab wiring — Wave 3 init */
   function sbInitLab(){
     if(!document.getElementById('lab'))return;
     sbLabFillFirms('tcFirm','tcPlan');
@@ -3247,6 +3445,7 @@
         clearInterval(iv);
         sbLabFillFirms('tcFirm','tcPlan');sbLabFillFirms('simFirm','simPlan');
         sbTrueCostCalc();sbSimRun();sbRenderRadar();
+        if(typeof sbInitLabWave4==='function')sbInitLabWave4();
       }else if(tries>40)clearInterval(iv);
     },500);
   }
