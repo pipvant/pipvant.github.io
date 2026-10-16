@@ -2962,12 +2962,17 @@
     var sheet=document.getElementById('firmDetailSheet');if(!sheet)return;
     var title=document.getElementById('firmDetailTitle');if(title)title.textContent=firm.name;
     var sub=sheet.querySelector('.sheet-title-row div p:last-child');
-    if(sub)sub.textContent=(currentLanguage==='ar'?'تم تحديث البيانات ':'Data updated ')+sbFmtDate(firm.updated_at);
+    // C-1-matcher fix: disclose that rules are from the first plan (not all).
+    if(sub)sub.textContent=(currentLanguage==='ar'?'تم تحديث البيانات ':'Data updated ')+sbFmtDate(firm.updated_at)+(plans.length>1?(currentLanguage==='ar'?' · القواعد لأول خطة':' · Rules for first plan'):'');
     var vals={'Account sizes':sbSizeRange(plans),'Price from':sbMinPrice(plans),'Profit target':sbPlanTarget(rules),'Max drawdown':sbPlanDrawdown(rules)};
     if(rules&&rules.daily_loss_pct!=null&&isFinite(Number(rules.daily_loss_pct)))vals['Daily loss limit']=rules.daily_loss_pct+'%';
-    sheet.querySelectorAll('.rule-row').forEach(function(row){
-      var label=row.querySelector('span');var strong=row.querySelector('strong');
-      if(label&&strong&&vals[label.textContent]!=null)strong.textContent=vals[label.textContent];
+    // H-1-matcher fix: match by data-key (not translated text).
+    // Add data-key to rows if missing.
+    sheet.querySelectorAll('.rule-row').forEach(function(row,idx){
+      var _keys=['Program type','Account sizes','Price from','Profit target','Profit split','Max drawdown','Daily loss limit','Leverage','Payout frequency'];
+      var _k=_keys[idx];
+      var strong=row.querySelector('strong');
+      if(strong&&_k&&vals[_k]!=null)strong.textContent=vals[_k];
     });
     var notes=sheet.querySelectorAll('.notable-rules li span');
     var keyRules=rules&&Array.isArray(rules.key_rules)?rules.key_rules:[];
