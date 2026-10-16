@@ -1411,7 +1411,7 @@
         <div class="lp-how-grid">
           <article class="lp-step rv"><h3>Create your free account</h3><p>Thirty seconds. No card, no trial clock — the full toolkit is free from the first click.</p></article>
           <article class="lp-step rv" style="--d:.1s"><h3>Log your trades</h3><p>Record entries, exits, and risk. PIPVANT turns them into stats, equity curves, and review insights.</p></article>
-          <article class="lp-step rv" style="--d:.2s"><h3>Review &amp; earn certificates</h3><p>Hit real milestones — 500 logged trades, 90 disciplined days — and earn verifiable certificates.</p></article>
+          <article class="lp-step rv" style="--d:.2s"><h3>Review &amp; earn certificates</h3><p>Hit real milestones — 500 logged trades and more — and earn verifiable certificates.</p></article>
         </div>
       </div>
     </section>
@@ -3340,7 +3340,13 @@
         // Show landing/login for a logged-out visitor.
         var _seen=false;try{_seen=!!localStorage.getItem('pipvant_landing_seen');}catch(e){}
         if(_seen){document.body.classList.add('auth-active','show-auth');}
-        else{document.body.classList.add('show-landing');}
+        else{
+          document.body.classList.add('show-landing');
+          // C-2-landing fix: initialize the landing so CTAs work, and set
+          // the first-visit marker (was a dead page without this).
+          try{if(typeof initSiteLanding==='function')initSiteLanding();}catch(e){}
+          try{localStorage.setItem('pipvant_landing_seen','1');}catch(e){}
+        }
       }catch(e){}
       return;
     }
@@ -6402,6 +6408,10 @@
         document.body.classList.remove('auth-checking');
         if(!document.body.classList.contains('app-ready')&&!document.body.classList.contains('auth-active')&&!document.body.classList.contains('show-landing')){
           document.body.classList.add('show-landing');
+          // C-1-landing fix: initialize the landing so CTAs work, and set
+          // the first-visit marker (was a dead page without this).
+          try{if(typeof initSiteLanding==='function')initSiteLanding();}catch(e){}
+          try{localStorage.setItem('pipvant_landing_seen','1');}catch(e){}
         }
       }
     }catch(e){}
