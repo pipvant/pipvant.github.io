@@ -3264,6 +3264,13 @@
     // Listen for auth state changes (token refresh, sign out, etc.)
     sb.auth.onAuthStateChange(function(event,session){
       if(event==='SIGNED_IN'&&session&&session.user){
+        // If a DIFFERENT user signs in (account switch without logout),
+        // wipe the previous user's local state first to prevent leaks.
+        try{
+          if(sbUser&&sbUser.id&&session.user.id&&sbUser.id!==session.user.id){
+            if(typeof clearUserState==='function')clearUserState();
+          }
+        }catch(e){}
         sbUser=session.user;
         sbFlushPendingProfile();
         sbLoadProfile(function(pname){enterProduct(pname||session.user.email||'','—');});
@@ -3271,7 +3278,7 @@
         sbLoadTrades();sbLoadDiscipline();sbLoadSettings();sbLoadAccounts();sbLoadUserPrefs();sbLoadCertificates();sbLoadNotifications();
       }else if(event==='SIGNED_OUT'){
         sbUser=null;
-        try{sessionJournalEntries=[];window.sessionJournalEntries=[];if(typeof renderJournalEntries==='function')renderJournalEntries();}catch(_so){}
+        try{if(typeof clearUserState==='function')clearUserState();}catch(_so){}
       }else if(event==='TOKEN_REFRESHED'&&session&&session.user){
         sbUser=session.user;
       }
@@ -4239,7 +4246,7 @@
   }
   /* ---- Notification data: global (everyone) + personal ---- */
   var notifStore=[];
-  function notifUserKey(){try{var u=sessionUser&&sessionUser.id?sessionUser.id:'anon';return 'pipvant_notif_'+u;}catch(e){return 'pipvant_notif_anon';}}
+  function notifUserKey(){try{var u=(typeof sbUser!=='undefined'&&sbUser&&sbUser.id)?sbUser.id:'anon';return 'pipvant_notif_'+u;}catch(e){return 'pipvant_notif_anon';}}
   function getPersonalNotifs(){try{return JSON.parse(localStorage.getItem(notifUserKey())||'[]');}catch(e){return [];}}
   function savePersonalNotifs(list){try{localStorage.setItem(notifUserKey(),JSON.stringify(list.slice(0,50)));}catch(e){}}
   function addPersonalNotif(title,message,type,ref){
@@ -4794,13 +4801,42 @@
     if(profileSession.photoUrl)URL.revokeObjectURL(profileSession.photoUrl);profileSession.photoUrl='';updateProfileIdentity('','');renderProfileCertificates([]);setAvatarSurfacePhoto('');document.getElementById('profileAvatarFeedback').textContent='';
     updateCheckProgress();if(riskPercent)setRiskValue(defaultRisk);refreshPreferenceCopy();
   }
+  // Wipe ALL user-scoped state (memory + localStorage) so nothing leaks to the
+  // next account that signs in on this device. Device-level keys are kept.
+  function clearUserState(){
+    sbPendingName='';
+    window._welcomeAttempted=false;
+    tradingAccounts=[];selectedAccountId='all';
+    sessionJournalEntries=[];window.sessionJournalEntries=[];
+    try{renderJournalEntries();}catch(e){}
+    try{renderAccountList();}catch(e){}
+    try{updateAccountSwitchLabel();}catch(e){}
+    notifStore=[];
+    try{refreshNotificationBadge();}catch(e){}
+    if(typeof profileSession!=='undefined'){
+      try{if(profileSession.photoUrl)URL.revokeObjectURL(profileSession.photoUrl);}catch(e){}
+      profileSession.photoUrl='';profileSession.name='';profileSession.bio='';profileSession.certificates=[];
+    }
+    try{updateProfileIdentity('','');}catch(e){}
+    try{setAvatarSurfacePhoto('');}catch(e){}
+    try{renderProfileCertificates([]);}catch(e){}
+    try{
+      var keep={'pipvant_landing_seen':1,'pipvant_seen_landing':1,'pipvantConsent':1,'pipvant_rates':1,'pipvant_last_screen':1,'pipvant_news_alerted':1};
+      var drop=[];
+      for(var i=0;i<localStorage.length;i++){
+        var k=localStorage.key(i);
+        if(k&&k.indexOf('pipvant_')===0&&!keep[k])drop.push(k);
+      }
+      drop.forEach(function(k){try{localStorage.removeItem(k);}catch(e){}});
+    }catch(e){}
+  }
   function logout(){
+    // Best-effort: flush pending local data to the outgoing user's cloud before signing out
+    try{if(typeof syncLocalTradesToCloud==='function')syncLocalTradesToCloud();}catch(e){}
+    try{if(typeof sbSaveAccounts==='function')sbSaveAccounts();}catch(e){}
     if(sb){sbQuiet(sb.auth.signOut());}
     sbUser=null;
-    try{
-      sessionJournalEntries=sessionJournalEntries.filter(function(en){return !en._db;}); window.sessionJournalEntries=sessionJournalEntries;
-      renderJournalEntries();
-    }catch(clearErr){}
+    clearUserState();
     document.body.classList.remove('app-ready','show-landing');
     document.body.classList.add('auth-active','show-auth','auth-returning');setTimeout(function(){document.body.classList.remove('auth-returning');},210);
     document.getElementById('signupForm').reset();
