@@ -4374,6 +4374,12 @@
     if(!groups)return;
     // combine: global + personal
     var all=notifStore.concat(getPersonalNotifs());
+    // Welcome is personal-only: drop any stale global welcome (pre-fix data).
+    // If a personal welcome exists, it takes precedence.
+    var hasPersonalWelcome=all.some(function(x){return x.scope==='personal'&&x.title==='Welcome to PIPVANT';});
+    if(hasPersonalWelcome){
+      all=all.filter(function(x){return !(x.scope==='everyone'&&x.title==='Welcome to PIPVANT');});
+    }
     // filter by tab
     if(activeNTab!=='all')all=all.filter(function(x){return x.scope===activeNTab;});
     // sort newest first
@@ -5898,6 +5904,20 @@
     sb.from('notifications').select('id,title,body,created_at,read,data').eq('user_id',sbUser.id).order('created_at',{ascending:false}).limit(30)
       .then(function(r){
         var rows=(r&&!r.error&&r.data)?r.data:[];
+        // One-time cleanup: delete stale news alerts saved as personal cloud
+        // notifications by the old logic (news is now everyone-scope, memory-only).
+        try{
+          var staleIds=rows.filter(function(n){
+            var t=n.title||'';
+            var isNews=/high-impact news soon/i.test(t)||/خبر عالي التأثير/.test(t);
+            var age=Date.now()-new Date(n.created_at||Date.now()).getTime();
+            return isNews&&age>24*3600*1000;
+          }).map(function(n){return n.id;});
+          if(staleIds.length&&sbUser){
+            sb.from('notifications').delete().in('id',staleIds).eq('user_id',sbUser.id).then(function(){}).catch(function(){});
+            rows=rows.filter(function(n){return staleIds.indexOf(n.id)<0;});
+          }
+        }catch(e){}
         // Merge Supabase personal notifications into notifStore (single renderer).
         rows.forEach(function(n){
           var id='s_'+n.id;
@@ -6073,26 +6093,31 @@
             var _alerted={};
             try{_alerted=JSON.parse(localStorage.getItem('pipvant_news_alerted')||'{}');}catch(e){}
             var _prefs=getNotifCurrPrefs();
-            // Group same-time events into ONE notification (2026-10-15 fix):
-            // 4 news at 12:30 (PPI, Core PPI, Retail Sales, Core Retail Sales)
-            // used to fire 4 separate notifications in the same second.
+            // Group same-time events into ONE notification:
+            // events in the same minute group together (exact timestamps
+            // may differ by seconds).
             var _groups={};
             calendarEvents.forEach(function(ev){
               if(ev.impact!=='high'||!ev._ts)return;
               if(_prefs.indexOf(ev.currency)<0)return;
               var _diff=ev._ts-_now;
               if(_diff>0&&_diff<3600000){
-                var _g=_groups[ev._ts]||(_groups[ev._ts]={ts:ev._ts,items:[],_seen:{}});
-                // Dedupe exact duplicate rows client-side (edge-function
-                // redeploy still pending): same title+currency+time = 1 event.
+                var _minKey=Math.floor(ev._ts/60000);
+                var _g=_groups[_minKey]||(_groups[_minKey]={ts:ev._ts,items:[],_seen:{}});
+                // Dedupe exact duplicate rows client-side: same title+currency = 1 event.
                 var _ek=(ev.name||'')+'|'+(ev.currency||'');
                 if(!_g._seen[_ek]){_g._seen[_ek]=1;_g.items.push(ev);}
               }
             });
-            Object.keys(_groups).forEach(function(ts){
-              var _g=_groups[ts];if(!_g.items.length)return;
+            // Clean stale alerted-keys for past events (keep localStorage small)
+            Object.keys(_alerted).forEach(function(k){
+              var m=k.match(/^grp_(\d+)_/);
+              if(m&&Number(m[1])<Date.now()-3600000)delete _alerted[k];
+            });
+            Object.keys(_groups).forEach(function(mk){
+              var _g=_groups[mk];if(!_g.items.length)return;
               var _names=_g.items.map(function(e){return e.name||'';}).sort().join('|');
-              var _key='grp_'+ts+'_'+_names; // group-level dedupe key
+              var _key='grp_'+_g.ts+'_'+_names; // group-level dedupe key
               if(_alerted[_key])return;
               _alerted[_key]=1;
               var _ev0=_g.items[0];
@@ -6112,7 +6137,13 @@
                       currency:_ev0.currency,impact:_ev0.impactLabel||_ev0.impact,
                       time:_ev0.time,dayLabel:_ev0.dayLabel};
               }
-              addPersonalNotif(_title,_body,'news',_ref);
+              // News alerts are EVERYONE scope, memory-only (never saved to
+              // personal cloud). They expire naturally on reload.
+              var _nid='news_'+_key;
+              if(!notifStore.some(function(x){return x.id===_nid;})){
+                notifStore.push({id:_nid,scope:'everyone',title:_title,message:_body,type:'news',ts:Date.now(),read:isNotifRead(_nid),ref:_ref});
+              }
+              renderNotifications();
             });
             try{localStorage.setItem('pipvant_news_alerted',JSON.stringify(_alerted));}catch(e){}
           }
