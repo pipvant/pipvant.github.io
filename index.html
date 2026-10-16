@@ -411,6 +411,8 @@
     .market-tab{border:1px solid transparent;background:var(--bg);border-radius:9px;color:var(--muted)}
     .market-tab[aria-selected="true"]{background:var(--platinum);color:var(--bg);box-shadow:none}
     .method-pill{display:inline-flex;align-items:center;min-height:34px;padding:0 12px;border:1px solid transparent;border-radius:999px;background:linear-gradient(var(--surface),var(--surface)) padding-box,linear-gradient(105deg,var(--platinum),var(--market-accent)) border-box;color:var(--text);font-size:10px;font-weight:700;text-decoration:none}
+    .freshness-pill{display:inline-flex;align-items:center;gap:6px;min-height:28px;padding:0 12px;border:1px solid var(--line-strong);border-radius:999px;background:var(--surface);color:var(--secondary);font-size:11px;font-weight:600}
+    .freshness-pill .fresh-dot{width:7px;height:7px;border-radius:50%;background:#3ECF6E;box-shadow:0 0 7px rgba(62,207,110,.55)}
     .firm-card{border-color:color-mix(in srgb,var(--market-accent) 32%,var(--line));background:linear-gradient(110deg,color-mix(in srgb,var(--market-accent) 8%,transparent),rgba(15,29,51,.97) 56%)}
     .firm-summary{min-height:154px;grid-template-columns:minmax(0,1fr) 52px;align-items:stretch;padding:12px}
     .firm-expand{min-height:128px;grid-template-columns:24px 48px minmax(0,1fr) 42px 16px;align-items:start;gap:9px}
@@ -1696,7 +1698,7 @@
 
       <section class="matcher-list" data-view="rows" data-density="comfortable" aria-labelledby="top-firms-title">
         <div class="matcher-list-head">
-          <div><h3 id="top-firms-title">Top Prop Firms</h3><div class="matcher-meta"><a class="method-pill" href="#matcherMethodology">How we verify and rank firms</a><span>Last updated —</span></div></div>
+          <div><h3 id="top-firms-title">Top Prop Firms</h3><div class="matcher-meta"><a class="method-pill" href="#matcherMethodology">How we verify and rank firms</a><span id="lastUpdatedSpan">Last updated —</span><span class="freshness-pill" id="freshnessBadge" hidden><span class="fresh-dot"></span><span id="freshnessText"></span></span></div></div>
           <div class="view-toggle" aria-label="Result view">
             <button class="view-button" type="button" aria-pressed="true" data-matcher-view="rows">Rows</button>
             <button class="view-button" type="button" aria-pressed="false" data-matcher-view="table">Table</button>
@@ -2473,7 +2475,7 @@
   }
   function sbLoadFirms(){
     if(!sb)return;
-    sb.from('firms').select('id,name,website,headquarters,countries_allowed,countries_restricted,updated_at,source').order('name')
+    sb.from('firms').select('id,name,website,headquarters,countries_allowed,countries_restricted,updated_at,last_verified_at,source').order('name')
       .then(function(r){
         if(r.error||!r.data||!r.data.length)return;
         sbFirms=r.data;
@@ -2725,8 +2727,22 @@
     }catch(e){}
     var preview=document.querySelector('#matcher .preview-label');if(preview)preview.textContent=sbFirms.length+(currentLanguage==='ar'?' شركات موثقة':' verified firms');
     var latest=null;sbFirms.forEach(function(f){if(f.updated_at&&(!latest||f.updated_at>latest))latest=f.updated_at;});
-    var metaSpan=document.querySelector('#matcher .matcher-meta span:last-child');
+    var metaSpan=document.getElementById('lastUpdatedSpan');
     if(metaSpan)metaSpan.textContent=(currentLanguage==='ar'?'آخر تحديث ':'Last updated ')+sbFmtDate(latest);
+    /* Freshness badge: honest floor — every firm shown was verified at least this recently.
+       Uses MIN(last_verified_at), falling back to updated_at before the first daily check. */
+    try{
+      var oldestVerified=null;
+      sbFirms.forEach(function(f){var v=f.last_verified_at||f.updated_at;if(v&&(!oldestVerified||v<oldestVerified))oldestVerified=v;});
+      var fb=document.getElementById('freshnessBadge'),ft=document.getElementById('freshnessText');
+      if(fb&&ft&&oldestVerified){
+        var fd=Math.floor((Date.now()-new Date(oldestVerified).getTime())/86400000);
+        var rel=fd<=0?(currentLanguage==='ar'?'اليوم':'today'):fd===1?(currentLanguage==='ar'?'أمس':'yesterday'):fd+(currentLanguage==='ar'?' يوم':'d ago');
+        ft.textContent=(currentLanguage==='ar'?'✓ تم التحقق من البيانات ':'✓ Data verified ')+rel;
+        fb.title=(currentLanguage==='ar'?'أقدم تحقق: ':'Oldest verification: ')+sbFmtDate(oldestVerified);
+        fb.hidden=false;
+      }
+    }catch(fbe){}
     sbUpdateCountChips();
     if(typeof sbUpdateMethodologyStats==='function')sbUpdateMethodologyStats();
   }

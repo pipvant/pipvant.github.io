@@ -44,6 +44,9 @@
     h1{font-size:clamp(2.2rem,6vw,3.6rem);line-height:1.05;margin:0 0 16px}
     h1 .gold{background:linear-gradient(135deg,#F5D67B,#D4AF37);-webkit-background-clip:text;background-clip:text;color:transparent}
     .lede{color:var(--secondary);font-size:17px;line-height:1.7;max-width:680px;margin:0 auto 28px}
+    .freshness-wrap{text-align:center;margin:0 0 4px}
+    .freshness-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border:1px solid var(--line-strong);border-radius:999px;background:var(--surface);color:var(--secondary);font-size:13px;font-weight:600}
+    .freshness-badge .fresh-dot{width:8px;height:8px;border-radius:50%;background:#3ECF6E;box-shadow:0 0 8px rgba(62,207,110,.5)}
     .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;padding:20px 0 40px}
     .card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px;transition:transform .15s,border-color .15s}
     .card:hover{transform:translateY(-2px);border-color:var(--line-strong)}
@@ -85,6 +88,7 @@
     <div class="eyebrow">Prop firm matcher · Verified data</div>
     <h1>Compare the <span class="gold">best prop firms</span> of 2026 — free.</h1>
     <p class="lede">10 verified prop firms. 43 funding plans. Filter by drawdown, profit target, price and payout terms — then pick the challenge that fits your trading style. No signup, no paid reviews.</p>
+    <div class="freshness-wrap"><span class="freshness-badge" id="freshnessBadge" hidden><span class="fresh-dot"></span><span id="freshnessText"></span></span></div>
     <a class="cta-btn" href="/">Launch the free matcher →</a>
   </section>
 
@@ -145,5 +149,30 @@
   <span><a href="/">Toolkit</a><a href="free-trading-journal.html">Journal</a><a href="forex-risk-calculator.html">Calculator</a></span>
 </div></footer>
 <script src="assets/pipv-os.js" defer></script>
+<script>
+/* Freshness badge: shows the honest floor — every tracked firm was verified at least this recently.
+   Reads MIN(last_verified_at) from Supabase, falling back to updated_at before the first daily check. */
+(function(){
+  var KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFjcGt6YXZtaWZqd25za2lhcmV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyMDk1ODcsImV4cCI6MjEwNjc4NTU4N30.9-k-DoB6467EXTPKrvWUi-LRDPbSSC30f6BgrZezo2A';
+  var URL='https://acpkzavmifjwnskiaret.supabase.co/rest/v1/firms?select=last_verified_at,updated_at';
+  function rel(d){return d<=0?'today':d===1?'yesterday':d+'d ago';}
+  fetch(URL,{headers:{'apikey':KEY,'Authorization':'Bearer '+KEY}})
+    .then(function(r){return r.json();})
+    .then(function(rows){
+      if(!Array.isArray(rows)||!rows.length)return;
+      var oldest=null;
+      rows.forEach(function(f){var v=f.last_verified_at||f.updated_at;if(v&&(!oldest||v<oldest))oldest=v;});
+      if(!oldest)return;
+      var days=Math.floor((Date.now()-new Date(oldest).getTime())/86400000);
+      var badge=document.getElementById('freshnessBadge'),txt=document.getElementById('freshnessText');
+      if(badge&&txt){
+        txt.textContent='✓ All firm data verified '+rel(days);
+        badge.title='Oldest verification: '+new Date(oldest).toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'});
+        badge.hidden=false;
+      }
+    })
+    .catch(function(){/* badge stays hidden — never show a guessed date */});
+})();
+</script>
 </body>
 </html>
