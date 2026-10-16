@@ -151,6 +151,19 @@
     .promo-copy-btn{background:#0A1628;color:#D4AF37;border:1px solid #D4AF37;border-radius:10px;padding:8px 16px;font-weight:800;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
     .promo-copy-btn:active{transform:scale(.96)}
     .restricted-flags{font-size:12px;color:var(--muted);margin-top:8px}
+    /* MOBILE CARD FIX: promo badge out of grid flow (was 5th item in 4-col grid → broken layout) */
+    .firm-expand{position:relative}
+    .firm-expand .discount-slot.promo-badge{position:absolute;top:10px;inset-inline-end:38px;z-index:3;margin:0}
+    @media (max-width:639px){
+      .firm-expand .discount-slot.promo-badge{top:8px;inset-inline-end:34px;font-size:11px;padding:3px 10px}
+      .firm-core{gap:6px!important;padding-top:0!important}
+      .firm-card .meta-pills{gap:4px}
+      .firm-card .evidence-line{font-size:11px;flex-wrap:wrap}
+      .firm-card .allocation{margin-top:2px}
+      .firm-card .rating-block{margin-top:2px}
+      /* compare toggle: keep clear of promo badge */
+      .compare-toggle{top:8px}
+    }
     
     .slot-cta{min-width:50px;min-height:32px;display:grid;place-items:center;border:1px solid var(--line-strong);border-radius:8px;color:var(--muted);font-size:10px;font-weight:800;letter-spacing:.05em;opacity:.68}.slot-cta:not([disabled]):hover{opacity:1}.slot-cta:not([disabled]):active{opacity:1;transform:scale(.96)}
     .row-chevron{color:var(--silver);transition:transform var(--micro) var(--ease-move)}
