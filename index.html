@@ -3289,18 +3289,20 @@
         // No session: brand-new visitors see the landing; returning visitors go straight to login.
         // The flag is set ONLY when the landing is actually displayed (never on button clicks),
         // so a first-time visitor can never be misclassified as returning.
-        var seenLp=false;try{seenLp=!!localStorage.getItem('pipvant_seen_landing');}catch(e){}
+        // Key renamed from pipvant_seen_landing: the old key was written on every CTA click,
+        // so any stale value from before this fix is ignored.
+        var seenLp=false;try{seenLp=!!localStorage.getItem('pipvant_landing_seen');}catch(e){}
         if(seenLp){
           document.body.classList.add('auth-active','show-auth');
           if(typeof setAuthMode==='function')setAuthMode('login');
           if(typeof authStage==='function')authStage('authSignup');
         }else{
-          try{localStorage.setItem('pipvant_seen_landing','1');}catch(e){}
+          try{localStorage.setItem('pipvant_landing_seen','1');}catch(e){}
           document.body.classList.add('show-landing');
           if(typeof initSiteLanding==='function')initSiteLanding();
         }
       }
-    }).catch(function(){var loader=document.getElementById('authLoading');if(loader)loader.style.display='none';document.body.classList.remove('auth-checking');var seenLp2=false;try{seenLp2=!!localStorage.getItem('pipvant_seen_landing');}catch(e){}if(seenLp2){document.body.classList.add('auth-active','show-auth');if(typeof setAuthMode==='function')setAuthMode('login');if(typeof authStage==='function')authStage('authSignup');}else{try{localStorage.setItem('pipvant_seen_landing','1');}catch(e){}document.body.classList.add('show-landing');if(typeof initSiteLanding==='function')initSiteLanding();}});
+    }).catch(function(){var loader=document.getElementById('authLoading');if(loader)loader.style.display='none';document.body.classList.remove('auth-checking');var seenLp2=false;try{seenLp2=!!localStorage.getItem('pipvant_landing_seen');}catch(e){}if(seenLp2){document.body.classList.add('auth-active','show-auth');if(typeof setAuthMode==='function')setAuthMode('login');if(typeof authStage==='function')authStage('authSignup');}else{try{localStorage.setItem('pipvant_landing_seen','1');}catch(e){}document.body.classList.add('show-landing');if(typeof initSiteLanding==='function')initSiteLanding();}});
   }
   /* Guest browse: skip auth gate for public tools (matcher, calendar) */
   document.addEventListener('click',function(e){
