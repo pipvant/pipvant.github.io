@@ -4,6 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="dark light">
+  <!-- Mega-audit SEO fixes: canonical + theme-color (were missing). -->
+  <link rel="canonical" href="https://pipvant.github.io/">
+  <meta name="theme-color" content="#0A1628">
+  <!-- Mega-audit fix: set theme before first paint (prevents dark→light flash). -->
+  <script>try{var _s=JSON.parse(localStorage.getItem('pipvant_settings')||'{}');var _t=_s&&_s.theme;if(_t==='light'||_t==='dark')document.documentElement.setAttribute('data-theme',_t);}catch(e){}</script>
   <link rel="icon" type="image/png" href="assets/pipvanta-logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1325,6 +1330,13 @@
       .field-grid{grid-template-columns:1fr!important;}
       .notification-tools{grid-template-columns:1fr!important;}
     }
+    /* Mega-audit mobile fix: 44px minimum touch targets for small controls
+       (chart toggles, group tabs, range buttons, sort buttons, chips). */
+    .chart-toggle,.group-tabs button,.trade-view button,.range-btn,.sort-button,
+    .directory-chip,.chip,.slot-cta,.risk-preset,.notif-tab,.dir-tab{
+      min-height:44px;min-width:44px;
+    }
+    .chart-toggle,.group-tabs button,.trade-view button,.range-btn,.sort-button{padding:10px 12px;}
   </style>
 </head>
 <body class="auth-active auth-checking">
@@ -1826,7 +1838,7 @@
         <div class="directory-toolbar">
           <div class="directory-search"><svg width="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="m16 16 4 4"/></svg><label class="visually-hidden" for="directorySearch">Search firms</label><input id="directorySearch" type="search" autocomplete="off" placeholder="Search firms" aria-label="Search firms"></div>
           <div class="directory-actions">
-            <div class="directory-sort"><label class="visually-hidden" for="directorySort">Sort firms</label><select id="directorySort" aria-label="Sort firms"><option>Recommended</option><option>Price: low to high</option><option>Profit split: high to low</option></select></div>
+            <div class="directory-sort"><label class="visually-hidden" for="directorySort">Sort firms</label><select id="directorySort" aria-label="Sort firms"><option>Recommended</option><option>Price: low to high</option></select></div>
             <button class="directory-filter-button" id="openDirectoryFilters" type="button" aria-haspopup="dialog" aria-controls="directoryFilterSheet"><svg width="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h16M7 12h10m-7 5h4"/></svg><span>Filters</span><span class="filter-count" id="directoryFilterCount" data-count="0">0</span></button>
           </div>
         </div>
@@ -1873,7 +1885,7 @@
 
       <section class="journal-analytics" aria-label="Performance charts">
         <article class="equity-card">
-          <div class="journal-card-head"><div><h3>Daily Net Cumulative P&amp;L</h3><p>Equity from logged trades only</p></div><div class="chart-toggles" role="group" aria-label="Chart metric"><button class="chart-toggle" type="button" aria-pressed="true">Cumulative</button><button class="chart-toggle" type="button" aria-pressed="false">Per-trade R</button><button class="chart-toggle" type="button" aria-pressed="false">Drawdown</button></div></div>
+          <div class="journal-card-head"><div><h3>Daily Net Cumulative P&amp;L</h3><p>Equity from logged trades only</p></div><div class="chart-toggles" role="group" aria-label="Chart metric"><button class="chart-toggle" type="button" aria-pressed="true" data-chart-mode="cumulative">Cumulative</button><button class="chart-toggle" type="button" aria-pressed="false" data-chart-mode="pertrade">Per-trade R</button><button class="chart-toggle" type="button" aria-pressed="false" data-chart-mode="drawdown">Drawdown</button></div></div>
           <div class="equity-empty"><div><div class="empty-glyph" aria-hidden="true"><svg width="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 18 9 13l3 2 7-9"/></svg></div><h3>No trade history available</h3><p>The chart will populate after the first trade result is recorded.</p></div></div><div class="drawdown-strip" aria-label="Empty drawdown strip"></div>
         </article>
         <aside class="score-card" aria-labelledby="score-title"><div class="journal-card-head"><div><h3 id="score-title">Trading Score</h3><p>Six execution dimensions</p></div><span class="tiny">0–100</span></div><div class="score-body"><div class="radar-wrap"><svg class="radar-svg" viewBox="0 0 220 190" fill="none" aria-label="Trading score radar"><path d="m110 12 84 42v82l-84 42-84-42V54Z" stroke="var(--line-strong)"/><path d="m110 45 56 28v44l-56 28-56-28V73Z" stroke="var(--line)"/><path d="m110 78 28 14v8l-28 14-28-14v-8Z" stroke="var(--line)"/><path d="M110 12v166M26 54l168 82M194 54 26 136" stroke="var(--line)"/></svg><span class="radar-label r1">Win %</span><span class="radar-label r2">Profit factor</span><span class="radar-label r3">Avg win/loss</span><span class="radar-label r4">Recovery factor</span><span class="radar-label r5">Max drawdown</span><span class="radar-label r6">Consistency</span></div><div class="score-track"><div class="score-fill"></div></div><div class="score-meta"><strong>—</strong><span>Qualitative label —</span></div></div></aside>
@@ -1883,7 +1895,7 @@
 
       <div class="journal-filter" aria-label="Trade filters"><div class="journal-filter-row"><button class="filter-action" id="journalFilterButton" type="button" aria-expanded="false"><svg width="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 6h16M7 12h10m-7 6h4"/></svg>Filters</button><div class="active-filter-slot"><span class="active-filter-chip" id="dayFilterChip">Day —</span><span class="active-filter-chip" id="facetFilterChip">All symbols · All sides</span></div></div><div class="facet-panel" id="facetPanel"><div class="facet-group" id="facetSymbol"><strong>Symbol</strong></div><div class="facet-group" id="facetSide"><strong>Side</strong></div><div class="facet-group" id="facetSetup"><strong>Setup</strong></div><div class="facet-group" id="facetTag"><strong>Tag</strong></div></div></div>
 
-      <section class="trades-card" aria-labelledby="trade-list-title"><div class="journal-card-head"><div><h3 id="trade-list-title">Trade Log</h3><p>Execution records and review context</p></div><span class="tiny" id="journalEntryCount">0 TRADES</span><button type="button" id="exportTradesCsv" class="btn secondary" style="min-height:32px;padding:0 12px;font-size:11px;">Export CSV</button></div><div class="trade-toolbar"><div class="trade-toolbar-top"><input class="trade-search" type="search" placeholder="Search symbol or note" aria-label="Search trades"><div class="trade-view" role="group" aria-label="Trade view"><button type="button" aria-pressed="true">Table</button><button type="button" aria-pressed="false">Chart</button><button type="button" aria-pressed="false">Unified</button></div></div><div class="group-tabs" role="group" aria-label="Group trades"><button type="button" aria-pressed="true">All</button><button type="button" aria-pressed="false">By Symbol</button><button type="button" aria-pressed="false">By Day</button><button type="button" aria-pressed="false">By Tag</button></div></div><div class="trade-columns" aria-hidden="true"><span>Date / time</span><span>Symbol</span><span>Side</span><span>Setup</span><span>Entry / exit</span><span>Qty</span><span>Net P&amp;L</span><span>R multiple</span><span>Rating</span><span>Notes</span><span></span></div><div class="journal-entry-list" id="journalEntryList" hidden></div><div class="journal-chart-view" id="journalChartView" hidden style="padding:16px"></div><div class="trade-list-empty" id="journalEntryEmpty"><div><div class="empty-glyph" aria-hidden="true"><svg width="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6M9 11h6M9 15h3"/></svg></div><h3>No trades recorded</h3><p>Record the first trade to populate P&amp;L, MAE/MFE, tags, ratings, and linked notes from actual entries.</p>
+      <section class="trades-card" aria-labelledby="trade-list-title"><div class="journal-card-head"><div><h3 id="trade-list-title">Trade Log</h3><p>Execution records and review context</p></div><span class="tiny" id="journalEntryCount">0 TRADES</span><button type="button" id="exportTradesCsv" class="btn secondary" style="min-height:32px;padding:0 12px;font-size:11px;">Export CSV</button></div><div class="trade-toolbar"><div class="trade-toolbar-top"><input class="trade-search" type="search" placeholder="Search symbol or note" aria-label="Search trades"><div class="trade-view" role="group" aria-label="Trade view"><button type="button" aria-pressed="true" data-view-mode="table">Table</button><button type="button" aria-pressed="false" data-view-mode="chart">Chart</button><button type="button" aria-pressed="false" data-view-mode="unified">Unified</button></div></div><div class="group-tabs" role="group" aria-label="Group trades"><button type="button" aria-pressed="true" data-group-by="all">All</button><button type="button" aria-pressed="false" data-group-by="symbol">By Symbol</button><button type="button" aria-pressed="false" data-group-by="day">By Day</button><button type="button" aria-pressed="false" data-group-by="tag">By Tag</button></div></div><div class="trade-columns" aria-hidden="true"><span>Date / time</span><span>Symbol</span><span>Side</span><span>Setup</span><span>Entry / exit</span><span>Qty</span><span>Net P&amp;L</span><span>R multiple</span><span>Rating</span><span>Notes</span><span></span></div><div class="journal-entry-list" id="journalEntryList" hidden></div><div class="journal-chart-view" id="journalChartView" hidden style="padding:16px"></div><div class="trade-list-empty" id="journalEntryEmpty"><div><div class="empty-glyph" aria-hidden="true"><svg width="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6M9 11h6M9 15h3"/></svg></div><h3>No trades recorded</h3><p>Record the first trade to populate P&amp;L, MAE/MFE, tags, ratings, and linked notes from actual entries.</p>
       <!-- E1-empty fix: CTA button (was missing). -->
       <button type="button" class="btn primary" id="journalEmptyCta" style="margin-top:12px;">Log trade</button>
       <div class="trade-schema-note">Direction markers: Long — steel-blue &nbsp; / &nbsp; Short — silver</div></div></div></section>
@@ -2158,7 +2170,7 @@
               <button class="settings-action" id="exportData" type="button"><span class="settings-copy"><strong>Export my data</strong><small>Download your current PIPVANT data as JSON.</small></span><svg width="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 19h14"/></svg></button>
               <button class="settings-action" id="importData" type="button"><span class="settings-copy"><strong data-i18n="Import my data">Import my data</strong><small data-i18n="Restore settings and profile from a JSON file.">Restore settings and profile from a JSON file.</small></span><svg width="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 15V3m0 12 4-4m-4 4-4-4M5 19h14"/></svg></button>
               <input type="file" id="importDataFile" accept="application/json,.json" hidden>
-              <button class="settings-action settings-danger" type="button" data-settings-modal="deleteModal"><span class="settings-copy"><strong>Delete account</strong><small>Erase the current account state and return to welcome.</small></span><svg width="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m9 6 6 6-6 6"/></svg></button>
+              <button class="settings-action settings-danger" type="button" data-settings-modal="deleteModal"><span class="settings-copy"><strong data-i18n="Sign out & clear device">Sign out &amp; clear device</strong><small data-i18n="Sign out and erase this device's local data. Your account data stays on the server.">Sign out and erase this device's local data. Your account data stays on the server.</small></span><svg width="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m9 6 6 6-6 6"/></svg></button>
             </div>
             <p class="settings-feedback" id="settingsFeedback" aria-live="polite"></p>
           </section>
@@ -2387,7 +2399,7 @@
 
 <div class="settings-modal" id="deleteModal" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle" hidden>
   <div class="settings-dialog">
-    <div class="settings-dialog-head"><div><h3 id="deleteModalTitle">Delete account</h3><p>This clears the current account state and returns to welcome.</p></div><button class="settings-dialog-close" type="button" data-close-settings-modal aria-label="Close delete account form"><svg width="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+    <div class="settings-dialog-head"><div><h3 id="deleteModalTitle" data-i18n="Sign out & clear device">Sign out &amp; clear device</h3><p data-i18n="This signs you out and erases this device's local data. To fully delete your account including server data, contact support.">This signs you out and erases this device's local data. To fully delete your account including server data, contact support.</p></div><button class="settings-dialog-close" type="button" data-close-settings-modal aria-label="Close sign out form"><svg width="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
     <form class="settings-form" id="deleteForm">
       <div><label for="deleteConfirm">Type <span class="confirm-word" id="deleteConfirmWord">DELETE</span> to confirm</label><input id="deleteConfirm" type="text" autocomplete="off" required></div>
       <p class="settings-form-error" id="deleteFormError" aria-live="polite"></p>
@@ -2645,12 +2657,18 @@
   var sbTableSortCol=null,sbTableSortDir='asc';
   function sbFirmSortVal(firm,col){
     var plans=sbPlansByFirm[firm.id]||[];
-    var rules=plans.length?plans[0].rules:null;
+    // Mega-audit H11 fix: use the best value ACROSS plans (was plans[0].rules
+    // only — silently mis-sorted firms whose first plan wasn't representative).
+    function bestRuleNum(key,better){
+      var best=null;
+      plans.forEach(function(p){var v=p.rules?Number(p.rules[key]):NaN;if(isFinite(v)){if(best===null||better(v,best))best=v;}});
+      return best;
+    }
     switch(col){
       case 'Firm':return String(firm.name||'').toLowerCase();
       case 'Account sizes':{var s=plans.map(function(p){return sbNum(p.account_size);}).filter(isFinite);return s.length?Math.max.apply(null,s):-1;}
-      case 'Profit target':return rules&&isFinite(Number(rules.profit_target_pct))?Number(rules.profit_target_pct):-1;
-      case 'Max drawdown':return rules&&isFinite(Number(rules.max_drawdown_pct))?Number(rules.max_drawdown_pct):-1;
+      case 'Profit target':{var pt=bestRuleNum('profit_target_pct',function(a,b){return a<b;});return pt===null?-1:pt;}
+      case 'Max drawdown':{var dd=bestRuleNum('max_drawdown_pct',function(a,b){return a>b;});return dd===null?-1:dd;}
       default:return 0;
     }
   }
@@ -2698,7 +2716,17 @@
     }
     var tbody=document.querySelector('#matcher .matcher-table tbody');
     if(tbody){tbody.innerHTML='';sbSortFirmsForTable(firms).forEach(function(firm,idx){tbody.appendChild(sbBuildTableRow(firm,sbPlansByFirm[firm.id]||[],idx+1));});}
-    var mEmpty=document.querySelector('#matcher .matcher-empty');if(mEmpty)mEmpty.style.display=firms.length>0?'none':'';
+    var mEmpty=document.querySelector('#matcher .matcher-empty');
+    if(mEmpty){
+      mEmpty.style.display=firms.length>0?'none':'';
+      // Mega-audit fix: when the quiz filters out all firms (but firms exist),
+      // blame the answers, not data verification.
+      if(firms.length===0&&(sbFirms||[]).length>0){
+        var _mh=mEmpty.querySelector('h3'),_mp=mEmpty.querySelector('p');
+        if(_mh)_mh.textContent=currentLanguage==='ar'?'لا توجد شركات مطابقة لإجاباتك':'No firms match your answers';
+        if(_mp)_mp.textContent=currentLanguage==='ar'?'جرّب تعديل إجاباتك لعرض المزيد.':'Try adjusting your answers to see more.';
+      }
+    }
     // Populate "Member since" from Supabase user created_at
     try{
       if(typeof sbUser!=='undefined'&&sbUser&&sbUser.created_at){
@@ -2774,18 +2802,19 @@
     var metaSpan=document.getElementById('lastUpdatedSpan');
     if(metaSpan)metaSpan.textContent=(currentLanguage==='ar'?'آخر تحديث ':'Last updated ')+sbFmtDate(latest);
     /* Freshness badge: honest floor — every firm shown was verified at least this recently.
-       Uses MIN(last_verified_at), falling back to updated_at before the first daily check. */
+       Mega-audit H9 fix: use ONLY last_verified_at (was falling back to
+       updated_at, showing "verified today" for firms never verified). */
     try{
-      var oldestVerified=null;
-      sbFirms.forEach(function(f){var v=f.last_verified_at||f.updated_at;if(v&&(!oldestVerified||v<oldestVerified))oldestVerified=v;});
+      var oldestVerified=null,verifiedCount=0;
+      sbFirms.forEach(function(f){var v=f.last_verified_at;if(v){verifiedCount++;if(!oldestVerified||v<oldestVerified)oldestVerified=v;}});
       var fb=document.getElementById('freshnessBadge'),ft=document.getElementById('freshnessText');
-      if(fb&&ft&&oldestVerified){
+      if(fb&&ft&&oldestVerified&&verifiedCount===sbFirms.length){
         var fd=Math.floor((Date.now()-new Date(oldestVerified).getTime())/86400000);
         var rel=fd<=0?(currentLanguage==='ar'?'اليوم':'today'):fd===1?(currentLanguage==='ar'?'أمس':'yesterday'):fd+(currentLanguage==='ar'?' يوم':'d ago');
         ft.textContent=(currentLanguage==='ar'?'✓ تم التحقق من البيانات ':'✓ Data verified ')+rel;
         fb.title=(currentLanguage==='ar'?'أقدم تحقق: ':'Oldest verification: ')+sbFmtDate(oldestVerified);
         fb.hidden=false;
-      }
+      }else if(fb){fb.hidden=true;}
     }catch(fbe){}
     sbUpdateCountChips();
     if(typeof sbUpdateMethodologyStats==='function')sbUpdateMethodologyStats();
@@ -2932,7 +2961,9 @@
         var fid=card.getAttribute('data-firm-id');var firm=null;
         (sbFirms||[]).forEach(function(f){if(String(f.id)===String(fid))firm=f;});
         var plans=firm?(sbPlansByFirm[firm.id]||[]):[];
-        var rules=plans.length?plans[0].rules:null;
+        // Mega-audit H12 fix: a firm passes if ANY plan satisfies the filter
+        // (was plans[0].rules only — hid firms whose cheapest plan failed).
+        function planRules(){return plans.map(function(p){return p.rules||null;}).filter(Boolean);}
         if(maxPrice>0){
           var _rate2=(typeof exchangeRates!=='undefined'&&exchangeRates[currentCurrency])?exchangeRates[currentCurrency]:1;
           var _maxUsd2=maxPrice/_rate2;
@@ -2940,18 +2971,22 @@
           if(!prices.length||Math.min.apply(null,prices)>_maxUsd2)show=false;
         }
         if(show&&maxTarget>0){
-          var pt=rules?Number(rules.profit_target_pct):NaN;
-          if(!isFinite(pt)||pt>maxTarget)show=false;
+          var _okT=false;
+          planRules().forEach(function(ru){var pt=Number(ru.profit_target_pct);if(isFinite(pt)&&pt<=maxTarget)_okT=true;});
+          if(!_okT)show=false;
         }
         if(show&&minDd>0){
-          var dd=rules?Number(rules.max_drawdown_pct):NaN;
-          if(!isFinite(dd)||dd<minDd)show=false;
+          var _okD=false;
+          planRules().forEach(function(ru){var dd=Number(ru.max_drawdown_pct);if(isFinite(dd)&&dd>=minDd)_okD=true;});
+          if(!_okD)show=false;
         }
         if(show&&ddTypes.length){
-          var dt=String((rules&&rules.drawdown_type)||'').toLowerCase();
-          var ok=false;
-          ddTypes.forEach(function(ty){if(dt.indexOf(ty)!==-1)ok=true;});
-          if(!ok)show=false;
+          var _okTy=false;
+          planRules().forEach(function(ru){
+            var dt=String(ru.drawdown_type||'').toLowerCase();
+            ddTypes.forEach(function(ty){if(dt.indexOf(ty)!==-1)_okTy=true;});
+          });
+          if(!_okTy)show=false;
         }
       }
       card.hidden=!show;if(show)visible++;
@@ -2982,7 +3017,26 @@
     var keyRules=rules&&Array.isArray(rules.key_rules)?rules.key_rules:[];
     notes.forEach(function(sp,i){sp.textContent=keyRules[i]||'—';});
   }
+  // Mega-audit H26/H27 fix: translate raw Supabase/English error strings into
+  // friendly bilingual messages (was shown verbatim, untranslated).
+  function sbFriendlyError(msg){
+    var m=String(msg||'');
+    var ar=currentLanguage==='ar';
+    function has(){for(var i=0;i<arguments.length;i++){if(m.toLowerCase().indexOf(String(arguments[i]).toLowerCase())!==-1)return true;}return false;}
+    if(has('invalid login credentials','invalid email or password'))return ar?'البريد أو كلمة المرور غير صحيحة.':'Incorrect email or password.';
+    if(has('email not confirmed','email_not_confirmed'))return ar?'تحقق من بريدك الإلكتروني أولاً ثم سجّل الدخول.':'Please confirm your email first, then log in.';
+    if(has('user already registered','already registered','already exists'))return ar?'هذا البريد مسجل مسبقاً — سجّل الدخول.':'This email is already registered — please log in.';
+    if(has('password should be','weak password','password is too'))return ar?'كلمة المرور ضعيفة — استعمل 8 أحرف على الأقل.':'Password is too weak — use at least 8 characters.';
+    if(has('invalid email','email address')&&has('invalid'))return ar?'صيغة البريد الإلكتروني غير صحيحة.':'That email address looks invalid.';
+    if(has('too many requests','rate limit','rate_limit'))return ar?'محاولات كثيرة — انتظر قليلاً ثم أعد المحاولة.':'Too many attempts — wait a moment and try again.';
+    if(has('network','fetch failed','failed to fetch','timeout','timed out'))return ar?'تعذر الاتصال — تحقق من الإنترنت وحاول مجدداً.':'Could not connect — check your internet and try again.';
+    if(has('authsessionmissing','session missing','no session'))return ar?'انتهت الجلسة — اطلب رابطاً جديداً.':'Session expired — request a new link.';
+    if(has('token')&&has('expired'))return ar?'انتهت صلاحية الرابط — اطلب رابطاً جديداً.':'This link has expired — request a new one.';
+    if(has('same password','new password should be different'))return ar?'اختر كلمة مرور مختلفة عن الحالية.':'Choose a password different from the current one.';
+    return m||(ar?'حدث خطأ — حاول مجدداً.':'Something went wrong — try again.');
+  }
   function sbAuthError(msg){
+    msg=sbFriendlyError(msg);
     var el=document.getElementById('authFeedback');
     if(el){el.textContent=msg;feedbackMotion(el);}
     showToast(msg);
@@ -2996,6 +3050,8 @@
   function sbLoadProfile(cb){
     cb=cb||function(){};
     if(!sb||!sbUser){cb('');return;}
+    // Mega-audit staleness guard (see sbLoadTradesQuery).
+    var _qUid=sbUser.id;
     var metaName=(sbUser.user_metadata&&sbUser.user_metadata.display_name)||'';
     // H3 fix: actively reset stale fields BEFORE loading. If the new user has
     // no photo/bio, the previous user's data must not persist.
@@ -3004,10 +3060,27 @@
     profileSession.name='';
     try{setAvatarSurfacePhoto('');}catch(e){}
     try{var _pb0=document.getElementById('profileBio');if(_pb0)_pb0.textContent='';}catch(e){}
-    sb.from('profiles').select('display_name,bio,avatar_url').eq('user_id',sbUser.id).maybeSingle()
+    sb.from('profiles').select('display_name,bio,avatar_url').eq('user_id',_qUid).maybeSingle()
       .then(function(r){
+        try{if(!sbUser||sbUser.id!==_qUid){cb('');return;}}catch(e){cb('');return;}
         var d=r&&!r.error&&r.data?r.data:null;
-        if(d&&d.avatar_url){profileSession.photoUrl=d.avatar_url;setAvatarSurfacePhoto(d.avatar_url);}
+        if(d&&d.avatar_url){
+          // Mega-audit C2 fix: avatar_url now stores the storage PATH.
+          // Re-sign fresh on every load (signed URLs expire). Old rows may
+          // still hold a signed URL — extract the path from it.
+          (function(){
+            var stored=String(d.avatar_url||''),apath=null;
+            if(stored.indexOf('http')!==0){apath=stored;}
+            else{var m=stored.match(/\/avatars\/(?:sign\/)?([^?]+)/);if(m)apath=m[1];}
+            if(apath&&sb){
+              sb.storage.from('avatars').createSignedUrl(apath,31536000).then(function(s){
+                var u=s&&s.data&&s.data.signedUrl;
+                if(u){profileSession.photoUrl=u;setAvatarSurfacePhoto(u);}
+                else{profileSession.photoUrl=d.avatar_url;setAvatarSurfacePhoto(d.avatar_url);}
+              }).catch(function(){profileSession.photoUrl=d.avatar_url;setAvatarSurfacePhoto(d.avatar_url);});
+            }else{profileSession.photoUrl=d.avatar_url;setAvatarSurfacePhoto(d.avatar_url);}
+          })();
+        }
         if(d&&d.bio){profileSession.bio=d.bio;var pb=document.getElementById('profileBio');if(pb)pb.textContent=d.bio;}
         var name=d&&d.display_name?d.display_name:metaName;
         if(name){
@@ -3189,8 +3262,13 @@
   }
   function sbLoadTradesQuery(){
     if(!sb||!sbUser)return;
-    sb.from('trades').select('id,symbol,direction,entry_price,stop_price,target_price,position_size,notes,opened_at,created_at,exit_price,pnl,closed_at,setup,tag,account_id').eq('user_id',sbUser.id).order('opened_at',{ascending:false})
+    // Mega-audit fix: staleness guard — if the user logs out/switches while
+    // this query is in flight, the late response must not repopulate wiped
+    // state with the old user's data.
+    var _qUid=sbUser.id;
+    sb.from('trades').select('id,symbol,direction,entry_price,stop_price,target_price,position_size,notes,opened_at,created_at,exit_price,pnl,closed_at,setup,tag,account_id').eq('user_id',_qUid).order('opened_at',{ascending:false})
       .then(function(r){
+        try{if(!sbUser||sbUser.id!==_qUid)return;}catch(e){return;}
         if(r.error||!r.data){
           var _fb=document.getElementById('journalFeedback');
           if(r&&r.error&&_fb){_fb.textContent=(currentLanguage==='ar'?'تعذر تحميل الصفقات — جارٍ إعادة المحاولة…':'Could not load trades — retrying…');if(typeof feedbackMotion==='function')feedbackMotion(_fb);}
@@ -3285,46 +3363,80 @@
       sessionJournalEntries.sort(function(a,b){return (b.timestamp||0)-(a.timestamp||0);});
     }catch(e){}
   }
+  // Mega-audit rewrite: bulk insert + returns a promise + single UI refresh.
+  // Fixes: T-perf (was N UI rebuilds + N round-trips + N storage RW),
+  // T-logout (logout's 5s race was dead code — this returned undefined),
+  // T-crud (failed insert stranded trade: _synced=false now persisted).
+  var _tradeSyncInFlight=false;
   function syncLocalTradesToCloud(){
+    var _done=function(v){return v;};
     try{
-      if(!sb||!sbUser)return;
+      if(!sb||!sbUser||_tradeSyncInFlight)return Promise.resolve(false);
       var all=loadLocalTrades();
-      // H4 fix: only sync trades owned by the current user. Skip (don't delete)
-      // trades belonging to someone else — the logout wipe should have removed
-      // them, but this is defense in depth.
-      // Also set _synced to prevent duplicate inserts on re-entry (C1 from features audit).
-      var inFlight={};
       var pending=all.filter(function(t){
         if(!t||t._dbId||t._synced)return false;
         if(t._ownerId&&t._ownerId!==sbUser.id)return false;
-        if(inFlight[t._localId])return false;
-        inFlight[t._localId]=1;
         return true;
       });
-      if(!pending.length)return;
-      pending.forEach(function(t){
-        t._synced=true;
-        // R1 fix: persist the _synced flag immediately (before the async insert),
-        // instead of a trailing saveLocalTrades(all) which would resurrect
-        // trades already removed by removeLocalTrade.
-        try{
-          var _all=loadLocalTrades();
-          for(var _i=0;_i<_all.length;_i++){if(_all[_i]._localId===t._localId){_all[_i]._synced=true;break;}}
-          saveLocalTrades(_all);
-        }catch(e){}
+      if(!pending.length)return Promise.resolve(false);
+      _tradeSyncInFlight=true;
+      var uid=sbUser.id;
+      // Mark _synced synchronously (single storage write) to prevent
+      // duplicate inserts on re-entry before the bulk call settles.
+      pending.forEach(function(t){t._synced=true;});
+      try{saveLocalTrades(all);}catch(e){}
+      var payloads=pending.map(function(t){
         var ep=parseFloat(t.entry),sz=parseFloat(t.size),sp=parseFloat(t.stop),tp=parseFloat(t.target),xp=parseFloat(t.exitPrice);
-        var payload={user_id:sbUser.id,symbol:t.pair||'UNKNOWN',direction:(t.direction||'long').toLowerCase(),entry_price:isFinite(ep)?ep:0,exit_price:isFinite(xp)?xp:null,position_size:isFinite(sz)?sz:0,pnl:(t.pnl!=null&&isFinite(Number(t.pnl)))?Number(t.pnl):null,stop_price:isFinite(sp)?sp:null,target_price:isFinite(tp)?tp:null,opened_at:new Date(t.timestamp||Date.now()).toISOString(),closed_at:t.closed?new Date().toISOString():null,notes:t.notes||null,setup:t.setup||null,tag:t.tag||null,account_id:t.account_id||null};
-        sb.from('trades').insert(payload).select('id').then(function(r){
-          if(!r.error&&r.data&&r.data[0]&&r.data[0].id){
-            removeLocalTrade(t._localId);
-            for(var i=0;i<sessionJournalEntries.length;i++){var e=sessionJournalEntries[i];if(e._localId===t._localId){e._db=true;e._dbId=r.data[0].id;e._id=r.data[0].id;e._localOnly=false;break;}}
-            if(typeof refreshAllTradeUI==='function')refreshAllTradeUI();
-          }else{
-            t._synced=false; // allow retry on failure
-          }
-        }).catch(function(){t._synced=false;});
+        return {user_id:uid,symbol:t.pair||'UNKNOWN',direction:(t.direction||'long').toLowerCase(),entry_price:isFinite(ep)?ep:0,exit_price:isFinite(xp)?xp:null,position_size:isFinite(sz)?sz:0,pnl:(t.pnl!=null&&isFinite(Number(t.pnl)))?Number(t.pnl):null,stop_price:isFinite(sp)?sp:null,target_price:isFinite(tp)?tp:null,opened_at:new Date(t.timestamp||Date.now()).toISOString(),closed_at:t.closed?new Date().toISOString():null,notes:t.notes||null,setup:t.setup||null,tag:t.tag||null,account_id:t.account_id||null};
       });
-    }catch(e){}
+      return sb.from('trades').insert(payloads).select('id').then(function(r){
+        _tradeSyncInFlight=false;
+        var okIds={};
+        if(!r.error&&r.data&&r.data.length===pending.length){
+          for(var i=0;i<pending.length;i++){
+            var t=pending[i],nid=r.data[i]&&r.data[i].id;
+            if(nid){
+              okIds[t._localId]=1;
+              try{removeLocalTrade(t._localId);}catch(e){}
+              for(var j=0;j<sessionJournalEntries.length;j++){var e=sessionJournalEntries[j];if(e._localId===t._localId){e._db=true;e._dbId=nid;e._id=nid;e._localOnly=false;break;}}
+            }
+          }
+        }
+        // Persist _synced=false for failures so they retry next run (was stranded).
+        var cur=null;
+        try{cur=loadLocalTrades();}catch(e){}
+        if(cur){
+          var changed=false;
+          for(var k=0;k<cur.length;k++){
+            if(cur[k]&&cur[k]._synced&&!okIds[cur[k]._localId]&&pending.indexOf(cur[k])===-1){
+              // belongs to this batch but failed → allow retry
+              var inBatch=false;
+              for(var b=0;b<pending.length;b++){if(pending[b]._localId===cur[k]._localId){inBatch=true;break;}}
+              if(inBatch){cur[k]._synced=false;changed=true;}
+            }
+          }
+          // Simpler robust pass: any pending trade not in okIds → _synced=false
+          for(var b2=0;b2<pending.length;b2++){
+            if(!okIds[pending[b2]._localId]){
+              for(var k2=0;k2<cur.length;k2++){if(cur[k2]&&cur[k2]._localId===pending[b2]._localId){cur[k2]._synced=false;changed=true;break;}}
+            }
+          }
+          if(changed){try{saveLocalTrades(cur);}catch(e){}}
+        }
+        if(typeof refreshAllTradeUI==='function'){try{refreshAllTradeUI();}catch(e){}}
+        return _done(true);
+      }).catch(function(){
+        _tradeSyncInFlight=false;
+        try{
+          var cur2=loadLocalTrades(),ch2=false;
+          for(var b3=0;b3<pending.length;b3++){
+            for(var k3=0;k3<cur2.length;k3++){if(cur2[k3]&&cur2[k3]._localId===pending[b3]._localId){cur2[k3]._synced=false;ch2=true;break;}}
+          }
+          if(ch2)saveLocalTrades(cur2);
+        }catch(e){}
+        return _done(false);
+      });
+    }catch(e){ _tradeSyncInFlight=false; return Promise.resolve(false); }
   }
   function applyTradeExtras(){
     try{
@@ -3341,6 +3453,14 @@
     }catch(e){}
   }
   function sbSaveTrade(entry){if(!sb)return;sb.auth.getUser().then(function(uRes){var user=uRes&&uRes.data&&uRes.data.user;if(!user){var fb0=document.getElementById('journalFeedback');if(fb0){fb0.textContent=currentLanguage==='ar'?'الجلسة منتهية — سجل الدخول مجدداً.':'Session expired — please sign in again.';feedbackMotion(fb0);showToast(fb0.textContent);}return;}sbUser=user;var ep=parseFloat(entry.entry),sz=parseFloat(entry.size),sp=parseFloat(entry.stop),tp=parseFloat(entry.target),xp=parseFloat(entry.exitPrice);var payload={user_id:user.id,symbol:entry.pair||'UNKNOWN',direction:(entry.direction||'long').toLowerCase(),entry_price:isFinite(ep)?ep:0,exit_price:isFinite(xp)?xp:null,position_size:isFinite(sz)?sz:0,pnl:(entry.pnl!=null&&isFinite(Number(entry.pnl)))?Number(entry.pnl):null,stop_price:isFinite(sp)?sp:null,target_price:isFinite(tp)?tp:null,opened_at:new Date(entry.timestamp||Date.now()).toISOString(),closed_at:entry.closed?new Date().toISOString():null,notes:entry.notes||null,setup:entry.setup||null,tag:entry.tag||null,account_id:entry.account_id||null};sb.from('trades').insert(payload).select().then(function(r){var fb=document.getElementById('journalFeedback');if(!fb)return;if(r.error){fb.textContent=currentLanguage==='ar'?'تعذر الحفظ في حسابك — محفوظة محلياً وستُزامَن تلقائياً.':'Could not save to your account — saved locally, will sync automatically.';}else{entry._db=true;if(r.data&&r.data[0]&&r.data[0].id){entry._dbId=r.data[0].id;entry._id=r.data[0].id;}if(typeof removeLocalTrade==='function'&&entry._localId)removeLocalTrade(entry._localId);entry._localOnly=false;saveTradeExtras(entry);fb.textContent=currentLanguage==='ar'?'تم حفظ الصفقة في حسابك.':'Trade saved to your account.';sbLoadTrades();}feedbackMotion(fb);showToast(fb.textContent);}).catch(function(){var fb2=document.getElementById('journalFeedback');if(!fb2)return;fb2.textContent=currentLanguage==='ar'?'تعذر الحفظ في حسابك — محفوظة محلياً وستُزامَن تلقائياً.':'Could not save to your account — saved locally, will sync automatically.';feedbackMotion(fb2);showToast(fb2.textContent);});}).catch(function(){var fb3=document.getElementById('journalFeedback');if(fb3){fb3.textContent=currentLanguage==='ar'?'تعذر الحفظ في حسابك — محفوظة محلياً وستُزامَن تلقائياً.':'Could not save to your account — saved locally, will sync automatically.';feedbackMotion(fb3);showToast(fb3.textContent);}});} function sbInitSession(){
+    // Mega-audit recovery fix: detect a password-recovery link BEFORE any
+    // session handling. The emailed link carries type=recovery in the hash;
+    // the Supabase client (created above) already parsed it, so the session
+    // will establish — but we must NOT bounce the user into the app.
+    // The hash is cleared only AFTER the password is updated (see below).
+    var _isRecovery=false;
+    try{_isRecovery=((window.location.hash||'').indexOf('type=recovery')>=0);}catch(e){}
+    try{window._pipvantRecovery=_isRecovery;}catch(e){}
     // C-1 fix: if Supabase failed to load, don't leave the app on infinite
     // "Loading…". Hide the loader and fall through to the no-session flow.
     if(!sb){
@@ -3363,18 +3483,51 @@
     // Listen for auth state changes (token refresh, sign out, etc.)
     sb.auth.onAuthStateChange(function(event,session){
       if(event==='SIGNED_IN'&&session&&session.user){
-        // If a DIFFERENT user signs in (account switch without logout),
-        // wipe the previous user's local state first to prevent leaks.
-        try{
-          if(sbUser&&sbUser.id&&session.user.id&&sbUser.id!==session.user.id){
-            if(typeof clearUserState==='function')clearUserState();
+        // Mega-audit recovery fix: during a recovery flow the session exists
+        // only so updateUser can set the new password — don't enter the app.
+        var _rec=false;try{_rec=!!window._pipvantRecovery;}catch(e){}
+        if(_rec){
+          sbUser=session.user;
+          try{
+            document.body.classList.add('auth-active','show-auth');
+            document.body.classList.remove('show-landing','app-ready');
+            if(typeof authStage==='function')authStage('authNewPassword');
+          }catch(e){}
+          return;
+        }
+        // Mega-audit C1 fix: if a DIFFERENT user signs in (account switch),
+        // sync the previous user's trades BEFORE wiping (was data loss —
+        // the old code wiped with no sync; the login form's sync-before-wipe
+        // was dead code because this handler fires first).
+        var _newUser=session.user;
+        var _isSwitch=false;
+        try{_isSwitch=!!(sbUser&&sbUser.id&&_newUser.id&&sbUser.id!==_newUser.id);}catch(e){}
+        var _runPostLogin=function(){
+          sbUser=_newUser;
+          try{window._signedInHandledAt=Date.now();}catch(e){}
+          sbFlushPendingProfile();
+          sbLoadProfile(function(pname){enterProduct(pname||_newUser.email||'','—');});
+          if(typeof syncLocalTradesToCloud==='function')syncLocalTradesToCloud();
+          sbLoadTrades();sbLoadDiscipline();sbLoadSettings();sbLoadAccounts();sbLoadUserPrefs();sbLoadCertificates();sbLoadNotifications();
+        };
+        if(_isSwitch){
+          var _sp=null;
+          try{if(typeof syncLocalTradesToCloud==='function')_sp=syncLocalTradesToCloud();}catch(e){_sp=null;}
+          var _wiped=false;
+          var _wipeThenProceed=function(){
+            if(_wiped)return;_wiped=true;
+            try{if(typeof clearUserState==='function')clearUserState();}catch(e){}
+            _runPostLogin();
+          };
+          if(_sp&&typeof _sp.then==='function'){
+            _sp.then(_wipeThenProceed).catch(_wipeThenProceed);
+            setTimeout(_wipeThenProceed,8000); // bounded wait
+          }else{
+            _wipeThenProceed();
           }
-        }catch(e){}
-        sbUser=session.user;
-        sbFlushPendingProfile();
-        sbLoadProfile(function(pname){enterProduct(pname||session.user.email||'','—');});
-        if(typeof syncLocalTradesToCloud==='function')syncLocalTradesToCloud();
-        sbLoadTrades();sbLoadDiscipline();sbLoadSettings();sbLoadAccounts();sbLoadUserPrefs();sbLoadCertificates();sbLoadNotifications();
+        }else{
+          _runPostLogin();
+        }
       }else if(event==='SIGNED_OUT'){
         sbUser=null;
         try{if(typeof clearUserState==='function')clearUserState();}catch(_so){}
@@ -3384,6 +3537,16 @@
     });
     sb.auth.getSession().then(function(r){
       var session=r.data&&r.data.session;var loader=document.getElementById('authLoading');if(loader)loader.style.display='none';document.body.classList.remove('auth-checking');
+      // Mega-audit H4 fix: a recovery session must NOT enter the product.
+      // Show the new-password form instead (the UI stage is set below).
+      if(_isRecovery){
+        try{
+          document.body.classList.add('auth-active','show-auth');
+          document.body.classList.remove('show-landing','app-ready');
+          if(typeof authStage==='function')authStage('authNewPassword');
+        }catch(e){}
+        return;
+      }
       if(session&&session.user){
         sbUser=session.user;
         var meta=session.user.user_metadata||{};
@@ -3443,7 +3606,7 @@
     'All accounts':'كل الحسابات','Custom':'مخصص','+ Add Trade':'+ إضافة صفقة','Net P&L':'صافي الربح والخسارة','vs prior period —':'مقارنة بالفترة السابقة —','Win Rate':'نسبة الربح','Win':'ربح','Loss':'خسارة','BE':'تعادل','Profit Factor':'معامل الربح','Performance label —':'وصف الأداء —','Avg Win vs Avg Loss':'متوسط الربح مقابل الخسارة','RATIO —':'النسبة —','Avg win —':'متوسط الربح —','Avg loss —':'متوسط الخسارة —','Expectancy':'التوقع','PER TRADE':'لكل صفقة','Cumulative R —':'R التراكمي —','Daily Net Cumulative P&L':'صافي الربح والخسارة التراكمي اليومي','Equity from logged trades only':'الرصيد من الصفقات المسجلة فقط','Cumulative':'تراكمي','Per-trade R':'R لكل صفقة','No trade history available':'لا يوجد سجل صفقات','The chart will populate after the first trade result is recorded.':'سيظهر الرسم بعد تسجيل نتيجة أول صفقة.','Trading Score':'تقييم التداول','Six execution dimensions':'ستة أبعاد للتنفيذ','Win %':'نسبة الربح','Profit factor':'معامل الربح','Avg win/loss':'متوسط الربح/الخسارة','Recovery factor':'معامل التعافي','Consistency':'الاستمرارية','Qualitative label —':'الوصف النوعي —','P&L Calendar':'تقويم الربح والخسارة','Month — · Select a day to filter trades':'الشهر — · اختر يوماً لتصفية الصفقات','MONTH —':'الشهر —','— P&L':'— ربح/خسارة','— trades · — win%':'— صفقات · — نسبة ربح','Week 1':'الأسبوع 1','Week 2':'الأسبوع 2','Week 3':'الأسبوع 3','Week 4':'الأسبوع 4','Week 5':'الأسبوع 5','Day —':'اليوم —','Symbol':'الرمز','Selected':'المحدد','Side':'الاتجاه','Setup':'النموذج','Mistake':'الخطأ','Session':'الجلسة','Tag':'الوسم','Trade Log':'سجل الصفقات','Execution records and review context':'سجلات التنفيذ وسياق المراجعة','0 TRADES':'0 صفقات','Chart':'رسم','Unified':'موحد','All':'الكل','By Symbol':'حسب الرمز','By Day':'حسب اليوم','By Tag':'حسب الوسم','Date / time':'التاريخ / الوقت','Entry / exit':'الدخول / الخروج','Qty':'الكمية','R multiple':'مضاعف R','Notes':'ملاحظات','No trades recorded':'لا توجد صفقات مسجلة','Record the first trade to populate P&L, MAE/MFE, tags, ratings, and linked notes from actual entries.':'سجل أول صفقة لعرض الربح والخسارة وMAE/MFE والوسوم والتقييمات والملاحظات الفعلية.','Direction markers: Long — steel-blue / Short — silver':'ألوان الاتجاه: شراء — أزرق فولاذي / بيع — فضي','Log trade':'تسجيل صفقة','Journal statistics are calculated only from logged trades.':'إحصاءات السجل تُحسب فقط من الصفقات المسجلة.',
     'Trade inputs':'مدخلات الصفقة','All fields are required.':'كل الحقول مطلوبة.','LIVE':'مباشر','Risk %':'نسبة المخاطرة','Stop-loss pips':'نقاط وقف الخسارة','pips':'نقاط','Symbol / pair':'الرمز / الزوج','Select pair':'اختر زوجاً','USD-quoted FX pairs use the standard $10 pip value per lot.':'أزواج الفوركس المسعّرة بالدولار تستخدم قيمة قياسية 10$ للنقطة لكل لوت.','Live calculation':'الحساب المباشر','Updates with every valid input.':'يتحدث مع كل إدخال صالح.','USD ACCOUNT':'حساب بالدولار','POSITION SIZE':'حجم الصفقة','standard lots':'لوت قياسي','$ at risk':'المبلغ المعرض للمخاطر','1R value':'قيمة 1R','This trade risks —% of account':'هذه الصفقة تخاطر بـ —% من الحساب','You risk $— (—% of your $— account) to make $— at —R. A loss costs $—.':'تخاطر بـ $— (—% من حسابك $—) لتحقيق $— عند —R. الخسارة تكلف $—.','Method: account size × risk % ÷ (stop-loss pips × $10 pip value). Verify contract details with your broker.':'الطريقة: حجم الحساب × نسبة المخاطرة ÷ (نقاط الوقف × قيمة النقطة 10$). تحقق من تفاصيل العقد مع وسيطك.','Save to journal':'حفظ في السجل','Live arithmetic only — verify symbol specifications before placing a trade.':'حساب مباشر فقط — تحقق من مواصفات الرمز قبل تنفيذ الصفقة.','Process checklist':'قائمة مراجعة المنهج','Mark each rule complete only after it has been verified.':'علّم القاعدة مكتملة فقط بعد التحقق منها.','Risk ≤1% on every trade':'المخاطرة ≤1% في كل صفقة','Daily':'يومي','Journaled before entering':'مسجلة قبل الدخول','Mon–Fri':'الإثنين–الجمعة','No trading after 2 losses':'لا تداول بعد خسارتين','Reviewed plan pre-session':'مراجعة الخطة قبل الجلسة','3×/wk':'3×/أسبوع','— days':'— أيام','current streak':'السلسلة الحالية','best —':'الأفضل —','Weekly review':'المراجعة الأسبوعية','Review adherence and define one measurable priority for the next week.':'راجع الالتزام وحدد أولوية قابلة للقياس للأسبوع القادم.','THIS WEEK':'هذا الأسبوع','Completion %':'نسبة الإكمال','Best streak':'أفضل سلسلة','Total completions':'إجمالي المكتمل','Which rules were followed consistently?':'ما القواعد التي التزمت بها باستمرار؟','Which rules were not followed?':'ما القواعد التي لم تُتبع؟','Priority rule for next week':'قاعدة الأولوية للأسبوع القادم','Saved reviews':'المراجعات المحفوظة','Your weekly reviews will appear here.':'ستظهر مراجعاتك الأسبوعية هنا.','Checklist state is session-only until account data is connected.':'حالة القائمة لهذه الجلسة فقط حتى يتم ربط بيانات الحساب.',
     'Mark all read':'تعليم الكل كمقروء','Action needed —':'يتطلب إجراء —','Earlier —':'سابقاً —','Display':'العرض','System':'النظام','Today':'اليوم','Mark read':'تعليم كمقروء','Snooze':'تأجيل','Delete':'حذف','Yesterday':'أمس','Earlier this week':'في وقت سابق هذا الأسبوع','← All notifications':'كل الإشعارات →','Notification details will appear here.':'ستظهر تفاصيل الإشعار هنا.','next':'التالي','previous':'السابق','unread':'غير مقروء','snooze':'تأجيل','Notifications use real account and tool events only.':'الإشعارات تستخدم أحداث الحساب والأدوات الحقيقية فقط.','Member since —':'عضو منذ —','Journal not connected':'لا صفقات بعد','No equity data yet':'لا توجد بيانات رصيد بعد','Win rate':'نسبة الربح','Total trades':'إجمالي الصفقات','Winning':'رابحة','Breakeven':'تعادل','Losing':'خاسرة','Most traded':'الأكثر تداولاً','Recent trades':'الصفقات الأخيرة','Latest journal entries':'آخر إدخالات السجل','No trades yet':'لا توجد صفقات بعد','Open Journal':'فتح السجل','Setup status':'حالة الإعداد','Profile details':'تفاصيل الملف','Risk defaults':'إعدادات المخاطر','Certificate badges':'شارات الشهادات','Marks earned through verified mission completion':'علامات مكتسبة عبر إكمال مهام موثقة','No certificates earned yet — complete missions to earn them':'لا توجد شهادات مكتسبة بعد — أكمل المهام لتحصل عليها','Edit profile':'تعديل الملف الشخصي','Changes remain in this session.':'تبقى التغييرات في هذه الجلسة.','Bio':'النبذة','Save changes':'حفظ التغييرات','Revert photo':'إرجاع الصورة','Data':'البيانات','Export my data':'تصدير بياناتي','NEW ENTRY':'إدخال جديد','Pair':'الزوج','Direction':'الاتجاه','Long':'شراء','Short':'بيع','Entry':'الدخول','Stop':'الإيقاف','Size':'الحجم','Close':'إغلاق',
-    'Appearance':'المظهر','Dark':'داكن','Light':'فاتح','Language':'اللغة','English':'الإنجليزية','Control how PIPVANT looks, calculates, and communicates.':'تحكم في مظهر PIPVANT وحساباته وإشعاراته.','Theme':'السمة','Choose the interface that fits your environment.':'اختر الواجهة المناسبة لبيئتك.','Interface language':'لغة الواجهة','Arabic switches the complete interface to RTL.':'العربية تحول الواجهة كاملة إلى اتجاه من اليمين إلى اليسار.','Trading':'التداول','Display currency':'عملة العرض','Used throughout the Risk Calculator display.':'تُستخدم في عرض حاسبة المخاطر.','Default risk':'المخاطرة الافتراضية','Prefills the Risk Calculator. Adjust in 0.1% steps.':'تملأ حاسبة المخاطر مسبقاً. عدّل بخطوات 0.1%.','Account notifications':'إشعارات الحساب','Show account and tool alerts.':'عرض تنبيهات الحساب والأدوات.','Security':'الأمان','Change password':'تغيير كلمة المرور','Replace your current account password.':'استبدل كلمة مرور حسابك الحالية.','Change email':'تغيير البريد الإلكتروني','Update the email used to access your account.':'حدّث البريد المستخدم للدخول إلى حسابك.','Download your current PIPVANT data as JSON.':'نزّل بيانات PIPVANT الحالية بصيغة JSON.','Delete account':'حذف الحساب','Erase the current account state and return to welcome.':'امسح حالة الحساب الحالية وارجع إلى الترحيب.','Enter your current password, then choose a new one.':'أدخل كلمة المرور الحالية ثم اختر كلمة جديدة.','Current password':'كلمة المرور الحالية','New password':'كلمة المرور الجديدة','Confirm new password':'تأكيد كلمة المرور الجديدة','Update password':'تحديث كلمة المرور','Cancel':'إلغاء','Use the email address you want for account access.':'استعمل البريد الذي تريده للدخول إلى الحساب.','New email':'البريد الإلكتروني الجديد','Update email':'تحديث البريد','This clears the current account state and returns to welcome.':'هذا يمسح حالة الحساب الحالية ويعيدك إلى الترحيب.','Type':'اكتب','to confirm':'للتأكيد','Password updated for this session.':'تم تحديث كلمة المرور لهذه الجلسة.','Email updated for this session.':'تم تحديث البريد لهذه الجلسة.','Passwords do not match.':'كلمتا المرور غير متطابقتين.','Type DELETE to confirm.':'اكتب DELETE للتأكيد.','Hold to delete':'اضغط مطولاً للحذف','After typing DELETE, hold the delete button.':'بعد كتابة DELETE، اضغط مطولاً على زر الحذف.','Export ready':'التصدير جاهز','Notifications on':'الإشعارات مفعلة','Notifications off':'الإشعارات متوقفة','pts':'نقطة','—W · —L · —BE':'—ر · —خ · —ت','+—R':'+—R','M':'ن','T':'ث','W':'ر','F':'ج','S':'س',
+    'Appearance':'المظهر','Dark':'داكن','Light':'فاتح','Language':'اللغة','English':'الإنجليزية','Control how PIPVANT looks, calculates, and communicates.':'تحكم في مظهر PIPVANT وحساباته وإشعاراته.','Theme':'السمة','Choose the interface that fits your environment.':'اختر الواجهة المناسبة لبيئتك.','Interface language':'لغة الواجهة','Arabic switches the complete interface to RTL.':'العربية تحول الواجهة كاملة إلى اتجاه من اليمين إلى اليسار.','Trading':'التداول','Display currency':'عملة العرض','Used throughout the Risk Calculator display.':'تُستخدم في عرض حاسبة المخاطر.','Default risk':'المخاطرة الافتراضية','Prefills the Risk Calculator. Adjust in 0.1% steps.':'تملأ حاسبة المخاطر مسبقاً. عدّل بخطوات 0.1%.','Account notifications':'إشعارات الحساب','Show account and tool alerts.':'عرض تنبيهات الحساب والأدوات.','Security':'الأمان','Change password':'تغيير كلمة المرور','Replace your current account password.':'استبدل كلمة مرور حسابك الحالية.','Change email':'تغيير البريد الإلكتروني','Update the email used to access your account.':'حدّث البريد المستخدم للدخول إلى حسابك.','Download your current PIPVANT data as JSON.':'نزّل بيانات PIPVANT الحالية بصيغة JSON.','Delete account':'تسجيل الخروج ومسح الجهاز','Erase the current account state and return to welcome.':'سجّل الخروج وامسح بيانات هذا الجهاز. تبقى بيانات حسابك على الخادم.','Sign out & clear device':'تسجيل الخروج ومسح الجهاز',"Sign out and erase this device's local data. Your account data stays on the server.":'سجّل الخروج وامسح بيانات هذا الجهاز. تبقى بيانات حسابك على الخادم.',"This signs you out and erases this device's local data. To fully delete your account including server data, contact support.":'هذا يسجّل خروجك ويمسح بيانات هذا الجهاز. لحذف حسابك نهائياً بما فيه بيانات الخادم، تواصل مع الدعم.','Enter your current password, then choose a new one.':'أدخل كلمة المرور الحالية ثم اختر كلمة جديدة.','Current password':'كلمة المرور الحالية','New password':'كلمة المرور الجديدة','Confirm new password':'تأكيد كلمة المرور الجديدة','Update password':'تحديث كلمة المرور','Cancel':'إلغاء','Use the email address you want for account access.':'استعمل البريد الذي تريده للدخول إلى الحساب.','New email':'البريد الإلكتروني الجديد','Update email':'تحديث البريد','This clears the current account state and returns to welcome.':'هذا يمسح حالة الحساب الحالية ويعيدك إلى الترحيب.','Type':'اكتب','to confirm':'للتأكيد','Password updated for this session.':'تم تحديث كلمة المرور لهذه الجلسة.','Email updated for this session.':'تم تحديث البريد لهذه الجلسة.','Passwords do not match.':'كلمتا المرور غير متطابقتين.','Type DELETE to confirm.':'اكتب DELETE للتأكيد.','Hold to delete':'اضغط مطولاً للحذف','After typing DELETE, hold the delete button.':'بعد كتابة DELETE، اضغط مطولاً على زر الحذف.','Export ready':'التصدير جاهز','Notifications on':'الإشعارات مفعلة','Notifications off':'الإشعارات متوقفة','pts':'نقطة','—W · —L · —BE':'—ر · —خ · —ت','+—R':'+—R','M':'ن','T':'ث','W':'ر','F':'ج','S':'س',
     'Certificate':'الشهادة','About':'حول','Contact':'تواصل','Certificates':'الشهادات','Complete demanding missions inside PIPVANT to earn verified certificates.':'أكمل مهام صعبة داخل PIPVANT لتحصل على شهادات موثقة.','Earned':'المكتسبة','0 CERTIFICATES':'0 شهادات','No certificates yet — complete missions to earn them.':'لا توجد شهادات بعد — أكمل المهام لتحصل عليها.','PIPVANT · VERIFIED RECORD':'PIPVANT · سجل موثق','Certificate template':'قالب الشهادة','PREVIEW':'معاينة','Verified':'موثق','achievement':'إنجاز','Certificate of achievement':'شهادة إنجاز','Proudly presented to':'تُقدم بفخر إلى','Awarded for completing a verified PIPVANT mission.':'ممنوحة بعد إكمال مهمة موثقة داخل PIPVANT.','Awarded for demonstrating exceptional consistency by logging 500 trades in the PIPVANT Journal.':'ممنوحة لإثبات استمرارية استثنائية عبر تسجيل 500 صفقة في سجل PIPVANT.','DATE —':'التاريخ —','Verification ID':'معرف التحقق','Download':'تنزيل','Share':'مشاركة','Missions':'المهام','6 MISSIONS':'6 مهام','Marathon':'الماراثون','Log 500 trades in the Journal.':'سجل 500 صفقة في السجل.','Profitable':'مربح','Net positive P&L across at least 100 trades.':'صافي ربح إيجابي عبر 100 صفقة على الأقل.','Sharpshooter':'القناص','Win rate of 60% or higher across at least 100 trades.':'نسبة ربح 60٪ أو أكثر عبر 100 صفقة على الأقل.','Iron Discipline':'انضباط حديدي','90 consecutive days of discipline check-ins.':'90 يوماً متتالياً من تسجيلات الانضباط.','Risk Master':'سيد المخاطر','100 consecutive trades without breaking your risk limit.':'100 صفقة متتالية دون تجاوز حد المخاطرة.','Edge Proven':'أفضلية مثبتة','Profit factor of 1.5 or higher across at least 100 trades.':'معامل ربح 1.5 أو أكثر عبر 100 صفقة على الأقل.','Progress':'التقدم','A disciplined suite of tools for clearer trading decisions, structured risk management, and accountable review.':'مجموعة منضبطة من الأدوات لقرارات تداول أوضح وإدارة مخاطر منظمة ومراجعة مسؤولة.','TRADING DECISION TOOLS':'أدوات قرار التداول','PIPVANT is built by Orovanta — an independent startup crafting focused trading tools.':'PIPVANT من تطوير Orovanta — مشروع ناشئ مستقل يصنع أدوات تداول مركزة.','The toolkit':'مجموعة الأدوات','Compare prop-firm rules against criteria that matter to your process.':'قارن قواعد شركات التمويل بالمعايير المهمة لمنهجك.','Review execution, risk, and consistency through your own trade records.':'راجع التنفيذ والمخاطر والاستمرارية من خلال سجلات صفقاتك الخاصة.','Calculate position size from balance, risk, stop distance, and point value.':'احسب حجم الصفقة انطلاقاً من الرصيد والمخاطرة ومسافة الإيقاف وقيمة النقطة.','Keep trading rules visible and structure daily and weekly reviews.':'أبقِ قواعد التداول واضحة ونظّم المراجعات اليومية والأسبوعية.','Principles':'المبادئ','Decision tools — never trade signals':'أدوات للقرار — وليست إشارات تداول','No performance or profit promises':'لا وعود بالأداء أو الأرباح','Real data and records only':'بيانات وسجلات حقيقية فقط','Designed for any trading strategy':'مصمم لأي استراتيجية تداول','Company':'الشركة','Orovanta':'Orovanta','Headquarters':'المقر الرئيسي','Morocco 🇲🇦':'المغرب 🇲🇦','Chief Executive Officer':'الرئيس التنفيذي','CHIEF EXECUTIVE OFFICER':'الرئيس التنفيذي','Sifeddine Beniaich':'سيف الدين بن عياش','Founder · 18':'المؤسس · 18','18-year-old trader building the toolkit he always wanted.':'متداول في عمر 18 سنة يبني مجموعة الأدوات التي طالما أرادها.','Version':'الإصدار','Questions, feedback, or partnership inquiries — we read everything.':'أسئلة أو ملاحظات أو استفسارات شراكة — نقرأ كل شيء.','Message':'الرسالة','Send message':'إرسال الرسالة','Message prepared':'الرسالة جاهزة','This design prototype does not send messages. Your form is complete and remains only in this session.':'هذا النموذج التصميمي لا يرسل الرسائل. النموذج مكتمل ويبقى في هذه الجلسة فقط.','Edit message':'تعديل الرسالة','Support email':'بريد الدعم','Trading days':'أيام التداول','Import my data':'استيراد بياناتي','Restore settings and profile from a JSON file.':'استعادة الإعدادات والملف الشخصي من ملف JSON.','Date':'التاريخ','Cancel':'إلغاء',
     'More':'المزيد','Back to Matcher':'العودة إلى المطابق','Firm directory':'دليل الشركات','All firms':'جميع الشركات','Search, sort, and filter verified firm rules in one consistent directory.':'ابحث ورتب وصفّ قواعد الشركات الموثقة في دليل موحد.','Search firms':'ابحث عن الشركات','Sort firms':'ترتيب الشركات','Recommended':'الموصى به','Price: low to high':'السعر: من الأقل إلى الأعلى','Profit split: high to low':'تقسيم الأرباح: من الأعلى إلى الأقل','Firm directory views':'طرق عرض دليل الشركات','Saved':'المحفوظة','How we rank':'كيف نرتب','Data updated —':'آخر تحديث للبيانات —','No firms listed yet — verified firms will appear here.':'لا توجد شركات مدرجة بعد — ستظهر الشركات الموثقة هنا.','Every listing will remain blank until its rules, pricing, and source date have been checked.':'سيبقى كل إدراج فارغاً حتى يتم التحقق من قواعده وأسعاره وتاريخ مصدره.','How we verify':'كيف نتحقق','No firms match these filters.':'لا توجد شركات تطابق هذه المرشحات.','Clear the active filters or search to return to the complete directory.':'امسح المرشحات أو البحث للعودة إلى الدليل الكامل.','Clear filters':'مسح المرشحات','Listings will publish only after firm rules, program pricing, limits, and source dates are checked. Ranking criteria will remain visible, and unavailable values will stay marked with an em dash.':'لن تُنشر الشركات إلا بعد التحقق من القواعد والأسعار والحدود وتواريخ المصادر. ستبقى معايير الترتيب ظاهرة والقيم غير المتاحة معروضة بشرطة.','Range':'النطاق','Profit split':'تقسيم الأرباح','Price from':'السعر من','External rating':'التقييم الخارجي','Years in business':'سنوات العمل','Payout frequency':'وتيرة السحب','Filter firms':'تصفية الشركات','Narrow verified listings by program rules.':'ضيّق النتائج الموثقة حسب قواعد البرنامج.','Minimum profit split':'الحد الأدنى لتقسيم الأرباح','Maximum profit target':'الحد الأقصى لهدف الربح','Minimum max drawdown':'الحد الأدنى لأقصى تراجع','Minimum leverage':'الحد الأدنى للرافعة','Program type':'نوع البرنامج','Instant':'فوري','1-Step':'مرحلة واحدة','2-Step':'مرحلتان','Drawdown type':'نوع التراجع','Static':'ثابت','Trailing':'متحرك','Apply filters':'تطبيق المرشحات','Verified firm profile':'ملف شركة موثق','Daily loss limit':'حد الخسارة اليومية','Leverage':'الرافعة','Notable rules':'قواعد بارزة',
     'A transparent standard for matching trader criteria with verified prop-firm information.':'معيار شفاف لمطابقة معايير المتداول مع معلومات شركات التداول الموثقة.','How matching works':'كيف تعمل المطابقة','Matcher compares the criteria a trader selects with the verified rules available for each firm. It does not recommend trades or guarantee that a firm is right for every trader.':'يقارن المطابق المعايير التي يختارها المتداول بالقواعد الموثقة المتاحة لكل شركة. لا يوصي بصفقات ولا يضمن أن شركة تناسب كل متداول.','Criteria first':'المعايير أولاً','Market, account size, price, rules, and other selected constraints define the comparison.':'السوق وحجم الحساب والسعر والقواعد والقيود المختارة تحدد المقارنة.','Visible fit':'ملاءمة واضحة','Each result will explain which criteria matched and which values were unavailable.':'كل نتيجة ستوضح المعايير المتطابقة والقيم غير المتاحة.','Trader decides':'المتداول يقرر','The final choice always stays with the trader after reviewing the firm’s current terms.':'يبقى القرار النهائي للمتداول بعد مراجعة شروط الشركة الحالية.','How we rank firms':'كيف نرتب الشركات','Rankings are based on disclosed comparison criteria, not paid placement or hidden star ratings. A score remains blank until the required source data is verified.':'يعتمد الترتيب على معايير مقارنة معلنة، لا على ترتيب مدفوع أو نجوم مخفية. يبقى التقييم فارغاً حتى يتم التحقق من بيانات المصدر المطلوبة.','Rule alignment':'توافق القواعد','Program terms are compared with the trader’s selected priorities and constraints.':'تُقارن شروط البرنامج بأولويات المتداول وقيوده المختارة.','Data completeness':'اكتمال البيانات','Missing or unclear values reduce confidence instead of being estimated.':'القيم الناقصة أو غير الواضحة تقلل الثقة بدلاً من تقديرها.','Clear rationale':'مبرر واضح','Every published position will include a concise reason for its place in the order.':'كل موضع منشور سيتضمن سبباً مختصراً لمكانه في الترتيب.','Firm information is published only after its rule, price, limit, source, and review date are checked. Unverified values stay unavailable rather than being filled with assumptions.':'لا تُنشر معلومات الشركة إلا بعد التحقق من القواعد والسعر والحدود والمصدر وتاريخ المراجعة. تبقى القيم غير الموثقة غير متاحة بدل ملئها بافتراضات.','Source attached':'المصدر مرفق','Each published fact will be tied to the source used for verification.':'كل معلومة منشورة سترتبط بالمصدر المستخدم للتحقق.','Review date visible':'تاريخ المراجعة ظاهر','Users will see when the information was last checked.':'سيرى المستخدمون متى تم فحص المعلومات آخر مرة.','Changes rechecked':'إعادة فحص التغييرات','Material rule or pricing changes require verification before the listing is updated.':'تتطلب تغييرات القواعد أو الأسعار المهمة التحقق قبل تحديث الإدراج.','Our principles':'مبادئنا','PIPVANT is built as a decision-tool suite, with strict limits on what the product claims and displays.':'بُني PIPVANT كمجموعة أدوات للقرار مع حدود صارمة لما يدعيه المنتج ويعرضه.','Real data only':'بيانات حقيقية فقط','No invented statistics, prices, or performance records.':'لا إحصاءات أو أسعار أو سجلات أداء مخترعة.','No fake listings':'لا إدراجات مزيفة','A firm appears only when its listing can be supported by verified source data.':'لا تظهر الشركة إلا عندما يدعم إدراجها مصدر بيانات موثق.','Tools, not signals':'أدوات وليست إشارات','PIPVANT supports research, sizing, journaling, and review. It never tells users what to trade.':'يدعم PIPVANT البحث وحساب الحجم والتسجيل والمراجعة. ولا يخبر المستخدمين بما يتداولون.','Calculations and certificates never imply guaranteed returns.':'الحسابات والشهادات لا توحي أبداً بعوائد مضمونة.',
@@ -3548,6 +3711,9 @@
   }
   function setAvatarSurfacePhoto(url){
     var image=document.getElementById('profileAvatarImage'),avatar=document.getElementById('profileAvatar'),initial=document.getElementById('profileAvatarInitials');
+    // Mega-audit H17 fix: broken-image fallback — a dead URL shows the
+    // initials avatar instead of a broken-image icon.
+    if(image&&!image._pipvantErrBound){image._pipvantErrBound=true;image.addEventListener('error',function(){image.removeAttribute('src');image.hidden=true;if(initial){initial.hidden=false;initial.textContent=profileInitials(profileSession.name);}if(avatar)avatar.classList.remove('has-photo');});}
     if(image&&avatar&&initial){if(url){image.src=url;image.hidden=false;initial.hidden=true;avatar.classList.add('has-photo');}else{image.removeAttribute('src');image.hidden=true;initial.hidden=false;initial.textContent=profileInitials(profileSession.name);avatar.classList.remove('has-photo');}}
     document.querySelectorAll('[data-rail-avatar],[data-header-avatar]').forEach(function(el){if(url){el.classList.add('avatar-image');el.style.backgroundImage='url("'+url.replace(/"/g,'%22')+'")';el.textContent='';}else{el.classList.remove('avatar-image');el.style.backgroundImage='';el.textContent=profileInitials(profileSession.name);}});
     var revert=document.getElementById('profileAvatarRevert');if(revert)revert.hidden=!url;
@@ -3729,8 +3895,11 @@
           // Add claim button if mission complete and not yet claimed
           var isComplete = m.current >= m.target;
           var isClaimed = profileSession.certificates.indexOf(m.name) !== -1;
+          // Mega-audit H25 fix: Iron Discipline is parked ("coming soon") —
+          // never show a claim button for it (was claimable via this path).
+          var isParked = m.name==='Iron Discipline';
           var existingBtn = card.querySelector('.claim-cert-btn');
-          if(isComplete && !isClaimed && !existingBtn){
+          if(isComplete && !isClaimed && !existingBtn && !isParked){
             var btn = document.createElement('button');
             btn.className = 'btn primary claim-cert-btn';
             btn.type = 'button';
@@ -3768,9 +3937,9 @@
   var profileEditor=document.getElementById('profileEditor'),profileEditorForm=document.getElementById('profileEditorForm'),profileNameInput=document.getElementById('profileNameInput'),profileBioInput=document.getElementById('profileBioInput'),profileBioCount=document.getElementById('profileBioCount'),profileAvatarInput=document.getElementById('profileAvatarInput');
   function updateProfileBioCount(){if(profileBioCount)profileBioCount.textContent=String((profileBioInput.value||'').length)+' / 160';}
   function openProfileEditor(focusField){
-    profileNameInput.value=profileSession.name;profileBioInput.value=profileSession.bio;updateProfileBioCount();profileEditor.hidden=false;document.body.style.overflow='hidden';var target=focusField==='bio'?profileBioInput:profileNameInput;setTimeout(function(){target.focus();target.setSelectionRange(target.value.length,target.value.length);},reduceMotion.matches?0:40);
+    profileNameInput.value=profileSession.name;profileBioInput.value=profileSession.bio;updateProfileBioCount();profileEditor.hidden=false;trapFocus(profileEditor);document.body.style.overflow='hidden';var target=focusField==='bio'?profileBioInput:profileNameInput;setTimeout(function(){target.focus();target.setSelectionRange(target.value.length,target.value.length);},reduceMotion.matches?0:40);
   }
-  function closeProfileEditor(){profileEditor.hidden=true;document.body.style.overflow='';document.getElementById('profileNameEdit').focus();}
+  function closeProfileEditor(){profileEditor.hidden=true;untrapFocus();document.body.style.overflow='';document.getElementById('profileNameEdit').focus();}
   document.getElementById('profileNameEdit').addEventListener('click',function(){openProfileEditor('name');});
   document.getElementById('profileBioEdit').addEventListener('click',function(){openProfileEditor('bio');});
   document.getElementById('profileEditorClose').addEventListener('click',closeProfileEditor);
@@ -3797,12 +3966,16 @@
         return sb.storage.from('avatars').createSignedUrl(path,31536000).then(function(signed){
           if(signed.error||!signed.data||!signed.data.signedUrl)throw new Error('no signed url');
           var url=signed.data.signedUrl;
+          // Mega-audit C2 fix: store the STORAGE PATH (not the signed URL).
+          // Signed URLs expire; the path lets us re-sign fresh on every load.
           return sb.from('profiles').select('id').eq('user_id',sbUser.id).maybeSingle().then(function(r){
             var saveOp=(r.error||!r.data)
-              ? sb.from('profiles').insert({user_id:sbUser.id,avatar_url:url})
-              : sb.from('profiles').update({avatar_url:url,updated_at:new Date().toISOString()}).eq('user_id',sbUser.id);
-            return saveOp.then(function(){return url;});
-          }).catch(function(){return url;});
+              ? sb.from('profiles').insert({user_id:sbUser.id,avatar_url:path})
+              : sb.from('profiles').update({avatar_url:path,updated_at:new Date().toISOString()}).eq('user_id',sbUser.id);
+            // Mega-audit H16 fix: propagate profiles-write failures (was
+            // swallowed → misleading "Photo updated." on silent failure).
+            return saveOp.then(function(sr){if(sr.error)throw sr.error;return url;});
+          });
         });
       }).then(function(url){
         setPhoto(url,doneMsg);
@@ -3835,7 +4008,12 @@
     function activate(){
       if(sequence!==screenSequence)return;window.scrollTo({top:0,behavior:'auto'});document.querySelectorAll('.screen').forEach(function(el){el.classList.remove('motion-enter','motion-exit');el.classList.toggle('active',el.id===id);});
       var activeScreen=document.getElementById(id);prepareProfilePrestige(activeScreen);
-      if(id==='profile'&&typeof sbUpdateProfileStats==='function'&&typeof sessionJournalEntries!=='undefined'){try{sbUpdateProfileStats(sessionJournalEntries.filter(function(e){return e.type==='trade';}));}catch(_e){}}if(activeScreen&&!instant){void activeScreen.offsetWidth;activeScreen.classList.add('motion-enter');if(!viewedScreens[id]){viewedScreens[id]=true;runCountUps(activeScreen);setTimeout(function(){activeScreen.querySelectorAll('.motion-cascade').forEach(function(group){group.classList.add('motion-done');});},560);}if(id==='certificates'){var earned=activeScreen.querySelector('.earned-certificate:not([hidden])');if(earned&&!earned.dataset.motionIssued){earned.dataset.motionIssued='true';earned.classList.add('issuing');setTimeout(function(){earned.classList.remove('issuing');},920);}}setTimeout(function(){activeScreen.classList.remove('motion-enter');},520);}
+      if(id==='profile'&&typeof sbUpdateProfileStats==='function'&&typeof sessionJournalEntries!=='undefined'){try{
+        // Mega-audit fix: profile stats respect the account filter (were
+        // always computed on all trades).
+        var _pf=typeof getFilteredJournalEntries==='function'?getFilteredJournalEntries():sessionJournalEntries;
+        sbUpdateProfileStats(_pf.filter(function(e){return e.type==='trade';}));
+      }catch(_e){}}if(activeScreen&&!instant){void activeScreen.offsetWidth;activeScreen.classList.add('motion-enter');if(!viewedScreens[id]){viewedScreens[id]=true;runCountUps(activeScreen);setTimeout(function(){activeScreen.querySelectorAll('.motion-cascade').forEach(function(group){group.classList.add('motion-done');});},560);}if(id==='certificates'){var earned=activeScreen.querySelector('.earned-certificate:not([hidden])');if(earned&&!earned.dataset.motionIssued){earned.dataset.motionIssued='true';earned.classList.add('issuing');setTimeout(function(){earned.classList.remove('issuing');},920);}}setTimeout(function(){activeScreen.classList.remove('motion-enter');},520);}
       document.querySelectorAll('[data-screen]').forEach(function(el){el.classList.toggle('active',el.getAttribute('data-screen')===id);});
       var screenCopy=(currentLanguage==='ar'?titlesAr:titlesEn)[id];document.getElementById('crumb').textContent=screenCopy[0];document.getElementById('screenTitle').textContent=screenCopy[1];refreshBottomIndicator();refreshAllSegmentIndicators();
     }
@@ -3964,7 +4142,9 @@
   directoryFilterSheet.addEventListener('click',function(event){if(event.target===directoryFilterSheet)closeDirectoryFilters();});
   firmDetailSheet.addEventListener('click',function(event){if(event.target===firmDetailSheet)closeFirmDetail();});
   document.getElementById('closeFirmDetail').addEventListener('click',closeFirmDetail);
-  directorySearch.addEventListener('input',refreshDirectory);
+  // Mega-audit fix: debounce directory search (was re-render on every keystroke).
+  var _dirSearchT=0;
+  directorySearch.addEventListener('input',function(){clearTimeout(_dirSearchT);_dirSearchT=setTimeout(refreshDirectory,250);});
   // Directory sort: "Profit split" option removed (no verified data); sort by min price or recommended
   try{
     var dirSort=document.getElementById('directorySort');
@@ -4020,11 +4200,19 @@
     function begin(y,target){if(refreshing||!screen.classList.contains('active')||!pageAtTop()||(target&&target.closest('button,input,select,textarea,a')))return;startY=y;pull=0;tracking=true;surface.classList.add('is-pulling');}
     function move(y,event){if(!tracking)return;var delta=y-startY;if(delta<=0){pull=0;return;}if(event&&event.cancelable)event.preventDefault();pull=Math.min(68,delta*.52);surface.style.setProperty('--pull-y',pull+'px');surface.style.setProperty('--pull-opacity',String(Math.min(1,pull/30)));surface.style.setProperty('--pull-rotation',(pull*4)+'deg');}
     function resetIndicator(){tracking=false;pull=0;surface.classList.remove('is-pulling','is-refreshing');surface.style.setProperty('--pull-y','0px');surface.style.setProperty('--pull-opacity','0');surface.style.setProperty('--pull-rotation','0deg');}
+    // Mega-audit fix: await the refresh callback's promise before hiding the
+    // spinner (was timer-based — spinner finished before the query resolved).
     function completeRefresh(){
-      if(refreshCallback)refreshCallback();
-      content.classList.remove('is-refresh-settling');void content.offsetWidth;content.classList.add('is-refresh-settling');
-      surface.classList.remove('is-refreshing');surface.style.setProperty('--pull-rotation','0deg');
-      setTimeout(function(){content.classList.remove('is-refresh-settling');refreshing=false;resetIndicator();},reduceMotion.matches?0:150);
+      var _done=function(){
+        content.classList.remove('is-refresh-settling');void content.offsetWidth;content.classList.add('is-refresh-settling');
+        surface.classList.remove('is-refreshing');surface.style.setProperty('--pull-rotation','0deg');
+        setTimeout(function(){content.classList.remove('is-refresh-settling');refreshing=false;resetIndicator();},reduceMotion.matches?0:150);
+      };
+      try{
+        var _r=refreshCallback?refreshCallback():null;
+        if(_r&&typeof _r.then==='function'){_r.then(_done).catch(_done);setTimeout(_done,10000);}
+        else{_done();}
+      }catch(e){_done();}
     }
     function end(){if(!tracking)return;tracking=false;surface.classList.remove('is-pulling');if(pull<threshold){resetIndicator();return;}refreshing=true;surface.classList.add('is-refreshing');surface.style.setProperty('--pull-y','40px');surface.style.setProperty('--pull-opacity','1');surface.style.setProperty('--pull-rotation','0deg');setTimeout(completeRefresh,reduceMotion.matches?0:420);}
     surface.addEventListener('touchstart',function(event){if(event.touches.length===1)begin(event.touches[0].clientY,event.target);},{passive:true});
@@ -4186,7 +4374,9 @@
     // Only apply if localStorage is empty (local takes precedence for same-device changes)
     if(!sb||!sbUser){themeHydrating=false;return;}
     var hasLocal=false;
-    try{hasLocal=!!localStorage.getItem('pipvant_settings');}catch(e){}
+    // Mega-audit fix: validate the JSON (a corrupt value shadowed the cloud
+    // copy forever — parse failure must fall through to Supabase).
+    try{var _chk=JSON.parse(localStorage.getItem('pipvant_settings')||'null');hasLocal=!!(_chk&&typeof _chk==='object');}catch(e){hasLocal=false;}
     if(hasLocal){themeHydrating=false;return;}
     sb.from('user_settings').select('theme,language,currency,default_risk,notifications').eq('user_id',sbUser.id).maybeSingle()
       .then(function(r){
@@ -4210,8 +4400,8 @@
       try{
         if(Array.isArray(d.shortlist)&&d.shortlist.length&&!localStorage.getItem('pipvant_shortlist'))localStorage.setItem('pipvant_shortlist',JSON.stringify(d.shortlist));
         if(Array.isArray(d.notif_currencies)&&d.notif_currencies.length){var ck=notifUserKey()+'_currs';if(!localStorage.getItem(ck))localStorage.setItem(ck,JSON.stringify(d.notif_currencies));}
-        if(Array.isArray(d.read_broadcasts)&&d.read_broadcasts.length&&!localStorage.getItem('pipvant_notif_read')){
-          var m={};d.read_broadcasts.forEach(function(id){m[id]=1;});localStorage.setItem('pipvant_notif_read',JSON.stringify(m));
+        if(Array.isArray(d.read_broadcasts)&&d.read_broadcasts.length&&!localStorage.getItem(notifReadKey())){
+          var m={};d.read_broadcasts.forEach(function(id){m[id]=1;});localStorage.setItem(notifReadKey(),JSON.stringify(m));
           // C1-broadcast fix: update in-memory store and re-render (was stale).
           try{
             if(typeof notifStore!=='undefined'){
@@ -4338,10 +4528,29 @@
     reader.readAsText(file);
   });
   var activeSettingsModal=null;
-  function openSettingsModal(id){
-    var modal=document.getElementById(id);if(!modal)return;activeSettingsModal=modal;modal.hidden=false;var input=modal.querySelector('input');if(input)setTimeout(function(){input.focus();},30);
+  // Mega-audit H30 fix: focus trap for modals (was none — keyboard users
+  // could tab out of dialogs into the background page).
+  var _trapCleanup=null;
+  function trapFocus(container){
+    untrapFocus();
+    if(!container)return;
+    function onKey(e){
+      if(e.key!=='Tab')return;
+      var nodes=container.querySelectorAll('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])');
+      var f=Array.prototype.filter.call(nodes,function(el){return !el.disabled&&el.offsetParent!==null;});
+      if(!f.length)return;
+      var first=f[0],last=f[f.length-1];
+      if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+      else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+    }
+    container.addEventListener('keydown',onKey);
+    _trapCleanup=function(){try{container.removeEventListener('keydown',onKey);}catch(e){}};
   }
-  function closeSettingsModal(){if(!activeSettingsModal)return;if(activeSettingsModal.id==='deleteModal')cancelDeleteHold();activeSettingsModal.hidden=true;activeSettingsModal.querySelector('form').reset();activeSettingsModal.querySelectorAll('input').forEach(updateFloatingField);activeSettingsModal.querySelector('.settings-form-error').textContent='';activeSettingsModal=null;}
+  function untrapFocus(){if(_trapCleanup){try{_trapCleanup();}catch(e){}_trapCleanup=null;}}
+  function openSettingsModal(id){
+    var modal=document.getElementById(id);if(!modal)return;activeSettingsModal=modal;modal.hidden=false;trapFocus(modal);var input=modal.querySelector('input');if(input)setTimeout(function(){input.focus();},30);
+  }
+  function closeSettingsModal(){if(!activeSettingsModal)return;if(activeSettingsModal.id==='deleteModal')cancelDeleteHold();activeSettingsModal.hidden=true;untrapFocus();activeSettingsModal.querySelector('form').reset();activeSettingsModal.querySelectorAll('input').forEach(updateFloatingField);activeSettingsModal.querySelector('.settings-form-error').textContent='';activeSettingsModal=null;}
   document.querySelectorAll('[data-settings-modal]').forEach(function(button){button.addEventListener('click',function(){openSettingsModal(button.getAttribute('data-settings-modal'));});});
   document.querySelectorAll('[data-close-settings-modal]').forEach(function(button){button.addEventListener('click',closeSettingsModal);});
   document.querySelectorAll('.settings-modal').forEach(function(modal){modal.addEventListener('click',function(event){if(event.target===modal)closeSettingsModal();});});
@@ -4358,9 +4567,15 @@
       if(ok)closeSettingsModal();
     }
     if(!sb||!sbUser){_done(false,currentLanguage==='ar'?'غير متصل.':'Offline.');return;}
-    sb.auth.updateUser({password:_pw}).then(function(res){
-      if(res.error)_done(false,res.error.message);
-      else _done(true,currentLanguage==='ar'?'تم تحديث كلمة المرور.':'Password updated.');
+    // Mega-audit H18 fix: verify the CURRENT password first (was decorative).
+    // Re-authenticate; only then change the password.
+    var _curPw=document.getElementById('currentPassword').value;
+    sb.auth.signInWithPassword({email:sbUser.email,password:_curPw}).then(function(ra){
+      if(ra.error){_done(false,currentLanguage==='ar'?'كلمة المرور الحالية غير صحيحة.':'Current password is incorrect.');return;}
+      sb.auth.updateUser({password:_pw}).then(function(res){
+        if(res.error)_done(false,sbFriendlyError(res.error.message));
+        else _done(true,currentLanguage==='ar'?'تم تحديث كلمة المرور.':'Password updated.');
+      }).catch(function(err){_done(false,sbFriendlyError(err&&err.message?err.message:'Failed.'));});
     }).catch(function(err){_done(false,err&&err.message?err.message:'Failed.');});
   });
   document.getElementById('emailForm').addEventListener('submit',function(event){
@@ -4375,9 +4590,14 @@
       if(ok)closeSettingsModal();
     }
     if(!sb||!sbUser){_done(false,currentLanguage==='ar'?'غير متصل.':'Offline.');return;}
-    sb.auth.updateUser({email:nextEmail}).then(function(res){
-      if(res.error)_done(false,res.error.message);
-      else _done(true,currentLanguage==='ar'?'تم إرسال رابط التأكيد لبريدك الجديد.':'Confirmation sent to your new email.');
+    // Mega-audit H19 fix: verify the CURRENT password first (was decorative).
+    var _curPw2=document.getElementById('emailPassword').value;
+    sb.auth.signInWithPassword({email:sbUser.email,password:_curPw2}).then(function(ra){
+      if(ra.error){_done(false,currentLanguage==='ar'?'كلمة المرور الحالية غير صحيحة.':'Current password is incorrect.');return;}
+      sb.auth.updateUser({email:nextEmail}).then(function(res){
+        if(res.error)_done(false,sbFriendlyError(res.error.message));
+        else _done(true,currentLanguage==='ar'?'تم إرسال رابط التأكيد لبريدك الجديد.':'Confirmation sent to your new email.');
+      }).catch(function(err){_done(false,sbFriendlyError(err&&err.message?err.message:'Failed.'));});
     }).catch(function(err){_done(false,err&&err.message?err.message:'Failed.');});
   });
   var holdDeleteButton=document.getElementById('holdDeleteAccount');
@@ -4392,7 +4612,7 @@
     if(value!=='DELETE'){deleteError.textContent=currentLanguage==='ar'?'اكتب DELETE للتأكيد.':'Type DELETE to confirm.';feedbackMotion(deleteError);return;}
     deleteError.textContent='';deleteHoldActive=true;holdDeleteButton.classList.remove('is-holding');void holdDeleteButton.offsetWidth;holdDeleteButton.classList.add('is-holding');holdDeleteButton.setAttribute('aria-busy','true');
     if(event&&event.pointerId!==undefined&&holdDeleteButton.setPointerCapture){try{holdDeleteButton.setPointerCapture(event.pointerId);}catch(ignore){}}
-    deleteHoldTimer=setTimeout(function(){deleteHoldTimer=0;deleteHoldActive=false;deleteHoldCompleted=true;holdDeleteButton.removeAttribute('aria-busy');runSuccessMorph(holdDeleteButton,function(){closeSettingsModal();clearPrototypeState();logout();});},reduceMotion.matches?0:600);
+    deleteHoldTimer=setTimeout(function(){deleteHoldTimer=0;deleteHoldActive=false;deleteHoldCompleted=true;holdDeleteButton.removeAttribute('aria-busy');runSuccessMorph(holdDeleteButton,function(){closeSettingsModal();clearPrototypeState();logout(true);});},reduceMotion.matches?0:600);
   }
   function releaseDeleteHold(){if(deleteHoldCompleted)return;cancelDeleteHold();}
   holdDeleteButton.addEventListener('pointerdown',function(event){if(event.button!==undefined&&event.button!==0)return;event.preventDefault();startDeleteHold(event);});
@@ -4404,7 +4624,12 @@
   document.getElementById('deleteForm').addEventListener('submit',function(event){
     event.preventDefault();var deleteError=document.getElementById('deleteFormError');deleteError.textContent=currentLanguage==='ar'?'بعد كتابة DELETE، اضغط مطولاً على زر الحذف.':'After typing DELETE, hold the delete button.';feedbackMotion(deleteError);
   });
-  applyTheme('dark');
+  // Mega-audit fix: restore saved theme (was forcing 'dark', flashing over the
+  // head-script value and ignoring the user's choice).
+  (function(){var _t='dark';try{var _s=JSON.parse(localStorage.getItem('pipvant_settings')||'{}');if(_s&&(_s.theme==='light'||_s.theme==='dark'))_t=_s.theme;}catch(e){}applyTheme(_t,true);})();
+  // Mega-audit fix: restore saved language for signed-out visitors too
+  // (was only restored in authenticated flows via sbLoadSettings).
+  (function(){try{var _s=JSON.parse(localStorage.getItem('pipvant_settings')||'{}');if(_s&&(_s.language==='ar'||_s.language==='en'))applyLanguage(_s.language);}catch(e){}})();
   function refreshMenuButtonLabel(){
     var desktop=window.innerWidth>=1024;
     var expanded=desktop?!appRail.classList.contains('collapsed'):appRail.classList.contains('open');
@@ -4494,17 +4719,25 @@
       }
     }catch(e){}
   }
+  // Mega-audit fix: per-user read-marker key (was device-global —
+  // user B inherited user A's read state on a shared device).
+  function notifReadKey(){
+    try{
+      var uid=(typeof sbUser!=='undefined'&&sbUser&&sbUser.id)?sbUser.id:'anon';
+      return 'pipvant_notif_read_'+uid;
+    }catch(e){return 'pipvant_notif_read_anon';}
+  }
   function isNotifRead(id){
-    try{var r=JSON.parse(localStorage.getItem('pipvant_notif_read')||'{}');return !!r[id];}catch(e){return false;}
+    try{var r=JSON.parse(localStorage.getItem(notifReadKey())||'{}');return !!r[id];}catch(e){return false;}
   }
   function markNotifRead(id){
     try{
-      var r=JSON.parse(localStorage.getItem('pipvant_notif_read')||'{}');r[id]=1;
-      localStorage.setItem('pipvant_notif_read',JSON.stringify(r));
+      var r=JSON.parse(localStorage.getItem(notifReadKey())||'{}');r[id]=1;
+      localStorage.setItem(notifReadKey(),JSON.stringify(r));
     }catch(e){}
     // sync broadcast/global read-state (b_/g_ only; personal read lives in the notifications table)
     if((id.indexOf('b_')===0||id.indexOf('g_')===0)&&typeof sbSyncUserPref==='function'){
-      try{var _rm=JSON.parse(localStorage.getItem('pipvant_notif_read')||'{}');var _arr=Object.keys(_rm).filter(function(k){return k.indexOf('b_')===0||k.indexOf('g_')===0;});sbSyncUserPref('read_broadcasts',_arr);}catch(e){}
+      try{var _rm=JSON.parse(localStorage.getItem(notifReadKey())||'{}');var _arr=Object.keys(_rm).filter(function(k){return k.indexOf('b_')===0||k.indexOf('g_')===0;});sbSyncUserPref('read_broadcasts',_arr);}catch(e){}
     }
     // personal
     var list=getPersonalNotifs();var changed=false;
@@ -4708,7 +4941,10 @@
     titleEl.textContent=n.title||'—';
     var html='';
     var L=currentLanguage==='ar';
-    function row(k,v,mono){return '<div class="notif-detail-row"><span class="k">'+k+'</span><span class="v'+(mono?' mono':'')+'">'+v+'</span></div>';}
+    // Mega-audit XSS fix: escape values (pair/messages flow from free-text
+    // inputs and remote feeds into innerHTML here).
+    function escRow(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+    function row(k,v,mono){return '<div class="notif-detail-row"><span class="k">'+escRow(k)+'</span><span class="v'+(mono?' mono':'')+'">'+escRow(v)+'</span></div>';}
     if(n.type==='news'){
       // Real event data: from ref (v2+), or extract from message + live lookup (v1)
       var rd=n.ref||{};
@@ -4869,6 +5105,9 @@
   function returnToLogin(){setAuthMode('login');}
   // C1 fix: handle the recovery link. When the user clicks the emailed link,
   // Supabase puts type=recovery in location.hash. Show the new-password form.
+  // Mega-audit fix: do NOT strip the hash here — the session bootstrap reads
+  // it, and stripping early broke the flow. It's cleared after the password
+  // is successfully updated (see recoveryPasswordForm submit).
   (function _checkRecoveryLink(){
     try{
       var h=window.location.hash||'';
@@ -4876,8 +5115,6 @@
         document.body.classList.add('auth-active','show-auth');
         document.body.classList.remove('show-landing','app-ready');
         authStage('authNewPassword');
-        // Clear the token from the URL for security (prevents history hijack).
-        if(history.replaceState)history.replaceState(null,'',window.location.pathname+window.location.search);
       }
     }catch(e){}
   })();
@@ -4893,14 +5130,19 @@
     if(btn)btn.disabled=true;
     sb.auth.updateUser({password:p1}).then(function(res){
       if(btn)btn.disabled=false;
-      if(res.error){if(fb)fb.textContent=res.error.message;return;}
+      // Mega-audit H27 fix: friendly bilingual errors (was raw verbatim).
+      if(res.error){if(fb)fb.textContent=sbFriendlyError(res.error.message);return;}
       if(fb)fb.textContent='';
+      // Mega-audit fix: clear the recovery token from the URL now that the
+      // password is updated (prevents history hijack / replay on reload).
+      try{if(history.replaceState)history.replaceState(null,'',window.location.pathname+window.location.search);}catch(e){}
+      try{window._pipvantRecovery=false;}catch(e){}
       showToast(currentLanguage==='ar'?'تم تحديث كلمة السر.':'Password updated.');
       try{sb.auth.signOut();}catch(_x){}
       setAuthMode('login');authStage('authSignup');
     }).catch(function(err){
       if(btn)btn.disabled=false;
-      if(fb)fb.textContent=err&&err.message?err.message:'Failed.';
+      if(fb)fb.textContent=sbFriendlyError(err&&err.message?err.message:'Failed.');
     });
   });
   document.getElementById('resetBack').addEventListener('click',returnToLogin);
@@ -4913,9 +5155,9 @@
     // H2-login fix: explicit offline error, not false success.
     if(!sb){showToast(currentLanguage==='ar'?'تعذر الوصول للخادم — تحقق من الاتصال وحاول مجدداً.':'Could not reach the server — check your connection and try again.');return;}
     sb.auth.resetPasswordForEmail(recipient,{redirectTo:'https://pipvant.github.io/'}).then(function(res){
-      if(res.error){showToast(res.error.message);return;}
+      if(res.error){showToast(sbFriendlyError(res.error.message));return;}
       showResetSent();
-    }).catch(function(err){showToast(err&&err.message?err.message:'Could not send reset link.');});
+    }).catch(function(err){showToast(sbFriendlyError(err&&err.message?err.message:'Could not send reset link.'));});
   });
   document.getElementById('resendReset').addEventListener('click',function(){
     this.blur();
@@ -5009,23 +5251,36 @@
     var sbEmail=document.getElementById('signupEmail').value.trim();
     var sbPassword=document.getElementById('signupPassword').value;
     var authFeedbackEl=document.getElementById('authFeedback');if(authFeedbackEl)authFeedbackEl.textContent='';
-    function sbPrototypeFallback(){runSuccessMorph(e.submitter,function(){if(authMode==='login'){enterProduct('','—');return;}document.getElementById('setupAvatar').textContent=initials(signupName.value);authStage('authProfileSetup');});}
+    // Mega-audit H28 fix: NEVER enter the product without authentication.
+    // The old fallback called enterProduct() when Supabase failed to load,
+    // silently bypassing auth. Now it shows an explicit offline error.
+    function sbPrototypeFallback(){
+      sbAuthError(currentLanguage==='ar'?'تعذر الاتصال بالخادم — تحقق من الإنترنت وحاول مجدداً.':'Could not reach the server — check your connection and try again.');
+      _reenable();
+    }
     if(!sb){sbPrototypeFallback();return;}
     if(authMode==='login'){
-      sb.auth.signInWithPassword({email:sbEmail,password:sbPassword}).then(function(res){
-        if(res.error){sbAuthError(res.error.message);return;}
-        // C1 fix: wipe any previous user's state BEFORE assigning the new user.
-        // (The SIGNED_IN handler's user-switch guard can't detect the switch
-        // because sbUser is assigned here first.)
-        // C1-logout fix: sync before wipe (was deleting unsynced trades).
-        // If same user re-logging in, don't wipe at all.
+      // Mega-audit H1 fix: 20s timeout — a hung request no longer bricks the button.
+      var _loginP=sb.auth.signInWithPassword({email:sbEmail,password:sbPassword});
+      var _timeoutP=new Promise(function(_,rej){setTimeout(function(){rej(new Error('Request timed out — try again.'));},20000);});
+      Promise.race([_loginP,_timeoutP]).then(function(res){
+        // Mega-audit fix: re-enable the button on every error path (was
+        // permanently disabled — _reenable was dead code).
+        if(res.error){_reenable();sbAuthError(res.error.message);return;}
+        // Mega-audit H2 fix: SIGNED_IN handler (above) already ran the full
+        // post-login suite; skip the duplicate here. Fall back to the suite
+        // only if the handler somehow didn't run.
+        var _handled=false;
+        try{_handled=!!(window._signedInHandledAt&&Date.now()-window._signedInHandledAt<10000);}catch(e){}
+        if(_handled){
+          runSuccessMorph(e.submitter,function(){});
+          return;
+        }
+        // Fallback path (SIGNED_IN missed): sync-before-wipe then suite.
         var _incomingId=res.data.user&&res.data.user.id;
         var _sameUser=sbUser&&_incomingId&&sbUser.id===_incomingId;
         if(!_sameUser){
-          try{
-            // Sync old user's trades before wiping (they belong to old user).
-            if(typeof syncLocalTradesToCloud==='function')syncLocalTradesToCloud();
-          }catch(e){}
+          try{if(typeof syncLocalTradesToCloud==='function')syncLocalTradesToCloud();}catch(e){}
           try{if(typeof clearUserState==='function')clearUserState();}catch(e){}
         }
         sbUser=res.data.user;
@@ -5034,12 +5289,16 @@
           sbLoadProfile(function(pname){enterProduct(pname||sbUser.email||'','—');});
           sbLoadTrades();sbLoadDiscipline();sbLoadSettings();sbLoadAccounts();sbLoadUserPrefs();sbLoadCertificates();sbLoadNotifications();
         });
-      }).catch(function(err){sbAuthError(err&&err.message?err.message:'Sign-in failed.');});
+      }).catch(function(err){_reenable();sbAuthError(err&&err.message?err.message:'Sign-in failed.');});
     }else{
-      sb.auth.signUp({email:sbEmail,password:sbPassword,options:{data:{display_name:signupName.value||''}}}).then(function(res){
-        if(res.error){sbAuthError(res.error.message);return;}
+      // Mega-audit fix: 20s timeout on sign-up too (was stuck forever on hang).
+      var _suP=sb.auth.signUp({email:sbEmail,password:sbPassword,options:{data:{display_name:signupName.value||''}}});
+      var _suTimeout=new Promise(function(_,rej){setTimeout(function(){rej(new Error('Request timed out — try again.'));},20000);});
+      Promise.race([_suP,_suTimeout]).then(function(res){
+        if(res.error){_reenable();sbAuthError(res.error.message);return;}
         try{sb.from('page_views').insert({page:'/signup',referrer:null});}catch(e){}
         if(!res.data.session){
+          _reenable();
           sbAuthError(currentLanguage==='ar'?'تم إنشاء الحساب — تحقق من بريدك الإلكتروني ثم سجّل الدخول.':'Account created — check your email to confirm, then log in.');
           setAuthMode('login');
           return;
@@ -5050,7 +5309,7 @@
         try{if(typeof clearUserState==='function')clearUserState();}catch(e){}
         sbUser=res.data.user;
         runSuccessMorph(e.submitter,function(){document.getElementById('setupAvatar').textContent=initials(signupName.value);authStage('authProfileSetup');});
-      }).catch(function(err){sbAuthError(err&&err.message?err.message:'Sign-up failed.');});
+      }).catch(function(err){_reenable();sbAuthError(err&&err.message?err.message:'Sign-up failed.');});
     }
   });
   function getLastScreen(fallback){
@@ -5118,9 +5377,30 @@
       drop.forEach(function(k){try{localStorage.removeItem(k);}catch(e){}});
     }catch(e){}
   }
-  function logout(){
+  // Mega-audit H21 fix: skipSync=true for the "clear device" flow — the old
+  // delete-account path synced local data UP to the cloud right before
+  // "deleting", so nothing was truly removed.
+  // Mega-audit H29 fix: if unsynced trades exist and we're offline, confirm
+  // before wiping (was silently deleting unsynced data on logout).
+  function logout(skipSync){
+    if(!skipSync){
+      try{
+        var _unsynced=0;
+        if(typeof loadLocalTrades==='function'){
+          var _lt=loadLocalTrades()||[];
+          for(var _ui=0;_ui<_lt.length;_ui++){if(_lt[_ui]&&!_lt[_ui]._dbId&&!_lt[_ui]._synced)_unsynced++;}
+        }
+        if(_unsynced>0&&typeof navigator!=='undefined'&&navigator.onLine===false){
+          var _msg=(currentLanguage==='ar'
+            ?'لديك '+_unsynced+' صفقة غير مُزامَنة وستُحذف من هذا الجهاز عند تسجيل الخروج. متابعة؟'
+            :'You have '+_unsynced+' unsynced trade(s) that will be deleted from this device on logout. Continue?');
+          if(!window.confirm(_msg))return;
+        }
+      }catch(e){}
+    }
     // C2-logout fix: wait for sync (was fire-and-forget, data lost if tab closed).
     var _syncs=[];
+    if(!skipSync){
     try{
       if(typeof syncLocalTradesToCloud==='function'){
         var _r=syncLocalTradesToCloud();
@@ -5133,6 +5413,7 @@
         if(_r2&&typeof _r2.then==='function')_syncs.push(_r2);
       }
     }catch(e){}
+    }
     var _doLogout=function(){
       if(sb){sbQuiet(sb.auth.signOut());}
       sbUser=null;
@@ -5231,12 +5512,16 @@
     else if(range==='custom'){var startStr=prompt(currentLanguage==='ar'?'تاريخ البداية (YYYY-MM-DD):':'Start date (YYYY-MM-DD):');var endStr=prompt(currentLanguage==='ar'?'تاريخ النهاية (YYYY-MM-DD):':'End date (YYYY-MM-DD):');if(startStr){var sd=new Date(startStr);if(!isNaN(sd.getTime()))cutoff=sd.getTime();}var _endCutoff=0;if(endStr){var _ed=new Date(endStr);if(!isNaN(_ed.getTime())){_ed.setHours(23,59,59,999);_endCutoff=_ed.getTime();}}window.journalDateEnd=_endCutoff;}else{window.journalDateEnd=0;}window.journalDateCutoff=cutoff;if(typeof renderJournalEntries==='function')renderJournalEntries();});});
   // Chart toggles
   window.journalChartMode='cumulative';
-  document.querySelectorAll('.chart-toggle').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.chart-toggle').forEach(function(other){other.setAttribute('aria-pressed',String(other===button));});var label=(button.textContent||'').trim().toLowerCase();window.journalChartMode=label.indexOf('per-trade')===0?'pertrade':(label.indexOf('drawdown')===0?'drawdown':'cumulative');if(typeof updateJournalEquity==='function')updateJournalEquity();});});
+  document.querySelectorAll('.chart-toggle').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.chart-toggle').forEach(function(other){other.setAttribute('aria-pressed',String(other===button));});
+    // Mega-audit H8 fix: use data-chart-mode (was textContent — broke in Arabic).
+    window.journalChartMode=button.getAttribute('data-chart-mode')||'cumulative';if(typeof updateJournalEquity==='function')updateJournalEquity();});});
   // Day cells - filter by day
   document.querySelectorAll('[data-journal-day]').forEach(function(cell){cell.addEventListener('click',function(){var day=cell.getAttribute('data-journal-day');showToast((currentLanguage==='ar'?'اليوم ':'Day ')+day);});});
 
   window.journalViewMode='table';
-  document.querySelectorAll('.trade-view button').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.trade-view button').forEach(function(other){other.setAttribute('aria-pressed',String(other===button));});var label=(button.textContent||'').trim().toLowerCase();window.journalViewMode=label.indexOf('chart')===0?'chart':(label.indexOf('unified')===0?'unified':'table');applyJournalViewMode();});});
+  document.querySelectorAll('.trade-view button').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.trade-view button').forEach(function(other){other.setAttribute('aria-pressed',String(other===button));});
+  // Mega-audit H8 fix: data-view-mode (was textContent — broke in Arabic).
+  window.journalViewMode=button.getAttribute('data-view-mode')||'table';applyJournalViewMode();});});
   function applyJournalViewMode(){
     try{
       var mode=window.journalViewMode||'table';
@@ -5272,7 +5557,9 @@
     }catch(e){}
   }
   window.journalGroupBy='all';
-  document.querySelectorAll('.group-tabs button').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.group-tabs button').forEach(function(other){other.setAttribute('aria-pressed',String(other===button));});var label=(button.textContent||'').trim().toLowerCase();window.journalGroupBy=label.indexOf('by symbol')===0?'symbol':(label.indexOf('by day')===0?'day':(label.indexOf('by tag')===0?'tag':'all'));if(typeof renderJournalEntries==='function')renderJournalEntries();});});
+  document.querySelectorAll('.group-tabs button').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.group-tabs button').forEach(function(other){other.setAttribute('aria-pressed',String(other===button));});
+  // Mega-audit H8 fix: data-group-by (was textContent — broke in Arabic).
+  window.journalGroupBy=button.getAttribute('data-group-by')||'all';if(typeof renderJournalEntries==='function')renderJournalEntries();});});
   var facetPanel=document.getElementById('facetPanel');
   var journalFilterButton=document.getElementById('journalFilterButton');
   journalFilterButton.addEventListener('click',function(){var open=facetPanel.classList.toggle('open');journalFilterButton.setAttribute('aria-expanded',String(open));});
@@ -5308,7 +5595,18 @@
     if(savedSel)selectedAccountId=savedSel;
     var _idMap={},_mig=false;
     tradingAccounts.forEach(function(a){if(a&&a.id&&!isAccountUuid(a.id)){var _nu=newAccountId();_idMap[String(a.id)]=_nu;a.id=_nu;_mig=true;}});
-    if(_mig){if(_idMap[selectedAccountId])selectedAccountId=_idMap[selectedAccountId];sbSaveAccounts();}
+    if(_mig){
+      if(_idMap[selectedAccountId])selectedAccountId=_idMap[selectedAccountId];
+      // Mega-audit H6 fix: remap trade account_ids too (were orphaned —
+      // trades kept the old ID and vanished from every account view).
+      try{
+        var _tr=JSON.parse(localStorage.getItem('pipvant_trades')||'[]'),_tc=false;
+        for(var _ti=0;_ti<_tr.length;_ti++){if(_tr[_ti]&&_tr[_ti].account_id&&_idMap[_tr[_ti].account_id]){_tr[_ti].account_id=_idMap[_tr[_ti].account_id];_tc=true;}}
+        if(_tc)localStorage.setItem('pipvant_trades',JSON.stringify(_tr));
+        if(window.sessionJournalEntries)for(var _si=0;_si<window.sessionJournalEntries.length;_si++){var _se=window.sessionJournalEntries[_si];if(_se&&_se.account_id&&_idMap[_se.account_id])_se.account_id=_idMap[_se.account_id];}
+      }catch(e){}
+      sbSaveAccounts();
+    }
   }catch(e){}
   function accountStat(label,value){var wrap=document.createElement('span');var labelNode=document.createElement('span');var valueNode=document.createElement('strong');labelNode.textContent=label;valueNode.textContent=value===''?'—':money(Number(value));wrap.appendChild(labelNode);wrap.appendChild(valueNode);return wrap;}
   function accountOption(id,name,firm,size,maxLoss,target){
@@ -5378,8 +5676,9 @@
   // so clearing site data deleted them while trades survived).
   function sbSaveAccounts(){
     try{localStorage.setItem('pipvant_accounts',JSON.stringify(tradingAccounts));localStorage.setItem('pipvant_selected_account',selectedAccountId);}catch(e){}
-    if(!sb||!sbUser)return;
-    sb.from('user_settings').upsert({user_id:sbUser.id,accounts:tradingAccounts,selected_account:selectedAccountId},{onConflict:'user_id'}).then(function(r){if(r.error)console.warn('Accounts sync failed:',r.error.message);}).catch(function(e){console.warn('Accounts sync error:',e);});
+    if(!sb||!sbUser)return Promise.resolve(false);
+    // Mega-audit fix: return the promise so logout's sync gate actually waits.
+    return sb.from('user_settings').upsert({user_id:sbUser.id,accounts:tradingAccounts,selected_account:selectedAccountId},{onConflict:'user_id'}).then(function(r){if(r.error)console.warn('Accounts sync failed:',r.error.message);return !r.error;}).catch(function(e){console.warn('Accounts sync error:',e);return false;});
   }
   function sbLoadAccounts(){
     // C2 fix: cloud is the source of truth. Always reset memory first, then
@@ -5434,7 +5733,9 @@
   window.editingTradeId=null;
   function startEditTrade(entry){
     if(!entry||entry.type!=='trade')return;
-    window.editingTradeId=entry._id||entry._dbId||entry.timestamp;
+    // Mega-audit H22 fix: key by _localId first (matches the update lookup
+    // order below — was _id||_dbId||timestamp, so local trades never matched).
+    window.editingTradeId=entry._localId||entry._id||entry._dbId||entry.timestamp;
     document.getElementById('tradePair').value=entry.pair||'';
     document.getElementById('tradeEntry').value=entry.entry||'';
     document.getElementById('tradeStop').value=entry.stop||'';
@@ -5505,8 +5806,13 @@
       var headers=['Date','Symbol','Side','Setup','Entry','Stop','Target','Exit','Size','P&L','R Multiple','Rating','Tag','Notes','Result'];
       var rows=trades.map(function(t){
         var d=new Date(t.timestamp||Date.now());
-        var dateStr=d.toISOString().slice(0,16).replace('T',' ');
-        var esc=function(v){v=String(v==null?'':v);return '"'+v.replace(/"/g,'""')+'"';};
+        // Mega-audit fix: local device time in CSV (was toISOString UTC —
+        // mismatched every time shown in the app).
+        var _p2=function(x){return String(x).padStart(2,'0');};
+        var dateStr=d.getFullYear()+'-'+_p2(d.getMonth()+1)+'-'+_p2(d.getDate())+' '+_p2(d.getHours())+':'+_p2(d.getMinutes());
+        // Mega-audit fix: formula-injection guard — prefix cells starting
+        // with =,+,-,@ with a single quote (Excel/Sheets would execute them).
+        var esc=function(v){v=String(v==null?'':v);if(/^[=+\-@]/.test(v))v="'"+v;return '"'+v.replace(/"/g,'""')+'"';};
         return [dateStr,t.pair||'',t.direction||'',t.setup||'',t.entry||'',t.stop||'',t.target||'',t.exitPrice||'',t.size||'',t.pnl==null?'':t.pnl,t.rMultiple||'',t.rating||'',t.tag||'',t.notes||'',t.result||''].map(esc).join(',');
       });
       var csv='﻿'+headers.join(',')+'\n'+rows.join('\n');
@@ -5519,21 +5825,46 @@
     }catch(e){console.warn('CSV export failed:',e);}
   }
   document.getElementById('exportTradesCsv').addEventListener('click',exportTradesCsv);
+  // Mega-audit H7 fix: single shared journal filter. KPIs/equity/calendar and
+  // the list all use the same filtered set (KPIs previously ignored every
+  // filter). Also respects the selected trading account (was leaking
+  // unassigned trades into per-account views).
+  function getFilteredJournalEntries(){
+    var q=(typeof journalSearchQuery==='string'?journalSearchQuery:'').trim().toLowerCase();
+    var dateCutoff=window.journalDateCutoff||0;var dateEnd=window.journalDateEnd||0;var dayFilter=window.journalDayFilter||null;var facets=window.journalFacets||{symbol:null,side:null,setup:null,tag:null};
+    var acctFilter=(typeof selectedAccountId!=='undefined'&&selectedAccountId&&selectedAccountId!=='all')?String(selectedAccountId):null;
+    return (window.sessionJournalEntries||[]).filter(function(entry){
+      var matchQ=true,matchD=true,matchDay=true,matchSym=true,matchSide=true,matchSetup=true,matchTag=true,matchAcct=true;
+      if(q){
+        var _acctName='';
+        try{
+          if(entry.account_id&&typeof tradingAccounts!=='undefined'){
+            for(var _ai=0;_ai<tradingAccounts.length;_ai++){
+              if(String(tradingAccounts[_ai].id)===String(entry.account_id)){_acctName=tradingAccounts[_ai].name||'';break;}
+            }
+          }
+        }catch(_e){}
+        var haystack=((entry.pair||'')+' '+(entry.notes||'')+' '+(entry.direction||'')+' '+(entry.setup||'')+' '+(entry.tag||'')+' '+_acctName).toLowerCase();matchQ=haystack.indexOf(q)!==-1;
+      }
+      if(dateCutoff){matchD=(entry.timestamp||0)>=dateCutoff;}
+      if(dateEnd){matchD=matchD&&(entry.timestamp||0)<=dateEnd;}
+      if(dayFilter){var d=new Date(entry.timestamp||0);matchDay=d.getFullYear()===dayFilter.y&&d.getMonth()===dayFilter.m&&d.getDate()===dayFilter.d;}
+      if(facets.symbol&&entry.type==='trade'){matchSym=String(entry.pair||'').toUpperCase()===facets.symbol;}
+      if(facets.side&&entry.type==='trade'){matchSide=String(entry.direction||'').toLowerCase()===facets.side;}
+      if(facets.setup&&entry.type==='trade'){matchSetup=String(entry.setup||'').toLowerCase()===facets.setup;}
+      if(facets.tag&&entry.type==='trade'){matchTag=String(entry.tag||'').trim().replace(/^#+/,'').toLowerCase()===facets.tag;}
+      if(acctFilter&&entry.type==='trade'){matchAcct=String(entry.account_id||'')===acctFilter;}
+      return matchQ&&matchD&&matchDay&&matchSym&&matchSide&&matchSetup&&matchTag&&matchAcct;
+    });
+  }
   function renderJournalEntries(){
     var list=document.getElementById('journalEntryList'),empty=document.getElementById('journalEntryEmpty'),count=document.getElementById('journalEntryCount');
     if(!list||!empty||!count)return;list.replaceChildren();
+    // Reset the render cap on fresh filter changes (show-more sets the flag).
+    if(!window._journalKeepLimit)window.journalRenderLimit=100;
+    window._journalKeepLimit=false;
     var labels=currentLanguage==='ar'?['التاريخ / الوقت','الرمز','الاتجاه','الإعداد','الدخول / الخطة','الكمية','صافي الربح والخسارة','مضاعف R','التقييم','الملاحظات','']:['Date / time','Symbol','Side','Setup','Entry / plan','Qty','Net P&L','R multiple','Rating','Notes',''];
-    var q=journalSearchQuery.trim().toLowerCase();var dateCutoff=window.journalDateCutoff||0;var dateEnd=window.journalDateEnd||0;var dayFilter=window.journalDayFilter||null;var facets=window.journalFacets||{symbol:null,side:null,setup:null,tag:null};var filtered=sessionJournalEntries.filter(function(entry){var matchQ=true,matchD=true,matchDay=true,matchSym=true,matchSide=true,matchSetup=true,matchTag=true;if(q){
-      // F2 fix: search setup, tag, and account (was pair/notes/direction only).
-      var _acctName='';
-      try{
-        if(entry.account_id&&typeof tradingAccounts!=='undefined'){
-          for(var _ai=0;_ai<tradingAccounts.length;_ai++){
-            if(String(tradingAccounts[_ai].id)===String(entry.account_id)){_acctName=tradingAccounts[_ai].name||'';break;}
-          }
-        }
-      }catch(_e){}
-      var haystack=((entry.pair||'')+' '+(entry.notes||'')+' '+(entry.direction||'')+' '+(entry.setup||'')+' '+(entry.tag||'')+' '+_acctName).toLowerCase();matchQ=haystack.indexOf(q)!==-1;}if(dateCutoff){matchD=(entry.timestamp||0)>=dateCutoff;}if(dateEnd){matchD=matchD&&(entry.timestamp||0)<=dateEnd;}if(dayFilter){var d=new Date(entry.timestamp||0);matchDay=d.getFullYear()===dayFilter.y&&d.getMonth()===dayFilter.m&&d.getDate()===dayFilter.d;}if(facets.symbol&&entry.type==='trade'){matchSym=String(entry.pair||'').toUpperCase()===facets.symbol;}if(facets.side&&entry.type==='trade'){matchSide=String(entry.direction||'').toLowerCase()===facets.side;}if(facets.setup&&entry.type==='trade'){matchSetup=String(entry.setup||'').toLowerCase()===facets.setup;}if(facets.tag&&entry.type==='trade'){matchTag=String(entry.tag||'').trim().replace(/^#+/,'').toLowerCase()===facets.tag;}return matchQ&&matchD&&matchDay&&matchSym&&matchSide&&matchSetup&&matchTag;});
+    var filtered=getFilteredJournalEntries();
     var tradeCount=filtered.length; // Save count before grouping adds headers
     (function(){
       var groupBy=window.journalGroupBy||'all';
@@ -5552,7 +5883,12 @@
         ordered.forEach(function(k){regrouped.push({__groupHeader:k});groups[k].forEach(function(e){regrouped.push(e);});});
         filtered=regrouped;
       }
-    })();filtered.forEach(function(entry){
+    })();
+    // Mega-audit fix: cap initial render at 100 rows (was unbounded DOM —
+    // hundreds of trades = thousands of nodes).
+    var _renderLimit=window.journalRenderLimit||100;
+    var _toRender=filtered.length>_renderLimit?filtered.slice(0,_renderLimit):filtered;
+    _toRender.forEach(function(entry){
       if(entry.__groupHeader){
         var gh=document.createElement('div');gh.className='journal-group-header';gh.style.cssText='padding:10px 14px;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);background:var(--sunken);border-top:1px solid var(--line);border-bottom:1px solid var(--line)';gh.textContent=entry.__groupHeader;list.appendChild(gh);return;
       }
@@ -5593,7 +5929,30 @@
         }
       });list.appendChild(row);
     });
-    var hasEntries=tradeCount>0;list.hidden=!hasEntries;empty.hidden=hasEntries;count.textContent=hasEntries?(tradeCount+(currentLanguage==='ar'?' إدخالات':(tradeCount===1?' ENTRY':' ENTRIES'))):(currentLanguage==='ar'?'0 صفقات':'0 TRADES');
+    // "Show more" when capped.
+    if(filtered.length>_toRender.length){
+      var _sm=document.createElement('button');
+      _sm.type='button';_sm.className='btn secondary';
+      _sm.style.cssText='margin:12px auto;display:block;';
+      _sm.textContent=(currentLanguage==='ar'?'عرض المزيد (':'Show more (')+filtered.length+' / '+_toRender.length+')';
+      _sm.addEventListener('click',function(){window._journalKeepLimit=true;window.journalRenderLimit=(window.journalRenderLimit||100)+100;renderJournalEntries();});
+      list.appendChild(_sm);
+    }
+    var hasEntries=tradeCount>0;list.hidden=!hasEntries;empty.hidden=hasEntries;
+    // Mega-audit fix: when trades exist but filters/search yield zero, say so
+    // (was "No trades recorded" — telling users with trades to record their first).
+    if(!hasEntries){
+      var _totalTrades=(window.sessionJournalEntries||[]).filter(function(e){return e.type==='trade';}).length;
+      var _eh=empty.querySelector('h3'),_ep=empty.querySelector('p');
+      if(_totalTrades>0){
+        if(_eh)_eh.textContent=currentLanguage==='ar'?'لا توجد صفقات مطابقة':'No trades match these filters';
+        if(_ep)_ep.textContent=currentLanguage==='ar'?'جرّب تعديل البحث أو المرشحات.':'Try adjusting your search or filters.';
+      }else{
+        if(_eh)_eh.textContent=currentLanguage==='ar'?'لا توجد صفقات مسجلة':'No trades recorded';
+        if(_ep)_ep.textContent=currentLanguage==='ar'?'سجّل أول صفقة لتعبئة الربح والخسارة.':'Record the first trade to populate P&L.';
+      }
+    }
+    count.textContent=hasEntries?(tradeCount+(currentLanguage==='ar'?' إدخالات':(tradeCount===1?' ENTRY':' ENTRIES'))):(currentLanguage==='ar'?'0 صفقات':'0 TRADES');
     updateJournalKPIs();updateJournalCalendar();updateJournalEquity();updateJournalScore();renderFacetOptions();updateProfileFromSession();if(typeof applyJournalViewMode==='function'&&(window.journalViewMode==='chart'||window.journalViewMode==='unified'))applyJournalViewMode();
   }
   /* Central refresh: after any trade save/load/delete, update EVERYTHING.
@@ -5725,7 +6084,10 @@
   /* ---- Journal KPI cards: computed from real closed-trade P&L ---- */
   function updateJournalKPIs(){
     try{
-      var closed=sessionJournalEntries.filter(function(e){return e.type==='trade'&&e.pnl!=null&&isFinite(Number(e.pnl));});
+      // Mega-audit H7 fix: KPIs respect the active filters (were computed on
+      // ALL trades regardless of search/date/facet/account filters).
+      var _feeds=typeof getFilteredJournalEntries==='function'?getFilteredJournalEntries():(window.sessionJournalEntries||[]);
+      var closed=_feeds.filter(function(e){return e.type==='trade'&&e.pnl!=null&&isFinite(Number(e.pnl));});
       var n=closed.length;
       var set=function(id,txt){var el=document.getElementById(id);if(el)el.textContent=txt;};
       if(!n){
@@ -5835,8 +6197,10 @@
     try{
       var container=document.querySelector('.equity-card .equity-empty');
       if(!container)return;
-      var _selA=(typeof selectedAccountId!=='undefined')?selectedAccountId:'all';
-      var trades=(window.sessionJournalEntries||[]).filter(function(t){return t.closed&&isFinite(parseFloat(t.pnl))&&(!_selA||_selA==='all'||!t.account_id||String(t.account_id||'')===String(_selA));});
+      // Mega-audit H7 fix: equity respects ALL filters (was only account, and
+      // leaked unassigned trades into per-account views via !t.account_id).
+      var _feeds=typeof getFilteredJournalEntries==='function'?getFilteredJournalEntries():(window.sessionJournalEntries||[]);
+      var trades=_feeds.filter(function(t){return t.type==='trade'&&t.closed&&isFinite(parseFloat(t.pnl));});
       if(trades.length===0){
         container.innerHTML='<div><div class="empty-glyph" aria-hidden="true"><svg width="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 18 9 13l3 2 7-9"/></svg></div><h3>'+(currentLanguage==='ar'?'لا يوجد سجل صفقات':'No trade history available')+'</h3><p>'+(currentLanguage==='ar'?'سيظهر الرسم بعد تسجيل نتيجة أول صفقة.':'The chart will populate after the first trade result is recorded.')+'</p></div>';
         return;
@@ -6036,7 +6400,10 @@
       });
     }catch(e){}
   }
-  /* Journal search handler */document.addEventListener('input',function(event){if(event.target&&event.target.classList&&event.target.classList.contains('trade-search')){journalSearchQuery=event.target.value||'';renderJournalEntries();}});function openTradeSheet(){document.getElementById('tradeFormFeedback').textContent='';
+  /* Journal search handler — Mega-audit fix: 250ms debounce (was a full DOM
+     rebuild on every keystroke). */
+  var _journalSearchT=0;
+  document.addEventListener('input',function(event){if(event.target&&event.target.classList&&event.target.classList.contains('trade-search')){journalSearchQuery=event.target.value||'';clearTimeout(_journalSearchT);_journalSearchT=setTimeout(function(){if(typeof renderJournalEntries==='function')renderJournalEntries();},250);}});function openTradeSheet(){document.getElementById('tradeFormFeedback').textContent='';
     // E3 fix: when opening for a NEW trade (not editing), reset stale values
     // left over from a cancelled edit.
     if(!window.editingTradeId){
@@ -6066,7 +6433,7 @@
       return Math.round(pnl*100)/100;
     }catch(e){return null;}
   }
-  function openCloseTradeModal(entry){currentCloseEntry=entry;document.getElementById('closeTradeFeedback').textContent='';document.getElementById('closeExitPrice').value='';var rp=document.getElementById('closeRealizedPnl');if(rp){rp.value='';rp.dataset.auto='1';}closeTradeSheetEl.classList.add('open');document.getElementById('closeExitPrice').focus();
+  function openCloseTradeModal(entry){currentCloseEntry=entry;document.getElementById('closeTradeFeedback').textContent='';document.getElementById('closeExitPrice').value='';var rp=document.getElementById('closeRealizedPnl');if(rp){rp.value='';rp.dataset.auto='1';}closeTradeSheetEl.classList.add('open');trapFocus(closeTradeSheetEl);document.getElementById('closeExitPrice').focus();
     // Auto-estimate P&L when exit price is entered (updates until user manually edits)
     var exitInput=document.getElementById('closeExitPrice');
     var pnlInput=document.getElementById('closeRealizedPnl');
@@ -6092,7 +6459,9 @@
       });
     }
   }
-  function hideCloseTradeModal(){closeTradeSheetEl.classList.remove('open');currentCloseEntry=null;}
+  // Mega-audit H24 fix: re-enable the submit button when the modal closes
+  // (was permanently disabled after the first successful close).
+  function hideCloseTradeModal(){closeTradeSheetEl.classList.remove('open');untrapFocus();currentCloseEntry=null;var _cb=document.querySelector('#closeTradeModal [type="submit"]');if(_cb)_cb.disabled=false;}
   document.getElementById('closeCloseTradeSheet').addEventListener('click',hideCloseTradeModal);
   document.getElementById('cancelCloseTrade').addEventListener('click',hideCloseTradeModal);
   closeTradeSheetEl.addEventListener('click',function(e){if(e.target===closeTradeSheetEl)hideCloseTradeModal();});
@@ -6151,12 +6520,13 @@
     // Update DB if saved
     if(sb&&sbUser&&currentCloseEntry._dbId){
       sb.from('trades').update({exit_price:exitPrice,pnl:pnl,closed_at:new Date().toISOString()}).eq('id',currentCloseEntry._dbId).eq('user_id',sbUser.id).then(function(res){
-        if(res&&res.error){document.getElementById('closeTradeFeedback').textContent=closeFailMsg;showToast(closeFailMsg);return;}
+        if(res&&res.error){document.getElementById('closeTradeFeedback').textContent=closeFailMsg;showToast(closeFailMsg);if(_cs)_cs.disabled=false;return;}
         sbLoadTrades();closeDone();
-      }).catch(function(){document.getElementById('closeTradeFeedback').textContent=closeFailMsg;showToast(closeFailMsg);});
+      }).catch(function(){document.getElementById('closeTradeFeedback').textContent=closeFailMsg;showToast(closeFailMsg);if(_cs)_cs.disabled=false;});
     }else if(sb&&sbUser&&currentCloseEntry._db){
       var waitMsg=currentLanguage==='ar'?'جارٍ حفظ الصفقة — انتظر قليلاً ثم أعد المحاولة.':'Still saving the trade — wait a moment and retry.';
       document.getElementById('closeTradeFeedback').textContent=waitMsg;showToast(waitMsg);
+      if(_cs)_cs.disabled=false;
     }else{closeDone();}
   });
   logTradeButton.addEventListener('click',openTradeSheet);
@@ -6206,6 +6576,13 @@
           // E5 fix: key by _localId first to avoid timestamp collisions.
           var eid=en._localId||en._id||en._dbId||en.timestamp;
           if(eid===editingId&&en.type==='trade'){
+            // Mega-audit fix: don't wipe a manually-entered P&L when the edit
+            // form can't compute one (e.g. index symbol with no estimate).
+            if(tradeEntry.pnl==null&&en.pnl!=null&&isFinite(Number(en.pnl))){
+              tradeEntry.pnl=Number(en.pnl);
+              if(tradeEntry.result==null)tradeEntry.result=en.result;
+              if(tradeEntry.closed!==true&&en.closed)tradeEntry.closed=true;
+            }
             en.pair=tradeEntry.pair;en.direction=tradeEntry.direction;en.entry=tradeEntry.entry;en.stop=tradeEntry.stop;en.target=tradeEntry.target;en.size=tradeEntry.size;en.rMultiple=tradeEntry.rMultiple;en.setup=tradeEntry.setup;en.tag=tradeEntry.tag;en.rating=tradeEntry.rating;en.timestamp=tradeEntry.timestamp;en.notes=tradeEntry.notes;en.closed=tradeEntry.closed;en.exitPrice=tradeEntry.exitPrice;en.pnl=tradeEntry.pnl;en.result=tradeEntry.result;
             // E8 fix: allow changing the account.
             if(typeof tradeEntry.account_id!=='undefined')en.account_id=tradeEntry.account_id;
@@ -6283,8 +6660,10 @@
         var streak=0,d=new Date();
         if(!dates[sbDisciplineToday()])d.setDate(d.getDate()-1);
         while(dates[d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)]){streak++;d.setDate(d.getDate()-1);}
-        var streakEl=document.querySelector('.discipline-streak .streak-count');
-        if(streakEl&&streak>0)streakEl.textContent=streak;
+        // Mega-audit H15 fix: #streakDays (was .streak-count — no such element,
+        // so the streak never displayed).
+        var streakEl=document.getElementById('streakDays');
+        if(streakEl)streakEl.textContent=streak>0?streak+' days':'—';
         pipvantDisciplineStreak=streak;
         /* Sidebar "Current streak" shows REAL trading days (from journal trades),
            not discipline check-ins — the discipline screen keeps its own streak. */
@@ -6416,6 +6795,11 @@
     // C1-risk fix: use the user-entered pip/point value instead of hardcoded $10.
     var _pv=parseFloat((document.getElementById('riskPipValue').value||'').replace(/[^0-9.]/g,''));
     var pipVal=(isFinite(_pv)&&_pv>0)?_pv:10;
+    // Mega-audit H14 fix: the pip value is entered in USD ($) but the balance/
+    // risk are in the display currency — convert pipVal to display currency
+    // before dividing (was mixing USD pipVal with MAD/EUR risk).
+    var _fx=(typeof exchangeRates!=='undefined'&&exchangeRates[currentCurrency])?exchangeRates[currentCurrency]:1;
+    pipVal=pipVal*_fx;
     if(b>0&&r>0&&s>0&&pair){
       // H3-risk fix: clamp risk % at 100 (direct typing bypassed the cap).
       r=Math.min(r,100);
@@ -6475,7 +6859,10 @@
     var dow=(now.getUTCDay()+6)%7; // 0=Mon
     var weekStart=new Date(Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),now.getUTCDate()-dow,0,0,0));
     var weekIso=weekStart.toISOString();
-    sb.from('economic_events').select('event_time,currency,impact,title,forecast,previous,source').gte('event_time',weekIso).order('event_time')
+    // Mega-audit fix: cap the query at week end + 200-row limit (was
+    // unbounded — a stale/mis-dated row could pull the whole table).
+    var weekEnd=new Date(weekStart.getTime()+7*86400000).toISOString();
+    sb.from('economic_events').select('event_time,currency,impact,title,forecast,previous,source').gte('event_time',weekIso).lt('event_time',weekEnd).order('event_time').limit(200)
       .then(function(r){
         if(r.error||!r.data||!r.data.length)return;
         // Deduplicate: same title + same minute (DB has dupes from feed)
