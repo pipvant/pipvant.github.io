@@ -151,33 +151,95 @@
     .promo-copy-btn{background:#0A1628;color:#D4AF37;border:1px solid #D4AF37;border-radius:10px;padding:8px 16px;font-weight:800;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
     .promo-copy-btn:active{transform:scale(.96)}
     .restricted-flags{font-size:12px;color:var(--muted);margin-top:8px}
-    /* MOBILE CARD FIX: promo badge out of grid flow (was 5th item in 4-col grid → broken layout) */
+    /* ============ PFM-STYLE FIRM CARDS (mobile) + FIRM DETAIL PAGE ============ */
+    /* desktop: promo badge floats (out of grid flow) */
     .firm-expand{position:relative}
     .firm-expand .discount-slot.promo-badge{position:absolute;top:10px;inset-inline-end:38px;z-index:3;margin:0}
+    /* --- PFM cards: slim horizontal strips, mobile only --- */
     @media (max-width:639px){
-      .firm-expand .discount-slot.promo-badge{top:8px;inset-inline-end:34px;font-size:11px;padding:3px 10px}
-      /* compare toggle: keep clear of promo badge */
-      .compare-toggle{top:8px}
-      /* WIDE HORIZONTAL CARDS: 2-column flow inside card → wide not tall */
-      .firm-card{border-radius:14px}
-      .firm-summary{min-height:0!important;padding:10px 12px!important}
-      .firm-expand{min-height:0!important;padding:10px 8px!important;gap:10px!important;align-items:start!important}
-      .firm-core{display:grid!important;grid-template-columns:1fr 1fr;gap:6px 12px!important;padding-top:0!important;align-items:center}
-      .firm-topline{grid-column:1/-1;min-width:0}
-      .firm-name{font-size:15px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-      .meta-pills{grid-column:1/-1;gap:4px;margin:0}
-      .meta-pill{font-size:9px;padding:3px 8px;white-space:nowrap}
-      .firm-card .evidence-line{font-size:10px;flex-wrap:wrap;gap:4px;margin:0;min-width:0}
-      .firm-card .what-check-btn{min-height:26px;font-size:10px;padding:0 10px}
-      .firm-card .rating-block{margin:0!important;padding:6px 8px!important;min-width:0}
-      .firm-card .rating-block>strong{font-size:17px!important}
-      .firm-card .allocation{margin:0!important;min-width:0}
-      .firm-card .allocation-track{height:4px!important}
-      .firm-card .allocation strong{font-size:12px!important}
-      .firm-card .allocation-line span:first-child{font-size:10px}
-      .logo-slot{width:42px!important;height:42px!important}
-      .slot-cta{min-width:46px;min-height:32px;font-size:9px}
+      #matcher .firm-card{border-radius:16px}
+      #matcher .firm-summary{padding:4px!important;min-height:0!important;grid-template-columns:minmax(0,1fr) auto!important;gap:6px!important;align-items:center!important}
+      #matcher .firm-expand{display:flex!important;align-items:center;gap:10px;padding:12px 12px;min-height:78px;grid-template-columns:none!important}
+      #matcher .firm-expand .rank{flex:0 0 auto;font-size:15px}
+      #matcher .firm-card.pfm-top1 .rank,#matcher .firm-card.pfm-top2 .rank,#matcher .firm-card.pfm-top3 .rank{font-size:20px;border:0;background:none}
+      #matcher .firm-card .logo-slot{width:52px!important;height:52px!important;border-radius:14px!important;border:2px solid rgba(212,175,55,.45)!important;flex:0 0 auto;font-size:16px}
+      #matcher .firm-card.pfm-top1 .logo-slot{border-color:#D4AF37!important;box-shadow:0 0 14px rgba(212,175,55,.4)}
+      #matcher .firm-card.pfm-top2 .logo-slot{border-color:#c0c8d4!important}
+      #matcher .firm-card.pfm-top3 .logo-slot{border-color:#cd7f32!important}
+      #matcher .firm-core{flex:1;min-width:0;display:block!important;padding:0!important}
+      #matcher .firm-topline{display:flex!important;align-items:center;gap:8px;min-width:0}
+      #matcher .firm-name{font-size:16px!important;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0}
+      #matcher .pfm-heart{background:none;border:0;color:var(--muted);font-size:19px;line-height:1;padding:6px;cursor:pointer;flex:0 0 auto}
+      #matcher .pfm-heart.on{color:#D4AF37}
+      #matcher .pfm-sub{margin-top:3px;color:#D4AF37;font-size:13px;font-weight:700}
+      #matcher .pfm-sub b{font-variant-numeric:tabular-nums}
+      #matcher .pfm-sub span{color:var(--muted);font-weight:400;font-size:11px}
+      /* hide secondary sections on the PFM strip (all live on the detail page) */
+      #matcher .firm-card .meta-pills,
+      #matcher .firm-card .evidence-line,
+      #matcher .firm-card .rating-block,
+      #matcher .firm-card .allocation,
+      #matcher .firm-expand .row-chevron{display:none!important}
+      /* right promo/PT:DD block with divider */
+      #matcher .firm-expand .discount-slot{position:static!important;display:none;margin:0;flex:0 0 auto;border-inline-start:1px solid var(--line);padding-inline-start:12px;min-width:70px;text-align:center;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+      #matcher .firm-expand .discount-slot.show{display:flex!important}
+      #matcher .firm-expand .discount-slot.promo-badge{font-size:12px}
+      #matcher .discount-slot .ptdd-lbl{display:block;font-size:9px;color:var(--muted);font-weight:600}
+      #matcher .discount-slot .ptdd-val{display:block;font-size:14px;font-weight:800;color:#D4AF37;font-variant-numeric:tabular-nums}
+      /* compact VIEW */
+      #matcher .slot-cta{min-width:0;padding:0 12px;min-height:36px;font-size:10px;flex:0 0 auto}
+      #matcher .compare-toggle{top:6px}
     }
+    /* --- firm detail page --- */
+    .fd-wrap{max-width:720px;margin:0 auto;padding:14px 16px 0}
+    .fd-back{display:inline-flex;align-items:center;gap:8px;background:none;border:0;color:var(--muted);font-size:14px;font-weight:600;padding:10px 0;cursor:pointer;margin-bottom:6px}
+    html[dir="rtl"] .fd-back svg{transform:scaleX(-1)}
+    .fd-head{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+    .fd-logo{width:64px!important;height:64px!important;border-radius:16px!important;font-size:22px;flex:0 0 auto}
+    .fd-titlewrap{flex:1;min-width:0}
+    .fd-titlewrap h2{font-size:22px;margin:0;line-height:1.35}
+    .fd-titlewrap p{color:var(--muted);font-size:13px;margin:4px 0 0}
+    .fd-heart{background:none;border:0;font-size:26px;color:var(--muted);padding:8px;cursor:pointer;line-height:1}
+    .fd-heart.on{color:#D4AF37}
+    .fd-hero{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+    .fd-stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 8px;text-align:center}
+    .fd-stat b{display:block;font-size:19px;color:#D4AF37;font-variant-numeric:tabular-nums}
+    .fd-stat span{font-size:11px;color:var(--muted)}
+    .fd-tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:18px}
+    .fd-tab{flex:1;background:none;border:0;padding:12px 4px;font-size:14px;font-weight:600;color:var(--muted);cursor:pointer;position:relative;font-family:inherit}
+    .fd-tab.active{color:var(--text);font-weight:700}
+    .fd-tab.active::after{content:"";position:absolute;bottom:-1px;inset-inline:22%;height:3px;background:#D4AF37;border-radius:2px}
+    .fd-pane{display:none}
+    .fd-pane.active{display:block;animation:fdUp .25s ease}
+    @keyframes fdUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    .fd-kv{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px}
+    .fd-kv>div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px}
+    .fd-kv span{display:block;font-size:11px;color:var(--muted);margin-bottom:4px}
+    .fd-kv b{font-size:14px;font-variant-numeric:tabular-nums;font-weight:600}
+    .fd-sec{font-size:15px;font-weight:700;margin:20px 0 10px;color:var(--text)}
+    .fd-rules{list-style:none;padding:0;margin:0}
+    .fd-rules li{padding:11px 13px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;font-size:13.5px;background:var(--surface);line-height:1.6}
+    .fd-planrow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;background:var(--surface)}
+    .fd-planrow .ps b{font-size:16px;font-variant-numeric:tabular-nums}
+    .fd-planrow .pm{font-size:11px;color:var(--muted);margin-top:2px}
+    .fd-planrow .pp{text-align:end;font-variant-numeric:tabular-nums;flex:0 0 auto}
+    .fd-planrow .pp b{font-size:15px}
+    .fd-planrow .pp s{display:block;font-size:11px;color:var(--muted);font-weight:400}
+    .fd-promo{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 14px;border:1px dashed rgba(212,175,55,.55);border-radius:12px;margin-bottom:8px;background:rgba(212,175,55,.06);cursor:pointer;width:100%;font-family:inherit;color:var(--text);text-align:start}
+    .fd-promo b{color:#D4AF37;font-size:16px;letter-spacing:1px}
+    .fd-promo small{color:var(--muted);font-size:11px;display:block}
+    .fd-note{font-size:12.5px;color:var(--muted);line-height:1.7}
+    .fd-cta{display:none}
+    #firm-detail.active .fd-cta{display:block;position:fixed;left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom));z-index:60}
+    #firm-detail.active .fd-cta button{width:100%;min-height:56px;border:0;border-radius:16px;background:linear-gradient(135deg,#D4AF37,#b8942a);color:#0A1628;font-size:16px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 12px 32px rgba(212,175,55,.35);font-family:inherit}
+    #firm-detail.active .fd-cta button:active{transform:scale(.98)}
+    body:has(#firm-detail.active) .bottom-nav{display:none}
+    @media(min-width:640px){
+      .fd-wrap{padding:24px 32px 0}.fd-cta-inner{max-width:720px;margin:0 auto}
+      /* desktop keeps current card design: hide PFM mobile-only elements */
+      #matcher .pfm-heart,#matcher .pfm-sub{display:none!important}
+    }
+    /* ============ END PFM CARDS + DETAIL PAGE ============ */
     
     .slot-cta{min-width:50px;min-height:32px;display:grid;place-items:center;border:1px solid var(--line-strong);border-radius:8px;color:var(--muted);font-size:10px;font-weight:800;letter-spacing:.05em;opacity:.68}.slot-cta:not([disabled]):hover{opacity:1}.slot-cta:not([disabled]):active{opacity:1;transform:scale(.96)}
     .row-chevron{color:var(--silver);transition:transform var(--micro) var(--ease-move)}
@@ -2331,6 +2393,36 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       </div>
     </section>
 
+    <!-- FIRM DETAIL PAGE (dedicated page per firm, PFM-style) -->
+    <section class="screen" id="firm-detail" aria-label="Firm details">
+      <div class="fd-wrap">
+        <button class="fd-back" type="button" data-screen="matcher"><svg width="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg><span data-fd-back>Back to matcher</span></button>
+        <header class="fd-head">
+          <span class="logo-slot fd-logo" id="fdLogo" aria-label="Firm logo">—</span>
+          <div class="fd-titlewrap">
+            <h2 id="fdName">—</h2>
+            <p id="fdSub">—</p>
+          </div>
+          <button class="pfm-heart fd-heart" id="fdHeart" type="button" aria-label="Save firm">♡</button>
+        </header>
+        <div class="fd-hero">
+          <div class="fd-stat"><b id="fdPlans">—</b><span data-fd-lbl="plans">Plans</span></div>
+          <div class="fd-stat"><b id="fdAlloc">—</b><span data-fd-lbl="alloc">Max allocation</span></div>
+          <div class="fd-stat"><b id="fdPtdd">—</b><span data-fd-lbl="ptdd">Best PT:DD</span></div>
+        </div>
+        <div class="fd-tabs" role="tablist" aria-label="Firm detail sections">
+          <button class="fd-tab active" type="button" role="tab" aria-selected="true" data-fd-tab="overview" data-fd-lbl="tOverview">Overview</button>
+          <button class="fd-tab" type="button" role="tab" aria-selected="false" data-fd-tab="challenges" data-fd-lbl="tChallenges">Challenges</button>
+          <button class="fd-tab" type="button" role="tab" aria-selected="false" data-fd-tab="payouts" data-fd-lbl="tPayouts">Payouts</button>
+        </div>
+        <div class="fd-pane active" data-fd-pane="overview" id="fdOverview" role="tabpanel"></div>
+        <div class="fd-pane" data-fd-pane="challenges" id="fdChallenges" role="tabpanel"></div>
+        <div class="fd-pane" data-fd-pane="payouts" id="fdPayouts" role="tabpanel"></div>
+        <div style="height:110px" aria-hidden="true"></div>
+      </div>
+      <div class="fd-cta"><button id="fdCopyPv" type="button"><svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg><span data-fd-lbl="copyPv">Copy PV code</span></button></div>
+    </section>
+
     <section class="screen" id="journal" aria-label="Trading journal">
       <div class="journal-command" aria-label="Journal controls">
         <button class="account-switch" id="accountSwitch" type="button" aria-haspopup="dialog" aria-controls="accountSheet"><svg width="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 9h5M7 13h3"/></svg><span>All accounts</span><svg width="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m7 10 5 5 5-5"/></svg></button>
@@ -3320,7 +3412,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       var grid=details.querySelector('.spec-grid');if(grid&&grid.after)grid.after(ul);else details.appendChild(ul);
     }
     var cta=q('.slot-cta');
-    if(cta){cta.disabled=false;cta.addEventListener('click',function(ev2){ev2.stopPropagation();card.classList.toggle('expanded');var _fe=card.querySelector('.firm-expand');if(_fe)_fe.setAttribute('aria-expanded',String(card.classList.contains('expanded')));});}
+    if(cta){cta.disabled=false;cta.addEventListener('click',function(ev2){ev2.stopPropagation();if(typeof sbOpenFirmDetail==='function')sbOpenFirmDetail(firm.id);});}
     // Shortlist button (matcher cards)
     var slBtn=card.querySelector('.firm-detail-actions .btn.secondary');
     if(slBtn){
@@ -3342,6 +3434,43 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     if(expander){
       // PIPVANT-WAVE1: card extras (promo badge, updated stamp, PT:DD, flags)
       sbWave1CardExtras(card,firm,plans,firstRules);
+      /* PFM-STYLE card extras: trophy ranks, heart, gold alloc sub, right promo/PT:DD block */
+      try{
+        var rkNum=Number(rank);
+        if(rkNum>=1&&rkNum<=3){
+          if(rankEl)rankEl.textContent=['🏆','🥈','🥉'][rkNum-1];
+          card.classList.add('pfm-top'+rkNum);
+        }
+        var topline=q('.firm-topline');
+        if(topline){
+          var heart=topline.querySelector('.pfm-heart');
+          if(!heart){
+            heart=document.createElement('button');heart.type='button';heart.className='pfm-heart';
+            heart.setAttribute('aria-label',(currentLanguage==='ar'?'حفظ ':'Save ')+firm.name);
+            topline.appendChild(heart);
+          }
+          var uh=function(){var s=sbIsShortlisted(firm.id);heart.textContent=s?'♥':'♡';heart.classList.toggle('on',s);};
+          uh();
+          heart.onclick=function(ev){if(ev)ev.stopPropagation();var n=sbToggleShortlist(firm.id);uh();if(typeof showToast==='function')showToast(n?((currentLanguage==='ar'?'تحفظات ':'Saved ')+firm.name):((currentLanguage==='ar'?'تحيدات ':'Removed ')+firm.name));};
+        }
+        var fcore=q('.firm-core');
+        var psub=q('.pfm-sub');
+        if(!psub&&fcore&&topline){psub=document.createElement('div');psub.className='pfm-sub';fcore.insertBefore(psub,topline.nextSibling);}
+        if(psub){var _mx=plans.reduce(function(m,p){var n=Number(p.account_size);return n>m?n:m;},0);psub.innerHTML=_mx?'<b>'+sbFmtSize(_mx)+'</b> <span>'+(currentLanguage==='ar'?'كحد أقصى':'max')+'</span>':'—';}
+        var dslot=q('.discount-slot');
+        var _promo=firstRules?sbBestPromo(firstRules):null;
+        var _ptdd=firstRules?sbPTDD(firstRules):null;
+        if(dslot){
+          if(_promo){
+            dslot.classList.add('promo-badge','show');
+            // sbWave1CardExtras already filled promo content
+          }else if(_ptdd){
+            dslot.classList.add('show');dslot.classList.remove('promo-badge');
+            dslot.innerHTML='<span class="ptdd-lbl">PT:DD</span><span class="ptdd-val">'+_ptdd.split(':')[1]+'</span>';
+            dslot.setAttribute('aria-label','Profit target to drawdown ratio '+_ptdd);
+          }else{dslot.classList.remove('show','promo-badge');dslot.style.display='none';}
+        }
+      }catch(_pfm){}
       /* WAVE 2b — compare toggle (⚖) on each card */
       try{
         var ct=card.querySelector('.compare-toggle');
@@ -3352,12 +3481,10 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
         ct.onclick=function(ev){ev.stopPropagation();if(typeof sbToggleCompare==='function')sbToggleCompare(firm.id);};
       }catch(_ct){}
       var toggle=function(){
-        var expanded=expander.getAttribute('aria-expanded')==='true';
-        document.querySelectorAll('#matcher .firm-card').forEach(function(o){o.classList.remove('expanded');var e=o.querySelector('.firm-expand');if(e)e.setAttribute('aria-expanded','false');});
-        if(!expanded){expander.closest('.firm-card').classList.add('expanded');expander.setAttribute('aria-expanded','true');}
+        if(typeof sbOpenFirmDetail==='function')sbOpenFirmDetail(firm.id);
       };
-      expander.addEventListener('click',function(event){if(!event.target.closest('[data-methodology-trigger]'))toggle();});
-      expander.addEventListener('keydown',function(event){if((event.key==='Enter'||event.key===' ')&&!event.target.closest('[data-methodology-trigger]')){event.preventDefault();toggle();}});
+      expander.addEventListener('click',function(event){if(!event.target.closest('[data-methodology-trigger]')&&!event.target.closest('.pfm-heart'))toggle();});
+      expander.addEventListener('keydown',function(event){if((event.key==='Enter'||event.key===' ')&&!event.target.closest('[data-methodology-trigger]')&&!event.target.closest('.pfm-heart')){event.preventDefault();toggle();}});
     }
   }
   function sbBuildTableRow(firm,plans,rank){
@@ -3375,7 +3502,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     var td5=document.createElement('td');td5.textContent=plans.length?sbPlanTarget(plans[0].rules):'—';tr.appendChild(td5);
     var td6=document.createElement('td');td6.textContent=plans.length?sbPlanDrawdown(plans[0].rules):'—';tr.appendChild(td6);
     var td7=document.createElement('td');var vb=document.createElement('button');vb.className='table-view-slot';vb.type='button';vb.textContent='VIEW';
-    vb.addEventListener('click',function(){try{var rb=document.querySelector('[data-matcher-view="rows"]');if(rb)rb.click();setTimeout(function(){var cardEl=document.querySelector('.firm-card[data-firm-id="'+firm.id+'"]');if(cardEl){var vbtn=cardEl.querySelector('.slot-cta');if(vbtn)vbtn.click();setTimeout(function(){cardEl.scrollIntoView({behavior:'smooth',block:'center'});},100);}},150);}catch(e){}});
+    vb.addEventListener('click',function(){try{if(typeof sbOpenFirmDetail==='function')sbOpenFirmDetail(firm.id);}catch(e){}});
     td7.appendChild(vb);tr.appendChild(td7);
     return tr;
   }
@@ -4280,6 +4407,169 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       }
     }catch(_sp){}
   }
+  /* ============ FIRM DETAIL PAGE (dedicated page per firm) ============ */
+  var sbDetailFirmId=null;
+  function sbBestPtdd(plans){
+    var best=null;
+    (plans||[]).forEach(function(p){var r=sbPTDD(p.rules);if(r){var v=parseFloat(String(r).split(':')[1]);if(isFinite(v)&&(best===null||v>best))best=v;}});
+    return best===null?null:'1:'+(Math.round(best*100)/100);
+  }
+  function sbDdExplain(t,ar){
+    var s=String(t||'').toLowerCase();
+    if(s.indexOf('trailing')!==-1)return ar?'متحرك — يتبع أعلى رصيد وصلته':'Trailing — follows your peak balance';
+    if(s.indexOf('static')!==-1)return ar?'ثابت — محسوب من الرصيد الأولي':'Static — measured from starting balance';
+    return t||'—';
+  }
+  function sbFillFdOverview(firm,plans,ar){
+    var el=document.getElementById('fdOverview');if(!el)return;el.innerHTML='';
+    var rules=plans.length?plans[0].rules:null;
+    function sec(t){var h=document.createElement('div');h.className='fd-sec';h.textContent=t;el.appendChild(h);}
+    // key facts grid
+    var kv=document.createElement('div');kv.className='fd-kv';
+    function item(l,v){var d=document.createElement('div');var s=document.createElement('span');s.textContent=l;var b=document.createElement('b');b.textContent=v||'—';d.appendChild(s);d.appendChild(b);kv.appendChild(d);}
+    item(ar?'نوع التراجع':'Drawdown type',rules?sbDdExplain(rules.drawdown_type,ar):null);
+    item(ar?'نموذج التسعير':'Pricing model',rules?(rules.pricing_model==='monthly subscription'?(ar?'اشتراك شهري':'Monthly sub'):(ar?'دفعة واحدة':'One-time')):null);
+    item(ar?'الرافعة':'Leverage',rules?rules.leverage:null);
+    item(ar?'المقر':'Headquarters',(sbCountryFlag(firm.headquarters)?sbCountryFlag(firm.headquarters)+' ':'')+(firm.headquarters||null));
+    el.appendChild(kv);
+    // key rules
+    var kr=rules&&Array.isArray(rules.key_rules)?rules.key_rules:[];
+    if(kr.length){
+      sec(ar?'القواعد الأساسية':'Key rules');
+      var ul=document.createElement('ul');ul.className='fd-rules';
+      kr.slice(0,6).forEach(function(k){var li=document.createElement('li');li.textContent=k;ul.appendChild(li);});
+      el.appendChild(ul);
+    }
+    // restricted countries
+    if(firm.countries_restricted){
+      var rc=String(firm.countries_restricted).split(/[,;]/).map(function(s){return s.trim();}).filter(Boolean);
+      if(rc.length){
+        sec(ar?'الدول المحظورة':'Restricted countries');
+        var p=document.createElement('p');p.className='fd-note';p.textContent=rc.join(' · ');
+        el.appendChild(p);
+      }
+    }
+    // source
+    sec(ar?'المصدر':'Source');
+    var ps=document.createElement('p');ps.className='fd-note';
+    var a=document.createElement('a');var href=firm.source||firm.website||'#';a.href=/^https?:\/\//i.test(href)?href:'#';a.target='_blank';a.rel='noopener';a.style.color='var(--accent)';a.textContent=sbDomain(firm.source||firm.website);
+    ps.appendChild(a);
+    ps.appendChild(document.createTextNode(' · '+(ar?'تم التحقق ':'Verified ')+sbFmtDate(firm.last_verified_at||firm.updated_at)));
+    el.appendChild(ps);
+  }
+  function sbFillFdChallenges(firm,plans,ar){
+    var el=document.getElementById('fdChallenges');if(!el)return;el.innerHTML='';
+    if(!plans.length){el.innerHTML='<p class="fd-note">—</p>';return;}
+    plans.forEach(function(p){
+      var r=p.rules||{};
+      var row=document.createElement('div');row.className='fd-planrow';
+      var left=document.createElement('div');left.className='ps';
+      var b=document.createElement('b');var sz=sbNum(p.account_size);b.textContent=isFinite(sz)?sbFmtSize(sz):'—';left.appendChild(b);
+      var m=document.createElement('div');m.className='pm';
+      var parts=[];
+      parts.push((ar?'الهدف ':'Target ')+(sbPlanTarget(r)||'—'));
+      parts.push((ar?'التراجع ':'DD ')+(sbPlanDrawdown(r)||'—'));
+      if(r.profit_split!=null&&isFinite(Number(r.profit_split)))parts.push(r.profit_split+'% '+(ar?'تقسيم':'split'));
+      var ptdd=sbPTDD(r);if(ptdd)parts.push('PT:DD '+ptdd);
+      m.textContent=parts.join(' · ');left.appendChild(m);
+      var pr=document.createElement('div');pr.className='pp';
+      var dp=sbDiscountedPrice(p);
+      if(dp.final!=null){
+        var bb=document.createElement('b');bb.textContent=sbFmtUSD(dp.final);pr.appendChild(bb);
+        if(dp.pct>0){var s=document.createElement('s');s.textContent=sbFmtUSD(dp.base);pr.appendChild(s);}
+      }else{var b2=document.createElement('b');b2.textContent='—';pr.appendChild(b2);}
+      row.appendChild(left);row.appendChild(pr);
+      el.appendChild(row);
+    });
+  }
+  function sbFillFdPayouts(firm,plans,ar){
+    var el=document.getElementById('fdPayouts');if(!el)return;el.innerHTML='';
+    var rules=plans.length?plans[0].rules:null;
+    var kv=document.createElement('div');kv.className='fd-kv';
+    function item(l,v){var d=document.createElement('div');var s=document.createElement('span');s.textContent=l;var b=document.createElement('b');b.textContent=v||'—';d.appendChild(s);d.appendChild(b);kv.appendChild(d);}
+    item(ar?'تقسيم الأرباح':'Profit split',(rules&&rules.profit_split!=null&&isFinite(Number(rules.profit_split)))?rules.profit_split+'%':null);
+    item(ar?'تكرار الدفع':'Payout frequency',rules?rules.payout_frequency:null);
+    el.appendChild(kv);
+    var kr=rules&&Array.isArray(rules.key_rules)?rules.key_rules:[];
+    var prel=kr.filter(function(k){return /payout|consist|withdraw|scaling/i.test(k);});
+    if(prel.length){
+      var h=document.createElement('div');h.className='fd-sec';h.textContent=ar?'قواعد الدفع':'Payout rules';el.appendChild(h);
+      var ul=document.createElement('ul');ul.className='fd-rules';
+      prel.slice(0,5).forEach(function(k){var li=document.createElement('li');li.textContent=k;ul.appendChild(li);});
+      el.appendChild(ul);
+    }
+    var promos=[];
+    plans.forEach(function(p){var pr2=p.rules?sbBestPromo(p.rules):null;if(pr2)promos.push(pr2);});
+    if(promos.length){
+      var hp=document.createElement('div');hp.className='fd-sec';hp.textContent=ar?'العروض':'Promotions';el.appendChild(hp);
+      promos.slice(0,4).forEach(function(pr2){
+        var line=document.createElement('button');line.type='button';line.className='fd-promo';
+        var code=document.createElement('b');code.textContent=pr2.code||'PV';
+        var meta=document.createElement('small');meta.textContent=(pr2.discount||'')+(pr2.expiry?(' · '+(ar?'ينتهي ':'ends ')+sbFmtDate(pr2.expiry)):'');
+        var wrap=document.createElement('span');wrap.appendChild(code);wrap.appendChild(meta);
+        var cp=document.createElement('span');cp.style.cssText='color:var(--muted);font-size:11px';cp.textContent=ar?'انسخ':'Copy';
+        line.appendChild(wrap);line.appendChild(cp);
+        line.addEventListener('click',function(){try{if(navigator.clipboard)navigator.clipboard.writeText(pr2.code||'PV');if(typeof showToast==='function')showToast(ar?'تم نسخ الكود':'Code copied');}catch(e){}});
+        el.appendChild(line);
+      });
+    }
+    if(!prel.length&&!promos.length){
+      el.innerHTML+='<p class="fd-note">'+(ar?'لا توجد بيانات دفع إضافية.':'No additional payout data.')+'</p>';
+    }
+  }
+  function sbOpenFirmDetail(firmId){
+    var firm=null;(sbFirms||[]).forEach(function(f){if(String(f.id)===String(firmId))firm=f;});
+    if(!firm||typeof showScreen!=='function')return;
+    sbDetailFirmId=firm.id;
+    var plans=sbPlansByFirm[firm.id]||[];
+    var ar=currentLanguage==='ar';
+    try{
+      var logo=document.getElementById('fdLogo');if(logo)sbFirmLogo(logo,firm);
+      var nm=document.getElementById('fdName');if(nm)nm.textContent=firm.name;
+      var sub=document.getElementById('fdSub');
+      if(sub){var fl=sbCountryFlag(firm.headquarters);sub.textContent=(fl?fl+' ':'')+(firm.headquarters||'—')+' · '+(ar?'تم التحقق ':'Verified ')+sbFmtDate(firm.last_verified_at||firm.updated_at);}
+      var pl=document.getElementById('fdPlans');if(pl)pl.textContent=plans.length||'—';
+      var mx=plans.reduce(function(m,p){var n=Number(p.account_size);return n>m?n:m;},0);
+      var al=document.getElementById('fdAlloc');if(al)al.textContent=mx?sbFmtSize(mx):'—';
+      var pt=document.getElementById('fdPtdd');if(pt)pt.textContent=sbBestPtdd(plans)||'—';
+      var heart=document.getElementById('fdHeart');
+      if(heart){
+        var uh=function(){var s=sbIsShortlisted(firm.id);heart.textContent=s?'♥':'♡';heart.classList.toggle('on',s);};
+        uh();
+        heart.onclick=function(ev){if(ev)ev.stopPropagation();var n=sbToggleShortlist(firm.id);uh();if(typeof showToast==='function')showToast(n?((ar?'تحفظات ':'Saved ')+firm.name):((ar?'تحيدات ':'Removed ')+firm.name));if(typeof sbRenderFirms==='function')try{sbRenderFirms();}catch(e){}};
+      }
+      var L={back:ar?'رجوع للمطابق':'Back to matcher',plans:ar?'الخطط':'Plans',alloc:ar?'أقصى تخصيص':'Max allocation',ptdd:ar?'أفضل PT:DD':'Best PT:DD',tO:ar?'نظرة عامة':'Overview',tC:ar?'التحديات':'Challenges',tP:ar?'الدفعات':'Payouts',copy:ar?'نسخ كود PV':'Copy PV code'};
+      document.querySelectorAll('#firm-detail [data-fd-lbl]').forEach(function(elm){
+        var k=elm.getAttribute('data-fd-lbl');
+        var map={back:'back',plans:'plans',alloc:'alloc',ptdd:'ptdd',tOverview:'tO',tChallenges:'tC',tPayouts:'tP',copyPv:'copy'};
+        if(map[k]&&L[map[k]])elm.textContent=L[map[k]];
+      });
+      sbFillFdOverview(firm,plans,ar);
+      sbFillFdChallenges(firm,plans,ar);
+      sbFillFdPayouts(firm,plans,ar);
+      document.querySelectorAll('#firm-detail .fd-tab').forEach(function(t){
+        var on=t.getAttribute('data-fd-tab')==='overview';
+        t.classList.toggle('active',on);t.setAttribute('aria-selected',String(on));
+      });
+      document.querySelectorAll('#firm-detail .fd-pane').forEach(function(p){
+        p.classList.toggle('active',p.getAttribute('data-fd-pane')==='overview');
+      });
+      var cp=document.getElementById('fdCopyPv');
+      if(cp)cp.onclick=function(){try{if(navigator.clipboard)navigator.clipboard.writeText('PV');if(typeof showToast==='function')showToast(ar?'تم نسخ PV':'PV copied');}catch(e){}};
+    }catch(e){}
+    showScreen('firm-detail');
+  }
+  // detail page tabs (wired once)
+  try{
+    document.querySelectorAll('#firm-detail .fd-tab').forEach(function(t){
+      t.addEventListener('click',function(){
+        var k=t.getAttribute('data-fd-tab');
+        document.querySelectorAll('#firm-detail .fd-tab').forEach(function(o){var on=o===t;o.classList.toggle('active',on);o.setAttribute('aria-selected',String(on));});
+        document.querySelectorAll('#firm-detail .fd-pane').forEach(function(p){p.classList.toggle('active',p.getAttribute('data-fd-pane')===k);});
+      });
+    });
+  }catch(e){}
+  /* ============ END FIRM DETAIL PAGE ============ */
   // Mega-audit H26/H27 fix: translate raw Supabase/English error strings into
   // friendly bilingual messages (was shown verbatim, untranslated).
   function sbFriendlyError(msg){
@@ -4860,8 +5150,8 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     sbFillDetailSheet(card.getAttribute('data-firm-id'));
   });
   /* ================= /Supabase data layer ================= */
-  var titlesEn={landing:['Toolkit','Trade with a process'],matcher:['Tool 01','Prop firm matcher'],'all-firms':['Matcher','All firms'],journal:['Tool 02','Trading journal'],calculator:['Tool 03','Risk calculator'],calendar:['Tool 04','Economic Calendar'],lab:['Tool 05','Pro Lab'],discipline:['Parked','Discipline'],'discipline-soon':['Next version','Discipline'],notifications:['Inbox','Notifications'],profile:['Account','Profile'],settings:['Account','Settings'],certificate:['Account','Certificates'],methodology:['PIPVANT','Methodology'],support:['PIPVANT','Support'],about:['PIPVANT','About'],contact:['PIPVANT','Contact']};
-  var titlesAr={landing:['الأدوات','تداول وفق منهج'],matcher:['الأداة 01','مطابق شركات التداول'],'all-firms':['المطابق','جميع الشركات'],journal:['الأداة 02','سجل التداول'],calculator:['الأداة 03','حاسبة المخاطر'],calendar:['الأداة 04','التقويم الاقتصادي'],lab:['الأداة 05','مختبر المحترفين'],discipline:['متوقف مؤقتاً','الانضباط'],'discipline-soon':['الإصدار القادم','الانضباط'],notifications:['الوارد','الإشعارات'],profile:['الحساب','الملف الشخصي'],settings:['الحساب','الإعدادات'],certificate:['الحساب','الشهادات'],methodology:['PIPVANT','المنهجية'],support:['PIPVANT','الدعم'],about:['PIPVANT','حول'],contact:['PIPVANT','تواصل']};
+  var titlesEn={landing:['Toolkit','Trade with a process'],matcher:['Tool 01','Prop firm matcher'],'all-firms':['Matcher','All firms'],journal:['Tool 02','Trading journal'],calculator:['Tool 03','Risk calculator'],calendar:['Tool 04','Economic Calendar'],lab:['Tool 05','Pro Lab'],discipline:['Parked','Discipline'],'discipline-soon':['Next version','Discipline'],notifications:['Inbox','Notifications'],profile:['Account','Profile'],settings:['Account','Settings'],certificate:['Account','Certificates'],methodology:['PIPVANT','Methodology'],support:['PIPVANT','Support'],about:['PIPVANT','About'],contact:['PIPVANT','Contact'],'firm-detail':['Matcher','Firm details']};
+  var titlesAr={landing:['الأدوات','تداول وفق منهج'],matcher:['الأداة 01','مطابق شركات التداول'],'all-firms':['المطابق','جميع الشركات'],journal:['الأداة 02','سجل التداول'],calculator:['الأداة 03','حاسبة المخاطر'],calendar:['الأداة 04','التقويم الاقتصادي'],lab:['الأداة 05','مختبر المحترفين'],discipline:['متوقف مؤقتاً','الانضباط'],'discipline-soon':['الإصدار القادم','الانضباط'],notifications:['الوارد','الإشعارات'],profile:['الحساب','الملف الشخصي'],settings:['الحساب','الإعدادات'],certificate:['الحساب','الشهادات'],methodology:['PIPVANT','المنهجية'],support:['PIPVANT','الدعم'],about:['PIPVANT','حول'],contact:['PIPVANT','تواصل'],'firm-detail':['المطابق','تفاصيل الشركة']};
   var ar={
     'Soon':'قريباً','Discipline is coming soon.':'الانضباط قادم قريباً.','Launching in the next version.':'سينطلق في الإصدار القادم.','Trade with PIPVANT.':'تداول مع PIPVANT.','A focused toolkit for comparing rules, sizing risk, reviewing trades, and protecting your process.':'مجموعة أدوات مركزة لمقارنة القواعد وحساب المخاطر ومراجعة الصفقات وحماية منهجك.','Get started':'ابدأ','Log in':'تسجيل الدخول','Create your account':'أنشئ حسابك','Start with the essentials.':'ابدأ بالأساسيات.','Create secure access to the complete PIPVANT toolkit.':'أنشئ وصولاً آمناً إلى مجموعة أدوات PIPVANT الكاملة.','Name':'الاسم','Email':'البريد الإلكتروني','Password':'كلمة المرور','Forgot password?':'نسيت كلمة المرور؟','Create account':'إنشاء حساب','New to PIPVANT?':'جديد في PIPVANT؟','Your credentials protect access to your workspace.':'بيانات الدخول تحمي الوصول إلى مساحة عملك.','Account recovery':'استرداد الحساب','Reset your password':'إعادة تعيين كلمة المرور','Enter the email linked to your account.':'أدخل البريد الإلكتروني المرتبط بحسابك.','Send reset link':'إرسال رابط الاستعادة','Reset link sent':'تم إرسال رابط الاستعادة','Check your inbox':'تحقق من بريدك','We sent a reset link to':'أرسلنا رابط الاستعادة إلى','Resend link':'إعادة الإرسال','Back to log in':'العودة لتسجيل الدخول','Reset links expire after 1 hour for account security.':'تنتهي صلاحية رابط الاستعادة بعد ساعة واحدة لحماية الحساب.','Profile setup':'إعداد الملف الشخصي','How should we show your name?':'كيف تريد أن يظهر اسمك؟','This name will appear across your workspace and reports.':'سيظهر هذا الاسم في مساحة عملك وتقاريرك.','Display name':'الاسم المعروض','Continue to Matcher':'المتابعة إلى المطابق','View profile':'عرض الملف الشخصي','Matcher':'المطابق','Journal':'السجل','Risk':'المخاطر','Discipline':'الانضباط','Profile':'الملف الشخصي','Trading score':'تقييم التداول','Current streak':'السلسلة الحالية','trading days':'أيام تداول','Methodology':'المنهجية','Settings':'الإعدادات','Support':'الدعم','Log out':'تسجيل الخروج','Toolkit':'الأدوات','Trade with a process':'تداول وفق منهج','Notifications':'الإشعارات','— NEW':'— جديد','No pending notifications':'لا توجد إشعارات معلقة','Account and tool alerts will appear here.':'ستظهر تنبيهات الحساب والأدوات هنا.','View all notifications':'عرض كل الإشعارات',
     'A focused trading toolkit':'مجموعة أدوات تداول مركزة','Find your fit. Size your risk.':'اعثر على الأنسب. احسب مخاطرتك.','Compare prop-firm rules clearly and calculate position risk without the noise. Built for process, not predictions.':'قارن قواعد شركات التداول بوضوح واحسب مخاطر الصفقة دون تشويش. صُممت للمنهج لا للتوقعات.','Open matcher':'فتح المطابق','Calculate risk':'حساب المخاطر','verified firms':'شركات موثقة','trades logged':'صفقات مسجلة','rules tracked':'قواعد متتبعة','data freshness':'حداثة البيانات','Quick risk check':'فحص سريع للمخاطر','LIVE CALCULATION':'حساب مباشر','Account balance':'رصيد الحساب','Stop distance':'مسافة الإيقاف','Value per point':'قيمة النقطة','Amount at risk':'المبلغ المعرض للمخاطر','Based on balance':'بناءً على الرصيد','Position size':'حجم الصفقة','Units / contracts':'وحدات / عقود','Enter all four values to calculate.':'أدخل القيم الأربع للحساب.','The problem':'المشكلة','Trading tools are fragmented.':'أدوات التداول مشتتة.','Core decisions are often split across promotional lists, disconnected calculators, and notes with no shared process.':'تتوزع القرارات الأساسية غالباً بين قوائم ترويجية وحاسبات منفصلة وملاحظات بلا منهج موحد.','Incomplete firm due diligence':'تحقق غير مكتمل من الشركات','Critical rules are difficult to compare when each source uses a different structure and standard.':'يصعب مقارنة القواعد المهمة حين يستخدم كل مصدر بنية ومعياراً مختلفين.','Fragmented workflows':'سير عمل مشتت','Research, risk sizing, journaling, and review operate across disconnected tools and records.':'يعمل البحث وحساب المخاطر والتسجيل والمراجعة عبر أدوات وسجلات منفصلة.','Opaque ranking criteria':'معايير ترتيب غير واضحة','A ranking without disclosed criteria cannot establish why one firm is a stronger fit than another.':'الترتيب دون معايير معلنة لا يوضح لماذا تناسبك شركة أكثر من أخرى.','Built for clarity':'مصمم للوضوح','A unified workflow for core decisions.':'سير عمل موحد للقرارات الأساسية.','Each tool has a defined purpose, with transparent inputs and outputs that remain unavailable until the underlying data is verified.':'لكل أداة غرض محدد ومدخلات ونتائج شفافة تبقى غير متاحة حتى يتم التحقق من بياناتها.','Compare rules in one scan':'قارن القواعد بنظرة واحدة','Filter firm constraints by the details you care about, then inspect the method behind the order.':'صفِّ قيود الشركات حسب ما يهمك ثم راجع المنهج وراء الترتيب.','Size risk precisely':'احسب المخاطر بدقة','Turn your own inputs into a transparent position-size calculation.':'حوّل مدخلاتك إلى حساب واضح لحجم الصفقة.','Review real records':'راجع سجلات حقيقية','Journal output stays grounded in trades you enter, not sample performance.':'تبقى نتائج السجل مبنية على صفقاتك الفعلية لا على أداء افتراضي.','Monitor process adherence':'راقب الالتزام بالمنهج','Review checklist completion and weekly process notes without performance incentives or gamification.':'راجع اكتمال القائمة والملاحظات الأسبوعية دون تحفيز أدائي أو تلعيب.','The toolkit':'مجموعة الأدوات','Five tools. One process.':'خمس أدوات. منهج واحد.','Independent utilities that support how you prepare, execute, and review.':'أدوات مستقلة تدعم التحضير والتنفيذ والمراجعة.','Filter prop firms by the rules and constraints that matter to you.':'صفِّ شركات التداول حسب القواعد والقيود المهمة لك.','Explore matcher →':'استكشف المطابق ←','Review your execution with clean records and meaningful context.':'راجع تنفيذك بسجلات واضحة وسياق مفيد.','Open journal →':'افتح السجل ←','Risk calculator':'حاسبة المخاطر','Turn account risk and stop distance into an exact position size.':'حوّل مخاطرة الحساب ومسافة الإيقاف إلى حجم صفقة دقيق.','Open calculator →':'افتح الحاسبة ←','Keep rules visible and review consistency without gamification.':'أبقِ القواعد واضحة وراجع الاستمرارية دون تلعيب.','Open discipline →':'افتح الانضباط ←','How it works':'كيف تعمل','Compare. Calculate. Track.':'قارن. احسب. تتبع.','A short path from understanding the constraints to reviewing your own execution.':'مسار قصير من فهم القيود إلى مراجعة تنفيذك.','Compare':'قارن','Set your priorities and inspect verified prop-firm rules with the ranking method in view.':'حدد أولوياتك وافحص قواعد الشركات الموثقة مع إظهار منهج الترتيب.','Calculate':'احسب','Enter your balance, risk, stop distance, and point value to size the position.':'أدخل الرصيد والمخاطرة ومسافة الإيقاف وقيمة النقطة لحساب حجم الصفقة.','Track':'تتبع','Log the trade, review the record, and keep the process visible for the next decision.':'سجل الصفقة وراجعها وأبقِ المنهج واضحاً للقرار التالي.','Built on restraint':'مبني على الانضباط','What the product will not do.':'ما لن يفعله المنتج.','No signals':'لا إشارات','Tools support decisions. They do not tell traders what to buy or sell.':'الأدوات تدعم القرار ولا تخبر المتداول بما يشتري أو يبيع.','No profit promises':'لا وعود بالأرباح','Calculations and comparisons stay factual, with no outcome guarantees.':'تبقى الحسابات والمقارنات واقعية دون ضمان نتائج.','No hidden scoring':'لا تقييم مخفي','Matcher results will show the criteria and methodology behind each fit.':'ستعرض نتائج المطابق المعايير والمنهج وراء كل تطابق.','Questions':'أسئلة','Know exactly what each tool does.':'اعرف بدقة ما تفعله كل أداة.','Does Matcher recommend a firm?':'هل يوصي المطابق بشركة؟','No. Matcher compares verified rules against filters you choose and shows the criteria behind the order. The final decision stays yours.':'لا. يقارن المطابق القواعد الموثقة بمرشحاتك ويعرض معايير الترتيب. القرار النهائي لك.','Where do firm rules and prices come from?':'من أين تأتي قواعد الشركات وأسعارها؟','Firm information is displayed only after its source and review date have been verified. Unverified counts and results remain unavailable.':'تُعرض معلومات الشركة فقط بعد التحقق من المصدر وتاريخ المراجعة. تبقى النتائج غير الموثقة غير متاحة.','Is the risk calculator a recommendation?':'هل حاسبة المخاطر توصية؟','No. It applies arithmetic to the balance, risk percentage, stop distance, and point value you enter. You choose and verify every input.':'لا. تطبق الحساب على الرصيد ونسبة المخاطرة ومسافة الإيقاف وقيمة النقطة التي تدخلها. أنت تختار وتتحقق من كل مدخل.','What appears in the Journal?':'ماذا يظهر في السجل؟','Only records you log. Statistics and the equity curve remain blank until actual trade entries exist.':'فقط السجلات التي تدخلها. تبقى الإحصاءات ومنحنى الرصيد فارغة حتى توجد صفقات فعلية.','Does Discipline score my trading?':'هل يقيّم الانضباط تداولي؟','No. It keeps a daily checklist and weekly review prompts visible without gamification or performance promises.':'لا. يعرض قائمة يومية وأسئلة مراجعة أسبوعية دون تلعيب أو وعود بالأداء.','Structured execution':'تنفيذ منظم','Bring the process into one place.':'اجمع المنهج في مكان واحد.','Begin with verified firm criteria or calculate risk from your own inputs.':'ابدأ بمعايير شركات موثقة أو احسب المخاطر من مدخلاتك.','Open Matcher':'فتح المطابق','PIPVANT by Orovanta · Trading tools only':'PIPVANT من Orovanta · أدوات تداول فقط',
