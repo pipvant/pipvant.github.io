@@ -4806,15 +4806,14 @@
     if(hasPersonalWelcome){
       all=all.filter(function(x){return !(x.scope==='everyone'&&x.title==='Welcome to PIPVANT');});
     }
-    // Bugfix: dedupe multiple welcomes with same title (keep newest only).
-    var _seenWelcome=false;
-    all=all.filter(function(x){
-      if(x.title==='Welcome to PIPVANT'){
-        if(_seenWelcome)return false;
-        _seenWelcome=true;
-      }
-      return true;
-    });
+    // Bugfix: dedupe multiple welcomes with same title (keep OLDEST = original from account creation).
+    var _welcomes=all.filter(function(x){return x.title==='Welcome to PIPVANT';});
+    if(_welcomes.length>1){
+      // Sort by ts/created_at ascending, keep first (oldest)
+      _welcomes.sort(function(a,b){return (a.ts||0)-(b.ts||0);});
+      var _keepId=_welcomes[0].id;
+      all=all.filter(function(x){return x.title!=='Welcome to PIPVANT'||x.id===_keepId;});
+    }
     // filter by tab
     if(activeNTab!=='all')all=all.filter(function(x){return x.scope===activeNTab;});
     // H3-notif fix: apply search filter (was dead input).
