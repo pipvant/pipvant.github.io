@@ -1405,6 +1405,46 @@
 .promo-line{display:flex;justify-content:space-between;align-items:center;background:rgba(212,175,55,.1);border:1px dashed rgba(212,175,55,.5);border-radius:10px;padding:10px 14px;margin-bottom:8px;font-size:13px}
 .promo-line b{color:var(--gold,#D4AF37);font-size:16px;letter-spacing:2px}
 .promo-line small{color:var(--muted)}
+/* WAVE 3/4 — Pro Lab: one cohesive system */
+.lab-tool{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:30px;margin:0 0 26px}
+.lab-tool-head{margin-bottom:24px}
+.lab-tool-head .eyebrow{color:var(--gold,#D4AF37);font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px}
+.lab-tool-head h3{font-size:22px;color:var(--text);margin-bottom:6px;font-weight:700}
+.lab-tool-head .helper{color:var(--muted);font-size:14px;max-width:640px}
+.lab-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:26px;align-items:start}
+@media(max-width:860px){.lab-grid{grid-template-columns:1fr}}
+.lab-inputs{display:grid;gap:16px}
+.lab-results{background:var(--sunken);border:1px solid var(--line);border-radius:16px;padding:24px}
+.lab-hero{margin-bottom:18px}
+.lab-hero strong{font-size:44px;font-variant-numeric:tabular-nums}
+.radar-list{display:grid;gap:10px}
+.radar-row{display:flex;align-items:center;gap:14px;padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:var(--sunken)}
+.radar-dot{flex:0 0 12px;width:12px;height:12px;border-radius:50%}
+.radar-dot.fresh{background:var(--green,#1d9d63);box-shadow:0 0 8px rgba(29,157,99,.6)}
+.radar-dot.stale{background:var(--red,#d64545);box-shadow:0 0 8px rgba(214,69,69,.6)}
+.radar-name{font-weight:700;color:var(--text);flex:1}
+.radar-meta{font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.radar-status{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;border-radius:10px;padding:4px 12px}
+.radar-status.fresh{background:rgba(29,157,99,.14);color:var(--green,#1d9d63)}
+.radar-status.stale{background:rgba(214,69,69,.14);color:var(--red,#d64545)}
+/* WAVE 4 — Breach guard + DNA quiz + payout board */
+.breach-gauge{height:14px;border-radius:8px;background:var(--sunken);border:1px solid var(--line);overflow:hidden;margin:8px 0 4px}
+.breach-fill{height:100%;border-radius:8px;transition:width .4s ease,background .4s ease}
+.breach-ok{background:var(--green,#1d9d63)}.breach-warn{background:#e8a13c}.breach-stop{background:var(--red,#d64545)}
+.breach-msg{font-weight:800;font-size:16px;margin-top:10px}
+.dna-q{margin-bottom:20px}
+.dna-q p{font-weight:700;color:var(--text);margin-bottom:10px;font-size:15px}
+.dna-opts{display:flex;flex-wrap:wrap;gap:8px}
+.dna-opt{border:1px solid var(--line-strong);background:var(--surface);color:var(--text);border-radius:12px;padding:10px 18px;font-size:13.5px;font-weight:600;cursor:pointer;transition:all .15s}
+.dna-opt[aria-pressed="true"]{background:var(--navy,#0A1628);border-color:var(--gold,#D4AF37);color:var(--gold,#D4AF37)}
+.dna-result{display:flex;gap:14px;align-items:center;padding:14px;border:1px solid var(--line);border-radius:12px;margin-bottom:10px;background:var(--sunken)}
+.dna-score{flex:0 0 54px;width:54px;height:54px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:17px;border:2px solid var(--gold,#D4AF37);color:var(--gold,#D4AF37);font-variant-numeric:tabular-nums}
+.dna-why{font-size:13px;color:var(--muted)}
+.payout-table{width:100%;border-collapse:collapse;font-size:13px}
+.payout-table th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:10px 12px;border-bottom:1px solid var(--line)}
+.payout-table td{padding:12px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums;color:var(--secondary)}
+.payout-table td:first-child{font-weight:700;color:var(--text);font-family:"Space Grotesk",sans-serif}
+.payout-table .p-split{color:var(--gold,#D4AF37);font-weight:800}
 </style>
 <div id="siteLanding" aria-label="PIPVANT landing page">
   <div class="lp-grain" aria-hidden="true"></div>
@@ -1650,6 +1690,7 @@
       <button class="rail-btn" data-screen="journal" type="button" title="Journal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6M9 11h6M9 15h3"/></svg><span>Journal</span></button>
       <button class="rail-btn" data-screen="calculator" type="button" title="Risk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h2m4 0h2M8 15h2m4 0h2"/></svg><span>Risk</span></button>
       <button class="rail-btn" data-screen="calendar" type="button" title="Calendar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16M8 14h3M14 14h2M8 17h2"/></svg><span>Calendar</span></button>
+      <button class="rail-btn" data-screen="lab" type="button" title="Pro Lab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 3h6M10 3v6l-5.5 9.5A2 2 0 0 0 6.2 21h11.6a2 2 0 0 0 1.7-2.5L14 9V3"/><path d="M7.5 15h9"/></svg><span>Lab</span></button>
       <button class="rail-btn" data-screen="profile" type="button" title="Profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 20c.5-4 2.7-6 6.5-6s6 2 6.5 6"/></svg><span>Profile</span></button>
       <button class="rail-btn" data-screen="certificate" type="button" title="Certificates"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="9" r="5"/><path d="m9 13-1 8 4-2 4 2-1-8M10 9l1.3 1.3L14 7.6"/></svg><span>Certificates</span></button>
       <button class="rail-btn nav-coming-soon" data-screen="discipline-soon" type="button" title="Discipline — Soon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="8"/><path d="m8.5 12 2.2 2.2 4.8-5"/></svg><span>Discipline</span><small class="nav-soon-badge">Soon</small></button>
@@ -2013,6 +2054,75 @@
         </div>
       </div>
       <footer class="desktop-footer"><span>Live arithmetic only — verify symbol specifications before placing a trade.</span><span class="footer-links"><a href="#" data-nav="about">About</a> · <a href="#" data-nav="methodology">Methodology</a> · <a href="#" data-nav="support">Support</a> · <a href="#" data-nav="contact">Contact</a></span></footer>
+    </section>
+
+    <section class="screen" id="lab" aria-label="Pro Lab">
+      <div class="screen-intro">
+        <div><p class="eyebrow">Pro Lab</p><h2 id="lab-title">Tools nobody else has</h2>
+        <p class="screen-lede">Honest calculators built on verified firm data. Every number is computed live — nothing invented, nothing hidden.</p></div>
+      </div>
+
+      <!-- WAVE 3a — True Cost Calculator -->
+      <section class="lab-tool" aria-labelledby="tc-title">
+        <div class="lab-tool-head"><div><p class="eyebrow">Calculator 01</p><h3 id="tc-title">True Cost Calculator</h3>
+        <p class="helper">The sticker price lies. Commissions, resets and fees are the real price of a funded account.</p></div></div>
+        <div class="lab-grid">
+          <div class="lab-inputs">
+            <div class="risk-field"><label for="tcFirm">Firm</label><select id="tcFirm" class="full-calc-input"></select></div>
+            <div class="risk-field"><label for="tcPlan">Plan / account size</label><select id="tcPlan" class="full-calc-input"></select></div>
+            <div class="risk-field"><label for="tcComm">Commission per round-trip ($)</label><input id="tcComm" class="full-calc-input" type="number" min="0" step="0.5" value="7"></div>
+            <div class="risk-field"><label for="tcTrades">Expected trades to pass</label><input id="tcTrades" class="full-calc-input" type="number" min="1" step="1" value="60"></div>
+            <div class="risk-field"><label for="tcReset">Reset probability (%)</label><input id="tcReset" class="full-calc-input" type="number" min="0" max="100" step="1" value="30"><p class="helper">Estimate: chance you blow the challenge and pay again.</p></div>
+          </div>
+          <div class="lab-results">
+            <div class="position-hero lab-hero"><label>TRUE COST</label><strong id="tcHero">—</strong><small id="tcHeroSub">select a plan</small></div>
+            <div class="risk-metrics">
+              <div class="risk-metric"><span>Sticker price</span><strong id="tcSticker">—</strong></div>
+              <div class="risk-metric"><span>Commissions</span><strong id="tcCommOut">—</strong></div>
+              <div class="risk-metric"><span>Expected resets</span><strong id="tcResetOut">—</strong></div>
+              <div class="risk-metric"><span>Cost per $1K funded</span><strong id="tcPerK">—</strong></div>
+            </div>
+            <p class="risk-method">Method: price + (commission × trades) + (price × reset probability). Commissions, trade count and reset chance are your estimates.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- WAVE 3b — Challenge Simulator -->
+      <section class="lab-tool" aria-labelledby="sim-title">
+        <div class="lab-tool-head"><div><p class="eyebrow">Simulator 02</p><h3 id="sim-title">واش غتدوز التحدي؟ — Pass Simulator</h3>
+        <p class="helper">2,000 Monte Carlo runs of your stats against real firm rules. Pure math — can <em>you</em> pass?</p></div></div>
+        <div class="lab-grid">
+          <div class="lab-inputs">
+            <div class="risk-field"><label for="simFirm">Firm</label><select id="simFirm" class="full-calc-input"></select></div>
+            <div class="risk-field"><label for="simPlan">Plan / account size</label><select id="simPlan" class="full-calc-input"></select></div>
+            <div class="risk-field"><label for="simWin">Win rate (%)</label><input id="simWin" class="full-calc-input" type="number" min="1" max="99" step="1" value="45"></div>
+            <div class="risk-field"><label for="simWinR">Avg win (R)</label><input id="simWinR" class="full-calc-input" type="number" min="0.1" step="0.1" value="1.5"></div>
+            <div class="risk-field"><label for="simLossR">Avg loss (R)</label><input id="simLossR" class="full-calc-input" type="number" min="0.1" step="0.1" value="1"></div>
+            <div class="risk-field"><label for="simRisk">Risk per trade (% of account)</label><input id="simRisk" class="full-calc-input" type="number" min="0.1" max="10" step="0.1" value="1"></div>
+            <div class="risk-field"><label for="simTPD">Trades per day</label><input id="simTPD" class="full-calc-input" type="number" min="1" max="20" step="1" value="3"></div>
+            <div class="risk-field"><label for="simDays">Trading days</label><input id="simDays" class="full-calc-input" type="number" min="5" max="90" step="1" value="30"></div>
+          </div>
+          <div class="lab-results">
+            <div class="position-hero lab-hero"><label>PASS PROBABILITY</label><strong id="simHero" style="color:var(--gold,#D4AF37)">—</strong><small id="simHeroSub">2,000 simulated runs</small></div>
+            <div class="equity-risk"><div class="equity-risk-head"><span id="simBarLabel">Runs that passed</span><strong id="simBarValue">—</strong></div><div class="equity-track"><span class="equity-fill" id="simFill" style="background:var(--gold,#D4AF37)"></span></div></div>
+            <div class="risk-metrics">
+              <div class="risk-metric"><span>Median peak</span><strong id="simPeak">—</strong></div>
+              <div class="risk-metric"><span>Breach rate</span><strong id="simBreach">—</strong></div>
+            </div>
+            <p class="risk-method">Method: each run simulates daily R-multiples from your win rate; pass = hit profit target before max drawdown. Daily-loss rule applied per day. Estimates from your inputs — not a guarantee.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- WAVE 3c — Rule-change Radar -->
+      <section class="lab-tool" aria-labelledby="radar-title">
+        <div class="lab-tool-head"><div><p class="eyebrow">Radar 03</p><h3 id="radar-title">Rule-change Radar</h3>
+        <p class="helper">Firms change rules silently. We track data freshness honestly — green means recently verified, red means it needs a re-check.</p></div></div>
+        <div id="radarList" class="radar-list"></div>
+        <p class="risk-method">We show verification age, not claimed changes. A red row means our data is older than 60 days — treat its rules with caution until re-verified.</p>
+      </section>
+
+      <footer class="desktop-footer"><span>All Lab tools compute from verified data or your own inputs — nothing invented.</span></footer>
     </section>
 
     <section class="screen" id="discipline-soon" aria-label="Discipline coming soon">
@@ -2404,6 +2514,7 @@
     <button class="nav-btn" data-screen="journal" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h12v18H6zM9 7h6M9 11h6"/></svg><span>Journal</span></button>
     <button class="nav-btn" data-screen="calculator" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h2m4 0h2"/></svg><span>Risk</span></button>
     <button class="nav-btn" data-screen="calendar" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16M8 14h3M14 14h2M8 17h2"/></svg><span>Calendar</span></button>
+    <button class="nav-btn" data-screen="lab" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 3h6M10 3v6l-5.5 9.5A2 2 0 0 0 6.2 21h11.6a2 2 0 0 0 1.7-2.5L14 9V3"/><path d="M7.5 15h9"/></svg><span>Lab</span></button>
     <button class="nav-btn" data-screen="profile" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 20c.5-4 2.7-6 6.5-6s6 2 6.5 6"/></svg><span>Profile</span></button>
   </nav>
 </div>
@@ -2650,8 +2761,9 @@
             }
             sbRenderFirms();
             sbRenderDirectory();sbPopulateAccountSizes();
+            if(typeof sbInitLab==='function')sbInitLab();
           })
-          .catch(function(){sbRenderFirms();sbRenderDirectory();sbPopulateAccountSizes();});
+          .catch(function(){sbRenderFirms();sbRenderDirectory();sbPopulateAccountSizes();if(typeof sbInitLab==='function')sbInitLab();});
       })
       .catch(function(){/* keep honest empty states */});
   }
@@ -2997,6 +3109,147 @@
     document.getElementById('compareModal').classList.add('open');
   }
   function sbCloseCompare(){var m=document.getElementById('compareModal');if(m)m.classList.remove('open');}
+  /* ============ WAVE 3 — Pro Lab ============ */
+  /* Shared: populate firm+plan selects from Supabase data */
+  function sbLabFillFirms(firmSelId,planSelId){
+    var fs=document.getElementById(firmSelId),ps=document.getElementById(planSelId);
+    if(!fs||!ps||typeof sbFirms==='undefined')return;
+    fs.innerHTML='';ps.innerHTML='';
+    sbFirms.forEach(function(f){
+      var o=document.createElement('option');o.value=String(f.id);o.textContent=f.name;fs.appendChild(o);
+    });
+    function fillPlans(){
+      ps.innerHTML='';
+      var plans=sbPlansByFirm[fs.value]||[];
+      plans.forEach(function(p){
+        var o=document.createElement('option');o.value=String(p.id);
+        var sz=sbNum(p.account_size);
+        o.textContent=(isFinite(sz)?sbFmtSize(sz):'?')+' · '+(isFinite(sbNum(p.price))?sbFmtUSD(p.price):'—');
+        ps.appendChild(o);
+      });
+      ps.dispatchEvent(new Event('change'));
+    }
+    fs.addEventListener('change',fillPlans);
+    fillPlans();
+  }
+  function sbLabGetPlan(firmSelId,planSelId){
+    var fs=document.getElementById(firmSelId),ps=document.getElementById(planSelId);
+    if(!fs||!ps)return null;
+    var plans=sbPlansByFirm[fs.value]||[],out=null;
+    plans.forEach(function(p){if(String(p.id)===String(ps.value))out=p;});
+    return out||plans[0]||null;
+  }
+  /* WAVE 3a — True Cost Calculator */
+  function sbTrueCostCalc(){
+    var plan=sbLabGetPlan('tcFirm','tcPlan');
+    var hero=document.getElementById('tcHero');if(!hero)return;
+    if(!plan){hero.textContent='—';return;}
+    var price=sbNum(plan.price);if(!isFinite(price))price=0;
+    var comm=Number(document.getElementById('tcComm').value)||0;
+    var trades=Number(document.getElementById('tcTrades').value)||0;
+    var resetP=Number(document.getElementById('tcReset').value)||0;
+    var commCost=comm*trades;
+    var resetCost=price*(resetP/100);
+    var total=price+commCost+resetCost;
+    hero.textContent=sbFmtUSD(Math.round(total));
+    var sub=document.getElementById('tcHeroSub');
+    var sz=sbNum(plan.account_size);
+    if(sub)sub.textContent=isFinite(sz)&&sz>0?('≈ '+sbFmtUSD(Math.round(total/(sz/1000)*100)/100)+' per $1K funded'):'';
+    function set(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
+    set('tcSticker',sbFmtUSD(price));
+    set('tcCommOut',sbFmtUSD(Math.round(commCost)));
+    set('tcResetOut',sbFmtUSD(Math.round(resetCost)));
+    set('tcPerK',(isFinite(sz)&&sz>0)?sbFmtUSD(Math.round(total/(sz/1000)*100)/100):'—');
+  }
+  /* WAVE 3b — Pass Simulator (Monte Carlo, 2000 runs, pure math) */
+  function sbSimRun(){
+    var plan=sbLabGetPlan('simFirm','simPlan');
+    var hero=document.getElementById('simHero');if(!hero)return;
+    if(!plan||!plan.rules){hero.textContent='—';return;}
+    var r=plan.rules;
+    var target=Number(r.profit_target_pct),maxDD=Number(r.max_drawdown_pct),dailyL=Number(r.daily_loss_pct);
+    if(!isFinite(target)||!isFinite(maxDD)){hero.textContent='—';return;}
+    var winP=(Number(document.getElementById('simWin').value)||45)/100;
+    var winR=Number(document.getElementById('simWinR').value)||1.5;
+    var lossR=Number(document.getElementById('simLossR').value)||1;
+    var riskP=(Number(document.getElementById('simRisk').value)||1)/100;
+    var tpd=Math.max(1,Math.round(Number(document.getElementById('simTPD').value)||3));
+    var days=Math.max(1,Math.round(Number(document.getElementById('simDays').value)||30));
+    var RUNS=2000,passed=0,breached=0,peaks=[];
+    for(var i=0;i<RUNS;i++){
+      var eq=0,peak=0,done=false,ok=false;
+      for(var d=0;d<days&&!done;d++){
+        var dayPL=0;
+        for(var t=0;t<tpd;t++){
+          var win=Math.random()<winP;
+          var rmult=win?winR:-lossR;
+          var pl=rmult*riskP*100; // in % of account
+          eq+=pl;dayPL+=pl;
+          if(eq>peak)peak=eq;
+          if(eq<=-maxDD){done=true;break;} // max drawdown breach
+          if(eq>=target){done=true;ok=true;break;} // target hit
+        }
+        if(!done&&isFinite(dailyL)&&dayPL<=-dailyL){done=true;} // daily loss breach
+      }
+      if(ok)passed++;else breached++;
+      peaks.push(peak);
+    }
+    peaks.sort(function(a,b){return a-b;});
+    var med=peaks[Math.floor(peaks.length/2)];
+    var prob=Math.round(passed/RUNS*100);
+    hero.textContent=prob+'%';
+    hero.style.color=prob>=60?'var(--green,#1d9d63)':prob>=35?'var(--gold,#D4AF37)':'var(--red,#d64545)';
+    function set(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
+    set('simBarValue',passed+' / '+RUNS);
+    set('simPeak','+'+Math.round(med*10)/10+'%');
+    set('simBreach',Math.round(breached/RUNS*100)+'%');
+    var fill=document.getElementById('simFill');if(fill)fill.style.width=prob+'%';
+    var lbl=document.getElementById('simHeroSub');if(lbl)lbl.textContent=RUNS.toLocaleString()+' simulated runs';
+  }
+  /* WAVE 3c — Rule-change Radar (honest freshness tracking) */
+  function sbRenderRadar(){
+    var list=document.getElementById('radarList');if(!list||typeof sbFirms==='undefined')return;
+    list.innerHTML='';
+    var ar=currentLanguage==='ar';
+    var rows=sbFirms.map(function(f){
+      var ts=f.last_verified_at||f.updated_at;
+      var days=ts?Math.floor((Date.now()-new Date(ts).getTime())/86400000):9999;
+      return {firm:f,days:days,stale:days>60};
+    }).sort(function(a,b){return b.days-a.days;});
+    rows.forEach(function(row){
+      var div=document.createElement('div');div.className='radar-row';
+      var dot=document.createElement('span');dot.className='radar-dot '+(row.stale?'stale':'fresh');
+      var name=document.createElement('span');name.className='radar-name';name.textContent=row.firm.name;
+      var meta=document.createElement('span');meta.className='radar-meta';
+      meta.textContent=row.days>9000?(ar?'غير معروف':'unknown'):(ar?('فُحص قبل '+row.days+' يوم'):'checked '+row.days+'d ago');
+      var st=document.createElement('span');st.className='radar-status '+(row.stale?'stale':'fresh');
+      st.textContent=row.stale?(ar?'يحتاج مراجعة':'needs re-check'):(ar?'حديث':'fresh');
+      div.appendChild(dot);div.appendChild(name);div.appendChild(meta);div.appendChild(st);
+      list.appendChild(div);
+    });
+  }
+  /* Lab wiring */
+  function sbInitLab(){
+    if(!document.getElementById('lab'))return;
+    sbLabFillFirms('tcFirm','tcPlan');
+    sbLabFillFirms('simFirm','simPlan');
+    ['tcFirm','tcPlan','tcComm','tcTrades','tcReset'].forEach(function(id){
+      var e=document.getElementById(id);if(e)e.addEventListener('input',sbTrueCostCalc);
+    });
+    ['simFirm','simPlan','simWin','simWinR','simLossR','simRisk','simTPD','simDays'].forEach(function(id){
+      var e=document.getElementById(id);if(e)e.addEventListener('input',sbSimRun);
+    });
+    // Re-run when Supabase data arrives (firm data loads async)
+    var tries=0;
+    var iv=setInterval(function(){
+      tries++;
+      if(typeof sbFirms!=='undefined'&&sbFirms.length){
+        clearInterval(iv);
+        sbLabFillFirms('tcFirm','tcPlan');sbLabFillFirms('simFirm','simPlan');
+        sbTrueCostCalc();sbSimRun();sbRenderRadar();
+      }else if(tries>40)clearInterval(iv);
+    },500);
+  }
   /* WAVE 2a — Challenges table helpers (one row PER PLAN). Steps derived from rules:
      phase2 target present → 2-step; monthly subscription or 'instant' in key_rules → instant; else 1. */
   function sbPlanSteps(rules){
