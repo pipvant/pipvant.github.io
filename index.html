@@ -5015,7 +5015,17 @@
         // C1 fix: wipe any previous user's state BEFORE assigning the new user.
         // (The SIGNED_IN handler's user-switch guard can't detect the switch
         // because sbUser is assigned here first.)
-        try{if(typeof clearUserState==='function')clearUserState();}catch(e){}
+        // C1-logout fix: sync before wipe (was deleting unsynced trades).
+        // If same user re-logging in, don't wipe at all.
+        var _incomingId=res.data.user&&res.data.user.id;
+        var _sameUser=sbUser&&_incomingId&&sbUser.id===_incomingId;
+        if(!_sameUser){
+          try{
+            // Sync old user's trades before wiping (they belong to old user).
+            if(typeof syncLocalTradesToCloud==='function')syncLocalTradesToCloud();
+          }catch(e){}
+          try{if(typeof clearUserState==='function')clearUserState();}catch(e){}
+        }
         sbUser=res.data.user;
         runSuccessMorph(e.submitter,function(){
           sbFlushPendingProfile();
@@ -5033,6 +5043,8 @@
           return;
         }
         // C1 fix: wipe before assigning (see login handler).
+        // C1-logout fix: sync before wipe (was deleting unsynced trades).
+        try{if(typeof syncLocalTradesToCloud==='function')syncLocalTradesToCloud();}catch(e){}
         try{if(typeof clearUserState==='function')clearUserState();}catch(e){}
         sbUser=res.data.user;
         runSuccessMorph(e.submitter,function(){document.getElementById('setupAvatar').textContent=initials(signupName.value);authStage('authProfileSetup');});
@@ -5105,20 +5117,42 @@
     }catch(e){}
   }
   function logout(){
-    // Best-effort: flush pending local data to the outgoing user's cloud before signing out
-    try{if(typeof syncLocalTradesToCloud==='function')syncLocalTradesToCloud();}catch(e){}
-    try{if(typeof sbSaveAccounts==='function')sbSaveAccounts();}catch(e){}
-    if(sb){sbQuiet(sb.auth.signOut());}
-    sbUser=null;
-    clearUserState();
-    document.body.classList.remove('app-ready','show-landing');
-    document.body.classList.add('auth-active','show-auth','auth-returning');setTimeout(function(){document.body.classList.remove('auth-returning');},210);
-    document.getElementById('signupForm').reset();
-    document.getElementById('profileSetupForm').reset();
-    document.getElementById('setupAvatar').textContent='—';
-    if(typeof setAuthMode==='function')setAuthMode('login');
-    authStage('authSignup');
-    window.scrollTo(0,0);
+    // C2-logout fix: wait for sync (was fire-and-forget, data lost if tab closed).
+    var _syncs=[];
+    try{
+      if(typeof syncLocalTradesToCloud==='function'){
+        var _r=syncLocalTradesToCloud();
+        if(_r&&typeof _r.then==='function')_syncs.push(_r);
+      }
+    }catch(e){}
+    try{
+      if(typeof sbSaveAccounts==='function'){
+        var _r2=sbSaveAccounts();
+        if(_r2&&typeof _r2.then==='function')_syncs.push(_r2);
+      }
+    }catch(e){}
+    var _doLogout=function(){
+      if(sb){sbQuiet(sb.auth.signOut());}
+      sbUser=null;
+      clearUserState();
+      document.body.classList.remove('app-ready','show-landing');
+      document.body.classList.add('auth-active','show-auth','auth-returning');setTimeout(function(){document.body.classList.remove('auth-returning');},210);
+      document.getElementById('signupForm').reset();
+      document.getElementById('profileSetupForm').reset();
+      document.getElementById('setupAvatar').textContent='—';
+      if(typeof setAuthMode==='function')setAuthMode('login');
+      authStage('authSignup');
+      window.scrollTo(0,0);
+    };
+    if(_syncs.length){
+      // Wait up to 5s for syncs, then proceed regardless.
+      Promise.race([
+        Promise.all(_syncs.map(function(p){return p.catch(function(){});})),
+        new Promise(function(res){setTimeout(res,5000);})
+      ]).then(_doLogout).catch(_doLogout);
+    }else{
+      _doLogout();
+    }
   }
 
   var marketTints={Forex:'#5B8DEF',Futures:'#C9D2DC','Crypto-Perps':'#9FC1FF'};
