@@ -1445,6 +1445,318 @@
 .payout-table td{padding:12px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums;color:var(--secondary)}
 .payout-table td:first-child{font-weight:700;color:var(--text);font-family:"Space Grotesk",sans-serif}
 .payout-table .p-split{color:var(--gold,#D4AF37);font-weight:800}
+/* ============ DESIGN OVERHAUL — premium "هربانة" standard ============
+   Patterns applied from research-empire/cards-ui.md:
+   P2 layered dark surfaces · P3 hover lift+illumination · P4 press .98
+   P5 semantic color · P6 tabular numerals · P7 badge chips · P16 anti-patterns
+   ============================================================ */
+/* ---- 1. FIRM CARDS: premium hierarchy ---- */
+.firm-card{
+  border:1px solid color-mix(in srgb,var(--line-strong) 65%,transparent)!important;
+  border-radius:18px!important;
+  background:linear-gradient(165deg,rgba(255,255,255,.035),rgba(255,255,255,0) 30%),var(--surface)!important;
+  box-shadow:0 2px 6px rgba(0,0,0,.18),0 12px 32px -12px rgba(0,0,0,.45)!important;
+  transition:transform .2s ease-out,box-shadow .2s ease-out,border-color .2s ease-out!important;
+  overflow:hidden;
+}
+.firm-card::after{ /* top gold hairline — premium signal */
+  content:"";position:absolute;top:0;left:18px;right:18px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(212,175,55,.45),transparent);
+  pointer-events:none;
+}
+@media(hover:hover){
+  .firm-card:hover{
+    transform:translateY(-3px);
+    border-color:color-mix(in srgb,var(--gold,#D4AF37) 45%,var(--line-strong))!important;
+    box-shadow:0 4px 10px rgba(0,0,0,.2),0 20px 44px -12px rgba(0,0,0,.55),0 0 0 1px rgba(212,175,55,.12),0 0 24px -6px rgba(212,175,55,.18)!important;
+  }
+}
+.firm-card:active{transform:scale(.985);transition-duration:.1s}
+.firm-summary{padding:14px 14px!important;gap:10px!important}
+.firm-expand{grid-template-columns:26px 52px minmax(0,1fr) 18px!important;gap:12px!important;min-height:60px!important}
+.rank{
+  color:var(--gold,#D4AF37)!important;font-weight:700!important;font-size:15px!important;
+  font-variant-numeric:tabular-nums;
+}
+.logo-slot{
+  width:52px!important;height:52px!important;border-radius:14px!important;
+  border:1px solid color-mix(in srgb,var(--gold,#D4AF37) 30%,var(--line-strong))!important;
+  background:linear-gradient(160deg,var(--raised),var(--sunken))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 4px 12px -4px rgba(0,0,0,.5)!important;
+  font-size:15px!important;
+}
+.firm-name{font-size:19px!important;font-weight:700!important;letter-spacing:-.01em!important;line-height:1.3!important}
+.firm-topline{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.meta-pills{gap:6px!important;margin-top:7px!important}
+.meta-pill{
+  font-size:11px!important;font-weight:600!important;letter-spacing:.02em!important;
+  padding:4px 10px!important;border-radius:20px!important;
+  background:rgba(91,141,239,.08)!important;border:1px solid rgba(91,141,239,.18)!important;
+  color:var(--secondary)!important;
+}
+/* promo badge — glowing gold, seamlessly integrated */
+.promo-badge{
+  font-size:12.5px!important;padding:5px 14px!important;border-radius:14px!important;
+  background:linear-gradient(135deg,#e8c455,#D4AF37 55%,#b8912a)!important;
+  box-shadow:0 2px 10px rgba(212,175,55,.45),inset 0 1px 0 rgba(255,255,255,.35)!important;
+  letter-spacing:.03em!important;
+}
+/* PT:DD chip — refined */
+.ptdd-chip{
+  font-size:11.5px!important;padding:3px 11px!important;
+  background:rgba(91,141,239,.12)!important;border:1px solid rgba(91,141,239,.4)!important;
+  font-variant-numeric:tabular-nums;
+}
+/* updated stamp — quieter, tabular */
+.updated-stamp{font-size:11px!important;opacity:.75}
+/* price strike — refined */
+.price-strike{font-size:12px!important;opacity:.7}
+/* spec grid — tabular numerals, ≥11px labels, airy */
+.spec-grid{gap:8px!important;background:transparent!important;border:0!important;margin:16px 0!important}
+.spec{
+  background:var(--sunken)!important;border:1px solid var(--line)!important;border-radius:12px!important;
+  padding:13px 10px!important;text-align:center;
+}
+.spec label{font-size:11px!important;font-weight:600!important;letter-spacing:.04em!important;text-transform:uppercase;color:var(--muted)!important;margin-bottom:8px!important}
+.spec strong{font-size:16px!important;font-variant-numeric:tabular-nums!important;letter-spacing:-.01em}
+/* allocation bar — gold gradient */
+.allocation-track{height:6px!important;border-radius:4px!important;background:var(--sunken)!important;overflow:hidden}
+.allocation-fill{background:linear-gradient(90deg,#b8912a,var(--gold,#D4AF37),#e8c455)!important;border-radius:4px!important;box-shadow:0 0 8px rgba(212,175,55,.4)}
+.allocation-line strong{font-variant-numeric:tabular-nums;font-size:15px!important;color:var(--platinum)}
+/* VIEW button — blue interactive accent */
+.slot-cta{
+  border-color:rgba(91,141,239,.45)!important;color:var(--accent,#5B8DEF)!important;opacity:1!important;
+  font-size:11px!important;letter-spacing:.08em!important;border-radius:10px!important;
+  min-width:58px!important;min-height:38px!important;
+  background:rgba(91,141,239,.07)!important;
+  transition:all .15s ease-out!important;
+}
+.slot-cta:not([disabled]):hover{background:rgba(91,141,239,.16)!important;box-shadow:0 0 12px rgba(91,141,239,.25)}
+.slot-cta:not([disabled]):active{transform:scale(.94)}
+/* rating block refinement */
+.rating-block strong{font-variant-numeric:tabular-nums}
+/* evidence line */
+.evidence-line{font-size:12px!important}
+/* compare toggle on card */
+.compare-toggle{
+  width:34px!important;height:34px!important;border-radius:10px!important;
+  font-size:16px!important;top:10px!important;left:10px!important;
+  background:rgba(10,22,40,.7)!important;backdrop-filter:blur(8px);
+  border:1px solid var(--line-strong)!important;
+  transition:all .15s ease-out!important;
+}
+.compare-toggle[aria-pressed="true"]{
+  background:linear-gradient(135deg,#e8c455,#D4AF37)!important;color:#0A1628!important;
+  box-shadow:0 2px 12px rgba(212,175,55,.5)!important;transform:scale(1.05);
+}
+/* expanded details */
+.firm-details{padding:0 18px 18px 18px!important}
+html[dir="rtl"] .firm-details{padding:0 18px 18px 18px!important}
+
+/* ---- 2. CHALLENGES TABLE: premium ---- */
+.challenges-scroll{
+  border-radius:16px!important;border:1px solid var(--line-strong)!important;
+  box-shadow:0 8px 28px -12px rgba(0,0,0,.5)!important;overflow:hidden;
+}
+.challenges-table th{
+  background:var(--navy,#0A1628)!important;position:sticky;top:0;z-index:2;
+  box-shadow:0 1px 0 var(--line-strong);
+}
+.challenges-table th button{
+  color:#c4d0e2!important;font-size:10.5px!important;font-weight:800!important;letter-spacing:.07em!important;
+  text-transform:uppercase;padding:14px 12px!important;width:100%;text-align:left;background:transparent;border:0;cursor:pointer;
+  font-variant-numeric:tabular-nums;transition:color .15s;
+}
+.challenges-table th button:hover{color:var(--gold,#D4AF37)!important}
+.challenges-table th button[aria-sort="ascending"]::after{content:" ▲";color:var(--gold,#D4AF37)}
+.challenges-table th button[aria-sort="descending"]::after{content:" ▼";color:var(--gold,#D4AF37)}
+.challenges-table td{padding:13px 12px!important;font-size:12.5px!important}
+.challenges-table tbody tr{transition:background .15s}
+.challenges-table tbody tr:nth-child(even) td{background:rgba(255,255,255,.014)}
+.challenges-table tbody tr:hover td{background:rgba(91,141,239,.07)!important}
+.challenges-table tbody tr:hover td:first-child{box-shadow:inset 3px 0 0 var(--gold,#D4AF37)}
+html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset -3px 0 0 var(--gold,#D4AF37)}
+.chal-firm{font-size:13.5px!important}
+.chal-price b{font-size:14px!important;font-variant-numeric:tabular-nums}
+.chal-ptdd{
+  color:var(--gold,#D4AF37)!important;font-weight:800!important;font-size:13px!important;
+  text-shadow:0 0 12px rgba(212,175,55,.3);font-variant-numeric:tabular-nums;
+}
+.chal-promo{
+  font-size:10.5px!important;padding:3px 10px!important;border-radius:12px!important;
+  box-shadow:0 2px 8px rgba(212,175,55,.35);
+}
+
+/* ---- 3. COMPARE TRAY + MODAL: premium ---- */
+.compare-tray{
+  border-radius:20px!important;padding:14px 22px!important;gap:14px!important;
+  background:rgba(10,22,40,.92)!important;backdrop-filter:blur(20px) saturate(140%);
+  border:1px solid rgba(212,175,55,.55)!important;
+  box-shadow:0 16px 48px rgba(0,0,0,.55),0 0 32px -8px rgba(212,175,55,.3)!important;
+}
+.compare-tray .cmp-count{font-size:16px!important;font-variant-numeric:tabular-nums}
+.compare-tray button{transition:transform .12s ease-out!important}
+.compare-tray button:active{transform:scale(.95)}
+.compare-tray .cmp-open{
+  background:linear-gradient(135deg,#e8c455,#D4AF37)!important;
+  box-shadow:0 4px 16px rgba(212,175,55,.4)!important;
+}
+.compare-modal.open .compare-panel{animation:cmpIn .25s ease-out}
+@keyframes cmpIn{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:none}}
+.compare-panel{
+  border-radius:22px!important;padding:28px!important;
+  border:1px solid var(--line-strong)!important;
+  box-shadow:0 32px 80px rgba(0,0,0,.6)!important;
+}
+.compare-panel h3{font-size:20px!important;letter-spacing:-.01em}
+.compare-row{border-bottom:1px solid var(--line)!important}
+.compare-row>div{padding:13px 14px!important;font-variant-numeric:tabular-nums}
+.compare-row .cmp-label{
+  background:var(--sunken);font-weight:800!important;position:sticky;left:0;
+  border-inline-end:1px solid var(--line);
+}
+.compare-row .cmp-diff{
+  background:rgba(212,175,55,.13)!important;
+  box-shadow:inset 0 0 0 1px rgba(212,175,55,.2);border-radius:6px;
+}
+
+/* ---- 4. DETAIL SHEET TABS: premium ---- */
+.sheet-tabs{gap:4px!important;margin:18px 0 6px!important}
+.sheet-tab{
+  font-size:14px!important;padding:12px 18px!important;position:relative;
+  color:var(--muted);transition:color .18s;border-bottom:0!important;margin-bottom:0!important;
+}
+.sheet-tab::after{
+  content:"";position:absolute;bottom:-1px;left:14px;right:14px;height:3px;border-radius:2px;
+  background:var(--gold,#D4AF37);transform:scaleX(0);transform-origin:center;
+  transition:transform .22s ease-out;box-shadow:0 0 10px rgba(212,175,55,.5);
+}
+.sheet-tab[aria-selected="true"]{color:var(--text)!important;font-weight:800}
+.sheet-tab[aria-selected="true"]::after{transform:scaleX(1)}
+.sheet-tab:hover{color:var(--text)}
+.sheet-tabpane{padding-top:18px!important}
+.chal-minirow{padding:14px 6px!important;border-radius:10px;transition:background .15s}
+.chal-minirow:hover{background:rgba(91,141,239,.05)}
+.chal-minirow .m-size{font-size:15px!important}
+.chal-minirow .m-price{font-size:15px!important}
+.payout-kv div{border:1px solid var(--line);transition:border-color .15s}
+.payout-kv div:hover{border-color:rgba(212,175,55,.4)}
+.payout-kv b{font-variant-numeric:tabular-nums}
+.promo-line{
+  border-radius:12px!important;padding:13px 16px!important;
+  background:linear-gradient(135deg,rgba(212,175,55,.14),rgba(212,175,55,.06))!important;
+  transition:transform .15s;
+}
+.promo-line:active{transform:scale(.98)}
+.promo-line b{font-size:17px!important;text-shadow:0 0 12px rgba(212,175,55,.35)}
+
+/* ---- 5. PRO LAB TOOLS: distinct premium panels ---- */
+.lab-tool{
+  border-radius:22px!important;padding:34px!important;
+  background:linear-gradient(170deg,rgba(255,255,255,.03),rgba(255,255,255,0) 40%),var(--surface)!important;
+  border:1px solid var(--line-strong)!important;
+  box-shadow:0 4px 12px rgba(0,0,0,.2),0 20px 48px -20px rgba(0,0,0,.5)!important;
+  position:relative;overflow:hidden;
+}
+.lab-tool::before{ /* distinct top accent per tool */
+  content:"";position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,transparent,var(--gold,#D4AF37),transparent);
+}
+.lab-tool-head .eyebrow{font-size:12px!important;letter-spacing:.18em!important;margin-bottom:10px!important}
+.lab-tool-head h3{font-size:24px!important;letter-spacing:-.015em!important;margin-bottom:8px!important}
+.lab-tool-head .helper{font-size:14.5px!important;line-height:1.75}
+.lab-results{
+  border-radius:18px!important;padding:28px!important;
+  background:linear-gradient(165deg,var(--raised),var(--sunken))!important;
+  border:1px solid var(--line-strong)!important;
+  box-shadow:inset 0 2px 12px rgba(0,0,0,.25)!important;
+}
+.lab-hero{margin-bottom:22px!important;text-align:center}
+.lab-hero strong{
+  font-size:52px!important;font-weight:800;letter-spacing:-.03em;
+  background:linear-gradient(135deg,#f4dd8f,var(--gold,#D4AF37) 60%,#c39a2e);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 2px 12px rgba(212,175,55,.25));
+  font-variant-numeric:tabular-nums;line-height:1.05;
+}
+.lab-hero .lab-sub{font-size:13px;color:var(--muted);margin-top:8px;font-variant-numeric:tabular-nums}
+/* lab inputs — instrument feel */
+.lab-inputs label{font-size:11px!important;font-weight:700!important;letter-spacing:.06em!important;text-transform:uppercase;color:var(--muted)!important;margin-bottom:8px!important;display:block}
+.lab-inputs input,.lab-inputs select{
+  font-size:15px!important;padding:13px 14px!important;border-radius:12px!important;
+  border:1px solid var(--line-strong)!important;background:var(--sunken)!important;color:var(--text)!important;
+  font-variant-numeric:tabular-nums;transition:border-color .15s,box-shadow .15s!important;width:100%;
+}
+.lab-inputs input:focus,.lab-inputs select:focus{
+  outline:none;border-color:var(--accent,#5B8DEF)!important;
+  box-shadow:0 0 0 3px rgba(91,141,239,.18)!important;
+}
+/* radar rows */
+.radar-row{padding:16px 18px!important;border-radius:14px!important;transition:border-color .15s,transform .15s}
+.radar-row:hover{border-color:var(--line-strong);transform:translateY(-1px)}
+.radar-name{font-size:15px!important}
+/* breach gauges */
+.breach-gauge{height:16px!important;border-radius:10px!important}
+.breach-msg{font-size:17px!important;letter-spacing:-.01em}
+/* dna options */
+.dna-opt{transition:all .15s ease-out!important}
+.dna-opt:active{transform:scale(.96)}
+.dna-opt[aria-pressed="true"]{
+  background:linear-gradient(135deg,rgba(212,175,55,.18),rgba(212,175,55,.08))!important;
+  box-shadow:0 0 16px rgba(212,175,55,.2)!important;
+}
+.dna-score{font-variant-numeric:tabular-nums}
+/* payout leaderboard table */
+.payout-table th{padding:13px 12px!important}
+.payout-table td{padding:14px 12px!important}
+.payout-table tbody tr{transition:background .15s}
+.payout-table tbody tr:hover td{background:rgba(91,141,239,.06)}
+.payout-table .p-split{font-size:15px!important;text-shadow:0 0 10px rgba(212,175,55,.3)}
+
+/* ---- 6. VIEW TOGGLE: premium segmented control ---- */
+.view-toggle{
+  gap:4px!important;padding:4px!important;border-radius:14px!important;
+  background:var(--sunken)!important;border:1px solid var(--line-strong)!important;
+  box-shadow:inset 0 2px 8px rgba(0,0,0,.25)!important;
+}
+.view-button{
+  min-height:38px!important;padding:0 16px!important;border-radius:10px!important;
+  font-size:12.5px!important;font-weight:700!important;letter-spacing:.03em!important;
+  transition:all .18s ease-out!important;position:relative;
+}
+.view-button[aria-pressed="true"]{
+  background:linear-gradient(135deg,#e8c455,#D4AF37)!important;color:#0A1628!important;
+  box-shadow:0 3px 12px rgba(212,175,55,.4),inset 0 1px 0 rgba(255,255,255,.3)!important;
+  font-weight:800!important;
+}
+.view-button:not([aria-pressed="true"]):hover{color:var(--text)!important;background:rgba(255,255,255,.04)}
+.view-button:active{transform:scale(.96)}
+
+/* ---- 7. General premium polish ---- */
+/* captions ≥11px */
+.spec label,.updated-stamp,.radar-meta{font-size:11px!important}
+/* tabular numerals on all figures */
+.firm-card strong,.firm-card b,.chal-minirow,.payout-kv b,.compare-row,
+.slot-cta,.promo-badge{font-variant-numeric:tabular-nums}
+/* focus visibility (keyboard) */
+.firm-expand:focus-visible,.slot-cta:focus-visible,.view-button:focus-visible,
+.sheet-tab:focus-visible,.dna-opt:focus-visible{
+  outline:2px solid var(--accent,#5B8DEF);outline-offset:2px;
+}
+/* mobile: keep hierarchy, generous rhythm */
+@media(max-width:480px){
+  .firm-card{border-radius:20px!important}
+  .firm-summary{padding:16px 14px!important}
+  .firm-name{font-size:18px!important}
+  .lab-tool{padding:24px 20px!important;border-radius:20px!important}
+  .lab-hero strong{font-size:44px!important}
+  .compare-panel{padding:20px!important;border-radius:18px!important}
+  .promo-badge{font-size:12px!important}
+}
+/* reduced motion respect */
+@media(prefers-reduced-motion:reduce){
+  .firm-card,.firm-card:hover,.slot-cta,.view-button,.dna-opt{transition:none!important;transform:none!important}
+}
 </style>
 <div id="siteLanding" aria-label="PIPVANT landing page">
   <div class="lp-grain" aria-hidden="true"></div>
