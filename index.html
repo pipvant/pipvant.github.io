@@ -2549,6 +2549,8 @@
       .catch(function(){/* keep honest empty states */});
   }
   function sbFillFirmCard(card,firm,plans,rank){card.setAttribute('data-firm-id',firm.id);
+    // Mega-audit a11y: ensure cloned cards expose role=button.
+    try{var _fe=card.querySelector('.firm-expand');if(_fe&&!_fe.getAttribute('role'))_fe.setAttribute('role','button');}catch(e){}
     function q(s){return card.querySelector(s);}
     var rankEl=q('.rank');if(rankEl)rankEl.textContent=rank;
     var logo=q('.logo-slot');sbFirmLogo(logo,firm);
@@ -3586,7 +3588,7 @@
       // Load public data
       if(typeof sbLoadFirms==='function')sbLoadFirms();
       if(typeof sbLoadCalendar==='function')sbLoadCalendar();
-      try{var gs=localStorage.getItem('pipvant_last_screen');if((gs==='calendar'||gs==='matcher')&&typeof showScreen==='function')showScreen(gs,true);}catch(ge){}
+      try{var gs=localStorage.getItem('pipvant_last_screen');var _pa={'matcher':1,'journal':1,'calculator':1,'calendar':1,'profile':1};if(gs&&_pa[gs]&&typeof showScreen==='function')showScreen(gs,true);}catch(ge){}
     }
   });
   /* Fill the firm detail sheet before the existing opener runs (registered first). */
@@ -5313,7 +5315,9 @@
     }
   });
   function getLastScreen(fallback){
-    try{var s=localStorage.getItem('pipvant_last_screen');if(s&&document.getElementById(s))return s;}catch(e){}
+    // Mega-audit fix: mirror the primary-screen allowlist on read (was
+    // accepting any stored id, including transient screens).
+    try{var s=localStorage.getItem('pipvant_last_screen');var _p={'matcher':1,'journal':1,'calculator':1,'calendar':1,'profile':1};if(s&&_p[s]&&document.getElementById(s))return s;}catch(e){}
     return fallback||'matcher';
   }
   function enterProduct(name,avatar){
@@ -5458,15 +5462,26 @@
     filterBody.hidden=expanded;
   });
 
+  // Mega-audit fix: event delegation (was direct binding — dynamically rendered
+  // firm cards never got the expand handlers).
+  function _firmToggleRow(row){
+    var card=row.closest('.firm-card');
+    var expanded=row.getAttribute('aria-expanded')==='true';
+    document.querySelectorAll('.firm-card').forEach(function(other){other.classList.remove('expanded');var _re=other.querySelector('.firm-expand');if(_re)_re.setAttribute('aria-expanded','false');});
+    if(!expanded&&card){card.classList.add('expanded');row.setAttribute('aria-expanded','true');}
+  }
+  document.addEventListener('click',function(event){
+    var row=event.target&&event.target.closest?event.target.closest('.firm-expand'):null;
+    if(row&&!event.target.closest('[data-methodology-trigger]'))_firmToggleRow(row);
+  });
+  document.addEventListener('keydown',function(event){
+    var row=event.target&&event.target.closest?event.target.closest('.firm-expand'):null;
+    if(row&&(event.key==='Enter'||event.key===' ')&&!event.target.closest('[data-methodology-trigger]')){event.preventDefault();_firmToggleRow(row);}
+  });
   document.querySelectorAll('.firm-expand').forEach(function(row){
-    function toggleRow(){
-      var card=row.closest('.firm-card');
-      var expanded=row.getAttribute('aria-expanded')==='true';
-      document.querySelectorAll('.firm-card').forEach(function(other){other.classList.remove('expanded');other.querySelector('.firm-expand').setAttribute('aria-expanded','false');});
-      if(!expanded){card.classList.add('expanded');row.setAttribute('aria-expanded','true');}
-    }
-    row.addEventListener('click',function(event){if(!event.target.closest('[data-methodology-trigger]'))toggleRow();});
-    row.addEventListener('keydown',function(event){if((event.key==='Enter'||event.key===' ')&&!event.target.closest('[data-methodology-trigger]')){event.preventDefault();toggleRow();}});
+    // Mega-audit a11y fix: role=button (was a div with tabindex — screen
+    // readers didn't announce it as interactive).
+    if(!row.getAttribute('role'))row.setAttribute('role','button');
   });
 
   var matcherList=document.querySelector('.matcher-list');
