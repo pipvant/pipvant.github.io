@@ -1899,6 +1899,7 @@
               <div class="risk-field"><label for="riskPercent">Risk %</label><div class="risk-stepper"><button class="step-button" type="button" data-risk-step="-0.1" aria-label="Decrease risk percentage">−</button><div class="field-shell"><input id="riskPercent" class="full-calc-input" type="number" min="0.1" max="100" step="0.1" inputmode="decimal" placeholder="—" aria-label="Risk percentage"><span class="suffix">%</span></div><button class="step-button" type="button" data-risk-step="0.1" aria-label="Increase risk percentage">+</button></div><div class="risk-presets" aria-label="Risk presets"><button class="risk-preset" type="button" data-risk-preset="0.5" aria-pressed="false">0.5%</button><button class="risk-preset" type="button" data-risk-preset="1" aria-pressed="false">1%</button><button class="risk-preset" type="button" data-risk-preset="2" aria-pressed="false">2%</button></div></div>
               <div class="risk-field"><label for="stopDistance">Stop-loss pips</label><div class="field-shell"><input id="stopDistance" class="suffixed full-calc-input" type="number" min="0" step="0.1" inputmode="decimal" placeholder="—"><span class="suffix">pips</span></div></div>
               <div class="risk-field"><label for="riskSymbol">Symbol / pair</label><select id="riskSymbol" class="full-calc-input"><option value="">Select pair</option><option value="EUR/USD">EUR/USD</option><option value="GBP/USD">GBP/USD</option><option value="AUD/USD">AUD/USD</option><option value="NZD/USD">NZD/USD</option><option value="USD/JPY">USD/JPY</option><option value="EUR/JPY">EUR/JPY</option><option value="GBP/JPY">GBP/JPY</option><option value="XAU/USD">XAU/USD (Gold)</option><option value="US30">US30</option><option value="NAS100">NAS100</option><option value="SPX500">SPX500</option></select><p class="helper">Enter the correct point value for your broker and pair below.</p></div>
+              <div class="risk-field"><label for="riskPipValue">Point value per standard lot ($)</label><input id="riskPipValue" class="full-calc-input" type="text" inputmode="decimal" value="10"><p class="helper">Default $10 fits XXX/USD forex. Adjust for JPY pairs, gold, indices — verify with your broker.</p></div>
             </div>
           </section>
           <section class="risk-results" aria-labelledby="output-title">
@@ -4201,7 +4202,24 @@
   document.querySelectorAll('[data-theme-choice]').forEach(function(button){button.addEventListener('click',function(){applyTheme(button.getAttribute('data-theme-choice'));});});
   document.querySelectorAll('[data-language-choice]').forEach(function(button){button.addEventListener('click',function(){applyLanguage(button.getAttribute('data-language-choice'));applyTheme(document.documentElement.getAttribute('data-theme')||'dark');sbSaveSettings();});});
   document.querySelectorAll('[data-currency-choice]').forEach(function(button){button.addEventListener('click',function(){
-    currentCurrency=button.getAttribute('data-currency-choice');
+    var _oldCur=currentCurrency;
+    var _newCur=button.getAttribute('data-currency-choice');
+    // C2-risk fix: convert the balance input so it matches the outputs
+    // (was showing old-currency value with new-currency label).
+    try{
+      var _balEl=document.getElementById('balance');
+      if(_balEl&&_oldCur!==_newCur){
+        var _oldRate=(typeof exchangeRates!=='undefined'&&exchangeRates[_oldCur])||1;
+        var _newRate=(typeof exchangeRates!=='undefined'&&exchangeRates[_newCur])||1;
+        var _raw=parseFloat((_balEl.value||'').replace(/[^0-9.]/g,''));
+        if(isFinite(_raw)&&_raw>0&&_oldRate>0&&_newRate>0){
+          var _usd=_raw/_oldRate;
+          var _conv=Math.round(_usd*_newRate*100)/100;
+          _balEl.value=String(_conv);
+        }
+      }
+    }catch(e){}
+    currentCurrency=_newCur;
     document.querySelectorAll('[data-currency-choice]').forEach(function(other){other.setAttribute('aria-pressed',String(other===button));});
     refreshPreferenceCopy();refreshCurrencyDisplay();sbSaveSettings();
     if(typeof calculateFull==='function')calculateFull();
@@ -6077,7 +6095,9 @@
   document.getElementById('saveRiskToJournal').addEventListener('click',function(){
     var b=n('balance'),r=n('riskPercent'),s=n('stopDistance'),pair=document.getElementById('riskSymbol').value,feedback=document.getElementById('riskSaveFeedback');
     if(!(b>0&&r>0&&s>0&&pair)){feedback.textContent=currentLanguage==='ar'?'أكمل المدخلات الأربعة قبل الحفظ.':'Complete all four inputs before saving.';return;}
-    var risk=b*r/100,size=risk/(s*10),riskEntry={type:'risk',timestamp:Date.now(),pair:pair,stop:units(s),size:units(size),riskLabel:money(risk),riskPercent:units(r),accountLabel:money(b)};runSuccessMorph(this,function(){sessionJournalEntries.unshift(riskEntry);renderJournalEntries();feedback.textContent=currentLanguage==='ar'?'تم حفظ الحساب في السجل لهذه الجلسة فقط.':'Risk calculation saved to the journal for this session only.';document.getElementById('journalFeedback').textContent=feedback.textContent;feedbackMotion(feedback);showToast(feedback.textContent);});
+    var _pv2=parseFloat((document.getElementById('riskPipValue').value||'').replace(/[^0-9.]/g,''));
+    var _pipVal=(isFinite(_pv2)&&_pv2>0)?_pv2:10;
+    var risk=b*r/100,size=risk/(s*_pipVal),riskEntry={type:'risk',timestamp:Date.now(),pair:pair,stop:units(s),size:units(size),riskLabel:money(risk),riskPercent:units(r),accountLabel:money(b)};runSuccessMorph(this,function(){sessionJournalEntries.unshift(riskEntry);renderJournalEntries();feedback.textContent=currentLanguage==='ar'?'تم حفظ الحساب في السجل لهذه الجلسة فقط.':'Risk calculation saved to the journal for this session only.';document.getElementById('journalFeedback').textContent=feedback.textContent;feedbackMotion(feedback);showToast(feedback.textContent);});
   });
   renderJournalEntries();
 
@@ -6226,8 +6246,13 @@
   riskPercent.addEventListener('input',function(){document.querySelectorAll('.risk-preset').forEach(function(button){button.setAttribute('aria-pressed',String(parseFloat(button.getAttribute('data-risk-preset'))===parseFloat(riskPercent.value)));});calculateFull();});
   function calculateFull(){
     var b=n('balance'),r=n('riskPercent'),s=n('stopDistance'),pair=document.getElementById('riskSymbol').value;
+    // C1-risk fix: use the user-entered pip/point value instead of hardcoded $10.
+    var _pv=parseFloat((document.getElementById('riskPipValue').value||'').replace(/[^0-9.]/g,''));
+    var pipVal=(isFinite(_pv)&&_pv>0)?_pv:10;
     if(b>0&&r>0&&s>0&&pair){
-      var risk=b*r/100,size=risk/(s*10),scale=Math.min(r/5,1);
+      // H3-risk fix: clamp risk % at 100 (direct typing bypassed the cap).
+      r=Math.min(r,100);
+      var risk=b*r/100,size=risk/(s*pipVal),scale=Math.min(r/5,1);
       document.getElementById('sizeOutput').textContent=units(size);
       document.getElementById('riskOutput').textContent=money(risk);
       document.getElementById('rOutput').textContent=money(risk);
