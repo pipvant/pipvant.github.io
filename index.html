@@ -2950,13 +2950,20 @@
     cb=cb||function(){};
     if(!sb||!sbUser){cb('');return;}
     var metaName=(sbUser.user_metadata&&sbUser.user_metadata.display_name)||'';
+    // H3 fix: actively reset stale fields BEFORE loading. If the new user has
+    // no photo/bio, the previous user's data must not persist.
+    profileSession.photoUrl='';
+    profileSession.bio='';
+    profileSession.name='';
+    try{setAvatarSurfacePhoto('');}catch(e){}
+    try{var _pb0=document.getElementById('profileBio');if(_pb0)_pb0.textContent='';}catch(e){}
     sb.from('profiles').select('display_name,bio,avatar_url').eq('user_id',sbUser.id).maybeSingle()
       .then(function(r){
         var d=r&&!r.error&&r.data?r.data:null;
         if(d&&d.avatar_url){profileSession.photoUrl=d.avatar_url;setAvatarSurfacePhoto(d.avatar_url);}
         if(d&&d.bio){profileSession.bio=d.bio;var pb=document.getElementById('profileBio');if(pb)pb.textContent=d.bio;}
         var name=d&&d.display_name?d.display_name:metaName;
-        if(name&&(!d||!d.display_name)){
+        if(name){
           profileSession.name=name;
           if(typeof updateProfileIdentity==='function')updateProfileIdentity(name,profileSession.bio||'');
         }
@@ -3036,6 +3043,8 @@
   }
   function sbUpdateProfileStats(trades){
     try{
+      // H5 fix: only count actual trades, not risk-calculator entries.
+      trades=(trades||[]).filter(function(t){return t&&t.type!=='risk';});
       var total=trades.length;
       // Calculate stats from closed trades
       var closedTrades=trades.filter(function(t){return t.pnl!=null&&isFinite(Number(t.pnl));});
@@ -3199,6 +3208,8 @@
     try{
       if(!entry||entry.type!=='trade')return null;
       if(!entry._localId)entry._localId='loc-'+Date.now()+'-'+Math.floor(Math.random()*1e6);
+      // H4 fix: stamp the owning user so another user's sync can't claim it.
+      if(!entry._ownerId&&typeof sbUser!=='undefined'&&sbUser&&sbUser.id)entry._ownerId=sbUser.id;
       var all=loadLocalTrades();
       var found=false;
       for(var i=0;i<all.length;i++){if(all[i]._localId===entry._localId){all[i]=JSON.parse(JSON.stringify(entry));found=true;break;}}
@@ -3231,9 +3242,21 @@
     try{
       if(!sb||!sbUser)return;
       var all=loadLocalTrades();
-      var pending=all.filter(function(t){return t&&!t._dbId&&!t._synced;});
+      // H4 fix: only sync trades owned by the current user. Skip (don't delete)
+      // trades belonging to someone else — the logout wipe should have removed
+      // them, but this is defense in depth.
+      // Also set _synced to prevent duplicate inserts on re-entry (C1 from features audit).
+      var inFlight={};
+      var pending=all.filter(function(t){
+        if(!t||t._dbId||t._synced)return false;
+        if(t._ownerId&&t._ownerId!==sbUser.id)return false;
+        if(inFlight[t._localId])return false;
+        inFlight[t._localId]=1;
+        return true;
+      });
       if(!pending.length)return;
       pending.forEach(function(t){
+        t._synced=true;
         var ep=parseFloat(t.entry),sz=parseFloat(t.size),sp=parseFloat(t.stop),tp=parseFloat(t.target),xp=parseFloat(t.exitPrice);
         var payload={user_id:sbUser.id,symbol:t.pair||'UNKNOWN',direction:(t.direction||'long').toLowerCase(),entry_price:isFinite(ep)?ep:0,exit_price:isFinite(xp)?xp:null,position_size:isFinite(sz)?sz:0,pnl:(t.pnl!=null&&isFinite(Number(t.pnl)))?Number(t.pnl):null,stop_price:isFinite(sp)?sp:null,target_price:isFinite(tp)?tp:null,opened_at:new Date(t.timestamp||Date.now()).toISOString(),closed_at:t.closed?new Date().toISOString():null,notes:t.notes||null,setup:t.setup||null,tag:t.tag||null,account_id:t.account_id||null};
         sb.from('trades').insert(payload).select('id').then(function(r){
@@ -3241,9 +3264,12 @@
             removeLocalTrade(t._localId);
             for(var i=0;i<sessionJournalEntries.length;i++){var e=sessionJournalEntries[i];if(e._localId===t._localId){e._db=true;e._dbId=r.data[0].id;e._id=r.data[0].id;e._localOnly=false;break;}}
             if(typeof refreshAllTradeUI==='function')refreshAllTradeUI();
+          }else{
+            t._synced=false; // allow retry on failure
           }
-        }).catch(function(){});
+        }).catch(function(){t._synced=false;});
       });
+      saveLocalTrades(all);
     }catch(e){}
   }
   function applyTradeExtras(){
@@ -3315,6 +3341,11 @@
   /* Guest browse: skip auth gate for public tools (matcher, calendar) */
   document.addEventListener('click',function(e){
     if(e.target&&e.target.id==='guestBrowse'){
+      // M8 fix: guest mode is a logged-out view. Clear any user state so a
+      // previous session's data (notifications, profile, accounts) can't leak
+      // into the guest view.
+      try{if(typeof clearUserState==='function')clearUserState();}catch(e){}
+      try{if(typeof sbUser!=='undefined')sbUser=null;}catch(e){}
       document.body.classList.remove('auth-active','show-auth');
       document.body.classList.add('app-ready');
       // Load public data
@@ -4763,6 +4794,10 @@
     if(authMode==='login'){
       sb.auth.signInWithPassword({email:sbEmail,password:sbPassword}).then(function(res){
         if(res.error){sbAuthError(res.error.message);return;}
+        // C1 fix: wipe any previous user's state BEFORE assigning the new user.
+        // (The SIGNED_IN handler's user-switch guard can't detect the switch
+        // because sbUser is assigned here first.)
+        try{if(typeof clearUserState==='function')clearUserState();}catch(e){}
         sbUser=res.data.user;
         runSuccessMorph(e.submitter,function(){
           sbFlushPendingProfile();
@@ -4773,13 +4808,15 @@
     }else{
       sb.auth.signUp({email:sbEmail,password:sbPassword,options:{data:{display_name:signupName.value||''}}}).then(function(res){
         if(res.error){sbAuthError(res.error.message);return;}
-        sbUser=res.data.user;
         try{sb.from('page_views').insert({page:'/signup',referrer:null});}catch(e){}
         if(!res.data.session){
           sbAuthError(currentLanguage==='ar'?'تم إنشاء الحساب — تحقق من بريدك الإلكتروني ثم سجّل الدخول.':'Account created — check your email to confirm, then log in.');
           setAuthMode('login');
           return;
         }
+        // C1 fix: wipe before assigning (see login handler).
+        try{if(typeof clearUserState==='function')clearUserState();}catch(e){}
+        sbUser=res.data.user;
         runSuccessMorph(e.submitter,function(){document.getElementById('setupAvatar').textContent=initials(signupName.value);authStage('authProfileSetup');});
       }).catch(function(err){sbAuthError(err&&err.message?err.message:'Sign-up failed.');});
     }
@@ -5054,9 +5091,12 @@
     sb.from('user_settings').upsert({user_id:sbUser.id,accounts:tradingAccounts,selected_account:selectedAccountId},{onConflict:'user_id'}).then(function(r){if(r.error)console.warn('Accounts sync failed:',r.error.message);}).catch(function(e){console.warn('Accounts sync error:',e);});
   }
   function sbLoadAccounts(){
-    var hasLocal=false;
-    try{hasLocal=!!localStorage.getItem('pipvant_accounts');}catch(e){}
-    if(hasLocal)return;
+    // C2 fix: cloud is the source of truth. Always reset memory first, then
+    // load the current user's accounts. Never trust localStorage blindly
+    // (it may hold another user's data if a wipe was bypassed).
+    tradingAccounts=[];
+    selectedAccountId=null;
+    if(typeof renderAccountList==='function')renderAccountList();
     if(!sb||!sbUser)return;
     sb.from('user_settings').select('accounts,selected_account').eq('user_id',sbUser.id).maybeSingle().then(function(r){
       var d=r&&!r.error&&r.data?r.data:null;if(!d)return;
@@ -5176,7 +5216,7 @@
     var list=document.getElementById('journalEntryList'),empty=document.getElementById('journalEntryEmpty'),count=document.getElementById('journalEntryCount');
     if(!list||!empty||!count)return;list.replaceChildren();
     var labels=currentLanguage==='ar'?['التاريخ / الوقت','الرمز','الاتجاه','الإعداد','الدخول / الخطة','الكمية','صافي الربح والخسارة','مضاعف R','التقييم','الملاحظات','']:['Date / time','Symbol','Side','Setup','Entry / plan','Qty','Net P&L','R multiple','Rating','Notes',''];
-    var q=journalSearchQuery.trim().toLowerCase();var dateCutoff=window.journalDateCutoff||0;var dateEnd=window.journalDateEnd||0;var dayFilter=window.journalDayFilter||null;var facets=window.journalFacets||{symbol:null,side:null,setup:null,tag:null};var filtered=sessionJournalEntries.filter(function(entry){var matchQ=true,matchD=true,matchDay=true,matchSym=true,matchSide=true,matchSetup=true,matchTag=true;if(q){var haystack=((entry.pair||'')+' '+(entry.notes||'')+' '+(entry.direction||'')).toLowerCase();matchQ=haystack.indexOf(q)!==-1;}if(dateCutoff){matchD=(entry.timestamp||0)>=dateCutoff;}if(dateEnd){matchD=matchD&&(entry.timestamp||0)<=dateEnd;}if(dayFilter){var d=new Date(entry.timestamp||0);matchDay=d.getFullYear()===dayFilter.y&&d.getMonth()===dayFilter.m&&d.getDate()===dayFilter.d;}if(facets.symbol&&entry.type==='trade'){matchSym=String(entry.pair||'').toUpperCase()===facets.symbol;}if(facets.side&&entry.type==='trade'){matchSide=String(entry.direction||'').toLowerCase()===facets.side;}if(facets.setup&&entry.type==='trade'){matchSetup=String(entry.setup||'').toLowerCase()===facets.setup;}if(facets.tag&&entry.type==='trade'){matchTag=String(entry.tag||'').toLowerCase()===facets.tag;}return matchQ&&matchD&&matchDay&&matchSym&&matchSide&&matchSetup&&matchTag;});
+    var q=journalSearchQuery.trim().toLowerCase();var dateCutoff=window.journalDateCutoff||0;var dateEnd=window.journalDateEnd||0;var dayFilter=window.journalDayFilter||null;var facets=window.journalFacets||{symbol:null,side:null,setup:null,tag:null};var filtered=sessionJournalEntries.filter(function(entry){var matchQ=true,matchD=true,matchDay=true,matchSym=true,matchSide=true,matchSetup=true,matchTag=true;if(q){var haystack=((entry.pair||'')+' '+(entry.notes||'')+' '+(entry.direction||'')).toLowerCase();matchQ=haystack.indexOf(q)!==-1;}if(dateCutoff){matchD=(entry.timestamp||0)>=dateCutoff;}if(dateEnd){matchD=matchD&&(entry.timestamp||0)<=dateEnd;}if(dayFilter){var d=new Date(entry.timestamp||0);matchDay=d.getFullYear()===dayFilter.y&&d.getMonth()===dayFilter.m&&d.getDate()===dayFilter.d;}if(facets.symbol&&entry.type==='trade'){matchSym=String(entry.pair||'').toUpperCase()===facets.symbol;}if(facets.side&&entry.type==='trade'){matchSide=String(entry.direction||'').toLowerCase()===facets.side;}if(facets.setup&&entry.type==='trade'){matchSetup=String(entry.setup||'').toLowerCase()===facets.setup;}if(facets.tag&&entry.type==='trade'){matchTag=String(entry.tag||'').trim().replace(/^#+/,'').toLowerCase()===facets.tag;}return matchQ&&matchD&&matchDay&&matchSym&&matchSide&&matchSetup&&matchTag;});
     var tradeCount=filtered.length; // Save count before grouping adds headers
     (function(){
       var groupBy=window.journalGroupBy||'all';
@@ -6116,7 +6156,9 @@
             Object.keys(_groups).forEach(function(mk){
               var _g=_groups[mk];if(!_g.items.length)return;
               var _names=_g.items.map(function(e){return e.name||'';}).sort().join('|');
-              var _key='grp_'+_g.ts+'_'+_names; // group-level dedupe key
+              // H2-notif fix: use the minute bucket (mk) not exact ms timestamp,
+              // so feed time corrections don't cause duplicate alerts.
+              var _key='grp_'+mk+'_'+_names; // group-level dedupe key
               if(_alerted[_key])return;
               _alerted[_key]=1;
               var _ev0=_g.items[0];
@@ -6138,6 +6180,8 @@
               }
               // News alerts are EVERYONE scope, memory-only (never saved to
               // personal cloud). They expire naturally on reload.
+              // H4-notif fix: respect the notifications on/off toggle.
+              if(typeof notificationsEnabled!=='undefined'&&!notificationsEnabled)return;
               var _nid='news_'+_key;
               if(!notifStore.some(function(x){return x.id===_nid;})){
                 notifStore.push({id:_nid,scope:'everyone',title:_title,message:_body,type:'news',ts:Date.now(),read:isNotifRead(_nid),ref:_ref});
@@ -6153,7 +6197,17 @@
   /* ---- Supabase boot (data phase): public catalog + persisted session ---- */
   sbLoadFirms();
   sbLoadCalendar();
-  setInterval(function(){try{sbUpdateCalendarStatus();}catch(e){}},30000);
+  // C1-notif fix: re-check news alerts periodically (were only checked at page
+  // load, so events entering the 60-min window after load never alerted).
+  // Every 5 min, reload calendar (cheap, cached) which re-runs the alert scan.
+  var _newsRecheck=0;
+  setInterval(function(){
+    try{sbUpdateCalendarStatus();}catch(e){}
+    try{
+      _newsRecheck++;
+      if(_newsRecheck>=10){_newsRecheck=0;if(typeof sbLoadCalendar==='function')sbLoadCalendar();}
+    }catch(e){}
+  },30000);
   sbInitSession();
 })();
 </script>
