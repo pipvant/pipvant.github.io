@@ -5483,22 +5483,6 @@
     filterBody.hidden=expanded;
   });
 
-  // Mega-audit fix: event delegation (was direct binding — dynamically rendered
-  // firm cards never got the expand handlers).
-  function _firmToggleRow(row){
-    var card=row.closest('.firm-card');
-    var expanded=row.getAttribute('aria-expanded')==='true';
-    document.querySelectorAll('.firm-card').forEach(function(other){other.classList.remove('expanded');var _re=other.querySelector('.firm-expand');if(_re)_re.setAttribute('aria-expanded','false');});
-    if(!expanded&&card){card.classList.add('expanded');row.setAttribute('aria-expanded','true');}
-  }
-  document.addEventListener('click',function(event){
-    var row=event.target&&event.target.closest?event.target.closest('.firm-expand'):null;
-    if(row&&!event.target.closest('[data-methodology-trigger]'))_firmToggleRow(row);
-  });
-  document.addEventListener('keydown',function(event){
-    var row=event.target&&event.target.closest?event.target.closest('.firm-expand'):null;
-    if(row&&(event.key==='Enter'||event.key===' ')&&!event.target.closest('[data-methodology-trigger]')){event.preventDefault();_firmToggleRow(row);}
-  });
   document.querySelectorAll('.firm-expand').forEach(function(row){
     // Mega-audit a11y fix: role=button (was a div with tabindex — screen
     // readers didn't announce it as interactive).
