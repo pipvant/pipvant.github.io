@@ -1351,6 +1351,61 @@
 <!-- Mega-audit a11y: skip link (was missing). -->
 <a href="#app" class="skip-link" data-i18n="Skip to main content">Skip to main content</a>
 <style>.skip-link{position:absolute;left:-9999px;top:0;z-index:9999;background:var(--accent,#5B8DEF);color:#fff;padding:10px 16px;border-radius:0 0 8px 0;font-weight:700;}.skip-link:focus{left:0;}</style>
+<style>
+/* WAVE 2 — Challenges table (per-plan) */
+.challenges-scroll{display:none;overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+.matcher-list[data-view="challenges"] .firm-slots{display:none}
+.matcher-list[data-view="challenges"] .matcher-table{display:none}
+.matcher-list[data-view="challenges"] .challenges-scroll{display:block}
+.challenges-table{width:100%;min-width:880px;border-collapse:collapse;font-size:12px}
+.challenges-table th{padding:0;background:var(--sunken);text-align:left;position:sticky;top:0}
+.challenges-table td{padding:10px 12px;border-bottom:1px solid var(--line);color:var(--secondary);font:500 12px/1.45 "IBM Plex Mono",monospace;white-space:nowrap}
+.challenges-table tbody tr:last-child td{border-bottom:0}
+.challenges-table tbody tr:hover td{background:rgba(91,141,239,.05)}
+.challenges-table .chal-firm{font-family:"Space Grotesk",sans-serif;font-weight:600;color:var(--text);font-size:13px}
+.challenges-table .chal-price b{color:var(--platinum);font-size:13px}
+.challenges-table .chal-price s{color:var(--muted);font-size:11px;margin-right:6px}
+.challenges-table .chal-ptdd{color:var(--gold,#D4AF37);font-weight:700}
+.challenges-table .chal-promo{display:inline-block;font-size:10px;font-weight:800;background:var(--gold,#D4AF37);color:#0A1628;border-radius:10px;padding:2px 8px;margin-top:2px}
+/* WAVE 2 — Compare tray + modal */
+.compare-tray{position:fixed;bottom:76px;left:50%;transform:translateX(-50%) translateY(20px);z-index:80;display:none;align-items:center;gap:12px;background:var(--navy,#0A1628);color:#fff;border:1px solid rgba(212,175,55,.5);border-radius:16px;padding:12px 18px;box-shadow:0 12px 32px rgba(0,0,0,.4);opacity:0;transition:opacity .2s,transform .2s}
+.compare-tray.show{display:flex;opacity:1;transform:translateX(-50%) translateY(0)}
+.compare-tray .cmp-count{font-weight:800;color:var(--gold,#D4AF37)}
+.compare-tray button{border:0;border-radius:10px;padding:9px 18px;font-weight:800;font-size:13px;cursor:pointer}
+.compare-tray .cmp-open{background:var(--gold,#D4AF37);color:#0A1628}
+.compare-tray .cmp-clear{background:transparent;color:#9fb0c9;border:1px solid rgba(255,255,255,.2)}
+.compare-toggle{position:absolute;top:8px;left:8px;z-index:5;width:30px;height:30px;border-radius:9px;border:1px solid var(--line-strong);background:var(--surface);color:var(--muted);font-size:15px;cursor:pointer;display:grid;place-items:center}
+.compare-toggle[aria-pressed="true"]{background:var(--gold,#D4AF37);border-color:var(--gold,#D4AF37);color:#0A1628}
+.firm-card{position:relative}
+.compare-modal{position:fixed;inset:0;z-index:95;display:none;align-items:center;justify-content:center;background:rgba(4,8,16,.72);padding:16px}
+.compare-modal.open{display:flex}
+.compare-panel{background:var(--surface);border:1px solid var(--line);border-radius:18px;max-width:860px;width:100%;max-height:86vh;overflow:auto;padding:22px}
+.compare-panel h3{color:var(--text);margin-bottom:4px}
+.compare-grid{display:grid;gap:0;margin-top:14px;overflow-x:auto}
+.compare-row{display:grid;grid-template-columns:150px repeat(var(--cmp-n,2),minmax(150px,1fr));border-bottom:1px solid var(--line);font-size:13px}
+.compare-row>div{padding:10px 12px}
+.compare-row .cmp-label{font-weight:700;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em}
+.compare-row .cmp-diff{background:rgba(212,175,55,.12)}
+.compare-row .cmp-same{opacity:.55}
+/* WAVE 2 — Detail sheet tabs */
+.sheet-tabs{display:flex;gap:6px;margin:14px 0 4px;border-bottom:1px solid var(--line);padding-bottom:0}
+.sheet-tab{border:0;background:transparent;color:var(--muted);font-size:13px;font-weight:700;padding:10px 14px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.sheet-tab[aria-selected="true"]{color:var(--platinum);border-bottom-color:var(--gold,#D4AF37)}
+.sheet-tabpane{display:none;padding-top:12px}
+.sheet-tabpane.active{display:block}
+.chal-minirow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 4px;border-bottom:1px solid var(--line);font-size:13px}
+.chal-minirow:last-child{border-bottom:0}
+.chal-minirow .m-size{font-weight:800;color:var(--text);font-variant-numeric:tabular-nums}
+.chal-minirow .m-meta{color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}
+.chal-minirow .m-price{font-weight:800;color:var(--platinum);font-variant-numeric:tabular-nums;white-space:nowrap}
+.payout-kv{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.payout-kv div{background:var(--sunken);border-radius:10px;padding:12px}
+.payout-kv span{display:block;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.payout-kv b{font-size:15px;color:var(--text)}
+.promo-line{display:flex;justify-content:space-between;align-items:center;background:rgba(212,175,55,.1);border:1px dashed rgba(212,175,55,.5);border-radius:10px;padding:10px 14px;margin-bottom:8px;font-size:13px}
+.promo-line b{color:var(--gold,#D4AF37);font-size:16px;letter-spacing:2px}
+.promo-line small{color:var(--muted)}
+</style>
 <div id="siteLanding" aria-label="PIPVANT landing page">
   <div class="lp-grain" aria-hidden="true"></div>
 
@@ -1756,6 +1811,7 @@
           <div class="view-toggle" aria-label="Result view">
             <button class="view-button" type="button" aria-pressed="true" data-matcher-view="rows">Rows</button>
             <button class="view-button" type="button" aria-pressed="false" data-matcher-view="table">Table</button>
+            <button class="view-button" type="button" aria-pressed="false" data-matcher-view="challenges">Challenges</button>
           </div>
           <button class="btn secondary matcher-more" data-screen="all-firms" type="button">More <span aria-hidden="true">→</span></button>
           <span class="preview-label">Awaiting verified data</span>
@@ -1805,6 +1861,22 @@
             <tr><td class="rank-cell"><span>3</span></td><td><span class="table-firm"><span class="logo-slot">—</span><span class="table-firm-stack"><span>—</span><span class="table-evidence">Verification — <button class="table-check" type="button" data-methodology-trigger>Criteria</button></span></span></span></td><td><span class="table-rating"><strong>—</strong><span class="rating-track"><i></i></span><small>Rationale —</small></span></td><td>—</td><td>—</td><td>—</td><td><button class="table-view-slot" type="button" disabled>VIEW</button></td></tr>
           </tbody>
         </table>
+
+        <div class="challenges-scroll"><table class="challenges-table" aria-label="Challenge plans comparison">
+          <thead><tr>
+            <th><button class="sort-button chal-sort" type="button" data-chal-col="firm">Firm</button></th>
+            <th><button class="sort-button chal-sort" type="button" data-chal-col="size">Size</button></th>
+            <th><button class="sort-button chal-sort" type="button" data-chal-col="steps">Steps</button></th>
+            <th><button class="sort-button chal-sort" type="button" data-chal-col="target">Target</button></th>
+            <th><button class="sort-button chal-sort" type="button" data-chal-col="daily">Daily Loss</button></th>
+            <th><button class="sort-button chal-sort" type="button" data-chal-col="maxdd">Max Loss</button></th>
+            <th><button class="sort-button chal-sort" type="button" data-chal-col="ptdd">PT:DD</button></th>
+            <th><button class="sort-button chal-sort" type="button" data-chal-col="split">Split</button></th>
+            <th><button class="sort-button chal-sort" type="button" data-chal-col="payout">Payout</button></th>
+            <th><button class="sort-button chal-sort" type="button" data-chal-col="price">Price</button></th>
+          </tr></thead>
+          <tbody></tbody>
+        </table></div>
 
         <div class="matcher-empty" style="display:none"><div class="empty-mark" aria-hidden="true">—</div><div><h3>No verified firms yet</h3><p>Results appear here once firm rules, prices, and sources are verified.</p></div></div>
       </section>
@@ -2440,13 +2512,37 @@
   <div class="firm-detail-panel">
     <div class="grabber"></div>
     <div class="sheet-title-row"><div><p class="eyebrow">Verified firm profile</p><h3 id="firmDetailTitle">—</h3><p>Data updated —</p></div><button class="sheet-close" id="closeFirmDetail" type="button" aria-label="Close firm details"><svg width="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+    <div class="sheet-tabs" role="tablist" aria-label="Firm detail sections">
+      <button class="sheet-tab" type="button" role="tab" aria-selected="true" data-sheet-tab="overview">Overview</button>
+      <button class="sheet-tab" type="button" role="tab" aria-selected="false" data-sheet-tab="challenges">Challenges</button>
+      <button class="sheet-tab" type="button" role="tab" aria-selected="false" data-sheet-tab="payouts">Payouts</button>
+    </div>
+    <div class="sheet-tabpane active" data-sheet-pane="overview">
     <div class="rule-table" aria-label="Firm rule table"><div class="rule-row"><span>Program type</span><strong>—</strong></div><div class="rule-row"><span>Account sizes</span><strong>—</strong></div><div class="rule-row"><span>Price from</span><strong>—</strong></div><div class="rule-row"><span>Profit target</span><strong>—</strong></div><div class="rule-row"><span>Profit split</span><strong>—</strong></div><div class="rule-row"><span>Max drawdown</span><strong>—</strong></div><div class="rule-row"><span>Daily loss limit</span><strong>—</strong></div><div class="rule-row"><span>Leverage</span><strong>—</strong></div><div class="rule-row"><span>Payout frequency</span><strong>—</strong></div></div>
     <h3 style="margin:24px 0 0">Notable rules</h3><ul class="notable-rules"><li><i aria-hidden="true"></i><span>—</span></li><li><i aria-hidden="true"></i><span>—</span></li><li><i aria-hidden="true"></i><span>—</span></li></ul>
+    </div><!-- /overview pane -->
+    <div class="sheet-tabpane" data-sheet-pane="challenges" role="tabpanel"><div id="sheetChallenges"></div></div>
+    <div class="sheet-tabpane" data-sheet-pane="payouts" role="tabpanel"><div id="sheetPayouts"></div></div>
   </div>
 </div>
 
-<div class="trade-sheet" id="tradeSheet" role="dialog" aria-modal="true" aria-labelledby="tradeSheetTitle">
-  <div class="trade-form">
+<!-- WAVE 2b — Compare tray + modal -->
+<div class="compare-tray" id="compareTray" role="toolbar" aria-label="Compare selected firms">
+  <span><span class="cmp-count" id="cmpCount">0</span> <span data-i18n-cmp="selected">selected</span></span>
+  <button class="cmp-open" id="cmpOpen" type="button">Compare</button>
+  <button class="cmp-clear" id="cmpClear" type="button">Clear</button>
+</div>
+<div class="compare-modal" id="compareModal" role="dialog" aria-modal="true" aria-label="Firm comparison">
+  <div class="compare-panel">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div><p class="eyebrow" style="margin:0">Side by side</p><h3 id="cmpTitle" style="margin:0">Compare firms</h3></div>
+      <button class="sheet-close" id="cmpClose" type="button" aria-label="Close comparison"><svg width="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+    </div>
+    <div class="compare-grid" id="cmpGrid"></div>
+  </div>
+</div>
+
+<div class="trade-sheet" id="tradeSheet" role="dialog" aria-modal="true" aria-labelledby="tradeSheetTitle">  <div class="trade-form">
     <div class="grabber"></div>
     <div class="sheet-head"><div><span class="tiny">NEW ENTRY</span><h3 id="tradeSheetTitle">Log trade</h3></div><button class="btn icon secondary" id="closeTradeSheet" type="button" aria-label="Close trade form"><svg width="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
     <form id="tradeForm">
@@ -2733,6 +2829,15 @@
     if(expander){
       // PIPVANT-WAVE1: card extras (promo badge, updated stamp, PT:DD, flags)
       sbWave1CardExtras(card,firm,plans,firstRules);
+      /* WAVE 2b — compare toggle (⚖) on each card */
+      try{
+        var ct=card.querySelector('.compare-toggle');
+        if(!ct){ct=document.createElement('button');ct.className='compare-toggle';ct.type='button';card.appendChild(ct);}
+        ct.setAttribute('aria-pressed',String((window.sbCompareIds||[]).indexOf(String(firm.id))!==-1));
+        ct.setAttribute('aria-label',currentLanguage==='ar'?'قارن '+firm.name:'Compare '+firm.name);
+        ct.textContent='⚖';
+        ct.onclick=function(ev){ev.stopPropagation();if(typeof sbToggleCompare==='function')sbToggleCompare(firm.id);};
+      }catch(_ct){}
       var toggle=function(){
         var expanded=expander.getAttribute('aria-expanded')==='true';
         document.querySelectorAll('#matcher .firm-card').forEach(function(o){o.classList.remove('expanded');var e=o.querySelector('.firm-expand');if(e)e.setAttribute('aria-expanded','false');});
@@ -2811,6 +2916,176 @@
       return (va-vb)*dir;
     });
   }
+  /* WAVE 2b — Compare tray: select up to 3 firms, side-by-side modal.
+     Diff highlighting: gold tint where values differ, dimmed where identical. */
+  window.sbCompareIds=[];
+  function sbToggleCompare(firmId){
+    var id=String(firmId),i=window.sbCompareIds.indexOf(id);
+    if(i!==-1)window.sbCompareIds.splice(i,1);
+    else{
+      if(window.sbCompareIds.length>=3){
+        if(typeof showToast==='function')showToast(currentLanguage==='ar'?'الحد الأقصى 3 شركات':'Maximum 3 firms');
+        return;
+      }
+      window.sbCompareIds.push(id);
+    }
+    sbUpdateCompareTray();
+  }
+  function sbUpdateCompareTray(){
+    var tray=document.getElementById('compareTray'),n=window.sbCompareIds.length;
+    if(tray){
+      tray.classList.toggle('show',n>0);
+      var c=document.getElementById('cmpCount');if(c)c.textContent=n;
+      var openBtn=document.getElementById('cmpOpen');if(openBtn)openBtn.disabled=n<2;
+    }
+    document.querySelectorAll('#matcher .firm-card').forEach(function(card){
+      var t=card.querySelector('.compare-toggle'),fid=card.getAttribute('data-firm-id');
+      if(t)t.setAttribute('aria-pressed',String(window.sbCompareIds.indexOf(String(fid))!==-1));
+    });
+  }
+  function sbCmpCellVal(firm,plans,key){
+    var r=(plans[0]&&plans[0].rules)||{};
+    switch(key){
+      case 'firm':return firm.name||'—';
+      case 'hq':return (sbCountryFlag(firm.headquarters)?sbCountryFlag(firm.headquarters)+' ':'')+(firm.headquarters||'—');
+      case 'sizes':return sbSizeRange(plans)||'—';
+      case 'price':{var ps=plans.map(function(p){return sbNum(p.price);}).filter(isFinite);return ps.length?sbFmtUSD(Math.min.apply(null,ps)):'—';}
+      case 'target':return sbPlanTarget(r)||'—';
+      case 'daily':return (r.daily_loss_pct!=null&&isFinite(Number(r.daily_loss_pct)))?r.daily_loss_pct+'%':'—';
+      case 'maxdd':{var v=(r.max_drawdown_pct!=null&&isFinite(Number(r.max_drawdown_pct)))?r.max_drawdown_pct+'%':'—';return v+(r.drawdown_type?' ('+String(r.drawdown_type).split(' ')[0]+')':'');}
+      case 'split':return (r.profit_split!=null&&isFinite(Number(r.profit_split)))?r.profit_split+'%':'—';
+      case 'payout':return r.payout_frequency||'—';
+      case 'promo':{var p=sbBestPromo(r);return p?((p.code||'PV')+(p.discount?' · '+p.discount:'')):'—';}
+      default:return '—';
+    }
+  }
+  function sbOpenCompare(){
+    var ids=window.sbCompareIds;
+    if(ids.length<2)return;
+    var grid=document.getElementById('cmpGrid');if(!grid)return;
+    var firms=ids.map(function(id){var f=null;(sbFirms||[]).forEach(function(x){if(String(x.id)===String(id))f=x;});return f;}).filter(Boolean);
+    var rows=[
+      ['firm',currentLanguage==='ar'?'الشركة':'Firm'],
+      ['hq',currentLanguage==='ar'?'المقر':'HQ'],
+      ['sizes',currentLanguage==='ar'?'الأحجام':'Sizes'],
+      ['price',currentLanguage==='ar'?'السعر من':'Price from'],
+      ['target',currentLanguage==='ar'?'الهدف':'Target'],
+      ['daily',currentLanguage==='ar'?'الخسارة اليومية':'Daily loss'],
+      ['maxdd',currentLanguage==='ar'?'أقصى تراجع':'Max drawdown'],
+      ['split',currentLanguage==='ar'?'التقسيم':'Split'],
+      ['payout',currentLanguage==='ar'?'الدفع':'Payout'],
+      ['promo',currentLanguage==='ar'?'البرومو':'Promo']
+    ];
+    grid.style.setProperty('--cmp-n',firms.length);
+    grid.innerHTML='';
+    rows.forEach(function(row){
+      var key=row[0],label=row[1];
+      var vals=firms.map(function(f){return sbCmpCellVal(f,sbPlansByFirm[f.id]||[],key);});
+      var allSame=vals.every(function(v){return v===vals[0];});
+      var rdiv=document.createElement('div');rdiv.className='compare-row';
+      var lab=document.createElement('div');lab.className='cmp-label';lab.textContent=label;rdiv.appendChild(lab);
+      vals.forEach(function(v){
+        var c=document.createElement('div');
+        c.className=allSame?'cmp-same':'cmp-diff';
+        c.textContent=v;
+        rdiv.appendChild(c);
+      });
+      grid.appendChild(rdiv);
+    });
+    var t=document.getElementById('cmpTitle');
+    if(t)t.textContent=currentLanguage==='ar'?'قارن الشركات':'Compare firms';
+    document.getElementById('compareModal').classList.add('open');
+  }
+  function sbCloseCompare(){var m=document.getElementById('compareModal');if(m)m.classList.remove('open');}
+  /* WAVE 2a — Challenges table helpers (one row PER PLAN). Steps derived from rules:
+     phase2 target present → 2-step; monthly subscription or 'instant' in key_rules → instant; else 1. */
+  function sbPlanSteps(rules){
+    if(!rules)return '—';
+    var kr=Array.isArray(rules.key_rules)?rules.key_rules.join(' ').toLowerCase():'';
+    if(rules.pricing_model&&String(rules.pricing_model).toLowerCase().indexOf('monthly')!==-1)return currentLanguage==='ar'?'شهري':'Monthly';
+    if(kr.indexOf('instant')!==-1)return currentLanguage==='ar'?'فوري':'Instant';
+    if(rules.profit_target_pct_phase2!=null&&isFinite(Number(rules.profit_target_pct_phase2)))return '2';
+    return '1';
+  }
+  function sbPlanStepsSort(rules){
+    var s=sbPlanSteps(rules);
+    if(s==='—')return 99;
+    var m=String(s).match(/(\d+)/);return m?Number(m[1]):50;
+  }
+  var sbChalSortCol='price',sbChalSortDir='asc';
+  function sbChalRowVal(firm,plan,col){
+    var r=plan.rules||{};
+    switch(col){
+      case 'firm':return String(firm.name||'').toLowerCase();
+      case 'size':{var v=sbNum(plan.account_size);return isFinite(v)?v:-1;}
+      case 'steps':return sbPlanStepsSort(r);
+      case 'target':{var v=Number(r.profit_target_pct);return isFinite(v)?v:-1;}
+      case 'daily':{var v=Number(r.daily_loss_pct);return isFinite(v)?v:-1;}
+      case 'maxdd':{var v=Number(r.max_drawdown_pct);return isFinite(v)?v:-1;}
+      case 'ptdd':{var p=sbPTDD(r);if(!p)return -1;var m=String(p).match(/1:([\d.]+)/);return m?Number(m[1]):-1;}
+      case 'split':{var v=Number(r.profit_split);return isFinite(v)?v:-1;}
+      case 'payout':return String(r.payout_frequency||'').toLowerCase();
+      case 'price':{var v=sbNum(plan.price);return isFinite(v)?v:-1;}
+      default:return 0;
+    }
+  }
+  function sbDiscountedPrice(plan){
+    var base=sbNum(plan.price);
+    if(!isFinite(base))return {base:null,final:null,pct:0};
+    var promo=plan.rules?sbBestPromo(plan.rules):null;
+    var pct=promo?sbPromoDiscountPct(promo):0;
+    if(pct>0)return {base:base,final:Math.round(base*(1-pct/100)*100)/100,pct:pct};
+    return {base:base,final:base,pct:0};
+  }
+  function sbRenderChallenges(firms){
+    var tbody=document.querySelector('#matcher .challenges-table tbody');
+    if(!tbody)return;
+    tbody.innerHTML='';
+    var rows=[];
+    (firms||[]).forEach(function(firm){
+      (sbPlansByFirm[firm.id]||[]).forEach(function(plan){
+        rows.push({firm:firm,plan:plan});
+      });
+    });
+    var dir=sbChalSortDir==='desc'?-1:1;
+    rows.sort(function(a,b){
+      var va=sbChalRowVal(a.firm,a.plan,sbChalSortCol),vb=sbChalRowVal(b.firm,b.plan,sbChalSortCol);
+      if(typeof va==='string')return va.localeCompare(vb)*dir;
+      return (va-vb)*dir;
+    });
+    rows.forEach(function(row){
+      var firm=row.firm,plan=row.plan,r=plan.rules||{};
+      var tr=document.createElement('tr');
+      function td(html,cls){var c=document.createElement('td');if(cls)c.className=cls;if(typeof html==='string')c.innerHTML=html;else if(html)c.appendChild(html);return c;}
+      tr.appendChild(td('<span class="chal-firm"></span>',''));
+      tr.querySelector('.chal-firm').textContent=firm.name||'—';
+      var sz=sbNum(plan.account_size);
+      tr.appendChild(td(isFinite(sz)?sbFmtSize(sz):'—'));
+      tr.appendChild(td(sbPlanSteps(r)));
+      tr.appendChild(td(sbPlanTarget(r)||'—'));
+      var dl=r.daily_loss_pct;
+      tr.appendChild(td(dl!=null&&isFinite(Number(dl))?dl+'%':'—'));
+      var md=r.max_drawdown_pct,mdt=r.drawdown_type;
+      tr.appendChild(td((md!=null&&isFinite(Number(md))?md+'%':'—')+(mdt?' <small style="opacity:.6">'+String(mdt).split(' ')[0]+'</small>':'')));
+      var ptdd=sbPTDD(r);
+      tr.appendChild(td(ptdd||'—','chal-ptdd'));
+      var sp=r.profit_split;
+      tr.appendChild(td(sp!=null&&isFinite(Number(sp))?sp+'%':'—'));
+      tr.appendChild(td(r.payout_frequency||'—'));
+      var dp=sbDiscountedPrice(plan);
+      var priceHtml='—';
+      if(dp.final!=null){
+        priceHtml='<span class="chal-price">'+(dp.pct>0?'<s>'+sbFmtUSD(dp.base)+'</s>':'')+'<b>'+sbFmtUSD(dp.final)+'</b>'+(dp.pct>0?'<br><span class="chal-promo">-'+dp.pct+'%</span>':'')+'</span>';
+      }
+      tr.appendChild(td(priceHtml));
+      tbody.appendChild(tr);
+    });
+    // update sort indicators
+    document.querySelectorAll('.chal-sort').forEach(function(b){
+      if(b.getAttribute('data-chal-col')===sbChalSortCol)b.setAttribute('aria-sort',sbChalSortDir==='asc'?'ascending':'descending');
+      else b.removeAttribute('aria-sort');
+    });
+  }
   function sbHideMarketUI(){
     // Hide market tabs + market filter: no verified market-type data in database (don't invent)
     try{
@@ -2846,6 +3121,8 @@
     }
     var tbody=document.querySelector('#matcher .matcher-table tbody');
     if(tbody){tbody.innerHTML='';sbSortFirmsForTable(firms).forEach(function(firm,idx){tbody.appendChild(sbBuildTableRow(firm,sbPlansByFirm[firm.id]||[],idx+1));});}
+    /* WAVE 2a — render per-plan challenges table with same filtered firms */
+    try{if(typeof sbRenderChallenges==='function')sbRenderChallenges(firms);}catch(_ce){}
     var mEmpty=document.querySelector('#matcher .matcher-empty');
     if(mEmpty){
       mEmpty.style.display=firms.length>0?'none':'';
@@ -3146,6 +3423,71 @@
     var notes=sheet.querySelectorAll('.notable-rules li span');
     var keyRules=rules&&Array.isArray(rules.key_rules)?rules.key_rules:[];
     notes.forEach(function(sp,i){sp.textContent=keyRules[i]||'—';});
+    /* WAVE 2c — fill Challenges + Payouts panes */
+    try{
+      var chEl=document.getElementById('sheetChallenges');
+      if(chEl){
+        chEl.innerHTML='';
+        if(!plans.length){chEl.innerHTML='<p style="color:var(--muted);font-size:13px">—</p>';}
+        plans.forEach(function(p){
+          var r=p.rules||{};
+          var row=document.createElement('div');row.className='chal-minirow';
+          var sz=sbNum(p.account_size);
+          var left=document.createElement('div');
+          var ms=document.createElement('div');ms.className='m-size';ms.textContent=isFinite(sz)?sbFmtSize(sz):'—';
+          var mm=document.createElement('div');mm.className='m-meta';
+          var parts=[];
+          parts.push((currentLanguage==='ar'?'الهدف ':'Target ')+(sbPlanTarget(r)||'—'));
+          parts.push((currentLanguage==='ar'?'التراجع ':'DD ')+(sbPlanDrawdown(r)||'—'));
+          if(r.profit_split!=null&&isFinite(Number(r.profit_split)))parts.push(r.profit_split+'% '+(currentLanguage==='ar'?'تقسيم':'split'));
+          mm.textContent=parts.join(' · ');
+          left.appendChild(ms);left.appendChild(mm);
+          var pr=document.createElement('div');pr.className='m-price';
+          var dp=sbDiscountedPrice(p);
+          pr.innerHTML=dp.final!=null?(dp.pct>0?'<s style="color:var(--muted);font-weight:400">'+sbFmtUSD(dp.base)+'</s> ':'')+sbFmtUSD(dp.final):'—';
+          row.appendChild(left);row.appendChild(pr);
+          chEl.appendChild(row);
+        });
+      }
+      var poEl=document.getElementById('sheetPayouts');
+      if(poEl){
+        poEl.innerHTML='';
+        var kv=document.createElement('div');kv.className='payout-kv';
+        function kvItem(lbl,val){var d=document.createElement('div');var s=document.createElement('span');s.textContent=lbl;var b=document.createElement('b');b.textContent=val||'—';d.appendChild(s);d.appendChild(b);return d;}
+        var ar=currentLanguage==='ar';
+        kv.appendChild(kvItem(ar?'تقسيم الأرباح':'Profit split',(rules&&rules.profit_split!=null&&isFinite(Number(rules.profit_split)))?rules.profit_split+'%':null));
+        kv.appendChild(kvItem(ar?'تكرار الدفع':'Payout frequency',rules?rules.payout_frequency:null));
+        poEl.appendChild(kv);
+        // payout/consistency-related key rules
+        var prel=keyRules.filter(function(k){return /payout|consist|withdraw|scaling/i.test(k);});
+        if(prel.length){
+          var h=document.createElement('h3');h.style.margin='6px 0 8px';h.style.fontSize='14px';h.textContent=ar?'قواعد الدفع':'Payout rules';
+          poEl.appendChild(h);
+          var ul=document.createElement('ul');ul.className='notable-rules';ul.style.margin='0 0 12px';
+          prel.slice(0,5).forEach(function(k){var li=document.createElement('li');var sp=document.createElement('span');sp.textContent=k;li.appendChild(sp);ul.appendChild(li);});
+          poEl.appendChild(ul);
+        }
+        // promotions
+        var promos=[];
+        plans.forEach(function(p){var pr2=p.rules?sbBestPromo(p.rules):null;if(pr2)promos.push(pr2);});
+        if(promos.length){
+          var hp=document.createElement('h3');hp.style.margin='6px 0 8px';hp.style.fontSize='14px';hp.textContent=ar?'العروض':'Promotions';
+          poEl.appendChild(hp);
+          promos.slice(0,4).forEach(function(pr2){
+            var line=document.createElement('div');line.className='promo-line';
+            var code=document.createElement('b');code.textContent=pr2.code||'PV';
+            var meta=document.createElement('small');meta.textContent=(pr2.discount||'')+(pr2.expiry?(' · '+(ar?'ينتهي ':'ends ')+sbFmtDate(pr2.expiry)):'');
+            line.appendChild(code);line.appendChild(meta);
+            line.style.cursor='pointer';
+            line.addEventListener('click',function(){try{if(navigator.clipboard)navigator.clipboard.writeText(pr2.code||'PV');if(typeof showToast==='function')showToast(ar?'تم نسخ الكود':'Code copied');}catch(e){}});
+            poEl.appendChild(line);
+          });
+        }
+        if(!prel.length&&!promos.length){
+          poEl.innerHTML+='<p style="color:var(--muted);font-size:13px">'+(ar?'لا توجد بيانات دفع إضافية.':'No additional payout data.')+'</p>';
+        }
+      }
+    }catch(_sp){}
   }
   // Mega-audit H26/H27 fix: translate raw Supabase/English error strings into
   // friendly bilingual messages (was shown verbatim, untranslated).
@@ -4272,6 +4614,21 @@
   directoryFilterSheet.addEventListener('click',function(event){if(event.target===directoryFilterSheet)closeDirectoryFilters();});
   firmDetailSheet.addEventListener('click',function(event){if(event.target===firmDetailSheet)closeFirmDetail();});
   document.getElementById('closeFirmDetail').addEventListener('click',closeFirmDetail);
+  /* WAVE 2c — detail sheet tab switching */
+  (function(){
+    var tabs=document.querySelectorAll('#firmDetailSheet .sheet-tab');
+    var ar=currentLanguage==='ar';
+    tabs.forEach(function(t){
+      var k=t.getAttribute('data-sheet-tab');
+      t.textContent=k==='overview'?(ar?'نظرة عامة':'Overview'):k==='challenges'?(ar?'التحديات':'Challenges'):(ar?'الدفعات':'Payouts');
+    });
+    tabs.forEach(function(tab){tab.addEventListener('click',function(){
+      tabs.forEach(function(o){o.setAttribute('aria-selected',String(o===tab));});
+      document.querySelectorAll('#firmDetailSheet .sheet-tabpane').forEach(function(p){
+        p.classList.toggle('active',p.getAttribute('data-sheet-pane')===tab.getAttribute('data-sheet-tab'));
+      });
+    });});
+  })();
   // Mega-audit fix: debounce directory search (was re-render on every keystroke).
   var _dirSearchT=0;
   directorySearch.addEventListener('input',function(){clearTimeout(_dirSearchT);_dirSearchT=setTimeout(refreshDirectory,250);});
@@ -5635,14 +5992,32 @@
     matcherList.setAttribute('data-view',view);
     document.querySelectorAll('[data-matcher-view]').forEach(function(other){other.setAttribute('aria-pressed',String(other===button));});
   });});
-  document.querySelectorAll('.sort-button').forEach(function(button){button.addEventListener('click',function(){
+  document.querySelectorAll('.sort-button:not(.chal-sort)').forEach(function(button){button.addEventListener('click',function(){
     var col=button.getAttribute('data-sort-column');
     var next=button.getAttribute('aria-sort')==='ascending'?'descending':'ascending';
-    document.querySelectorAll('.sort-button').forEach(function(other){other.removeAttribute('aria-sort');});
+    document.querySelectorAll('.sort-button:not(.chal-sort)').forEach(function(other){other.removeAttribute('aria-sort');});
     button.setAttribute('aria-sort',next);
     // Rating/Discount columns have no verified data; sorting them is a no-op
     if(col==='Rating'){sbTableSortCol=null;}
     else{sbTableSortCol=col;sbTableSortDir=next;}
+    if(typeof sbRenderFirms==='function')sbRenderFirms();
+  });});
+  /* WAVE 2b — compare tray wiring */
+  (function(){
+    var openB=document.getElementById('cmpOpen'),clearB=document.getElementById('cmpClear'),closeB=document.getElementById('cmpClose'),modal=document.getElementById('compareModal');
+    if(openB)openB.addEventListener('click',function(){sbOpenCompare();});
+    if(clearB)clearB.addEventListener('click',function(){window.sbCompareIds=[];sbUpdateCompareTray();});
+    if(closeB)closeB.addEventListener('click',function(){sbCloseCompare();});
+    if(modal)modal.addEventListener('click',function(e){if(e.target===modal)sbCloseCompare();});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')sbCloseCompare();});
+    if(openB)openB.textContent=currentLanguage==='ar'?'قارن':'Compare';
+    if(clearB)clearB.textContent=currentLanguage==='ar'?'مسح':'Clear';
+  })();
+  /* WAVE 2a — challenges table sorting (per-plan rows) */
+  document.querySelectorAll('.chal-sort').forEach(function(button){button.addEventListener('click',function(){
+    var col=button.getAttribute('data-chal-col');
+    var next=button.getAttribute('aria-sort')==='ascending'?'descending':'ascending';
+    sbChalSortCol=col;sbChalSortDir=next;
     if(typeof sbRenderFirms==='function')sbRenderFirms();
   });});
 
