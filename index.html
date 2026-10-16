@@ -5387,12 +5387,12 @@
         var esc=function(v){v=String(v==null?'':v);return '"'+v.replace(/"/g,'""')+'"';};
         return [dateStr,t.pair||'',t.direction||'',t.setup||'',t.entry||'',t.stop||'',t.target||'',t.exitPrice||'',t.size||'',t.pnl==null?'':t.pnl,t.rMultiple||'',t.rating||'',t.tag||'',t.notes||'',t.result||''].map(esc).join(',');
       });
-      var csv=headers.join(',')+'\n'+rows.join('\n');
+      var csv='﻿'+headers.join(',')+'\n'+rows.join('\n');
       var blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
       var url=URL.createObjectURL(blob);
       var a=document.createElement('a');a.href=url;a.download='pipvant-trades-'+new Date().toISOString().slice(0,10)+'.csv';
       document.body.appendChild(a);a.click();document.body.removeChild(a);
-      setTimeout(function(){URL.revokeObjectURL(url);},1000);
+      setTimeout(function(){URL.revokeObjectURL(url);},60000);
       if(typeof showToast==='function')showToast(currentLanguage==='ar'?'تم تصدير الصفقات.':'Trades exported.');
     }catch(e){console.warn('CSV export failed:',e);}
   }
