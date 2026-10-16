@@ -25,7 +25,7 @@
       --bg:#0A1628; --surface:#0F1D33; --raised:#14253F; --sunken:#060D1A;
       --line:#1C2F4D; --line-strong:#2B4266; --text:#F4F6F8; --secondary:#A9B6C6;
       --muted:#8B9AB0; --accent:#5B8DEF; --accent-strong:#3A6FDE; --accent-soft:rgba(91,141,239,.12);
-      --platinum:#C9D2DC; --silver:#8E9AAF; --success:#5B8DEF; --danger:#C9D2DC;
+      --platinum:#C9D2DC; --silver:#8E9AAF; --success:#10b981; --danger:#ef4444;
       --shadow:0 22px 70px rgba(0,0,0,.28); --r-lg:18px; --r-md:12px; --r-sm:9px;
       --press:120ms; --micro:150ms; --sheet:220ms; --dialog:260ms; --screen:240ms; --screen-exit:190ms; --hero:480ms; --stagger:60ms;
       --ease-enter:cubic-bezier(.23,1,.32,1); --ease-move:ease-in-out; --ease-constant:linear;
@@ -738,7 +738,7 @@
     .switch-track:after{content:"";position:absolute;width:16px;height:16px;left:2px;top:2px;border-radius:50%;background:var(--muted);transition:transform var(--micro) var(--ease-move),background-color var(--micro) var(--ease-move)}
     .rail-bottom-spacer{margin-top:auto}
 
-    html[data-theme="light"]{color-scheme:light;--bg:#F4F6F8;--surface:#FFFFFF;--raised:#E8ECF1;--sunken:#E8ECF1;--line:#C9D2DC;--line-strong:#A7B3C1;--text:#0A1628;--secondary:#34445C;--muted:#5D6C7F;--accent:#3A6FDE;--accent-strong:#3A6FDE;--accent-soft:rgba(58,111,222,.11);--platinum:#526174;--silver:#6B788A;--success:#3A6FDE;--danger:#34445C;--shadow:0 22px 70px rgba(10,22,40,.13)}
+    html[data-theme="light"]{color-scheme:light;--bg:#F4F6F8;--surface:#FFFFFF;--raised:#E8ECF1;--sunken:#E8ECF1;--line:#C9D2DC;--line-strong:#A7B3C1;--text:#0A1628;--secondary:#34445C;--muted:#5D6C7F;--accent:#3A6FDE;--accent-strong:#3A6FDE;--accent-soft:rgba(58,111,222,.11);--platinum:#526174;--silver:#6B788A;--success:#0d9d6c;--danger:#dc2626;--shadow:0 22px 70px rgba(10,22,40,.13)}
     html[data-theme="light"] .topbar{background:color-mix(in srgb,var(--bg) 93%,transparent)}
     html[data-theme="light"] .bottom-nav{background:color-mix(in srgb,var(--surface) 92%,transparent);box-shadow:0 16px 42px rgba(10,22,40,.16),inset 0 1px 0 rgba(255,255,255,.8)}
     html[data-theme="light"] .firm-card,html[data-theme="light"] .pain-card,html[data-theme="light"] .benefit-card,html[data-theme="light"] .step-card{background:var(--surface)}
@@ -2945,6 +2945,12 @@
     var el=document.getElementById('authFeedback');
     if(el){el.textContent=msg;feedbackMotion(el);}
     showToast(msg);
+    // N1 fix: re-enable the auth submit button after an error.
+    try{
+      var _f=document.getElementById('signupForm');
+      var _b=_f&&_f.querySelector('[type="submit"]');
+      if(_b)_b.disabled=false;
+    }catch(e){}
   }
   function sbLoadProfile(cb){
     cb=cb||function(){};
@@ -3257,6 +3263,14 @@
       if(!pending.length)return;
       pending.forEach(function(t){
         t._synced=true;
+        // R1 fix: persist the _synced flag immediately (before the async insert),
+        // instead of a trailing saveLocalTrades(all) which would resurrect
+        // trades already removed by removeLocalTrade.
+        try{
+          var _all=loadLocalTrades();
+          for(var _i=0;_i<_all.length;_i++){if(_all[_i]._localId===t._localId){_all[_i]._synced=true;break;}}
+          saveLocalTrades(_all);
+        }catch(e){}
         var ep=parseFloat(t.entry),sz=parseFloat(t.size),sp=parseFloat(t.stop),tp=parseFloat(t.target),xp=parseFloat(t.exitPrice);
         var payload={user_id:sbUser.id,symbol:t.pair||'UNKNOWN',direction:(t.direction||'long').toLowerCase(),entry_price:isFinite(ep)?ep:0,exit_price:isFinite(xp)?xp:null,position_size:isFinite(sz)?sz:0,pnl:(t.pnl!=null&&isFinite(Number(t.pnl)))?Number(t.pnl):null,stop_price:isFinite(sp)?sp:null,target_price:isFinite(tp)?tp:null,opened_at:new Date(t.timestamp||Date.now()).toISOString(),closed_at:t.closed?new Date().toISOString():null,notes:t.notes||null,setup:t.setup||null,tag:t.tag||null,account_id:t.account_id||null};
         sb.from('trades').insert(payload).select('id').then(function(r){
@@ -3269,7 +3283,6 @@
           }
         }).catch(function(){t._synced=false;});
       });
-      saveLocalTrades(all);
     }catch(e){}
   }
   function applyTradeExtras(){
@@ -4803,6 +4816,11 @@
   document.getElementById('signupForm').addEventListener('submit',function(e){
     e.preventDefault();
     if(!e.currentTarget.reportValidity())return;
+    // N1 fix: prevent double-submit. Disable the button until done.
+    var _btn=e.submitter||e.currentTarget.querySelector('[type="submit"]');
+    if(_btn&&_btn.disabled)return;
+    if(_btn)_btn.disabled=true;
+    function _reenable(){if(_btn)_btn.disabled=false;}
     var sbEmail=document.getElementById('signupEmail').value.trim();
     var sbPassword=document.getElementById('signupPassword').value;
     var authFeedbackEl=document.getElementById('authFeedback');if(authFeedbackEl)authFeedbackEl.textContent='';
@@ -5114,15 +5132,31 @@
     tradingAccounts=[];
     selectedAccountId=null;
     if(typeof renderAccountList==='function')renderAccountList();
-    if(!sb||!sbUser)return;
+    // R2 fix: offline fallback. If cloud is unavailable, restore from the
+    // localStorage snapshot (written on script load from the same device).
+    // This is safe because clearUserState wipes it on logout/user-switch.
+    function _restoreLocal(){
+      try{
+        var la=JSON.parse(localStorage.getItem('pipvant_accounts')||'[]');
+        if(Array.isArray(la)&&la.length)tradingAccounts=la;
+        var ls=localStorage.getItem('pipvant_selected_account');
+        if(ls)selectedAccountId=ls;
+        if(typeof renderAccountList==='function')renderAccountList();
+        if(typeof updateAccountSwitchLabel==='function')updateAccountSwitchLabel();
+        if(typeof updateProfileBalance==='function')updateProfileBalance();
+      }catch(e){}
+    }
+    if(!sb||!sbUser){_restoreLocal();return;}
     sb.from('user_settings').select('accounts,selected_account').eq('user_id',sbUser.id).maybeSingle().then(function(r){
-      var d=r&&!r.error&&r.data?r.data:null;if(!d)return;
+      var d=r&&!r.error&&r.data?r.data:null;
+      if(!d||r.error){_restoreLocal();return;}
       if(Array.isArray(d.accounts)&&d.accounts.length){tradingAccounts=d.accounts;try{localStorage.setItem('pipvant_accounts',JSON.stringify(tradingAccounts));}catch(e){}}
+      else{_restoreLocal();return;}
       if(typeof d.selected_account==='string'&&d.selected_account){selectedAccountId=d.selected_account;try{localStorage.setItem('pipvant_selected_account',selectedAccountId);}catch(e){}}
       if(typeof renderAccountList==='function')renderAccountList();
       if(typeof updateAccountSwitchLabel==='function')updateAccountSwitchLabel();
       if(typeof updateProfileBalance==='function')updateProfileBalance();
-    }).catch(function(){});
+    }).catch(function(){_restoreLocal();});
   }
 
   var tradeSheet=document.getElementById('tradeSheet');
@@ -5842,6 +5876,10 @@
   document.getElementById('cancelTrade').addEventListener('click',closeTradeSheet);
   document.getElementById('tradeForm').addEventListener('submit',function(e){
     e.preventDefault();if(!e.currentTarget.reportValidity())return;
+    // N2 fix: prevent double-submit creating duplicate trades.
+    var _tbtn=e.submitter||e.currentTarget.querySelector('[type="submit"]');
+    if(_tbtn&&_tbtn.disabled)return;
+    if(_tbtn){_tbtn.disabled=true;setTimeout(function(){try{_tbtn.disabled=false;}catch(_x){}},3000);}
     var tradeFormEl=e.currentTarget;
     var directionButton=document.querySelector('.chip[data-direction][aria-pressed="true"]');
     if(!directionButton){document.getElementById('tradeFormFeedback').textContent=currentLanguage==='ar'?'اختر اتجاه الصفقة.':'Choose a trade direction.';document.querySelector('.chip[data-direction]').focus();return;}
