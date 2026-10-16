@@ -2587,7 +2587,7 @@
       var grid=details.querySelector('.spec-grid');if(grid&&grid.after)grid.after(ul);else details.appendChild(ul);
     }
     var cta=q('.slot-cta');
-    if(cta){cta.disabled=false;cta.addEventListener('click',function(ev2){ev2.stopPropagation();var fid=card.getAttribute('data-firm-id');if(fid&&typeof sbFillDetailSheet==='function')sbFillDetailSheet(fid);var sheet=document.getElementById('firmDetailSheet');if(sheet){sheet.classList.add('open');var panel=sheet.querySelector('.firm-detail-panel');if(panel){panel.classList.remove('detail-morph');void panel.offsetWidth;panel.classList.add('detail-morph');}var cb=document.getElementById('closeFirmDetail');if(cb)cb.focus();}});}
+    if(cta){cta.disabled=false;cta.addEventListener('click',function(ev2){ev2.stopPropagation();ev2.preventDefault();try{var fid=card.getAttribute('data-firm-id');if(fid&&typeof sbFillDetailSheet==='function')sbFillDetailSheet(fid);}catch(_e){}try{var sheet=document.getElementById('firmDetailSheet');if(sheet){sheet.classList.add('open');var panel=sheet.querySelector('.firm-detail-panel');if(panel){panel.classList.remove('detail-morph');void panel.offsetWidth;panel.classList.add('detail-morph');}}}catch(_e2){}});}
     // Shortlist button (matcher cards)
     var slBtn=card.querySelector('.firm-detail-actions .btn.secondary');
     if(slBtn){
