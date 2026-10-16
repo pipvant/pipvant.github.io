@@ -155,6 +155,12 @@
     /* desktop: promo badge floats (out of grid flow) */
     .firm-expand{position:relative}
     .firm-expand .discount-slot.promo-badge{position:absolute;top:10px;inset-inline-end:38px;z-index:3;margin:0}
+    /* Desktop: badge/PT:DD as a proper grid column (no overlap with allocation) */
+    @media (min-width:640px){
+      .firm-expand{grid-template-columns:34px 48px minmax(0,1fr) auto!important}
+      .firm-expand .discount-slot.promo-badge{position:static;margin:0;align-self:center;justify-self:end}
+      .firm-expand .discount-slot.show:not(.promo-badge){position:static;margin:0;align-self:center;justify-self:end}
+    }
     /* --- PFM cards: slim horizontal strips, mobile only --- */
     @media (max-width:639px){
       #matcher .firm-card{border-radius:16px}
@@ -4387,7 +4393,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
         }
         // promotions
         var promos=[];
-        plans.forEach(function(p){var pr2=p.rules?sbBestPromo(p.rules):null;if(pr2)promos.push(pr2);});
+        var _seen={};plans.forEach(function(p){var pr2=p.rules?sbBestPromo(p.rules):null;if(pr2){var _k=String(pr2.code||'PV').toUpperCase();if(!_seen[_k]){_seen[_k]=1;promos.push(pr2);}}});
         if(promos.length){
           var hp=document.createElement('h3');hp.style.margin='6px 0 8px';hp.style.fontSize='14px';hp.textContent=ar?'العروض':'Promotions';
           poEl.appendChild(hp);
@@ -4499,7 +4505,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       el.appendChild(ul);
     }
     var promos=[];
-    plans.forEach(function(p){var pr2=p.rules?sbBestPromo(p.rules):null;if(pr2)promos.push(pr2);});
+    var _seen={};plans.forEach(function(p){var pr2=p.rules?sbBestPromo(p.rules):null;if(pr2){var _k=String(pr2.code||'PV').toUpperCase();if(!_seen[_k]){_seen[_k]=1;promos.push(pr2);}}});
     if(promos.length){
       var hp=document.createElement('div');hp.className='fd-sec';hp.textContent=ar?'العروض':'Promotions';el.appendChild(hp);
       promos.slice(0,4).forEach(function(pr2){
