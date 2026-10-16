@@ -5904,14 +5904,13 @@
     sb.from('notifications').select('id,title,body,created_at,read,data').eq('user_id',sbUser.id).order('created_at',{ascending:false}).limit(30)
       .then(function(r){
         var rows=(r&&!r.error&&r.data)?r.data:[];
-        // One-time cleanup: delete stale news alerts saved as personal cloud
-        // notifications by the old logic (news is now everyone-scope, memory-only).
+        // One-time cleanup: delete ALL news alerts saved as personal cloud
+        // notifications by the old logic (news is now everyone-scope,
+        // memory-only and must never live in personal cloud).
         try{
           var staleIds=rows.filter(function(n){
             var t=n.title||'';
-            var isNews=/high-impact news soon/i.test(t)||/خبر عالي التأثير/.test(t);
-            var age=Date.now()-new Date(n.created_at||Date.now()).getTime();
-            return isNews&&age>24*3600*1000;
+            return /high-impact news soon/i.test(t)||/خبر عالي التأثير/.test(t);
           }).map(function(n){return n.id;});
           if(staleIds.length&&sbUser){
             sb.from('notifications').delete().in('id',staleIds).eq('user_id',sbUser.id).then(function(){}).catch(function(){});
