@@ -3647,9 +3647,11 @@
     if(tradeCount>=500&&earned.indexOf('Marathon')===-1){
       if(awardProfileCertificate('Marathon'))sbSaveCertificate('Marathon');
     }
-    if(disciplineStreak>=90&&earned.indexOf('Iron Discipline')===-1){
-      if(awardProfileCertificate('Iron Discipline'))sbSaveCertificate('Iron Discipline');
-    }
+    // C1-cert fix: Iron Discipline is unearnable while the discipline feature
+    // is parked. Skip the award check (the card already says "coming soon").
+    // if(disciplineStreak>=90&&earned.indexOf('Iron Discipline')===-1){
+    //   if(awardProfileCertificate('Iron Discipline'))sbSaveCertificate('Iron Discipline');
+    // }
     // Real mission progress from sessionJournalEntries
     var mTrades=[],mClosed=[];
     try{
@@ -3689,19 +3691,20 @@
         {name:'Risk Master',current:mTrades.length,target:100,unit:currentLanguage==='ar'?'صفقة':'trades',extra:mStopPct+'%'},
         {name:'Edge Proven',current:mClosed.length,target:100,unit:currentLanguage==='ar'?'صفقة':'trades',extra:'PF '+(isFinite(mPf)?mPf.toFixed(2):'—')}
       ];
-      document.querySelectorAll('.locked-certificate').forEach(function(card){
+      document.querySelectorAll('.locked-certificate').forEach(function(card,idx){
         var title=card.querySelector('h4');
         var progress=card.querySelector('.mission-status strong');
         if(!title||!progress)return;
-        var name=title.textContent.trim();
-        var m=missions.find(function(x){return x.name===name;});
+        // H4-cert fix: match by index, not translated text (Arabic mode breaks
+        // text matching). The missions array order matches the card order.
+        var m=missions[idx];
         if(m){
           var txt=m.current+'/'+m.target+' '+m.unit;
           if(m.note)txt+=' · '+m.note;
           progress.textContent=txt;
           // Add claim button if mission complete and not yet claimed
           var isComplete = m.current >= m.target;
-          var isClaimed = profileSession.certificates.indexOf(name) !== -1;
+          var isClaimed = profileSession.certificates.indexOf(m.name) !== -1;
           var existingBtn = card.querySelector('.claim-cert-btn');
           if(isComplete && !isClaimed && !existingBtn){
             var btn = document.createElement('button');
@@ -3709,7 +3712,8 @@
             btn.type = 'button';
             btn.style.cssText = 'margin-top:12px;width:100%;';
             btn.textContent = currentLanguage==='ar' ? 'استلام الشهادة' : 'Claim Certificate';
-            btn.onclick = function(){ awardProfileCertificate(name); };
+            // H1-cert fix: persist to cloud (was local-only, lost on reload).
+            (function(_mn){btn.onclick = function(){ if(awardProfileCertificate(_mn)&&typeof sbSaveCertificate==='function')sbSaveCertificate(_mn); };})(m.name);
             card.appendChild(btn);
             card.style.opacity = '1';
             card.style.borderColor = 'var(--accent)';
