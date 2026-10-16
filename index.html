@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
   <title>PIPVANT by Orovanta — Trading Decision Tools</title>
-  <meta name="description" content="PIPVANT is a free toolkit for serious traders: prop firm matcher with verified firms, smart trading journal, risk calculator, and economic calendar. Trade with a process, not a prediction.">
+  <meta name="description" content="PIPVANT is a free toolkit for serious traders: prop firm matcher with verified firms, smart journal, risk calculator, and economic calendar.">
   <meta property="og:title" content="PIPVANT — Free Trading Toolkit for Serious Traders">
   <meta property="og:description" content="Prop firm matcher, smart journal, risk calculator & economic calendar. Free forever.">
   <meta property="og:type" content="website">
@@ -23,6 +23,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="PIPVANT — Free Trading Toolkit">
   <meta name="twitter:description" content="Prop firm matcher, smart journal, risk calculator & economic calendar. Free forever.">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"PIPVANT","url":"https://pipvant.github.io/","logo":"https://pipvant.github.io/assets/pipvanta-logo.png","parentOrganization":{"@type":"Organization","name":"Orovanta"}}</script>
   <style>
     [hidden]{display:none!important;}
     :root {
@@ -229,6 +230,7 @@
     .review-prompts label{font-size:12px;line-height:1.45;text-transform:none;letter-spacing:0;color:var(--secondary);margin-bottom:8px}
     body.auth-active{overflow:hidden} .auth-shell{visibility:hidden} body.show-auth .auth-shell{visibility:visible}
     body.auth-active .app{display:none}
+    body.show-landing .app{display:none}
     body.app-ready .auth-shell{display:none}
     .auth-shell{min-height:100svh;background:var(--bg);padding:18px;display:grid;place-items:center;position:relative;overflow:hidden}
     .auth-shell:before{content:"";position:absolute;width:420px;height:420px;left:50%;top:-270px;transform:translateX(-50%);border:1px solid rgba(91,141,239,.14);border-radius:50%;box-shadow:0 0 0 54px rgba(91,141,239,.025),0 0 0 108px rgba(201,210,220,.018);pointer-events:none}
@@ -1914,7 +1916,7 @@
               <div class="risk-field"><label for="riskPercent">Risk %</label><div class="risk-stepper"><button class="step-button" type="button" data-risk-step="-0.1" aria-label="Decrease risk percentage">−</button><div class="field-shell"><input id="riskPercent" class="full-calc-input" type="number" min="0.1" max="100" step="0.1" inputmode="decimal" placeholder="—" aria-label="Risk percentage"><span class="suffix">%</span></div><button class="step-button" type="button" data-risk-step="0.1" aria-label="Increase risk percentage">+</button></div><div class="risk-presets" aria-label="Risk presets"><button class="risk-preset" type="button" data-risk-preset="0.5" aria-pressed="false">0.5%</button><button class="risk-preset" type="button" data-risk-preset="1" aria-pressed="false">1%</button><button class="risk-preset" type="button" data-risk-preset="2" aria-pressed="false">2%</button></div></div>
               <div class="risk-field"><label for="stopDistance">Stop-loss pips</label><div class="field-shell"><input id="stopDistance" class="suffixed full-calc-input" type="number" min="0" step="0.1" inputmode="decimal" placeholder="—"><span class="suffix">pips</span></div></div>
               <div class="risk-field"><label for="riskSymbol">Symbol / pair</label><select id="riskSymbol" class="full-calc-input"><option value="">Select pair</option><option value="EUR/USD">EUR/USD</option><option value="GBP/USD">GBP/USD</option><option value="AUD/USD">AUD/USD</option><option value="NZD/USD">NZD/USD</option><option value="USD/JPY">USD/JPY</option><option value="EUR/JPY">EUR/JPY</option><option value="GBP/JPY">GBP/JPY</option><option value="XAU/USD">XAU/USD (Gold)</option><option value="US30">US30</option><option value="NAS100">NAS100</option><option value="SPX500">SPX500</option></select><p class="helper">Enter the correct point value for your broker and pair below.</p></div>
-              <div class="risk-field"><label for="riskPipValue">Point value per standard lot ($)</label><input id="riskPipValue" class="full-calc-input" type="text" inputmode="decimal" value="10"><p class="helper">Default $10 fits XXX/USD forex. Adjust for JPY pairs, gold, indices — verify with your broker.</p></div>
+              <div class="risk-field"><label for="riskPipValue">Point value per standard lot ($)</label><input id="riskPipValue" class="full-calc-input" type="text" inputmode="decimal" value="10"><p class="helper">Default $10 fits USD-quoted forex pairs (e.g. EUR/USD). Adjust for JPY pairs, gold, indices — verify with your broker.</p></div>
             </div>
           </section>
           <section class="risk-results" aria-labelledby="output-title">
@@ -2084,7 +2086,7 @@
       </div>
       <div class="profile-editor" id="profileEditor" role="dialog" aria-modal="true" aria-labelledby="profileEditorTitle" hidden>
         <form class="profile-editor-card" id="profileEditorForm">
-          <div class="profile-editor-head"><div><h3 id="profileEditorTitle">Edit profile</h3><p>Changes remain in this session.</p></div><button class="profile-editor-close" id="profileEditorClose" type="button" aria-label="Close profile editor"><svg width="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+          <div class="profile-editor-head"><div><h3 id="profileEditorTitle">Edit profile</h3><p>Changes save to your account.</p></div><button class="profile-editor-close" id="profileEditorClose" type="button" aria-label="Close profile editor"><svg width="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
           <div class="profile-editor-fields">
             <div><label for="profileNameInput">Display name</label><input id="profileNameInput" type="text" maxlength="60" autocomplete="name" placeholder="—"></div>
             <div><label for="profileBioInput">Bio</label><textarea id="profileBioInput" maxlength="160" placeholder="—"></textarea><span class="profile-editor-count" id="profileBioCount">0 / 160</span></div>
@@ -2268,13 +2270,13 @@
 
     <section class="screen" id="support" aria-label="Support">
       <div class="module-wrap">
-        <header class="module-head"><h2>Support</h2><p>Direct answers about the current PIPVANT prototype and the standards behind the product.</p></header>
+        <header class="module-head"><h2>Support</h2><p>Direct answers about the current PIPVANT product and the standards behind it.</p></header>
         <div class="support-layout">
           <section class="support-panel" aria-labelledby="support-faq-title"><div class="support-panel-head"><h3 id="support-faq-title">Frequently asked questions</h3><p>Current product status, data, and account behavior.</p></div><div class="faq-list">
-            <article class="faq-item"><button class="faq-question" type="button" aria-expanded="false"><span>Is PIPVANT free?</span><svg width="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></button><div class="faq-answer">This prototype does not include paid plans or checkout. Pricing has not been published.</div></article>
-            <article class="faq-item"><button class="faq-question" type="button" aria-expanded="false"><span>Where does firm data come from?</span><svg width="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></button><div class="faq-answer">Firm data will be published only from sources that can be checked, with a visible review date. The directory stays empty until that verified data is connected.</div></article>
-            <article class="faq-item"><button class="faq-question" type="button" aria-expanded="false"><span>How do certificates work?</span><svg width="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></button><div class="faq-answer">Certificates are earned only after completing the listed missions. The current prototype shows the mission requirements; verified issuance will be connected during the data phase.</div></article>
-            <article class="faq-item"><button class="faq-question" type="button" aria-expanded="false"><span>Is my journal data saved?</span><svg width="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></button><div class="faq-answer">Not in this static prototype. Journal entries and trading accounts exist only for the active session and are not retained after the page is reloaded.</div></article>
+            <article class="faq-item"><button class="faq-question" type="button" aria-expanded="false"><span>Is PIPVANT free?</span><svg width="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></button><div class="faq-answer">Yes. There are no paid tiers and no locked features.</div></article>
+            <article class="faq-item"><button class="faq-question" type="button" aria-expanded="false"><span>Where does firm data come from?</span><svg width="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></button><div class="faq-answer">Firm data is published only from sources that can be checked, with a visible review date.</div></article>
+            <article class="faq-item"><button class="faq-question" type="button" aria-expanded="false"><span>How do certificates work?</span><svg width="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></button><div class="faq-answer">Certificates are earned by completing the listed missions. Each certificate is a verifiable document for a real milestone.</div></article>
+            <article class="faq-item"><button class="faq-question" type="button" aria-expanded="false"><span>Is my journal data saved?</span><svg width="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg></button><div class="faq-answer">Yes — when you're signed in, journal entries and trading accounts sync to your account and persist across devices.</div></article>
           </div></section>
           <aside class="support-panel support-contact" aria-labelledby="support-contact-title"><h3 id="support-contact-title">Need more help?</h3><p>Use the contact page for questions, feedback, or partnership inquiries.</p><button class="btn primary" data-screen="contact" type="button">Open Contact <span aria-hidden="true">→</span></button><div class="support-email"><span>Support email</span><a href="mailto:sifeddinebneiaich45@gmail.com">sifeddinebneiaich45@gmail.com</a></div></aside>
         </div>
@@ -2517,7 +2519,7 @@
   function sbSourceLine(container,firm){
     container.textContent='';
     container.appendChild(document.createTextNode(currentLanguage==='ar'?'المصدر: ':'Source: '));
-    var a=document.createElement('a');a.href=firm.source||firm.website||'#';a.target='_blank';a.rel='noopener';a.style.color='inherit';a.textContent=sbDomain(firm.source||firm.website);
+    var a=document.createElement('a');var _href=firm.source||firm.website||'#';if(!/^https?:\/\//i.test(_href))_href='#';a.href=_href;a.target='_blank';a.rel='noopener';a.style.color='inherit';a.textContent=sbDomain(firm.source||firm.website);
     container.appendChild(a);
     container.appendChild(document.createTextNode(' · '+sbFmtDate(firm.updated_at)));
   }
@@ -2733,7 +2735,7 @@
     try{
       if(typeof sbUser!=='undefined'&&sbUser&&sbUser.created_at){
         var created=new Date(sbUser.created_at);
-        var monthNames=currentLanguage==='ar'?['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر']:['January','February','March','April','May','June','July','August','September','October','November','December'];
+        var monthNames=currentLanguage==='ar'?['يناير','فبراير','مارس','أبريل','ماي','يونيو','يوليوز','غشت','شتنبر','أكتوبر','نونبر','دجنبر']:['January','February','March','April','May','June','July','August','September','October','November','December'];
         var memberSince=monthNames[created.getMonth()]+' '+created.getFullYear();
         document.querySelectorAll('.profile-member-since').forEach(function(el){
           el.textContent=(currentLanguage==='ar'?'عضو منذ ':'Member since ')+memberSince;
@@ -2837,7 +2839,7 @@
       // Update P&L calendar month label
       try{
         var now=new Date();
-        var monthNames=currentLanguage==='ar'?['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر']:['January','February','March','April','May','June','July','August','September','October','November','December'];
+        var monthNames=currentLanguage==='ar'?['يناير','فبراير','مارس','أبريل','ماي','يونيو','يوليوز','غشت','شتنبر','أكتوبر','نونبر','دجنبر']:['January','February','March','April','May','June','July','August','September','October','November','December'];
         var monthLabel=monthNames[now.getMonth()]+' '+now.getFullYear();
         document.querySelectorAll('#journal .calendar-card .journal-card-head p').forEach(function(p){
           if(p.textContent.indexOf('Month')!==-1||p.textContent.indexOf('الشهر')!==-1){
@@ -4184,7 +4186,7 @@
       });
     }
   }catch(e){}
-  document.querySelectorAll('.directory-filter-list input[type="range"]').forEach(function(input){input.addEventListener('input',function(){refreshDirectoryRange(input);refreshDirectory();});});
+  document.querySelectorAll('.directory-filter-list input[type="range"]').forEach(function(input){input.addEventListener('input',function(){refreshDirectoryRange(input);clearTimeout(window._dirRangeT);window._dirRangeT=setTimeout(refreshDirectory,150);});});
   document.querySelectorAll('.directory-chip').forEach(function(chip){chip.addEventListener('click',function(){chip.setAttribute('aria-pressed',String(chip.getAttribute('aria-pressed')!=='true'));refreshDirectory();});});
   document.querySelectorAll('.directory-tab').forEach(function(tab){tab.addEventListener('click',function(){document.querySelectorAll('.directory-tab').forEach(function(other){other.setAttribute('aria-selected',String(other===tab));});refreshDirectory();});});
   document.querySelectorAll('[data-methodology-section]').forEach(function(button){button.addEventListener('click',function(){var target=button.getAttribute('data-methodology-section');showScreen('methodology');setTimeout(function(){var section=document.getElementById('methodology-'+target);if(section)section.scrollIntoView({behavior:'smooth',block:'start'});},20);});});
@@ -5034,7 +5036,7 @@
       if(_size)html+=row(L?'الحجم':'Size',_size,true);
     }else{
       // Global or generic: show full message (real data from notifications.json)
-      html+='<p class="notif-detail-desc">'+(n.message||'')+'</p>';
+      html+='<p class="notif-detail-desc">'+escRow(n.message||'')+'</p>';
       html+=row(L?'النوع':'Type',n.scope==='everyone'?(L?'للجميع':'Everyone'):(L?'شخصي':'Personal'));
       var _d=new Date(n.ts||Date.now());
       html+=row(L?'التاريخ':'Date',_d.toLocaleDateString(L?'ar-MA':'en-GB',{weekday:'long',day:'2-digit',month:'long',year:'numeric'}));
@@ -5800,9 +5802,9 @@
       setTimeout(function(){if(btn.isConnected){btn.removeAttribute('data-confirm-armed');btn.textContent=orig;}},3000);
       return;
     }
-    var id=entry._id||entry._dbId||entry.timestamp;
+    var id=entry._localId||entry._id||entry._dbId||entry.timestamp;
     sessionJournalEntries=sessionJournalEntries.filter(function(e){
-      var eid=e._id||e._dbId||e.timestamp;
+      var eid=e._localId||e._id||e._dbId||e.timestamp;
       return eid!==id;
     }); window.sessionJournalEntries=sessionJournalEntries;
     if(window.editingTradeId===id)cancelEditTrade();
@@ -6612,7 +6614,7 @@
               var ep2=parseFloat(en.entry),sz2=parseFloat(en.size),sp2=parseFloat(en.stop),tp2=parseFloat(en.target),xp2=parseFloat(en.exitPrice);
               // E4 fix: include opened_at so date edits persist.
               // E6 fix: toast on failure instead of silent vanish.
-              sb.from('trades').update({symbol:en.pair||'UNKNOWN',direction:(en.direction||'long').toLowerCase(),entry_price:isFinite(ep2)?ep2:0,exit_price:isFinite(xp2)?xp2:null,position_size:isFinite(sz2)?sz2:0,pnl:(en.pnl!=null&&isFinite(Number(en.pnl)))?Number(en.pnl):null,stop_price:isFinite(sp2)?sp2:null,target_price:isFinite(tp2)?tp2:null,opened_at:new Date(en.timestamp||Date.now()).toISOString(),closed_at:en.closed?new Date().toISOString():null,notes:en.notes||null,setup:en.setup||null,tag:en.tag||null,account_id:en.account_id||null}).eq('id',en._dbId).eq('user_id',sbUser.id).then(function(){sbLoadTrades();}).catch(function(){if(typeof showToast==='function')showToast(currentLanguage==='ar'?'حُفظ محلياً — تعذر المزامنة.':'Saved locally — could not sync.');});
+              sb.from('trades').update({symbol:en.pair||'UNKNOWN',direction:(en.direction||'long').toLowerCase(),entry_price:isFinite(ep2)?ep2:0,exit_price:isFinite(xp2)?xp2:null,position_size:isFinite(sz2)?sz2:0,pnl:(en.pnl!=null&&isFinite(Number(en.pnl)))?Number(en.pnl):null,stop_price:isFinite(sp2)?sp2:null,target_price:isFinite(tp2)?tp2:null,opened_at:new Date(en.timestamp||Date.now()).toISOString(),closed_at:en.closed?new Date().toISOString():null,notes:en.notes||null,setup:en.setup||null,tag:en.tag||null,account_id:en.account_id||null}).eq('id',en._dbId).eq('user_id',sbUser.id).then(function(res){if(res&&res.error){if(typeof showToast==='function')showToast(currentLanguage==='ar'?'تعذر حفظ التعديل على السحابة.':'Could not save edit to cloud.');return;}sbLoadTrades();}).catch(function(){if(typeof showToast==='function')showToast(currentLanguage==='ar'?'حُفظ محلياً — تعذر المزامنة.':'Saved locally — could not sync.');});
             }
           }
         });
@@ -6634,7 +6636,7 @@
              size:tradeEntry.size}
           );
         }
-        if(sb&&sbUser){sbSaveTrade(tradeEntry);}else{var feedback=document.getElementById('journalFeedback');if(feedback){feedback.textContent=currentLanguage==='ar'?'تم حفظ الصفقة محلياً — ستُزامَن مع حسابك عند تسجيل الدخول.':'Trade saved locally — will sync to your account when you sign in.';if(typeof feedbackMotion==='function')feedbackMotion(feedback);if(typeof showToast==='function')showToast(feedback.textContent);}}
+        if(sb&&sbUser){sbSaveTrade(tradeEntry);}else{var feedback=document.getElementById('journalFeedback');if(feedback){feedback.textContent=currentLanguage==='ar'?'تم حفظ الصفقة على هذا الجهاز فقط — أنشئ حساباً مجانياً للحفاظ عليها.':'Trade saved on this device only — create a free account to keep it.';if(typeof feedbackMotion==='function')feedbackMotion(feedback);if(typeof showToast==='function')showToast(feedback.textContent);}}
       }
       if(typeof refreshAllTradeUI==='function')refreshAllTradeUI();else renderJournalEntries();tradeFormEl.reset();tradeFormEl.querySelectorAll('input,textarea').forEach(updateFloatingField);document.querySelectorAll('.chip[data-direction]').forEach(function(chip){chip.setAttribute('aria-pressed','false');});document.getElementById('tradeFormFeedback').textContent='';closeTradeSheet();
     });
