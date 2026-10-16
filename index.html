@@ -156,27 +156,26 @@
     .firm-expand .discount-slot.promo-badge{position:absolute;top:10px;inset-inline-end:38px;z-index:3;margin:0}
     @media (max-width:639px){
       .firm-expand .discount-slot.promo-badge{top:8px;inset-inline-end:34px;font-size:11px;padding:3px 10px}
-      .firm-core{gap:6px!important;padding-top:0!important}
-      .firm-card .meta-pills{gap:4px}
-      .firm-card .evidence-line{font-size:11px;flex-wrap:wrap}
-      .firm-card .allocation{margin-top:2px}
-      .firm-card .rating-block{margin-top:2px}
       /* compare toggle: keep clear of promo badge */
       .compare-toggle{top:8px}
-      /* COMPACT MOBILE CARDS: small not gigantic — hide bulky rows, single-line meta */
-      .firm-card .rating-block{display:none!important}
-      .firm-card .allocation .allocation-track{display:none!important}
-      .firm-card .allocation{margin:0!important}
-      .firm-card .allocation-line{display:flex;justify-content:space-between;align-items:center;gap:8px}
-      .firm-card .allocation-line span:first-child{display:none}
-      .firm-card .allocation strong{font-size:14px!important}
-      .firm-card .evidence-line span:first-child{font-size:10px}
-      .firm-card .what-check-btn{min-height:28px;font-size:10px;padding:0 10px}
-      .firm-card .meta-pills{margin-top:2px}
-      .firm-card .meta-pill{font-size:9px;padding:3px 8px}
+      /* WIDE HORIZONTAL CARDS: everything visible, flowing wide not boxy */
+      .firm-card{border-radius:14px}
       .firm-summary{min-height:0!important;padding:10px 12px!important}
-      .firm-expand{min-height:0!important;padding:10px 8px!important;gap:8px!important}
-      .slot-cta{min-width:44px;min-height:30px;font-size:9px}
+      .firm-expand{min-height:0!important;padding:8px!important;gap:10px!important;align-items:center!important}
+      .firm-core{gap:5px!important}
+      /* rationale + allocation stay visible but slim */
+      .firm-card .rating-block{margin:0!important;padding:6px 8px!important}
+      .firm-card .rating-block>strong{font-size:18px!important}
+      .firm-card .allocation{margin:0!important}
+      .firm-card .allocation-track{height:4px!important}
+      .firm-card .allocation strong{font-size:13px!important}
+      .firm-card .meta-pills{gap:4px}
+      .firm-card .meta-pill{font-size:9px;padding:3px 8px;white-space:nowrap}
+      .firm-card .evidence-line{font-size:10px;flex-wrap:wrap;gap:4px}
+      .firm-card .what-check-btn{min-height:26px;font-size:10px;padding:0 10px}
+      .firm-name{font-size:15px!important}
+      .logo-slot{width:42px!important;height:42px!important}
+      .slot-cta{min-width:46px;min-height:32px;font-size:9px}
     }
     
     .slot-cta{min-width:50px;min-height:32px;display:grid;place-items:center;border:1px solid var(--line-strong);border-radius:8px;color:var(--muted);font-size:10px;font-weight:800;letter-spacing:.05em;opacity:.68}.slot-cta:not([disabled]):hover{opacity:1}.slot-cta:not([disabled]):active{opacity:1;transform:scale(.96)}
