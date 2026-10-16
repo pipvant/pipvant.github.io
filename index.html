@@ -3451,6 +3451,8 @@
   }
   function translateValue(value){var key=value.trim();if(ar[key])return value.replace(key,ar[key]);var day=key.match(/^Filter trades by day (\d+)$/);if(day)return 'تصفية الصفقات حسب اليوم '+day[1];return value;}
   function applyLanguage(lang){
+    // L2-lang fix: validate input (was silently breaking on undefined).
+    if(lang!=='ar'&&lang!=='en')return;
     currentLanguage=lang;document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';document.title=lang==='ar'?'PIPVANT من Orovanta — أدوات قرار التداول':'PIPVANT by Orovanta — Trading Decision Tools';
     translatableNodes.forEach(function(node){node.nodeValue=lang==='ar'?translateValue(node.__en):node.__en;});
     document.querySelectorAll('[data-en-aria-label],[data-en-placeholder],[data-en-title]').forEach(function(el){['aria-label','placeholder','title'].forEach(function(a){var original=el.getAttribute('data-en-'+a);if(original!==null)el.setAttribute(a,lang==='ar'?(attrAr[original]||translateValue(original)):original);});});
@@ -3461,6 +3463,8 @@
     if(typeof renderCalendar==='function')renderCalendar();
     if(typeof refreshMenuButtonLabel==='function')refreshMenuButtonLabel();
     if(typeof refreshNotificationBadge==='function')refreshNotificationBadge();
+    // H1-lang fix: re-render notifications on language switch.
+    if(typeof renderNotifications==='function')renderNotifications();
     if(typeof renderJournalEntries==='function'&&Array.isArray(sessionJournalEntries))renderJournalEntries();
     if(typeof sbRenderFirms==='function'&&sbFirms.length){sbRenderFirms();sbRenderDirectory();sbPopulateAccountSizes();}
     if(typeof updateProfileIdentity==='function'&&profileSession)updateProfileIdentity(profileSession.name,profileSession.bio);
@@ -4275,7 +4279,8 @@
         if(data.preferences&&typeof data.preferences==='object'){
           var p=data.preferences;
           if(p.appearance==='light'||p.appearance==='dark'){document.documentElement.setAttribute('data-theme',p.appearance);restored.push(currentLanguage==='ar'?'المظهر':'theme');}
-          if(p.language==='ar'||p.language==='en'){currentLanguage=p.language;if(typeof applyLanguage==='function')applyLanguage();restored.push(currentLanguage==='ar'?'اللغة':'language');}
+          // C1-lang fix: pass the language (was clobbering to undefined/English).
+          if(p.language==='ar'||p.language==='en'){currentLanguage=p.language;if(typeof applyLanguage==='function')applyLanguage(p.language);restored.push(currentLanguage==='ar'?'اللغة':'language');}
           if(typeof p.currency==='string'&&p.currency){currentCurrency=p.currency;if(typeof refreshCurrencyDisplay==='function')refreshCurrencyDisplay();restored.push(currentLanguage==='ar'?'العملة':'currency');}
           if(isFinite(Number(p.defaultRiskPercent))){defaultRisk=Number(p.defaultRiskPercent);var drEl=document.getElementById('defaultRiskValue');if(drEl)drEl.textContent=defaultRisk+'%';restored.push(currentLanguage==='ar'?'المخاطرة':'risk');}
           if(typeof p.notifications==='boolean'){notificationsEnabled=p.notifications;var ntEl=document.getElementById('notificationsToggle');if(ntEl)ntEl.setAttribute('aria-pressed',String(notificationsEnabled));restored.push(currentLanguage==='ar'?'التنبيهات':'notifications');}
