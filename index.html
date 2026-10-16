@@ -1953,7 +1953,8 @@
         <div class="notification-tabs" role="tablist" aria-label="Notification views"><button class="notification-tab" type="button" role="tab" aria-selected="true" data-ntab="all">All</button><button class="notification-tab" type="button" role="tab" aria-selected="false" data-ntab="everyone">Everyone</button><button class="notification-tab" type="button" role="tab" aria-selected="false" data-ntab="personal">Personal</button></div>
         <div class="notification-tools"><input class="notification-search" type="search" placeholder="Search notifications" aria-label="Search notifications"><button class="display-button" id="notificationDisplay" type="button" aria-pressed="false"><svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 7h16M7 12h10m-7 5h4"/></svg>Display</button></div>
       </div>
-      <div class="notification-filters" role="group" aria-label="Notification filters"><button class="notification-filter" type="button" aria-pressed="true">All</button><button class="notification-filter" type="button" aria-pressed="false">Risk</button><button class="notification-filter" type="button" aria-pressed="false">Discipline</button><button class="notification-filter" type="button" aria-pressed="false">System</button></div>
+      <div class="notification-filters" role="group" aria-label="Notification filters" hidden><button class="notification-filter" type="button" aria-pressed="true">All</button><button class="notification-filter" type="button" aria-pressed="false">Risk</button><button class="notification-filter" type="button" aria-pressed="false">Discipline</button><button class="notification-filter" type="button" aria-pressed="false">System</button></div>
+      <!-- H1/H2-notif fix: type filters hidden (were dead — categories don't match real types). -->
       <div class="notification-shell is-empty" id="notificationShell">
         <div class="notification-list-pane">
           <div class="notification-groups" id="notificationGroups" hidden>
@@ -4389,9 +4390,16 @@
   }
   function closeNotifications(){notificationPanel.classList.remove('open');notificationButton.setAttribute('aria-expanded','false');}
   function refreshNotificationBadge(){
+    // H4-notif fix: count ALL unread (was only the visible tab).
+    var unreadCount=0;
+    try{
+      if(notificationsEnabled){
+        var _all=(typeof notifStore!=='undefined'?notifStore:[]).concat(typeof getPersonalNotifs==='function'?getPersonalNotifs():[]);
+        unreadCount=_all.filter(function(x){return !x.read;}).length;
+      }
+    }catch(e){}
     var groups=document.getElementById('notificationGroups');
-    var unreadCount=notificationsEnabled&&groups&&!groups.hidden?groups.querySelectorAll('.notification-item.unread').length:0;
-    if(unreadCount>previousUnreadCount){notificationBadge.classList.remove('badge-pop');notificationButton.classList.remove('bell-swing');void notificationBadge.offsetWidth;notificationBadge.classList.add('badge-pop');notificationButton.classList.add('bell-swing');var newest=groups.querySelector('.notification-item.unread .notification-copy strong');if(newest&&newest.textContent.trim()&&newest.textContent.trim()!=='—')showToast(newest.textContent.trim());setTimeout(function(){notificationBadge.classList.remove('badge-pop');notificationButton.classList.remove('bell-swing');},310);}previousUnreadCount=unreadCount;
+    if(unreadCount>previousUnreadCount){notificationBadge.classList.remove('badge-pop');notificationButton.classList.remove('bell-swing');void notificationBadge.offsetWidth;notificationBadge.classList.add('badge-pop');notificationButton.classList.add('bell-swing');var newest=groups&&groups.querySelector('.notification-item.unread .notification-copy strong');if(newest&&newest.textContent.trim()&&newest.textContent.trim()!=='—')showToast(newest.textContent.trim());setTimeout(function(){notificationBadge.classList.remove('badge-pop');notificationButton.classList.remove('bell-swing');},310);}previousUnreadCount=unreadCount;
     notificationBadge.textContent=unreadCount>1?(unreadCount>99?'99+':String(unreadCount)):'';
     notificationBadge.classList.toggle('visible',unreadCount>0);notificationBadge.classList.toggle('count',unreadCount>1);
     notificationButton.setAttribute('aria-label',currentLanguage==='ar'?(unreadCount?('الإشعارات، '+unreadCount+' غير مقروءة'):'الإشعارات'):(unreadCount?('Notifications, '+unreadCount+' unread'):'Notifications'));
@@ -4534,6 +4542,14 @@
     }
     // filter by tab
     if(activeNTab!=='all')all=all.filter(function(x){return x.scope===activeNTab;});
+    // H3-notif fix: apply search filter (was dead input).
+    var _nq=(window._notifSearchQuery||'').trim().toLowerCase();
+    if(_nq){
+      all=all.filter(function(x){
+        var _h=((x.title||'')+' '+(x.message||'')).toLowerCase();
+        return _h.indexOf(_nq)!==-1;
+      });
+    }
     // sort newest first
     all.sort(function(a,b){return (b.ts||0)-(a.ts||0);});
     groups.replaceChildren();
@@ -6272,6 +6288,16 @@
   document.querySelectorAll('.notification-filter').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.notification-filter').forEach(function(other){other.setAttribute('aria-pressed',String(other===button));});});});
   var notificationShell=document.getElementById('notificationShell');
   document.getElementById('notificationDisplay').addEventListener('click',function(){var compact=notificationShell.classList.toggle('compact');this.setAttribute('aria-pressed',String(compact));});
+  // H3-notif fix: wire the search input (was dead).
+  (function(){
+    var _ns=document.querySelector('.notification-search');
+    if(_ns){
+      _ns.addEventListener('input',function(){
+        window._notifSearchQuery=_ns.value||'';
+        if(typeof renderNotifications==='function')renderNotifications();
+      });
+    }
+  })();
   document.querySelectorAll('[data-notification-item]').forEach(function(item){item.addEventListener('click',function(){item.classList.remove('unread');item.classList.add('read');refreshNotificationBadge();notificationShell.classList.add('detail-open');document.getElementById('notificationDetail').querySelector('h3').textContent=item.querySelector('.notification-copy strong').textContent;});});
   document.getElementById('notificationBack').addEventListener('click',function(){notificationShell.classList.remove('detail-open');});
   document.querySelector('.mark-all').addEventListener('click',function(){document.querySelectorAll('.notification-item').forEach(function(item){item.classList.remove('unread');item.classList.add('read');});refreshNotificationBadge();});
