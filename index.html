@@ -1858,7 +1858,7 @@
     <section class="screen" id="journal" aria-label="Trading journal">
       <div class="journal-command" aria-label="Journal controls">
         <button class="account-switch" id="accountSwitch" type="button" aria-haspopup="dialog" aria-controls="accountSheet"><svg width="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 9h5M7 13h3"/></svg><span>All accounts</span><svg width="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m7 10 5 5 5-5"/></svg></button>
-        <div class="range-segment" role="group" aria-label="Date range"><button class="range-btn" type="button" aria-pressed="true">1W</button><button class="range-btn" type="button" aria-pressed="false">1M</button><button class="range-btn" type="button" aria-pressed="false">3M</button><button class="range-btn" type="button" aria-pressed="false">1Y</button><button class="range-btn" type="button" aria-pressed="false">Custom</button></div>
+        <div class="range-segment" role="group" aria-label="Date range"><button class="range-btn" type="button" data-range="1w" aria-pressed="true">1W</button><button class="range-btn" type="button" data-range="1m" aria-pressed="false">1M</button><button class="range-btn" type="button" data-range="3m" aria-pressed="false">3M</button><button class="range-btn" type="button" data-range="1y" aria-pressed="false">1Y</button><button class="range-btn" type="button" data-range="all" aria-pressed="false">All</button><button class="range-btn" type="button" data-range="custom" aria-pressed="false">Custom</button></div>
         <button class="btn primary journal-add" id="desktopAddTrade" type="button">+ Add Trade</button>
       </div>
       <p class="session-feedback" id="journalFeedback" aria-live="polite"></p>
@@ -5120,7 +5120,16 @@
     if(typeof sbRenderFirms==='function')sbRenderFirms();
   });});
 
-  document.querySelectorAll('.range-btn').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.range-btn').forEach(function(other){other.setAttribute('aria-pressed',String(other===button));});var range=button.textContent.trim();var now=Date.now();var cutoff=0;if(range==='1W')cutoff=now-7*24*60*60*1000;else if(range==='1M')cutoff=now-30*24*60*60*1000;else if(range==='3M')cutoff=now-90*24*60*60*1000;else if(range==='1Y')cutoff=now-365*24*60*60*1000;else if(range==='Custom'){var startStr=prompt(currentLanguage==='ar'?'تاريخ البداية (YYYY-MM-DD):':'Start date (YYYY-MM-DD):');var endStr=prompt(currentLanguage==='ar'?'تاريخ النهاية (YYYY-MM-DD):':'End date (YYYY-MM-DD):');if(startStr){var sd=new Date(startStr);if(!isNaN(sd.getTime()))cutoff=sd.getTime();}var _endCutoff=0;if(endStr){var _ed=new Date(endStr);if(!isNaN(_ed.getTime())){_ed.setHours(23,59,59,999);_endCutoff=_ed.getTime();}}window.journalDateEnd=_endCutoff;}else{window.journalDateEnd=0;}window.journalDateCutoff=cutoff;if(typeof renderJournalEntries==='function')renderJournalEntries();});});
+  document.querySelectorAll('.range-btn').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.range-btn').forEach(function(other){other.setAttribute('aria-pressed',String(other===button));});
+    // F3 fix: use data-range (not button text, fragile to translation).
+    var range=button.getAttribute('data-range')||'1w';
+    var now=Date.now();var cutoff=0;
+    if(range==='1w')cutoff=now-7*24*60*60*1000;
+    else if(range==='1m')cutoff=now-30*24*60*60*1000;
+    else if(range==='3m')cutoff=now-90*24*60*60*1000;
+    else if(range==='1y')cutoff=now-365*24*60*60*1000;
+    else if(range==='all'){cutoff=0;window.journalDateEnd=0;}
+    else if(range==='custom'){var startStr=prompt(currentLanguage==='ar'?'تاريخ البداية (YYYY-MM-DD):':'Start date (YYYY-MM-DD):');var endStr=prompt(currentLanguage==='ar'?'تاريخ النهاية (YYYY-MM-DD):':'End date (YYYY-MM-DD):');if(startStr){var sd=new Date(startStr);if(!isNaN(sd.getTime()))cutoff=sd.getTime();}var _endCutoff=0;if(endStr){var _ed=new Date(endStr);if(!isNaN(_ed.getTime())){_ed.setHours(23,59,59,999);_endCutoff=_ed.getTime();}}window.journalDateEnd=_endCutoff;}else{window.journalDateEnd=0;}window.journalDateCutoff=cutoff;if(typeof renderJournalEntries==='function')renderJournalEntries();});});
   // Chart toggles
   window.journalChartMode='cumulative';
   document.querySelectorAll('.chart-toggle').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.chart-toggle').forEach(function(other){other.setAttribute('aria-pressed',String(other===button));});var label=(button.textContent||'').trim().toLowerCase();window.journalChartMode=label.indexOf('per-trade')===0?'pertrade':(label.indexOf('drawdown')===0?'drawdown':'cumulative');if(typeof updateJournalEquity==='function')updateJournalEquity();});});
@@ -5415,7 +5424,17 @@
     var list=document.getElementById('journalEntryList'),empty=document.getElementById('journalEntryEmpty'),count=document.getElementById('journalEntryCount');
     if(!list||!empty||!count)return;list.replaceChildren();
     var labels=currentLanguage==='ar'?['التاريخ / الوقت','الرمز','الاتجاه','الإعداد','الدخول / الخطة','الكمية','صافي الربح والخسارة','مضاعف R','التقييم','الملاحظات','']:['Date / time','Symbol','Side','Setup','Entry / plan','Qty','Net P&L','R multiple','Rating','Notes',''];
-    var q=journalSearchQuery.trim().toLowerCase();var dateCutoff=window.journalDateCutoff||0;var dateEnd=window.journalDateEnd||0;var dayFilter=window.journalDayFilter||null;var facets=window.journalFacets||{symbol:null,side:null,setup:null,tag:null};var filtered=sessionJournalEntries.filter(function(entry){var matchQ=true,matchD=true,matchDay=true,matchSym=true,matchSide=true,matchSetup=true,matchTag=true;if(q){var haystack=((entry.pair||'')+' '+(entry.notes||'')+' '+(entry.direction||'')).toLowerCase();matchQ=haystack.indexOf(q)!==-1;}if(dateCutoff){matchD=(entry.timestamp||0)>=dateCutoff;}if(dateEnd){matchD=matchD&&(entry.timestamp||0)<=dateEnd;}if(dayFilter){var d=new Date(entry.timestamp||0);matchDay=d.getFullYear()===dayFilter.y&&d.getMonth()===dayFilter.m&&d.getDate()===dayFilter.d;}if(facets.symbol&&entry.type==='trade'){matchSym=String(entry.pair||'').toUpperCase()===facets.symbol;}if(facets.side&&entry.type==='trade'){matchSide=String(entry.direction||'').toLowerCase()===facets.side;}if(facets.setup&&entry.type==='trade'){matchSetup=String(entry.setup||'').toLowerCase()===facets.setup;}if(facets.tag&&entry.type==='trade'){matchTag=String(entry.tag||'').trim().replace(/^#+/,'').toLowerCase()===facets.tag;}return matchQ&&matchD&&matchDay&&matchSym&&matchSide&&matchSetup&&matchTag;});
+    var q=journalSearchQuery.trim().toLowerCase();var dateCutoff=window.journalDateCutoff||0;var dateEnd=window.journalDateEnd||0;var dayFilter=window.journalDayFilter||null;var facets=window.journalFacets||{symbol:null,side:null,setup:null,tag:null};var filtered=sessionJournalEntries.filter(function(entry){var matchQ=true,matchD=true,matchDay=true,matchSym=true,matchSide=true,matchSetup=true,matchTag=true;if(q){
+      // F2 fix: search setup, tag, and account (was pair/notes/direction only).
+      var _acctName='';
+      try{
+        if(entry.account_id&&typeof tradingAccounts!=='undefined'){
+          for(var _ai=0;_ai<tradingAccounts.length;_ai++){
+            if(String(tradingAccounts[_ai].id)===String(entry.account_id)){_acctName=tradingAccounts[_ai].name||'';break;}
+          }
+        }
+      }catch(_e){}
+      var haystack=((entry.pair||'')+' '+(entry.notes||'')+' '+(entry.direction||'')+' '+(entry.setup||'')+' '+(entry.tag||'')+' '+_acctName).toLowerCase();matchQ=haystack.indexOf(q)!==-1;}if(dateCutoff){matchD=(entry.timestamp||0)>=dateCutoff;}if(dateEnd){matchD=matchD&&(entry.timestamp||0)<=dateEnd;}if(dayFilter){var d=new Date(entry.timestamp||0);matchDay=d.getFullYear()===dayFilter.y&&d.getMonth()===dayFilter.m&&d.getDate()===dayFilter.d;}if(facets.symbol&&entry.type==='trade'){matchSym=String(entry.pair||'').toUpperCase()===facets.symbol;}if(facets.side&&entry.type==='trade'){matchSide=String(entry.direction||'').toLowerCase()===facets.side;}if(facets.setup&&entry.type==='trade'){matchSetup=String(entry.setup||'').toLowerCase()===facets.setup;}if(facets.tag&&entry.type==='trade'){matchTag=String(entry.tag||'').trim().replace(/^#+/,'').toLowerCase()===facets.tag;}return matchQ&&matchD&&matchDay&&matchSym&&matchSide&&matchSetup&&matchTag;});
     var tradeCount=filtered.length; // Save count before grouping adds headers
     (function(){
       var groupBy=window.journalGroupBy||'all';
