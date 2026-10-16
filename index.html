@@ -2587,7 +2587,7 @@
       var grid=details.querySelector('.spec-grid');if(grid&&grid.after)grid.after(ul);else details.appendChild(ul);
     }
     var cta=q('.slot-cta');
-    if(cta){cta.disabled=false;cta.addEventListener('click',function(ev2){ev2.stopPropagation();card.classList.toggle('expanded');card.querySelector('.firm-expand').setAttribute('aria-expanded',String(card.classList.contains('expanded')));});}
+    if(cta){cta.disabled=false;cta.addEventListener('click',function(ev2){ev2.stopPropagation();var fid=card.getAttribute('data-firm-id');if(fid&&typeof sbFillDetailSheet==='function')sbFillDetailSheet(fid);var sheet=document.getElementById('firmDetailSheet');if(sheet){sheet.classList.add('open');var panel=sheet.querySelector('.firm-detail-panel');if(panel){panel.classList.remove('detail-morph');void panel.offsetWidth;panel.classList.add('detail-morph');}var cb=document.getElementById('closeFirmDetail');if(cb)cb.focus();}});}
     // Shortlist button (matcher cards)
     var slBtn=card.querySelector('.firm-detail-actions .btn.secondary');
     if(slBtn){
@@ -4806,6 +4806,15 @@
     if(hasPersonalWelcome){
       all=all.filter(function(x){return !(x.scope==='everyone'&&x.title==='Welcome to PIPVANT');});
     }
+    // Bugfix: dedupe multiple welcomes with same title (keep newest only).
+    var _seenWelcome=false;
+    all=all.filter(function(x){
+      if(x.title==='Welcome to PIPVANT'){
+        if(_seenWelcome)return false;
+        _seenWelcome=true;
+      }
+      return true;
+    });
     // filter by tab
     if(activeNTab!=='all')all=all.filter(function(x){return x.scope===activeNTab;});
     // H3-notif fix: apply search filter (was dead input).
