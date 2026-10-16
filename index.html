@@ -4363,7 +4363,20 @@
   });
   document.getElementById('emailForm').addEventListener('submit',function(event){
     event.preventDefault();if(!event.currentTarget.reportValidity())return;
-    var nextEmail=document.getElementById('newEmail').value.trim();runSuccessMorph(event.submitter,function(){prototypeAccount.email=nextEmail;closeSettingsModal();var feedback=document.getElementById('settingsFeedback');feedback.textContent=currentLanguage==='ar'?'تم تحديث البريد لهذه الجلسة.':'Email updated for this session.';feedbackMotion(feedback);showToast(feedback.textContent);});
+    var nextEmail=document.getElementById('newEmail').value.trim().toLowerCase();
+    // C1-form fix: actually change email via Supabase (was fake prototype).
+    var _btn=event.submitter;if(_btn)_btn.disabled=true;
+    function _done(ok,msg){
+      if(_btn)_btn.disabled=false;
+      var feedback=document.getElementById('settingsFeedback');
+      feedback.textContent=msg;feedbackMotion(feedback);showToast(msg);
+      if(ok)closeSettingsModal();
+    }
+    if(!sb||!sbUser){_done(false,currentLanguage==='ar'?'غير متصل.':'Offline.');return;}
+    sb.auth.updateUser({email:nextEmail}).then(function(res){
+      if(res.error)_done(false,res.error.message);
+      else _done(true,currentLanguage==='ar'?'تم إرسال رابط التأكيد لبريدك الجديد.':'Confirmation sent to your new email.');
+    }).catch(function(err){_done(false,err&&err.message?err.message:'Failed.');});
   });
   var holdDeleteButton=document.getElementById('holdDeleteAccount');
   var deleteHoldTimer=0,deleteHoldActive=false,deleteHoldCompleted=false;
