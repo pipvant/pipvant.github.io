@@ -141,7 +141,16 @@
     .rank{color:var(--platinum);font:500 13px/1 "IBM Plex Mono",monospace;text-align:center}
     .logo-slot{width:40px;height:40px;border:1px solid var(--line-strong);border-radius:8px;background:var(--raised);display:grid;place-items:center;color:var(--silver);font:500 12px/1 "IBM Plex Mono",monospace}
     .firm-name{min-width:0;font-family:"Space Grotesk",sans-serif;font-size:18px;font-weight:600;color:var(--text)}
-    .discount-slot{display:none}.firm-expand .discount-slot{display:none!important}
+    .discount-slot{display:none}.firm-expand .discount-slot{display:none!important}.firm-expand .discount-slot.promo-badge{display:inline-flex!important}
+    /* PIPVANT-WAVE1: promo badge, updated stamp, PT:DD chip, price strike, country flags */
+    .promo-badge{display:inline-flex;align-items:center;gap:6px;background:#D4AF37;color:#0A1628;font-weight:800;font-size:12px;border-radius:12px;padding:4px 12px;letter-spacing:.02em;box-shadow:0 2px 8px rgba(212,175,55,.35)}
+    .promo-badge small{font-weight:600;opacity:.85}
+    .updated-stamp{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+    .ptdd-chip{display:inline-block;font-size:11px;font-weight:700;background:rgba(91,141,239,.14);color:#5B8DEF;border:1px solid rgba(91,141,239,.35);border-radius:10px;padding:2px 10px;margin-inline-start:8px;font-variant-numeric:tabular-nums}
+    .price-strike{font-size:12px;color:var(--muted);text-decoration:line-through;margin-inline-start:6px}
+    .promo-copy-btn{background:#0A1628;color:#D4AF37;border:1px solid #D4AF37;border-radius:10px;padding:8px 16px;font-weight:800;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+    .promo-copy-btn:active{transform:scale(.96)}
+    .restricted-flags{font-size:12px;color:var(--muted);margin-top:8px}
     
     .slot-cta{min-width:50px;min-height:32px;display:grid;place-items:center;border:1px solid var(--line-strong);border-radius:8px;color:var(--muted);font-size:10px;font-weight:800;letter-spacing:.05em;opacity:.68}.slot-cta:not([disabled]):hover{opacity:1}.slot-cta:not([disabled]):active{opacity:1;transform:scale(.96)}
     .row-chevron{color:var(--silver);transition:transform var(--micro) var(--ease-move)}
@@ -2550,6 +2559,121 @@
       })
       .catch(function(){/* keep honest empty states */});
   }
+  /* ============ PIPVANT-WAVE1: card extras (promo, updated stamp, PT:DD, flags) ============ */
+  function sbCountryFlag(hq){
+    if(!hq)return '';
+    var t=String(hq).toLowerCase();
+    var map=[['united kingdom','🇬🇧'],['uk','🇬🇧'],['britain','🇬🇧'],['london','🇬🇧'],['united states','🇺🇸'],['usa','🇺🇸'],['us','🇺🇸'],['united arab emirates','🇦🇪'],['uae','🇦🇪'],['dubai','🇦🇪'],['canada','🇨🇦'],['australia','🇦🇺'],['cyprus','🇨🇾'],['seychelles','🇸🇨'],['mauritius','🇲🇺'],['singapore','🇸🇬'],['hong kong','🇭🇰'],['germany','🇩🇪'],['france','🇫🇷'],['netherlands','🇳🇱'],['spain','🇪🇸'],['italy','🇮🇹'],['switzerland','🇨🇭'],['south africa','🇿🇦'],['morocco','🇲🇦']];
+    for(var i=0;i<map.length;i++){if(t.indexOf(map[i][0])!==-1)return map[i][1];}
+    return '';
+  }
+  function sbTimeAgo(iso){
+    if(!iso)return '';
+    var d=new Date(iso).getTime();if(!isFinite(d))return '';
+    var mins=Math.max(0,Math.floor((Date.now()-d)/60000));
+    if(mins<60)return currentLanguage==='ar'?('قبل '+mins+' د'):mins+'m ago';
+    var h=Math.floor(mins/60);
+    if(h<24)return currentLanguage==='ar'?('قبل '+h+' س'):h+'h ago';
+    var days=Math.floor(h/24);
+    return currentLanguage==='ar'?('قبل '+days+' يوم'):days+'d ago';
+  }
+  function sbPTDD(rules){
+    if(!rules)return null;
+    var pt=Number(rules.profit_target_pct), dd=Number(rules.max_drawdown_pct);
+    if(isFinite(pt)&&isFinite(dd)&&dd>0){
+      var r=pt/dd;
+      return '1:'+(Math.round(r*100)/100);
+    }
+    return null;
+  }
+  function sbBestPromo(rules){
+    if(!rules||!Array.isArray(rules.promotions)||!rules.promotions.length)return null;
+    var now=Date.now(), best=null;
+    rules.promotions.forEach(function(p){
+      if(!p) return;
+      if(p.expiry){var e=new Date(p.expiry).getTime();if(isFinite(e)&&e<now)return;} // expired
+      if(!best)best=p;
+    });
+    return best;
+  }
+  function sbPromoDiscountPct(promo){
+    if(!promo||!promo.discount)return 0;
+    var m=String(promo.discount).match(/(\d+)\s*%/);
+    return m?Number(m[1]):0;
+  }
+  function sbWave1CardExtras(card,firm,plans,firstRules){
+    try{
+      // 1. Promo badge in discount-slot (unhide when promo exists)
+      var promo=firstRules?sbBestPromo(firstRules):null;
+      var dslot=card.querySelector('.discount-slot');
+      if(dslot&&promo){
+        dslot.style.display='';dslot.classList.add('promo-badge');
+        dslot.setAttribute('aria-label','Promotion available');
+        dslot.innerHTML='';
+        var pct=sbPromoDiscountPct(promo);
+        dslot.appendChild(document.createTextNode(pct>0?(pct+'% OFF'):(currentLanguage==='ar'?'عرض خاص':'Special offer')));
+        if(promo.code){var sm=document.createElement('small');sm.textContent=' · '+promo.code;dslot.appendChild(sm);}
+      }
+      // 2. Updated stamp appended to evidence line
+      var ev=card.querySelector('.evidence-line');
+      if(ev){
+        var stamp=sbTimeAgo(firm.last_verified_at||firm.updated_at);
+        if(stamp&&!ev.querySelector('.updated-stamp')){
+          var sp=document.createElement('span');sp.className='updated-stamp';sp.textContent=' · '+stamp;
+          ev.appendChild(sp);
+        }
+      }
+      // 3. PT:DD chip next to profit-target spec
+      var ptdd=firstRules?sbPTDD(firstRules):null;
+      if(ptdd){
+        var specs=card.querySelectorAll('.spec-grid .spec');
+        if(specs[1]&&!specs[1].querySelector('.ptdd-chip')){
+          var chip=document.createElement('span');chip.className='ptdd-chip';chip.title='Profit target ÷ max drawdown';chip.textContent='PT:DD '+ptdd;
+          specs[1].querySelector('strong').appendChild(chip);
+        }
+      }
+      // 4. Strikethrough pricing: apply promo % to min plan price
+      if(promo){
+        var dpct=sbPromoDiscountPct(promo);
+        if(dpct>0&&dpct<100){
+          var prices=plans.map(function(p){return Number(p.price);}).filter(isFinite);
+          if(prices.length){
+            var minP=Math.min.apply(null,prices);
+            var specs2=card.querySelectorAll('.spec-grid .spec');
+            // show in allocation line as strikethrough reference
+            var alloc=card.querySelector('.allocation strong');
+            if(alloc&&!card.querySelector('.price-strike')){
+              var was=document.createElement('span');was.className='price-strike';
+              was.textContent='$'+Math.round(minP).toLocaleString('en-US');
+              alloc.appendChild(was);
+            }
+          }
+        }
+      }
+      // 5. Country flag prepended to first meta pill (headquarters)
+      var pills=card.querySelectorAll('.meta-pill');
+      if(pills[0]&&firm.headquarters){
+        var flag=sbCountryFlag(firm.headquarters);
+        if(flag&&pills[0].textContent.indexOf(flag)===-1){
+          pills[0].textContent=flag+' '+pills[0].textContent;
+        }
+      }
+      // 6. Restricted countries note in details
+      var det=card.querySelector('.firm-details');
+      if(det&&firm.countries_restricted&&!det.querySelector('.restricted-flags')){
+        var rc=String(firm.countries_restricted).split(/[,;]/).map(function(s){return s.trim();}).filter(Boolean);
+        if(rc.length){
+          var rn=document.createElement('div');rn.className='restricted-flags';
+          rn.textContent=(currentLanguage==='ar'?'غير متاح في: ':'Restricted in: ')+rc.slice(0,6).join(', ')+(rc.length>6?' +'+(rc.length-6):'');
+          det.appendChild(rn);
+        }
+      }
+      // 7. Upgrade PV promo button style in details
+      var pvBtn=card.querySelector('.promo-slot');
+      if(pvBtn)pvBtn.classList.add('promo-copy-btn');
+    }catch(e){}
+  }
+  /* ============ END PIPVANT-WAVE1 ============ */
   function sbFillFirmCard(card,firm,plans,rank){card.setAttribute('data-firm-id',firm.id);
     // Mega-audit a11y: ensure cloned cards expose role=button.
     try{var _fe=card.querySelector('.firm-expand');if(_fe&&!_fe.getAttribute('role'))_fe.setAttribute('role','button');}catch(e){}
@@ -2607,6 +2731,8 @@
     }
     var expander=q('.firm-expand');
     if(expander){
+      // PIPVANT-WAVE1: card extras (promo badge, updated stamp, PT:DD, flags)
+      sbWave1CardExtras(card,firm,plans,firstRules);
       var toggle=function(){
         var expanded=expander.getAttribute('aria-expanded')==='true';
         document.querySelectorAll('#matcher .firm-card').forEach(function(o){o.classList.remove('expanded');var e=o.querySelector('.firm-expand');if(e)e.setAttribute('aria-expanded','false');});
