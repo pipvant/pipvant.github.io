@@ -3287,7 +3287,19 @@
     }catch(e){}
   }
   function sbSaveTrade(entry){if(!sb)return;sb.auth.getUser().then(function(uRes){var user=uRes&&uRes.data&&uRes.data.user;if(!user){var fb0=document.getElementById('journalFeedback');if(fb0){fb0.textContent=currentLanguage==='ar'?'الجلسة منتهية — سجل الدخول مجدداً.':'Session expired — please sign in again.';feedbackMotion(fb0);showToast(fb0.textContent);}return;}sbUser=user;var ep=parseFloat(entry.entry),sz=parseFloat(entry.size),sp=parseFloat(entry.stop),tp=parseFloat(entry.target),xp=parseFloat(entry.exitPrice);var payload={user_id:user.id,symbol:entry.pair||'UNKNOWN',direction:(entry.direction||'long').toLowerCase(),entry_price:isFinite(ep)?ep:0,exit_price:isFinite(xp)?xp:null,position_size:isFinite(sz)?sz:0,pnl:(entry.pnl!=null&&isFinite(Number(entry.pnl)))?Number(entry.pnl):null,stop_price:isFinite(sp)?sp:null,target_price:isFinite(tp)?tp:null,opened_at:new Date(entry.timestamp||Date.now()).toISOString(),closed_at:entry.closed?new Date().toISOString():null,notes:entry.notes||null,setup:entry.setup||null,tag:entry.tag||null,account_id:entry.account_id||null};sb.from('trades').insert(payload).select().then(function(r){var fb=document.getElementById('journalFeedback');if(!fb)return;if(r.error){fb.textContent=currentLanguage==='ar'?'تعذر الحفظ في حسابك — محفوظة محلياً وستُزامَن تلقائياً.':'Could not save to your account — saved locally, will sync automatically.';}else{entry._db=true;if(r.data&&r.data[0]&&r.data[0].id){entry._dbId=r.data[0].id;entry._id=r.data[0].id;}if(typeof removeLocalTrade==='function'&&entry._localId)removeLocalTrade(entry._localId);entry._localOnly=false;saveTradeExtras(entry);fb.textContent=currentLanguage==='ar'?'تم حفظ الصفقة في حسابك.':'Trade saved to your account.';sbLoadTrades();}feedbackMotion(fb);showToast(fb.textContent);}).catch(function(){var fb2=document.getElementById('journalFeedback');if(!fb2)return;fb2.textContent=currentLanguage==='ar'?'تعذر الحفظ في حسابك — محفوظة محلياً وستُزامَن تلقائياً.':'Could not save to your account — saved locally, will sync automatically.';feedbackMotion(fb2);showToast(fb2.textContent);});}).catch(function(){var fb3=document.getElementById('journalFeedback');if(fb3){fb3.textContent=currentLanguage==='ar'?'تعذر الحفظ في حسابك — محفوظة محلياً وستُزامَن تلقائياً.':'Could not save to your account — saved locally, will sync automatically.';feedbackMotion(fb3);showToast(fb3.textContent);}});} function sbInitSession(){
-    if(!sb)return;
+    // C-1 fix: if Supabase failed to load, don't leave the app on infinite
+    // "Loading…". Hide the loader and fall through to the no-session flow.
+    if(!sb){
+      try{
+        var _bl=document.getElementById('authLoading');if(_bl)_bl.style.display='none';
+        document.body.classList.remove('auth-checking');
+        // Show landing/login for a logged-out visitor.
+        var _seen=false;try{_seen=!!localStorage.getItem('pipvant_landing_seen');}catch(e){}
+        if(_seen){document.body.classList.add('auth-active','show-auth');}
+        else{document.body.classList.add('show-landing');}
+      }catch(e){}
+      return;
+    }
     // Listen for auth state changes (token refresh, sign out, etc.)
     sb.auth.onAuthStateChange(function(event,session){
       if(event==='SIGNED_IN'&&session&&session.user){
@@ -3734,6 +3746,11 @@
   var screenSequence=0;
   document.addEventListener('click',function(e){var a=e.target&&e.target.closest?e.target.closest('a[data-nav]'):null;if(a){e.preventDefault();var s=a.getAttribute('data-nav');if(s&&typeof showScreen==='function')showScreen(s);}});
   function showScreen(id,instant){
+    // H-1 fix: validate the target BEFORE blanking the UI. An invalid id
+    // (stale pipvant_last_screen, typo) must not wipe the active screen.
+    if(!id||!document.getElementById(id))return;
+    var _copy=(currentLanguage==='ar'?titlesAr:titlesEn)[id];
+    if(!_copy||!_copy[0])return;
     var previous=document.querySelector('.screen.active');
     if(previous&&previous.id===id){window.scrollTo({top:0,behavior:'auto'});return;}
     try{if(document.getElementById(id))localStorage.setItem('pipvant_last_screen',id);}catch(se){}
@@ -6209,6 +6226,20 @@
     }catch(e){}
   },30000);
   sbInitSession();
+  // C-1 backstop: if the loader is still visible after 12s (hung Supabase
+  // call, stalled promise), force-hide it so the app is never stuck.
+  setTimeout(function(){
+    try{
+      var _l=document.getElementById('authLoading');
+      if(_l&&_l.style.display!=='none'){
+        _l.style.display='none';
+        document.body.classList.remove('auth-checking');
+        if(!document.body.classList.contains('app-ready')&&!document.body.classList.contains('auth-active')&&!document.body.classList.contains('show-landing')){
+          document.body.classList.add('show-landing');
+        }
+      }
+    }catch(e){}
+  },12000);
 })();
 </script>
 <!-- PIPVANT Company OS: privacy-friendly analytics (no cookies, page+referrer only) -->
