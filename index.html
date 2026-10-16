@@ -4779,6 +4779,8 @@
     var login=mode==='login';
     document.getElementById('signupNameField').hidden=login;
     signupName.required=!login;
+    // H3-login fix: Supabase allows 6-char passwords; don't lock out login.
+    try{document.getElementById('signupPassword').minLength=login?6:8;}catch(e){}
     document.getElementById('authEyebrow').textContent=currentLanguage==='ar'?(login?'مرحباً بعودتك':'أنشئ حسابك'):(login?'Welcome back':'Create your account');
     document.getElementById('authFormTitle').textContent=currentLanguage==='ar'?(login?'سجل الدخول إلى PIPVANT.':'ابدأ بالأساسيات.'):(login?'Log in to PIPVANT.':'Start with the essentials.');
     document.getElementById('authFormCopy').textContent=currentLanguage==='ar'?(login?'أدخل بيانات حسابك للمتابعة.':'أنشئ وصولاً آمناً إلى مجموعة أدوات PIPVANT الكاملة.'):(login?'Enter your account credentials to continue.':'Create secure access to the complete PIPVANT toolkit.');
@@ -4845,13 +4847,25 @@
     if(!e.currentTarget.reportValidity())return;
     var recipient=document.getElementById('resetEmail').value.trim();
     function showResetSent(){runSuccessMorph(e.submitter,function(){document.getElementById('resetRecipient').textContent=recipient;document.getElementById('resetRequest').hidden=true;document.getElementById('resetSuccess').hidden=false;});}
-    if(!sb){showResetSent();return;}
+    // H2-login fix: explicit offline error, not false success.
+    if(!sb){showToast(currentLanguage==='ar'?'تعذر الوصول للخادم — تحقق من الاتصال وحاول مجدداً.':'Could not reach the server — check your connection and try again.');return;}
     sb.auth.resetPasswordForEmail(recipient,{redirectTo:'https://pipvant.github.io/'}).then(function(res){
       if(res.error){showToast(res.error.message);return;}
       showResetSent();
     }).catch(function(err){showToast(err&&err.message?err.message:'Could not send reset link.');});
   });
-  document.getElementById('resendReset').addEventListener('click',function(){this.blur();});
+  document.getElementById('resendReset').addEventListener('click',function(){
+    this.blur();
+    // H1-login fix: actually resend the reset link (was dead).
+    var _rc=document.getElementById('resetRecipient');
+    var _email=_rc?_rc.textContent.trim():'';
+    if(!_email||!sb){showToast(currentLanguage==='ar'?'تعذر الإرسال.':'Could not send.');return;}
+    var _btn=this;_btn.disabled=true;
+    sb.auth.resetPasswordForEmail(_email,{redirectTo:'https://pipvant.github.io/'}).then(function(res){
+      _btn.disabled=false;
+      showToast(res.error?res.error.message:(currentLanguage==='ar'?'تمت إعادة الإرسال.':'Link resent.'));
+    }).catch(function(err){_btn.disabled=false;showToast(err&&err.message?err.message:'Failed.');});
+  });
   document.querySelectorAll('[data-auth-back]').forEach(function(button){button.addEventListener('click',function(){
     if(document.body.classList.contains('from-landing')&&button.getAttribute('data-auth-back')==='welcome'){backToLanding();return;}
     authStage(button.getAttribute('data-auth-back')==='welcome'?'authWelcome':'authSignup');
