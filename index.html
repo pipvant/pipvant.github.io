@@ -6379,6 +6379,10 @@
         // No upcoming high-impact: clear the banner honestly
         var nm0=document.getElementById('nextEventName');if(nm0)nm0.textContent='—';
         var mm0=document.getElementById('nextEventMeta');if(mm0)mm0.textContent=currentLanguage==='ar'?'لا أحداث قادمة':'No upcoming events';
+        // H-2-cal fix: clear stale countdown (was showing old numbers).
+        var _cd=document.getElementById('countdownDays');if(_cd)_cd.textContent='—';
+        var _ch=document.getElementById('countdownHours');if(_ch)_ch.textContent='—';
+        var _cm=document.getElementById('countdownMinutes');if(_cm)_cm.textContent='—';
         return;
       }
       // next high-impact = earliest FUTURE by timestamp
@@ -6387,7 +6391,8 @@
       var nm=document.getElementById('nextEventName');
       if(nm)nm.textContent=next.name||'—';
       var mm=document.getElementById('nextEventMeta');
-      if(mm)mm.textContent=(next.currency||'')+' · '+next.dayLabel+' '+next.time+' UTC';
+      // H-1-cal fix: use device timezone label (was hardcoded 'UTC').
+      if(mm)mm.textContent=(next.currency||'')+' · '+next.dayLabel+' '+next.time+' '+(typeof calendarTimezoneLabel==='function'?calendarTimezoneLabel():'');
       if(nextTs){
         var diff=Math.max(0,nextTs-Date.now());
         var dd=Math.floor(diff/86400000),hh=Math.floor(diff%86400000/3600000),mi=Math.floor(diff%3600000/60000);
