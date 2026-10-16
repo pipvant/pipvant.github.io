@@ -5922,7 +5922,7 @@
       var e=parseFloat(entry), x=parseFloat(exit), s=parseFloat(size);
       if(!isFinite(e)||!isFinite(x)||!isFinite(s)||s<=0)return null;
       // Only estimate for instruments with known specs; skip indices (US30, NAS100, SPX500, etc.)
-      if(/^(US30|NAS100|NAS|SPX|SPX500|GER40|UK100|FRA40|JP225|AUS200)/.test(sym))return null;
+      if(/^(US30|US100|US500|NAS100|NAS|SPX|SPX500|GER40|UK100|FRA40|JP225|AUS200)/.test(sym))return null;
       var diff=dir==='long'?(x-e):(e-x);
       var mult=100000; // default forex
       if(sym.indexOf('XAU')===0)mult=100;
@@ -5966,17 +5966,32 @@
   closeTradeSheetEl.addEventListener('click',function(e){if(e.target===closeTradeSheetEl)hideCloseTradeModal();});
   document.getElementById('closeTradeForm').addEventListener('submit',function(e){
     e.preventDefault();if(!currentCloseEntry)return;
+    // M1-close fix: double-submit guard.
+    var _cs=e.submitter||document.querySelector('#closeTradeModal [type="submit"]');
+    if(_cs&&_cs.disabled)return;
+    if(_cs)_cs.disabled=true;
     var exitPrice=parseFloat(document.getElementById('closeExitPrice').value);
+    // M3-close fix: reject non-positive exit prices.
+    if(!isFinite(exitPrice)||exitPrice<=0){document.getElementById('closeTradeFeedback').textContent=currentLanguage==='ar'?'أدخل سعر خروج صحيح.':'Enter a valid exit price.';if(_cs)_cs.disabled=false;return;}
     var result=document.getElementById('closeResult').value;
     var realizedInput=document.getElementById('closeRealizedPnl');
     var realizedPnl=realizedInput?parseFloat(realizedInput.value):NaN;
-    if(!isFinite(exitPrice)){document.getElementById('closeTradeFeedback').textContent=currentLanguage==='ar'?'أدخل سعر الخروج.':'Enter exit price.';return;}
+    if(!isFinite(exitPrice)){document.getElementById('closeTradeFeedback').textContent=currentLanguage==='ar'?'أدخل سعر الخروج.':'Enter exit price.';if(_cs)_cs.disabled=false;return;}
     var entry=parseFloat(currentCloseEntry.entry)||0;var dir=String(currentCloseEntry.direction||'').toLowerCase();
     var pnl;
     if(isFinite(realizedPnl)){
       pnl=realizedPnl;
     }else{
-      pnl=dir==='long'?(exitPrice-entry):(entry-exitPrice);
+      // H1-close fix: don't store raw price difference as P&L for indices.
+      // If estimatePnl can't compute (returns null), require manual entry.
+      var _sym=String(currentCloseEntry.pair||'').toUpperCase();
+      var _est=null;
+      try{_est=typeof estimatePnl==='function'?estimatePnl(_sym,dir,entry,exitPrice,parseFloat(currentCloseEntry.size)||0):null;}catch(_e){}
+      if(_est==null){
+        document.getElementById('closeTradeFeedback').textContent=currentLanguage==='ar'?'أدخل الربح/الخسارة المحققة يدوياً لهذا الرمز.':'Enter the realized P&L manually for this symbol.';
+        if(_cs)_cs.disabled=false;return;
+      }
+      pnl=_est;
     }
     if(result==='breakeven')pnl=0;
     var closeDone=function(){
