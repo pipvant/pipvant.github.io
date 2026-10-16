@@ -1027,7 +1027,7 @@
     .empty-motion{animation:itemRise var(--hero) var(--ease-enter) both}
     .empty-motion svg path,.empty-motion svg circle,.empty-motion svg rect,.empty-motion svg line,.empty-motion svg polyline{stroke-dasharray:1;stroke-dashoffset:1;animation:iconLineDraw var(--hero) var(--ease-enter) both}
 
-    .bottom-nav:before{content:"";position:absolute;z-index:0;left:5px;top:5px;width:calc((100% - 10px)/5);height:54px;border-radius:16px;background:linear-gradient(180deg,rgba(91,141,239,.14),rgba(91,141,239,.055));transform:translateX(var(--nav-shift,0%));transition:transform 200ms var(--ease-move);pointer-events:none}
+    .bottom-nav:before{content:"";position:absolute;z-index:0;left:5px;top:5px;width:calc((100% - 10px)/5);height:54px;border-radius:16px;background:linear-gradient(180deg,rgba(91,141,239,.14),rgba(91,141,239,.055));transform:translateX(var(--nav-shift,0%));transition:transform 200ms var(--ease-move),opacity 200ms;opacity:var(--nav-pill-opacity,1);pointer-events:none}
     .nav-btn{position:relative;z-index:1}.nav-btn.active{background:transparent}
     html[dir="rtl"] .bottom-nav:before{left:auto;right:5px;transform:translateX(var(--nav-shift-rtl,0%))}
     .segmented,.range-segment,.settings-segmented,.directory-tabs{position:relative;isolation:isolate;--segment-count:2;--segment-index:0}
@@ -3486,7 +3486,11 @@
     var position=Math.max(active,0);group.style.setProperty('--segment-count',String(Math.max(buttons.length,1)));group.style.setProperty('--segment-index',String(position));group.style.setProperty('--segment-shift',(position*100)+'%');group.style.setProperty('--segment-shift-rtl',(-position*100)+'%');
   }
   function refreshAllSegmentIndicators(){document.querySelectorAll('.segmented,.range-segment,.settings-segmented,.directory-tabs').forEach(refreshSegmentIndicator);}
-  function refreshBottomIndicator(){var buttons=Array.prototype.slice.call(document.querySelectorAll('.bottom-nav .nav-btn'));var active=buttons.findIndex(function(button){return button.classList.contains('active');});var position=Math.max(active,0),nav=document.querySelector('.bottom-nav');if(nav){nav.style.setProperty('--nav-index',String(position));nav.style.setProperty('--nav-shift',(position*100)+'%');nav.style.setProperty('--nav-shift-rtl',(-position*100)+'%');}}
+  function refreshBottomIndicator(){var buttons=Array.prototype.slice.call(document.querySelectorAll('.bottom-nav .nav-btn'));var active=buttons.findIndex(function(button){return button.classList.contains('active');});var nav=document.querySelector('.bottom-nav');if(nav){
+    // N2-nav fix: hide the pill on non-nav screens (was snapping to Matcher).
+    if(active<0){nav.style.setProperty('--nav-pill-opacity','0');}
+    else{nav.style.setProperty('--nav-pill-opacity','1');nav.style.setProperty('--nav-index',String(active));nav.style.setProperty('--nav-shift',(active*100)+'%');nav.style.setProperty('--nav-shift-rtl',(-active*100)+'%');}
+  }}
   function updateFloatingField(input){var wrap=input.parentElement;if(wrap)wrap.classList.toggle('has-value',String(input.value||'').length>0);}
   function buildPasswordEyes(){
     document.querySelectorAll('input[type="password"]').forEach(function(input){if(input.parentElement.classList.contains('password-shell'))return;var shell=document.createElement('div');shell.className='password-shell';input.parentNode.insertBefore(shell,input);shell.appendChild(input);var button=document.createElement('button');button.type='button';button.className='password-eye';button.setAttribute('aria-label','Show password');button.setAttribute('aria-pressed','false');button.innerHTML='<svg width="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 12s3.2-5 9-5 9 5 9 5-3.2 5-9 5-9-5-9-5Z"/><circle cx="12" cy="12" r="2.2"/></svg>';button.addEventListener('click',function(){var showing=input.type==='text';input.type=showing?'password':'text';button.setAttribute('aria-pressed',String(!showing));button.setAttribute('aria-label',showing?'Show password':'Hide password');input.focus();});shell.appendChild(button);});
@@ -3812,7 +3816,12 @@
     if(!_copy||!_copy[0])return;
     var previous=document.querySelector('.screen.active');
     if(previous&&previous.id===id){window.scrollTo({top:0,behavior:'auto'});return;}
-    try{if(document.getElementById(id))localStorage.setItem('pipvant_last_screen',id);}catch(se){}
+    // N3-nav fix: only persist primary tool screens (not transient ones like
+    // notifications/settings/about — was dropping users into odd screens).
+    try{
+      var _primary={'matcher':1,'journal':1,'calculator':1,'calendar':1,'profile':1};
+      if(document.getElementById(id)&&_primary[id])localStorage.setItem('pipvant_last_screen',id);
+    }catch(se){}
     var sequence=++screenSequence,skip=instant||reduceMotion.matches||!previous;
     function activate(){
       if(sequence!==screenSequence)return;window.scrollTo({top:0,behavior:'auto'});document.querySelectorAll('.screen').forEach(function(el){el.classList.remove('motion-enter','motion-exit');el.classList.toggle('active',el.id===id);});
