@@ -2587,13 +2587,7 @@
       var grid=details.querySelector('.spec-grid');if(grid&&grid.after)grid.after(ul);else details.appendChild(ul);
     }
     var cta=q('.slot-cta');
-    if(cta){cta.disabled=false;cta.addEventListener('click',function(ev2){ev2.stopPropagation();ev2.preventDefault();
-      // Restore original: toggle inline expand (was working before)
-      card.classList.toggle('expanded');var _fe=card.querySelector('.firm-expand');if(_fe)_fe.setAttribute('aria-expanded',String(card.classList.contains('expanded')));
-      // Also open the detail sheet
-      try{var fid=card.getAttribute('data-firm-id');if(fid&&typeof sbFillDetailSheet==='function')sbFillDetailSheet(fid);}catch(_e){}
-      try{var sheet=document.getElementById('firmDetailSheet');if(sheet){sheet.classList.add('open');var panel=sheet.querySelector('.firm-detail-panel');if(panel){panel.classList.remove('detail-morph');void panel.offsetWidth;panel.classList.add('detail-morph');}}}catch(_e2){}
-    });}
+    if(cta){cta.disabled=false;cta.addEventListener('click',function(ev2){ev2.stopPropagation();card.classList.toggle('expanded');var _fe=card.querySelector('.firm-expand');if(_fe)_fe.setAttribute('aria-expanded',String(card.classList.contains('expanded')));});}
     // Shortlist button (matcher cards)
     var slBtn=card.querySelector('.firm-detail-actions .btn.secondary');
     if(slBtn){
@@ -6755,13 +6749,22 @@
         // Welcome: NEW USERS ONLY, once. (It used to be global in
         // notifications.json with read-state in localStorage, so it
         // re-appeared as NEW after every data-clear for existing users.)
-        if(!window._welcomeAttempted){
+        // Root-cause fix: use localStorage lock (not just in-memory) to prevent
+        // duplicate welcomes from race conditions / multiple tabs / reloads.
+        var _wLockKey='pipvant_welcome_lock_'+(sbUser?sbUser.id:'anon');
+        var _wLocked=false;
+        try{_wLocked=!!localStorage.getItem(_wLockKey);}catch(_e){}
+        if(!_wLocked&&!window._welcomeAttempted){
           var hasWelcome=rows.some(function(n){return n.title==='Welcome to PIPVANT';});
           var createdAt=sbUser.created_at?new Date(sbUser.created_at).getTime():0;
           if(!hasWelcome&&createdAt&&(Date.now()-createdAt)<7*24*3600*1000){
             window._welcomeAttempted=true;
+            try{localStorage.setItem(_wLockKey,'1');}catch(_e2){}
             var wp=sbNotify('Welcome to PIPVANT','Use code PV on firm cards for exclusive offers.',null);
             if(wp&&typeof wp.then==='function')wp.then(function(wr){if(!wr||!wr.error)sbLoadNotifications();},function(){});
+          }else if(hasWelcome){
+            // Already have one: lock to prevent future attempts
+            try{localStorage.setItem(_wLockKey,'1');}catch(_e3){}
           }
         }
         renderNotifications();
