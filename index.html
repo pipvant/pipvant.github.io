@@ -4207,7 +4207,17 @@
       try{
         if(Array.isArray(d.shortlist)&&d.shortlist.length&&!localStorage.getItem('pipvant_shortlist'))localStorage.setItem('pipvant_shortlist',JSON.stringify(d.shortlist));
         if(Array.isArray(d.notif_currencies)&&d.notif_currencies.length){var ck=notifUserKey()+'_currs';if(!localStorage.getItem(ck))localStorage.setItem(ck,JSON.stringify(d.notif_currencies));}
-        if(Array.isArray(d.read_broadcasts)&&d.read_broadcasts.length&&!localStorage.getItem('pipvant_notif_read')){var m={};d.read_broadcasts.forEach(function(id){m[id]=1;});localStorage.setItem('pipvant_notif_read',JSON.stringify(m));}
+        if(Array.isArray(d.read_broadcasts)&&d.read_broadcasts.length&&!localStorage.getItem('pipvant_notif_read')){
+          var m={};d.read_broadcasts.forEach(function(id){m[id]=1;});localStorage.setItem('pipvant_notif_read',JSON.stringify(m));
+          // C1-broadcast fix: update in-memory store and re-render (was stale).
+          try{
+            if(typeof notifStore!=='undefined'){
+              notifStore.forEach(function(x){if(m[x.id])x.read=true;});
+            }
+            if(typeof renderNotifications==='function')renderNotifications();
+            if(typeof refreshNotificationBadge==='function')refreshNotificationBadge();
+          }catch(e){}
+        }
         if(d.trade_extras&&typeof d.trade_extras==='object'&&Object.keys(d.trade_extras).length&&!localStorage.getItem('pipvant_trade_extras')){localStorage.setItem('pipvant_trade_extras',JSON.stringify(d.trade_extras));if(typeof applyTradeExtras==='function')applyTradeExtras();}
       }catch(e){}
     }).catch(function(){});
