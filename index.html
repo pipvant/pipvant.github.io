@@ -4227,6 +4227,8 @@
   }
   var themeHydrating=true; // prevent save during initial load
   function applyTheme(theme,skipSave){
+    // T7-theme fix: validate (was accepting garbage values).
+    if(theme!=='light'&&theme!=='dark')theme='dark';
     document.documentElement.setAttribute('data-theme',theme);
     document.querySelectorAll('[data-theme-choice]').forEach(function(button){button.setAttribute('aria-pressed',String(button.getAttribute('data-theme-choice')===theme));});
     if(!skipSave&&!themeHydrating)sbSaveSettings();
