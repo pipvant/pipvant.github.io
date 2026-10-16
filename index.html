@@ -2475,7 +2475,15 @@
   }
   function sbLoadFirms(){
     if(!sb)return;
-    sb.from('firms').select('id,name,website,headquarters,countries_allowed,countries_restricted,updated_at,last_verified_at,source').order('name')
+    /* last_verified_at may not exist until the DB migration runs — retry without it so the matcher never breaks. */
+    var firmCols='id,name,website,headquarters,countries_allowed,countries_restricted,updated_at,last_verified_at,source';
+    sb.from('firms').select(firmCols).order('name')
+      .then(function(r){
+        if(r.error&&/last_verified_at/i.test(String((r.error&&r.error.message)||''))){
+          return sb.from('firms').select(firmCols.replace(',last_verified_at','')).order('name');
+        }
+        return r;
+      })
       .then(function(r){
         if(r.error||!r.data||!r.data.length)return;
         sbFirms=r.data;
