@@ -191,7 +191,39 @@
       #matcher .firm-summary{padding:4px!important;min-height:0!important;grid-template-columns:minmax(0,1fr) auto!important;gap:6px!important;align-items:center!important}
       #matcher .firm-expand{display:flex!important;align-items:center;gap:10px;padding:12px 12px;min-height:78px;grid-template-columns:none!important}
       #matcher .firm-expand .rank{flex:0 0 auto;font-size:15px}
-      #matcher .firm-card.pfm-top1 .rank,#matcher .firm-card.pfm-top2 .rank,#matcher .firm-card.pfm-top3 .rank{font-size:20px;border:0;background:none}
+    /* VISIBLE RANK BADGES — prominent #1/#2/#3, gold/silver/bronze for top 3 */
+    #matcher .firm-expand .rank,#matcher .rank-cell .rank{
+      min-width:34px;height:34px;padding:0 8px;display:inline-grid;place-items:center;
+      border-radius:10px;background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.25);
+      color:#D4AF37;font:800 14px/1 "Space Grotesk",sans-serif;letter-spacing:.02em;
+    }
+    #matcher .firm-expand .rank.rank-top1,#matcher .rank-cell .rank.rank-top1{
+      background:linear-gradient(135deg,#F7DC7E,#D4AF37 55%,#B8942A);color:#0A1628;border:0;
+      box-shadow:0 4px 14px rgba(212,175,55,.35);font-size:15px;
+    }
+    #matcher .firm-expand .rank.rank-top2,#matcher .rank-cell .rank.rank-top2{
+      background:linear-gradient(135deg,#E8EDF3,#B9C2CF 60%,#98A2B1);color:#0A1628;border:0;
+      box-shadow:0 4px 14px rgba(185,194,207,.3);font-size:15px;
+    }
+    #matcher .firm-expand .rank.rank-top3,#matcher .rank-cell .rank.rank-top3{
+      background:linear-gradient(135deg,#E8A86C,#CD7F32 60%,#A8641F);color:#0A1628;border:0;
+      box-shadow:0 4px 14px rgba(205,127,50,.3);font-size:15px;
+    }
+    /* PIPVANT Score pill next to rank */
+    #matcher .firm-expand .score-pill{
+      min-width:30px;height:24px;padding:0 7px;display:inline-grid;place-items:center;
+      border-radius:7px;background:rgba(91,141,239,.1);border:1px solid rgba(91,141,239,.3);
+      color:#8FB3F5;font:700 12px/1 "IBM Plex Mono",monospace;
+    }
+    /* Directory card rank badges */
+    .directory-card-head .dir-rank{
+      min-width:34px;height:34px;padding:0 8px;display:inline-grid;place-items:center;flex:0 0 auto;
+      border-radius:10px;background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.25);
+      color:#D4AF37;font:800 14px/1 "Space Grotesk",sans-serif;
+    }
+    .directory-card-head .dir-rank.rank-top1{background:linear-gradient(135deg,#F7DC7E,#D4AF37 55%,#B8942A);color:#0A1628;border:0;box-shadow:0 4px 14px rgba(212,175,55,.35);}
+    .directory-card-head .dir-rank.rank-top2{background:linear-gradient(135deg,#E8EDF3,#B9C2CF 60%,#98A2B1);color:#0A1628;border:0;box-shadow:0 4px 14px rgba(185,194,207,.3);}
+    .directory-card-head .dir-rank.rank-top3{background:linear-gradient(135deg,#E8A86C,#CD7F32 60%,#A8641F);color:#0A1628;border:0;box-shadow:0 4px 14px rgba(205,127,50,.3);}
       #matcher .firm-card .logo-slot{width:52px!important;height:52px!important;border-radius:14px!important;border:2px solid rgba(212,175,55,.45)!important;flex:0 0 auto;font-size:16px}
       #matcher .firm-card.pfm-top1 .logo-slot{border-color:#D4AF37!important;box-shadow:0 0 14px rgba(212,175,55,.4)}
       #matcher .firm-card.pfm-top2 .logo-slot{border-color:#c0c8d4!important}
@@ -3577,6 +3609,20 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       rankEl.classList.toggle('rank-top2',_rn===2);
       rankEl.classList.toggle('rank-top3',_rn===3);
     }
+    /* PIPVANT Score pill (e.g. "87") — visible next to rank, data-driven, never invented */
+    try{
+      var _score=sbPipvScore(firm).score;
+      var _scoreEl=q('.score-pill');
+      if(!_scoreEl&&rankEl&&rankEl.parentNode){
+        _scoreEl=document.createElement('span');_scoreEl.className='score-pill';
+        rankEl.parentNode.insertBefore(_scoreEl,rankEl.nextSibling);
+      }
+      if(_scoreEl){
+        _scoreEl.textContent=_score;
+        _scoreEl.setAttribute('aria-label',(currentLanguage==='ar'?'نقاط PIPVANT ':'PIPVANT Score ')+_score+'/100');
+        _scoreEl.title='PIPVANT Score: '+_score+'/100';
+      }
+    }catch(_se){}
     var logo=q('.logo-slot');sbFirmLogo(logo,firm);
     var nameEl=q('.firm-name');if(nameEl)nameEl.textContent=firm.name;
     var pills=card.querySelectorAll('.meta-pill');
@@ -3632,11 +3678,11 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     if(expander){
       // PIPVANT-WAVE1: card extras (promo badge, updated stamp, PT:DD, flags)
       sbWave1CardExtras(card,firm,plans,firstRules);
-      /* PFM-STYLE card extras: trophy ranks, heart, gold alloc sub, right promo/PT:DD block */
+      /* PFM-STYLE card extras: rank highlight, heart, gold alloc sub, right promo/PT:DD block */
       try{
         var rkNum=Number(rank);
         if(rkNum>=1&&rkNum<=3){
-          if(rankEl)rankEl.textContent=['🏆','🥈','🥉'][rkNum-1];
+          /* Keep the "#N" badge text (set above); add gold/silver/bronze logo ring */
           card.classList.add('pfm-top'+rkNum);
         }
         var topline=q('.firm-topline');
@@ -3686,7 +3732,13 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
   }
   function sbBuildTableRow(firm,plans,rank){
     var tr=document.createElement('tr');
-    var td0=document.createElement('td');td0.className='rank-cell';var s0=document.createElement('span');s0.textContent=rank;td0.appendChild(s0);tr.appendChild(td0);
+    var td0=document.createElement('td');td0.className='rank-cell';
+    var s0=document.createElement('span');
+    var _trn=Number(rank)||0;
+    s0.className='rank rank-top'+(_trn>=1&&_trn<=3?_trn:'x');
+    if(_trn>3)s0.className='rank';
+    s0.textContent='#'+_trn;
+    td0.appendChild(s0);tr.appendChild(td0);
     var td1=document.createElement('td');var wf=document.createElement('span');wf.className='table-firm';
     var lg=document.createElement('span');lg.className='logo-slot';sbFirmLogo(lg,firm);
     var st=document.createElement('span');st.className='table-firm-stack';
@@ -4515,6 +4567,23 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       results.insertBefore(node,empty);
     });
     empty.hidden=true;
+    /* Initial rank stamp: sort by PIPVANT Score (Recommended default) + stamp #N */
+    try{
+      var _dcards=Array.prototype.slice.call(results.querySelectorAll('[data-firm-card]'));
+      _dcards.sort(function(a,b){
+        var fa=null,fb=null,_fid;
+        _fid=a.getAttribute('data-firm-id');(sbFirms||[]).forEach(function(f){if(String(f.id)===String(_fid))fa=f;});
+        _fid=b.getAttribute('data-firm-id');(sbFirms||[]).forEach(function(f){if(String(f.id)===String(_fid))fb=f;});
+        return (sbPipvScore(fb).score||0)-(sbPipvScore(fa).score||0);
+      });
+      _dcards.forEach(function(c,idx){
+        results.insertBefore(c,empty);
+        var _dr=c.querySelector('.dir-rank');
+        if(!_dr){_dr=document.createElement('span');_dr.className='dir-rank rank';var _h=c.querySelector('.directory-card-head');if(_h)_h.insertBefore(_dr,_h.firstChild);}
+        var _rn=idx+1;_dr.textContent='#'+_rn;
+        _dr.classList.toggle('rank-top1',_rn===1);_dr.classList.toggle('rank-top2',_rn===2);_dr.classList.toggle('rank-top3',_rn===3);
+      });
+    }catch(_dri){}
     sbFilterDirectory();
   }
   function sbFilterDirectory(){
@@ -6161,78 +6230,8 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
         // - Payout speed (15pts): faster = better
         // - Data completeness (10pts): % of expected rule fields present
         function sbFirmScore(firm){
-          if(!firm)return 0;
-          var plans=sbPlansByFirm[firm.id]||[];
-          if(!plans.length)return 0;
-          var score=0, rationale=[];
-          // 0. Trust & Transparency (25pts): FULLY AUTOMATIC — based on measurable
-          // data quality signals. No manual tiers. Our criteria:
-          // - Rule transparency: % of plans with complete rules (15pts)
-          // - Payout clarity: has clear payout terms (5pts)
-          // - Verification freshness: data recently verified (5pts)
-          var trustPts=0;
-          var totalPlans=plans.length;
-          // Rule transparency: count plans with key rules filled
-          var transparentPlans=plans.filter(function(p){
-            var r=p.rules||{};
-            return r.profit_split!=null && r.max_drawdown_pct!=null && r.drawdown_type;
-          }).length;
-          trustPts+=Math.round((transparentPlans/Math.max(1,totalPlans))*15);
-          // Payout clarity
-          var hasPayout=plans.some(function(p){
-            var r=p.rules||{};return r.payout_frequency;
-          });
-          if(hasPayout){trustPts+=5;rationale.push('clear payouts');}
-          // Verification freshness: firm verified in last 48h
-          try{
-            var vAt=firm.last_verified_at?new Date(firm.last_verified_at):null;
-            if(vAt&&(Date.now()-vAt.getTime())<48*3600*1000)trustPts+=5;
-          }catch(e){}
-          trustPts=Math.min(25,trustPts);
-          score+=trustPts;
-          if(trustPts>=20)rationale.push('high transparency');
-          // 1. Profit split (20pts): use max split across plans
-          var splits=plans.map(function(p){var r=p.rules||{};return sbNum(r.profit_split);}).filter(isFinite);
-          var maxSplit=splits.length?Math.max.apply(null,splits):0;
-          var splitPts=Math.min(20, maxSplit*0.2);
-          score+=splitPts;
-          if(maxSplit>0)rationale.push(maxSplit+'% split');
-          // 2. Value (20pts): best account-size-per-dollar ratio
-          var values=plans.map(function(p){
-            var sz=sbNum(p.account_size), pr=sbNum(p.price);
-            return (isFinite(sz)&&isFinite(pr)&&pr>0)?sz/pr:0;
-          }).filter(function(v){return v>0;});
-          var bestVal=values.length?Math.max.apply(null,values):0;
-          // Normalize: ~400 $/dollar = excellent (20pts). Scale linearly.
-          var valPts=Math.min(20, bestVal/20);
-          score+=valPts;
-          // 3. Drawdown (15pts): higher % better; static bonus
-          var dds=plans.map(function(p){var r=p.rules||{};return sbNum(r.max_drawdown_pct);}).filter(isFinite);
-          var maxDD=dds.length?Math.max.apply(null,dds):0;
-          var ddPts=Math.min(11, maxDD*1.1);
-          // Static bonus: check if any plan has static drawdown
-          var hasStatic=plans.some(function(p){var r=p.rules||{};return /static/i.test(r.drawdown_type||'');});
-          if(hasStatic)ddPts+=4;
-          ddPts=Math.min(15,ddPts);
-          score+=ddPts;
-          if(maxDD>0)rationale.push(maxDD+'% DD'+(hasStatic?' static':''));
-          // 4. Payout speed (10pts)
-          var payoutStr=plans.map(function(p){var r=p.rules||{};return String(r.payout_frequency||'').toLowerCase();}).join(' ');
-          var payoutPts=3;
-          if(/instant|on-demand|on demand/.test(payoutStr))payoutPts=10;
-          else if(/daily/.test(payoutStr))payoutPts=8;
-          else if(/weekly|7 days/.test(payoutStr))payoutPts=7;
-          else if(/bi-?weekly|14 days|48h/.test(payoutStr))payoutPts=5;
-          score+=payoutPts;
-          // 5. Data completeness (10pts)
-          var expected=['profit_target_pct','daily_loss_pct','max_drawdown_pct','profit_split','payout_frequency'];
-          var present=0;
-          plans.forEach(function(p){var r=p.rules||{};
-            expected.forEach(function(k){if(r[k]!==undefined&&r[k]!==null&&r[k]!=='')present++;});
-          });
-          var compPts=Math.min(10, (present/(expected.length*plans.length))*10*plans.length/3);
-          score+=compPts;
-          return {score:Math.round(score), rationale:rationale.join(', ')};
+          /* Delegates to the global sbPipvScore (single source of truth for ranking). */
+          try{return sbPipvScore(firm);}catch(e){return {score:0,rationale:''};}
         }
         if(/price.*low to high/i.test(mode)){
           cards.sort(function(a,b){return minPriceOf(firmOf(a))-minPriceOf(firmOf(b));});
@@ -6260,6 +6259,22 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
           });
         }
         cards.forEach(function(c){results.insertBefore(c,empty);});
+        /* VISIBLE RANK: stamp #1/#2/#3... on directory cards after sort */
+        try{
+          cards.forEach(function(c,idx){
+            var _dr=c.querySelector('.dir-rank');
+            if(!_dr){
+              _dr=document.createElement('span');_dr.className='dir-rank rank';
+              var _head=c.querySelector('.directory-card-head');
+              if(_head)_head.insertBefore(_dr,_head.firstChild);
+            }
+            var _rn=idx+1;
+            _dr.textContent='#'+_rn;
+            _dr.classList.toggle('rank-top1',_rn===1);
+            _dr.classList.toggle('rank-top2',_rn===2);
+            _dr.classList.toggle('rank-top3',_rn===3);
+          });
+        }catch(_dre){}
         if(typeof sbFilterDirectory==='function')sbFilterDirectory();
       });
     }
