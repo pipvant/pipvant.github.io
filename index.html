@@ -117,6 +117,23 @@
     .market-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:4px;background:var(--sunken);border:1px solid var(--line);border-radius:10px;margin-bottom:12px}
     .market-tab{min-width:0;min-height:44px;border:0;border-radius:8px;background:transparent;color:var(--muted);font-size:12px;font-weight:700;cursor:pointer;transition:transform var(--press) var(--ease-move),opacity var(--micro) var(--ease-move),background-color var(--micro) var(--ease-move)}
     .market-tab[aria-selected="true"]{background:var(--raised);color:var(--text);box-shadow:inset 0 0 0 1px var(--line-strong)}
+    /* Asset category filter — Futures / CFDs / Crypto (gold active, premium segmented) */
+    .cat-filter{display:flex;gap:8px;margin:0 0 16px;padding:2px;overflow-x:auto;scrollbar-width:none}
+    .cat-filter::-webkit-scrollbar{display:none}
+    .cat-btn{display:inline-flex;align-items:center;gap:8px;flex:0 0 auto;min-height:44px;padding:0 18px;border:1px solid var(--line);border-radius:999px;background:var(--sunken);color:var(--muted);font-size:13px;font-weight:700;cursor:pointer;transition:border-color .18s ease,color .18s ease,background-color .18s ease,box-shadow .18s ease,transform .12s ease}
+    .cat-btn:hover{color:var(--text);border-color:var(--line-strong)}
+    .cat-btn:active{transform:scale(.97)}
+    .cat-btn .cat-ico{font-size:15px;line-height:1}
+    .cat-btn .cat-count{font:600 10px/1 "IBM Plex Mono",monospace;color:var(--silver);background:rgba(255,255,255,.05);border:1px solid var(--line);padding:4px 8px;border-radius:999px;min-width:26px;text-align:center;font-variant-numeric:tabular-nums}
+    .cat-btn[aria-pressed="true"]{color:#D4AF37;border-color:rgba(212,175,55,.55);background:rgba(212,175,55,.10);box-shadow:0 0 0 1px rgba(212,175,55,.25),0 8px 20px rgba(212,175,55,.10)}
+    .cat-btn[aria-pressed="true"] .cat-count{color:#D4AF37;border-color:rgba(212,175,55,.4);background:rgba(212,175,55,.12)}
+    /* Category badge shown on each firm card + table row */
+    .cat-badge{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:800;letter-spacing:.08em;padding:3px 9px;border-radius:999px;border:1px solid;white-space:nowrap;vertical-align:middle}
+    .cat-badge.cat-futures{color:#8FB3F5;border-color:rgba(91,141,239,.45);background:rgba(91,141,239,.12)}
+    .cat-badge.cat-cfds{color:#D4AF37;border-color:rgba(212,175,55,.45);background:rgba(212,175,55,.10)}
+    .cat-badge.cat-crypto{color:var(--platinum);border-color:var(--line-strong);background:var(--sunken)}
+    .firm-topline .cat-badge{margin-inline-start:8px}
+    .table-firm-stack .cat-badge{margin-top:5px;align-self:flex-start}
     .filter-panel{position:sticky;top:61px;z-index:14;background:color-mix(in srgb,var(--surface) 96%,transparent);border:1px solid var(--line);border-radius:var(--r-md);padding:0;margin-bottom:18px;box-shadow:0 12px 28px rgba(0,0,0,.18);backdrop-filter:blur(18px)}
     .filter-title{width:100%;min-height:54px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 15px;border:0;background:transparent;text-align:left;cursor:pointer}
     .filter-title h3{margin:0;font-size:16px}
@@ -2270,6 +2287,13 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
         <div class="control-group"><span>Density</span><div class="segmented density" role="group" aria-label="Result density"><button class="segment density-segment" type="button" data-density="compact" aria-pressed="false">Compact</button><button class="segment density-segment" type="button" data-density="comfortable" aria-pressed="true">Comfortable</button></div></div>
       </div>
 
+      <div class="cat-filter" id="catFilter" role="group" aria-label="Asset category filter">
+        <button class="cat-btn" type="button" data-cat="all" aria-pressed="true"><span class="cat-ico" aria-hidden="true">✦</span><span class="cat-label">All</span><span class="cat-count">–</span></button>
+        <button class="cat-btn" type="button" data-cat="futures" aria-pressed="false"><span class="cat-ico" aria-hidden="true">📈</span><span class="cat-label">Futures</span><span class="cat-count">–</span></button>
+        <button class="cat-btn" type="button" data-cat="cfds" aria-pressed="false"><span class="cat-ico" aria-hidden="true">💱</span><span class="cat-label">CFDs</span><span class="cat-count">–</span></button>
+        <button class="cat-btn" type="button" data-cat="crypto" aria-pressed="false"><span class="cat-ico" aria-hidden="true">₿</span><span class="cat-label">Crypto</span><span class="cat-count">–</span></button>
+      </div>
+
       <section class="matcher-list" data-view="rows" data-density="comfortable" aria-labelledby="top-firms-title">
         <div class="matcher-list-head">
           <div><h3 id="top-firms-title">Top Prop Firms</h3><div class="matcher-meta"><a class="method-pill" href="#matcherMethodology">How we verify and rank firms</a><span id="lastUpdatedSpan">Last updated —</span><span class="freshness-pill" id="freshnessBadge" hidden><span class="fresh-dot"></span><span id="freshnessText"></span></span></div></div>
@@ -3414,6 +3438,23 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     var rankEl=q('.rank');if(rankEl)rankEl.textContent=rank;
     var logo=q('.logo-slot');sbFirmLogo(logo,firm);
     var nameEl=q('.firm-name');if(nameEl)nameEl.textContent=firm.name;
+    /* Asset category badge (FUTURES / CFDs / CRYPTO) — small pill next to the name */
+    try{
+      var _tline=q('.firm-topline');
+      if(_tline){
+        var _oldB=_tline.querySelector('.cat-badge');if(_oldB)_oldB.remove();
+        var _cat=sbCategoryOf(firm);
+        if(_cat){
+          var _cb=document.createElement('span');
+          _cb.className='cat-badge cat-'+_cat;
+          var _bar=currentLanguage==='ar';
+          _cb.textContent=(sbCatBadgeText[_cat]||{})[_bar?'ar':'en']||_cat.toUpperCase();
+          _cb.setAttribute('aria-label',(sbCatLabels[_cat]||{en:_cat,ar:_cat})[_bar?'ar':'en']);
+          if(nameEl&&nameEl.nextSibling)_tline.insertBefore(_cb,nameEl.nextSibling);
+          else _tline.appendChild(_cb);
+        }
+      }
+    }catch(_cbe){}
     var pills=card.querySelectorAll('.meta-pill');
     var hq=firm.headquarters||'';
     var pillTexts=[hq,sbPricingLabel(plans),plans.length?plans.length+(currentLanguage==='ar'?(plans.length===1?' حجم':' أحجام'):(plans.length===1?' size':' sizes')):'—'];
@@ -3526,7 +3567,10 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     var st=document.createElement('span');st.className='table-firm-stack';
     var nm=document.createElement('span');nm.textContent=firm.name;
     var ev=document.createElement('span');ev.className='table-evidence';sbSourceLine(ev,firm);
-    st.appendChild(nm);st.appendChild(ev);wf.appendChild(lg);wf.appendChild(st);td1.appendChild(wf);tr.appendChild(td1);
+    st.appendChild(nm);
+    /* Asset category badge (table view) */
+    try{var _tc=sbCategoryOf(firm);if(_tc){var _tcb=document.createElement('span');_tcb.className='cat-badge cat-'+_tc;var _tar=currentLanguage==='ar';_tcb.textContent=(sbCatBadgeText[_tc]||{})[_tar?'ar':'en']||_tc.toUpperCase();st.appendChild(_tcb);}}catch(_tce){}
+    st.appendChild(ev);wf.appendChild(lg);wf.appendChild(st);td1.appendChild(wf);tr.appendChild(td1);
     var td2=document.createElement('td');var rt=document.createElement('span');rt.className='table-rating';var rs=document.createElement('strong');rs.textContent='—';rt.appendChild(rs);td2.appendChild(rt);tr.appendChild(td2);
     
     var td4=document.createElement('td');td4.textContent=sbSizeRange(plans);tr.appendChild(td4);
@@ -3539,15 +3583,41 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
   }
   function sbPopulateAccountSizes(){var sel=document.getElementById('accountSize');if(!sel||typeof sbPlansByFirm==='undefined')return;var seen={};Object.keys(sbPlansByFirm).forEach(function(fid){(sbPlansByFirm[fid]||[]).forEach(function(p){var n=sbNum(p.account_size);if(isFinite(n)&&n>0)seen[n]=1;});});var sizes=Object.keys(seen).map(Number).sort(function(a,b){return a-b;});var cur=sel.value;var first=sel.options[0];var anyLbl=first?first.textContent:'Any';var anyI18n=first?first.getAttribute('data-i18n'):null;sel.innerHTML='';var any=document.createElement('option');any.value='';if(anyI18n)any.setAttribute('data-i18n',anyI18n);any.textContent=anyLbl;sel.appendChild(any);sizes.forEach(function(s){var o=document.createElement('option');o.value=String(s);o.textContent=sbFmtSize(s);sel.appendChild(o);});if(cur)sel.value=cur;if(typeof applyI18n==='function')applyI18n();}
   /* Matcher filters: real filtering from account size + max price */
+  /* Asset category filter (Futures / CFDs / Crypto) — classification by exact firm name.
+     Unmapped firms appear under "All" only. */
+  var sbCatByFirm={
+    'Apex Trader Funding':'futures','MyFundedFutures':'futures','TakeProfitTrader':'futures','Topstep':'futures',
+    'FTMO':'cfds','FundedNext':'cfds','Funding Pips':'cfds','E8 Markets':'cfds','The5ers':'cfds','Alpha Capital Group':'cfds'
+  };
+  var sbActiveCat='all';
+  function sbCategoryOf(firm){return (firm&&sbCatByFirm[firm.name])||null;}
+  var sbCatLabels={all:{en:'All',ar:'الكل'},futures:{en:'Futures',ar:'الفيوتشرز'},cfds:{en:'CFDs',ar:'CFD'},crypto:{en:'Crypto',ar:'الكريبتو'}};
+  var sbCatBadgeText={futures:{en:'FUTURES',ar:'فيوتشرز'},cfds:{en:'CFDs',ar:'CFD'},crypto:{en:'CRYPTO',ar:'كريبتو'}};
+  function sbUpdateCatButtons(){
+    var bar=document.getElementById('catFilter');if(!bar)return;
+    var ar=currentLanguage==='ar';
+    var counts={all:0,futures:0,cfds:0,crypto:0};
+    (sbFirms||[]).forEach(function(f){counts.all++;var c=sbCategoryOf(f);if(c&&counts[c]!=null)counts[c]++;});
+    bar.querySelectorAll('.cat-btn').forEach(function(btn){
+      var cat=btn.getAttribute('data-cat');
+      var lbl=btn.querySelector('.cat-label');
+      if(lbl)lbl.textContent=(sbCatLabels[cat]||{en:cat,ar:cat})[ar?'ar':'en'];
+      var cnt=btn.querySelector('.cat-count');
+      if(cnt)cnt.textContent=counts[cat]!=null?counts[cat]:0;
+      btn.setAttribute('aria-pressed',String(sbActiveCat===cat));
+    });
+  }
   function sbGetMatcherFilters(){
     var sizeSel=document.getElementById('accountSize');
     var priceInput=document.getElementById('maxPrice');
     return {
       size:sizeSel&&sizeSel.value?Number(sizeSel.value):0,
-      maxPrice:priceInput&&priceInput.value?parseFloat(priceInput.value):0
+      maxPrice:priceInput&&priceInput.value?parseFloat(priceInput.value):0,
+      cat:sbActiveCat||'all'
     };
   }
   function sbFirmMatchesFilters(firm,plans,filters){
+    if(filters.cat&&filters.cat!=='all'&&sbCategoryOf(firm)!==filters.cat)return false;
     if(filters.size>0){
       var hasSize=plans.some(function(p){return sbNum(p.account_size)===filters.size;});
       if(!hasSize)return false;
@@ -4055,6 +4125,9 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     var firms=sbFirms.filter(function(f){return sbFirmMatchesFilters(f,sbPlansByFirm[f.id]||[],filters);});
     window._filteredFirmsCount=firms.length;
     var _pv=document.querySelector('#matcher .preview-label');if(_pv)_pv.textContent=firms.length+(currentLanguage==='ar'?' شركات موثقة':' verified firms');
+    /* Asset category filter: keep button labels, counts and active state fresh
+       (re-runs on language switch and on every data render). */
+    try{if(typeof sbUpdateCatButtons==='function')sbUpdateCatButtons();}catch(_ucb){}
     var slots=document.querySelector('#matcher .firm-slots');
     if(slots){
       if(!sbFirmCardProto){var _sbProtoCard=slots.querySelector('.firm-card');if(_sbProtoCard)sbFirmCardProto=_sbProtoCard.cloneNode(true);}
@@ -4079,8 +4152,14 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       // blame the answers, not data verification.
       if(firms.length===0&&(sbFirms||[]).length>0){
         var _mh=mEmpty.querySelector('h3'),_mp=mEmpty.querySelector('p');
-        if(_mh)_mh.textContent=currentLanguage==='ar'?'لا توجد شركات مطابقة لإجاباتك':'No firms match your answers';
-        if(_mp)_mp.textContent=currentLanguage==='ar'?'جرّب تعديل إجاباتك لعرض المزيد.':'Try adjusting your answers to see more.';
+        if(sbActiveCat==='crypto'){
+          /* Honest empty state: no crypto firms verified yet — never invent firms. */
+          if(_mh)_mh.textContent=currentLanguage==='ar'?'لا توجد شركات كريبتو بعد':'No crypto firms yet';
+          if(_mp)_mp.textContent=currentLanguage==='ar'?'ما زلنا نتحقق من شركات الكريبتو — رجع لاحقاً.':'We\u2019re still verifying crypto firms \u2014 check back soon.';
+        }else{
+          if(_mh)_mh.textContent=currentLanguage==='ar'?'لا توجد شركات مطابقة لإجاباتك':'No firms match your answers';
+          if(_mp)_mp.textContent=currentLanguage==='ar'?'جرّب تعديل إجاباتك لعرض المزيد.':'Try adjusting your answers to see more.';
+        }
       }
     }
     // Populate "Member since" from Supabase user created_at
@@ -7152,6 +7231,15 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     document.querySelectorAll('.market-tab').forEach(function(other){other.setAttribute('aria-selected',String(other===tab));});
     document.getElementById('matcher').style.setProperty('--market-accent',marketTints[tab.getAttribute('data-market-tab')]);
   });});
+  /* Asset category filter buttons: set active category and re-render firms
+     (search/account-size/price filters + table sort keep working on top). */
+  document.querySelectorAll('#catFilter .cat-btn').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      sbActiveCat=btn.getAttribute('data-cat')||'all';
+      sbUpdateCatButtons();
+      if(typeof sbRenderFirms==='function')sbRenderFirms();
+    });
+  });
   document.querySelectorAll('.faq-question').forEach(function(button){button.addEventListener('click',function(){
     var item=button.closest('.faq-item');
     var open=button.getAttribute('aria-expanded')==='true';
