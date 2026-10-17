@@ -3355,7 +3355,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
   function sbCountryFlag(hq){
     if(!hq)return '';
     var t=String(hq).toLowerCase();
-    var map=[['united kingdom','🇬🇧'],['uk','🇬🇧'],['britain','🇬🇧'],['london','🇬🇧'],['united states','🇺🇸'],['usa','🇺🇸'],['us','🇺🇸'],['united arab emirates','🇦🇪'],['uae','🇦🇪'],['dubai','🇦🇪'],['canada','🇨🇦'],['australia','🇦🇺'],['cyprus','🇨🇾'],['seychelles','🇸🇨'],['mauritius','🇲🇺'],['singapore','🇸🇬'],['hong kong','🇭🇰'],['germany','🇩🇪'],['france','🇫🇷'],['netherlands','🇳🇱'],['spain','🇪🇸'],['italy','🇮🇹'],['switzerland','🇨🇭'],['south africa','🇿🇦'],['morocco','🇲🇦']];
+    var map=[['united kingdom','🇬🇧'],['uk','🇬🇧'],['britain','🇬🇧'],['london','🇬🇧'],['united states','🇺🇸'],['usa','🇺🇸'],['us','🇺🇸'],['united arab emirates','🇦🇪'],['uae','🇦🇪'],['dubai','🇦🇪'],['canada','🇨🇦'],['australia','🇦🇺'],['cyprus','🇨🇾'],['seychelles','🇸🇨'],['mauritius','🇲🇺'],['singapore','🇸🇬'],['hong kong','🇭🇰'],['saint lucia','🇱🇨'],['germany','🇩🇪'],['france','🇫🇷'],['netherlands','🇳🇱'],['spain','🇪🇸'],['italy','🇮🇹'],['switzerland','🇨🇭'],['south africa','🇿🇦'],['morocco','🇲🇦']];
     for(var i=0;i<map.length;i++){if(t.indexOf(map[i][0])!==-1)return map[i][1];}
     return '';
   }
@@ -3436,7 +3436,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
             var alloc=card.querySelector('.allocation strong');
             if(alloc&&!card.querySelector('.price-strike')){
               var was=document.createElement('span');was.className='price-strike';
-              was.textContent='$'+Math.round(minP).toLocaleString('en-US');
+              was.textContent=sbFmtUSD(Math.round(minP));
               alloc.appendChild(was);
             }
           }
@@ -4586,7 +4586,14 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
   function sbFillFdChallenges(firm,plans,ar){
     var el=document.getElementById('fdChallenges');if(!el)return;el.innerHTML='';
     if(!plans.length){el.innerHTML='<p class="fd-note">—</p>';return;}
+    /* Group plans by program so multi-program firms show distinct sections */
+    var groups=[],gmap={};
     plans.forEach(function(p){
+      var pr=(p.rules&&p.rules.program)?String(p.rules.program):'';
+      if(!gmap.hasOwnProperty(pr)){gmap[pr]=[];groups.push(pr);}
+      gmap[pr].push(p);
+    });
+    function renderPlan(p){
       var r=p.rules||{};
       var row=document.createElement('div');row.className='fd-planrow';
       var left=document.createElement('div');left.className='ps';
@@ -4618,6 +4625,12 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       }else{var b2=document.createElement('b');b2.textContent='—';pr.appendChild(b2);}
       row.appendChild(left);row.appendChild(pr);
       el.appendChild(row);
+    }
+    groups.forEach(function(pr){
+      if(groups.length>1&&pr){
+        var h=document.createElement('div');h.className='fd-sec';h.style.marginTop='14px';h.textContent=pr;el.appendChild(h);
+      }
+      gmap[pr].forEach(renderPlan);
     });
   }
   function sbFillFdPayouts(firm,plans,ar){
