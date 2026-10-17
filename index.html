@@ -3369,9 +3369,9 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     var maxSplit=splits.length?Math.max.apply(null,splits):0;
     score+=Math.min(20,maxSplit*0.2);
     if(maxSplit>0)rationale.push(maxSplit+'% split');
-    var values=plans.map(function(p){var sz=sbNum(p.account_size),pr=sbNum(p.price);return (isFinite(sz)&&isFinite(pr)&&pr>0)?sz/pr:0;}).filter(function(v){return v>0;});
-    var bestVal=values.length?Math.max.apply(null,values):0;
-    score+=Math.min(20,bestVal/20);
+    var values=plans.map(function(p){var sz=sbNum(p.account_size),pr=sbNum(p.price);return (isFinite(sz)&&isFinite(pr)&&pr>0)?sz/pr:0;}).filter(function(v){return v>0;}).sort(function(a,b){return a-b;});
+    var medVal=values.length?values[Math.floor(values.length/2)]:0;
+    score+=Math.min(20,medVal/20);
     var dds=plans.map(function(p){var r=p.rules||{};return sbNum(r.max_drawdown_pct);}).filter(isFinite);
     var maxDD=dds.length?Math.max.apply(null,dds):0;
     var ddPts=Math.min(11,maxDD*1.1);
@@ -3389,11 +3389,12 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     var expected=['profit_target_pct','daily_loss_pct','max_drawdown_pct','profit_split','payout_frequency'];
     var present=0;
     plans.forEach(function(p){var r=p.rules||{};expected.forEach(function(k){if(r[k]!==undefined&&r[k]!==null&&r[k]!=='')present++;});});
-    score+=Math.min(5,(present/(expected.length*plans.length))*5*plans.length/3);
+    var frac=expected.length*plans.length>0?present/(expected.length*plans.length):0;
+    score+=Math.min(5,frac*5);
     // Community (10pts): ratings + likes
     var comm2=window._sbCommunity&&window._sbCommunity[firm.id];
     if(comm2){
-      if(comm2.avgRating)score+=Math.min(5,(comm2.avgRating/5)*5);
+      if(comm2.avgRating&&comm2.ratingCount>=3)score+=Math.min(5,(comm2.avgRating/5)*5);
       if(comm2.likes)score+=Math.min(5,Math.log10(comm2.likes+1)*2.5);
     }
     return {score:Math.round(score),rationale:rationale.join(', ')};
@@ -6230,14 +6231,14 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
           var splitPts=Math.min(20, maxSplit*0.2);
           score+=splitPts;
           if(maxSplit>0)rationale.push(maxSplit+'% split');
-          // 2. Value (20pts): best account-size-per-dollar ratio
+          // 2. Value (20pts): median account-size-per-dollar ratio (robust vs outliers)
           var values=plans.map(function(p){
             var sz=sbNum(p.account_size), pr=sbNum(p.price);
             return (isFinite(sz)&&isFinite(pr)&&pr>0)?sz/pr:0;
-          }).filter(function(v){return v>0;});
-          var bestVal=values.length?Math.max.apply(null,values):0;
+          }).filter(function(v){return v>0;}).sort(function(a,b){return a-b;});
+          var medVal=values.length?values[Math.floor(values.length/2)]:0;
           // Normalize: ~400 $/dollar = excellent (20pts). Scale linearly.
-          var valPts=Math.min(20, bestVal/20);
+          var valPts=Math.min(20, medVal/20);
           score+=valPts;
           // 3. Drawdown (15pts): higher % better; static bonus
           var dds=plans.map(function(p){var r=p.rules||{};return sbNum(r.max_drawdown_pct);}).filter(isFinite);
@@ -6263,17 +6264,18 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
           plans.forEach(function(p){var r=p.rules||{};
             expected.forEach(function(k){if(r[k]!==undefined&&r[k]!==null&&r[k]!=='')present++;});
           });
-          var compPts=Math.min(5, (present/(expected.length*plans.length))*5*plans.length/3);
+          var compFrac=expected.length*plans.length>0?present/(expected.length*plans.length):0;
+          var compPts=Math.min(5, compFrac*5);
           score+=compPts;
           // 6. Community (10pts): Best Seller + Favorite Firms equivalent
-          // - Avg rating (5pts): community preference
+          // - Avg rating (5pts): community preference (needs 3+ ratings to count)
           // - Like count (5pts): demand/popularity
           // Scales automatically as more users rate/like
           var comm=window._sbCommunity&&window._sbCommunity[firm.id];
           if(comm){
-            if(comm.avgRating)score+=Math.min(5, (comm.avgRating/5)*5);
+            if(comm.avgRating&&comm.ratingCount>=3)score+=Math.min(5, (comm.avgRating/5)*5);
             if(comm.likes)score+=Math.min(5, Math.log10(comm.likes+1)*2.5);
-            if(comm.avgRating>=4)rationale.push('top rated');
+            if(comm.avgRating>=4&&comm.ratingCount>=3)rationale.push('top rated');
           }
           return {score:Math.round(score), rationale:rationale.join(', ')};
         }
