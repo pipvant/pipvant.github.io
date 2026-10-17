@@ -3010,7 +3010,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
         <header class="module-head"><h2>Methodology</h2><p>A transparent standard for matching trader criteria with verified prop-firm information.</p></header>
         <div class="methodology-stack">
           <section class="methodology-section" id="methodology-matching" aria-labelledby="methodology-matching-title"><div class="methodology-section-head"><span class="methodology-number">01</span><div><h3 id="methodology-matching-title">How matching works</h3><p>Matcher compares the criteria a trader selects with the verified rules available for each firm. It does not recommend trades or guarantee that a firm is right for every trader.</p></div></div><div class="methodology-detail-grid"><div class="methodology-detail"><strong>Criteria first</strong><span>Market, account size, price, rules, and other selected constraints define the comparison.</span></div><div class="methodology-detail"><strong>Visible fit</strong><span>Each result will explain which criteria matched and which values were unavailable.</span></div><div class="methodology-detail"><strong>Trader decides</strong><span>The final choice always stays with the trader after reviewing the firm’s current terms.</span></div></div></section>
-          <section class="methodology-section" id="methodology-ranking" aria-labelledby="methodology-ranking-title"><div class="methodology-section-head"><span class="methodology-number">02</span><div><h3 id="methodology-ranking-title">How we rank firms</h3><p>Rankings are based on disclosed comparison criteria, not paid placement or hidden star ratings. A score remains blank until the required source data is verified.</p></div></div><div class="methodology-detail-grid"><div class="methodology-detail"><strong>PIPVANT Score (100pts)</strong><span>Industry standing (25) + Profit split (20) + Value per dollar (20) + Drawdown terms (15) + Payout speed (10) + Data completeness (10). Standing is PIPVANT editorial; rest automatic from verified data.</span></div><div class="methodology-detail"><strong>Rule alignment</strong><span>Program terms are compared with the trader’s selected priorities and constraints.</span></div><div class="methodology-detail"><strong>Data completeness</strong><span>Missing or unclear values reduce confidence instead of being estimated.</span></div><div class="methodology-detail"><strong>Clear rationale</strong><span>Every published position will include a concise reason for its place in the order.</span></div></div></section>
+          <section class="methodology-section" id="methodology-ranking" aria-labelledby="methodology-ranking-title"><div class="methodology-section-head"><span class="methodology-number">02</span><div><h3 id="methodology-ranking-title">How we rank firms</h3><p>Rankings are based on disclosed comparison criteria, not paid placement or hidden star ratings. A score remains blank until the required source data is verified.</p></div></div><div class="methodology-detail-grid"><div class="methodology-detail"><strong>PIPVANT Score (100pts)</strong><span>Firm scale (25) + Profit split (20) + Value per dollar (20) + Drawdown terms (15) + Payout speed (10) + Data completeness (10). All automatic from verified data.</span></div><div class="methodology-detail"><strong>Rule alignment</strong><span>Program terms are compared with the trader’s selected priorities and constraints.</span></div><div class="methodology-detail"><strong>Data completeness</strong><span>Missing or unclear values reduce confidence instead of being estimated.</span></div><div class="methodology-detail"><strong>Clear rationale</strong><span>Every published position will include a concise reason for its place in the order.</span></div></div></section>
           <section class="methodology-section" id="methodology-verification" aria-labelledby="methodology-verification-title"><div class="methodology-section-head"><span class="methodology-number">03</span><div><h3 id="methodology-verification-title">How we verify</h3><p>Firm information is published only after its rule, price, limit, source, and review date are checked. Unverified values stay unavailable rather than being filled with assumptions.</p></div></div><div class="methodology-detail-grid"><div class="methodology-detail"><strong>Source attached</strong><span>Each published fact will be tied to the source used for verification.</span></div><div class="methodology-detail"><strong>Review date visible</strong><span>Users will see when the information was last checked.</span></div><div class="methodology-detail"><strong>Changes rechecked</strong><span>Material rule or pricing changes require verification before the listing is updated.</span></div></div></section>
           <section class="methodology-section" id="methodology-principles" aria-labelledby="methodology-principles-title"><div class="methodology-section-head"><span class="methodology-number">04</span><div><h3 id="methodology-principles-title">Our principles</h3><p>PIPVANT is built as a decision-tool suite, with strict limits on what the product claims and displays.</p></div></div><div class="principle-grid"><div class="principle-item"><i aria-hidden="true"></i><div><strong>Real data only</strong><span>No invented statistics, prices, or performance records.</span></div></div><div class="principle-item"><i aria-hidden="true"></i><div><strong>No fake listings</strong><span>A firm appears only when its listing can be supported by verified source data.</span></div></div><div class="principle-item"><i aria-hidden="true"></i><div><strong>Tools, not signals</strong><span>PIPVANT supports research, sizing, journaling, and review. It never tells users what to trade.</span></div></div><div class="principle-item"><i aria-hidden="true"></i><div><strong>No profit promises</strong><span>Calculations and certificates never imply guaranteed returns.</span></div></div><div class="principle-item"><i aria-hidden="true"></i><div><strong>Not financial advice</strong><span>Comparisons are informational only. Always verify terms on the firm's official site before purchasing.</span></div></div></div></section>
         </div>
@@ -3351,19 +3351,25 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     var plans=(typeof sbPlansByFirm!=='undefined'&&sbPlansByFirm[firm.id])||[];
     if(!plans.length)return {score:0,rationale:''};
     var score=0, rationale=[];
-    // 0. Industry Standing (25pts): PIPVANT editorial — reflects real-world
-    // reputation, years in business, payout reliability.
-    var standingTiers={
-      'FTMO':25, 'The5ers':25, 'Topstep':25,
-      'FundedNext':20, 'E8 Markets':20, 'Funding Pips':20, 'Apex Trader Funding':20,
-      'Alpha Capital Group':15, 'TakeProfitTrader':15, 'MyFundedFutures':15,
-      'FXIFY':15, 'Blue Guardian':15,
-      'Funded7':10, 'Maven Trading':10, 'PipFarm':10, 'Breakout Prop':10,
-      'Goat Funded Trader':10, 'BrightFunded':10, 'Funding Traders':10
-    };
-    var trustPts=standingTiers[firm.name]||10;
-    score+=trustPts;
-    if(trustPts>=20)rationale.push('industry leader');
+    // 0. Firm Scale (25pts): FULLY AUTOMATIC — measures firm size from data.
+    // Bigger, more established firms naturally score higher:
+    // - Plan count: more plans = bigger operation (10pts)
+    // - Max account size: larger accounts = bigger firm (10pts)
+    // - Program diversity: more programs = more established (5pts)
+    var scalePts=0;
+    // Plan count: 50+ plans = 10pts, scale linearly
+    scalePts+=Math.min(10, (plans.length/50)*10);
+    // Max account size: $400K+ = 10pts
+    var maxSize=Math.max.apply(null, plans.map(function(p){return sbNum(p.account_size)||0;}));
+    scalePts+=Math.min(10, (maxSize/400000)*10);
+    // Program diversity: count unique programs
+    var progs={};
+    plans.forEach(function(p){var r=p.rules||{};if(r.program)progs[r.program]=1;});
+    var progCount=Object.keys(progs).length;
+    scalePts+=Math.min(5, (progCount/8)*5);
+    scalePts=Math.round(Math.min(25, scalePts));
+    score+=scalePts;
+    if(scalePts>=18)rationale.push('large firm');
     var splits=plans.map(function(p){var r=p.rules||{};return sbNum(r.profit_split);}).filter(isFinite);
     var maxSplit=splits.length?Math.max.apply(null,splits):0;
     score+=Math.min(20,maxSplit*0.2);
@@ -6170,21 +6176,18 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
           var plans=sbPlansByFirm[firm.id]||[];
           if(!plans.length)return 0;
           var score=0, rationale=[];
-          // 0. Industry Standing (25pts): PIPVANT editorial — reflects real-world
-          // reputation, years in business, payout reliability. Stable (doesn't
-          // change hourly). Combined with automatic data-driven components below.
-          var standingTiers={
-            'FTMO':25, 'The5ers':25, 'Topstep':25,
-            'FundedNext':20, 'E8 Markets':20, 'Funding Pips':20, 'Apex Trader Funding':20,
-            'Alpha Capital Group':15, 'TakeProfitTrader':15, 'MyFundedFutures':15,
-            'FXIFY':15, 'Blue Guardian':15,
-            'Funded7':10, 'Maven Trading':10, 'PipFarm':10, 'Breakout Prop':10,
-            'Goat Funded Trader':10, 'BrightFunded':10, 'Funding Traders':10
-          };
-          var trustPts=standingTiers[firm.name]||10;
-          score+=trustPts;
-          if(trustPts>=20)rationale.push('industry leader');
-          if(trustPts>=20)rationale.push('high transparency');
+          // 0. Firm Scale (25pts): FULLY AUTOMATIC — measures firm size from data.
+          // Bigger, more established firms naturally score higher.
+          var scalePts=0;
+          scalePts+=Math.min(10, (plans.length/50)*10);
+          var maxSize=Math.max.apply(null, plans.map(function(p){var v=parseFloat(p.account_size);return isFinite(v)?v:0;}));
+          scalePts+=Math.min(10, (maxSize/400000)*10);
+          var progs={};
+          plans.forEach(function(p){var r=p.rules||{};if(r.program)progs[r.program]=1;});
+          scalePts+=Math.min(5, (Object.keys(progs).length/8)*5);
+          scalePts=Math.round(Math.min(25, scalePts));
+          score+=scalePts;
+          if(scalePts>=18)rationale.push('large firm');
           // 1. Profit split (20pts): use max split across plans
           var splits=plans.map(function(p){var r=p.rules||{};return sbNum(r.profit_split);}).filter(isFinite);
           var maxSplit=splits.length?Math.max.apply(null,splits):0;
