@@ -158,8 +158,12 @@
     .rank{color:var(--platinum);font:500 13px/1 "IBM Plex Mono",monospace;text-align:center}
     .logo-slot{width:40px;height:40px;border:1px solid var(--line-strong);border-radius:8px;background:var(--raised);display:grid;place-items:center;color:var(--silver);font:500 12px/1 "IBM Plex Mono",monospace}
     .logo-slot{position:relative}
-    .logo-slot .new-badge{position:absolute;top:-8px;right:-8px;background:#D4AF37;color:#0A1628;font:800 9px/1 "Space Grotesk",sans-serif;padding:3px 6px;border-radius:6px;letter-spacing:.05em;box-shadow:0 2px 8px rgba(0,0,0,.3);z-index:2}
-    .eyebrow .new-badge{display:inline-block;position:static;background:#D4AF37;color:#0A1628;font:800 9px/1 "Space Grotesk",sans-serif;padding:3px 8px;border-radius:6px;letter-spacing:.06em;margin-inline-start:8px;vertical-align:middle}
+    .logo-slot .new-badge{position:absolute;top:-10px;right:-10px;background:linear-gradient(135deg,#F7DC7E,#D4AF37 35%,#A8861F 65%,#F7DC7E);background-size:220% 220%;color:#0A1628;font:800 10px/1 "Space Grotesk",sans-serif;padding:5px 10px;border-radius:8px;letter-spacing:.09em;z-index:2;border:1px solid rgba(255,255,255,.4);animation:newBadgeShimmer 2.8s ease-in-out infinite,newBadgeGlow 2.8s ease-in-out infinite}
+    @keyframes newBadgeShimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+    @keyframes newBadgeGlow{0%,100%{box-shadow:0 0 8px rgba(212,175,55,.4),0 2px 8px rgba(0,0,0,.35);transform:scale(1) rotate(-2deg)}50%{box-shadow:0 0 22px rgba(212,175,55,.85),0 2px 10px rgba(0,0,0,.4);transform:scale(1.07) rotate(2deg)}}
+    @media (prefers-reduced-motion:reduce){.logo-slot .new-badge,.eyebrow .new-badge{animation:none}}
+    .eyebrow .new-badge{display:inline-block;position:static;background:linear-gradient(135deg,#F7DC7E,#D4AF37 35%,#A8861F 65%,#F7DC7E);background-size:220% 220%;color:#0A1628;font:800 10px/1 "Space Grotesk",sans-serif;padding:4px 10px;border-radius:7px;letter-spacing:.09em;margin-inline-start:8px;vertical-align:middle;border:1px solid rgba(255,255,255,.4);animation:newBadgeShimmer 2.8s ease-in-out infinite,newBadgeGlowSoft 2.8s ease-in-out infinite}
+    @keyframes newBadgeGlowSoft{0%,100%{box-shadow:0 0 6px rgba(212,175,55,.35)}50%{box-shadow:0 0 16px rgba(212,175,55,.7)}}
     .eyebrow .cat-badge{margin-inline-start:6px;vertical-align:middle}
     .firm-name{min-width:0;font-family:"Space Grotesk",sans-serif;font-size:18px;font-weight:600;color:var(--text)}
     .discount-slot{display:none}.firm-expand .discount-slot{display:none!important}.firm-expand .discount-slot.promo-badge{display:inline-flex!important}
@@ -3170,7 +3174,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
 <div class="firm-detail-sheet" id="firmDetailSheet" role="dialog" aria-modal="true" aria-labelledby="firmDetailTitle">
   <div class="firm-detail-panel">
     <div class="grabber"></div>
-    <div class="sheet-title-row"><div><p class="eyebrow">Verified firm profile <span class="new-badge" id="firmDetailNewBadge" hidden>NEW</span> <span class="cat-badge" id="firmDetailCatBadge" hidden></span></p><h3 id="firmDetailTitle">—</h3><p>Data updated —</p></div><button class="sheet-close" id="closeFirmDetail" type="button" aria-label="Close firm details"><svg width="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+    <div class="sheet-title-row"><div><p class="eyebrow">Verified firm profile <span class="new-badge" id="firmDetailNewBadge" hidden>✦ NEW</span> <span class="cat-badge" id="firmDetailCatBadge" hidden></span></p><h3 id="firmDetailTitle">—</h3><p>Data updated —</p></div><button class="sheet-close" id="closeFirmDetail" type="button" aria-label="Close firm details"><svg width="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
     <div class="sheet-tabs" role="tablist" aria-label="Firm detail sections">
       <button class="sheet-tab" type="button" role="tab" aria-selected="true" data-sheet-tab="overview">Overview</button>
       <button class="sheet-tab" type="button" role="tab" aria-selected="false" data-sheet-tab="challenges">Challenges</button>
@@ -3286,7 +3290,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     el.setAttribute('aria-label',firm.name||'Firm');
     // Custom high-res logo overrides (firms whose Google favicon is low-quality)
     var LOGO_OVERRIDES={
-      'alphacapitalgroup.uk':'https://alphacapitalgroup.uk/images/webclip.png',
+      'alphacapitalgroup.uk':'https://alphacapitalgroup.uk/images/Alpha-Capital-Icon-SVG.svg',
       'takeprofittrader.com':'https://takeprofittrader.com/assets/logo-dark.svg'
     };
     // NEW badge (auto-hides after 3 days)
@@ -3296,7 +3300,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       if(sbIsNewFirm(firm.id)){
         var badge=document.createElement('span');
         badge.className='new-badge';
-        badge.textContent='NEW';
+        badge.textContent='✦ NEW';
         el.appendChild(badge);
       } else if(_newFirmsCache===null){
         // Cache not loaded yet — retry after load
