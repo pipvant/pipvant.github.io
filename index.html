@@ -264,6 +264,14 @@
     .fd-sec{font-size:15px;font-weight:700;margin:20px 0 10px;color:var(--text)}
     .fd-rules{list-style:none;padding:0;margin:0}
     .fd-rules li{padding:11px 13px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;font-size:13.5px;background:var(--surface);line-height:1.6}
+    .fd-proscons{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0}
+    .fd-pros,.fd-cons{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--surface)}
+    .fd-pros strong{color:#4ade80;font-size:12px;letter-spacing:.04em}
+    .fd-cons strong{color:#f87171;font-size:12px;letter-spacing:.04em}
+    .fd-pros ul,.fd-cons ul{list-style:none;padding:0;margin:8px 0 0}
+    .fd-pros li,.fd-cons li{font-size:12.5px;padding:6px 0;border-bottom:1px solid var(--line);line-height:1.5}
+    .fd-pros li:last-child,.fd-cons li:last-child{border-bottom:0}
+    @media(max-width:480px){.fd-proscons{grid-template-columns:1fr}}
     .fd-planrow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;background:var(--surface)}
     .fd-planrow .ps b{font-size:16px;font-variant-numeric:tabular-nums}
     .fd-planrow .pm{font-size:11px;color:var(--muted);margin-top:2px}
@@ -3336,6 +3344,48 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
   function sbMinPrice(plans){var p=plans.map(function(x){return {price:sbNum(x.price),currency:x.currency||'USD',program:(x.rules&&x.rules.program)||null};}).filter(function(x){return isFinite(x.price);}).sort(function(a,b){return a.price-b.price;});if(!p.length)return '—';var sym=p[0].currency==='EUR'?'€':p[0].currency==='MAD'?'MAD ':'$';var out=sym+p[0].price.toLocaleString('en-US');if(p[0].program)out+=' ('+p[0].program+')';return out;}
   function sbFmtUSD(usd){var n=Number(usd);if(!isFinite(n))return '—';if(typeof convertPrice==='function'&&typeof currentCurrency!=='undefined'&&currentCurrency!=='USD'){var c=convertPrice(n);var sym=currentCurrency==='EUR'?'€':'MAD ';return sym+c.toLocaleString('en-US');}return '$'+n.toLocaleString('en-US');}function sbPlanTarget(rules){if(!rules)return '—';if(rules.profit_target_pct!=null&&isFinite(Number(rules.profit_target_pct)))return rules.profit_target_pct+'%';if(rules.profit_target_usd!=null&&isFinite(Number(rules.profit_target_usd)))return sbFmtUSD(rules.profit_target_usd);return '—';}
   function sbPlanDrawdown(rules){if(!rules)return '—';var v='—';if(rules.max_drawdown_pct!=null&&isFinite(Number(rules.max_drawdown_pct)))v=rules.max_drawdown_pct+'%';else if(rules.max_drawdown_usd!=null&&isFinite(Number(rules.max_drawdown_usd)))v=sbFmtUSD(rules.max_drawdown_usd);var t=String(rules.drawdown_type||'').toLowerCase();if(t.indexOf('trailing')!==-1)v+=' trailing';else if(t.indexOf('static')!==-1)v+=' static';return v;}
+  /* PIPVANT Score (0-100): global, data-driven ranking used by matcher cards + table.
+     Trust & transparency (25) + Profit split (20) + Value (20) + Drawdown (15) + Payout speed (10) + Data completeness (10). */
+  function sbPipvScore(firm){
+    if(!firm)return {score:0,rationale:''};
+    var plans=(typeof sbPlansByFirm!=='undefined'&&sbPlansByFirm[firm.id])||[];
+    if(!plans.length)return {score:0,rationale:''};
+    var score=0, rationale=[];
+    var trustPts=0, totalPlans=plans.length;
+    var transparentPlans=plans.filter(function(p){var r=p.rules||{};return r.profit_split!=null&&r.max_drawdown_pct!=null&&r.drawdown_type;}).length;
+    trustPts+=Math.round((transparentPlans/Math.max(1,totalPlans))*15);
+    var hasPayout=plans.some(function(p){var r=p.rules||{};return r.payout_frequency;});
+    if(hasPayout){trustPts+=5;rationale.push('clear payouts');}
+    try{var vAt=firm.last_verified_at?new Date(firm.last_verified_at):null;if(vAt&&(Date.now()-vAt.getTime())<48*3600*1000)trustPts+=5;}catch(e){}
+    trustPts=Math.min(25,trustPts);score+=trustPts;
+    if(trustPts>=20)rationale.push('high transparency');
+    var splits=plans.map(function(p){var r=p.rules||{};return sbNum(r.profit_split);}).filter(isFinite);
+    var maxSplit=splits.length?Math.max.apply(null,splits):0;
+    score+=Math.min(20,maxSplit*0.2);
+    if(maxSplit>0)rationale.push(maxSplit+'% split');
+    var values=plans.map(function(p){var sz=sbNum(p.account_size),pr=sbNum(p.price);return (isFinite(sz)&&isFinite(pr)&&pr>0)?sz/pr:0;}).filter(function(v){return v>0;});
+    var bestVal=values.length?Math.max.apply(null,values):0;
+    score+=Math.min(20,bestVal/20);
+    var dds=plans.map(function(p){var r=p.rules||{};return sbNum(r.max_drawdown_pct);}).filter(isFinite);
+    var maxDD=dds.length?Math.max.apply(null,dds):0;
+    var ddPts=Math.min(11,maxDD*1.1);
+    var hasStatic=plans.some(function(p){var r=p.rules||{};return /static/i.test(r.drawdown_type||'');});
+    if(hasStatic)ddPts+=4;
+    ddPts=Math.min(15,ddPts);score+=ddPts;
+    if(maxDD>0)rationale.push(maxDD+'% DD'+(hasStatic?' static':''));
+    var payoutStr=plans.map(function(p){var r=p.rules||{};return String(r.payout_frequency||'').toLowerCase();}).join(' ');
+    var payoutPts=3;
+    if(/instant|on-demand|on demand/.test(payoutStr))payoutPts=10;
+    else if(/daily/.test(payoutStr))payoutPts=8;
+    else if(/weekly|7 days/.test(payoutStr))payoutPts=7;
+    else if(/bi-?weekly|14 days|48h/.test(payoutStr))payoutPts=5;
+    score+=payoutPts;
+    var expected=['profit_target_pct','daily_loss_pct','max_drawdown_pct','profit_split','payout_frequency'];
+    var present=0;
+    plans.forEach(function(p){var r=p.rules||{};expected.forEach(function(k){if(r[k]!==undefined&&r[k]!==null&&r[k]!=='')present++;});});
+    score+=Math.min(10,(present/(expected.length*plans.length))*10*plans.length/3);
+    return {score:Math.round(score),rationale:rationale.join(', ')};
+  }
   function sbPricingLabel(plans){if(!plans.length||!plans[0].rules||!plans[0].rules.pricing_model)return '—';return plans[0].rules.pricing_model==='monthly subscription'?(currentLanguage==='ar'?'شهري':'Monthly'):(currentLanguage==='ar'?'دفعة واحدة':'One-time');}
   function sbSourceLine(container,firm){
     container.textContent='';
@@ -3516,7 +3566,17 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     // Mega-audit a11y: ensure cloned cards expose role=button.
     try{var _fe=card.querySelector('.firm-expand');if(_fe&&!_fe.getAttribute('role'))_fe.setAttribute('role','button');}catch(e){}
     function q(s){return card.querySelector(s);}
-    var rankEl=q('.rank');if(rankEl)rankEl.textContent=rank;
+    /* VISIBLE RANK BADGE: #1, #2, #3... — prominent, gold/silver/bronze for top 3 */
+    var rankEl=q('.rank');
+    if(rankEl){
+      var _rn=Number(rank)||0;
+      rankEl.textContent='#'+_rn;
+      rankEl.setAttribute('data-rank',String(_rn));
+      rankEl.setAttribute('aria-label',(currentLanguage==='ar'?'المرتبة ':'Rank ')+_rn);
+      rankEl.classList.toggle('rank-top1',_rn===1);
+      rankEl.classList.toggle('rank-top2',_rn===2);
+      rankEl.classList.toggle('rank-top3',_rn===3);
+    }
     var logo=q('.logo-slot');sbFirmLogo(logo,firm);
     var nameEl=q('.firm-name');if(nameEl)nameEl.textContent=firm.name;
     var pills=card.querySelectorAll('.meta-pill');
@@ -3715,7 +3775,16 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     }
   }
   function sbSortFirmsForTable(firms){
-    if(!sbTableSortCol||sbTableSortCol==='Rank')return firms;
+    if(!sbTableSortCol||sbTableSortCol==='Rank'){
+      /* Default Rank sort = PIPVANT Score descending (matches card order) */
+      try{
+        return firms.slice().sort(function(a,b){
+          var sa=sbPipvScore(a).score, sbb=sbPipvScore(b).score;
+          if(sbb!==sa)return sbb-sa;
+          return String(a.name||'').localeCompare(String(b.name||''));
+        });
+      }catch(e){return firms;}
+    }
     var dir=sbTableSortDir==='desc'?-1:1;
     return firms.slice().sort(function(a,b){
       var va=sbFirmSortVal(a,sbTableSortCol),vb=sbFirmSortVal(b,sbTableSortCol);
@@ -4189,6 +4258,15 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     if(!sbFirms.length)return;
     var filters=sbGetMatcherFilters();
     var firms=sbFirms.filter(function(f){return sbFirmMatchesFilters(f,sbPlansByFirm[f.id]||[],filters);});
+    /* RANKING: sort by PIPVANT Score (descending) so rank #1 = highest score.
+       This makes the ranking VISIBLE and meaningful on cards + table. */
+    try{
+      firms.sort(function(a,b){
+        var sa=sbPipvScore(a).score, sbb=sbPipvScore(b).score;
+        if(sbb!==sa)return sbb-sa;
+        return String(a.name||'').localeCompare(String(b.name||''));
+      });
+    }catch(_srt){}
     window._filteredFirmsCount=firms.length;
     var _pv=document.querySelector('#matcher .preview-label');if(_pv)_pv.textContent=firms.length+(currentLanguage==='ar'?' شركات موثقة':' verified firms');
     /* Asset category filter: keep button labels, counts and active state fresh
