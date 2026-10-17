@@ -3462,17 +3462,17 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
                 }
                 sbRenderFirms();
                 sbRenderDirectory();sbPopulateAccountSizes();
+                if(typeof sbInitLab==='function')sbInitLab();
+                // Safety net: refresh NEW badges once data is ready
+                sbLoadNewFirms(function(){
+                  document.querySelectorAll('.logo-slot[data-firm-id]').forEach(function(el){
+                    var fid=el.getAttribute('data-firm-id');
+                    var firm=null;sbFirms.forEach(function(f){if(String(f.id)===String(fid))firm=f;});
+                    if(firm)sbRefreshNewBadge(el,firm);
+                  });
+                });
               })
               .catch(function(){sbRenderFirms();sbRenderDirectory();sbPopulateAccountSizes();});
-            if(typeof sbInitLab==='function')sbInitLab();
-            // Safety net: refresh NEW badges once data is ready (in case JSON loaded after render)
-            sbLoadNewFirms(function(){
-              document.querySelectorAll('.logo-slot[data-firm-id]').forEach(function(el){
-                var fid=el.getAttribute('data-firm-id');
-                var firm=null;sbFirms.forEach(function(f){if(String(f.id)===String(fid))firm=f;});
-                if(firm)sbRefreshNewBadge(el,firm);
-              });
-            });
           })
           .catch(function(){sbRenderFirms();sbRenderDirectory();sbPopulateAccountSizes();if(typeof sbInitLab==='function')sbInitLab();});
       })
