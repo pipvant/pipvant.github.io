@@ -206,6 +206,21 @@
     .fd-heart.on{color:#D4AF37}
     .fd-compare{background:none;border:0;font-size:22px;color:var(--muted);padding:8px;cursor:pointer;line-height:1}
     .fd-compare.on{color:#D4AF37}
+    /* Community ratings + likes */
+    .fd-community{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;margin-bottom:16px;border:1px solid var(--line);border-radius:14px;background:var(--sunken)}
+    .fd-rate{display:flex;align-items:center;gap:10px;min-width:0}
+    .fd-stars{display:flex;gap:2px}
+    .fd-stars button{background:none;border:0;font-size:22px;line-height:1;padding:3px;cursor:pointer;color:var(--line-strong);transition:transform .12s}
+    .fd-stars button.lit{color:#D4AF37}
+    .fd-stars button:active{transform:scale(1.25)}
+    .fd-rate-meta{display:flex;align-items:baseline;gap:6px}
+    .fd-rate-meta b{font-size:17px;font-variant-numeric:tabular-nums}
+    .fd-rate-meta span{font-size:11px;color:var(--muted)}
+    .fd-like{display:flex;align-items:center;gap:8px;border:1px solid var(--line-strong);border-radius:999px;background:var(--surface);padding:8px 14px;cursor:pointer;font-family:inherit}
+    .fd-like-ico{font-size:17px;filter:grayscale(1);opacity:.55;transition:all .15s}
+    .fd-like b{font-size:14px;font-variant-numeric:tabular-nums}
+    .fd-like[aria-pressed="true"]{border-color:rgba(212,175,55,.55);background:rgba(212,175,55,.1)}
+    .fd-like[aria-pressed="true"] .fd-like-ico{filter:none;opacity:1}
     .fd-heart.on{color:#D4AF37}
     .fd-hero{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
     .fd-stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 8px;text-align:center}
@@ -2417,6 +2432,14 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
           <div class="fd-stat"><b id="fdAlloc">—</b><span data-fd-lbl="alloc">Max allocation</span></div>
           <div class="fd-stat"><b id="fdPtdd">—</b><span data-fd-lbl="ptdd">Best PT:DD</span></div>
         </div>
+        <!-- Community ratings + likes (real user data) -->
+        <div class="fd-community" id="fdCommunity">
+          <div class="fd-rate">
+            <div class="fd-stars" id="fdStars" role="radiogroup" aria-label="Rate this firm"></div>
+            <div class="fd-rate-meta"><b id="fdAvg">—</b><span id="fdRateCount"></span></div>
+          </div>
+          <button class="fd-like" id="fdLike" type="button" aria-pressed="false"><span class="fd-like-ico">👍</span><b id="fdLikeCount">0</b></button>
+        </div>
         <div class="fd-tabs" role="tablist" aria-label="Firm detail sections">
           <button class="fd-tab active" type="button" role="tab" aria-selected="true" data-fd-tab="overview" data-fd-lbl="tOverview">Overview</button>
           <button class="fd-tab" type="button" role="tab" aria-selected="false" data-fd-tab="challenges" data-fd-lbl="tChallenges">Challenges</button>
@@ -4523,10 +4546,83 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       el.innerHTML+='<p class="fd-note">'+(ar?'لا توجد بيانات دفع إضافية.':'No additional payout data.')+'</p>';
     }
   }
+  /* Community ratings + likes (real user data from Supabase) */
+  function sbRenderStars(el,avg,myRating,interactive,onRate){
+    if(!el)return;el.innerHTML='';
+    for(var i=1;i<=5;i++){
+      (function(n){
+        var b=document.createElement('button');b.type='button';
+        b.setAttribute('role','radio');b.setAttribute('aria-checked',String(myRating===n));
+        b.setAttribute('aria-label',n+' / 5');
+        var lit=myRating? n<=myRating : n<=Math.round(avg||0);
+        b.className=lit?'lit':'';
+        b.textContent='★';
+        if(interactive){b.addEventListener('click',function(ev){ev.stopPropagation();onRate(n);});}
+        else{b.style.cursor='default';}
+        el.appendChild(b);
+      })(i);
+    }
+  }
+  function sbLoadCommunity(firmId){
+    var ar=currentLanguage==='ar';
+    var starsEl=document.getElementById('fdStars'),avgEl=document.getElementById('fdAvg'),
+        cntEl=document.getElementById('fdRateCount'),likeBtn=document.getElementById('fdLike'),
+        likeCnt=document.getElementById('fdLikeCount');
+    if(!starsEl)return;
+    function paint(avg,count,myRating,likeCount,liked,canRate){
+      sbRenderStars(starsEl,avg,myRating,canRate,function(n){sbSubmitRating(firmId,n);});
+      if(avgEl)avgEl.textContent=count?Number(avg).toFixed(1):'—';
+      if(cntEl)cntEl.textContent=count?(ar?'من ':'from ')+count+(ar?' تقييم':' ratings'):(ar?'كن أول من يقيّم':'Be the first to rate');
+      if(likeCnt)likeCnt.textContent=likeCount||0;
+      if(likeBtn){likeBtn.setAttribute('aria-pressed',String(!!liked));}
+    }
+    paint(0,0,0,0,false,false);
+    if(typeof sb==='undefined'||!sb)return;
+    var uid=(typeof sbUser!=='undefined'&&sbUser)?sbUser.id:null;
+    sb.from('firm_ratings').select('rating,user_id').eq('firm_id',firmId).then(function(r){
+      var rows=(r&&r.data)||[],sum=0,my=0;
+      rows.forEach(function(x){sum+=Number(x.rating)||0;if(uid&&x.user_id===uid)my=Number(x.rating)||0;});
+      var avg=rows.length?sum/rows.length:0;
+      sb.from('firm_likes').select('id,user_id').eq('firm_id',firmId).then(function(l){
+        var lrows=(l&&l.data)||[],liked=false;
+        lrows.forEach(function(x){if(uid&&x.user_id===uid)liked=true;});
+        paint(avg,rows.length,my,lrows.length,liked,!!uid);
+        if(!uid&&starsEl){starsEl.title=ar?'سجل الدخول للتقييم':'Log in to rate';}
+        if(likeBtn){likeBtn.onclick=function(ev){if(ev)ev.stopPropagation();sbToggleLike(firmId);};
+          likeBtn.title=uid?'':(ar?'سجل الدخول للإعجاب':'Log in to like');}
+      },function(){paint(avg,rows.length,my,0,false,!!uid);});
+    },function(){});
+  }
+  function sbSubmitRating(firmId,n){
+    var ar=currentLanguage==='ar';
+    if(typeof sb==='undefined'||!sb)return;
+    var uid=(typeof sbUser!=='undefined'&&sbUser)?sbUser.id:null;
+    if(!uid){if(typeof showToast==='function')showToast(ar?'سجل الدخول باش تقيّم':'Log in to rate');return;}
+    sb.from('firm_ratings').upsert({firm_id:firmId,user_id:uid,rating:n},{onConflict:'firm_id,user_id'}).then(function(){
+      if(typeof showToast==='function')showToast(ar?'شكراً على تقييمك!':'Thanks for rating!');
+      sbLoadCommunity(firmId);
+    },function(){if(typeof showToast==='function')showToast(ar?'تعذر حفظ التقييم':'Could not save rating');});
+  }
+  function sbToggleLike(firmId){
+    var ar=currentLanguage==='ar';
+    if(typeof sb==='undefined'||!sb)return;
+    var uid=(typeof sbUser!=='undefined'&&sbUser)?sbUser.id:null;
+    if(!uid){if(typeof showToast==='function')showToast(ar?'سجل الدخول باش دير إعجاب':'Log in to like');return;}
+    sb.from('firm_likes').select('id').eq('firm_id',firmId).eq('user_id',uid).then(function(r){
+      var rows=(r&&r.data)||[];
+      if(rows.length){
+        sb.from('firm_likes').delete().eq('id',rows[0].id).then(function(){sbLoadCommunity(firmId);});
+      }else{
+        sb.from('firm_likes').insert({firm_id:firmId,user_id:uid}).then(function(){sbLoadCommunity(firmId);},
+          function(){if(typeof showToast==='function')showToast(ar?'تعذر حفظ الإعجاب':'Could not save like');});
+      }
+    });
+  }
   function sbOpenFirmDetail(firmId){
     var firm=null;(sbFirms||[]).forEach(function(f){if(String(f.id)===String(firmId))firm=f;});
     if(!firm||typeof showScreen!=='function')return;
     sbDetailFirmId=firm.id;
+    try{sbLoadCommunity(firm.id);}catch(e){}
     var plans=sbPlansByFirm[firm.id]||[];
     var ar=currentLanguage==='ar';
     try{
