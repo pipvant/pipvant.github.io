@@ -3320,7 +3320,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     container.appendChild(document.createTextNode(currentLanguage==='ar'?'المصدر: ':'Source: '));
     var a=document.createElement('a');var _href=firm.source||firm.website||'#';if(!/^https?:\/\//i.test(_href))_href='#';a.href=_href;a.target='_blank';a.rel='noopener';a.style.color='inherit';a.textContent=sbDomain(firm.source||firm.website);
     container.appendChild(a);
-    container.appendChild(document.createTextNode(' · '+sbFmtDate(firm.updated_at)));
+    container.appendChild(document.createTextNode(' · '+sbTimeAgo(firm.updated_at)));
   }
   function sbLoadFirms(){
     if(!sb)return;
@@ -4347,7 +4347,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     var titleBtn=node.querySelector('[data-open-firm-detail]');
     if(titleBtn){
       var st=titleBtn.querySelector('strong');if(st)st.textContent=firm.name;
-      var sm=titleBtn.querySelector('small');if(sm)sm.textContent=(currentLanguage==='ar'?'تم التحقق · ':'Verified · ')+sbFmtDate(firm.updated_at);
+      var sm=titleBtn.querySelector('small');if(sm)sm.textContent=(currentLanguage==='ar'?'تم التحقق ':'Verified ')+sbTimeAgo(firm.updated_at);
     }
     var logo=node.querySelector('.logo-slot');sbFirmLogo(logo,firm);
     var stats=node.querySelectorAll('.directory-stat strong');
@@ -4453,7 +4453,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     var title=document.getElementById('firmDetailTitle');if(title)title.textContent=firm.name;
     var sub=sheet.querySelector('.sheet-title-row div p:last-child');
     // C-1-matcher fix: disclose that rules are from the first plan (not all).
-    if(sub)sub.textContent=(currentLanguage==='ar'?'تم تحديث البيانات ':'Data updated ')+sbFmtDate(firm.updated_at)+(plans.length>1?(currentLanguage==='ar'?' · القواعد لأول خطة':' · Rules for first plan'):'');
+    if(sub)sub.textContent=(currentLanguage==='ar'?'تم تحديث البيانات ':'Data updated ')+sbTimeAgo(firm.updated_at)+(plans.length>1?(currentLanguage==='ar'?' · القواعد لأول خطة':' · Rules for first plan'):'');
     var vals={'Account sizes':sbSizeRange(plans),'Price from':sbMinPrice(plans),'Profit target':sbPlanTarget(rules),'Max drawdown':sbPlanDrawdown(rules)};
     if(rules&&rules.daily_loss_pct!=null&&isFinite(Number(rules.daily_loss_pct)))vals['Daily loss limit']=rules.daily_loss_pct+'%';
     // H-1-matcher fix: match by data-key (not translated text).
