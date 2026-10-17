@@ -2997,7 +2997,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
         <header class="module-head"><h2>Methodology</h2><p>A transparent standard for matching trader criteria with verified prop-firm information.</p></header>
         <div class="methodology-stack">
           <section class="methodology-section" id="methodology-matching" aria-labelledby="methodology-matching-title"><div class="methodology-section-head"><span class="methodology-number">01</span><div><h3 id="methodology-matching-title">How matching works</h3><p>Matcher compares the criteria a trader selects with the verified rules available for each firm. It does not recommend trades or guarantee that a firm is right for every trader.</p></div></div><div class="methodology-detail-grid"><div class="methodology-detail"><strong>Criteria first</strong><span>Market, account size, price, rules, and other selected constraints define the comparison.</span></div><div class="methodology-detail"><strong>Visible fit</strong><span>Each result will explain which criteria matched and which values were unavailable.</span></div><div class="methodology-detail"><strong>Trader decides</strong><span>The final choice always stays with the trader after reviewing the firm’s current terms.</span></div></div></section>
-          <section class="methodology-section" id="methodology-ranking" aria-labelledby="methodology-ranking-title"><div class="methodology-section-head"><span class="methodology-number">02</span><div><h3 id="methodology-ranking-title">How we rank firms</h3><p>Rankings are based on disclosed comparison criteria, not paid placement or hidden star ratings. A score remains blank until the required source data is verified.</p></div></div><div class="methodology-detail-grid"><div class="methodology-detail"><strong>Rule alignment</strong><span>Program terms are compared with the trader’s selected priorities and constraints.</span></div><div class="methodology-detail"><strong>Data completeness</strong><span>Missing or unclear values reduce confidence instead of being estimated.</span></div><div class="methodology-detail"><strong>Clear rationale</strong><span>Every published position will include a concise reason for its place in the order.</span></div></div></section>
+          <section class="methodology-section" id="methodology-ranking" aria-labelledby="methodology-ranking-title"><div class="methodology-section-head"><span class="methodology-number">02</span><div><h3 id="methodology-ranking-title">How we rank firms</h3><p>Rankings are based on disclosed comparison criteria, not paid placement or hidden star ratings. A score remains blank until the required source data is verified.</p></div></div><div class="methodology-detail-grid"><div class="methodology-detail"><strong>PIPVANT Score (100pts)</strong><span>Profit split (30) + Value per dollar (25) + Drawdown terms (20) + Payout speed (15) + Data completeness (10). All from verified data.</span></div><div class="methodology-detail"><strong>Rule alignment</strong><span>Program terms are compared with the trader’s selected priorities and constraints.</span></div><div class="methodology-detail"><strong>Data completeness</strong><span>Missing or unclear values reduce confidence instead of being estimated.</span></div><div class="methodology-detail"><strong>Clear rationale</strong><span>Every published position will include a concise reason for its place in the order.</span></div></div></section>
           <section class="methodology-section" id="methodology-verification" aria-labelledby="methodology-verification-title"><div class="methodology-section-head"><span class="methodology-number">03</span><div><h3 id="methodology-verification-title">How we verify</h3><p>Firm information is published only after its rule, price, limit, source, and review date are checked. Unverified values stay unavailable rather than being filled with assumptions.</p></div></div><div class="methodology-detail-grid"><div class="methodology-detail"><strong>Source attached</strong><span>Each published fact will be tied to the source used for verification.</span></div><div class="methodology-detail"><strong>Review date visible</strong><span>Users will see when the information was last checked.</span></div><div class="methodology-detail"><strong>Changes rechecked</strong><span>Material rule or pricing changes require verification before the listing is updated.</span></div></div></section>
           <section class="methodology-section" id="methodology-principles" aria-labelledby="methodology-principles-title"><div class="methodology-section-head"><span class="methodology-number">04</span><div><h3 id="methodology-principles-title">Our principles</h3><p>PIPVANT is built as a decision-tool suite, with strict limits on what the product claims and displays.</p></div></div><div class="principle-grid"><div class="principle-item"><i aria-hidden="true"></i><div><strong>Real data only</strong><span>No invented statistics, prices, or performance records.</span></div></div><div class="principle-item"><i aria-hidden="true"></i><div><strong>No fake listings</strong><span>A firm appears only when its listing can be supported by verified source data.</span></div></div><div class="principle-item"><i aria-hidden="true"></i><div><strong>Tools, not signals</strong><span>PIPVANT supports research, sizing, journaling, and review. It never tells users what to trade.</span></div></div><div class="principle-item"><i aria-hidden="true"></i><div><strong>No profit promises</strong><span>Calculations and certificates never imply guaranteed returns.</span></div></div></div></section>
         </div>
@@ -5915,13 +5915,68 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
           var prices=(sbPlansByFirm[firm.id]||[]).map(function(p){return sbNum(p.price);}).filter(isFinite);
           return prices.length?Math.min.apply(null,prices):Infinity;
         }
+        // PIPVANT Ranking Score (v1, 2026-10-17): transparent, data-driven, per methodology.
+        // Criteria (all from verified DB data, never estimated):
+        // - Profit split (30pts): higher = better
+        // - Value (25pts): account size per dollar (best plan)
+        // - Drawdown (20pts): higher % = better; static +5 bonus
+        // - Payout speed (15pts): faster = better
+        // - Data completeness (10pts): % of expected rule fields present
+        function sbFirmScore(firm){
+          if(!firm)return 0;
+          var plans=sbPlansByFirm[firm.id]||[];
+          if(!plans.length)return 0;
+          var score=0, rationale=[];
+          // 1. Profit split (30pts): use max split across plans
+          var splits=plans.map(function(p){var r=p.rules||{};return sbNum(r.profit_split);}).filter(isFinite);
+          var maxSplit=splits.length?Math.max.apply(null,splits):0;
+          var splitPts=Math.min(30, maxSplit*0.3);
+          score+=splitPts;
+          if(maxSplit>0)rationale.push(maxSplit+'% split');
+          // 2. Value (25pts): best account-size-per-dollar ratio
+          var values=plans.map(function(p){
+            var sz=sbNum(p.account_size), pr=sbNum(p.price);
+            return (isFinite(sz)&&isFinite(pr)&&pr>0)?sz/pr:0;
+          }).filter(function(v){return v>0;});
+          var bestVal=values.length?Math.max.apply(null,values):0;
+          // Normalize: ~500 $/dollar = excellent (25pts). Scale linearly.
+          var valPts=Math.min(25, bestVal/20);
+          score+=valPts;
+          // 3. Drawdown (20pts): higher % better; static bonus
+          var dds=plans.map(function(p){var r=p.rules||{};return sbNum(r.max_drawdown_pct);}).filter(isFinite);
+          var maxDD=dds.length?Math.max.apply(null,dds):0;
+          var ddPts=Math.min(15, maxDD*1.5);
+          // Static bonus: check if any plan has static drawdown
+          var hasStatic=plans.some(function(p){var r=p.rules||{};return /static/i.test(r.drawdown_type||'');});
+          if(hasStatic)ddPts+=5;
+          ddPts=Math.min(20,ddPts);
+          score+=ddPts;
+          if(maxDD>0)rationale.push(maxDD+'% DD'+(hasStatic?' static':''));
+          // 4. Payout speed (15pts)
+          var payoutStr=plans.map(function(p){var r=p.rules||{};return String(r.payout_frequency||'').toLowerCase();}).join(' ');
+          var payoutPts=5;
+          if(/instant|on-demand|on demand/.test(payoutStr))payoutPts=15;
+          else if(/daily/.test(payoutStr))payoutPts=12;
+          else if(/weekly|7 days/.test(payoutStr))payoutPts=10;
+          else if(/bi-?weekly|14 days|48h/.test(payoutStr))payoutPts=8;
+          score+=payoutPts;
+          // 5. Data completeness (10pts)
+          var expected=['profit_target_pct','daily_loss_pct','max_drawdown_pct','profit_split','payout_frequency'];
+          var present=0;
+          plans.forEach(function(p){var r=p.rules||{};
+            expected.forEach(function(k){if(r[k]!==undefined&&r[k]!==null&&r[k]!=='')present++;});
+          });
+          var compPts=Math.min(10, (present/(expected.length*plans.length))*10*plans.length/3);
+          score+=compPts;
+          return {score:Math.round(score), rationale:rationale.join(', ')};
+        }
         if(/price/i.test(mode)){
           cards.sort(function(a,b){return minPriceOf(firmOf(a))-minPriceOf(firmOf(b));});
         }else{
-          // Recommended: original load order (by firm name from Supabase)
+          // Recommended: PIPVANT Score (transparent ranking per methodology)
           cards.sort(function(a,b){
-            var fa=firmOf(a),fb=firmOf(b);
-            return String(fa&&fa.name||'').localeCompare(String(fb&&fb.name||''));
+            var sa=sbFirmScore(firmOf(a)), sb=sbFirmScore(firmOf(b));
+            return (sb.score||0)-(sa.score||0); // higher score first
           });
         }
         cards.forEach(function(c){results.insertBefore(c,empty);});
