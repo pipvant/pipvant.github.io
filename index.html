@@ -285,7 +285,7 @@
     .firm-expand[aria-expanded="true"] .row-chevron{transform:rotate(180deg)}
     .firm-details{display:none;padding:0 16px 16px 56px;border-top:1px solid color-mix(in srgb,var(--line) 72%,transparent)}
     .firm-card.expanded .firm-details{display:block}
-    .spec-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden;margin:14px 0}@media (max-width:480px){.spec-grid{grid-template-columns:repeat(2,1fr)}}
+    .spec-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden;margin:14px 0}@media (max-width:480px){.spec-grid{grid-template-columns:repeat(2,1fr)}}
     .spec{min-width:0;background:var(--sunken);padding:11px 8px}
     .spec label{font-size:8px;line-height:1.25;margin-bottom:6px;white-space:normal}
     .spec strong{font:600 14px/1 "Space Grotesk",sans-serif}
@@ -2313,7 +2313,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
               <button class="slot-cta" type="button" disabled>VIEW</button>
             </div>
             <div class="firm-details">
-              <div class="spec-grid"><div class="spec"><label>Account sizes</label><strong>—</strong></div><div class="spec"><label>Profit target</label><strong>—</strong></div><div class="spec"><label>Max drawdown</label><strong>—</strong></div></div>
+              <div class="spec-grid"><div class="spec"><label>Account sizes</label><strong>—</strong></div><div class="spec"><label>Profit target</label><strong>—</strong></div><div class="spec"><label>Max drawdown</label><strong>—</strong></div><div class="spec"><label>Daily loss</label><strong>—</strong></div></div>
               <div class="why-line"><span>Why it matches</span><strong>—</strong></div>
               <div class="firm-detail-actions"><button class="what-check-btn" type="button" data-methodology-trigger>What we check</button><button class="promo-slot" type="button" data-promo-code="PV" aria-label="Copy promo code PV">PROMO&nbsp; PV <svg width="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button><button class="btn secondary" type="button" disabled>Save to shortlist</button></div>
             </div>
@@ -2324,7 +2324,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
               <button class="slot-cta" type="button" disabled>VIEW</button>
             </div>
             <div class="firm-details">
-              <div class="spec-grid"><div class="spec"><label>Account sizes</label><strong>—</strong></div><div class="spec"><label>Profit target</label><strong>—</strong></div><div class="spec"><label>Max drawdown</label><strong>—</strong></div></div>
+              <div class="spec-grid"><div class="spec"><label>Account sizes</label><strong>—</strong></div><div class="spec"><label>Profit target</label><strong>—</strong></div><div class="spec"><label>Max drawdown</label><strong>—</strong></div><div class="spec"><label>Daily loss</label><strong>—</strong></div></div>
               <div class="why-line"><span>Why it matches</span><strong>—</strong></div>
               <div class="firm-detail-actions"><button class="what-check-btn" type="button" data-methodology-trigger>What we check</button><button class="promo-slot" type="button" data-promo-code="PV" aria-label="Copy promo code PV">PROMO&nbsp; PV <svg width="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button><button class="btn secondary" type="button" disabled>Save to shortlist</button></div>
             </div>
@@ -2335,7 +2335,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
               <button class="slot-cta" type="button" disabled>VIEW</button>
             </div>
             <div class="firm-details">
-              <div class="spec-grid"><div class="spec"><label>Account sizes</label><strong>—</strong></div><div class="spec"><label>Profit target</label><strong>—</strong></div><div class="spec"><label>Max drawdown</label><strong>—</strong></div></div>
+              <div class="spec-grid"><div class="spec"><label>Account sizes</label><strong>—</strong></div><div class="spec"><label>Profit target</label><strong>—</strong></div><div class="spec"><label>Max drawdown</label><strong>—</strong></div><div class="spec"><label>Daily loss</label><strong>—</strong></div></div>
               <div class="why-line"><span>Why it matches</span><strong>—</strong></div>
               <div class="firm-detail-actions"><button class="what-check-btn" type="button" data-methodology-trigger>What we check</button><button class="promo-slot" type="button" data-promo-code="PV" aria-label="Copy promo code PV">PROMO&nbsp; PV <svg width="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button><button class="btn secondary" type="button" disabled>Save to shortlist</button></div>
             </div>
@@ -3473,6 +3473,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     if(specs[0])specs[0].textContent=sbSizeRange(plans);
     if(specs[1])specs[1].textContent=sbPlanTarget(firstRules);
     if(specs[2])specs[2].textContent=sbPlanDrawdown(firstRules);
+    if(specs[3]){var _dl=firstRules?(firstRules.daily_loss_pct!=null&&isFinite(Number(firstRules.daily_loss_pct))?firstRules.daily_loss_pct+'%':(firstRules.daily_loss_usd!=null&&isFinite(Number(firstRules.daily_loss_usd))?'$'+Number(firstRules.daily_loss_usd).toLocaleString():null)):null;specs[3].textContent=_dl||'—';}
     // Transparent value score (0-100) based on verified plan data
     try{
       // Ratings removed: no invented scores. Only verified data is shown.
@@ -4579,6 +4580,8 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       var parts=[];
       parts.push((ar?'الهدف ':'Target ')+(sbPlanTarget(r)||'—'));
       parts.push((ar?'التراجع ':'DD ')+(sbPlanDrawdown(r)||'—'));
+      if(r.daily_loss_pct!=null&&isFinite(Number(r.daily_loss_pct)))parts.push((ar?'اليومي ':'Daily ')+r.daily_loss_pct+'%');
+      else if(r.daily_loss_usd!=null&&isFinite(Number(r.daily_loss_usd)))parts.push((ar?'اليومي ':'Daily ')+'$'+Number(r.daily_loss_usd).toLocaleString());
       if(r.profit_split!=null&&isFinite(Number(r.profit_split)))parts.push(r.profit_split+'% '+(ar?'تقسيم':'split'));
       var ptdd=sbPTDD(r);if(ptdd)parts.push('PT:DD '+ptdd);
       m.textContent=parts.join(' · ');left.appendChild(m);
@@ -4596,6 +4599,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       if(dp.final!=null){
         var bb=document.createElement('b');bb.textContent=sbFmtUSD(dp.final);pr.appendChild(bb);
         if(dp.pct>0){var s=document.createElement('s');s.textContent=sbFmtUSD(dp.base);pr.appendChild(s);}
+        if(p.currency&&p.currency!=='USD'){var cs=document.createElement('span');cs.className='pm';cs.style.fontSize='9px';cs.textContent=' '+p.currency;pr.appendChild(cs);}
       }else{var b2=document.createElement('b');b2.textContent='—';pr.appendChild(b2);}
       row.appendChild(left);row.appendChild(pr);
       el.appendChild(row);
