@@ -3284,6 +3284,11 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     if(!el)return;
     var letter=(firm.name||'?').charAt(0).toUpperCase();
     el.setAttribute('aria-label',firm.name||'Firm');
+    // Custom high-res logo overrides (firms whose Google favicon is low-quality)
+    var LOGO_OVERRIDES={
+      'alphacapitalgroup.uk':'https://alphacapitalgroup.uk/images/webclip.png',
+      'takeprofittrader.com':'https://takeprofittrader.com/assets/logo-dark.svg'
+    };
     // NEW badge (auto-hides after 3 days)
     (function(){
       var existing=el.querySelector('.new-badge');
@@ -3306,8 +3311,8 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     img.alt=firm.name||'';img.loading='lazy';
     img.style.cssText='width:100%;height:100%;object-fit:contain;border-radius:6px;';
     img.onerror=function(){img.remove();el.textContent=letter;};
-    // Google favicons with high-res (free, no key) — falls back to letter
-    img.src='https://www.google.com/s2/favicons?domain='+domain+'&sz=128';
+    // Custom override first, else Google favicons high-res (free, no key) — falls back to letter
+    img.src=LOGO_OVERRIDES[domain]||('https://www.google.com/s2/favicons?domain='+domain+'&sz=128');
     el.appendChild(img);
   }
   function sbNum(v){if(v==null||v==='')return NaN;return Number(v);}
