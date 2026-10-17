@@ -1,1 +1,17 @@
-{"_note":"Firms added within last 3 days get a NEW badge. Format: {\"id\": \"firm-uuid\", \"added_at\": \"2026-10-17T00:00:00Z\"}. Auto-managed by firm-adding scripts.","new_firms":[]}
+{
+  "_note": "Firms added within last 3 days get a NEW badge. Format: {\"id\": \"firm-uuid\", \"added_at\": \"2026-10-17T00:00:00Z\"}. Auto-managed by firm-adding scripts.",
+  "new_firms": [
+    {
+      "id": "51c71491-cffa-43f6-8a58-f6b3d0f0087f",
+      "added_at": "2026-10-17T10:06:22.485610+00:00"
+    },
+    {
+      "id": "a1a85a8f-de14-42ea-99d8-94ce22e05e28",
+      "added_at": "2026-10-17T10:06:22.485610+00:00"
+    },
+    {
+      "id": "5071840c-e3b6-4c45-a3a4-30601dc9b787",
+      "added_at": "2026-10-17T10:09:03.398285+00:00"
+    }
+  ]
+}
