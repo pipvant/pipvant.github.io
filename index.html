@@ -3518,6 +3518,18 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     var rankEl=q('.rank');if(rankEl)rankEl.textContent=rank;
     var logo=q('.logo-slot');sbFirmLogo(logo,firm);
     var nameEl=q('.firm-name');if(nameEl)nameEl.textContent=firm.name;
+    /* Category badge (Futures/CFDs) next to firm name */
+    try{
+      var _topline=q('.firm-topline');
+      if(_topline&&!_topline.querySelector('.cat-badge')){
+        var _ccat=sbCategoryOf(firm);
+        if(_ccat&&sbCatBadgeText[_ccat]){
+          var _cb=document.createElement('span');_cb.className='cat-badge cat-'+_ccat;
+          _cb.textContent=(sbCatBadgeText[_ccat]||{})[currentLanguage==='ar'?'ar':'en']||_ccat.toUpperCase();
+          _topline.appendChild(_cb);
+        }
+      }
+    }catch(_cbe){}
     var pills=card.querySelectorAll('.meta-pill');
     var hq=firm.headquarters||'';
     var pillTexts=[hq,sbPricingLabel(plans),plans.length?plans.length+(currentLanguage==='ar'?(plans.length===1?' حجم':' أحجام'):(plans.length===1?' size':' sizes')):'—'];
@@ -3632,7 +3644,17 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     var nm=document.createElement('span');nm.textContent=firm.name;
     var ev=document.createElement('span');ev.className='table-evidence';sbSourceLine(ev,firm);
     st.appendChild(nm);
-    st.appendChild(ev);wf.appendChild(lg);wf.appendChild(st);td1.appendChild(wf);tr.appendChild(td1);
+    st.appendChild(ev);
+    /* Category badge (Futures/CFDs) in table view */
+    try{
+      var _tcat=sbCategoryOf(firm);
+      if(_tcat&&sbCatBadgeText[_tcat]){
+        var _cb=document.createElement('span');_cb.className='cat-badge cat-'+_tcat;
+        _cb.textContent=(sbCatBadgeText[_tcat]||{})[currentLanguage==='ar'?'ar':'en']||_tcat.toUpperCase();
+        st.appendChild(_cb);
+      }
+    }catch(_tce){}
+    wf.appendChild(lg);wf.appendChild(st);td1.appendChild(wf);tr.appendChild(td1);
     var td2=document.createElement('td');var rt=document.createElement('span');rt.className='table-rating';var rs=document.createElement('strong');rs.textContent='—';rt.appendChild(rs);td2.appendChild(rt);tr.appendChild(td2);
     
     var td4=document.createElement('td');td4.textContent=sbSizeRange(plans);tr.appendChild(td4);
