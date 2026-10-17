@@ -4556,7 +4556,16 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     var tpl=document.getElementById('directoryFirmTemplate');
     if(!results||!tpl||!sbFirms.length)return;
     results.querySelectorAll('[data-firm-card]').forEach(function(n){n.remove();});
-    sbFirms.forEach(function(firm){
+    // Sort by PIPVANT Score (same as matcher) so directory matches main page order
+    var sorted=sbFirms.slice();
+    try{
+      sorted.sort(function(a,b){
+        var sa=sbPipvScore(a).score, sbb=sbPipvScore(b).score;
+        if(sbb!==sa)return sbb-sa;
+        return String(a.name||'').localeCompare(String(b.name||''));
+      });
+    }catch(e){}
+    sorted.forEach(function(firm){
       var node=tpl.content.firstElementChild.cloneNode(true);
       sbFillDirectoryCard(node,firm,sbPlansByFirm[firm.id]||[]);
       results.insertBefore(node,empty);
