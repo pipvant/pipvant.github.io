@@ -3010,7 +3010,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
         <header class="module-head"><h2>Methodology</h2><p>A transparent standard for matching trader criteria with verified prop-firm information.</p></header>
         <div class="methodology-stack">
           <section class="methodology-section" id="methodology-matching" aria-labelledby="methodology-matching-title"><div class="methodology-section-head"><span class="methodology-number">01</span><div><h3 id="methodology-matching-title">How matching works</h3><p>Matcher compares the criteria a trader selects with the verified rules available for each firm. It does not recommend trades or guarantee that a firm is right for every trader.</p></div></div><div class="methodology-detail-grid"><div class="methodology-detail"><strong>Criteria first</strong><span>Market, account size, price, rules, and other selected constraints define the comparison.</span></div><div class="methodology-detail"><strong>Visible fit</strong><span>Each result will explain which criteria matched and which values were unavailable.</span></div><div class="methodology-detail"><strong>Trader decides</strong><span>The final choice always stays with the trader after reviewing the firm’s current terms.</span></div></div></section>
-          <section class="methodology-section" id="methodology-ranking" aria-labelledby="methodology-ranking-title"><div class="methodology-section-head"><span class="methodology-number">02</span><div><h3 id="methodology-ranking-title">How we rank firms</h3><p>Rankings are based on disclosed comparison criteria, not paid placement or hidden star ratings. A score remains blank until the required source data is verified.</p></div></div><div class="methodology-detail-grid"><div class="methodology-detail"><strong>PIPVANT Score (100pts)</strong><span>Industry standing (25) + Profit split (20) + Value per dollar (20) + Drawdown terms (15) + Payout speed (10) + Data completeness (10). Standing is PIPVANT editorial (stable); rest automatic from verified data.</span></div><div class="methodology-detail"><strong>Rule alignment</strong><span>Program terms are compared with the trader’s selected priorities and constraints.</span></div><div class="methodology-detail"><strong>Data completeness</strong><span>Missing or unclear values reduce confidence instead of being estimated.</span></div><div class="methodology-detail"><strong>Clear rationale</strong><span>Every published position will include a concise reason for its place in the order.</span></div></div></section>
+          <section class="methodology-section" id="methodology-ranking" aria-labelledby="methodology-ranking-title"><div class="methodology-section-head"><span class="methodology-number">02</span><div><h3 id="methodology-ranking-title">How we rank firms</h3><p>Rankings are based on disclosed comparison criteria, not paid placement or hidden star ratings. A score remains blank until the required source data is verified.</p></div></div><div class="methodology-detail-grid"><div class="methodology-detail"><strong>PIPVANT Score (100pts)</strong><span>Industry standing (20) + Profit split (20) + Value per dollar (20) + Drawdown terms (15) + Payout speed (10) + Data completeness (5) + Community (10). Standing is editorial; rest automatic.</span></div><div class="methodology-detail"><strong>Rule alignment</strong><span>Program terms are compared with the trader’s selected priorities and constraints.</span></div><div class="methodology-detail"><strong>Data completeness</strong><span>Missing or unclear values reduce confidence instead of being estimated.</span></div><div class="methodology-detail"><strong>Clear rationale</strong><span>Every published position will include a concise reason for its place in the order.</span></div></div></section>
           <section class="methodology-section" id="methodology-verification" aria-labelledby="methodology-verification-title"><div class="methodology-section-head"><span class="methodology-number">03</span><div><h3 id="methodology-verification-title">How we verify</h3><p>Firm information is published only after its rule, price, limit, source, and review date are checked. Unverified values stay unavailable rather than being filled with assumptions.</p></div></div><div class="methodology-detail-grid"><div class="methodology-detail"><strong>Source attached</strong><span>Each published fact will be tied to the source used for verification.</span></div><div class="methodology-detail"><strong>Review date visible</strong><span>Users will see when the information was last checked.</span></div><div class="methodology-detail"><strong>Changes rechecked</strong><span>Material rule or pricing changes require verification before the listing is updated.</span></div></div></section>
           <section class="methodology-section" id="methodology-principles" aria-labelledby="methodology-principles-title"><div class="methodology-section-head"><span class="methodology-number">04</span><div><h3 id="methodology-principles-title">Our principles</h3><p>PIPVANT is built as a decision-tool suite, with strict limits on what the product claims and displays.</p></div></div><div class="principle-grid"><div class="principle-item"><i aria-hidden="true"></i><div><strong>Real data only</strong><span>No invented statistics, prices, or performance records.</span></div></div><div class="principle-item"><i aria-hidden="true"></i><div><strong>No fake listings</strong><span>A firm appears only when its listing can be supported by verified source data.</span></div></div><div class="principle-item"><i aria-hidden="true"></i><div><strong>Tools, not signals</strong><span>PIPVANT supports research, sizing, journaling, and review. It never tells users what to trade.</span></div></div><div class="principle-item"><i aria-hidden="true"></i><div><strong>No profit promises</strong><span>Calculations and certificates never imply guaranteed returns.</span></div></div><div class="principle-item"><i aria-hidden="true"></i><div><strong>Not financial advice</strong><span>Comparisons are informational only. Always verify terms on the firm's official site before purchasing.</span></div></div></div></section>
         </div>
@@ -3355,12 +3355,12 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     // reputation. Stable by design (reputation doesn't change hourly).
     // The data-driven components below ARE fully automatic.
     var standingTiers={
-      'FTMO':25, 'The5ers':25, 'Topstep':25, 'Funding Pips':25,
-      'FundedNext':20, 'E8 Markets':20, 'Apex Trader Funding':20,
-      'Alpha Capital Group':15, 'TakeProfitTrader':15, 'MyFundedFutures':15,
-      'FXIFY':15, 'Blue Guardian':15,
-      'Funded7':10, 'Maven Trading':10, 'PipFarm':10, 'Breakout Prop':10,
-      'Goat Funded Trader':10, 'BrightFunded':10, 'Funding Traders':10
+      'FTMO':20, 'The5ers':20, 'Topstep':20, 'Funding Pips':20,
+      'FundedNext':16, 'E8 Markets':16, 'Apex Trader Funding':16,
+      'Alpha Capital Group':12, 'TakeProfitTrader':12, 'MyFundedFutures':12,
+      'FXIFY':12, 'Blue Guardian':12,
+      'Funded7':8, 'Maven Trading':8, 'PipFarm':8, 'Breakout Prop':8,
+      'Goat Funded Trader':8, 'BrightFunded':8, 'Funding Traders':8
     };
     var scalePts=standingTiers[firm.name]||10;
     score+=scalePts;
@@ -3389,7 +3389,13 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     var expected=['profit_target_pct','daily_loss_pct','max_drawdown_pct','profit_split','payout_frequency'];
     var present=0;
     plans.forEach(function(p){var r=p.rules||{};expected.forEach(function(k){if(r[k]!==undefined&&r[k]!==null&&r[k]!=='')present++;});});
-    score+=Math.min(10,(present/(expected.length*plans.length))*10*plans.length/3);
+    score+=Math.min(5,(present/(expected.length*plans.length))*5*plans.length/3);
+    // Community (10pts): ratings + likes
+    var comm2=window._sbCommunity&&window._sbCommunity[firm.id];
+    if(comm2){
+      if(comm2.avgRating)score+=Math.min(5,(comm2.avgRating/5)*5);
+      if(comm2.likes)score+=Math.min(5,Math.log10(comm2.likes+1)*2.5);
+    }
     return {score:Math.round(score),rationale:rationale.join(', ')};
   }
   function sbPricingLabel(plans){if(!plans.length||!plans[0].rules||!plans[0].rules.pricing_model)return '—';return plans[0].rules.pricing_model==='monthly subscription'?(currentLanguage==='ar'?'شهري':'Monthly'):(currentLanguage==='ar'?'دفعة واحدة':'One-time');}
@@ -3421,8 +3427,42 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
               sbPlansByFirm={};
               r2.data.forEach(function(p){(sbPlansByFirm[p.firm_id]=sbPlansByFirm[p.firm_id]||[]).push(p);});
             }
-            sbRenderFirms();
-            sbRenderDirectory();sbPopulateAccountSizes();
+            // Load community scores (ratings + likes) for ranking
+            // Best Seller equivalent: most liked = highest demand
+            // Favorite Firms equivalent: highest rated = community preference
+            sb.from('firm_ratings').select('firm_id,rating')
+              .then(function(r3){
+                window._sbCommunity={};
+                if(r3&&!r3.error&&Array.isArray(r3.data)){
+                  var byFirm={};
+                  r3.data.forEach(function(x){
+                    (byFirm[x.firm_id]=byFirm[x.firm_id]||[]).push(x.rating);
+                  });
+                  Object.keys(byFirm).forEach(function(fid){
+                    var arr=byFirm[fid];
+                    var avg=arr.reduce(function(a,b){return a+b;},0)/arr.length;
+                    window._sbCommunity[fid]=window._sbCommunity[fid]||{};
+                    window._sbCommunity[fid].avgRating=avg;
+                    window._sbCommunity[fid].ratingCount=arr.length;
+                  });
+                }
+                return sb.from('firm_likes').select('firm_id');
+              })
+              .then(function(r4){
+                if(r4&&!r4.error&&Array.isArray(r4.data)){
+                  var likeCounts={};
+                  r4.data.forEach(function(x){
+                    likeCounts[x.firm_id]=(likeCounts[x.firm_id]||0)+1;
+                  });
+                  Object.keys(likeCounts).forEach(function(fid){
+                    window._sbCommunity[fid]=window._sbCommunity[fid]||{};
+                    window._sbCommunity[fid].likes=likeCounts[fid];
+                  });
+                }
+                sbRenderFirms();
+                sbRenderDirectory();sbPopulateAccountSizes();
+              })
+              .catch(function(){sbRenderFirms();sbRenderDirectory();sbPopulateAccountSizes();});
             if(typeof sbInitLab==='function')sbInitLab();
             // Safety net: refresh NEW badges once data is ready (in case JSON loaded after render)
             sbLoadNewFirms(function(){
@@ -6174,12 +6214,12 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
           // 0. Industry Standing (25pts): PIPVANT editorial — reflects real-world
           // reputation. Stable by design.
           var standingTiers={
-            'FTMO':25, 'The5ers':25, 'Topstep':25, 'Funding Pips':25,
-            'FundedNext':20, 'E8 Markets':20, 'Apex Trader Funding':20,
-            'Alpha Capital Group':15, 'TakeProfitTrader':15, 'MyFundedFutures':15,
-            'FXIFY':15, 'Blue Guardian':15,
-            'Funded7':10, 'Maven Trading':10, 'PipFarm':10, 'Breakout Prop':10,
-            'Goat Funded Trader':10, 'BrightFunded':10, 'Funding Traders':10
+            'FTMO':20, 'The5ers':20, 'Topstep':20, 'Funding Pips':20,
+            'FundedNext':16, 'E8 Markets':16, 'Apex Trader Funding':16,
+            'Alpha Capital Group':12, 'TakeProfitTrader':12, 'MyFundedFutures':12,
+            'FXIFY':12, 'Blue Guardian':12,
+            'Funded7':8, 'Maven Trading':8, 'PipFarm':8, 'Breakout Prop':8,
+            'Goat Funded Trader':8, 'BrightFunded':8, 'Funding Traders':8
           };
           var scalePts=standingTiers[firm.name]||10;
           score+=scalePts;
@@ -6223,8 +6263,18 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
           plans.forEach(function(p){var r=p.rules||{};
             expected.forEach(function(k){if(r[k]!==undefined&&r[k]!==null&&r[k]!=='')present++;});
           });
-          var compPts=Math.min(10, (present/(expected.length*plans.length))*10*plans.length/3);
+          var compPts=Math.min(5, (present/(expected.length*plans.length))*5*plans.length/3);
           score+=compPts;
+          // 6. Community (10pts): Best Seller + Favorite Firms equivalent
+          // - Avg rating (5pts): community preference
+          // - Like count (5pts): demand/popularity
+          // Scales automatically as more users rate/like
+          var comm=window._sbCommunity&&window._sbCommunity[firm.id];
+          if(comm){
+            if(comm.avgRating)score+=Math.min(5, (comm.avgRating/5)*5);
+            if(comm.likes)score+=Math.min(5, Math.log10(comm.likes+1)*2.5);
+            if(comm.avgRating>=4)rationale.push('top rated');
+          }
           return {score:Math.round(score), rationale:rationale.join(', ')};
         }
         if(/price.*low to high/i.test(mode)){
