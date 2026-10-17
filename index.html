@@ -206,6 +206,19 @@
       #matcher .pfm-sub>span{color:var(--muted);font-weight:400;font-size:11px}
       #matcher .pfm-pill{font-size:10px;font-weight:700;padding:3px 10px;border-radius:999px;border:1px solid var(--line-strong);color:var(--muted);background:var(--sunken);white-space:nowrap;font-variant-numeric:tabular-nums}
       #matcher .pfm-pill.pfm-promo{color:#D4AF37;border-color:rgba(212,175,55,.5);background:rgba(212,175,55,.12)}
+      /* Challenge Fairness pills — target/DD ratio. Brand-safe colors only. */
+      #matcher .pfm-pill.fair-good{color:#7FB069;border-color:rgba(127,176,105,.45);background:rgba(127,176,105,.10)}
+      #matcher .pfm-pill.fair-mid{color:#D4AF37;border-color:rgba(212,175,55,.5);background:rgba(212,175,55,.10)}
+      #matcher .pfm-pill.fair-tough{color:#E07A5F;border-color:rgba(224,122,95,.45);background:rgba(224,122,95,.10)}
+      /* Verified-hourly trust badge */
+      .hourly-badge{display:inline-flex;align-items:center;gap:6px;font:600 10px/1.4 "IBM Plex Mono",monospace;letter-spacing:.05em;color:#5B8DEF;border:1px solid rgba(91,141,239,.4);background:rgba(91,141,239,.08);padding:5px 10px;border-radius:999px;text-transform:uppercase;white-space:nowrap}
+      .hourly-badge .hb-dot{width:6px;height:6px;border-radius:50%;background:#5B8DEF;animation:hbPulse 2s ease-in-out infinite}
+      @keyframes hbPulse{0%,100%{opacity:1}50%{opacity:.35}}
+      /* Ranking mode segmented control */
+      .rankmode-bar{display:inline-flex;border:1px solid var(--line-strong);border-radius:10px;overflow:hidden;background:var(--sunken)}
+      .rankmode-bar button{border:0;background:transparent;color:var(--muted);font:600 11px/1 "Space Grotesk",sans-serif;padding:9px 12px;cursor:pointer;white-space:nowrap}
+      .rankmode-bar button[aria-pressed="true"]{background:linear-gradient(135deg,#E8C547,#D4AF37);color:#0A1628}
+      .rankmode-bar button+button{border-inline-start:1px solid var(--line-strong)}
       /* hide secondary sections on the PFM strip (all live on the detail page) */
       #matcher .firm-card .meta-pills,
       #matcher .firm-card .evidence-line,
@@ -2305,7 +2318,10 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
 
       <section class="matcher-list" data-view="rows" data-density="comfortable" aria-labelledby="top-firms-title">
         <div class="matcher-list-head">
-          <div><h3 id="top-firms-title">Top Prop Firms</h3><div class="matcher-meta"><a class="method-pill" href="#matcherMethodology">How we verify and rank firms</a><span id="lastUpdatedSpan">Last updated —</span><span class="freshness-pill" id="freshnessBadge" hidden><span class="fresh-dot"></span><span id="freshnessText"></span></span></div></div>
+          <div><h3 id="top-firms-title">Top Prop Firms</h3><div class="matcher-meta"><a class="method-pill" href="#matcherMethodology">How we verify and rank firms</a><span class="hourly-badge" id="hourlyBadge"><span class="hb-dot" aria-hidden="true"></span><span data-i18n-hourly>Data verified hourly</span></span><span id="lastUpdatedSpan">Last updated —</span><span class="freshness-pill" id="freshnessBadge" hidden><span class="fresh-dot"></span><span id="freshnessText"></span></span></div></div>
+          <div class="rankmode-bar" id="rankModeBar" role="group" aria-label="Ranking mode">
+            <button type="button" data-rankmode="overall" aria-pressed="true">Best Overall</button><button type="button" data-rankmode="value" aria-pressed="false">Best Value</button><button type="button" data-rankmode="payout" aria-pressed="false">Fastest Payouts</button><button type="button" data-rankmode="split" aria-pressed="false">Highest Split</button>
+          </div>
           <div class="view-toggle" aria-label="Result view">
             <button class="view-button" type="button" aria-pressed="true" data-matcher-view="rows">Rows</button>
             <button class="view-button" type="button" aria-pressed="false" data-matcher-view="table">Table</button>
@@ -2465,6 +2481,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
           <div class="fd-stat"><b id="fdPlans">—</b><span data-fd-lbl="plans">Plans</span></div>
           <div class="fd-stat"><b id="fdAlloc">—</b><span data-fd-lbl="alloc">Max allocation</span></div>
           <div class="fd-stat"><b id="fdPtdd">—</b><span data-fd-lbl="ptdd">Best PT:DD</span></div>
+          <div class="fd-stat"><b id="fdFairness">—</b><span data-fd-lbl="fairness">Challenge fairness</span></div>
         </div>
         <!-- Community ratings + likes (real user data) -->
         <div class="fd-community" id="fdCommunity">
@@ -3515,6 +3532,96 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     }
     return null;
   }
+  /* Challenge Fairness: profit_target_pct / max_drawdown_pct ratio.
+     <=1.0 Fair (green) | 1.0-1.5 Moderate (gold) | >1.5 Tough (red).
+     Uses the best (lowest) ratio across the firm's plans. */
+  function sbFairness(plans){
+    if(!plans||!plans.length)return null;
+    var best=null;
+    plans.forEach(function(p){
+      var r=p.rules||{};
+      var pt=Number(r.profit_target_pct), dd=Number(r.max_drawdown_pct);
+      if(isFinite(pt)&&isFinite(dd)&&dd>0&&pt>0){
+        var ratio=pt/dd;
+        if(best===null||ratio<best)best=ratio;
+      }
+    });
+    if(best===null)return null;
+    var ar=(typeof currentLanguage!=='undefined'&&currentLanguage==='ar');
+    var out={ratio:Math.round(best*100)/100};
+    if(best<=1.0){out.label=ar?'تحدي عادل':'Fair challenge';out.cls='fair-good';}
+    else if(best<=1.5){out.label=ar?'تحدي متوسط':'Moderate challenge';out.cls='fair-mid';}
+    else{out.label=ar?'تحدي صعب':'Tough challenge';out.cls='fair-tough';}
+    return out;
+  }
+  /* True Cost: price + numeric activation_fee (if any). Non-numeric
+     ("Free") or missing activation fees are treated as 0. */
+  function sbTrueCost(plan){
+    if(!plan)return null;
+    var price=Number(plan.price);
+    if(!isFinite(price))return null;
+    var af=plan.rules?plan.rules.activation_fee:null;
+    var afNum=Number(af);
+    if(isFinite(afNum)&&afNum>0)price+=afNum;
+    return {total:price,hasFee:isFinite(afNum)&&afNum>0,fee:isFinite(afNum)?afNum:0};
+  }
+  /* Ranking modes: Best Overall | Best Value | Fastest Payouts | Highest Split */
+  var sbRankMode='overall';
+  var sbRankModeLabels={
+    overall:{en:'Best Overall',ar:'الأفضل overall'},
+    value:{en:'Best Value',ar:'أفضل قيمة'},
+    payout:{en:'Fastest Payouts',ar:'أسرع سحب'},
+    split:{en:'Highest Split',ar:'أعلى تقسيم'}
+  };
+  function sbRankModeLabel(mode){
+    var ar=(typeof currentLanguage!=='undefined'&&currentLanguage==='ar');
+    var m=sbRankModeLabels[mode]||sbRankModeLabels.overall;
+    return ar?m.ar:m.en;
+  }
+  function sbFirmValueScore(firm){
+    var plans=(typeof sbPlansByFirm!=='undefined'&&sbPlansByFirm[firm.id])||[];
+    var values=plans.map(function(p){var sz=sbNum(p.account_size),pr=sbNum(p.price);return (isFinite(sz)&&isFinite(pr)&&pr>0)?sz/pr:0;}).filter(function(v){return v>0;}).sort(function(a,b){return a-b;});
+    return values.length?values[Math.floor(values.length/2)]:0;
+  }
+  function sbFirmPayoutScore(firm){
+    var plans=(typeof sbPlansByFirm!=='undefined'&&sbPlansByFirm[firm.id])||[];
+    var s=plans.map(function(p){var r=p.rules||{};return String(r.payout_frequency||'').toLowerCase();}).join(' ');
+    if(/instant|on-demand|on demand/.test(s))return 10;
+    if(/daily/.test(s))return 8;
+    if(/weekly|7 days/.test(s))return 7;
+    if(/bi-?weekly|14 days|48h/.test(s))return 5;
+    return 3;
+  }
+  function sbFirmMaxSplit(firm){
+    var plans=(typeof sbPlansByFirm!=='undefined'&&sbPlansByFirm[firm.id])||[];
+    var splits=plans.map(function(p){var r=p.rules||{};return sbNum(r.profit_split);}).filter(isFinite);
+    return splits.length?Math.max.apply(null,splits):0;
+  }
+  function sbSortByRankMode(firms){
+    var mode=sbRankMode||'overall';
+    firms.sort(function(a,b){
+      var va,vb;
+      if(mode==='value'){va=sbFirmValueScore(a);vb=sbFirmValueScore(b);}
+      else if(mode==='payout'){va=sbFirmPayoutScore(a);vb=sbFirmPayoutScore(b);}
+      else if(mode==='split'){va=sbFirmMaxSplit(a);vb=sbFirmMaxSplit(b);}
+      else{va=sbPipvScore(a).score;vb=sbPipvScore(b).score;}
+      if(vb!==va)return vb-va;
+      return String(a.name||'').localeCompare(String(b.name||''));
+    });
+    return firms;
+  }
+  /* Update rank mode button labels + hourly badge on language change */
+  function sbUpdateRankModeUI(){
+    try{
+      var ar=(typeof currentLanguage!=='undefined'&&currentLanguage==='ar');
+      document.querySelectorAll('#rankModeBar [data-rankmode]').forEach(function(btn){
+        var mode=btn.getAttribute('data-rankmode');
+        btn.textContent=sbRankModeLabel(mode);
+      });
+      var hb=document.querySelector('#hourlyBadge [data-i18n-hourly]');
+      if(hb)hb.textContent=ar?'البيانات تتحقق كل ساعة':'Data verified hourly';
+    }catch(e){}
+  }
   function sbBestPromo(rules){
     if(!rules||!Array.isArray(rules.promotions)||!rules.promotions.length)return null;
     var now=Date.now(), best=null;
@@ -3718,6 +3825,11 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
           var _h=_mx?'<b>'+sbFmtSize(_mx)+'</b> <span>'+(currentLanguage==='ar'?'كحد أقصى':'max')+'</span>':'';
           if(_promo&&_promo.discount){_h+='<span class="pfm-pill pfm-promo">'+String(_promo.discount).replace(/<[^>]*>/g,'')+'</span>';}
           else if(_ptdd){_h+='<span class="pfm-pill">PT:DD '+String(_ptdd).replace(/<[^>]*>/g,'')+'</span>';}
+          /* Challenge Fairness badge (target/DD ratio) */
+          try{
+            var _fair=sbFairness(plans);
+            if(_fair){_h+='<span class="pfm-pill '+_fair.cls+'" title="Target/DD ratio '+_fair.ratio+'">'+_fair.label+'</span>';}
+          }catch(_fe){}
           psub.innerHTML=_h||'—';
         }
         var dslot=q('.discount-slot');
@@ -3833,13 +3945,9 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
   }
   function sbSortFirmsForTable(firms){
     if(!sbTableSortCol||sbTableSortCol==='Rank'){
-      /* Default Rank sort = PIPVANT Score descending (matches card order) */
+      /* Default Rank sort = active ranking mode (matches card order) */
       try{
-        return firms.slice().sort(function(a,b){
-          var sa=sbPipvScore(a).score, sbb=sbPipvScore(b).score;
-          if(sbb!==sa)return sbb-sa;
-          return String(a.name||'').localeCompare(String(b.name||''));
-        });
+        return sbSortByRankMode(firms.slice());
       }catch(e){return firms;}
     }
     var dir=sbTableSortDir==='desc'?-1:1;
@@ -4313,16 +4421,13 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
   function sbRenderFirms(){
     sbHideMarketUI();
     if(!sbFirms.length)return;
+    try{if(typeof sbUpdateRankModeUI==='function')sbUpdateRankModeUI();}catch(e){}
     var filters=sbGetMatcherFilters();
     var firms=sbFirms.filter(function(f){return sbFirmMatchesFilters(f,sbPlansByFirm[f.id]||[],filters);});
-    /* RANKING: sort by PIPVANT Score (descending) so rank #1 = highest score.
-       This makes the ranking VISIBLE and meaningful on cards + table. */
+    /* RANKING: sort by active ranking mode (default: PIPVANT Score).
+       Modes: overall | value | payout | split — switchable via rankmode-bar. */
     try{
-      firms.sort(function(a,b){
-        var sa=sbPipvScore(a).score, sbb=sbPipvScore(b).score;
-        if(sbb!==sa)return sbb-sa;
-        return String(a.name||'').localeCompare(String(b.name||''));
-      });
+      sbSortByRankMode(firms);
     }catch(_srt){}
     window._filteredFirmsCount=firms.length;
     var _pv=document.querySelector('#matcher .preview-label');if(_pv)_pv.textContent=firms.length+(currentLanguage==='ar'?' شركات موثقة':' verified firms');
@@ -4874,6 +4979,15 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
         var bb=document.createElement('b');bb.textContent=sbFmtUSD(dp.final);pr.appendChild(bb);
         if(dp.pct>0){var s=document.createElement('s');s.textContent=sbFmtUSD(dp.base);pr.appendChild(s);}
         if(p.currency&&p.currency!=='USD'){var cs=document.createElement('span');cs.className='pm';cs.style.fontSize='9px';cs.textContent=' '+p.currency;pr.appendChild(cs);}
+        /* True Cost: show activation fee note when it's a real numeric fee */
+        try{
+          var _tc=sbTrueCost(p);
+          if(_tc&&_tc.hasFee){
+            var tc=document.createElement('div');tc.className='pm';tc.style.fontSize='9px';tc.style.color='#5B8DEF';
+            tc.textContent=(ar?'التكلفة الحقيقية: ':'True cost: ')+sbFmtUSD(_tc.total)+(ar?' (شامل رسوم التفعيل)':' (incl. activation)');
+            pr.appendChild(tc);
+          }
+        }catch(_tce){}
       }else{var b2=document.createElement('b');b2.textContent='—';pr.appendChild(b2);}
       row.appendChild(left);row.appendChild(pr);
       el.appendChild(row);
@@ -5008,6 +5122,18 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       var mx=plans.reduce(function(m,p){var n=Number(p.account_size);return n>m?n:m;},0);
       var al=document.getElementById('fdAlloc');if(al)al.textContent=mx?sbFmtSize(mx):'—';
       var pt=document.getElementById('fdPtdd');if(pt)pt.textContent=sbBestPtdd(plans)||'—';
+      /* Challenge Fairness indicator */
+      try{
+        var ff=document.getElementById('fdFairness');
+        if(ff){
+          var _fair=sbFairness(plans);
+          if(_fair){
+            ff.textContent=_fair.label;
+            ff.style.color=_fair.cls==='fair-good'?'#7FB069':(_fair.cls==='fair-mid'?'#D4AF37':'#E07A5F');
+            ff.title='Target/drawdown ratio: '+_fair.ratio;
+          }else{ff.textContent='—';ff.style.color='';}
+        }
+      }catch(_ffe){}
       var heart=document.getElementById('fdHeart');
       if(heart){
         var uh=function(){var s=sbIsShortlisted(firm.id);heart.textContent=s?'♥':'♡';heart.classList.toggle('on',s);};
@@ -5021,10 +5147,10 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
         uc();
         fcmp.onclick=function(ev){if(ev)ev.stopPropagation();if(typeof sbToggleCompare==='function')sbToggleCompare(firm.id);uc();if(typeof showToast==='function')showToast((window.sbCompareIds||[]).indexOf(String(firm.id))!==-1?(ar?'تزادت للمقارنة ':'Added to compare '):(ar?'تحيدات من المقارنة ':'Removed from compare '));};
       }
-      var L={back:ar?'رجوع للمطابق':'Back to matcher',plans:ar?'الخطط':'Plans',alloc:ar?'أقصى تخصيص':'Max allocation',ptdd:ar?'أفضل PT:DD':'Best PT:DD',tO:ar?'نظرة عامة':'Overview',tC:ar?'التحديات':'Challenges',tP:ar?'الدفعات':'Payouts',copy:ar?'نسخ كود PV':'Copy PV code'};
+      var L={back:ar?'رجوع للمطابق':'Back to matcher',plans:ar?'الخطط':'Plans',alloc:ar?'أقصى تخصيص':'Max allocation',ptdd:ar?'أفضل PT:DD':'Best PT:DD',fairness:ar?'عدالة التحدي':'Challenge fairness',tO:ar?'نظرة عامة':'Overview',tC:ar?'التحديات':'Challenges',tP:ar?'الدفعات':'Payouts',copy:ar?'نسخ كود PV':'Copy PV code'};
       document.querySelectorAll('#firm-detail [data-fd-lbl]').forEach(function(elm){
         var k=elm.getAttribute('data-fd-lbl');
-        var map={back:'back',plans:'plans',alloc:'alloc',ptdd:'ptdd',tOverview:'tO',tChallenges:'tC',tPayouts:'tP',copyPv:'copy'};
+        var map={back:'back',plans:'plans',alloc:'alloc',ptdd:'ptdd',fairness:'fairness',tOverview:'tO',tChallenges:'tC',tPayouts:'tP',copyPv:'copy'};
         if(map[k]&&L[map[k]])elm.textContent=L[map[k]];
       });
       sbFillFdOverview(firm,plans,ar);
@@ -7659,6 +7785,12 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     var view=button.getAttribute('data-matcher-view');
     matcherList.setAttribute('data-view',view);
     document.querySelectorAll('[data-matcher-view]').forEach(function(other){other.setAttribute('aria-pressed',String(other===button));});
+  });});
+  /* Ranking mode switcher: Best Overall | Best Value | Fastest Payouts | Highest Split */
+  document.querySelectorAll('#rankModeBar [data-rankmode]').forEach(function(button){button.addEventListener('click',function(){
+    sbRankMode=button.getAttribute('data-rankmode')||'overall';
+    document.querySelectorAll('#rankModeBar [data-rankmode]').forEach(function(other){other.setAttribute('aria-pressed',String(other===button));});
+    if(typeof sbRenderFirms==='function')sbRenderFirms();
   });});
   document.querySelectorAll('.sort-button:not(.chal-sort)').forEach(function(button){button.addEventListener('click',function(){
     var col=button.getAttribute('data-sort-column');
