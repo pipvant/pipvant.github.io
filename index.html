@@ -3311,6 +3311,10 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     el.setAttribute('aria-label',firm.name||'Firm');
     // NEW badge (auto-hides after 3 days) — badge-only refresh, no image reload
     sbRefreshNewBadge(el,firm);
+    // TakeProfitTrader: official mobile icon (square, designed for small sizes)
+    var LOGO_OVERRIDES={
+      'takeprofittrader.com':'https://takeprofittrader.com/assets/mobile-logo.svg'
+    };
     var domain='';
     try{domain=String(new URL(firm.website||'').hostname).replace(/^www\./,'');}catch(e){domain='';}
     if(!domain){el.textContent=letter;return;}
@@ -3321,7 +3325,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     img.style.cssText='width:100%;height:100%;object-fit:contain;border-radius:6px;';
     img.onerror=function(){img.remove();el.textContent=letter;};
     // Google favicons high-res (free, no key) — falls back to letter
-    img.src='https://www.google.com/s2/favicons?domain='+domain+'&sz=128';
+    img.src=LOGO_OVERRIDES[domain]||('https://www.google.com/s2/favicons?domain='+domain+'&sz=128');
     el.appendChild(img);
   }
   function sbNum(v){if(v==null||v==='')return NaN;return Number(v);}
