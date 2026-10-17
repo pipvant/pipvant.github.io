@@ -1592,6 +1592,27 @@
 .dna-result:hover{transform:translateY(-2px);border-color:var(--gold,#D4AF37)}
 .dna-score{flex:0 0 58px;width:58px;height:58px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:18px;border:2px solid var(--gold,#D4AF37);color:var(--gold,#D4AF37);font-variant-numeric:tabular-nums;background:rgba(212,175,55,.06)}
 .dna-why{font-size:13px;color:var(--muted);line-height:1.6;margin-top:4px}
+/* ---- Lab premium polish v2: hero eyebrow, progress, ranks, summary ---- */
+.lab-hero>label{font:800 11px/1 "Space Grotesk",sans-serif!important;letter-spacing:.18em!important;text-transform:uppercase!important;color:var(--gold,#D4AF37)!important;margin-bottom:12px!important;display:block}
+.dna-progress{display:flex;align-items:center;gap:12px;margin:2px 0 18px}
+.dna-progress-track{flex:1;height:6px;border-radius:4px;background:var(--sunken);border:1px solid var(--line);overflow:hidden}
+.dna-progress-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--gold,#D4AF37),#f4dd8f);transition:width .3s ease}
+.dna-progress-label{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.dna-results-head{display:flex;align-items:center;justify-content:space-between;margin:8px 0 14px}
+.dna-results-head h4{font-size:15px;color:var(--text);letter-spacing:-.01em;font-weight:700}
+.dna-reset{background:none;border:1px solid var(--line-strong);color:var(--muted);border-radius:10px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s}
+.dna-reset:hover{color:var(--text);border-color:var(--gold,#D4AF37)}
+.dna-rank{flex:0 0 30px;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800}
+.dna-rank.r1{background:linear-gradient(135deg,#f4dd8f,#D4AF37);color:#0A1628;box-shadow:0 0 14px rgba(212,175,55,.35)}
+.dna-rank.r2{background:rgba(201,210,220,.14);color:#C9D2DC;border:1px solid #C9D2DC}
+.dna-rank.r3{background:rgba(232,161,60,.14);color:#e8a13c;border:1px solid #e8a13c}
+.dna-empty{border:1px dashed var(--line-strong);border-radius:14px;padding:22px;text-align:center;color:var(--muted);font-size:13px}
+.radar-summary{display:flex;gap:18px;margin-bottom:14px;font-size:12.5px;color:var(--muted)}
+.radar-summary b{color:var(--text);font-variant-numeric:tabular-nums}
+.sim-rules{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:14px}
+.sim-rule{font-size:11.5px;font-weight:700;color:var(--muted);border:1px solid var(--line);border-radius:20px;padding:5px 12px;background:rgba(255,255,255,.02)}
+.sim-rule b{color:var(--gold,#D4AF37);font-variant-numeric:tabular-nums}
+.breach-msg{min-height:26px}
 /* ============ DESIGN OVERHAUL — premium "هربانة" standard ============
    Patterns applied from research-empire/cards-ui.md:
    P2 layered dark surfaces · P3 hover lift+illumination · P4 press .98
@@ -2574,7 +2595,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
               <div class="risk-metric"><span>Sticker price</span><strong id="tcSticker">—</strong></div>
               <div class="risk-metric"><span>Commissions</span><strong id="tcCommOut">—</strong></div>
               <div class="risk-metric"><span>Expected resets</span><strong id="tcResetOut">—</strong></div>
-              <div class="risk-metric"><span>Cost per $1K funded</span><strong id="tcPerK">—</strong></div>
+              <div class="risk-metric"><span id="tcPerKLabel">Cost per $1K funded</span><strong id="tcPerK">—</strong></div>
             </div>
             <p class="risk-method">Method: price + (commission × trades) + (price × reset probability). Commissions, trade count and reset chance are your estimates.</p>
           </div>
@@ -2584,7 +2605,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       <!-- WAVE 3b — Challenge Simulator -->
       <section class="lab-tool" aria-labelledby="sim-title">
         <div class="lab-tool-head"><div><p class="eyebrow">Simulator 02</p><h3 id="sim-title">Pass Simulator</h3>
-        <p class="helper">2,000 Monte Carlo runs of your stats against real firm rules. Pure math — can <em>you</em> pass?</p></div></div>
+        <p class="helper">2,000 Monte Carlo runs of your stats against real firm rules. Pure math — can you pass?</p></div></div>
         <div class="lab-grid">
           <div class="lab-inputs">
             <div class="risk-field"><label for="simFirm">Firm</label><select id="simFirm" class="full-calc-input"></select></div>
@@ -2603,6 +2624,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
               <div class="risk-metric"><span>Median peak</span><strong id="simPeak">—</strong></div>
               <div class="risk-metric"><span>Breach rate</span><strong id="simBreach">—</strong></div>
             </div>
+            <div class="sim-rules" id="simRules"></div>
             <p class="risk-method">Method: each run simulates daily R-multiples from your win rate; pass = hit profit target before max drawdown. Daily-loss rule applied per day. Estimates from your inputs — not a guarantee.</p>
           </div>
         </div>
@@ -2612,6 +2634,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       <section class="lab-tool" aria-labelledby="radar-title">
         <div class="lab-tool-head"><div><p class="eyebrow">Radar 03</p><h3 id="radar-title">Rule-change Radar</h3>
         <p class="helper">Firms change rules silently. We track data freshness honestly — green means recently verified, red means it needs a re-check.</p></div></div>
+        <div class="radar-summary" id="radarSummary"></div>
         <div id="radarList" class="radar-list"></div>
         <p class="risk-method">We show verification age, not claimed changes. A red row means our data is older than 60 days — treat its rules with caution until re-verified.</p>
       </section>
@@ -2624,8 +2647,8 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
           <div class="lab-inputs">
             <div class="risk-field"><label for="bgFirm">Firm</label><select id="bgFirm" class="full-calc-input"></select></div>
             <div class="risk-field"><label for="bgPlan">Plan / account size</label><select id="bgPlan" class="full-calc-input"></select></div>
-            <div class="risk-field"><label for="bgTotal">Current total P&amp;L ($) — negative if down</label><input id="bgTotal" class="full-calc-input" type="number" step="any" value="0"><p class="helper">Your floating + closed P&amp;L today vs the account start.</p></div>
-            <div class="risk-field"><label for="bgDaily">Today's P&amp;L ($) — negative if down</label><input id="bgDaily" class="full-calc-input" type="number" step="any" value="0"><p class="helper">Just today's session result.</p></div>
+            <div class="risk-field"><label for="bgTotal">Current total P&amp;L — negative if down</label><input id="bgTotal" class="full-calc-input" type="number" step="any" value="0"><p class="helper">Your floating + closed P&amp;L today vs the account start.</p></div>
+            <div class="risk-field"><label for="bgDaily">Today's P&amp;L — negative if down</label><input id="bgDaily" class="full-calc-input" type="number" step="any" value="0"><p class="helper">Just today's session result.</p></div>
           </div>
           <div class="lab-results">
             <div class="risk-section-head"><div><h3>Distance to breach</h3><p class="helper">% of each limit already used</p></div></div>
@@ -2665,6 +2688,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
             <button class="dna-opt" type="button" data-dna-v="slow">Monthly is fine</button>
           </div></div>
         </div>
+        <div class="dna-progress" id="dnaProgress"></div>
         <div id="dnaResults" style="margin-top:8px"></div>
       </section>
 
@@ -3952,7 +3976,8 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       plans.forEach(function(p){
         var o=document.createElement('option');o.value=String(p.id);
         var sz=sbNum(p.account_size);
-        o.textContent=(isFinite(sz)?sbFmtSize(sz):'?')+' · '+(isFinite(sbNum(p.price))?sbFmtUSD(p.price):'—');
+        var psym=p.currency==='EUR'?'€':p.currency==='MAD'?'MAD ':'$';
+        o.textContent=(isFinite(sz)?sbFmtSize(sz):'?')+' · '+(isFinite(sbNum(p.price))?psym+Number(p.price).toLocaleString('en-US'):'—');
         ps.appendChild(o);
       });
       ps.dispatchEvent(new Event('change'));
@@ -3968,10 +3993,13 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     return out||plans[0]||null;
   }
   /* WAVE 3a — True Cost Calculator */
+  function sbLabCur(plan){var c=plan&&plan.currency;return c==='EUR'?'€':c==='MAD'?'MAD ':'$';}
+  function sbLabFmt(plan,n){var v=Number(n);if(!isFinite(v))return '—';return sbLabCur(plan)+Math.round(v).toLocaleString('en-US');}
   function sbTrueCostCalc(){
     var plan=sbLabGetPlan('tcFirm','tcPlan');
     var hero=document.getElementById('tcHero');if(!hero)return;
     if(!plan){hero.textContent='—';return;}
+    var ar=currentLanguage==='ar';
     var price=sbNum(plan.price);if(!isFinite(price))price=0;
     var comm=Number(document.getElementById('tcComm').value)||0;
     var trades=Number(document.getElementById('tcTrades').value)||0;
@@ -3979,20 +4007,24 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     var commCost=comm*trades;
     var resetCost=price*(resetP/100);
     var total=price+commCost+resetCost;
-    hero.textContent=sbFmtUSD(Math.round(total));
+    var sym=sbLabCur(plan);
+    hero.textContent=sym+Math.round(total).toLocaleString('en-US');
     var sub=document.getElementById('tcHeroSub');
     var sz=sbNum(plan.account_size);
-    if(sub)sub.textContent=isFinite(sz)&&sz>0?('≈ '+sbFmtUSD(Math.round(total/(sz/1000)*100)/100)+' per $1K funded'):'';
+    if(sub)sub.textContent=isFinite(sz)&&sz>0?('≈ '+sym+(Math.round(total/(sz/1000)*100)/100).toLocaleString('en-US')+' '+(ar?'لكل':'per')+' '+sym+'1K '+(ar?'ممول':'funded')):(ar?'اختر خطة':'select a plan');
     function set(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
-    set('tcSticker',sbFmtUSD(price));
-    set('tcCommOut',sbFmtUSD(Math.round(commCost)));
-    set('tcResetOut',sbFmtUSD(Math.round(resetCost)));
-    set('tcPerK',(isFinite(sz)&&sz>0)?sbFmtUSD(Math.round(total/(sz/1000)*100)/100):'—');
+    set('tcSticker',sbLabFmt(plan,price));
+    set('tcCommOut',sbLabFmt(plan,commCost));
+    set('tcResetOut',sbLabFmt(plan,resetCost));
+    set('tcPerK',(isFinite(sz)&&sz>0)?sym+(Math.round(total/(sz/1000)*100)/100).toLocaleString('en-US'):'—');
+    var pkl=document.getElementById('tcPerKLabel');
+    if(pkl)pkl.textContent=ar?('التكلفة لكل '+sym+'1K من التمويل'):('Cost per '+sym+'1K funded');
   }
   /* WAVE 3b — Pass Simulator (Monte Carlo, 2000 runs, pure math) */
   function sbSimRun(){
     var plan=sbLabGetPlan('simFirm','simPlan');
     var hero=document.getElementById('simHero');if(!hero)return;
+    var rl0=document.getElementById('simRules');if(rl0)rl0.innerHTML='';
     if(!plan||!plan.rules){hero.textContent='—';return;}
     var r=plan.rules;
     var target=Number(r.profit_target_pct),maxDD=Number(r.max_drawdown_pct),dailyL=Number(r.daily_loss_pct);
@@ -4025,14 +4057,22 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     peaks.sort(function(a,b){return a-b;});
     var med=peaks[Math.floor(peaks.length/2)];
     var prob=Math.round(passed/RUNS*100);
+    var ar=currentLanguage==='ar';
     hero.textContent=prob+'%';
+    // Disable gradient text so the dynamic probability color shows
+    hero.style.background='none';hero.style.webkitTextFillColor='';hero.style.WebkitBackgroundClip='';
     hero.style.color=prob>=60?'var(--green,#1d9d63)':prob>=35?'var(--gold,#D4AF37)':'var(--red,#d64545)';
     function set(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
     set('simBarValue',passed+' / '+RUNS);
     set('simPeak','+'+Math.round(med*10)/10+'%');
     set('simBreach',Math.round(breached/RUNS*100)+'%');
     var fill=document.getElementById('simFill');if(fill)fill.style.width=prob+'%';
-    var lbl=document.getElementById('simHeroSub');if(lbl)lbl.textContent=RUNS.toLocaleString()+' simulated runs';
+    var lbl=document.getElementById('simHeroSub');if(lbl)lbl.textContent=RUNS.toLocaleString()+(ar?' تشغيل محاكاة':' simulated runs');
+    var rl=document.getElementById('simRules');
+    if(rl){
+      var chip=function(l,v){return '<span class="sim-rule">'+l+' <b>'+v+'</b></span>';};
+      rl.innerHTML=chip(ar?'الهدف':'Target',target+'%')+chip(ar?'أقصى تراجع':'Max DD',maxDD+'%')+(isFinite(dailyL)?chip(ar?'يومي':'Daily',dailyL+'%'):'');
+    }
   }
   /* WAVE 3c — Rule-change Radar (honest freshness tracking) */
   function sbRenderRadar(){
@@ -4055,6 +4095,12 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       div.appendChild(dot);div.appendChild(name);div.appendChild(meta);div.appendChild(st);
       list.appendChild(div);
     });
+    var sm=document.getElementById('radarSummary');
+    if(sm){
+      var fresh=rows.filter(function(x){return !x.stale;}).length;
+      var stale=rows.length-fresh;
+      sm.innerHTML=ar?('<b>'+rows.length+'</b> شركة · <b>'+fresh+'</b> حديثة · <b>'+stale+'</b> تحتاج مراجعة'):('<b>'+rows.length+'</b> firms · <b>'+fresh+'</b> fresh · <b>'+stale+'</b> need re-check');
+    }
   }
   /* ============ WAVE 4 — Moats ============ */
   /* WAVE 4a — Breach Guard v1 (manual-input honesty tool) */
@@ -4121,8 +4167,12 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
   function sbDnaRender(){
     var res=document.getElementById('dnaResults');if(!res)return;
     var keys=['style','risk','overnight','news','payout'];
-    var done=keys.every(function(k){return sbDnaAnswers[k];});
-    if(!done){res.innerHTML='<p style="color:var(--muted);font-size:13px">'+(currentLanguage==='ar'?'أجب عن الأسئلة الخمسة لعرض توصياتك.':'Answer all 5 questions to see your matches.')+'</p>';return;}
+    var ar=currentLanguage==='ar';
+    var answered=keys.filter(function(k){return sbDnaAnswers[k];}).length;
+    var pg=document.getElementById('dnaProgress');
+    if(pg)pg.innerHTML='<div class="dna-progress-track"><div class="dna-progress-fill" style="width:'+Math.round(answered/keys.length*100)+'%"></div></div><span class="dna-progress-label">'+answered+' / '+keys.length+(ar?' أُجيبت':' answered')+'</span>';
+    var done=answered===keys.length;
+    if(!done){res.innerHTML='<div class="dna-empty">'+(ar?'أجب عن الأسئلة الخمسة لعرض توصياتك.':'Answer all 5 questions to see your matches.')+'</div>';return;}
     var scored=[];
     (sbFirms||[]).forEach(function(f){
       (sbPlansByFirm[f.id]||[]).forEach(function(p){
@@ -4131,19 +4181,24 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       });
     });
     scored.sort(function(a,b){return b.score-a.score;});
-    var top=scored.slice(0,3),ar=currentLanguage==='ar';
+    var top=scored.slice(0,3);
     res.innerHTML='';
+    var hd=document.createElement('div');hd.className='dna-results-head';
+    var h4=document.createElement('h4');h4.textContent=ar?'أفضل 3 خطط لأسلوبك':'Top 3 plans for your style';
+    var rb=document.createElement('button');rb.type='button';rb.className='dna-reset';rb.textContent=ar?'إعادة البدء':'Start over';
+    hd.appendChild(h4);hd.appendChild(rb);res.appendChild(hd);
     top.forEach(function(t,i){
       var div=document.createElement('div');div.className='dna-result';
+      var rk=document.createElement('div');rk.className='dna-rank r'+(i+1);rk.textContent=(i+1);
       var sc=document.createElement('div');sc.className='dna-score';sc.textContent=t.score;
       var tx=document.createElement('div');
       var sz=sbNum(t.plan.account_size);
       var nm=document.createElement('div');nm.style.fontWeight='700';nm.style.color='var(--text)';
-      nm.textContent=(i+1)+'. '+t.firm.name+' · '+(isFinite(sz)?sbFmtSize(sz):'');
+      nm.textContent=t.firm.name+' · '+(isFinite(sz)?sbFmtSize(sz):'');
       var wh=document.createElement('div');wh.className='dna-why';
       wh.textContent=t.why.length?t.why.join(' · '):(ar?'توافق عام جيد':'good general fit');
       tx.appendChild(nm);tx.appendChild(wh);
-      div.appendChild(sc);div.appendChild(tx);
+      div.appendChild(rk);div.appendChild(sc);div.appendChild(tx);
       res.appendChild(div);
     });
   }
@@ -4163,6 +4218,16 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       });
     });
     sbBreachCalc();sbDnaRender();
+    var dnaRes=document.getElementById('dnaResults');
+    if(dnaRes&&!dnaRes._resetBound){dnaRes._resetBound=true;
+      dnaRes.addEventListener('click',function(e){
+        if(e.target&&e.target.classList&&e.target.classList.contains('dna-reset')){
+          sbDnaAnswers={};
+          document.querySelectorAll('.dna-opt').forEach(function(o){o.setAttribute('aria-pressed','false');});
+          sbDnaRender();
+        }
+      });
+    }
   }
   /* Lab wiring — Wave 3 init */
   function sbInitLab(){
@@ -5666,6 +5731,33 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     'Enter your live P&L — we tell you how close you are to the edge. Manual input, honest math.':'أدخل الربح والخسارة الحالية — نخبرك بمدى قربك من الحد. إدخال يدوي وحسابات نزيهة.',
     '5 questions. We score every real plan against your style — top 3 with the reason why.':'5 أسئلة. نقيّم كل خطة حقيقية وفق أسلوبك — أفضل 3 مع سبب الاختيار.',
     'All Lab tools compute from verified data or your own inputs — nothing invented.':'جميع أدوات المختبر تُحسب من بيانات موثقة أو مدخلاتك الخاصة — لا اختراع.',
+    'TRUE COST':'التكلفة الحقيقية','PASS PROBABILITY':'احتمالية الاجتياز','select a plan':'اختر خطة',
+    'Calculator 01':'الحاسبة 01','Simulator 02':'المحاكي 02','Radar 03':'الرادار 03','Guard 04':'الحارس 04','Quiz 05':'الاختبار 05','Pro Lab':'مختبر المحترفين',
+    'Commission per round-trip ($)':'العمولة لكل صفقة ذهاباً وإياباً ($)',
+    'Expected trades to pass':'الصفقات المتوقعة للاجتياز',
+    'Reset probability (%)':'احتمالية إعادة التعيين (%)',
+    'Estimate: chance you blow the challenge and pay again.':'تقدير: احتمال فشلك في التحدي والدفع مجدداً.',
+    'Sticker price':'السعر المعلن','Commissions':'العمولات','Expected resets':'إعادات متوقعة',
+    'Win rate (%)':'نسبة الفوز (%)','Avg win (R)':'متوسط الربح (R)','Avg loss (R)':'متوسط الخسارة (R)',
+    'Risk per trade (% of account)':'المخاطرة لكل صفقة (% من الحساب)','Trades per day':'صفقات يومياً','Trading days':'أيام التداول',
+    '2,000 Monte Carlo runs of your stats against real firm rules. Pure math — can you pass?':'٢٠٠٠ تشغيل مونت كارلو لإحصائياتك مقابل قواعد شركات حقيقية. رياضيات خالصة — هل يمكنك الاجتياز؟',
+    'Runs that passed':'التشغيلات الناجحة','Median peak':'الذروة الوسيطة','Breach rate':'معدل الاختراق',
+    'Method: price + (commission × trades) + (price × reset probability). Commissions, trade count and reset chance are your estimates.':'الطريقة: السعر + (العمولة × الصفقات) + (السعر × احتمالية الإعادة). العمولات وعدد الصفقات واحتمالية الإعادة تقديراتك الخاصة.',
+    'Distance to breach':'المسافة إلى الاختراق','% of each limit already used':'نسبة كل حدّ مستهلكة',
+    'Daily loss used':'الخسارة اليومية المستهلكة','Max drawdown used':'أقصى تراجع مستهلك',
+    'Current total P&L — negative if down':'إجمالي الربح/الخسارة الحالي — سالب إذا كنت خاسراً',
+    'Today\'s P&L — negative if down':'ربح/خسارة اليوم — سالب إذا كنت خاسراً',
+    'Your floating + closed P&L today vs the account start.':'العائم + المغلق اليوم مقابل بداية الحساب.',
+    'Just today\'s session result.':'نتيجة جلسة اليوم فقط.',
+    'Method: used % = |negative P&L| ÷ (limit % × account size). Based on the plan\'s published rules and your manual inputs.':'الطريقة: النسبة المستهلكة = |الخسارة| ÷ (نسبة الحد × حجم الحساب). بناءً على قواعد الخطة المنشورة ومدخلاتك اليدوية.',
+    'Enter your live P&L — we tell you how close you are to the edge. Manual input, honest math.':'أدخل الربح/الخسارة الحالية — نخبرك بمدى قربك من الحد. إدخال يدوي وحساب نزيه.',
+    'Plan / account size':'الخطة / حجم الحساب',
+    '1. Your trading style?':'1. ما أسلوب تداولك؟','2. Risk per trade?':'2. ما مخاطرتك لكل صفقة؟',
+    '3. Hold positions overnight?':'3. هل تحتفظ بالصفقات ليلاً؟','4. Trade during high-impact news?':'4. هل تتداول وقت الأخبار القوية؟',
+    '5. How fast do you need payouts?':'5. ما سرعة الدفع التي تحتاجها؟',
+    'Scalper':'سكالبر','Day trader':'متداول يومي','Swing trader':'متداول سوينغ',
+    'Under 1%':'أقل من 1%','Over 2%':'أكثر من 2%','Yes':'نعم','No':'لا',
+    'Weekly or faster':'أسبوعي أو أسرع','Monthly is fine':'شهري مناسب',
     'Soon':'قريباً','Discipline is coming soon.':'الانضباط قادم قريباً.','Launching in the next version.':'سينطلق في الإصدار القادم.','Trade with PIPVANT.':'تداول مع PIPVANT.','A focused toolkit for comparing rules, sizing risk, reviewing trades, and protecting your process.':'مجموعة أدوات مركزة لمقارنة القواعد وحساب المخاطر ومراجعة الصفقات وحماية منهجك.','Get started':'ابدأ','Log in':'تسجيل الدخول','Create your account':'أنشئ حسابك','Start with the essentials.':'ابدأ بالأساسيات.','Create secure access to the complete PIPVANT toolkit.':'أنشئ وصولاً آمناً إلى مجموعة أدوات PIPVANT الكاملة.','Name':'الاسم','Email':'البريد الإلكتروني','Password':'كلمة المرور','Forgot password?':'نسيت كلمة المرور؟','Create account':'إنشاء حساب','New to PIPVANT?':'جديد في PIPVANT؟','Your credentials protect access to your workspace.':'بيانات الدخول تحمي الوصول إلى مساحة عملك.','Account recovery':'استرداد الحساب','Reset your password':'إعادة تعيين كلمة المرور','Enter the email linked to your account.':'أدخل البريد الإلكتروني المرتبط بحسابك.','Send reset link':'إرسال رابط الاستعادة','Reset link sent':'تم إرسال رابط الاستعادة','Check your inbox':'تحقق من بريدك','We sent a reset link to':'أرسلنا رابط الاستعادة إلى','Resend link':'إعادة الإرسال','Back to log in':'العودة لتسجيل الدخول','Reset links expire after 1 hour for account security.':'تنتهي صلاحية رابط الاستعادة بعد ساعة واحدة لحماية الحساب.','Profile setup':'إعداد الملف الشخصي','How should we show your name?':'كيف تريد أن يظهر اسمك؟','This name will appear across your workspace and reports.':'سيظهر هذا الاسم في مساحة عملك وتقاريرك.','Display name':'الاسم المعروض','Continue to Matcher':'المتابعة إلى المطابق','View profile':'عرض الملف الشخصي','Matcher':'المطابق','Journal':'السجل','Risk':'المخاطر','Discipline':'الانضباط','Profile':'الملف الشخصي','Trading score':'تقييم التداول','Current streak':'السلسلة الحالية','trading days':'أيام تداول','Methodology':'المنهجية','Settings':'الإعدادات','Support':'الدعم','Log out':'تسجيل الخروج','Toolkit':'الأدوات','Trade with a process':'تداول وفق منهج','Notifications':'الإشعارات','— NEW':'— جديد','No pending notifications':'لا توجد إشعارات معلقة','Account and tool alerts will appear here.':'ستظهر تنبيهات الحساب والأدوات هنا.','View all notifications':'عرض كل الإشعارات',
     'A focused trading toolkit':'مجموعة أدوات تداول مركزة','Find your fit. Size your risk.':'اعثر على الأنسب. احسب مخاطرتك.','Compare prop-firm rules clearly and calculate position risk without the noise. Built for process, not predictions.':'قارن قواعد شركات التداول بوضوح واحسب مخاطر الصفقة دون تشويش. صُممت للمنهج لا للتوقعات.','Open matcher':'فتح المطابق','Calculate risk':'حساب المخاطر','verified firms':'شركات موثقة','trades logged':'صفقات مسجلة','rules tracked':'قواعد متتبعة','data freshness':'حداثة البيانات','Quick risk check':'فحص سريع للمخاطر','LIVE CALCULATION':'حساب مباشر','Account balance':'رصيد الحساب','Stop distance':'مسافة الإيقاف','Value per point':'قيمة النقطة','Amount at risk':'المبلغ المعرض للمخاطر','Based on balance':'بناءً على الرصيد','Position size':'حجم الصفقة','Units / contracts':'وحدات / عقود','Enter all four values to calculate.':'أدخل القيم الأربع للحساب.','The problem':'المشكلة','Trading tools are fragmented.':'أدوات التداول مشتتة.','Core decisions are often split across promotional lists, disconnected calculators, and notes with no shared process.':'تتوزع القرارات الأساسية غالباً بين قوائم ترويجية وحاسبات منفصلة وملاحظات بلا منهج موحد.','Incomplete firm due diligence':'تحقق غير مكتمل من الشركات','Critical rules are difficult to compare when each source uses a different structure and standard.':'يصعب مقارنة القواعد المهمة حين يستخدم كل مصدر بنية ومعياراً مختلفين.','Fragmented workflows':'سير عمل مشتت','Research, risk sizing, journaling, and review operate across disconnected tools and records.':'يعمل البحث وحساب المخاطر والتسجيل والمراجعة عبر أدوات وسجلات منفصلة.','Opaque ranking criteria':'معايير ترتيب غير واضحة','A ranking without disclosed criteria cannot establish why one firm is a stronger fit than another.':'الترتيب دون معايير معلنة لا يوضح لماذا تناسبك شركة أكثر من أخرى.','Built for clarity':'مصمم للوضوح','A unified workflow for core decisions.':'سير عمل موحد للقرارات الأساسية.','Each tool has a defined purpose, with transparent inputs and outputs that remain unavailable until the underlying data is verified.':'لكل أداة غرض محدد ومدخلات ونتائج شفافة تبقى غير متاحة حتى يتم التحقق من بياناتها.','Compare rules in one scan':'قارن القواعد بنظرة واحدة','Filter firm constraints by the details you care about, then inspect the method behind the order.':'صفِّ قيود الشركات حسب ما يهمك ثم راجع المنهج وراء الترتيب.','Size risk precisely':'احسب المخاطر بدقة','Turn your own inputs into a transparent position-size calculation.':'حوّل مدخلاتك إلى حساب واضح لحجم الصفقة.','Review real records':'راجع سجلات حقيقية','Journal output stays grounded in trades you enter, not sample performance.':'تبقى نتائج السجل مبنية على صفقاتك الفعلية لا على أداء افتراضي.','Monitor process adherence':'راقب الالتزام بالمنهج','Review checklist completion and weekly process notes without performance incentives or gamification.':'راجع اكتمال القائمة والملاحظات الأسبوعية دون تحفيز أدائي أو تلعيب.','The toolkit':'مجموعة الأدوات','Five tools. One process.':'خمس أدوات. منهج واحد.','Independent utilities that support how you prepare, execute, and review.':'أدوات مستقلة تدعم التحضير والتنفيذ والمراجعة.','Filter prop firms by the rules and constraints that matter to you.':'صفِّ شركات التداول حسب القواعد والقيود المهمة لك.','Explore matcher →':'استكشف المطابق ←','Review your execution with clean records and meaningful context.':'راجع تنفيذك بسجلات واضحة وسياق مفيد.','Open journal →':'افتح السجل ←','Risk calculator':'حاسبة المخاطر','Turn account risk and stop distance into an exact position size.':'حوّل مخاطرة الحساب ومسافة الإيقاف إلى حجم صفقة دقيق.','Open calculator →':'افتح الحاسبة ←','Keep rules visible and review consistency without gamification.':'أبقِ القواعد واضحة وراجع الاستمرارية دون تلعيب.','Open discipline →':'افتح الانضباط ←','How it works':'كيف تعمل','Compare. Calculate. Track.':'قارن. احسب. تتبع.','A short path from understanding the constraints to reviewing your own execution.':'مسار قصير من فهم القيود إلى مراجعة تنفيذك.','Compare':'قارن','Set your priorities and inspect verified prop-firm rules with the ranking method in view.':'حدد أولوياتك وافحص قواعد الشركات الموثقة مع إظهار منهج الترتيب.','Calculate':'احسب','Enter your balance, risk, stop distance, and point value to size the position.':'أدخل الرصيد والمخاطرة ومسافة الإيقاف وقيمة النقطة لحساب حجم الصفقة.','Track':'تتبع','Log the trade, review the record, and keep the process visible for the next decision.':'سجل الصفقة وراجعها وأبقِ المنهج واضحاً للقرار التالي.','Built on restraint':'مبني على الانضباط','What the product will not do.':'ما لن يفعله المنتج.','No signals':'لا إشارات','Tools support decisions. They do not tell traders what to buy or sell.':'الأدوات تدعم القرار ولا تخبر المتداول بما يشتري أو يبيع.','No profit promises':'لا وعود بالأرباح','Calculations and comparisons stay factual, with no outcome guarantees.':'تبقى الحسابات والمقارنات واقعية دون ضمان نتائج.','Not financial advice':'ليست نصيحة مالية','Comparisons are informational only. Always verify terms on the firm\'s official site before purchasing.':'المقارنات للمعلومات فقط. تحقق دائماً من الشروط على الموقع الرسمي للشركة قبل الشراء.','No hidden scoring':'لا تقييم مخفي','Matcher results will show the criteria and methodology behind each fit.':'ستعرض نتائج المطابق المعايير والمنهج وراء كل تطابق.','Questions':'أسئلة','Know exactly what each tool does.':'اعرف بدقة ما تفعله كل أداة.','Does Matcher recommend a firm?':'هل يوصي المطابق بشركة؟','No. Matcher compares verified rules against filters you choose and shows the criteria behind the order. The final decision stays yours.':'لا. يقارن المطابق القواعد الموثقة بمرشحاتك ويعرض معايير الترتيب. القرار النهائي لك.','Where do firm rules and prices come from?':'من أين تأتي قواعد الشركات وأسعارها؟','Firm information is displayed only after its source and review date have been verified. Unverified counts and results remain unavailable.':'تُعرض معلومات الشركة فقط بعد التحقق من المصدر وتاريخ المراجعة. تبقى النتائج غير الموثقة غير متاحة.','Is the risk calculator a recommendation?':'هل حاسبة المخاطر توصية؟','No. It applies arithmetic to the balance, risk percentage, stop distance, and point value you enter. You choose and verify every input.':'لا. تطبق الحساب على الرصيد ونسبة المخاطرة ومسافة الإيقاف وقيمة النقطة التي تدخلها. أنت تختار وتتحقق من كل مدخل.','What appears in the Journal?':'ماذا يظهر في السجل؟','Only records you log. Statistics and the equity curve remain blank until actual trade entries exist.':'فقط السجلات التي تدخلها. تبقى الإحصاءات ومنحنى الرصيد فارغة حتى توجد صفقات فعلية.','Does Discipline score my trading?':'هل يقيّم الانضباط تداولي؟','No. It keeps a daily checklist and weekly review prompts visible without gamification or performance promises.':'لا. يعرض قائمة يومية وأسئلة مراجعة أسبوعية دون تلعيب أو وعود بالأداء.','Structured execution':'تنفيذ منظم','Bring the process into one place.':'اجمع المنهج في مكان واحد.','Begin with verified firm criteria or calculate risk from your own inputs.':'ابدأ بمعايير شركات موثقة أو احسب المخاطر من مدخلاتك.','Open Matcher':'فتح المطابق','PIPVANT by Orovanta · Trading tools only':'PIPVANT من Orovanta · أدوات تداول فقط',
     'Forex':'فوركس','Futures':'العقود الآجلة','Crypto-Perps':'عقود العملات الدائمة','Filters':'المرشحات','3 · ANY':'3 · الكل','Account size':'حجم الحساب','Any':'الكل','Market':'السوق','Maximum price':'السعر الأقصى','Currency':'العملة','Density':'الكثافة','Compact':'مضغوط','Comfortable':'مريح','Top Prop Firms':'أفضل شركات التداول','How we verify and rank firms':'كيف نتحقق من الشركات ونرتبها','Last updated —':'آخر تحديث —','Rows':'صفوف','Table':'جدول','Awaiting verified data':'بانتظار بيانات موثقة','Country —':'البلد —','Operating history —':'سجل التشغيل —','Asset classes —':'فئات الأصول —','Verification —':'التحقق —','Criteria':'المعايير','Rationale —':'المبرر —','Max allocation':'أقصى تخصيص','VIEW':'عرض','Account sizes':'أحجام الحسابات','Profit target':'هدف الربح','Max drawdown':'أقصى تراجع','Why it matches':'سبب التطابق','What we check':'ما نتحقق منه','PROMO —':'عرض —','Save to shortlist':'حفظ في القائمة','Rank':'الترتيب','Firm':'الشركة','Rating':'التقييم','Discount':'الخصم','Account':'الحساب','Target':'الهدف','Drawdown':'التراجع','Action':'الإجراء','No verified firms yet':'لا توجد شركات موثقة بعد','Live results stay empty until firm rules, prices, and sources are verified.':'تبقى النتائج فارغة حتى يتم التحقق من قواعد الشركات وأسعارها ومصادرها.','Verified firms':'شركات موثقة','Challenges tracked':'تحديات متتبعة','Scores will be calculated from visible filter criteria and verified source data. Counts and freshness remain blank until that data exists.':'ستُحسب التقييمات من معايير المرشحات الظاهرة والبيانات الموثقة. تبقى الأعداد والحداثة فارغة حتى تتوفر البيانات.','Review methodology':'منهجية المراجعة','Every published row will show the source and the time its firm rules were last verified. Ratings stay blank until the underlying checks are complete.':'سيعرض كل صف منشور المصدر ووقت آخر تحقق من قواعد الشركة. تبقى التقييمات فارغة حتى تكتمل الفحوصات.','Firm terms':'شروط الشركة','Account rules, targets, drawdown limits, fees, and eligible markets.':'قواعد الحساب والأهداف وحدود التراجع والرسوم والأسواق المؤهلة.','Source freshness':'حداثة المصدر','Each fact is tied to a source and a visible verification timestamp.':'كل معلومة مرتبطة بمصدر ووقت تحقق ظاهر.','Scoring rationale':'مبرر التقييم','The rating bar and “why” line explain the fit without star ratings or hidden weighting.':'يوضح شريط التقييم وسطر السبب مدى الملاءمة دون نجوم أو أوزان مخفية.','Close methodology':'إغلاق المنهجية','Firms tracked':'شركات متتبعة','Data points checked':'نقاط بيانات مفحوصة','Re-verification cadence':'وتيرة إعادة التحقق','Read how firms are reviewed':'اقرأ كيف تُراجع الشركات','Data sources':'مصادر البيانات','Review policy':'سياسة المراجعة','Optional analytics':'تحليلات اختيارية','Choose whether optional usage analytics can be enabled. Essential product functions are unaffected.':'اختر تفعيل تحليلات الاستخدام الاختيارية. وظائف المنتج الأساسية لا تتأثر.','Reject optional':'رفض الاختياري','Accept':'قبول','Every score will include methodology and source freshness.':'كل تقييم سيشمل المنهجية وحداثة المصدر.',
@@ -5705,6 +5797,12 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     if(typeof renderNotifications==='function')renderNotifications();
     if(typeof renderJournalEntries==='function'&&Array.isArray(sessionJournalEntries))renderJournalEntries();
     if(typeof sbRenderFirms==='function'&&sbFirms.length){sbRenderFirms();sbRenderDirectory();sbPopulateAccountSizes();}
+    // L2-lab: re-render Lab dynamic content on language switch
+    if(typeof sbRenderRadar==='function')sbRenderRadar();
+    if(typeof sbDnaRender==='function')sbDnaRender();
+    if(typeof sbTrueCostCalc==='function')sbTrueCostCalc();
+    if(typeof sbSimRun==='function')sbSimRun();
+    if(typeof sbBreachCalc==='function')sbBreachCalc();
     if(typeof updateProfileIdentity==='function'&&profileSession)updateProfileIdentity(profileSession.name,profileSession.bio);
     if(typeof renderProfileCertificates==='function'&&profileSession)renderProfileCertificates(profileSession.certificates);
   }
