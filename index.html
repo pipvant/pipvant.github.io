@@ -3351,14 +3351,19 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     var plans=(typeof sbPlansByFirm!=='undefined'&&sbPlansByFirm[firm.id])||[];
     if(!plans.length)return {score:0,rationale:''};
     var score=0, rationale=[];
-    var trustPts=0, totalPlans=plans.length;
-    var transparentPlans=plans.filter(function(p){var r=p.rules||{};return r.profit_split!=null&&r.max_drawdown_pct!=null&&r.drawdown_type;}).length;
-    trustPts+=Math.round((transparentPlans/Math.max(1,totalPlans))*15);
-    var hasPayout=plans.some(function(p){var r=p.rules||{};return r.payout_frequency;});
-    if(hasPayout){trustPts+=5;rationale.push('clear payouts');}
-    try{var vAt=firm.last_verified_at?new Date(firm.last_verified_at):null;if(vAt&&(Date.now()-vAt.getTime())<48*3600*1000)trustPts+=5;}catch(e){}
-    trustPts=Math.min(25,trustPts);score+=trustPts;
-    if(trustPts>=20)rationale.push('high transparency');
+    // 0. Industry Standing (25pts): PIPVANT editorial — reflects real-world
+    // reputation, years in business, payout reliability.
+    var standingTiers={
+      'FTMO':25, 'The5ers':25, 'Topstep':25,
+      'FundedNext':20, 'E8 Markets':20, 'Funding Pips':20, 'Apex Trader Funding':20,
+      'Alpha Capital Group':15, 'TakeProfitTrader':15, 'MyFundedFutures':15,
+      'FXIFY':15, 'Blue Guardian':15,
+      'Funded7':10, 'Maven Trading':10, 'PipFarm':10, 'Breakout Prop':10,
+      'Goat Funded Trader':10, 'BrightFunded':10, 'Funding Traders':10
+    };
+    var trustPts=standingTiers[firm.name]||10;
+    score+=trustPts;
+    if(trustPts>=20)rationale.push('industry leader');
     var splits=plans.map(function(p){var r=p.rules||{};return sbNum(r.profit_split);}).filter(isFinite);
     var maxSplit=splits.length?Math.max.apply(null,splits):0;
     score+=Math.min(20,maxSplit*0.2);
