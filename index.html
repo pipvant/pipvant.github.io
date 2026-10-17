@@ -2287,11 +2287,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
         <div class="control-group"><span>Density</span><div class="segmented density" role="group" aria-label="Result density"><button class="segment density-segment" type="button" data-density="compact" aria-pressed="false">Compact</button><button class="segment density-segment" type="button" data-density="comfortable" aria-pressed="true">Comfortable</button></div></div>
       </div>
 
-      <div class="cat-filter" id="catFilter" role="group" aria-label="Asset category filter">
-        <button class="cat-btn" type="button" data-cat="all" aria-pressed="true"><span class="cat-ico" aria-hidden="true">✦</span><span class="cat-label">All</span><span class="cat-count">–</span></button>
-        <button class="cat-btn" type="button" data-cat="futures" aria-pressed="false"><span class="cat-ico" aria-hidden="true">📈</span><span class="cat-label">Futures</span><span class="cat-count">–</span></button>
-        <button class="cat-btn" type="button" data-cat="cfds" aria-pressed="false"><span class="cat-ico" aria-hidden="true">💱</span><span class="cat-label">CFDs</span><span class="cat-count">–</span></button>
-        <button class="cat-btn" type="button" data-cat="crypto" aria-pressed="false"><span class="cat-ico" aria-hidden="true">₿</span><span class="cat-label">Crypto</span><span class="cat-count">–</span></button>
+      <div class="cat-filter" id="catFilter" role="group" aria-label="Asset category filter" hidden>
       </div>
 
       <section class="matcher-list" data-view="rows" data-density="comfortable" aria-labelledby="top-firms-title">
@@ -3438,23 +3434,6 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     var rankEl=q('.rank');if(rankEl)rankEl.textContent=rank;
     var logo=q('.logo-slot');sbFirmLogo(logo,firm);
     var nameEl=q('.firm-name');if(nameEl)nameEl.textContent=firm.name;
-    /* Asset category badge (FUTURES / CFDs / CRYPTO) — small pill next to the name */
-    try{
-      var _tline=q('.firm-topline');
-      if(_tline){
-        var _oldB=_tline.querySelector('.cat-badge');if(_oldB)_oldB.remove();
-        var _cat=sbCategoryOf(firm);
-        if(_cat){
-          var _cb=document.createElement('span');
-          _cb.className='cat-badge cat-'+_cat;
-          var _bar=currentLanguage==='ar';
-          _cb.textContent=(sbCatBadgeText[_cat]||{})[_bar?'ar':'en']||_cat.toUpperCase();
-          _cb.setAttribute('aria-label',(sbCatLabels[_cat]||{en:_cat,ar:_cat})[_bar?'ar':'en']);
-          if(nameEl&&nameEl.nextSibling)_tline.insertBefore(_cb,nameEl.nextSibling);
-          else _tline.appendChild(_cb);
-        }
-      }
-    }catch(_cbe){}
     var pills=card.querySelectorAll('.meta-pill');
     var hq=firm.headquarters||'';
     var pillTexts=[hq,sbPricingLabel(plans),plans.length?plans.length+(currentLanguage==='ar'?(plans.length===1?' حجم':' أحجام'):(plans.length===1?' size':' sizes')):'—'];
@@ -3569,8 +3548,6 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     var nm=document.createElement('span');nm.textContent=firm.name;
     var ev=document.createElement('span');ev.className='table-evidence';sbSourceLine(ev,firm);
     st.appendChild(nm);
-    /* Asset category badge (table view) */
-    try{var _tc=sbCategoryOf(firm);if(_tc){var _tcb=document.createElement('span');_tcb.className='cat-badge cat-'+_tc;var _tar=currentLanguage==='ar';_tcb.textContent=(sbCatBadgeText[_tc]||{})[_tar?'ar':'en']||_tc.toUpperCase();st.appendChild(_tcb);}}catch(_tce){}
     st.appendChild(ev);wf.appendChild(lg);wf.appendChild(st);td1.appendChild(wf);tr.appendChild(td1);
     var td2=document.createElement('td');var rt=document.createElement('span');rt.className='table-rating';var rs=document.createElement('strong');rs.textContent='—';rt.appendChild(rs);td2.appendChild(rt);tr.appendChild(td2);
     
@@ -4722,7 +4699,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       var logo=document.getElementById('fdLogo');if(logo)sbFirmLogo(logo,firm);
       var nm=document.getElementById('fdName');if(nm)nm.textContent=firm.name;
       var sub=document.getElementById('fdSub');
-      if(sub){var fl=sbCountryFlag(firm.headquarters);sub.textContent=(fl?fl+' ':'')+(firm.headquarters||'—')+' · '+(ar?'تم التحقق ':'Verified ')+sbTimeAgo(firm.last_verified_at||firm.updated_at);}
+      if(sub){var fl=sbCountryFlag(firm.headquarters);var _dcat=sbCategoryOf(firm);var _dcatLbl=_dcat?((sbCatBadgeText[_dcat]||{})[ar?'ar':'en']||_dcat.toUpperCase()):'';sub.textContent=(fl?fl+' ':'')+(firm.headquarters||'—')+(_dcatLbl?' · '+_dcatLbl:'')+' · '+(ar?'تم التحقق ':'Verified ')+sbTimeAgo(firm.last_verified_at||firm.updated_at);}
       var pl=document.getElementById('fdPlans');if(pl)pl.textContent=plans.length||'—';
       var mx=plans.reduce(function(m,p){var n=Number(p.account_size);return n>m?n:m;},0);
       var al=document.getElementById('fdAlloc');if(al)al.textContent=mx?sbFmtSize(mx):'—';
