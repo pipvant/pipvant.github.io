@@ -244,6 +244,7 @@
     .fd-rate-meta{display:flex;align-items:baseline;gap:6px}
     .fd-rate-meta b{font-size:17px;font-variant-numeric:tabular-nums}
     .fd-rate-meta span{font-size:11px;color:var(--muted)}
+    .fd-my-rate{font-size:11px;font-weight:700;color:#0A1628;background:linear-gradient(135deg,#F7DC7E,#D4AF37);border-radius:20px;padding:3px 10px;white-space:nowrap}
     .fd-like{display:flex;align-items:center;gap:8px;border:1px solid var(--line-strong);border-radius:999px;background:var(--surface);padding:8px 14px;cursor:pointer;font-family:inherit}
     .fd-like-ico{font-size:17px;filter:grayscale(1);opacity:.55;transition:all .15s}
     .fd-like b{font-size:14px;font-variant-numeric:tabular-nums}
@@ -2477,6 +2478,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
           <div class="fd-rate">
             <div class="fd-stars" id="fdStars" role="radiogroup" aria-label="Rate this firm"></div>
             <div class="fd-rate-meta"><b id="fdAvg">—</b><span id="fdRateCount"></span></div>
+            <span id="fdMyRate" class="fd-my-rate" hidden></span>
           </div>
           <button class="fd-like" id="fdLike" type="button" aria-pressed="false"><span class="fd-like-ico">👍</span><b id="fdLikeCount">0</b></button>
         </div>
@@ -4955,15 +4957,17 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     }
   }
   /* Community ratings + likes (real user data from Supabase) */
-  function sbRenderStars(el,avg,myRating,interactive,onRate){
+  // Stars ALWAYS render the aggregate average across all users (never personalized).
+  // A user's own rating is shown separately as a text badge (see paint()).
+  function sbRenderStars(el,avg,interactive,onRate){
     if(!el)return;el.innerHTML='';
+    var litN=Math.round(avg||0);
     for(var i=1;i<=5;i++){
       (function(n){
         var b=document.createElement('button');b.type='button';
-        b.setAttribute('role','radio');b.setAttribute('aria-checked',String(myRating===n));
+        b.setAttribute('role','radio');b.setAttribute('aria-checked','false');
         b.setAttribute('aria-label',n+' / 5');
-        var lit=myRating? n<=myRating : n<=Math.round(avg||0);
-        b.className=lit?'lit':'';
+        b.className=n<=litN?'lit':'';
         b.textContent='★';
         if(interactive){b.addEventListener('click',function(ev){ev.stopPropagation();onRate(n);});}
         else{b.style.cursor='default';}
@@ -4978,23 +4982,40 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
         likeCnt=document.getElementById('fdLikeCount');
     if(!starsEl)return;
     function paint(avg,count,myRating,likeCount,liked,canRate){
-      sbRenderStars(starsEl,avg,myRating,canRate,function(n){sbSubmitRating(firmId,n);});
+      // Stars = aggregate average only. Personal rating shown as separate badge.
+      sbRenderStars(starsEl,avg,canRate,function(n){sbSubmitRating(firmId,n);});
       if(avgEl)avgEl.textContent=count?Number(avg).toFixed(1):'—';
       if(cntEl)cntEl.textContent=count?(ar?'من ':'from ')+count+(ar?' تقييم':' ratings'):(ar?'كن أول من يقيّم':'Be the first to rate');
+      var myEl=document.getElementById('fdMyRate');
+      if(myEl){
+        if(myRating>0&&canRate){
+          myEl.hidden=false;
+          myEl.textContent=(ar?'★ تقييمك: ':'★ Your rating: ')+myRating+'/5';
+        }else{myEl.hidden=true;myEl.textContent='';}
+      }
+      try{
+        starsEl.setAttribute('aria-label',count?
+          (ar?'متوسط التقييم ':'Average rating ')+Number(avg).toFixed(1)+' / 5 '+(ar?'من ':'from ')+count+(ar?' تقييم':' ratings'):
+          (ar?'قيّم هذه الشركة':'Rate this firm'));
+      }catch(e){}
       if(likeCnt)likeCnt.textContent=likeCount||0;
       if(likeBtn){likeBtn.setAttribute('aria-pressed',String(!!liked));}
     }
     paint(0,0,0,0,false,false);
     if(typeof sb==='undefined'||!sb)return;
     var uid=(typeof sbUser!=='undefined'&&sbUser)?sbUser.id:null;
+    var uidAtCall=uid; // session guard: abort stale paints if account changes mid-flight
+    function uidNow(){return (typeof sbUser!=='undefined'&&sbUser)?sbUser.id:null;}
     sb.from('firm_ratings').select('rating,user_id').eq('firm_id',firmId).then(function(r){
+      if(uidNow()!==uidAtCall)return; // logged out / switched mid-flight
       var rows=(r&&r.data)||[],sum=0,my=0;
-      rows.forEach(function(x){sum+=Number(x.rating)||0;if(uid&&x.user_id===uid)my=Number(x.rating)||0;});
+      rows.forEach(function(x){sum+=Number(x.rating)||0;if(uidAtCall&&x.user_id===uidAtCall)my=Number(x.rating)||0;});
       var avg=rows.length?sum/rows.length:0;
       sb.from('firm_likes').select('id,user_id').eq('firm_id',firmId).then(function(l){
+        if(uidNow()!==uidAtCall)return; // logged out / switched mid-flight
         var lrows=(l&&l.data)||[],liked=false;
-        lrows.forEach(function(x){if(uid&&x.user_id===uid)liked=true;});
-        paint(avg,rows.length,my,lrows.length,liked,!!uid);
+        lrows.forEach(function(x){if(uidAtCall&&x.user_id===uidAtCall)liked=true;});
+        paint(avg,rows.length,my,lrows.length,liked,!!uidAtCall);
         // BUG FIX: sync global community cache so matcher ranking updates immediately
         // (previously the cache stayed stale until page reload after rating/liking)
         try{
@@ -5007,10 +5028,10 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
           if(typeof sbRenderFirms==='function')sbRenderFirms();
           if(typeof sbRenderDirectory==='function')sbRenderDirectory();
         }catch(_ce){}
-        if(!uid&&starsEl){starsEl.title=ar?'سجل الدخول للتقييم':'Log in to rate';}
+        if(!uidAtCall&&starsEl){starsEl.title=ar?'سجل الدخول للتقييم':'Log in to rate';}
         if(likeBtn){likeBtn.onclick=function(ev){if(ev)ev.stopPropagation();sbToggleLike(firmId);};
-          likeBtn.title=uid?'':(ar?'سجل الدخول للإعجاب':'Log in to like');}
-      },function(){paint(avg,rows.length,my,0,false,!!uid);});
+          likeBtn.title=uidAtCall?'':(ar?'سجل الدخول للإعجاب':'Log in to like');}
+      },function(){if(uidNow()!==uidAtCall)return;paint(avg,rows.length,my,0,false,!!uidAtCall);});
     },function(){});
   }
   function sbSubmitRating(firmId,n){
@@ -5600,6 +5621,8 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
             if(_wiped)return;_wiped=true;
             try{if(typeof clearUserState==='function')clearUserState();}catch(e){}
             _runPostLogin();
+            // Ratings leak fix: repaint open firm detail for the NEW user (their own rating or aggregate)
+            try{if(typeof sbDetailFirmId!=='undefined'&&sbDetailFirmId&&typeof sbLoadCommunity==='function')sbLoadCommunity(sbDetailFirmId);}catch(_sw){}
           };
           if(_sp&&typeof _sp.then==='function'){
             _sp.then(_wipeThenProceed).catch(_wipeThenProceed);
@@ -5613,6 +5636,8 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       }else if(event==='SIGNED_OUT'){
         sbUser=null;
         try{if(typeof clearUserState==='function')clearUserState();}catch(_so){}
+        // Ratings leak fix: repaint open firm detail as logged-out (aggregate only, no personal state)
+        try{if(typeof sbDetailFirmId!=='undefined'&&sbDetailFirmId&&typeof sbLoadCommunity==='function')sbLoadCommunity(sbDetailFirmId);}catch(_so2){}
       }else if(event==='TOKEN_REFRESHED'&&session&&session.user){
         sbUser=session.user;
       }
@@ -7631,6 +7656,8 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       if(sb){sbQuiet(sb.auth.signOut());}
       sbUser=null;
       clearUserState();
+      // Ratings leak fix: repaint open firm detail as logged-out
+      try{if(typeof sbDetailFirmId!=='undefined'&&sbDetailFirmId&&typeof sbLoadCommunity==='function')sbLoadCommunity(sbDetailFirmId);}catch(_lo){}
       document.body.classList.remove('app-ready','show-landing');
       document.body.classList.add('auth-active','show-auth','auth-returning');setTimeout(function(){document.body.classList.remove('auth-returning');},210);
       document.getElementById('signupForm').reset();
