@@ -157,6 +157,8 @@
     .firm-expand{min-width:0;min-height:54px;display:grid;grid-template-columns:20px 44px minmax(0,1fr) 16px;align-items:center;gap:8px;padding:0;border:0;background:transparent;color:inherit;text-align:left;cursor:pointer}
     .rank{color:var(--platinum);font:500 13px/1 "IBM Plex Mono",monospace;text-align:center}
     .logo-slot{width:40px;height:40px;border:1px solid var(--line-strong);border-radius:8px;background:var(--raised);display:grid;place-items:center;color:var(--silver);font:500 12px/1 "IBM Plex Mono",monospace}
+    .logo-slot{position:relative}
+    .logo-slot .new-badge{position:absolute;top:-8px;right:-8px;background:#D4AF37;color:#0A1628;font:800 9px/1 "Space Grotesk",sans-serif;padding:3px 6px;border-radius:6px;letter-spacing:.05em;box-shadow:0 2px 8px rgba(0,0,0,.3);z-index:2}
     .firm-name{min-width:0;font-family:"Space Grotesk",sans-serif;font-size:18px;font-weight:600;color:var(--text)}
     .discount-slot{display:none}.firm-expand .discount-slot{display:none!important}.firm-expand .discount-slot.promo-badge{display:inline-flex!important}
     /* PIPVANT-WAVE1: promo badge, updated stamp, PT:DD chip, price strike, country flags */
@@ -3249,14 +3251,51 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
   var SUPABASE_URL='https://acpkzavmifjwnskiaret.supabase.co';
   var SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFjcGt6YXZtaWZqd25za2lhcmV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyMDk1ODcsImV4cCI6MjEwNjc4NTU4N30.9-k-DoB6467EXTPKrvWUi-LRDPbSSC30f6BgrZezo2A';
   var sb=null,sbUser=null,sbFirms=[],sbPlansByFirm={},sbPendingName='';
+  sbLoadNewFirms(); // Preload NEW badge data
   try{if(window.supabase&&window.supabase.createClient){sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);}}catch(sbInitErr){sb=null;}
   function sbQuiet(p){if(p&&typeof p.then==='function'){p.then(function(){},function(){});}return p;}
   function sbFmtDate(iso){try{var d=new Date(iso);if(isNaN(d.getTime()))return '—';return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});}catch(e){return '—';}}
   function sbDomain(url){try{return String(new URL(url).hostname).replace(/^www\./,'');}catch(e){return url||'—';}}
+  var _newFirmsCache=null,_newFirmsLoading=false;
+  function sbLoadNewFirms(cb){
+    if(_newFirmsCache!==null){if(cb)cb(_newFirmsCache);return;}
+    if(_newFirmsLoading)return;
+    _newFirmsLoading=true;
+    fetch('assets/new-firms.json').then(function(r){return r.json();}).then(function(d){
+      _newFirmsCache=d.new_firms||[];_newFirmsLoading=false;if(cb)cb(_newFirmsCache);
+    }).catch(function(){_newFirmsCache=[];_newFirmsLoading=false;if(cb)cb([]);});
+  }
+  function sbIsNewFirm(firmId){
+    if(!_newFirmsCache||!firmId)return false;
+    var now=Date.now();
+    for(var i=0;i<_newFirmsCache.length;i++){
+      var nf=_newFirmsCache[i];
+      if(String(nf.id)===String(firmId)){
+        var added=new Date(nf.added_at).getTime();
+        var daysOld=(now-added)/(1000*60*60*24);
+        return daysOld<3; // NEW badge for 3 days
+      }
+    }
+    return false;
+  }
   function sbFirmLogo(el,firm){
     if(!el)return;
     var letter=(firm.name||'?').charAt(0).toUpperCase();
     el.setAttribute('aria-label',firm.name||'Firm');
+    // NEW badge (auto-hides after 3 days)
+    (function(){
+      var existing=el.querySelector('.new-badge');
+      if(existing)existing.remove();
+      if(sbIsNewFirm(firm.id)){
+        var badge=document.createElement('span');
+        badge.className='new-badge';
+        badge.textContent='NEW';
+        el.appendChild(badge);
+      } else if(_newFirmsCache===null){
+        // Cache not loaded yet — retry after load
+        sbLoadNewFirms(function(){sbFirmLogo(el,firm);});
+      }
+    })();
     var domain='';
     try{domain=String(new URL(firm.website||'').hostname).replace(/^www\./,'');}catch(e){domain='';}
     if(!domain){el.textContent=letter;return;}
