@@ -3731,9 +3731,9 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
             heart.setAttribute('aria-label',(currentLanguage==='ar'?'حفظ ':'Save ')+firm.name);
             topline.appendChild(heart);
           }
-          var uh=function(){var s=sbIsShortlisted(firm.id);heart.textContent=s?'♥':'♡';heart.classList.toggle('on',s);};
+          var uh=function(){try{var s=sbIsShortlisted(firm.id);heart.textContent=s?'♥':'♡';heart.classList.toggle('on',s);}catch(_u){heart.textContent='♡';}};
+          heart.onclick=function(ev){if(ev)ev.stopPropagation();try{var n=sbToggleShortlist(firm.id);uh();if(typeof showToast==='function')showToast(n?((currentLanguage==='ar'?'تحفظات ':'Saved ')+firm.name):((currentLanguage==='ar'?'تحيدات ':'Removed ')+firm.name));}catch(_h){}};
           uh();
-          heart.onclick=function(ev){if(ev)ev.stopPropagation();var n=sbToggleShortlist(firm.id);uh();if(typeof showToast==='function')showToast(n?((currentLanguage==='ar'?'تحفظات ':'Saved ')+firm.name):((currentLanguage==='ar'?'تحيدات ':'Removed ')+firm.name));};
         }
         var fcore=q('.firm-core');
         var _promo=firstRules?sbBestPromo(firstRules):null;
@@ -4548,9 +4548,10 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     });
   }
   function sbGetShortlist(){try{return JSON.parse(localStorage.getItem('pipvant_shortlist')||'[]');}catch(e){return[];}}
-  function sbIsShortlisted(fid){return sbGetShortlist().indexOf(fid)!==-1;}
+  function sbIsShortlisted(fid){var l=sbGetShortlist();fid=String(fid);for(var i=0;i<l.length;i++){if(String(l[i])===fid)return true;}return false;}
   function sbToggleShortlist(fid){
-    var list=sbGetShortlist();var i=list.indexOf(fid);
+    var list=sbGetShortlist();fid=String(fid);var i=-1;
+    for(var k=0;k<list.length;k++){if(String(list[k])===fid){i=k;break;}}
     if(i===-1){list.push(fid);}else{list.splice(i,1);}
     try{localStorage.setItem('pipvant_shortlist',JSON.stringify(list));}catch(e){}
     if(typeof sbSyncUserPref==='function')sbSyncUserPref('shortlist',list);
