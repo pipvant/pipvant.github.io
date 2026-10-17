@@ -3328,11 +3328,11 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     if(!iso)return '';
     var d=new Date(iso).getTime();if(!isFinite(d))return '';
     var mins=Math.max(0,Math.floor((Date.now()-d)/60000));
-    if(mins<60)return currentLanguage==='ar'?('قبل '+mins+' د'):mins+'m ago';
+    if(mins<60)return currentLanguage==='ar'?('منذ '+mins+' د'):mins+'m ago';
     var h=Math.floor(mins/60);
-    if(h<24)return currentLanguage==='ar'?('قبل '+h+' س'):h+'h ago';
+    if(h<24)return currentLanguage==='ar'?('منذ '+h+' س'):h+'h ago';
     var days=Math.floor(h/24);
-    return currentLanguage==='ar'?('قبل '+days+' يوم'):days+'d ago';
+    return currentLanguage==='ar'?('منذ '+days+' يوم'):days+'d ago';
   }
   function sbPTDD(rules){
     if(!rules)return null;
@@ -4236,7 +4236,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     var preview=document.querySelector('#matcher .preview-label');if(preview)preview.textContent=sbFirms.length+(currentLanguage==='ar'?' شركات موثقة':' verified firms');
     var latest=null;sbFirms.forEach(function(f){if(f.updated_at&&(!latest||f.updated_at>latest))latest=f.updated_at;});
     var metaSpan=document.getElementById('lastUpdatedSpan');
-    if(metaSpan)metaSpan.textContent=(currentLanguage==='ar'?'آخر تحديث ':'Last updated ')+sbFmtDate(latest);
+    if(metaSpan)metaSpan.textContent=(currentLanguage==='ar'?'آخر تحديث ':'Last updated ')+sbTimeAgo(latest);
     /* Freshness badge: honest floor — every firm shown was verified at least this recently.
        Mega-audit H9 fix: use ONLY last_verified_at (was falling back to
        updated_at, showing "verified today" for firms never verified). */
@@ -4245,8 +4245,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       sbFirms.forEach(function(f){var v=f.last_verified_at;if(v){verifiedCount++;if(!oldestVerified||v<oldestVerified)oldestVerified=v;}});
       var fb=document.getElementById('freshnessBadge'),ft=document.getElementById('freshnessText');
       if(fb&&ft&&oldestVerified&&verifiedCount===sbFirms.length){
-        var fd=Math.floor((Date.now()-new Date(oldestVerified).getTime())/86400000);
-        var rel=fd<=0?(currentLanguage==='ar'?'اليوم':'today'):fd===1?(currentLanguage==='ar'?'أمس':'yesterday'):fd+(currentLanguage==='ar'?' يوم':'d ago');
+        var rel=sbTimeAgo(oldestVerified);
         ft.textContent=(currentLanguage==='ar'?'✓ تم التحقق من البيانات ':'✓ Data verified ')+rel;
         fb.title=(currentLanguage==='ar'?'أقدم تحقق: ':'Oldest verification: ')+sbFmtDate(oldestVerified);
         fb.hidden=false;
@@ -4565,7 +4564,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     var ps=document.createElement('p');ps.className='fd-note';
     var a=document.createElement('a');var href=firm.source||firm.website||'#';a.href=/^https?:\/\//i.test(href)?href:'#';a.target='_blank';a.rel='noopener';a.style.color='var(--accent)';a.textContent=sbDomain(firm.source||firm.website);
     ps.appendChild(a);
-    ps.appendChild(document.createTextNode(' · '+(ar?'تم التحقق ':'Verified ')+sbFmtDate(firm.last_verified_at||firm.updated_at)));
+    ps.appendChild(document.createTextNode(' · '+(ar?'تم التحقق ':'Verified ')+sbTimeAgo(firm.last_verified_at||firm.updated_at)));
     el.appendChild(ps);
   }
   function sbFillFdChallenges(firm,plans,ar){
@@ -4723,7 +4722,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       var logo=document.getElementById('fdLogo');if(logo)sbFirmLogo(logo,firm);
       var nm=document.getElementById('fdName');if(nm)nm.textContent=firm.name;
       var sub=document.getElementById('fdSub');
-      if(sub){var fl=sbCountryFlag(firm.headquarters);sub.textContent=(fl?fl+' ':'')+(firm.headquarters||'—')+' · '+(ar?'تم التحقق ':'Verified ')+sbFmtDate(firm.last_verified_at||firm.updated_at);}
+      if(sub){var fl=sbCountryFlag(firm.headquarters);sub.textContent=(fl?fl+' ':'')+(firm.headquarters||'—')+' · '+(ar?'تم التحقق ':'Verified ')+sbTimeAgo(firm.last_verified_at||firm.updated_at);}
       var pl=document.getElementById('fdPlans');if(pl)pl.textContent=plans.length||'—';
       var mx=plans.reduce(function(m,p){var n=Number(p.account_size);return n>m?n:m;},0);
       var al=document.getElementById('fdAlloc');if(al)al.textContent=mx?sbFmtSize(mx):'—';
