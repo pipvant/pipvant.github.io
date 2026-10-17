@@ -192,9 +192,6 @@
       #matcher .firm-expand .discount-slot{display:none!important}
       /* compact VIEW */
       #matcher .slot-cta{min-width:0;padding:0 12px;min-height:36px;font-size:10px;flex:0 0 auto}
-      /* compare toggle: small clean button next to VIEW (was ugly gray square overlapping trophy) */
-      #matcher .compare-toggle{left:auto!important;right:66px;top:50%!important;transform:translateY(-50%);width:30px;height:30px;border-radius:10px;font-size:14px;background:var(--sunken);border:1px solid var(--line);color:var(--muted);display:grid;place-items:center;z-index:5}
-      #matcher .compare-toggle[aria-pressed="true"]{background:#D4AF37;border-color:#D4AF37;color:#0A1628}
     }
     /* --- firm detail page --- */
     .fd-wrap{max-width:720px;margin:0 auto;padding:14px 16px 0}
@@ -206,6 +203,9 @@
     .fd-titlewrap h2{font-size:22px;margin:0;line-height:1.35}
     .fd-titlewrap p{color:var(--muted);font-size:13px;margin:4px 0 0}
     .fd-heart{background:none;border:0;font-size:26px;color:var(--muted);padding:8px;cursor:pointer;line-height:1}
+    .fd-heart.on{color:#D4AF37}
+    .fd-compare{background:none;border:0;font-size:22px;color:var(--muted);padding:8px;cursor:pointer;line-height:1}
+    .fd-compare.on{color:#D4AF37}
     .fd-heart.on{color:#D4AF37}
     .fd-hero{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
     .fd-stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 8px;text-align:center}
@@ -2410,6 +2410,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
             <p id="fdSub">—</p>
           </div>
           <button class="pfm-heart fd-heart" id="fdHeart" type="button" aria-label="Save firm">♡</button>
+          <button class="pfm-heart fd-compare" id="fdCompare" type="button" aria-label="Add to compare" title="Compare">⚖</button>
         </header>
         <div class="fd-hero">
           <div class="fd-stat"><b id="fdPlans">—</b><span data-fd-lbl="plans">Plans</span></div>
@@ -3483,15 +3484,8 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
           }else{dslot.classList.remove('show','promo-badge');dslot.style.display='none';}
         }
       }catch(_pfm){}
-      /* WAVE 2b — compare toggle (⚖) on each card */
-      try{
-        var ct=card.querySelector('.compare-toggle');
-        if(!ct){ct=document.createElement('button');ct.className='compare-toggle';ct.type='button';card.appendChild(ct);}
-        ct.setAttribute('aria-pressed',String((window.sbCompareIds||[]).indexOf(String(firm.id))!==-1));
-        ct.setAttribute('aria-label',currentLanguage==='ar'?'قارن '+firm.name:'Compare '+firm.name);
-        ct.textContent='⚖';
-        ct.onclick=function(ev){ev.stopPropagation();if(typeof sbToggleCompare==='function')sbToggleCompare(firm.id);};
-      }catch(_ct){}
+      /* WAVE 2b — compare toggle REMOVED from cards (user: cleaner without it; compare lives on detail page) */
+      try{var _ctOld=card.querySelector('.compare-toggle');if(_ctOld)_ctOld.remove();}catch(_ct2){}
       var toggle=function(){
         if(typeof sbOpenFirmDetail==='function')sbOpenFirmDetail(firm.id);
       };
@@ -4549,6 +4543,13 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
         var uh=function(){var s=sbIsShortlisted(firm.id);heart.textContent=s?'♥':'♡';heart.classList.toggle('on',s);};
         uh();
         heart.onclick=function(ev){if(ev)ev.stopPropagation();var n=sbToggleShortlist(firm.id);uh();if(typeof showToast==='function')showToast(n?((ar?'تحفظات ':'Saved ')+firm.name):((ar?'تحيدات ':'Removed ')+firm.name));if(typeof sbRenderFirms==='function')try{sbRenderFirms();}catch(e){}};
+      }
+      /* Compare lives here now (removed from cards) */
+      var fcmp=document.getElementById('fdCompare');
+      if(fcmp){
+        var uc=function(){var s=(window.sbCompareIds||[]).indexOf(String(firm.id))!==-1;fcmp.classList.toggle('on',s);fcmp.setAttribute('aria-pressed',String(s));};
+        uc();
+        fcmp.onclick=function(ev){if(ev)ev.stopPropagation();if(typeof sbToggleCompare==='function')sbToggleCompare(firm.id);uc();if(typeof showToast==='function')showToast((window.sbCompareIds||[]).indexOf(String(firm.id))!==-1?(ar?'تزادت للمقارنة ':'Added to compare '):(ar?'تحيدات من المقارنة ':'Removed from compare '));};
       }
       var L={back:ar?'رجوع للمطابق':'Back to matcher',plans:ar?'الخطط':'Plans',alloc:ar?'أقصى تخصيص':'Max allocation',ptdd:ar?'أفضل PT:DD':'Best PT:DD',tO:ar?'نظرة عامة':'Overview',tC:ar?'التحديات':'Challenges',tP:ar?'الدفعات':'Payouts',copy:ar?'نسخ كود PV':'Copy PV code'};
       document.querySelectorAll('#firm-detail [data-fd-lbl]').forEach(function(elm){
