@@ -2411,7 +2411,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
         <div class="directory-toolbar">
           <div class="directory-search"><svg width="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="m16 16 4 4"/></svg><label class="visually-hidden" for="directorySearch">Search firms</label><input id="directorySearch" type="search" autocomplete="off" placeholder="Search firms" aria-label="Search firms"></div>
           <div class="directory-actions">
-            <div class="directory-sort"><label class="visually-hidden" for="directorySort">Sort firms</label><select id="directorySort" aria-label="Sort firms"><option>Recommended</option><option>Price: low to high</option></select></div>
+            <div class="directory-sort"><label class="visually-hidden" for="directorySort">Sort firms</label><select id="directorySort" aria-label="Sort firms"><option>Recommended</option><option>Price: low to high</option><option>Price: high to low</option><option>Profit split: high to low</option><option>Max drawdown: high to low</option></select></div>
             <button class="directory-filter-button" id="openDirectoryFilters" type="button" aria-haspopup="dialog" aria-controls="directoryFilterSheet"><svg width="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h16M7 12h10m-7 5h4"/></svg><span>Filters</span><span class="filter-count" id="directoryFilterCount" data-count="0">0</span></button>
           </div>
         </div>
@@ -3466,7 +3466,11 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
             var alloc=card.querySelector('.allocation strong');
             if(alloc&&!card.querySelector('.price-strike')){
               var was=document.createElement('span');was.className='price-strike';
-              was.textContent=sbFmtUSD(Math.round(minP));
+              // Respect the plan's original currency (€ for FTMO/BrightFunded)
+              var minPlan=plans.filter(function(p){return isFinite(Number(p.price));}).sort(function(a,b){return Number(a.price)-Number(b.price);})[0];
+              var pcur=minPlan?(minPlan.currency||'USD'):'USD';
+              var psym=pcur==='EUR'?'€':pcur==='MAD'?'MAD ':'$';
+              was.textContent=psym+Math.round(minP).toLocaleString('en-US');
               alloc.appendChild(was);
             }
           }
@@ -3752,7 +3756,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       case 'firm':return firm.name||'—';
       case 'hq':return (sbCountryFlag(firm.headquarters)?sbCountryFlag(firm.headquarters)+' ':'')+(firm.headquarters||'—');
       case 'sizes':return sbSizeRange(plans)||'—';
-      case 'price':{var ps=plans.map(function(p){return sbNum(p.price);}).filter(isFinite);return ps.length?sbFmtUSD(Math.min.apply(null,ps)):'—';}
+      case 'price':{var pso=plans.map(function(p){return {price:sbNum(p.price),currency:p.currency||'USD'};}).filter(function(x){return isFinite(x.price);}).sort(function(a,b){return a.price-b.price;});if(!pso.length)return '—';var pcsym=pso[0].currency==='EUR'?'€':pso[0].currency==='MAD'?'MAD ':'$';return pcsym+pso[0].price.toLocaleString('en-US');}
       case 'target':return sbPlanTarget(r)||'—';
       case 'daily':return (r.daily_loss_pct!=null&&isFinite(Number(r.daily_loss_pct)))?r.daily_loss_pct+'%':'—';
       case 'maxdd':{var v=(r.max_drawdown_pct!=null&&isFinite(Number(r.max_drawdown_pct)))?r.max_drawdown_pct+'%':'—';return v+(r.drawdown_type?' ('+String(r.drawdown_type).split(' ')[0]+')':'');}
@@ -4629,6 +4633,47 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       kr.slice(0,6).forEach(function(k){var li=document.createElement('li');li.textContent=k;ul.appendChild(li);});
       el.appendChild(ul);
     }
+    // AUTO-GENERATED PROS & CONS (from verified data only)
+    (function(){
+      var pros=[],cons=[];
+      var allRules=plans.map(function(p){return p.rules||{};});
+      var maxSplit=Math.max.apply(null,allRules.map(function(r){return sbNum(r.profit_split);}).filter(isFinite).concat([0]));
+      var minTarget=Math.min.apply(null,allRules.map(function(r){return sbNum(r.profit_target_pct);}).filter(isFinite).concat([Infinity]));
+      var hasStatic=allRules.some(function(r){return /static/i.test(r.drawdown_type||'');});
+      var hasTrailing=allRules.some(function(r){return /trailing/i.test(r.drawdown_type||'');});
+      var hasPromo=plans.some(function(p){return p.promo_code||(p.rules&&p.rules.promo_code);});
+      var hasPayout=allRules.some(function(r){return r.payout_frequency;});
+      var isMonthly=allRules.some(function(r){return /monthly/i.test(r.pricing_model||'');});
+      if(maxSplit>=90)pros.push((ar?'تقسيم أرباح عالي ':'High profit split ')+maxSplit+'%');
+      else if(maxSplit>=80)pros.push((ar?'تقسيم أرباح جيد ':'Good profit split ')+maxSplit+'%');
+      if(hasStatic)pros.push(ar?'تراجع ثابت (متسامح)':'Static drawdown (forgiving)');
+      if(minTarget<=8&&isFinite(minTarget))pros.push((ar?'هدف ربح منخفض ':'Low profit target ')+minTarget+'%');
+      if(hasPromo)pros.push(ar?'برومو نشط':'Active promo');
+      if(plans.length>=10)pros.push(ar?'برامج متعددة':'Multiple programs');
+      if(hasTrailing)cons.push(ar?'تراجع متحرك (صارم)':'Trailing drawdown (strict)');
+      if(minTarget>10&&isFinite(minTarget))cons.push((ar?'هدف ربح مرتفع ':'High profit target ')+minTarget+'%');
+      if(isMonthly)cons.push(ar?'اشتراك شهري':'Monthly subscription');
+      if(!hasPayout)cons.push(ar?'شروط السحب غير واضحة':'Payout terms unclear');
+      if(pros.length||cons.length){
+        sec(ar?'المميزات والعيوب':'Pros & cons');
+        var pc=document.createElement('div');pc.className='fd-proscons';
+        if(pros.length){
+          var pd=document.createElement('div');pd.className='fd-pros';
+          var ph=document.createElement('strong');ph.textContent=ar?'✓ المميزات':'✓ Pros';pd.appendChild(ph);
+          var pu=document.createElement('ul');
+          pros.slice(0,4).forEach(function(t){var li=document.createElement('li');li.textContent=t;pu.appendChild(li);});
+          pd.appendChild(pu);pc.appendChild(pd);
+        }
+        if(cons.length){
+          var cd=document.createElement('div');cd.className='fd-cons';
+          var ch=document.createElement('strong');ch.textContent=ar?'✗ العيوب':'✗ Cons';cd.appendChild(ch);
+          var cu=document.createElement('ul');
+          cons.slice(0,4).forEach(function(t){var li=document.createElement('li');li.textContent=t;cu.appendChild(li);});
+          cd.appendChild(cu);pc.appendChild(cd);
+        }
+        el.appendChild(pc);
+      }
+    })();
     // restricted countries
     if(firm.countries_restricted){
       var rc=String(firm.countries_restricted).split(/[,;]/).map(function(s){return s.trim();}).filter(Boolean);
@@ -6111,8 +6156,24 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
           score+=compPts;
           return {score:Math.round(score), rationale:rationale.join(', ')};
         }
-        if(/price/i.test(mode)){
+        if(/price.*low to high/i.test(mode)){
           cards.sort(function(a,b){return minPriceOf(firmOf(a))-minPriceOf(firmOf(b));});
+        }else if(/price.*high to low/i.test(mode)){
+          cards.sort(function(a,b){return minPriceOf(firmOf(b))-minPriceOf(firmOf(a));});
+        }else if(/profit split/i.test(mode)){
+          cards.sort(function(a,b){
+            var pa=sbPlansByFirm[(firmOf(a)||{}).id]||[], pb=sbPlansByFirm[(firmOf(b)||{}).id]||[];
+            var sa=Math.max.apply(null,pa.map(function(p){return sbNum((p.rules||{}).profit_split);}).filter(isFinite).concat([0]));
+            var sb2=Math.max.apply(null,pb.map(function(p){return sbNum((p.rules||{}).profit_split);}).filter(isFinite).concat([0]));
+            return sb2-sa;
+          });
+        }else if(/max drawdown/i.test(mode)){
+          cards.sort(function(a,b){
+            var pa=sbPlansByFirm[(firmOf(a)||{}).id]||[], pb=sbPlansByFirm[(firmOf(b)||{}).id]||[];
+            var da=Math.max.apply(null,pa.map(function(p){return sbNum((p.rules||{}).max_drawdown_pct);}).filter(isFinite).concat([0]));
+            var db=Math.max.apply(null,pb.map(function(p){return sbNum((p.rules||{}).max_drawdown_pct);}).filter(isFinite).concat([0]));
+            return db-da;
+          });
         }else{
           // Recommended: PIPVANT Score (transparent ranking per methodology)
           cards.sort(function(a,b){
