@@ -3472,7 +3472,17 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
                   });
                 });
               })
-              .catch(function(){sbRenderFirms();sbRenderDirectory();sbPopulateAccountSizes();});
+              .catch(function(){
+                sbRenderFirms();sbRenderDirectory();sbPopulateAccountSizes();
+                // Safety net for NEW badges even on community-load failure
+                sbLoadNewFirms(function(){
+                  document.querySelectorAll('.logo-slot[data-firm-id]').forEach(function(el){
+                    var fid=el.getAttribute('data-firm-id');
+                    var firm=null;sbFirms.forEach(function(f){if(String(f.id)===String(fid))firm=f;});
+                    if(firm)sbRefreshNewBadge(el,firm);
+                  });
+                });
+              });
           })
           .catch(function(){sbRenderFirms();sbRenderDirectory();sbPopulateAccountSizes();if(typeof sbInitLab==='function')sbInitLab();});
       })
