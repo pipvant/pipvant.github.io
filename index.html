@@ -159,6 +159,8 @@
     .logo-slot{width:40px;height:40px;border:1px solid var(--line-strong);border-radius:8px;background:var(--raised);display:grid;place-items:center;color:var(--silver);font:500 12px/1 "IBM Plex Mono",monospace}
     .logo-slot{position:relative}
     .logo-slot .new-badge{position:absolute;top:-8px;right:-8px;background:#D4AF37;color:#0A1628;font:800 9px/1 "Space Grotesk",sans-serif;padding:3px 6px;border-radius:6px;letter-spacing:.05em;box-shadow:0 2px 8px rgba(0,0,0,.3);z-index:2}
+    .eyebrow .new-badge{display:inline-block;position:static;background:#D4AF37;color:#0A1628;font:800 9px/1 "Space Grotesk",sans-serif;padding:3px 8px;border-radius:6px;letter-spacing:.06em;margin-inline-start:8px;vertical-align:middle}
+    .eyebrow .cat-badge{margin-inline-start:6px;vertical-align:middle}
     .firm-name{min-width:0;font-family:"Space Grotesk",sans-serif;font-size:18px;font-weight:600;color:var(--text)}
     .discount-slot{display:none}.firm-expand .discount-slot{display:none!important}.firm-expand .discount-slot.promo-badge{display:inline-flex!important}
     /* PIPVANT-WAVE1: promo badge, updated stamp, PT:DD chip, price strike, country flags */
@@ -3168,7 +3170,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
 <div class="firm-detail-sheet" id="firmDetailSheet" role="dialog" aria-modal="true" aria-labelledby="firmDetailTitle">
   <div class="firm-detail-panel">
     <div class="grabber"></div>
-    <div class="sheet-title-row"><div><p class="eyebrow">Verified firm profile</p><h3 id="firmDetailTitle">—</h3><p>Data updated —</p></div><button class="sheet-close" id="closeFirmDetail" type="button" aria-label="Close firm details"><svg width="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+    <div class="sheet-title-row"><div><p class="eyebrow">Verified firm profile <span class="new-badge" id="firmDetailNewBadge" hidden>NEW</span> <span class="cat-badge" id="firmDetailCatBadge" hidden></span></p><h3 id="firmDetailTitle">—</h3><p>Data updated —</p></div><button class="sheet-close" id="closeFirmDetail" type="button" aria-label="Close firm details"><svg width="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
     <div class="sheet-tabs" role="tablist" aria-label="Firm detail sections">
       <button class="sheet-tab" type="button" role="tab" aria-selected="true" data-sheet-tab="overview">Overview</button>
       <button class="sheet-tab" type="button" role="tab" aria-selected="false" data-sheet-tab="challenges">Challenges</button>
@@ -3604,7 +3606,9 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
      Unmapped firms appear under "All" only. */
   var sbCatByFirm={
     'Apex Trader Funding':'futures','MyFundedFutures':'futures','TakeProfitTrader':'futures','Topstep':'futures',
-    'FTMO':'cfds','FundedNext':'cfds','Funding Pips':'cfds','E8 Markets':'cfds','The5ers':'cfds','Alpha Capital Group':'cfds'
+    'FTMO':'cfds','FundedNext':'cfds','Funding Pips':'cfds','E8 Markets':'cfds','The5ers':'cfds','Alpha Capital Group':'cfds',
+    'Funded7':'cfds','Blue Guardian':'cfds','FXIFY':'cfds','Goat Funded Trader':'cfds','Breakout Prop':'cfds',
+    'PipFarm':'cfds','Maven Trading':'cfds','Funding Traders':'cfds','BrightFunded':'cfds'
   };
   var sbActiveCat='all';
   function sbCategoryOf(firm){return (firm&&sbCatByFirm[firm.name])||null;}
@@ -4451,6 +4455,18 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     var plans=sbPlansByFirm[firm.id]||[];var rules=plans.length?plans[0].rules:null;
     var sheet=document.getElementById('firmDetailSheet');if(!sheet)return;
     var title=document.getElementById('firmDetailTitle');if(title)title.textContent=firm.name;
+    // NEW badge + category badge on detail sheet
+    var newBadge=document.getElementById('firmDetailNewBadge');
+    if(newBadge)newBadge.hidden=!sbIsNewFirm(firm.id);
+    var catBadge=document.getElementById('firmDetailCatBadge');
+    if(catBadge){
+      var cat=sbCategoryOf(firm);
+      if(cat&&sbCatBadgeText[cat]){
+        catBadge.hidden=false;
+        catBadge.className='cat-badge cat-'+cat;
+        catBadge.textContent=(sbCatBadgeText[cat]||{})[currentLanguage==='ar'?'ar':'en']||cat.toUpperCase();
+      }else{catBadge.hidden=true;}
+    }
     var sub=sheet.querySelector('.sheet-title-row div p:last-child');
     // C-1-matcher fix: disclose that rules are from the first plan (not all).
     if(sub)sub.textContent=(currentLanguage==='ar'?'تم تحديث البيانات ':'Data updated ')+sbTimeAgo(firm.updated_at)+(plans.length>1?(currentLanguage==='ar'?' · القواعد لأول خطة':' · Rules for first plan'):'');
