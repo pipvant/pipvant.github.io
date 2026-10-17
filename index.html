@@ -243,6 +243,7 @@
     .fd-planrow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;background:var(--surface)}
     .fd-planrow .ps b{font-size:16px;font-variant-numeric:tabular-nums}
     .fd-planrow .pm{font-size:11px;color:var(--muted);margin-top:2px}
+    .fd-planrow .pm-extra{font-size:10px;opacity:.85}
     .fd-planrow .pp{text-align:end;font-variant-numeric:tabular-nums;flex:0 0 auto}
     .fd-planrow .pp b{font-size:15px}
     .fd-planrow .pp s{display:block;font-size:11px;color:var(--muted);font-weight:400}
@@ -3264,6 +3265,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
   }
   function sbLoadFirms(){
     if(!sb)return;
+    try{sbLastFirmLoad=Date.now();}catch(e){}
     /* last_verified_at may not exist until the DB migration runs — retry without it so the matcher never breaks. */
     var firmCols='id,name,website,headquarters,countries_allowed,countries_restricted,updated_at,last_verified_at,source';
     sb.from('firms').select(firmCols).order('name')
@@ -4501,6 +4503,15 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       if(r.profit_split!=null&&isFinite(Number(r.profit_split)))parts.push(r.profit_split+'% '+(ar?'تقسيم':'split'));
       var ptdd=sbPTDD(r);if(ptdd)parts.push('PT:DD '+ptdd);
       m.textContent=parts.join(' · ');left.appendChild(m);
+      /* hidden fields: phase2, leverage, contracts, USD amounts, pricing */
+      var extra=[];
+      if(r.profit_target_pct_phase2!=null&&isFinite(Number(r.profit_target_pct_phase2)))extra.push((ar?'المرحلة 2: ':'Phase 2: ')+r.profit_target_pct_phase2+'%');
+      if(r.profit_target_usd!=null&&isFinite(Number(r.profit_target_usd)))extra.push('$'+Number(r.profit_target_usd).toLocaleString()+' '+(ar?'هدف':'target'));
+      if(r.max_drawdown_usd!=null&&isFinite(Number(r.max_drawdown_usd)))extra.push('$'+Number(r.max_drawdown_usd).toLocaleString()+' '+(ar?'تراجع':'DD'));
+      if(r.leverage)extra.push((ar?'رافعة ':'Leverage ')+r.leverage);
+      if(r.max_contracts!=null&&isFinite(Number(r.max_contracts)))extra.push(r.max_contracts+(ar?' عقود':' contracts'));
+      if(r.pricing_model)extra.push({ 'one-time':ar?'دفعة واحدة':'One-time','monthly':ar?'شهري':'Monthly','evaluation':ar?'تقييم':'Evaluation'}[r.pricing_model]||r.pricing_model);
+      if(extra.length){var xm=document.createElement('div');xm.className='pm pm-extra';xm.textContent=extra.join(' · ');left.appendChild(xm);}
       var pr=document.createElement('div');pr.className='pp';
       var dp=sbDiscountedPrice(p);
       if(dp.final!=null){
@@ -8692,6 +8703,17 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
   /* ---- Supabase boot (data phase): public catalog + persisted session ---- */
   sbLoadFirms();
   sbLoadCalendar();
+  /* HOURLY AUTO-REFRESH: firm data re-fetches every 60 min so plans/prices stay fresh without reload */
+  try{
+    setInterval(function(){
+      if(typeof sbLoadFirms==='function'&&!document.hidden){sbLoadFirms();}
+    },3600000);
+    document.addEventListener('visibilitychange',function(){
+      if(!document.hidden&&typeof sbLastFirmLoad==='number'&&Date.now()-sbLastFirmLoad>3600000){
+        if(typeof sbLoadFirms==='function')sbLoadFirms();
+      }
+    });
+  }catch(_hr){}
   // C1-notif fix: re-check news alerts periodically (were only checked at page
   // load, so events entering the 60-min window after load never alerted).
   // Every 5 min, reload calendar (cheap, cached) which re-runs the alert scan.
