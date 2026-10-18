@@ -244,8 +244,7 @@
     .fd-stars span{font-size:22px;line-height:1;padding:3px;color:var(--line-strong);cursor:default;pointer-events:none;user-select:none}
     .fd-stars span.lit{color:#D4AF37}
     .fd-rate-meta{display:flex;align-items:baseline;gap:6px}
-    .fd-rate-meta b{font-size:17px;font-variant-numeric:tabular-nums}
-    .fd-rate-meta span{font-size:11px;color:var(--muted)}
+    .fd-rate-meta span{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--text)}
     .fd-like{display:flex;align-items:center;gap:8px;border:1px solid var(--line-strong);border-radius:999px;background:var(--surface);padding:8px 14px;cursor:pointer;font-family:inherit}
     .fd-like-ico{font-size:17px;filter:grayscale(1);opacity:.55;transition:all .15s}
     .fd-like b{font-size:14px;font-variant-numeric:tabular-nums}
@@ -2489,7 +2488,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
         <div class="fd-community" id="fdCommunity">
           <div class="fd-rate">
             <div class="fd-stars" id="fdStars" role="img" aria-label="Average rating"></div>
-            <div class="fd-rate-meta"><b id="fdAvg">—</b><span id="fdRateCount"></span></div>
+            <div class="fd-rate-meta"><span id="fdRateCompact">—</span></div>
           </div>
           <button class="fd-like" id="fdLike" type="button" aria-pressed="false"><span class="fd-like-ico">👍</span><b id="fdLikeCount">0</b></button>
         </div>
@@ -4977,6 +4976,18 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
   /* Community ratings + likes (real user data from Supabase) */
   // Stars ALWAYS render the aggregate average across all users (never personalized).
   // A user's own rating is shown separately as a text badge (see paint()).
+  // PropFirmMatch-style compact rating label: "★ 4.0 (2)"
+  function sbRatingCountAr(n){
+    if(n===1)return '(تقييم)';
+    if(n===2)return '(تقييمان)';
+    if(n<=10)return '('+n+' تقييمات)';
+    return '('+n+' تقييمًا)';
+  }
+  function sbRatingCompact(avg,count,ar){
+    if(!count)return ar?'كن أول من يقيّم':'Be the first to rate';
+    var c=ar?sbRatingCountAr(count):'('+count+')';
+    return '★ '+Number(avg).toFixed(1)+' '+c;
+  }
   function sbRenderStars(el,avg,interactive,onRate){
     if(!el)return;el.innerHTML='';
     var litN=Math.round(avg||0);
@@ -4998,19 +5009,18 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
   }
   function sbLoadCommunity(firmId){
     var ar=currentLanguage==='ar';
-    var starsEl=document.getElementById('fdStars'),avgEl=document.getElementById('fdAvg'),
-        cntEl=document.getElementById('fdRateCount'),likeBtn=document.getElementById('fdLike'),
+    var starsEl=document.getElementById('fdStars'),compactEl=document.getElementById('fdRateCompact'),
+        likeBtn=document.getElementById('fdLike'),
         likeCnt=document.getElementById('fdLikeCount');
     if(!starsEl)return;
     function paint(avg,count,myRating,likeCount,liked,canRate){
       // Stars show the AGGREGATE average; clickable for rating when logged in.
       sbRenderStars(starsEl,avg,canRate,function(n){sbSubmitRating(firmId,n);});
-      if(avgEl)avgEl.textContent=count?Number(avg).toFixed(1):'—';
-      if(cntEl)cntEl.textContent=count?(ar?'من ':'from ')+count+(ar?' تقييم':' ratings'):(ar?'كن أول من يقيّم':'Be the first to rate');
+      if(compactEl)compactEl.textContent=sbRatingCompact(avg,count,ar);
       try{
         starsEl.setAttribute('role',canRate?'radiogroup':'img');
         starsEl.setAttribute('aria-label',count?
-          (ar?'متوسط التقييم ':'Average rating ')+Number(avg).toFixed(1)+' / 5 '+(ar?'من ':'from ')+count+(ar?' تقييم':' ratings')+(canRate?(ar?' — انقر للتقييم':' — click to rate'):''):
+          sbRatingCompact(avg,count,ar)+(canRate?(ar?' — انقر للتقييم':' — click to rate'):''):
           (ar?'لا توجد تقييمات بعد':'No ratings yet'));
       }catch(e){}
       if(!canRate&&starsEl){starsEl.title=ar?'سجل الدخول للتقييم':'Log in to rate';}
