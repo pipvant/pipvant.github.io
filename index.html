@@ -581,7 +581,7 @@
     .market-tab[aria-selected="true"]{background:var(--platinum);color:var(--bg);box-shadow:none}
     .method-pill{display:inline-flex;align-items:center;min-height:44px;padding:0 12px;border:1px solid transparent;border-radius:999px;background:linear-gradient(var(--surface),var(--surface)) padding-box,linear-gradient(105deg,var(--platinum),var(--market-accent)) border-box;color:var(--text);font-size:10px;font-weight:700;text-decoration:none}
     .freshness-pill{display:inline-flex;align-items:center;gap:6px;min-height:28px;padding:0 12px;border:1px solid var(--line-strong);border-radius:999px;background:var(--surface);color:var(--secondary);font-size:11px;font-weight:600}
-    .freshness-pill .fresh-dot{width:7px;height:7px;border-radius:50%;background:var(--success);box-shadow:0 0 7px color-mix(in srgb,var(--success) 55%,transparent)}
+    .freshness-pill .fresh-dot{width:7px;height:7px;border-radius:50%;background:var(--success);box-shadow:0 0 7px color-mix(in srgb,var(--success) 55%,transparent);animation:hbPulse 2s ease-in-out infinite}
     .firm-card{border-color:color-mix(in srgb,var(--market-accent) 32%,var(--line));background:linear-gradient(110deg,color-mix(in srgb,var(--market-accent) 8%,transparent),rgba(15,29,51,.97) 56%)}
     .firm-summary{min-height:154px;grid-template-columns:minmax(0,1fr) 52px;align-items:stretch;padding:12px}
     .firm-expand{min-height:128px;grid-template-columns:24px 48px minmax(0,1fr) 16px;align-items:start;gap:9px}
@@ -2518,7 +2518,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
             <button class="directory-tab" type="button" role="tab" aria-selected="true" data-directory-tab="all">All firms</button>
             <button class="directory-tab" type="button" role="tab" aria-selected="false" data-directory-tab="saved"><svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6 4h12v17l-6-4-6 4Z"/></svg><span>Saved</span></button>
           </div>
-          <div class="directory-meta"><button type="button" data-methodology-section="ranking">How we rank</button><span>Data updated —</span></div>
+          <div class="directory-meta"><button type="button" data-methodology-section="ranking">How we rank</button><span id="directoryFreshness">Data updated —</span></div>
         </div>
 
         <div class="directory-results refresh-content" id="directoryResults">
@@ -4092,12 +4092,17 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
         var o=document.createElement('option');o.value=String(p.id);
         var sz=sbNum(p.account_size);
         var psym=p.currency==='EUR'?'€':p.currency==='MAD'?'MAD ':'$';
-        o.textContent=(isFinite(sz)?sbFmtSize(sz):'?')+' · '+(isFinite(sbNum(p.price))?psym+Number(p.price).toLocaleString('en-US'):'—');
+        var prog='';try{prog=(p.rules&&p.rules.program)?String(p.rules.program):'';}catch(_e){}
+        o.textContent=(isFinite(sz)?sbFmtSize(sz):'?')+' · '+(isFinite(sbNum(p.price))?psym+Number(p.price).toLocaleString('en-US'):'—')+(prog?' · '+prog:'');
         ps.appendChild(o);
       });
       ps.dispatchEvent(new Event('change'));
     }
-    fs.addEventListener('change',fillPlans);
+    // Idempotent: never double-bind the firm change handler (sbLabFillFirms may run twice: direct + async interval)
+    if(!fs._sbLabFillBound){
+      fs._sbLabFillBound=true;
+      fs.addEventListener('change',fillPlans);
+    }
     fillPlans();
   }
   function sbLabGetPlan(firmSelId,planSelId){
@@ -4321,7 +4326,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
   function sbInitLabWave4(){
     sbLabFillFirms('bgFirm','bgPlan');
     ['bgFirm','bgPlan','bgTotal','bgDaily'].forEach(function(id){
-      var e=document.getElementById(id);if(e)e.addEventListener('input',sbBreachCalc);
+      var e=document.getElementById(id);if(e){e.addEventListener('input',sbBreachCalc);e.addEventListener('change',sbBreachCalc);}
     });
     document.querySelectorAll('.dna-opt').forEach(function(btn){
       btn.addEventListener('click',function(){
@@ -4350,10 +4355,10 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     sbLabFillFirms('tcFirm','tcPlan');
     sbLabFillFirms('simFirm','simPlan');
     ['tcFirm','tcPlan','tcComm','tcTrades','tcReset'].forEach(function(id){
-      var e=document.getElementById(id);if(e)e.addEventListener('input',sbTrueCostCalc);
+      var e=document.getElementById(id);if(e){e.addEventListener('input',sbTrueCostCalc);e.addEventListener('change',sbTrueCostCalc);}
     });
     ['simFirm','simPlan','simWin','simWinR','simLossR','simRisk','simTPD','simDays'].forEach(function(id){
-      var e=document.getElementById(id);if(e)e.addEventListener('input',sbSimRun);
+      var e=document.getElementById(id);if(e){e.addEventListener('input',sbSimRun);e.addEventListener('change',sbSimRun);}
     });
     // Re-run when Supabase data arrives (firm data loads async)
     var tries=0;
@@ -4806,6 +4811,16 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     });
     empty.hidden=true;
     sbFilterDirectory();
+    /* Directory freshness: same honest floor as matcher (oldest last_verified_at) */
+    try{
+      var dfEl=document.getElementById('directoryFreshness');
+      if(dfEl){
+        var oldestV=null;
+        sbFirms.forEach(function(f){var v=f.last_verified_at;if(v&&(!oldestV||v<oldestV))oldestV=v;});
+        var ar2=(typeof currentLanguage!=='undefined'&&currentLanguage==='ar');
+        dfEl.textContent=(ar2?'✓ تم التحقق من البيانات ':'✓ Data verified ')+(oldestV?sbTimeAgo(oldestV):'—');
+      }
+    }catch(dfe){}
   }
   function sbFilterDirectory(){
     var searchEl=document.getElementById('directorySearch');
