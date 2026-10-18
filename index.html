@@ -199,7 +199,8 @@
       #matcher .firm-core{flex:1;min-width:0;display:block!important;padding:0!important}
       #matcher .firm-topline{display:flex!important;align-items:center;gap:8px;min-width:0}
       #matcher .firm-name{font-size:16px!important;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0}
-      #matcher .pfm-heart{background:none;border:0;color:var(--muted);font-size:19px;line-height:1;padding:6px;cursor:pointer;flex:0 0 auto}
+      #matcher .pfm-heart{background:none;border:0;color:var(--muted);font-size:19px;line-height:1;padding:6px;cursor:pointer;flex:0 0 auto;min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+      #matcher .pfm-heart:active{transform:scale(.85)}
       #matcher .pfm-heart.on{color:#D4AF37}
       #matcher .pfm-sub{margin-top:5px;display:flex!important;align-items:center;gap:6px;flex-wrap:wrap;color:#D4AF37;font-size:13px;font-weight:700}
       #matcher .pfm-sub b{font-variant-numeric:tabular-nums}
@@ -230,9 +231,11 @@
     .fd-titlewrap{flex:1;min-width:0}
     .fd-titlewrap h2{font-size:22px;margin:0;line-height:1.35}
     .fd-titlewrap p{color:var(--muted);font-size:13px;margin:4px 0 0}
-    .fd-heart{background:none;border:0;font-size:26px;color:var(--muted);padding:8px;cursor:pointer;line-height:1}
+    .fd-heart{background:none;border:0;font-size:26px;color:var(--muted);padding:8px;cursor:pointer;line-height:1;min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+    .fd-heart:active{transform:scale(.85)}
     .fd-heart.on{color:#D4AF37}
-    .fd-compare{background:none;border:0;font-size:22px;color:var(--muted);padding:8px;cursor:pointer;line-height:1}
+    .fd-compare{background:none;border:0;font-size:22px;color:var(--muted);padding:8px;cursor:pointer;line-height:1;min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+    .fd-compare:active{transform:scale(.85)}
     .fd-compare.on{color:#D4AF37}
     /* Community ratings + likes */
     .fd-community{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;margin-bottom:16px;border:1px solid var(--line);border-radius:14px;background:var(--sunken)}
@@ -3734,9 +3737,10 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
             heart.setAttribute('aria-label',(currentLanguage==='ar'?'حفظ ':'Save ')+firm.name);
             topline.appendChild(heart);
           }
-          var uh=function(){try{var s=sbIsShortlisted(firm.id);heart.textContent=s?'♥':'♡';heart.classList.toggle('on',s);}catch(_u){heart.textContent='♡';}};
-          heart.onclick=function(ev){if(ev)ev.stopPropagation();try{var n=sbToggleShortlist(firm.id);uh();if(typeof showToast==='function')showToast(n?((currentLanguage==='ar'?'تحفظات ':'Saved ')+firm.name):((currentLanguage==='ar'?'تحيدات ':'Removed ')+firm.name));}catch(_h){}};
-          uh();
+          heart.setAttribute('data-firm-id',firm.id);
+          heart.setAttribute('data-firm-name',firm.name||'');
+          sbRepaintHeart(heart,firm.id);
+          if(typeof sbBindHeartTap==='function')sbBindHeartTap(heart);
         }
         var fcore=q('.firm-core');
         var _promo=firstRules?sbBestPromo(firstRules):null;
@@ -4570,8 +4574,48 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     for(var k=0;k<list.length;k++){if(String(list[k])===fid){i=k;break;}}
     if(i===-1){list.push(fid);}else{list.splice(i,1);}
     try{localStorage.setItem('pipvant_shortlist',JSON.stringify(list));}catch(e){}
-    if(typeof sbSyncUserPref==='function')sbSyncUserPref('shortlist',list);
+    try{if(typeof sbSyncUserPref==='function')sbSyncUserPref('shortlist',list);}catch(_sp){}
     return i===-1;
+  }
+  /* BULLETPROOF heart repaint — reads saved state, never throws */
+  function sbRepaintHeart(el,fid){
+    try{
+      var s=false;
+      try{s=sbIsShortlisted(fid);}catch(_s){}
+      el.textContent=s?'♥':'♡';
+      el.classList.toggle('on',s);
+      el.setAttribute('aria-pressed',String(s));
+    }catch(_e){try{el.textContent='♡';}catch(_e2){}}
+  }
+  /* BULLETPROOF heart tap binder — binds ONCE per element; firm id is read
+     from data-firm-id at tap time so re-opens for other firms stay correct.
+     click + touchend cover desktop and mobile; 450ms dedupe prevents the
+     ghost click after touchend from double-firing. */
+  function sbBindHeartTap(el){
+    if(!el||el._sbHeartBound)return;el._sbHeartBound=true;
+    var lastTap=0;
+    function fire(ev){
+      try{
+        if(ev){
+          if(ev.cancelable&&ev.type==='touchend')ev.preventDefault();
+          ev.stopPropagation();
+        }
+      }catch(_e){}
+      var now=Date.now();if(now-lastTap<450)return;lastTap=now;
+      var fid=el.getAttribute('data-firm-id');
+      try{console.log('[heart] tap fid=',fid,'type=',ev&&ev.type);}catch(_e){}
+      if(!fid)return;
+      try{
+        var n=sbToggleShortlist(fid);
+        sbRepaintHeart(el,fid);
+        var fname=el.getAttribute('data-firm-name')||'';
+        var ar=(typeof currentLanguage!=='undefined'&&currentLanguage==='ar');
+        if(typeof showToast==='function')showToast(n?((ar?'تحفظات ':'Saved ')+fname):((ar?'تحيدات ':'Removed ')+fname));
+        if(typeof sbRenderFirms==='function'){try{sbRenderFirms();}catch(_e2){}}
+      }catch(_h){}
+    }
+    el.addEventListener('touchend',fire,{passive:false});
+    el.addEventListener('click',fire);
   }
   function sbFillDirectoryCard(node,firm,plans){
     node.setAttribute('data-firm-id',firm.id);
@@ -5103,9 +5147,10 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       var pt=document.getElementById('fdPtdd');if(pt)pt.textContent=sbBestPtdd(plans)||'—';
       var heart=document.getElementById('fdHeart');
       if(heart){
-        var uh=function(){try{var s=sbIsShortlisted(firm.id);heart.textContent=s?'♥':'♡';heart.classList.toggle('on',s);}catch(_u){heart.textContent='♡';}};
-        heart.onclick=function(ev){if(ev)ev.stopPropagation();try{var n=sbToggleShortlist(firm.id);uh();if(typeof showToast==='function')showToast(n?((ar?'تحفظات ':'Saved ')+firm.name):((ar?'تحيدات ':'Removed ')+firm.name));if(typeof sbRenderFirms==='function')try{sbRenderFirms();}catch(e){}}catch(_h){}};
-        uh();
+        heart.setAttribute('data-firm-id',firm.id);
+        heart.setAttribute('data-firm-name',firm.name||'');
+        if(typeof sbRepaintHeart==='function')sbRepaintHeart(heart,firm.id);
+        if(typeof sbBindHeartTap==='function')sbBindHeartTap(heart);
       }
       /* Compare lives here now (removed from cards) */
       var fcmp=document.getElementById('fdCompare');
