@@ -223,7 +223,7 @@
       #matcher .slot-cta{min-width:0;padding:0 12px;min-height:36px;font-size:10px;flex:0 0 auto}
     }
     /* --- firm detail page --- */
-    .fd-wrap{max-width:720px;margin:0 auto;padding:14px 16px 0}
+    .fd-wrap{max-width:720px;margin:0 auto;padding:14px 16px 110px}
     .fd-back{display:inline-flex;align-items:center;gap:8px;background:none;border:0;color:var(--muted);font-size:14px;font-weight:600;padding:10px 0;cursor:pointer;margin-bottom:6px}
     html[dir="rtl"] .fd-back svg{transform:scaleX(-1)}
     .fd-head{display:flex;align-items:center;gap:14px;margin-bottom:18px}
@@ -299,7 +299,7 @@
     #firm-detail.active .fd-cta button:active{transform:scale(.98)}
     body:has(#firm-detail.active) .bottom-nav{display:none}
     @media(min-width:640px){
-      .fd-wrap{padding:24px 32px 0}.fd-cta-inner{max-width:720px;margin:0 auto}
+      .fd-wrap{padding:24px 32px 110px}.fd-cta-inner{max-width:720px;margin:0 auto}
       /* desktop keeps current card design: hide PFM mobile-only elements */
       #matcher .pfm-heart,#matcher .pfm-sub{display:none!important}
     }
@@ -1972,7 +1972,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
   /* Wider content container on large screens */
   .content{max-width:1600px!important;padding:0 32px!important}
   /* Firm detail: was 720px (too narrow), now fills width */
-  .fd-wrap{max-width:1100px!important;padding:24px 32px 0!important}
+  .fd-wrap{max-width:1100px!important;padding:24px 32px 110px!important}
   .fd-cta-inner{max-width:1100px!important}
   /* Lab tools: wider on desktop */
   #lab .lab-tool{max-width:1200px;margin-left:auto;margin-right:auto}
@@ -2375,7 +2375,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       <div class="filter-panel">
         <button class="filter-title" id="filterToggle" type="button" aria-expanded="true" aria-controls="filterBody">
           <h3>Filters</h3>
-          <span class="filter-state"><span class="tiny">3 · ANY</span><svg class="filter-chevron" width="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></span>
+          <span class="filter-state"><span class="tiny">ANY</span><svg class="filter-chevron" width="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></span>
         </button>
         <div class="filter-body" id="filterBody">
           <div class="filter-grid">
@@ -2502,7 +2502,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
         <span class="pull-refresh-indicator" aria-hidden="true"><span class="pull-refresh-spinner"><svg width="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 4v6h-6"/></svg></span></span>
         <header class="directory-head">
           <button class="directory-back" data-screen="matcher" type="button"><svg width="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg><span>Back to Matcher</span></button>
-          <div><p class="eyebrow">Firm directory</p><h2>All firms</h2><p>Search, sort, and filter verified firm rules in one consistent directory.</p></div>
+          <div><p class="eyebrow">Firm directory</p><h2 id="directoryTitle">All firms</h2><p>Search, sort, and filter verified firm rules in one consistent directory.</p></div>
         </header>
 
         <div class="directory-toolbar">
@@ -3658,6 +3658,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
   function sbWave1CardExtras(card,firm,plans,firstRules){
     try{
       // 1. Promo badge in discount-slot (unhide when promo exists)
+      // Standardized format: "X% OFF · CODE" | "X% OFF" | "CODE" | "Special offer"
       var promo=firstRules?sbBestPromo(firstRules):null;
       var dslot=card.querySelector('.discount-slot');
       if(dslot&&promo){
@@ -3665,8 +3666,15 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
         dslot.setAttribute('aria-label','Promotion available');
         dslot.innerHTML='';
         var pct=sbPromoDiscountPct(promo);
-        dslot.appendChild(document.createTextNode(pct>0?(pct+'% OFF'):(currentLanguage==='ar'?'عرض خاص':'Special offer')));
-        if(promo.code){var sm=document.createElement('small');sm.textContent=' · '+promo.code;dslot.appendChild(sm);}
+        var ar3=(typeof currentLanguage!=='undefined'&&currentLanguage==='ar');
+        if(pct>0){
+          dslot.appendChild(document.createTextNode(pct+'% OFF'));
+          if(promo.code){var sm=document.createElement('small');sm.textContent=' · '+promo.code;dslot.appendChild(sm);}
+        }else if(promo.code){
+          dslot.appendChild(document.createTextNode(promo.code));
+        }else{
+          dslot.appendChild(document.createTextNode(ar3?'عرض خاص':'Special offer'));
+        }
       }
       // 2. Updated stamp appended to evidence line
       var ev=card.querySelector('.evidence-line');
@@ -4092,8 +4100,10 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
         var o=document.createElement('option');o.value=String(p.id);
         var sz=sbNum(p.account_size);
         var psym=p.currency==='EUR'?'€':p.currency==='MAD'?'MAD ':'$';
+        /* Use plan's ORIGINAL currency for both size and price (no mixed $200k·€47) */
+        function fmtSz(v){if(!isFinite(v))return '?';return v>=1000000?psym+(Math.round(v/10000)/100)+'M':(v>=1000?psym+(Math.round(v/10)/100)+'k':psym+(Math.round(v*100)/100));}
         var prog='';try{prog=(p.rules&&p.rules.program)?String(p.rules.program):'';}catch(_e){}
-        o.textContent=(isFinite(sz)?sbFmtSize(sz):'?')+' · '+(isFinite(sbNum(p.price))?psym+Number(p.price).toLocaleString('en-US'):'—')+(prog?' · '+prog:'');
+        o.textContent=fmtSz(sz)+' · '+(isFinite(sbNum(p.price))?psym+Number(p.price).toLocaleString('en-US'):'—')+(prog?' · '+prog:'');
         ps.appendChild(o);
       });
       ps.dispatchEvent(new Event('change'));
@@ -6825,7 +6835,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
   }catch(e){}
   document.querySelectorAll('.directory-filter-list input[type="range"]').forEach(function(input){input.addEventListener('input',function(){refreshDirectoryRange(input);clearTimeout(window._dirRangeT);window._dirRangeT=setTimeout(refreshDirectory,150);});});
   document.querySelectorAll('.directory-chip').forEach(function(chip){chip.addEventListener('click',function(){chip.setAttribute('aria-pressed',String(chip.getAttribute('aria-pressed')!=='true'));refreshDirectory();});});
-  document.querySelectorAll('.directory-tab').forEach(function(tab){tab.addEventListener('click',function(){document.querySelectorAll('.directory-tab').forEach(function(other){other.setAttribute('aria-selected',String(other===tab));});refreshDirectory();});});
+  document.querySelectorAll('.directory-tab').forEach(function(tab){tab.addEventListener('click',function(){document.querySelectorAll('.directory-tab').forEach(function(other){other.setAttribute('aria-selected',String(other===tab));});try{var dt=document.getElementById('directoryTitle');if(dt){var saved=tab.getAttribute('data-directory-tab')==='saved';var ar=(typeof currentLanguage!=='undefined'&&currentLanguage==='ar');dt.textContent=saved?(ar?'الشركات المحفوظة':'Saved firms'):(ar?'جميع الشركات':'All firms');}}catch(e){}refreshDirectory();});});
   document.querySelectorAll('[data-methodology-section]').forEach(function(button){button.addEventListener('click',function(){var target=button.getAttribute('data-methodology-section');showScreen('methodology');setTimeout(function(){var section=document.getElementById('methodology-'+target);if(section)section.scrollIntoView({behavior:'smooth',block:'start'});},20);});});
   document.addEventListener('click',function(event){
     var detailTrigger=event.target.closest('[data-open-firm-detail]');if(detailTrigger){firmDetailSheet.classList.add('open');var panel=firmDetailSheet.querySelector('.firm-detail-panel');if(panel){panel.classList.remove('detail-morph');void panel.offsetWidth;panel.classList.add('detail-morph');}var verified=firmDetailSheet.querySelector('.verified-check');if(verified){verified.classList.remove('is-drawing');void verified.offsetWidth;verified.classList.add('is-drawing');}document.getElementById('closeFirmDetail').focus();}
@@ -7093,9 +7103,8 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
   function sbUpdateMatcherFilterBadge(){
     try{
       var f=sbGetMatcherFilters();
-      var n=(f.size>0?1:0)+(f.maxPrice>0?1:0);
       var badge=document.querySelector('#matcher .filter-state .tiny');
-      if(badge)badge.textContent=n+' · '+(f.size>0?sbFmtSize(f.size):'ANY');
+      if(badge)badge.textContent=f.size>0?sbFmtSize(f.size):'ANY';
     }catch(e){}
   }
   ['accountSize','maxPrice'].forEach(function(id){
