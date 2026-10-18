@@ -244,7 +244,6 @@
     .fd-rate-meta{display:flex;align-items:baseline;gap:6px}
     .fd-rate-meta b{font-size:17px;font-variant-numeric:tabular-nums}
     .fd-rate-meta span{font-size:11px;color:var(--muted)}
-    .fd-my-rate{font-size:11px;font-weight:700;color:#0A1628;background:linear-gradient(135deg,#F7DC7E,#D4AF37);border-radius:20px;padding:3px 10px;white-space:nowrap}
     .fd-like{display:flex;align-items:center;gap:8px;border:1px solid var(--line-strong);border-radius:999px;background:var(--surface);padding:8px 14px;cursor:pointer;font-family:inherit}
     .fd-like-ico{font-size:17px;filter:grayscale(1);opacity:.55;transition:all .15s}
     .fd-like b{font-size:14px;font-variant-numeric:tabular-nums}
@@ -2489,7 +2488,6 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
           <div class="fd-rate">
             <div class="fd-stars" id="fdStars" role="radiogroup" aria-label="Rate this firm"></div>
             <div class="fd-rate-meta"><b id="fdAvg">—</b><span id="fdRateCount"></span></div>
-            <span id="fdMyRate" class="fd-my-rate" hidden></span>
           </div>
           <button class="fd-like" id="fdLike" type="button" aria-pressed="false"><span class="fd-like-ico">👍</span><b id="fdLikeCount">0</b></button>
         </div>
@@ -5004,13 +5002,6 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       sbRenderStars(starsEl,avg,canRate,function(n){sbSubmitRating(firmId,n);});
       if(avgEl)avgEl.textContent=count?Number(avg).toFixed(1):'—';
       if(cntEl)cntEl.textContent=count?(ar?'من ':'from ')+count+(ar?' تقييم':' ratings'):(ar?'كن أول من يقيّم':'Be the first to rate');
-      var myEl=document.getElementById('fdMyRate');
-      if(myEl){
-        if(myRating>0&&canRate){
-          myEl.hidden=false;
-          myEl.textContent=(ar?'★ تقييمك: ':'★ Your rating: ')+myRating+'/5';
-        }else{myEl.hidden=true;myEl.textContent='';}
-      }
       try{
         starsEl.setAttribute('aria-label',count?
           (ar?'متوسط التقييم ':'Average rating ')+Number(avg).toFixed(1)+' / 5 '+(ar?'من ':'from ')+count+(ar?' تقييم':' ratings'):
@@ -5095,9 +5086,9 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       var pt=document.getElementById('fdPtdd');if(pt)pt.textContent=sbBestPtdd(plans)||'—';
       var heart=document.getElementById('fdHeart');
       if(heart){
-        var uh=function(){var s=sbIsShortlisted(firm.id);heart.textContent=s?'♥':'♡';heart.classList.toggle('on',s);};
+        var uh=function(){try{var s=sbIsShortlisted(firm.id);heart.textContent=s?'♥':'♡';heart.classList.toggle('on',s);}catch(_u){heart.textContent='♡';}};
+        heart.onclick=function(ev){if(ev)ev.stopPropagation();try{var n=sbToggleShortlist(firm.id);uh();if(typeof showToast==='function')showToast(n?((ar?'تحفظات ':'Saved ')+firm.name):((ar?'تحيدات ':'Removed ')+firm.name));if(typeof sbRenderFirms==='function')try{sbRenderFirms();}catch(e){}}catch(_h){}};
         uh();
-        heart.onclick=function(ev){if(ev)ev.stopPropagation();var n=sbToggleShortlist(firm.id);uh();if(typeof showToast==='function')showToast(n?((ar?'تحفظات ':'Saved ')+firm.name):((ar?'تحيدات ':'Removed ')+firm.name));if(typeof sbRenderFirms==='function')try{sbRenderFirms();}catch(e){}};
       }
       /* Compare lives here now (removed from cards) */
       var fcmp=document.getElementById('fdCompare');
