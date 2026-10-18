@@ -2376,12 +2376,6 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     </section>
 
     <section class="screen" id="matcher" aria-label="Prop firm matcher">
-      <div class="market-tabs" role="tablist" aria-label="Market type">
-        <button class="market-tab" type="button" role="tab" aria-selected="true" data-market-tab="Forex">Forex</button>
-        <button class="market-tab" type="button" role="tab" aria-selected="false" data-market-tab="Futures">Futures</button>
-        <button class="market-tab" type="button" role="tab" aria-selected="false" data-market-tab="Crypto-Perps">Crypto-Perps</button>
-      </div>
-
       <div class="filter-panel">
         <button class="filter-title" id="filterToggle" type="button" aria-expanded="true" aria-controls="filterBody">
           <h3>Filters</h3>
@@ -8380,11 +8374,6 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     }
   }
 
-  var marketTints={Forex:'#5B8DEF',Futures:'#C9D2DC','Crypto-Perps':'#9FC1FF'};
-  document.querySelectorAll('.market-tab').forEach(function(tab){tab.addEventListener('click',function(){
-    document.querySelectorAll('.market-tab').forEach(function(other){other.setAttribute('aria-selected',String(other===tab));});
-    document.getElementById('matcher').style.setProperty('--market-accent',marketTints[tab.getAttribute('data-market-tab')]);
-  });});
   /* Asset category filter buttons: set active category and re-render firms
      (search/account-size/price filters + table sort keep working on top). */
   document.querySelectorAll('#catFilter .cat-btn').forEach(function(btn){
