@@ -5498,6 +5498,39 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     if(found&&typeof sbOpenFirmDetail==='function'){try{sbOpenFirmDetail(fid);}catch(e){}}
     else{sbSetFirmHash(null);}
   }
+  /* Firm-detail persistence: reopen the last-viewed firm detail after a
+     browser restart. Called after the pipvant_last_screen restore on load.
+     A #firm-<id> deep link in the URL always wins. Waits for sbFirms
+     (loaded async) before opening; clears the key if the firm is gone. */
+  function sbRestoreLastFirm(lastScreen){
+    try{
+      var _lf=null;try{_lf=localStorage.getItem('pipvant_last_firm');}catch(_g1){}
+      if(!_lf||typeof sbOpenFirmDetail!=='function')return;
+      var _lhash=null;try{_lhash=(typeof sbFirmIdFromHash==='function')?sbFirmIdFromHash():null;}catch(_g2){}
+      if(_lhash)return; /* deep link wins */
+      /* The detail is not a primary screen, so last_screen stays at the
+         screen the user was on before opening the detail (normally matcher). */
+      if(lastScreen&&lastScreen!=='matcher')return;
+      var _tries=0;
+      var _iv=setInterval(function(){
+        _tries++;
+        try{
+          var _openId=null;try{_openId=(typeof sbDetailFirmId!=='undefined')?sbDetailFirmId:null;}catch(_g3){}
+          if(_openId&&String(_openId)===String(_lf)){clearInterval(_iv);return;}
+          var _cur=null;try{var _as=document.querySelector('.screen.active');_cur=_as&&_as.id;}catch(_g4){}
+          if(_cur&&_cur!=='matcher'&&_cur!=='firm-detail'){clearInterval(_iv);return;}
+          if(typeof sbFirms!=='undefined'&&sbFirms&&sbFirms.length>0){
+            clearInterval(_iv);
+            var _found=false;
+            try{_found=sbFirms.some(function(f){return String(f.id)===String(_lf);});}catch(_g5){}
+            if(_found){try{sbOpenFirmDetail(_lf);}catch(_g6){}}
+            else{try{localStorage.removeItem('pipvant_last_firm');}catch(_g7){}}
+          }
+        }catch(_gz){}
+        if(_tries>120)clearInterval(_iv);
+      },100);
+    }catch(_ge){}
+  }
   try{
     window.addEventListener('hashchange',function(){try{sbSyncDetailFromHash();}catch(e){}});
   }catch(e){}
@@ -5561,6 +5594,10 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     var firm=null;(sbFirms||[]).forEach(function(f){if(String(f.id)===String(firmId))firm=f;});
     if(!firm||typeof showScreen!=='function')return;
     sbDetailFirmId=firm.id;
+    /* Firm-detail persistence: remember the open detail so a browser
+       restart brings the user back here (pipvant_last_screen only
+       stores primary screens, not the detail). */
+    try{localStorage.setItem('pipvant_last_firm',firm.id);}catch(_plf){}
     try{if(typeof sbSetFirmHash==='function')sbSetFirmHash(firm.id);}catch(_hh){}
     try{sbLoadCommunity(firm.id);}catch(e){}
     var plans=sbPlansByFirm[firm.id]||[];
@@ -6200,6 +6237,8 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
           try{if(typeof sbLoadCalendar==='function')sbLoadCalendar();}catch(_e){}
           // ISSUE 1 fix: restore the last viewed screen (matcher, lab, etc.) on refresh
           try{var _gs=localStorage.getItem('pipvant_last_screen');var _pa={'matcher':1,'journal':1,'calculator':1,'calendar':1,'profile':1,'lab':1};if(_gs&&_pa[_gs]&&typeof showScreen==='function')showScreen(_gs,true);}catch(_ge2){}
+          /* Restore an open firm detail after browser restart (deep link wins). */
+          try{if(typeof sbRestoreLastFirm==='function')sbRestoreLastFirm(_gs);}catch(_ge3){}
           return;
         }
         var seenLp=false;try{seenLp=!!localStorage.getItem('pipvant_landing_seen');}catch(e){}
@@ -6243,6 +6282,8 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       if(typeof sbLoadFirms==='function')sbLoadFirms();
       if(typeof sbLoadCalendar==='function')sbLoadCalendar();
       try{var gs=localStorage.getItem('pipvant_last_screen');var _pa={'matcher':1,'journal':1,'calculator':1,'calendar':1,'profile':1,'lab':1};if(gs&&_pa[gs]&&typeof showScreen==='function')showScreen(gs,true);}catch(ge){}
+      /* Restore an open firm detail after browser restart (deep link wins). */
+      try{if(typeof sbRestoreLastFirm==='function')sbRestoreLastFirm(gs);}catch(ge2){}
     }
   });
   /* Fill the firm detail sheet before the existing opener runs (registered first). */
@@ -6850,7 +6891,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     });
   }catch(e){}
   function closeDirectoryFilters(){if(directoryFilterSheet)directoryFilterSheet.classList.remove('open');}
-  function closeFirmDetail(){if(firmDetailSheet)firmDetailSheet.classList.remove('open');try{if(typeof sbSetFirmHash==='function')sbSetFirmHash(null);}catch(e){}}
+  function closeFirmDetail(){if(firmDetailSheet)firmDetailSheet.classList.remove('open');try{if(typeof sbSetFirmHash==='function')sbSetFirmHash(null);}catch(e){}try{localStorage.removeItem('pipvant_last_firm');}catch(_e2){}}
   function directoryActiveCount(){
     var count=0;
     document.querySelectorAll('.directory-filter-list input[type="range"]').forEach(function(input){if(input.value!==input.getAttribute('data-default'))count++;});
@@ -8310,6 +8351,8 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       if(sb){sbQuiet(sb.auth.signOut());}
       sbUser=null;
       clearUserState();
+      /* Firm-detail persistence must not leak into the next session. */
+      try{localStorage.removeItem('pipvant_last_firm');}catch(_lf2){}
       // Ratings leak fix: repaint open firm detail as logged-out
       try{if(typeof sbDetailFirmId!=='undefined'&&sbDetailFirmId&&typeof sbLoadCommunity==='function')sbLoadCommunity(sbDetailFirmId);}catch(_lo){}
       document.body.classList.remove('app-ready','show-landing');
