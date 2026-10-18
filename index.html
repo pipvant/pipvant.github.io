@@ -8250,7 +8250,12 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
   }
   function enterProduct(name,avatar){
     var authShell=document.querySelector('.auth-shell');authShell.classList.add('auth-leaving');
-    setTimeout(function(){document.body.classList.remove('auth-active','show-auth','show-landing','from-landing');document.body.classList.add('app-ready','app-revealing');authShell.classList.remove('auth-leaving');showScreen(getLastScreen('matcher'));if(pendingLandingNav&&typeof showScreen==='function'){try{showScreen(pendingLandingNav);}catch(e){}pendingLandingNav=null;}setTimeout(function(){document.body.classList.remove('app-revealing');},410);},reduceMotion.matches?0:170);
+    setTimeout(function(){document.body.classList.remove('auth-active','show-auth','show-landing','from-landing');document.body.classList.add('app-ready','app-revealing');authShell.classList.remove('auth-leaving');var _els=(typeof getLastScreen==='function')?getLastScreen('matcher'):'matcher';showScreen(_els);if(pendingLandingNav&&typeof showScreen==='function'){try{showScreen(pendingLandingNav);}catch(e){}pendingLandingNav=null;}
+    /* Firm-detail persistence FIX: the logged-in entry path never called
+       sbRestoreLastFirm, so a browser restart always landed on the matcher
+       even with pipvant_last_firm saved (guest paths already call it). */
+    try{if(typeof sbRestoreLastFirm==='function')sbRestoreLastFirm(_els);}catch(_rf2){}
+    setTimeout(function(){document.body.classList.remove('app-revealing');},410);},reduceMotion.matches?0:170);
     updateProfileIdentity(name,profileSession.bio||'');
   }
   document.getElementById('profileSetupForm').addEventListener('submit',function(e){
