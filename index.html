@@ -3963,7 +3963,14 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     if(filters.maxPrice>0){
       var _rate=(typeof exchangeRates!=='undefined'&&exchangeRates[currentCurrency])?exchangeRates[currentCurrency]:1;
       var _maxUsd=filters.maxPrice/_rate;
-      var minP=plans.map(function(p){return sbNum(p.price);}).filter(isFinite);
+      // Currency fix: convert each plan price to USD using its own currency
+      // (a €79 plan is ~$88.76, not $79).
+      var minP=plans.map(function(p){
+        var v=sbNum(p.price);if(!isFinite(v))return NaN;
+        var cur=(p.currency||'USD').toUpperCase();
+        var pr=(typeof exchangeRates!=='undefined'&&exchangeRates[cur])?exchangeRates[cur]:1;
+        return v/pr;
+      }).filter(isFinite);
       if(!minP.length||Math.min.apply(null,minP)>_maxUsd)return false;
     }
     return true;
@@ -4455,13 +4462,13 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       case 'firm':return String(firm.name||'').toLowerCase();
       case 'size':{var v=sbNum(plan.account_size);return isFinite(v)?v:-1;}
       case 'steps':return sbPlanStepsSort(r);
-      case 'target':{var v=Number(r.profit_target_pct);return isFinite(v)?v:-1;}
+      case 'target':{var v=Number(r.profit_target_pct);if(isFinite(v)&&v>0)return v;var u=Number(r.profit_target_usd),sz=sbNum(plan.account_size);if(isFinite(u)&&u>0&&isFinite(sz)&&sz>0)return u/sz*100;return -1;}
       case 'daily':{var v=Number(r.daily_loss_pct);return isFinite(v)?v:-1;}
       case 'maxdd':{var v=Number(r.max_drawdown_pct);return isFinite(v)?v:-1;}
       case 'ptdd':{var p=sbPTDD(r);if(!p)return -1;var m=String(p).match(/1:([\d.]+)/);return m?Number(m[1]):-1;}
       case 'split':{var v=Number(r.profit_split);return isFinite(v)?v:-1;}
       case 'payout':return String(r.payout_frequency||'').toLowerCase();
-      case 'price':{var v=sbNum(plan.price);return isFinite(v)?v:-1;}
+      case 'price':{var pv=sbNum(plan.price);if(!isFinite(pv))return -1;var pcur=(plan.currency||'USD').toUpperCase();var prate=(typeof exchangeRates!=='undefined'&&exchangeRates[pcur])?exchangeRates[pcur]:1;return pv/prate;}
       default:return 0;
     }
   }
@@ -4908,7 +4915,18 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       // on the matcher card or firm detail instead of here.
       var fid2=card.getAttribute('data-firm-id');var savedMatch=false;
       try{savedMatch=sbIsShortlisted(fid2);}catch(e){var bookmarkBtn=card.querySelector('[data-save-firm]');savedMatch=!!(bookmarkBtn&&bookmarkBtn.getAttribute('aria-pressed')==='true');}
-      var show=(!q||name.toLowerCase().indexOf(q)!==-1)&&(!savedOnly||savedMatch);
+      // Search fix: match name + headquarters + category + promo codes (was name only).
+      var hay=name.toLowerCase();
+      if(q){
+        var firm0=null;
+        try{(sbFirms||[]).forEach(function(f){if(String(f.id)===String(fid2))firm0=f;});}catch(e){}
+        if(firm0){
+          hay+=' '+(firm0.headquarters||'').toLowerCase();
+          try{var _cat=sbCategoryOf(firm0);if(_cat)hay+=' '+String(_cat).toLowerCase();}catch(e){}
+          try{(sbPlansByFirm[firm0.id]||[]).forEach(function(p){var rs=p.rules;if(rs&&Array.isArray(rs.promotions))rs.promotions.forEach(function(pr){if(pr&&pr.code)hay+=' '+String(pr.code).toLowerCase();});});}catch(e){}
+        }
+      }
+      var show=(!q||hay.indexOf(q)!==-1)&&(!savedOnly||savedMatch);
       if(show&&hasRuleFilters){
         var fid=card.getAttribute('data-firm-id');var firm=null;
         (sbFirms||[]).forEach(function(f){if(String(f.id)===String(fid))firm=f;});
@@ -4919,7 +4937,13 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
         if(maxPrice>0){
           var _rate2=(typeof exchangeRates!=='undefined'&&exchangeRates[currentCurrency])?exchangeRates[currentCurrency]:1;
           var _maxUsd2=maxPrice/_rate2;
-          var prices=plans.map(function(p){return sbNum(p.price);}).filter(isFinite);
+          // Currency fix: convert each plan price to USD using its own currency.
+          var prices=plans.map(function(p){
+            var v=sbNum(p.price);if(!isFinite(v))return NaN;
+            var cur=(p.currency||'USD').toUpperCase();
+            var pr=(typeof exchangeRates!=='undefined'&&exchangeRates[cur])?exchangeRates[cur]:1;
+            return v/pr;
+          }).filter(isFinite);
           if(!prices.length||Math.min.apply(null,prices)>_maxUsd2)show=false;
         }
         if(show&&maxTarget>0){
