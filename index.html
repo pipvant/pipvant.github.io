@@ -3585,11 +3585,11 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     if(!iso)return '';
     var d=new Date(iso).getTime();if(!isFinite(d))return '';
     var mins=Math.max(0,Math.floor((Date.now()-d)/60000));
-    if(mins<60)return currentLanguage==='ar'?('منذ '+mins+' د'):mins+'m ago';
+    if(mins<60)return currentLanguage==='ar'?('قبل '+mins+' د'):mins+'m ago';
     var h=Math.floor(mins/60);
-    if(h<24)return currentLanguage==='ar'?('منذ '+h+' س'):h+'h ago';
+    if(h<24)return currentLanguage==='ar'?('قبل '+h+' س'):h+'h ago';
     var days=Math.floor(h/24);
-    return currentLanguage==='ar'?('منذ '+days+' يوم'):days+'d ago';
+    return currentLanguage==='ar'?('قبل '+days+' يوم'):days+'d ago';
   }
   function sbPTDD(rules){
     if(!rules)return null;
@@ -3665,23 +3665,31 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
           specs[1].querySelector('strong').appendChild(chip);
         }
       }
-      // 4. Strikethrough pricing: apply promo % to min plan price
+      // 4. Promo pricing: show SALE price prominently with original struck through
+      // ISSUE 6 fix: was mashing "$200k$33" with no separator, and only showed
+      // the struck original (not the sale price). Now shows " · $29.7 $33".
       if(promo){
         var dpct=sbPromoDiscountPct(promo);
         if(dpct>0&&dpct<100){
-          var prices=plans.map(function(p){return Number(p.price);}).filter(isFinite);
-          if(prices.length){
-            var minP=Math.min.apply(null,prices);
-            var specs2=card.querySelectorAll('.spec-grid .spec');
-            // show in allocation line as strikethrough reference
+          var minPlan=plans.filter(function(p){return isFinite(Number(p.price));}).sort(function(a,b){return Number(a.price)-Number(b.price);})[0];
+          if(minPlan){
             var alloc=card.querySelector('.allocation strong');
             if(alloc&&!card.querySelector('.price-strike')){
-              var was=document.createElement('span');was.className='price-strike';
-              // Respect the plan's original currency (€ for FTMO/BrightFunded)
-              var minPlan=plans.filter(function(p){return isFinite(Number(p.price));}).sort(function(a,b){return Number(a.price)-Number(b.price);})[0];
-              var pcur=minPlan?(minPlan.currency||'USD'):'USD';
+              var dp=sbDiscountedPrice(minPlan);
+              var pcur=minPlan.currency||'USD';
               var psym=pcur==='EUR'?'€':pcur==='MAD'?'MAD ':'$';
-              was.textContent=psym+Math.round(minP).toLocaleString('en-US');
+              // Separator first (fixes "$200k$33" mashing)
+              var sep=document.createElement('span');sep.className='price-sep';sep.textContent=' · ';
+              sep.style.cssText='font-weight:400;opacity:0.6;margin:0 2px;';
+              alloc.appendChild(sep);
+              // Sale price (prominent)
+              var sale=document.createElement('span');sale.className='price-sale';
+              sale.style.cssText='color:#D4AF37;font-weight:700;';
+              sale.textContent=psym+(Math.round(dp.final*100)/100).toLocaleString('en-US');
+              alloc.appendChild(sale);
+              // Original price (struck through)
+              var was=document.createElement('span');was.className='price-strike';
+              was.textContent=psym+Math.round(dp.base).toLocaleString('en-US');
               alloc.appendChild(was);
             }
           }
@@ -3857,7 +3865,19 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     st.appendChild(nm);
     st.appendChild(ev);
     wf.appendChild(lg);wf.appendChild(st);td1.appendChild(wf);tr.appendChild(td1);
-    var td2=document.createElement('td');var rt=document.createElement('span');rt.className='table-rating';var rs=document.createElement('strong');rs.textContent='—';rt.appendChild(rs);td2.appendChild(rt);tr.appendChild(td2);
+    var td2=document.createElement('td');var rt=document.createElement('span');rt.className='table-rating';var rs=document.createElement('strong');
+    // ISSUE 8 fix: was hardcoded to '—'. Now shows real rating from _sbCommunity.
+    (function(){
+      var comm=window._sbCommunity&&window._sbCommunity[firm.id];
+      if(comm&&comm.avgRating&&comm.ratingCount>=1){
+        var avg=Math.round(comm.avgRating*10)/10;
+        rs.textContent='★ '+avg.toFixed(1)+' ('+comm.ratingCount+')';
+        rs.style.color='#D4AF37';
+      }else{
+        rs.textContent='—';
+      }
+    })();
+    rt.appendChild(rs);td2.appendChild(rt);tr.appendChild(td2);
     
     var td4=document.createElement('td');td4.textContent=sbSizeRange(plans);tr.appendChild(td4);
     var td5=document.createElement('td');td5.textContent=plans.length?sbPlanTarget(plans[0].rules):'—';tr.appendChild(td5);
@@ -4947,7 +4967,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     item(ar?'نوع التراجع':'Drawdown type',rules?sbDdExplain(rules.drawdown_type,ar):null);
     item(ar?'نموذج التسعير':'Pricing model',rules?(rules.pricing_model==='monthly subscription'?(ar?'اشتراك شهري':'Monthly sub'):(ar?'دفعة واحدة':'One-time')):null);
     item(ar?'الرافعة':'Leverage',rules?rules.leverage:null);
-    item(ar?'المقر':'Headquarters',(sbCountryFlag(firm.headquarters)?sbCountryFlag(firm.headquarters)+' ':'')+(firm.headquarters||null));
+    item(ar?'المقر':'Headquarters',firm.headquarters?((sbCountryFlag(firm.headquarters)?sbCountryFlag(firm.headquarters)+' ':'')+firm.headquarters):null);
     el.appendChild(kv);
     // key rules
     var kr=rules&&Array.isArray(rules.key_rules)?rules.key_rules:[];
@@ -4970,11 +4990,11 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       var isMonthly=allRules.some(function(r){return /monthly/i.test(r.pricing_model||'');});
       if(maxSplit>=90)pros.push((ar?'تقسيم أرباح عالي ':'High profit split ')+maxSplit+'%');
       else if(maxSplit>=80)pros.push((ar?'تقسيم أرباح جيد ':'Good profit split ')+maxSplit+'%');
-      if(hasStatic)pros.push(ar?'تراجع ثابت (متسامح)':'Static drawdown (forgiving)');
+      if(hasStatic&&!hasTrailing)pros.push(ar?'تراجع ثابت (متسامح)':'Static drawdown (forgiving)');
       if(minTarget<=8&&isFinite(minTarget))pros.push((ar?'هدف ربح منخفض ':'Low profit target ')+minTarget+'%');
       if(hasPromo)pros.push(ar?'برومو نشط':'Active promo');
       if(plans.length>=10)pros.push(ar?'برامج متعددة':'Multiple programs');
-      if(hasTrailing)cons.push(ar?'تراجع متحرك (صارم)':'Trailing drawdown (strict)');
+      if(hasTrailing&&!hasStatic)cons.push(ar?'تراجع متحرك (صارم)':'Trailing drawdown (strict)');
       if(minTarget>10&&isFinite(minTarget))cons.push((ar?'هدف ربح مرتفع ':'High profit target ')+minTarget+'%');
       if(isMonthly)cons.push(ar?'اشتراك شهري':'Monthly subscription');
       if(!hasPayout)cons.push(ar?'شروط السحب غير واضحة':'Payout terms unclear');
@@ -6629,9 +6649,26 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
           return firm;
         }
         function minPriceOf(firm){
-          if(!firm)return Infinity;
-          var prices=(sbPlansByFirm[firm.id]||[]).map(function(p){return sbNum(p.price);}).filter(isFinite);
-          return prices.length?Math.min.apply(null,prices):Infinity;
+          if(!firm)return 1e12; // Missing firm -> sort last (was Infinity, which breaks sort via NaN)
+          var plans=sbPlansByFirm[firm.id]||[];
+          // ISSUE 10 fix: convert to USD for fair comparison, use DISCOUNTED (promo) prices,
+          // missing prices sort last.
+          var usdPrices=plans.map(function(p){
+            var dp=(typeof sbDiscountedPrice==='function')?sbDiscountedPrice(p):{final:sbNum(p.price)};
+            var pr=sbNum(dp.final);
+            if(!isFinite(pr))return null;
+            var cur=(p.currency||'USD').toUpperCase();
+            // Convert to USD: rates are USD->target, so USD = price / rate
+            var rate=1;
+            try{
+              if(typeof exchangeRates!=='undefined'&&exchangeRates){
+                if(cur==='EUR'&&exchangeRates.EUR)rate=exchangeRates.EUR;
+                else if(cur==='MAD'&&exchangeRates.MAD)rate=exchangeRates.MAD;
+              }
+            }catch(e){}
+            return pr/rate;
+          }).filter(function(v){return v!==null&&isFinite(v);});
+          return usdPrices.length?Math.min.apply(null,usdPrices):1e12;
         }
         // PIPVANT Ranking Score (v1, 2026-10-17): transparent, data-driven, per methodology.
         // Criteria (all from verified DB data, never estimated):
