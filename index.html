@@ -5874,6 +5874,13 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
         sbLoadProfile(function(pname){enterProduct(pname||session.user.email||'','—');});
         if(typeof syncLocalTradesToCloud==='function')syncLocalTradesToCloud();
         sbLoadTrades();sbLoadDiscipline();sbLoadSettings();sbLoadAccounts();sbLoadUserPrefs();sbLoadCertificates();sbLoadNotifications();
+        // Deep link: #firm-<id> must also work for logged-in users. After firms load,
+        // sbRestoreDetailFromHash() (called in sbLoadFirms) will open the detail.
+        // Ensure sbLoadFirms runs so the hash can be honored.
+        try{
+          var _dlFidS=(typeof sbFirmIdFromHash==='function')?sbFirmIdFromHash():null;
+          if(_dlFidS&&typeof sbLoadFirms==='function'){sbLoadFirms();}
+        }catch(_e){}
       }else{
         // Deep link: #firm-<id> must survive a fresh load. Skip the auth gate and
         // enter guest mode directly; sbLoadFirms() re-opens the detail after load.
