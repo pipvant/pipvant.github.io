@@ -2394,7 +2394,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
 
       <section class="matcher-list" data-view="rows" data-density="comfortable" aria-labelledby="top-firms-title">
         <div class="matcher-list-head">
-          <div><h3 id="top-firms-title">Top Prop Firms</h3><div class="matcher-meta"><a class="method-pill" href="#matcherMethodology">How we verify and rank firms</a><span class="hourly-badge" id="hourlyBadge"><span class="hb-dot" aria-hidden="true"></span><span data-i18n-hourly>Data verified hourly</span></span><span id="lastUpdatedSpan">Last updated —</span><span class="freshness-pill" id="freshnessBadge" hidden><span class="fresh-dot"></span><span id="freshnessText"></span></span></div></div>
+          <div><h3 id="top-firms-title">Top Prop Firms</h3><div class="matcher-meta"><a class="method-pill" href="#matcherMethodology">How we verify and rank firms</a><span class="freshness-pill" id="freshnessBadge" hidden><span class="fresh-dot"></span><span id="freshnessText"></span></span></div></div>
           <div class="view-toggle" aria-label="Result view">
             <button class="view-button" type="button" aria-pressed="true" data-matcher-view="rows">Rows</button>
             <button class="view-button" type="button" aria-pressed="false" data-matcher-view="table">Table</button>
@@ -3360,7 +3360,13 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     });
   }
   function sbIsNewFirm(firmId){
-    if(!_newFirmsCache||!firmId)return false;
+    if(!firmId)return false;
+    // ISSUE 7 fix: if cache not loaded yet, trigger load (don't just return false).
+    // This ensures consistent badge state across all views and renders.
+    if(_newFirmsCache===null){
+      sbLoadNewFirms();
+      return false;
+    }
     var now=Date.now();
     for(var i=0;i<_newFirmsCache.length;i++){
       var nf=_newFirmsCache[i];
@@ -3372,18 +3378,25 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     }
     return false;
   }
+  /* ISSUE 7: Preload NEW firms cache at startup so all views (matcher,
+     directory, table) have consistent badge data from the first render. */
+  try{sbLoadNewFirms();}catch(e){}
   function sbRefreshNewBadge(el,firm){
     if(!el||!firm)return;
     var existing=el.querySelector('.new-badge');
     if(existing)existing.remove();
+    // ISSUE 7: Single source of truth — sbIsNewFirm is the ONLY place that
+    // decides. If cache isn't loaded yet, queue a retry (with guard against
+    // infinite loops via _newBadgeRetries).
+    if(_newFirmsCache===null){
+      sbLoadNewFirms(function(){sbRefreshNewBadge(el,firm);});
+      return;
+    }
     if(sbIsNewFirm(firm.id)){
       var badge=document.createElement('span');
       badge.className='new-badge';
       badge.textContent='✦ NEW';
       el.appendChild(badge);
-    } else if(_newFirmsCache===null){
-      // Cache not loaded yet — retry after load (badge only, no image reload)
-      sbLoadNewFirms(function(){sbRefreshNewBadge(el,firm);});
     }
   }
   function sbFirmLogo(el,firm){
@@ -3420,6 +3433,22 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
   function sbFmtSize(v){var n=sbNum(v);if(!isFinite(n))return '—';var sym='$',val=n;if(typeof convertPrice==='function'&&typeof currentCurrency!=='undefined'&&currentCurrency!=='USD'){val=convertPrice(n);sym=currentCurrency==='EUR'?'€':'MAD ';}return val>=1000000?sym+(Math.round(val/10000)/100)+'M':(val>=1000?sym+(Math.round(val/10)/100)+'k':sym+(Math.round(val*100)/100));}
   function sbSizeRange(plans){var s=plans.map(function(p){return sbNum(p.account_size);}).filter(isFinite).sort(function(a,b){return a-b;});if(!s.length)return '—';if(s.length===1)return sbFmtSize(s[0]);return sbFmtSize(s[0])+' – '+sbFmtSize(s[s.length-1])+' ('+s.length+')';}
   function sbMinPrice(plans){var p=plans.map(function(x){return {price:sbNum(x.price),currency:x.currency||'USD',program:(x.rules&&x.rules.program)||null};}).filter(function(x){return isFinite(x.price);}).sort(function(a,b){return a.price-b.price;});if(!p.length)return '—';var sym=p[0].currency==='EUR'?'€':p[0].currency==='MAD'?'MAD ':'$';var out=sym+p[0].price.toLocaleString('en-US');if(p[0].program)out+=' ('+p[0].program+')';return out;}
+  /* ISSUE 12 fix: sbMinPrice with promo/discount applied. Returns the lowest
+     DISCOUNTED price across plans (e.g., Funding Pips $29.7 not $33). */
+  function sbMinDiscountedPrice(plans){
+    var items=plans.map(function(x){
+      var dp=(typeof sbDiscountedPrice==='function')?sbDiscountedPrice(x):{base:sbNum(x.price),final:sbNum(x.price),pct:0};
+      if(!isFinite(dp.final))return null;
+      return {price:dp.final,base:dp.base,pct:dp.pct,currency:x.currency||'USD',program:(x.rules&&x.rules.program)||null};
+    }).filter(Boolean).sort(function(a,b){return a.price-b.price;});
+    if(!items.length)return {text:'—',hasPromo:false};
+    var it=items[0];
+    var sym=it.currency==='EUR'?'€':it.currency==='MAD'?'MAD ':'$';
+    var priceStr=(Math.round(it.price*100)/100).toLocaleString('en-US');
+    var out=sym+priceStr;
+    if(it.program)out+=' ('+it.program+')';
+    return {text:out,hasPromo:it.pct>0,salePrice:it.price,origPrice:it.base,currency:it.currency,symbol:sym};
+  }
   function sbFmtUSD(usd){var n=Number(usd);if(!isFinite(n))return '—';if(typeof convertPrice==='function'&&typeof currentCurrency!=='undefined'&&currentCurrency!=='USD'){var c=convertPrice(n);var sym=currentCurrency==='EUR'?'€':'MAD ';return sym+c.toLocaleString('en-US');}return '$'+n.toLocaleString('en-US');}function sbPlanTarget(rules){if(!rules)return '—';if(rules.profit_target_pct!=null&&isFinite(Number(rules.profit_target_pct)))return rules.profit_target_pct+'%';if(rules.profit_target_usd!=null&&isFinite(Number(rules.profit_target_usd)))return sbFmtUSD(rules.profit_target_usd);return '—';}
   function sbPlanDrawdown(rules){if(!rules)return '—';var v='—';if(rules.max_drawdown_pct!=null&&isFinite(Number(rules.max_drawdown_pct)))v=rules.max_drawdown_pct+'%';else if(rules.max_drawdown_usd!=null&&isFinite(Number(rules.max_drawdown_usd)))v=sbFmtUSD(rules.max_drawdown_usd);var t=String(rules.drawdown_type||'').toLowerCase();if(t.indexOf('trailing')!==-1)v+=' trailing';else if(t.indexOf('static')!==-1)v+=' static';return v;}
   /* PIPVANT Score (0-100): global, data-driven ranking used by matcher cards + table.
@@ -3500,7 +3529,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       .then(function(r){
         if(r.error||!r.data||!r.data.length)return;
         sbFirms=r.data;
-        sb.from('firm_plans').select('firm_id,account_size,price,currency,rules,source,updated_at').order('account_size')
+        sb.from('firm_plans').select('id,firm_id,account_size,price,currency,rules,source,updated_at').order('account_size')
           .then(function(r2){
             if(r2&&!r2.error&&Array.isArray(r2.data)){
               sbPlansByFirm={};
@@ -3610,14 +3639,6 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     var afNum=Number(af);
     if(isFinite(afNum)&&afNum>0)price+=afNum;
     return {total:price,hasFee:isFinite(afNum)&&afNum>0,fee:isFinite(afNum)?afNum:0};
-  }
-  /* Hourly badge label (language-aware). Rank modes were removed per user request. */
-  function sbUpdateHourlyBadge(){
-    try{
-      var ar=(typeof currentLanguage!=='undefined'&&currentLanguage==='ar');
-      var hb=document.querySelector('#hourlyBadge [data-i18n-hourly]');
-      if(hb)hb.textContent=ar?'البيانات تتحقق كل ساعة':'Data verified hourly';
-    }catch(e){}
   }
   function sbBestPromo(rules){
     if(!rules||!Array.isArray(rules.promotions)||!rules.promotions.length)return null;
@@ -4451,7 +4472,6 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
   function sbRenderFirms(){
     sbHideMarketUI();
     if(!sbFirms.length)return;
-    try{if(typeof sbUpdateHourlyBadge==='function')sbUpdateHourlyBadge();}catch(e){}
     var filters=sbGetMatcherFilters();
     var firms=sbFirms.filter(function(f){return sbFirmMatchesFilters(f,sbPlansByFirm[f.id]||[],filters);});
     /* RANKING: sort by PIPVANT Score (best first, name tiebreak). */
@@ -4575,9 +4595,6 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       });
     }catch(e){}
     var preview=document.querySelector('#matcher .preview-label');if(preview)preview.textContent=sbFirms.length+(currentLanguage==='ar'?' شركات موثقة':' verified firms');
-    var latest=null;sbFirms.forEach(function(f){if(f.updated_at&&(!latest||f.updated_at>latest))latest=f.updated_at;});
-    var metaSpan=document.getElementById('lastUpdatedSpan');
-    if(metaSpan)metaSpan.textContent=(currentLanguage==='ar'?'آخر تحديث ':'Last updated ')+sbTimeAgo(latest);
     /* Freshness badge: honest floor — every firm shown was verified at least this recently.
        Mega-audit H9 fix: use ONLY last_verified_at (was falling back to
        updated_at, showing "verified today" for firms never verified). */
@@ -4737,7 +4754,19 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     if(stats[0])stats[0].textContent=sbSizeRange(plans);
     if(stats[2])stats[2].textContent=sbPlanDrawdown(rules);
     if(stats[3])stats[3].textContent=sbPlanTarget(rules);
-    if(stats[4])stats[4].textContent=sbMinPrice(plans);
+    // ISSUE 12 fix: PRICE FROM now shows the promo/sale price (was raw price only).
+    if(stats[4]){
+      var _mdp=(typeof sbMinDiscountedPrice==='function')?sbMinDiscountedPrice(plans):{text:sbMinPrice(plans),hasPromo:false};
+      stats[4].textContent=_mdp.text;
+      // If there's a promo, append the struck original for transparency
+      if(_mdp.hasPromo&&_mdp.origPrice){
+        var _ws=document.createElement('span');
+        _ws.className='price-strike';
+        _ws.style.cssText='font-size:11px;opacity:0.7;margin-inline-start:4px;';
+        _ws.textContent=_mdp.symbol+Math.round(_mdp.origPrice).toLocaleString('en-US');
+        stats[4].appendChild(_ws);
+      }
+    }
     // Shortlist button
     var slBtn=node.querySelector('.firm-detail-actions .btn.secondary');
     if(slBtn){
