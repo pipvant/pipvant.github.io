@@ -3369,8 +3369,6 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     if(firm&&firm.id)el.setAttribute('data-firm-id',firm.id);
     var letter=(firm.name||'?').charAt(0).toUpperCase();
     el.setAttribute('aria-label',firm.name||'Firm');
-    // NEW badge (auto-hides after 3 days) — badge-only refresh, no image reload
-    sbRefreshNewBadge(el,firm);
     // Logo overrides: official high-res logos (clearly visible)
     var LOGO_OVERRIDES={
       'takeprofittrader.com':'https://takeprofittrader.com/assets/mobile-logo.svg',
@@ -3380,18 +3378,21 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     var LETTER_ONLY_DOMAINS=['blueguardian.com'];
     var domain='';
     try{domain=String(new URL(firm.website||'').hostname).replace(/^www\./,'');}catch(e){domain='';}
-    if(!domain){el.textContent=letter;return;}
+    // NEW badge MUST be applied AFTER textContent mutations (they wipe children).
+    // Definitive fix: badge survives every render path (heart tap, rating, refresh).
+    if(!domain){el.textContent=letter;sbRefreshNewBadge(el,firm);return;}
     el.textContent='';
     el.classList.remove('logo-wide');
     // Blue Guardian: force clean letter (no hi-res logo exists)
-    if(LETTER_ONLY_DOMAINS.indexOf(domain)!==-1){el.textContent=letter;return;}
+    if(LETTER_ONLY_DOMAINS.indexOf(domain)!==-1){el.textContent=letter;sbRefreshNewBadge(el,firm);return;}
     var img=document.createElement('img');
     img.alt=firm.name||'';img.loading='lazy';
     img.style.cssText='width:100%;height:100%;object-fit:contain;border-radius:6px;';
-    img.onerror=function(){img.remove();el.textContent=letter;};
+    img.onerror=function(){img.remove();el.textContent=letter;sbRefreshNewBadge(el,firm);};
     // Google favicons high-res (free, no key) — falls back to letter
     img.src=LOGO_OVERRIDES[domain]||('https://www.google.com/s2/favicons?domain='+domain+'&sz=128');
     el.appendChild(img);
+    sbRefreshNewBadge(el,firm);
   }
   function sbNum(v){if(v==null||v==='')return NaN;return Number(v);}
   function sbFmtSize(v){var n=sbNum(v);if(!isFinite(n))return '—';var sym='$',val=n;if(typeof convertPrice==='function'&&typeof currentCurrency!=='undefined'&&currentCurrency!=='USD'){val=convertPrice(n);sym=currentCurrency==='EUR'?'€':'MAD ';}return val>=1000000?sym+(Math.round(val/10000)/100)+'M':(val>=1000?sym+(Math.round(val/10)/100)+'k':sym+(Math.round(val*100)/100));}
@@ -4659,10 +4660,17 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       try{
         var n=sbToggleShortlist(fid);
         sbRepaintHeart(el,fid);
+        // Sync every other heart showing this firm (matcher card, directory card,
+        // detail button) WITHOUT a full re-render — re-render used to wipe NEW badges.
+        try{
+          var allHearts=document.querySelectorAll('.pfm-heart[data-firm-id="'+String(fid).replace(/"/g,'')+'"],#fdHeart');
+          for(var hi=0;hi<allHearts.length;hi++){
+            if(allHearts[hi]!==el&&typeof sbRepaintHeart==='function')sbRepaintHeart(allHearts[hi],fid);
+          }
+        }catch(_sync){}
         var fname=el.getAttribute('data-firm-name')||'';
         var ar=(typeof currentLanguage!=='undefined'&&currentLanguage==='ar');
         if(typeof showToast==='function')showToast(n?((ar?'تحفظات ':'Saved ')+fname):((ar?'تحيدات ':'Removed ')+fname));
-        if(typeof sbRenderFirms==='function'){try{sbRenderFirms();}catch(_e2){}}
       }catch(_h){}
     }
     el.addEventListener('touchend',fire,{passive:false});
