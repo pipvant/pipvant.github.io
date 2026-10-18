@@ -3557,6 +3557,8 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
               })
               .catch(function(){
                 sbRenderFirms();sbRenderDirectory();sbPopulateAccountSizes();
+                // Deep link: re-open firm detail if the URL carries #firm-<id> (refresh-safe)
+                try{if(typeof sbRestoreDetailFromHash==='function')sbRestoreDetailFromHash();}catch(_dl3){}
                 // Safety net for NEW badges even on community-load failure
                 sbLoadNewFirms(function(){
                   document.querySelectorAll('.logo-slot[data-firm-id]').forEach(function(el){
@@ -5270,6 +5272,62 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
   try{
     window.addEventListener('hashchange',function(){try{sbSyncDetailFromHash();}catch(e){}});
   }catch(e){}
+  /* PIPVANT deep-link fallback: runs INDEPENDENT of the auth flow.
+     If the URL carries #firm-<id> but the firm detail never opens
+     (getSession hang, slow CDN, deploy lag), this takes over:
+     passive ~3s while auth settles, then forces the guest deep-link
+     path. Stops as soon as the right detail is open. Safe for logged-in
+     users: clearUserState() never touches the Supabase session token. */
+  (function(){
+    try{
+      if(!/^#firm-/.test(String(window.location.hash||'')))return;
+      var _tries=0;
+      var _iv=setInterval(function(){
+        _tries++;
+        try{
+          var _fid=(typeof sbFirmIdFromHash==='function')?sbFirmIdFromHash():null;
+          if(!_fid){clearInterval(_iv);return;} /* hash cleared (invalid id) — done */
+          var _open=false,_cur=null;
+          try{var _sh=document.getElementById('firmDetailSheet');_open=!!(_sh&&_sh.classList.contains('open'));}catch(_a){}
+          if(!_open){try{var _sc=document.getElementById('firm-detail');_open=!!(_sc&&_sc.classList.contains('active'));}catch(_b){}}
+          try{_cur=(typeof sbDetailFirmId!=='undefined')?sbDetailFirmId:null;}catch(_c){}
+          if(_open&&String(_cur)===String(_fid)){clearInterval(_iv);return;} /* already open — done */
+          var _firmsReady=!!(typeof sbFirms!=='undefined'&&sbFirms&&sbFirms.length>0);
+          if(_firmsReady&&typeof sbRestoreDetailFromHash==='function'){
+            clearInterval(_iv);
+            try{sbRestoreDetailFromHash();}catch(_d){}
+            return;
+          }
+          /* Aggressive mode after ~3s: force the guest deep-link path. */
+          if(_tries>=30&&typeof sb!=='undefined'&&sb&&typeof sbLoadFirms==='function'){
+            clearInterval(_iv);
+            try{if(typeof clearUserState==='function')clearUserState();}catch(_e){}
+            try{sbUser=null;}catch(_f){}
+            document.body.classList.remove('auth-active','show-auth','show-landing','auth-checking');
+            try{var _l=document.getElementById('authLoading');if(_l)_l.style.display='none';}catch(_g){}
+            document.body.classList.add('app-ready');
+            try{sbLoadFirms();}catch(_h){}
+            try{if(typeof sbLoadCalendar==='function')sbLoadCalendar();}catch(_i){}
+            /* Short passive re-poll: open the detail once firms land. */
+            var _t2=0;
+            var _iv2=setInterval(function(){
+              _t2++;
+              try{
+                var _f2=(typeof sbFirmIdFromHash==='function')?sbFirmIdFromHash():null;
+                if(!_f2){clearInterval(_iv2);return;}
+                if(typeof sbFirms!=='undefined'&&sbFirms&&sbFirms.length>0&&typeof sbRestoreDetailFromHash==='function'){
+                  clearInterval(_iv2);
+                  try{sbRestoreDetailFromHash();}catch(_j){}
+                }
+              }catch(_k){}
+              if(_t2>60)clearInterval(_iv2);
+            },100);
+          }
+        }catch(_z){}
+        if(_tries>90)clearInterval(_iv);
+      },100);
+    }catch(_zz){}
+  })();
   function sbOpenFirmDetail(firmId){
     var firm=null;(sbFirms||[]).forEach(function(f){if(String(f.id)===String(firmId))firm=f;});
     if(!firm||typeof showScreen!=='function')return;
