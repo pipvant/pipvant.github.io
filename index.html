@@ -3448,7 +3448,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     var priceStr=(Math.round(it.price*100)/100).toLocaleString('en-US');
     var out=sym+priceStr;
     if(it.program)out+=' ('+it.program+')';
-    return {text:out,hasPromo:it.pct>0,salePrice:it.price,origPrice:it.base,currency:it.currency,symbol:sym};
+    return {text:out,hasPromo:it.pct>0,salePrice:it.price,origPrice:it.base,currency:it.currency,symbol:sym,program:it.program};
   }
   function sbFmtUSD(usd){var n=Number(usd);if(!isFinite(n))return '—';if(typeof convertPrice==='function'&&typeof currentCurrency!=='undefined'&&currentCurrency!=='USD'){var c=convertPrice(n);var sym=currentCurrency==='EUR'?'€':'MAD ';return sym+c.toLocaleString('en-US');}return '$'+n.toLocaleString('en-US');}function sbPlanTarget(rules){if(!rules)return '—';if(rules.profit_target_pct!=null&&isFinite(Number(rules.profit_target_pct)))return rules.profit_target_pct+'%';if(rules.profit_target_usd!=null&&isFinite(Number(rules.profit_target_usd)))return sbFmtUSD(rules.profit_target_usd);return '—';}
   function sbPlanDrawdown(rules){if(!rules)return '—';var v='—';if(rules.max_drawdown_pct!=null&&isFinite(Number(rules.max_drawdown_pct)))v=rules.max_drawdown_pct+'%';else if(rules.max_drawdown_usd!=null&&isFinite(Number(rules.max_drawdown_usd)))v=sbFmtUSD(rules.max_drawdown_usd);var t=String(rules.drawdown_type||'').toLowerCase();if(t.indexOf('trailing')!==-1)v+=' trailing';else if(t.indexOf('static')!==-1)v+=' static';return v;}
@@ -4494,6 +4494,11 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     rows.sort(function(a,b){
       var va=sbChalRowVal(a.firm,a.plan,sbChalSortCol),vb=sbChalRowVal(b.firm,b.plan,sbChalSortCol);
       if(typeof va==='string')return va.localeCompare(vb)*dir;
+      // ISSUE C fix: rows with no valid value (-1 sentinel) always sort last, either direction.
+      var aM=(va===-1),bM=(vb===-1);
+      if(aM&&bM)return 0;
+      if(aM)return 1;
+      if(bM)return -1;
       return (va-vb)*dir;
     });
     rows.forEach(function(row){
@@ -4667,7 +4672,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
         }
       });
     }catch(e){}
-    var preview=document.querySelector('#matcher .preview-label');if(preview)preview.textContent=sbFirms.length+(currentLanguage==='ar'?' شركات موثقة':' verified firms');
+    var preview=document.querySelector('#matcher .preview-label');if(preview)preview.textContent=firms.length+(currentLanguage==='ar'?' شركات موثقة':' verified firms'); /* ISSUE A fix: was sbFirms.length (total), overwriting the filtered count set above */
     /* Freshness badge: honest floor — every firm shown was verified at least this recently.
        Mega-audit H9 fix: use ONLY last_verified_at (was falling back to
        updated_at, showing "verified today" for firms never verified). */
@@ -4828,16 +4833,43 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     if(stats[2])stats[2].textContent=sbPlanDrawdown(rules);
     if(stats[3])stats[3].textContent=sbPlanTarget(rules);
     // ISSUE 12 fix: PRICE FROM now shows the promo/sale price (was raw price only).
+    // ISSUE B fix: PRICE FROM follows the user's display currency (was plan native currency).
     if(stats[4]){
       var _mdp=(typeof sbMinDiscountedPrice==='function')?sbMinDiscountedPrice(plans):{text:sbMinPrice(plans),hasPromo:false};
-      stats[4].textContent=_mdp.text;
-      // If there's a promo, append the struck original for transparency
-      if(_mdp.hasPromo&&_mdp.origPrice){
-        var _ws=document.createElement('span');
-        _ws.className='price-strike';
-        _ws.style.cssText='font-size:11px;opacity:0.7;margin-inline-start:4px;';
-        _ws.textContent=_mdp.symbol+Math.round(_mdp.origPrice).toLocaleString('en-US');
-        stats[4].appendChild(_ws);
+      var _dc=(typeof currentCurrency!=='undefined'&&currentCurrency)?currentCurrency:'USD';
+      var _dSym=_dc==='EUR'?'€':_dc==='MAD'?'MAD ':'$';
+      var _cvt=function(amt,nat){
+        amt=Number(amt);if(!isFinite(amt))return null;
+        var nk=String(nat||'USD').toUpperCase();
+        var nr=(typeof exchangeRates!=='undefined'&&exchangeRates[nk])?exchangeRates[nk]:1;
+        var dr=(typeof exchangeRates!=='undefined'&&exchangeRates[_dc])?exchangeRates[_dc]:1;
+        return Math.round(amt/nr*dr*100)/100;
+      };
+      var _sale=(_mdp.salePrice!=null)?_cvt(_mdp.salePrice,_mdp.currency):null;
+      if(_sale!=null){
+        var _pt=_dSym+_sale.toLocaleString('en-US');
+        if(_mdp.program)_pt+=' ('+_mdp.program+')';
+        stats[4].textContent=_pt;
+        // If there's a promo, append the struck original for transparency
+        if(_mdp.hasPromo&&_mdp.origPrice!=null){
+          var _so=_cvt(_mdp.origPrice,_mdp.currency);
+          if(_so!=null){
+            var _ws=document.createElement('span');
+            _ws.className='price-strike';
+            _ws.style.cssText='font-size:11px;opacity:0.7;margin-inline-start:4px;';
+            _ws.textContent=_dSym+_so.toLocaleString('en-US');
+            stats[4].appendChild(_ws);
+          }
+        }
+      }else{
+        stats[4].textContent=_mdp.text;
+        if(_mdp.hasPromo&&_mdp.origPrice){
+          var _ws2=document.createElement('span');
+          _ws2.className='price-strike';
+          _ws2.style.cssText='font-size:11px;opacity:0.7;margin-inline-start:4px;';
+          _ws2.textContent=_mdp.symbol+Math.round(_mdp.origPrice).toLocaleString('en-US');
+          stats[4].appendChild(_ws2);
+        }
       }
     }
     // Shortlist button
