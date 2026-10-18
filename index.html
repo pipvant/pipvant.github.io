@@ -2234,13 +2234,13 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       <button class="rail-btn" data-screen="journal" type="button" title="Journal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6M9 11h6M9 15h3"/></svg><span>Journal</span></button>
       <button class="rail-btn" data-screen="calculator" type="button" title="Risk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h2m4 0h2M8 15h2m4 0h2"/></svg><span>Risk</span></button>
       <button class="rail-btn" data-screen="calendar" type="button" title="Calendar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16M8 14h3M14 14h2M8 17h2"/></svg><span>Calendar</span></button>
-      <button class="rail-btn" data-screen="lab" type="button" title="Pro Lab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 3h6M10 3v6l-5.5 9.5A2 2 0 0 0 6.2 21h11.6a2 2 0 0 0 1.7-2.5L14 9V3"/><path d="M7.5 15h9"/></svg><span>Lab</span></button>
+      <button class="rail-btn" data-screen="lab" type="button" title="Pro Lab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 3h6M10 3v6l-5.5 9.5A2 2 0 0 0 6.2 21h11.6a2 2 0 0 0 1.7-2.5L14 9V3"/><path d="M7.5 15h9"/></svg><span data-i18n="Lab">Lab</span></button>
       <button class="rail-btn" data-screen="profile" type="button" title="Profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 20c.5-4 2.7-6 6.5-6s6 2 6.5 6"/></svg><span>Profile</span></button>
       <button class="rail-btn" data-screen="certificate" type="button" title="Certificates"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="9" r="5"/><path d="m9 13-1 8 4-2 4 2-1-8M10 9l1.3 1.3L14 7.6"/></svg><span>Certificates</span></button>
       <button class="rail-btn nav-coming-soon" data-screen="discipline-soon" type="button" title="Discipline — Soon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="8"/><path d="m8.5 12 2.2 2.2 4.8-5"/></svg><span>Discipline</span><small class="nav-soon-badge">Soon</small></button>
     </nav>
     <div class="rail-widgets" aria-label="Account overview">
-      <div class="rail-widget"><span>Activity score</span><svg class="rail-spider" viewBox="0 0 60 48" fill="none"><path d="M30 3 52 15v22L30 47 8 37V15Z" stroke="currentColor" opacity=".34"/><path d="M30 3v44M8 15l44 22M52 15 8 37" stroke="currentColor" opacity=".18"/></svg><strong id="railTradingScore">—</strong></div>
+      <div class="rail-widget"><span data-i18n="Activity score">Activity score</span><svg class="rail-spider" viewBox="0 0 60 48" fill="none"><path d="M30 3 52 15v22L30 47 8 37V15Z" stroke="currentColor" opacity=".34"/><path d="M30 3v44M8 15l44 22M52 15 8 37" stroke="currentColor" opacity=".18"/></svg><strong id="railTradingScore">—</strong></div>
       <div class="rail-widget"><span>Current streak</span><strong id="railStreak">0</strong><span>trading days</span></div>
     </div>
     <div class="rail-bottom rail-bottom-spacer">
@@ -3450,7 +3450,10 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     if(it.program)out+=' ('+it.program+')';
     return {text:out,hasPromo:it.pct>0,salePrice:it.price,origPrice:it.base,currency:it.currency,symbol:sym,program:it.program};
   }
-  function sbFmtUSD(usd){var n=Number(usd);if(!isFinite(n))return '—';if(typeof convertPrice==='function'&&typeof currentCurrency!=='undefined'&&currentCurrency!=='USD'){var c=convertPrice(n);var sym=currentCurrency==='EUR'?'€':'MAD ';return sym+c.toLocaleString('en-US');}return '$'+n.toLocaleString('en-US');}function sbPlanTarget(rules){if(!rules)return '—';if(rules.profit_target_pct!=null&&isFinite(Number(rules.profit_target_pct)))return rules.profit_target_pct+'%';if(rules.profit_target_usd!=null&&isFinite(Number(rules.profit_target_usd)))return sbFmtUSD(rules.profit_target_usd);return '—';}
+  function sbFmtUSD(usd){var n=Number(usd);if(!isFinite(n))return '—';if(typeof convertPrice==='function'&&typeof currentCurrency!=='undefined'&&currentCurrency!=='USD'){var c=convertPrice(n);var sym=currentCurrency==='EUR'?'€':'MAD ';return sym+c.toLocaleString('en-US');}return '$'+n.toLocaleString('en-US');}
+  /* ISSUE 8 fix: capitalize payout frequency for consistent display ("weekly" -> "Weekly") */
+  function sbCapPayout(v){var s=String(v||'').trim();if(!s||s==='—')return s||'—';return s.charAt(0).toUpperCase()+s.slice(1);}
+  function sbPlanTarget(rules){if(!rules)return '—';if(rules.profit_target_pct!=null&&isFinite(Number(rules.profit_target_pct)))return rules.profit_target_pct+'%';if(rules.profit_target_usd!=null&&isFinite(Number(rules.profit_target_usd)))return sbFmtUSD(rules.profit_target_usd);return '—';}
   function sbPlanDrawdown(rules){if(!rules)return '—';var v='—';if(rules.max_drawdown_pct!=null&&isFinite(Number(rules.max_drawdown_pct)))v=rules.max_drawdown_pct+'%';else if(rules.max_drawdown_usd!=null&&isFinite(Number(rules.max_drawdown_usd)))v=sbFmtUSD(rules.max_drawdown_usd);var t=String(rules.drawdown_type||'').toLowerCase();if(t.indexOf('trailing')!==-1)v+=' trailing';else if(t.indexOf('static')!==-1)v+=' static';return v;}
   /* PIPVANT Score (0-100): global, data-driven ranking used by matcher cards + table.
      Trust & transparency (25) + Profit split (20) + Value (20) + Drawdown (15) + Payout speed (10) + Data completeness (10). */
@@ -3507,7 +3510,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     }
     return {score:Math.round(score),rationale:rationale.join(', ')};
   }
-  function sbPricingLabel(plans){if(!plans.length||!plans[0].rules||!plans[0].rules.pricing_model)return '—';return plans[0].rules.pricing_model==='monthly subscription'?(currentLanguage==='ar'?'شهري':'Monthly'):(currentLanguage==='ar'?'دفعة واحدة':'One-time');}
+  function sbPricingLabel(plans){if(!plans.length||!plans[0].rules||!plans[0].rules.pricing_model)return '—';var _pm=String(plans[0].rules.pricing_model).toLowerCase();/* ISSUE 7 fix: DB uses 'monthly', code only checked 'monthly subscription' */return (_pm==='monthly subscription'||_pm==='monthly')?(currentLanguage==='ar'?'شهري':'Monthly'):(currentLanguage==='ar'?'دفعة واحدة':'One-time');}
   function sbSourceLine(container,firm){
     container.textContent='';
     container.appendChild(document.createTextNode(currentLanguage==='ar'?'المصدر: ':'Source: '));
@@ -4519,7 +4522,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       tr.appendChild(td(ptdd||'—','chal-ptdd'));
       var sp=r.profit_split;
       tr.appendChild(td(sp!=null&&isFinite(Number(sp))?sp+'%':'—'));
-      tr.appendChild(td(r.payout_frequency||'—'));
+      tr.appendChild(td(sbCapPayout(r.payout_frequency)));
       var dp=sbDiscountedPrice(plan);
       var priceHtml='—';
       if(dp.final!=null){
@@ -5000,7 +5003,27 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       card.hidden=!show;if(show)visible++;
     });
     var noMatch=document.getElementById('directoryNoMatch');
-    if(noMatch)noMatch.hidden=visible>0;
+    if(noMatch){
+      noMatch.hidden=visible>0;
+      // ISSUE 4 fix: Saved tab with nothing saved shows a specific message
+      if(visible===0){
+        try{
+          var _savedTab=document.querySelector('.directory-tab[data-directory-tab="saved"]');
+          var _isSaved=_savedTab&&_savedTab.getAttribute('aria-selected')==='true';
+          var _h3=noMatch.querySelector('h3'),_pp=noMatch.querySelector('p'),_bb=noMatch.querySelector('button');
+          var _ar=currentLanguage==='ar';
+          if(_isSaved){
+            if(_h3)_h3.textContent=_ar?'لا توجد شركات محفوظة بعد':'No saved firms yet';
+            if(_pp)_pp.textContent=_ar?'انقر على القلب لحفظ الشركات هنا.':'Tap the heart on any firm to save it here.';
+            if(_bb)_bb.style.display='none';
+          }else{
+            if(_h3)_h3.textContent=_ar?'لا توجد شركات تطابق هذه المرشحات.':'No firms match these filters.';
+            if(_pp)_pp.textContent=_ar?'امسح المرشحات أو البحث للعودة إلى الدليل الكامل.':'Clear the active filters or search to return to the complete directory.';
+            if(_bb)_bb.style.display='';
+          }
+        }catch(_se){}
+      }
+    }
   }
   function sbFillDetailSheet(firmId){
     var firm=null;sbFirms.forEach(function(f){if(String(f.id)===String(firmId))firm=f;});
@@ -5072,7 +5095,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
         function kvItem(lbl,val){var d=document.createElement('div');var s=document.createElement('span');s.textContent=lbl;var b=document.createElement('b');b.textContent=val||'—';d.appendChild(s);d.appendChild(b);return d;}
         var ar=currentLanguage==='ar';
         kv.appendChild(kvItem(ar?'تقسيم الأرباح':'Profit split',(rules&&rules.profit_split!=null&&isFinite(Number(rules.profit_split)))?rules.profit_split+'%':null));
-        kv.appendChild(kvItem(ar?'تكرار الدفع':'Payout frequency',rules?rules.payout_frequency:null));
+        kv.appendChild(kvItem(ar?'تكرار الدفع':'Payout frequency',rules?sbCapPayout(rules.payout_frequency):null));
         poEl.appendChild(kv);
         // payout/consistency-related key rules
         var prel=keyRules.filter(function(k){return /payout|consist|withdraw|scaling/i.test(k);});
@@ -5126,7 +5149,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     var kv=document.createElement('div');kv.className='fd-kv';
     function item(l,v){var d=document.createElement('div');var s=document.createElement('span');s.textContent=l;var b=document.createElement('b');b.textContent=v||'—';d.appendChild(s);d.appendChild(b);kv.appendChild(d);}
     item(ar?'نوع التراجع':'Drawdown type',rules?sbDdExplain(rules.drawdown_type,ar):null);
-    item(ar?'نموذج التسعير':'Pricing model',rules?(rules.pricing_model==='monthly subscription'?(ar?'اشتراك شهري':'Monthly sub'):(ar?'دفعة واحدة':'One-time')):null);
+    item(ar?'نموذج التسعير':'Pricing model',rules?((function(_pm){return (_pm==='monthly subscription'||_pm==='monthly');})(String(rules.pricing_model).toLowerCase())?(ar?'اشتراك شهري':'Monthly sub'):(ar?'دفعة واحدة':'One-time')):null);
     item(ar?'الرافعة':'Leverage',rules?rules.leverage:null);
     item(ar?'المقر':'Headquarters',firm.headquarters?((sbCountryFlag(firm.headquarters)?sbCountryFlag(firm.headquarters)+' ':'')+firm.headquarters):null);
     el.appendChild(kv);
@@ -5261,7 +5284,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     var kv=document.createElement('div');kv.className='fd-kv';
     function item(l,v){var d=document.createElement('div');var s=document.createElement('span');s.textContent=l;var b=document.createElement('b');b.textContent=v||'—';d.appendChild(s);d.appendChild(b);kv.appendChild(d);}
     item(ar?'تقسيم الأرباح':'Profit split',(rules&&rules.profit_split!=null&&isFinite(Number(rules.profit_split)))?rules.profit_split+'%':null);
-    item(ar?'تكرار الدفع':'Payout frequency',rules?rules.payout_frequency:null);
+    item(ar?'تكرار الدفع':'Payout frequency',rules?sbCapPayout(rules.payout_frequency):null);
     el.appendChild(kv);
     var kr=rules&&Array.isArray(rules.key_rules)?rules.key_rules:[];
     var prel=kr.filter(function(k){return /payout|consist|withdraw|scaling/i.test(k);});
@@ -5382,7 +5405,27 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
         if(likeBtn){likeBtn.onclick=function(ev){if(ev)ev.stopPropagation();sbToggleLike(firmId);};
           likeBtn.title=uidAtCall?'':(ar?'سجل الدخول للإعجاب':'Log in to like');}
       },function(){if(uidNow()!==uidAtCall)return;paint(avg,cnt,my,0,false,!!uidAtCall);});
-    },function(){});
+    },function(){
+      // ISSUE 2 fix: retry once on failure (race condition left "No ratings yet" permanently)
+      setTimeout(function(){
+        try{
+          if(typeof sb==='undefined'||!sb)return;
+          var _uid2=(typeof sbUser!=='undefined'&&sbUser)?sbUser.id:null;
+          if(uidNow()!==uidAtCall)return;
+          sb.from('firm_ratings').select('rating,user_id').eq('firm_id',firmId).then(function(r2){
+            if(uidNow()!==uidAtCall)return;
+            var rows2=(r2&&r2.data)||[],sum2=0,cnt2=0,my2=0;
+            rows2.forEach(function(x){
+              var rv2=Number(x.rating);
+              if(rv2>=1&&rv2<=5){sum2+=rv2;cnt2++;}
+              if(uidAtCall&&x.user_id===uidAtCall){var mv2=Number(x.rating);my2=(mv2>=1&&mv2<=5)?mv2:0;}
+            });
+            var avg2=cnt2?sum2/cnt2:0;
+            paint(avg2,cnt2,my2,0,false,!!uidAtCall);
+          },function(){});
+        }catch(_re){}
+      },1500);
+    });
   }
   function sbSubmitRating(firmId,n){
     var ar=currentLanguage==='ar';
@@ -6140,6 +6183,18 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
         // so a first-time visitor can never be misclassified as returning.
         // Key renamed from pipvant_seen_landing: the old key was written on every CTA click,
         // so any stale value from before this fix is ignored.
+        // ISSUE 1 fix: if guest was browsing public tools (flag set), skip auth gate on refresh.
+        var _guestPub=false;try{_guestPub=!!localStorage.getItem('pipvant_guest_public');}catch(_ge){}
+        if(_guestPub){
+          try{if(typeof clearUserState==='function')clearUserState();}catch(_e){}
+          try{sbUser=null;}catch(_e){}
+          document.body.classList.remove('auth-active','show-auth','show-landing','auth-checking');
+          try{var _gpL=document.getElementById('authLoading');if(_gpL)_gpL.style.display='none';}catch(_e){}
+          document.body.classList.add('app-ready');
+          try{if(typeof sbLoadFirms==='function')sbLoadFirms();}catch(_e){}
+          try{if(typeof sbLoadCalendar==='function')sbLoadCalendar();}catch(_e){}
+          return;
+        }
         var seenLp=false;try{seenLp=!!localStorage.getItem('pipvant_landing_seen');}catch(e){}
         if(seenLp){
           document.body.classList.add('auth-active','show-auth');
@@ -6173,6 +6228,8 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       // into the guest view.
       try{if(typeof clearUserState==='function')clearUserState();}catch(e){}
       try{if(typeof sbUser!=='undefined')sbUser=null;}catch(e){}
+      // ISSUE 1 fix: remember guest chose public tools, so refresh stays here
+      try{localStorage.setItem('pipvant_guest_public','1');}catch(_g){}
       document.body.classList.remove('auth-active','show-auth');
       document.body.classList.add('app-ready');
       // Load public data
@@ -6199,7 +6256,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     '5 questions. We score every real plan against your style — top 3 with the reason why.':'5 أسئلة. نقيّم كل خطة حقيقية وفق أسلوبك — أفضل 3 مع سبب الاختيار.',
     'All Lab tools compute from verified data or your own inputs — nothing invented.':'جميع أدوات المختبر تُحسب من بيانات موثقة أو مدخلاتك الخاصة — لا اختراع.',
     'TRUE COST':'التكلفة الحقيقية','PASS PROBABILITY':'احتمالية الاجتياز','select a plan':'اختر خطة',
-    'Calculator 01':'الحاسبة 01','Simulator 02':'المحاكي 02','Radar 03':'الرادار 03','Guard 04':'الحارس 04','Quiz 05':'الاختبار 05','Pro Lab':'مختبر المحترفين',
+    'Calculator 01':'الحاسبة 01','Simulator 02':'المحاكي 02','Radar 03':'الرادار 03','Guard 04':'الحارس 04','Quiz 05':'الاختبار 05','Pro Lab':'مختبر المحترفين','Lab':'المختبر','Activity score':'نقاط النشاط',
     'Commission per round-trip ($)':'العمولة لكل صفقة ذهاباً وإياباً ($)',
     'Expected trades to pass':'الصفقات المتوقعة للاجتياز',
     'Reset probability (%)':'احتمالية إعادة التعيين (%)',
@@ -7230,12 +7287,14 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
   document.getElementById('notificationsToggle').addEventListener('click',function(){
     notificationsEnabled=!notificationsEnabled;this.setAttribute('aria-checked',String(notificationsEnabled));notificationButton.disabled=!notificationsEnabled;notificationButton.setAttribute('aria-disabled',String(!notificationsEnabled));
     if(!notificationsEnabled)closeNotifications();refreshNotificationBadge();var feedback=document.getElementById('settingsFeedback');feedback.textContent=currentLanguage==='ar'?(notificationsEnabled?'الإشعارات مفعلة':'الإشعارات متوقفة'):(notificationsEnabled?'Notifications on':'Notifications off');feedbackMotion(feedback);showToast(feedback.textContent);
+    /* ISSUE 9 fix: clear status text after toast dismisses */
+    try{setTimeout(function(){var _fb=document.getElementById('settingsFeedback');if(_fb)_fb.textContent='';},4000);}catch(_e){}
     if(typeof sbSaveSettings==='function')sbSaveSettings();
   });
   document.getElementById('exportData').addEventListener('click',function(){
     var direction=document.querySelector('.chip[data-direction][aria-pressed="true"]');
     var data={exportedAt:new Date().toISOString(),profile:{displayName:profileSession.name,bio:profileSession.bio,certificates:profileSession.certificates.slice()},preferences:{appearance:document.documentElement.getAttribute('data-theme')||'dark',language:currentLanguage,currency:currentCurrency,defaultRiskPercent:defaultRisk,notifications:notificationsEnabled},riskCalculator:{accountSize:document.getElementById('balance').value,riskPercent:document.getElementById('riskPercent').value,stopLossPips:document.getElementById('stopDistance').value,symbol:document.getElementById('riskSymbol').value},discipline:{checklist:Array.prototype.map.call(document.querySelectorAll('.discipline-check'),function(check){return check.checked;}),weeklyReview:{followed:document.getElementById('reviewWorked').value,notFollowed:document.getElementById('reviewBroke').value,nextPriority:document.getElementById('reviewChange').value}},tradeDraft:{pair:document.getElementById('tradePair').value,direction:direction?direction.getAttribute('data-direction'):'',entry:document.getElementById('tradeEntry').value,stop:document.getElementById('tradeStop').value,target:document.getElementById('tradeTarget').value,size:document.getElementById('tradeSize').value,notes:document.getElementById('tradeNotes').value}};
-    var url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));var link=document.createElement('a');link.href=url;link.download='pipvant-data.json';document.body.appendChild(link);link.click();link.remove();setTimeout(function(){URL.revokeObjectURL(url);},0);document.getElementById('settingsFeedback').textContent=currentLanguage==='ar'?'التصدير جاهز':'Export ready';
+    var url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));var link=document.createElement('a');link.href=url;link.download='pipvant-data.json';document.body.appendChild(link);link.click();link.remove();setTimeout(function(){URL.revokeObjectURL(url);},0);document.getElementById('settingsFeedback').textContent=currentLanguage==='ar'?'التصدير جاهز':'Export ready';try{setTimeout(function(){var _fb=document.getElementById('settingsFeedback');if(_fb)_fb.textContent='';},4000);}catch(_e){}
   });
   document.getElementById('importData').addEventListener('click',function(){
     document.getElementById('importDataFile').click();
