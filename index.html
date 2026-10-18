@@ -241,6 +241,14 @@
     .fd-stars button{background:none;border:0;font-size:22px;line-height:1;padding:3px;cursor:pointer;color:var(--line-strong);transition:transform .12s}
     .fd-stars button.lit{color:#D4AF37}
     .fd-stars button:active{transform:scale(1.25)}
+    .fd-stars span{font-size:22px;line-height:1;padding:3px;color:var(--line-strong);cursor:default;pointer-events:none;user-select:none}
+    .fd-stars span.lit{color:#D4AF37}
+    .fd-rate-cta{margin:-8px 0 16px}
+    .fd-rate-btn{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#E8C547,#D4AF37);color:#0A1628;border:0;border-radius:999px;padding:9px 18px;font:700 13px/1 inherit;font-family:inherit;cursor:pointer}
+    .fd-rate-btn:active{transform:scale(.97)}
+    .fd-rate-picker{margin-top:10px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--sunken);display:flex;align-items:center;gap:12px}
+    .fd-rate-picker[hidden]{display:none}
+    .fd-rate-hint{color:var(--muted);font-size:11px}
     .fd-rate-meta{display:flex;align-items:baseline;gap:6px}
     .fd-rate-meta b{font-size:17px;font-variant-numeric:tabular-nums}
     .fd-rate-meta span{font-size:11px;color:var(--muted)}
@@ -2486,10 +2494,17 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
         <!-- Community ratings + likes (real user data) -->
         <div class="fd-community" id="fdCommunity">
           <div class="fd-rate">
-            <div class="fd-stars" id="fdStars" role="radiogroup" aria-label="Rate this firm"></div>
+            <div class="fd-stars" id="fdStars" role="img" aria-label="Average rating"></div>
             <div class="fd-rate-meta"><b id="fdAvg">—</b><span id="fdRateCount"></span></div>
           </div>
           <button class="fd-like" id="fdLike" type="button" aria-pressed="false"><span class="fd-like-ico">👍</span><b id="fdLikeCount">0</b></button>
+        </div>
+        <div class="fd-rate-cta" id="fdRateCta" hidden>
+          <button class="fd-rate-btn" id="fdRateBtn" type="button"></button>
+          <div class="fd-rate-picker" id="fdRatePicker" hidden>
+            <div class="fd-stars fd-picker-stars" id="fdPickerStars" role="radiogroup" aria-label="Choose your rating"></div>
+            <small class="fd-rate-hint" id="fdRateHint"></small>
+          </div>
         </div>
         <div class="fd-tabs" role="tablist" aria-label="Firm detail sections">
           <button class="fd-tab active" type="button" role="tab" aria-selected="true" data-fd-tab="overview" data-fd-lbl="tOverview">Overview</button>
@@ -4980,13 +4995,16 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     var litN=Math.round(avg||0);
     for(var i=1;i<=5;i++){
       (function(n){
-        var b=document.createElement('button');b.type='button';
-        b.setAttribute('role','radio');b.setAttribute('aria-checked','false');
-        b.setAttribute('aria-label',n+' / 5');
+        // Aggregate display is never a button: plain spans, zero click surface.
+        var b=document.createElement(interactive?'button':'span');
+        if(interactive){
+          b.type='button';
+          b.setAttribute('role','radio');b.setAttribute('aria-checked','false');
+          b.setAttribute('aria-label',n+' / 5');
+          b.addEventListener('click',function(ev){ev.stopPropagation();onRate(n);});
+        }
         b.className=n<=litN?'lit':'';
         b.textContent='★';
-        if(interactive){b.addEventListener('click',function(ev){ev.stopPropagation();onRate(n);});}
-        else{b.style.cursor='default';}
         el.appendChild(b);
       })(i);
     }
@@ -4995,20 +5013,43 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     var ar=currentLanguage==='ar';
     var starsEl=document.getElementById('fdStars'),avgEl=document.getElementById('fdAvg'),
         cntEl=document.getElementById('fdRateCount'),likeBtn=document.getElementById('fdLike'),
-        likeCnt=document.getElementById('fdLikeCount');
+        likeCnt=document.getElementById('fdLikeCount'),
+        rateCta=document.getElementById('fdRateCta'),rateBtn=document.getElementById('fdRateBtn'),
+        ratePicker=document.getElementById('fdRatePicker'),pickerStars=document.getElementById('fdPickerStars'),
+        rateHint=document.getElementById('fdRateHint');
     if(!starsEl)return;
     function paint(avg,count,myRating,likeCount,liked,canRate){
-      // Stars = aggregate average only. Personal rating shown as separate badge.
-      sbRenderStars(starsEl,avg,canRate,function(n){sbSubmitRating(firmId,n);});
+      // Aggregate stars = display only, NEVER interactive.
+      sbRenderStars(starsEl,avg,false);
       if(avgEl)avgEl.textContent=count?Number(avg).toFixed(1):'—';
       if(cntEl)cntEl.textContent=count?(ar?'من ':'from ')+count+(ar?' تقييم':' ratings'):(ar?'كن أول من يقيّم':'Be the first to rate');
       try{
         starsEl.setAttribute('aria-label',count?
           (ar?'متوسط التقييم ':'Average rating ')+Number(avg).toFixed(1)+' / 5 '+(ar?'من ':'from ')+count+(ar?' تقييم':' ratings'):
-          (ar?'قيّم هذه الشركة':'Rate this firm'));
+          (ar?'لا توجد تقييمات بعد':'No ratings yet'));
       }catch(e){}
       if(likeCnt)likeCnt.textContent=likeCount||0;
       if(likeBtn){likeBtn.setAttribute('aria-pressed',String(!!liked));}
+      // Separate "Rate this firm" CTA: visible to logged-in users only.
+      if(rateCta){
+        rateCta.hidden=!canRate;
+        if(ratePicker)ratePicker.hidden=true;
+        if(rateBtn){
+          rateBtn.textContent=myRating>0?(ar?'★ حدّث تقييمك':'★ Update your rating'):(ar?'☆ قيّم هذه الشركة':'☆ Rate this firm');
+          rateBtn.onclick=function(ev){if(ev)ev.stopPropagation();
+            if(!ratePicker||!pickerStars)return;
+            var open=ratePicker.hidden;
+            ratePicker.hidden=!open;
+            if(open){
+              if(rateHint)rateHint.textContent=ar?'انقر على نجمة للإرسال':'Tap a star to submit';
+              sbRenderStars(pickerStars,myRating||0,true,function(n){
+                ratePicker.hidden=true;
+                sbSubmitRating(firmId,n);
+              });
+            }
+          };
+        }
+      }
     }
     paint(0,0,0,0,false,false);
     if(typeof sb==='undefined'||!sb)return;
@@ -5037,7 +5078,6 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
           if(typeof sbRenderFirms==='function')sbRenderFirms();
           if(typeof sbRenderDirectory==='function')sbRenderDirectory();
         }catch(_ce){}
-        if(!uidAtCall&&starsEl){starsEl.title=ar?'سجل الدخول للتقييم':'Log in to rate';}
         if(likeBtn){likeBtn.onclick=function(ev){if(ev)ev.stopPropagation();sbToggleLike(firmId);};
           likeBtn.title=uidAtCall?'':(ar?'سجل الدخول للإعجاب':'Log in to like');}
       },function(){if(uidNow()!==uidAtCall)return;paint(avg,rows.length,my,0,false,!!uidAtCall);});
