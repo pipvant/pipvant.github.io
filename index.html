@@ -3451,10 +3451,13 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
                 if(r3&&!r3.error&&Array.isArray(r3.data)){
                   var byFirm={};
                   r3.data.forEach(function(x){
-                    (byFirm[x.firm_id]=byFirm[x.firm_id]||[]).push(x.rating);
+                    // PFM-style integrity: only valid 1-5 ratings count (invalid/duplicative excluded)
+                    var rv=Number(x.rating);
+                    if(rv>=1&&rv<=5)(byFirm[x.firm_id]=byFirm[x.firm_id]||[]).push(rv);
                   });
                   Object.keys(byFirm).forEach(function(fid){
                     var arr=byFirm[fid];
+                    if(!arr.length)return;
                     var avg=arr.reduce(function(a,b){return a+b;},0)/arr.length;
                     window._sbCommunity[fid]=window._sbCommunity[fid]||{};
                     window._sbCommunity[fid].avgRating=avg;
@@ -5021,6 +5024,8 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
   // Stars ALWAYS render the aggregate average across all users (never personalized).
   // A user's own rating is shown separately as a text badge (see paint()).
   // PropFirmMatch-style compact rating label: "★ 4.0 (2)"
+  // Simple average (sum/count) like PropFirmMatch — honest because the COUNT is
+  // always shown next to it, and only valid 1-5 ratings are counted (see guards).
   function sbRatingCountAr(n){
     if(n===1)return '(تقييم)';
     if(n===2)return '(تقييمان)';
@@ -5079,21 +5084,26 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     function uidNow(){return (typeof sbUser!=='undefined'&&sbUser)?sbUser.id:null;}
     sb.from('firm_ratings').select('rating,user_id').eq('firm_id',firmId).then(function(r){
       if(uidNow()!==uidAtCall)return; // logged out / switched mid-flight
-      var rows=(r&&r.data)||[],sum=0,my=0;
-      rows.forEach(function(x){sum+=Number(x.rating)||0;if(uidAtCall&&x.user_id===uidAtCall)my=Number(x.rating)||0;});
-      var avg=rows.length?sum/rows.length:0;
+      var rows=(r&&r.data)||[],sum=0,cnt=0,my=0;
+      rows.forEach(function(x){
+        // PFM-style integrity: only valid 1-5 ratings count toward the average
+        var rv=Number(x.rating);
+        if(rv>=1&&rv<=5){sum+=rv;cnt++;}
+        if(uidAtCall&&x.user_id===uidAtCall){var mv=Number(x.rating);my=(mv>=1&&mv<=5)?mv:0;}
+      });
+      var avg=cnt?sum/cnt:0;
       sb.from('firm_likes').select('id,user_id').eq('firm_id',firmId).then(function(l){
         if(uidNow()!==uidAtCall)return; // logged out / switched mid-flight
         var lrows=(l&&l.data)||[],liked=false;
         lrows.forEach(function(x){if(uidAtCall&&x.user_id===uidAtCall)liked=true;});
-        paint(avg,rows.length,my,lrows.length,liked,!!uidAtCall);
+        paint(avg,cnt,my,lrows.length,liked,!!uidAtCall);
         // BUG FIX: sync global community cache so matcher ranking updates immediately
         // (previously the cache stayed stale until page reload after rating/liking)
         try{
           window._sbCommunity=window._sbCommunity||{};
           window._sbCommunity[firmId]=window._sbCommunity[firmId]||{};
           window._sbCommunity[firmId].avgRating=avg;
-          window._sbCommunity[firmId].ratingCount=rows.length;
+          window._sbCommunity[firmId].ratingCount=cnt;
           window._sbCommunity[firmId].likes=lrows.length;
           // Re-render matcher + directory so the new rating/like affects ranking live
           if(typeof sbRenderFirms==='function')sbRenderFirms();
@@ -5101,7 +5111,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
         }catch(_ce){}
         if(likeBtn){likeBtn.onclick=function(ev){if(ev)ev.stopPropagation();sbToggleLike(firmId);};
           likeBtn.title=uidAtCall?'':(ar?'سجل الدخول للإعجاب':'Log in to like');}
-      },function(){if(uidNow()!==uidAtCall)return;paint(avg,rows.length,my,0,false,!!uidAtCall);});
+      },function(){if(uidNow()!==uidAtCall)return;paint(avg,cnt,my,0,false,!!uidAtCall);});
     },function(){});
   }
   function sbSubmitRating(firmId,n){
