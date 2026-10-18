@@ -105,6 +105,8 @@
     input,select{width:100%;height:48px;border-radius:10px;border:1px solid var(--line);background:var(--sunken);color:var(--text);padding:0 14px;outline:none;font-variant-numeric:tabular-nums}
     input[type="password"]{width:100%;height:48px;border-radius:10px;border:1px solid var(--line);background:var(--sunken);color:var(--text);padding:0 14px;outline:none;font-variant-numeric:tabular-nums}
     input[type="password"]:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+    /* pw-mask: text input rendered as password dots (bypasses UA password-field rendering bugs) */
+    .pw-mask{-webkit-text-security:disc;text-security:disc}
     input.money{padding-left:30px}
     input.suffixed{padding-right:38px}
     input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
@@ -2159,7 +2161,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
         <div class="auth-fields">
           <div id="signupNameField"><label for="signupName">Name</label><input id="signupName" name="name" type="text" autocomplete="name" placeholder="" required></div>
           <div><label for="signupEmail">Email</label><input id="signupEmail" name="email" type="email" autocomplete="email" placeholder="" required></div>
-          <div><label for="signupPassword">Password</label><input id="signupPassword" name="password" type="password" autocomplete="new-password" placeholder="" minlength="8" required><div class="auth-field-link" id="forgotPasswordWrap" hidden><button class="auth-link" id="forgotPasswordLink" type="button">Forgot password?</button></div></div>
+          <div><label for="signupPassword">Password</label><input id="signupPassword" name="password" type="text" class="pw-mask" autocomplete="new-password" placeholder="" minlength="8" required><div class="auth-field-link" id="forgotPasswordWrap" hidden><button class="auth-link" id="forgotPasswordLink" type="button">Forgot password?</button></div></div>
         </div>
         <button class="btn primary auth-wide" id="authSubmit" type="submit">Create account</button>
       </form>
@@ -2202,8 +2204,8 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       <p class="auth-copy">Choose a strong password for your account.</p>
       <form id="recoveryPasswordForm">
         <div class="auth-fields">
-          <div><label for="recoveryPassword">New password</label><input id="recoveryPassword" name="password" type="password" autocomplete="new-password" minlength="8" required></div>
-          <div><label for="recoveryPasswordConfirm">Confirm password</label><input id="recoveryPasswordConfirm" name="password_confirm" type="password" autocomplete="new-password" minlength="8" required></div>
+          <div><label for="recoveryPassword">New password</label><input id="recoveryPassword" name="password" type="text" class="pw-mask" autocomplete="new-password" minlength="8" required></div>
+          <div><label for="recoveryPasswordConfirm">Confirm password</label><input id="recoveryPasswordConfirm" name="password_confirm" type="text" class="pw-mask" autocomplete="new-password" minlength="8" required></div>
         </div>
         <div class="auth-feedback" id="recoveryPasswordFeedback"></div>
         <button class="btn primary auth-wide" type="submit">Update password</button>
@@ -3208,9 +3210,9 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
   <div class="settings-dialog">
     <div class="settings-dialog-head"><div><h3 id="passwordModalTitle">Change password</h3><p>Enter your current password, then choose a new one.</p></div><button class="settings-dialog-close" type="button" data-close-settings-modal aria-label="Close password form"><svg width="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
     <form class="settings-form" id="passwordForm">
-      <div><label for="currentPassword">Current password</label><input id="currentPassword" type="password" autocomplete="current-password" minlength="8" required></div>
-      <div><label for="newPassword">New password</label><input id="newPassword" type="password" autocomplete="new-password" minlength="8" required></div>
-      <div><label for="confirmPassword">Confirm new password</label><input id="confirmPassword" type="password" autocomplete="new-password" minlength="8" required></div>
+      <div><label for="currentPassword">Current password</label><input id="currentPassword" type="text" class="pw-mask" autocomplete="current-password" minlength="8" required></div>
+      <div><label for="newPassword">New password</label><input id="newPassword" type="text" class="pw-mask" autocomplete="new-password" minlength="8" required></div>
+      <div><label for="confirmPassword">Confirm new password</label><input id="confirmPassword" type="text" class="pw-mask" autocomplete="new-password" minlength="8" required></div>
       <p class="settings-form-error" id="passwordFormError" aria-live="polite"></p>
       <div class="form-actions"><button class="btn secondary" type="button" data-close-settings-modal>Cancel</button><button class="btn primary" type="submit">Update password</button></div>
     </form>
@@ -3222,7 +3224,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     <div class="settings-dialog-head"><div><h3 id="emailModalTitle">Change email</h3><p>Use the email address you want for account access.</p></div><button class="settings-dialog-close" type="button" data-close-settings-modal aria-label="Close email form"><svg width="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
     <form class="settings-form" id="emailForm">
       <div><label for="newEmail">New email</label><input id="newEmail" type="email" autocomplete="email" required></div>
-      <div><label for="emailPassword">Current password</label><input id="emailPassword" type="password" autocomplete="current-password" minlength="8" required></div>
+      <div><label for="emailPassword">Current password</label><input id="emailPassword" type="text" class="pw-mask" autocomplete="current-password" minlength="8" required></div>
       <p class="settings-form-error" id="emailFormError" aria-live="polite"></p>
       <div class="form-actions"><button class="btn secondary" type="button" data-close-settings-modal>Cancel</button><button class="btn primary" type="submit">Update email</button></div>
     </form>
@@ -9889,6 +9891,76 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       }
     }catch(e){}
   },12000);
+  /* pw-mask fallback: bullet-mask real password on browsers without -webkit-text-security (Firefox).
+     The real value lives on el._pw (never in the DOM); the visible field only shows dots.
+     A capture-phase submit listener restores real values before form handlers read them, then re-masks. */
+  (function(){
+    var BULLET='\u2022';
+    function tsSupported(){
+      try{return !!(window.CSS&&CSS.supports&&CSS.supports('-webkit-text-security','disc'));}catch(e){return false;}
+    }
+    if(tsSupported())return;
+    function render(el,pos){
+      el.value=BULLET.repeat(el._pw.length);
+      if(typeof pos==='number'){try{el.setSelectionRange(pos,pos);}catch(e){}}
+    }
+    function insertAt(el,text){
+      var s=el.selectionStart||0,en=el.selectionEnd||0;
+      el._pw=el._pw.slice(0,s)+text+el._pw.slice(en);
+      render(el,s+text.length);
+    }
+    function delBack(el){
+      var s=el.selectionStart||0,en=el.selectionEnd||0;
+      if(s!==en){el._pw=el._pw.slice(0,s)+el._pw.slice(en);}
+      else if(s>0){el._pw=el._pw.slice(0,s-1)+el._pw.slice(s);s--;}
+      else return;
+      render(el,s);
+    }
+    function delFwd(el){
+      var s=el.selectionStart||0,en=el.selectionEnd||0;
+      if(s!==en){el._pw=el._pw.slice(0,s)+el._pw.slice(en);}
+      else{el._pw=el._pw.slice(0,s)+el._pw.slice(s+1);}
+      render(el,s);
+    }
+    function setup(el){
+      if(el._pw!==undefined)return;
+      el._pw=el.value||'';
+      if(el._pw)render(el);
+      el.addEventListener('paste',function(e){
+        e.preventDefault();
+        var d='';
+        try{d=(e.clipboardData||window.clipboardData).getData('text')||'';}catch(_){}
+        if(d)insertAt(el,d);
+      });
+      el.addEventListener('drop',function(e){
+        e.preventDefault();
+        var d='';
+        try{d=(e.dataTransfer||{}).getData('text')||'';}catch(_){}
+        if(d)insertAt(el,d);
+      });
+      el.addEventListener('beforeinput',function(e){
+        var t=e.inputType||'';
+        if(t==='insertText'||t==='insertCompositionText'||t==='insertReplacementText'){e.preventDefault();insertAt(el,e.data||'');}
+        else if(t==='insertFromPaste'||t==='insertFromDrop'){/* handled by paste/drop above */}
+        else if(t==='deleteContentBackward'){e.preventDefault();delBack(el);}
+        else if(t==='deleteContentForward'){e.preventDefault();delFwd(el);}
+        else if(t.indexOf('delete')===0){e.preventDefault();delBack(el);}
+        else if(t==='historyUndo'||t==='historyRedo'){e.preventDefault();}
+      });
+      el.addEventListener('input',function(){
+        if(el.value!==BULLET.repeat(el._pw.length)){el._pw=el.value;render(el);}
+      });
+    }
+    document.querySelectorAll('.pw-mask').forEach(setup);
+    document.addEventListener('submit',function(e){
+      var f=e.target;
+      if(!f||!f.querySelectorAll)return;
+      var els=f.querySelectorAll('.pw-mask');
+      if(!els.length)return;
+      els.forEach(function(el){if(typeof el._pw==='string')el.value=el._pw;});
+      setTimeout(function(){els.forEach(function(el){if(typeof el._pw==='string')render(el);});},0);
+    },true);
+  })();
 })();
 </script>
 <!-- PIPVANT Company OS: privacy-friendly analytics (no cookies, page+referrer only) -->
