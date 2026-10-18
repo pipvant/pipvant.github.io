@@ -4156,10 +4156,13 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     var plan=sbLabGetPlan('simFirm','simPlan');
     var hero=document.getElementById('simHero');if(!hero)return;
     var rl0=document.getElementById('simRules');if(rl0)rl0.innerHTML='';
-    if(!plan||!plan.rules){hero.textContent='—';return;}
+    /* DIAGNOSTIC (temporary): show exactly why simulation cannot run */
+    function _diag(msg){try{hero.textContent='—';hero.setAttribute('data-diag',msg);if(rl0)rl0.innerHTML='<span class="sim-rule">DIAG: '+msg+'</span>';}catch(_e){}}
+    if(!plan){_diag('no plan: sbPlansByFirm keys='+(typeof sbPlansByFirm==='undefined'?'undef':Object.keys(sbPlansByFirm).length)+', firmSel='+(document.getElementById('simFirm')?document.getElementById('simFirm').value:'?')+', planSel='+(document.getElementById('simPlan')?document.getElementById('simPlan').value:'?'));return;}
+    if(!plan.rules){_diag('plan has no rules: id='+plan.id+', keys='+Object.keys(plan).join(','));return;}
     var r=plan.rules;
     var target=Number(r.profit_target_pct),maxDD=Number(r.max_drawdown_pct),dailyL=Number(r.daily_loss_pct);
-    if(!isFinite(target)||!isFinite(maxDD)){hero.textContent='—';return;}
+    if(!isFinite(target)||!isFinite(maxDD)){_diag('bad target/dd: target='+r.profit_target_pct+', maxDD='+r.max_drawdown_pct+', ruleKeys='+Object.keys(r).join(','));return;}
     var winP=(Number(document.getElementById('simWin').value)||45)/100;
     var winR=Number(document.getElementById('simWinR').value)||1.5;
     var lossR=Number(document.getElementById('simLossR').value)||1;
