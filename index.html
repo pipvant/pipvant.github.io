@@ -5360,8 +5360,9 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
         likeCnt=document.getElementById('fdLikeCount');
     if(!starsEl)return;
     function paint(avg,count,myRating,likeCount,liked,canRate){
-      // Stars show the AGGREGATE average; clickable for rating when logged in.
-      sbRenderStars(starsEl,avg,canRate,function(n){sbSubmitRating(firmId,n);});
+      // Stars show the USER's own rating (empty if not rated); clickable for rating when logged in.
+      // The aggregate average is shown separately via sbRatingCompact.
+      sbRenderStars(starsEl,myRating||0,canRate,function(n){sbSubmitRating(firmId,n);});
       if(compactEl)compactEl.textContent=sbRatingCompact(avg,count,ar);
       try{
         starsEl.setAttribute('role',canRate?'radiogroup':'img');
