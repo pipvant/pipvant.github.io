@@ -2682,6 +2682,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
             <div class="risk-field"><label for="simTPD">Trades per day</label><input id="simTPD" class="full-calc-input" type="number" min="1" max="20" step="1" value="3"></div>
             <div class="risk-field"><label for="simDays">Trading days</label><input id="simDays" class="full-calc-input" type="number" min="5" max="90" step="1" value="30"></div>
           </div>
+          <button id="simRunBtn" type="button" class="lp-btn primary" style="width:100%;margin:12px 0;padding:14px;font-size:16px;font-weight:700;" data-i18n="sim_run">▶ Run Simulation</button>
           <div class="lab-results">
             <div class="position-hero lab-hero"><label>PASS PROBABILITY</label><strong id="simHero" style="color:var(--gold,#D4AF37)">—</strong><small id="simHeroSub">2,000 simulated runs</small></div>
             <div class="equity-risk"><div class="equity-risk-head"><span id="simBarLabel">Runs that passed</span><strong id="simBarValue">—</strong></div><div class="equity-track"><span class="equity-fill" id="simFill" style="background:var(--gold,#D4AF37)"></span></div></div>
@@ -4370,11 +4371,15 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     ['simFirm','simPlan','simWin','simWinR','simLossR','simRisk','simTPD','simDays'].forEach(function(id){
       var e=document.getElementById(id);if(e){e.addEventListener('input',sbSimRun);e.addEventListener('change',sbSimRun);}
     });
+    // Run button: manual trigger for the simulation
+    var rb=document.getElementById('simRunBtn');if(rb){rb.addEventListener('click',sbSimRun);}
     // Re-run when Supabase data arrives (firm data loads async)
     var tries=0;
     var iv=setInterval(function(){
       tries++;
-      if(typeof sbFirms!=='undefined'&&sbFirms.length){
+      var hasPlans=false;
+      try{hasPlans=typeof sbPlansByFirm!=='undefined'&&Object.keys(sbPlansByFirm).length>0;}catch(_e){}
+      if(typeof sbFirms!=='undefined'&&sbFirms.length&&hasPlans){
         clearInterval(iv);
         sbLabFillFirms('tcFirm','tcPlan');sbLabFillFirms('simFirm','simPlan');
         sbTrueCostCalc();sbSimRun();sbRenderRadar();
@@ -6085,7 +6090,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
   var titlesEn={landing:['Toolkit','Trade with a process'],matcher:['Tool 01','Prop firm matcher'],'all-firms':['Matcher','All firms'],journal:['Tool 02','Trading journal'],calculator:['Tool 03','Risk calculator'],calendar:['Tool 04','Economic Calendar'],lab:['Tool 05','Pro Lab'],discipline:['Parked','Discipline'],'discipline-soon':['Next version','Discipline'],notifications:['Inbox','Notifications'],profile:['Account','Profile'],settings:['Account','Settings'],certificate:['Account','Certificates'],methodology:['PIPVANT','Methodology'],support:['PIPVANT','Support'],about:['PIPVANT','About'],contact:['PIPVANT','Contact'],'firm-detail':['Matcher','Firm details']};
   var titlesAr={landing:['الأدوات','تداول وفق منهج'],matcher:['الأداة 01','مطابق شركات التداول'],'all-firms':['المطابق','جميع الشركات'],journal:['الأداة 02','سجل التداول'],calculator:['الأداة 03','حاسبة المخاطر'],calendar:['الأداة 04','التقويم الاقتصادي'],lab:['الأداة 05','مختبر المحترفين'],discipline:['متوقف مؤقتاً','الانضباط'],'discipline-soon':['الإصدار القادم','الانضباط'],notifications:['الوارد','الإشعارات'],profile:['الحساب','الملف الشخصي'],settings:['الحساب','الإعدادات'],certificate:['الحساب','الشهادات'],methodology:['PIPVANT','المنهجية'],support:['PIPVANT','الدعم'],about:['PIPVANT','حول'],contact:['PIPVANT','تواصل'],'firm-detail':['المطابق','تفاصيل الشركة']};
   var ar={
-    'True Cost Calculator':'حاسبة التكلفة الحقيقية','Pass Simulator':'محاكي اجتياز التحدي','Rule-change Radar':'رادار تغيير القواعد','Breach Guard':'حارس الاختراق','Trading DNA — find your match':'بصمة التداول — اعثر على ما يناسبك',
+    'True Cost Calculator':'حاسبة التكلفة الحقيقية','Pass Simulator':'محاكي اجتياز التحدي','Rule-change Radar':'رادار تغيير القواعد','Breach Guard':'حارس الاختراق','Trading DNA — find your match':'بصمة التداول — اعثر على ما يناسبك','▶ Run Simulation':'▶ تشغيل المحاكاة',
     'The sticker price lies. Commissions, resets and fees are the real price of a funded account.':'السعر المعلن مضلل. العمولات وإعادة التعيين والرسوم هي السعر الحقيقي للحساب الممول.',
     'Firms change rules silently. We track data freshness honestly — green means recently verified, red means it needs a re-check.':'الشركات تغير القواعد بصمت. نتتبع حداثة البيانات بنزاهة — الأخضر يعني تم التحقق حديثاً، والأحمر يعني يحتاج إعادة فحص.',
     'Enter your live P&L — we tell you how close you are to the edge. Manual input, honest math.':'أدخل الربح والخسارة الحالية — نخبرك بمدى قربك من الحد. إدخال يدوي وحسابات نزيهة.',
