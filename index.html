@@ -1917,6 +1917,52 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
   .compare-panel{padding:20px!important;border-radius:18px!important}
   .promo-badge{font-size:12px!important}
 }
+/* ---- LAB COMPACT CINEMATIC: slim, dense, premium (not bulky) ---- */
+#lab .lab-tool{
+  padding:20px!important;border-radius:16px!important;margin:0 0 14px!important;
+  background:linear-gradient(170deg,rgba(255,255,255,.025),rgba(255,255,255,0) 35%),#0d1a2e!important;
+  border:1px solid rgba(212,175,55,.16)!important;
+  box-shadow:0 2px 10px rgba(0,0,0,.28)!important;
+}
+#lab .lab-tool::before{height:2px!important;background:linear-gradient(90deg,transparent,rgba(212,175,55,.85),transparent)}
+#lab .lab-tool-head{margin-bottom:12px!important;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+#lab .lab-tool-head>div{flex:1 1 auto}
+#lab .lab-tool-head .eyebrow{font-size:9.5px!important;letter-spacing:.2em!important;margin-bottom:2px!important;color:rgba(212,175,55,.75)!important}
+#lab .lab-tool-head h3{font-size:18px!important;letter-spacing:-.01em!important;margin-bottom:2px!important;font-weight:700}
+#lab .lab-tool-head .helper{font-size:12.5px!important;line-height:1.55!important;color:var(--muted)}
+#lab .lab-grid{gap:16px!important}
+#lab .lab-inputs{gap:10px!important}
+#lab .lab-inputs label{font-size:10px!important;margin-bottom:4px!important}
+#lab .lab-inputs input,#lab .lab-inputs select{font-size:13.5px!important;padding:9px 11px!important;border-radius:10px!important}
+#lab .lab-results{padding:16px!important;border-radius:14px!important;background:linear-gradient(165deg,#101f36,#0b1526)!important}
+#lab .lab-hero{margin-bottom:12px!important}
+#lab .lab-hero strong{font-size:38px!important;line-height:1.1!important}
+#lab .lab-hero .lab-sub{font-size:11.5px!important;margin-top:4px!important}
+#lab .lab-hero>label{margin-bottom:6px!important;font-size:9.5px!important;letter-spacing:.16em!important}
+#lab .risk-metrics{gap:8px!important}
+#lab .risk-metric{padding:8px 10px!important;border-radius:10px!important}
+#lab .risk-metric span{font-size:10px!important}
+#lab .risk-metric strong{font-size:14px!important}
+#lab .risk-method{font-size:11px!important;line-height:1.55!important;margin-top:10px!important}
+#lab .radar-list{gap:8px!important}
+#lab .radar-row{padding:10px 12px!important;border-radius:10px!important;gap:10px}
+#lab .radar-name{font-size:13.5px!important}
+#lab .radar-meta{font-size:11px!important}
+#lab .radar-status{font-size:10px!important;padding:3px 10px!important}
+#lab .breach-gauge{height:10px!important;margin:6px 0 2px!important}
+#lab .breach-msg{font-size:14px!important;margin-top:6px!important}
+#lab .dna-q{margin-bottom:12px!important;padding:12px 14px!important;border-radius:12px!important}
+#lab .dna-q p{font-size:13.5px!important;margin-bottom:8px!important}
+#lab .dna-opt{padding:8px 14px!important;font-size:12.5px!important;border-radius:10px!important}
+#lab .dna-result{padding:12px 14px!important;border-radius:12px!important;margin-bottom:8px!important;gap:12px}
+#lab .dna-score{flex:0 0 44px!important;width:44px!important;height:44px!important;font-size:15px!important}
+#lab .dna-why{font-size:12px!important;margin-top:2px!important}
+#lab .dna-progress{margin:0 0 12px!important}
+#lab .full-calc-input{margin:0}
+@media(max-width:480px){
+  #lab .lab-tool{padding:16px 14px!important;border-radius:14px!important}
+  #lab .lab-hero strong{font-size:32px!important}
+}
 /* reduced motion respect */
 @media(prefers-reduced-motion:reduce){
   .firm-card,.firm-card:hover,.slot-cta,.view-button,.dna-opt{transition:none!important;transform:none!important}
@@ -2574,11 +2620,6 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     </section>
 
     <section class="screen" id="lab" aria-label="Pro Lab">
-      <div class="screen-intro">
-        <div><p class="eyebrow">Pro Lab</p><h2 id="lab-title">Tools nobody else has</h2>
-        <p class="screen-lede">Honest calculators built on verified firm data. Every number is computed live — nothing invented, nothing hidden.</p></div>
-      </div>
-
       <!-- WAVE 3a — True Cost Calculator -->
       <section class="lab-tool" aria-labelledby="tc-title">
         <div class="lab-tool-head"><div><p class="eyebrow">Calculator 01</p><h3 id="tc-title">True Cost Calculator</h3>
@@ -5797,7 +5838,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
   var titlesEn={landing:['Toolkit','Trade with a process'],matcher:['Tool 01','Prop firm matcher'],'all-firms':['Matcher','All firms'],journal:['Tool 02','Trading journal'],calculator:['Tool 03','Risk calculator'],calendar:['Tool 04','Economic Calendar'],lab:['Tool 05','Pro Lab'],discipline:['Parked','Discipline'],'discipline-soon':['Next version','Discipline'],notifications:['Inbox','Notifications'],profile:['Account','Profile'],settings:['Account','Settings'],certificate:['Account','Certificates'],methodology:['PIPVANT','Methodology'],support:['PIPVANT','Support'],about:['PIPVANT','About'],contact:['PIPVANT','Contact'],'firm-detail':['Matcher','Firm details']};
   var titlesAr={landing:['الأدوات','تداول وفق منهج'],matcher:['الأداة 01','مطابق شركات التداول'],'all-firms':['المطابق','جميع الشركات'],journal:['الأداة 02','سجل التداول'],calculator:['الأداة 03','حاسبة المخاطر'],calendar:['الأداة 04','التقويم الاقتصادي'],lab:['الأداة 05','مختبر المحترفين'],discipline:['متوقف مؤقتاً','الانضباط'],'discipline-soon':['الإصدار القادم','الانضباط'],notifications:['الوارد','الإشعارات'],profile:['الحساب','الملف الشخصي'],settings:['الحساب','الإعدادات'],certificate:['الحساب','الشهادات'],methodology:['PIPVANT','المنهجية'],support:['PIPVANT','الدعم'],about:['PIPVANT','حول'],contact:['PIPVANT','تواصل'],'firm-detail':['المطابق','تفاصيل الشركة']};
   var ar={
-    'Pass Simulator':'محاكي اجتياز التحدي','True Cost Calculator':'حاسبة التكلفة الحقيقية','Rule-change Radar':'رادار تغيير القواعد','Breach Guard':'حارس الاختراق','Trading DNA — find your match':'بصمة التداول — اعثر على ما يناسبك','Tools nobody else has':'أدوات لا يملكها أحد غيرنا','Honest calculators built on verified firm data. Every number is computed live — nothing invented, nothing hidden.':'حاسبات نزيهة مبنية على بيانات شركات موثقة. كل رقم يُحسب مباشرة — لا اختراع ولا إخفاء.',
+    'True Cost Calculator':'حاسبة التكلفة الحقيقية','Pass Simulator':'محاكي اجتياز التحدي','Rule-change Radar':'رادار تغيير القواعد','Breach Guard':'حارس الاختراق','Trading DNA — find your match':'بصمة التداول — اعثر على ما يناسبك',
     'The sticker price lies. Commissions, resets and fees are the real price of a funded account.':'السعر المعلن مضلل. العمولات وإعادة التعيين والرسوم هي السعر الحقيقي للحساب الممول.',
     'Firms change rules silently. We track data freshness honestly — green means recently verified, red means it needs a re-check.':'الشركات تغير القواعد بصمت. نتتبع حداثة البيانات بنزاهة — الأخضر يعني تم التحقق حديثاً، والأحمر يعني يحتاج إعادة فحص.',
     'Enter your live P&L — we tell you how close you are to the edge. Manual input, honest math.':'أدخل الربح والخسارة الحالية — نخبرك بمدى قربك من الحد. إدخال يدوي وحسابات نزيهة.',
