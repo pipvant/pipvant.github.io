@@ -1154,8 +1154,9 @@
     .settings-form-error,.session-feedback,.settings-feedback,.certificate-feedback{transition:opacity var(--micro) var(--ease-enter),transform 200ms var(--ease-enter)}
     .feedback-arrived{animation:itemRise 200ms var(--ease-enter) both}
 
-    .password-shell{position:relative}
-    .password-shell>input{padding-right:48px}
+    .password-shell{position:relative;display:block;width:100%}
+    .password-shell>input{width:100%;height:48px;border-radius:10px;border:1px solid var(--line);background:var(--sunken);color:var(--text);padding:12px 48px 0 14px;outline:none;font-variant-numeric:tabular-nums}
+    .password-shell>input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
     .password-eye{position:absolute;z-index:2;right:6px;top:5px;width:38px;height:38px;border:0;border-radius:8px;background:transparent;color:var(--muted);display:grid;place-items:center;cursor:pointer;transition:transform var(--micro) var(--ease-move),opacity var(--micro) var(--ease-move)}
     .password-eye[aria-pressed="true"]{transform:rotate(90deg);color:var(--accent)}
     .password-eye svg{transition:opacity var(--micro) var(--ease-move)}
