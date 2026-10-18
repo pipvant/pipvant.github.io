@@ -5875,6 +5875,20 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
         if(typeof syncLocalTradesToCloud==='function')syncLocalTradesToCloud();
         sbLoadTrades();sbLoadDiscipline();sbLoadSettings();sbLoadAccounts();sbLoadUserPrefs();sbLoadCertificates();sbLoadNotifications();
       }else{
+        // Deep link: #firm-<id> must survive a fresh load. Skip the auth gate and
+        // enter guest mode directly; sbLoadFirms() re-opens the detail after load.
+        // Supabase auth hashes (#type=recovery etc.) never match ^#firm-.
+        var _dlFid=null;try{_dlFid=(typeof sbFirmIdFromHash==='function')?sbFirmIdFromHash():null;}catch(_e){}
+        if(_dlFid){
+          try{if(typeof clearUserState==='function')clearUserState();}catch(_e){}
+          try{sbUser=null;}catch(_e){}
+          document.body.classList.remove('auth-active','show-auth','show-landing','auth-checking');
+          try{var _dlL=document.getElementById('authLoading');if(_dlL)_dlL.style.display='none';}catch(_e){}
+          document.body.classList.add('app-ready');
+          try{if(typeof sbLoadFirms==='function')sbLoadFirms();}catch(_e){}
+          try{if(typeof sbLoadCalendar==='function')sbLoadCalendar();}catch(_e){}
+          return;
+        }
         // No session: brand-new visitors see the landing; returning visitors go straight to login.
         // The flag is set ONLY when the landing is actually displayed (never on button clicks),
         // so a first-time visitor can never be misclassified as returning.
@@ -5891,7 +5905,19 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
           if(typeof initSiteLanding==='function')initSiteLanding();
         }
       }
-    }).catch(function(){var loader=document.getElementById('authLoading');if(loader)loader.style.display='none';document.body.classList.remove('auth-checking');var seenLp2=false;try{seenLp2=!!localStorage.getItem('pipvant_landing_seen');}catch(e){}if(seenLp2){document.body.classList.add('auth-active','show-auth');if(typeof setAuthMode==='function')setAuthMode('login');if(typeof authStage==='function')authStage('authSignup');}else{try{localStorage.setItem('pipvant_landing_seen','1');}catch(e){}document.body.classList.add('show-landing');if(typeof initSiteLanding==='function')initSiteLanding();}});
+    }).catch(function(){var loader=document.getElementById('authLoading');if(loader)loader.style.display='none';document.body.classList.remove('auth-checking');
+      // Deep link: same as the no-session branch above — #firm-<id> skips the auth gate.
+      var _dlFid2=null;try{_dlFid2=(typeof sbFirmIdFromHash==='function')?sbFirmIdFromHash():null;}catch(_e){}
+      if(_dlFid2){
+        try{if(typeof clearUserState==='function')clearUserState();}catch(_e){}
+        try{sbUser=null;}catch(_e){}
+        document.body.classList.remove('auth-active','show-auth','show-landing');
+        document.body.classList.add('app-ready');
+        try{if(typeof sbLoadFirms==='function')sbLoadFirms();}catch(_e){}
+        try{if(typeof sbLoadCalendar==='function')sbLoadCalendar();}catch(_e){}
+        return;
+      }
+      var seenLp2=false;try{seenLp2=!!localStorage.getItem('pipvant_landing_seen');}catch(e){}if(seenLp2){document.body.classList.add('auth-active','show-auth');if(typeof setAuthMode==='function')setAuthMode('login');if(typeof authStage==='function')authStage('authSignup');}else{try{localStorage.setItem('pipvant_landing_seen','1');}catch(e){}document.body.classList.add('show-landing');if(typeof initSiteLanding==='function')initSiteLanding();}});
   }
   /* Guest browse: skip auth gate for public tools (matcher, calendar) */
   document.addEventListener('click',function(e){
