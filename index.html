@@ -3521,6 +3521,8 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
                 sbRenderFirms();
                 sbRenderDirectory();sbPopulateAccountSizes();
                 if(typeof sbInitLab==='function')sbInitLab();
+                // Deep link: re-open firm detail if the URL carries #firm-<id> (refresh-safe)
+                try{if(typeof sbRestoreDetailFromHash==='function')sbRestoreDetailFromHash();}catch(_dl){}
                 // Safety net: refresh NEW badges once data is ready
                 sbLoadNewFirms(function(){
                   document.querySelectorAll('.logo-slot[data-firm-id]').forEach(function(el){
@@ -3542,7 +3544,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
                 });
               });
           })
-          .catch(function(){sbRenderFirms();sbRenderDirectory();sbPopulateAccountSizes();if(typeof sbInitLab==='function')sbInitLab();});
+          .catch(function(){sbRenderFirms();sbRenderDirectory();sbPopulateAccountSizes();if(typeof sbInitLab==='function')sbInitLab();try{if(typeof sbRestoreDetailFromHash==='function')sbRestoreDetailFromHash();}catch(_dl2){}});
       })
       .catch(function(){/* keep honest empty states */});
   }
@@ -4635,9 +4637,14 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
      from data-firm-id at tap time so re-opens for other firms stay correct.
      click + touchend cover desktop and mobile; 450ms dedupe prevents the
      ghost click after touchend from double-firing. */
+  /* Global heart-tap dedupe shared by ALL heart elements. The ghost click that
+     follows touchend can land on a freshly re-rendered element whose own
+     closure still has lastTap=0, causing a double toggle ("activates on its
+     own"). One shared timestamp kills the ghost event regardless of which
+     element receives it. */
+  var _sbHeartLastTap=0;
   function sbBindHeartTap(el){
     if(!el||el._sbHeartBound)return;el._sbHeartBound=true;
-    var lastTap=0;
     function fire(ev){
       try{
         if(ev){
@@ -4645,7 +4652,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
           ev.stopPropagation();
         }
       }catch(_e){}
-      var now=Date.now();if(now-lastTap<450)return;lastTap=now;
+      var now=Date.now();if(now-_sbHeartLastTap<450)return;_sbHeartLastTap=now;
       var fid=el.getAttribute('data-firm-id');
       try{console.log('[heart] tap fid=',fid,'type=',ev&&ev.type);}catch(_e){}
       if(!fid)return;
@@ -5189,10 +5196,55 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       }
     });
   }
+  /* Firm-detail deep linking (#firm-<id>): refresh/back-button safe.
+     - Opening a detail sets location.hash (adds a history entry).
+     - Browser back clears the hash -> hashchange navigates back to matcher.
+     - Closing via UI clears the hash with replaceState (no history games, so
+       the back button can never eject the user from the site).
+     - Supabase recovery hashes (#...type=recovery...) are never touched. */
+  function sbFirmIdFromHash(){
+    try{var m=String(window.location.hash||'').match(/^#firm-([A-Za-z0-9-]+)/);return m?m[1]:null;}catch(e){return null;}
+  }
+  function sbSetFirmHash(firmId){
+    try{
+      var h=firmId?('#firm-'+firmId):'';
+      var cur=String(window.location.hash||'');
+      if(cur===h)return;
+      if(h){window.location.hash=h;}
+      else if(/^#firm-/.test(cur)){history.replaceState(null,'',window.location.pathname+window.location.search);}
+    }catch(e){}
+  }
+  function sbSyncDetailFromHash(){
+    var fid=sbFirmIdFromHash();
+    var sheetOpen=false,screenActive=false;
+    try{var sh=document.getElementById('firmDetailSheet');sheetOpen=!!(sh&&sh.classList.contains('open'));}catch(e){}
+    try{var sc=document.getElementById('firm-detail');screenActive=!!(sc&&sc.classList.contains('active'));}catch(e){}
+    if(fid){
+      var cur=null;try{cur=(typeof sbDetailFirmId!=='undefined')?sbDetailFirmId:null;}catch(e){}
+      if(!(screenActive&&String(cur)===String(fid))){
+        if(typeof sbOpenFirmDetail==='function'){try{sbOpenFirmDetail(fid);}catch(e){}}
+      }
+    }else{
+      try{if(typeof closeFirmDetail==='function')closeFirmDetail();}catch(e){}
+      if(screenActive&&typeof showScreen==='function'){try{showScreen('matcher');}catch(e){}}
+    }
+  }
+  function sbRestoreDetailFromHash(){
+    var fid=sbFirmIdFromHash();
+    if(!fid)return;
+    var found=false;
+    try{found=(sbFirms||[]).some(function(f){return String(f.id)===String(fid);});}catch(e){}
+    if(found&&typeof sbOpenFirmDetail==='function'){try{sbOpenFirmDetail(fid);}catch(e){}}
+    else{sbSetFirmHash(null);}
+  }
+  try{
+    window.addEventListener('hashchange',function(){try{sbSyncDetailFromHash();}catch(e){}});
+  }catch(e){}
   function sbOpenFirmDetail(firmId){
     var firm=null;(sbFirms||[]).forEach(function(f){if(String(f.id)===String(firmId))firm=f;});
     if(!firm||typeof showScreen!=='function')return;
     sbDetailFirmId=firm.id;
+    try{if(typeof sbSetFirmHash==='function')sbSetFirmHash(firm.id);}catch(_hh){}
     try{sbLoadCommunity(firm.id);}catch(e){}
     var plans=sbPlansByFirm[firm.id]||[];
     var ar=currentLanguage==='ar';
@@ -6384,7 +6436,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     });
   }catch(e){}
   function closeDirectoryFilters(){if(directoryFilterSheet)directoryFilterSheet.classList.remove('open');}
-  function closeFirmDetail(){if(firmDetailSheet)firmDetailSheet.classList.remove('open');}
+  function closeFirmDetail(){if(firmDetailSheet)firmDetailSheet.classList.remove('open');try{if(typeof sbSetFirmHash==='function')sbSetFirmHash(null);}catch(e){}}
   function directoryActiveCount(){
     var count=0;
     document.querySelectorAll('.directory-filter-list input[type="range"]').forEach(function(input){if(input.value!==input.getAttribute('data-default'))count++;});
