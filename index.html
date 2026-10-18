@@ -5149,7 +5149,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     var kv=document.createElement('div');kv.className='fd-kv';
     function item(l,v){var d=document.createElement('div');var s=document.createElement('span');s.textContent=l;var b=document.createElement('b');b.textContent=v||'—';d.appendChild(s);d.appendChild(b);kv.appendChild(d);}
     item(ar?'نوع التراجع':'Drawdown type',rules?sbDdExplain(rules.drawdown_type,ar):null);
-    item(ar?'نموذج التسعير':'Pricing model',rules?((function(_pm){return (_pm==='monthly subscription'||_pm==='monthly');})(String(rules.pricing_model).toLowerCase())?(ar?'اشتراك شهري':'Monthly sub'):(ar?'دفعة واحدة':'One-time')):null);
+    item(ar?'نموذج التسعير':'Pricing model',rules?((function(_pm){return (_pm==='monthly subscription'||_pm==='monthly');})(String(rules.pricing_model).toLowerCase())?(ar?'اشتراك شهري':'Monthly'):(ar?'دفعة واحدة':'One-time')):null);
     item(ar?'الرافعة':'Leverage',rules?rules.leverage:null);
     item(ar?'المقر':'Headquarters',firm.headquarters?((sbCountryFlag(firm.headquarters)?sbCountryFlag(firm.headquarters)+' ':'')+firm.headquarters):null);
     el.appendChild(kv);
@@ -6193,6 +6193,8 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
           document.body.classList.add('app-ready');
           try{if(typeof sbLoadFirms==='function')sbLoadFirms();}catch(_e){}
           try{if(typeof sbLoadCalendar==='function')sbLoadCalendar();}catch(_e){}
+          // ISSUE 1 fix: restore the last viewed screen (matcher, lab, etc.) on refresh
+          try{var _gs=localStorage.getItem('pipvant_last_screen');var _pa={'matcher':1,'journal':1,'calculator':1,'calendar':1,'profile':1,'lab':1};if(_gs&&_pa[_gs]&&typeof showScreen==='function')showScreen(_gs,true);}catch(_ge2){}
           return;
         }
         var seenLp=false;try{seenLp=!!localStorage.getItem('pipvant_landing_seen');}catch(e){}
