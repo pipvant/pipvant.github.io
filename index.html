@@ -4156,13 +4156,47 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     var plan=sbLabGetPlan('simFirm','simPlan');
     var hero=document.getElementById('simHero');if(!hero)return;
     var rl0=document.getElementById('simRules');if(rl0)rl0.innerHTML='';
-    /* DIAGNOSTIC (temporary): show exactly why simulation cannot run */
-    function _diag(msg){try{hero.textContent='—';hero.setAttribute('data-diag',msg);if(rl0)rl0.innerHTML='<span class="sim-rule">DIAG: '+msg+'</span>';}catch(_e){}}
-    if(!plan){_diag('no plan: sbPlansByFirm keys='+(typeof sbPlansByFirm==='undefined'?'undef':Object.keys(sbPlansByFirm).length)+', firmSel='+(document.getElementById('simFirm')?document.getElementById('simFirm').value:'?')+', planSel='+(document.getElementById('simPlan')?document.getElementById('simPlan').value:'?'));return;}
-    if(!plan.rules){_diag('plan has no rules: id='+plan.id+', keys='+Object.keys(plan).join(','));return;}
-    var r=plan.rules;
-    var target=Number(r.profit_target_pct),maxDD=Number(r.max_drawdown_pct),dailyL=Number(r.daily_loss_pct);
-    if(!isFinite(target)||!isFinite(maxDD)){_diag('bad target/dd: target='+r.profit_target_pct+', maxDD='+r.max_drawdown_pct+', ruleKeys='+Object.keys(r).join(','));return;}
+    var ar=currentLanguage==='ar';
+    /* Helper: get a % value from rules, accepting both _pct and _usd variants.
+       USD values are converted using account_size. Returns NaN if unavailable. */
+    function simPct(rules,acctSize,pctKey,usdKey){
+      if(!rules)return NaN;
+      var v=Number(rules[pctKey]);
+      if(isFinite(v)&&v>0)return v;
+      var u=Number(rules[usdKey]);
+      var sz=Number(acctSize);
+      if(isFinite(u)&&u>0&&isFinite(sz)&&sz>0)return u/sz*100;
+      return NaN;
+    }
+    function planSimData(p){
+      if(!p||!p.rules)return null;
+      var t=simPct(p.rules,p.account_size,'profit_target_pct','profit_target_usd');
+      var d=simPct(p.rules,p.account_size,'max_drawdown_pct','max_drawdown_usd');
+      if(!isFinite(t)||!isFinite(d)||d<=0)return null;
+      var dl=simPct(p.rules,p.account_size,'daily_loss_pct','daily_loss_usd');
+      return {target:t,maxDD:d,dailyL:dl,plan:p};
+    }
+    var sim=planSimData(plan);
+    var usedFallback=false;
+    /* Fallback: if the selected plan lacks simulation data, use the first
+       valid plan from the same firm instead of silently showing dashes. */
+    if(!sim&&plan){
+      try{
+        var fs=document.getElementById('simFirm');
+        var fplans=(typeof sbPlansByFirm!=='undefined'&&fs)?(sbPlansByFirm[fs.value]||[]):[];
+        for(var fi=0;fi<fplans.length;fi++){
+          var cand=planSimData(fplans[fi]);
+          if(cand){sim=cand;usedFallback=true;break;}
+        }
+      }catch(_fe){}
+    }
+    if(!sim){
+      hero.textContent='—';
+      if(rl0)rl0.innerHTML='<span class="sim-rule">'+(ar?'لا توجد بيانات محاكاة لهذه الشركة':'No simulation data for this firm')+'</span>';
+      return;
+    }
+    var r=sim.plan.rules;
+    var target=sim.target,maxDD=sim.maxDD,dailyL=sim.dailyL;
     var winP=(Number(document.getElementById('simWin').value)||45)/100;
     var winR=Number(document.getElementById('simWinR').value)||1.5;
     var lossR=Number(document.getElementById('simLossR').value)||1;
@@ -4205,7 +4239,16 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     var rl=document.getElementById('simRules');
     if(rl){
       var chip=function(l,v){return '<span class="sim-rule">'+l+' <b>'+v+'</b></span>';};
-      rl.innerHTML=chip(ar?'الهدف':'Target',target+'%')+chip(ar?'أقصى تراجع':'Max DD',maxDD+'%')+(isFinite(dailyL)?chip(ar?'يومي':'Daily',dailyL+'%'):'');
+      var note='';
+      if(usedFallback){
+        try{
+          var _sz=sim.plan.account_size;
+          var _psym=sim.plan.currency==='EUR'?'€':sim.plan.currency==='MAD'?'MAD ':'$';
+          var _lbl=isFinite(Number(_sz))?(_psym+Number(_sz).toLocaleString('en-US')):'';
+          note='<span class="sim-rule">'+(ar?'باستخدام خطة':'Using plan')+' <b>'+_lbl+'</b></span>';
+        }catch(_ne){}
+      }
+      rl.innerHTML=note+chip(ar?'الهدف':'Target',Math.round(target*10)/10+'%')+chip(ar?'أقصى تراجع':'Max DD',Math.round(maxDD*10)/10+'%')+(isFinite(dailyL)?chip(ar?'يومي':'Daily',Math.round(dailyL*10)/10+'%'):'');
     }
   }
   /* WAVE 3c — Rule-change Radar (honest freshness tracking) */
