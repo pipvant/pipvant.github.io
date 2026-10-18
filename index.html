@@ -4628,6 +4628,10 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       var sm=titleBtn.querySelector('small');if(sm)sm.textContent=(currentLanguage==='ar'?'تم التحقق ':'Verified ')+sbTimeAgo(firm.updated_at);
     }
     var logo=node.querySelector('.logo-slot');sbFirmLogo(logo,firm);
+    // Bookmark button: initialize from the real shortlist (localStorage) so
+    // its visual state matches hearts tapped on matcher cards / firm detail.
+    var bmBtn=node.querySelector('[data-save-firm]');
+    if(bmBtn){try{bmBtn.setAttribute('aria-pressed',String(sbIsShortlisted(firm.id)));}catch(e){}}
     var stats=node.querySelectorAll('.directory-stat strong');
     var rules=plans.length?plans[0].rules:null;
     if(stats[0])stats[0].textContent=sbSizeRange(plans);
@@ -4694,7 +4698,12 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     document.querySelectorAll('#directoryResults [data-firm-card]').forEach(function(card){
       var t=card.querySelector('.directory-card-title strong');
       var name=t?t.textContent:'';
-      var bookmarkBtn=card.querySelector('[data-save-firm]');var savedMatch=bookmarkBtn&&bookmarkBtn.getAttribute('aria-pressed')==='true';var show=(!q||name.toLowerCase().indexOf(q)!==-1)&&(!savedOnly||savedMatch);
+      // Saved tab: read the real shortlist (localStorage), not the button's
+      // aria-pressed — the button state can be stale if the heart was tapped
+      // on the matcher card or firm detail instead of here.
+      var fid2=card.getAttribute('data-firm-id');var savedMatch=false;
+      try{savedMatch=sbIsShortlisted(fid2);}catch(e){var bookmarkBtn=card.querySelector('[data-save-firm]');savedMatch=!!(bookmarkBtn&&bookmarkBtn.getAttribute('aria-pressed')==='true');}
+      var show=(!q||name.toLowerCase().indexOf(q)!==-1)&&(!savedOnly||savedMatch);
       if(show&&hasRuleFilters){
         var fid=card.getAttribute('data-firm-id');var firm=null;
         (sbFirms||[]).forEach(function(f){if(String(f.id)===String(fid))firm=f;});
@@ -6525,7 +6534,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
   document.querySelectorAll('[data-methodology-section]').forEach(function(button){button.addEventListener('click',function(){var target=button.getAttribute('data-methodology-section');showScreen('methodology');setTimeout(function(){var section=document.getElementById('methodology-'+target);if(section)section.scrollIntoView({behavior:'smooth',block:'start'});},20);});});
   document.addEventListener('click',function(event){
     var detailTrigger=event.target.closest('[data-open-firm-detail]');if(detailTrigger){firmDetailSheet.classList.add('open');var panel=firmDetailSheet.querySelector('.firm-detail-panel');if(panel){panel.classList.remove('detail-morph');void panel.offsetWidth;panel.classList.add('detail-morph');}var verified=firmDetailSheet.querySelector('.verified-check');if(verified){verified.classList.remove('is-drawing');void verified.offsetWidth;verified.classList.add('is-drawing');}document.getElementById('closeFirmDetail').focus();}
-    var saveTrigger=event.target.closest('[data-save-firm]');if(saveTrigger){var nowSaved=saveTrigger.getAttribute('aria-pressed')!=='true';saveTrigger.setAttribute('aria-pressed',String(nowSaved));saveTrigger.classList.remove('bookmark-pop');void saveTrigger.offsetWidth;saveTrigger.classList.add('bookmark-pop');showToast(currentLanguage==='ar'?(nowSaved?'تم الحفظ':'تمت الإزالة من المحفوظات'):(nowSaved?'Saved':'Removed from saved'));}
+    var saveTrigger=event.target.closest('[data-save-firm]');if(saveTrigger){var cardEl=saveTrigger.closest('[data-firm-id]');var sFid=cardEl?cardEl.getAttribute('data-firm-id'):null;var nowSaved=false;try{nowSaved=sFid?sbToggleShortlist(sFid):(saveTrigger.getAttribute('aria-pressed')!=='true');}catch(e){nowSaved=saveTrigger.getAttribute('aria-pressed')!=='true';}saveTrigger.setAttribute('aria-pressed',String(nowSaved));saveTrigger.classList.remove('bookmark-pop');void saveTrigger.offsetWidth;saveTrigger.classList.add('bookmark-pop');showToast(currentLanguage==='ar'?(nowSaved?'تم الحفظ':'تمت الإزالة من المحفوظات'):(nowSaved?'Saved':'Removed from saved'));}
   });
   document.addEventListener('keydown',function(event){if(event.key==='Escape'){closeDirectoryFilters();closeFirmDetail();closeCalendarFilters();closeCalendarEvent();}});
 
