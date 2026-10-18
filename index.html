@@ -6356,7 +6356,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     if(active<0){nav.style.setProperty('--nav-pill-opacity','0');}
     else{nav.style.setProperty('--nav-pill-opacity','1');nav.style.setProperty('--nav-index',String(active));nav.style.setProperty('--nav-shift',(active*100)+'%');nav.style.setProperty('--nav-shift-rtl',(-active*100)+'%');}
   }}
-  function updateFloatingField(input){var wrap=input.parentElement;if(wrap)wrap.classList.toggle('has-value',String(input.value||'').length>0);}
+  function updateFloatingField(input){var wrap=input.closest('.auth-fields>div,.account-form-grid>div,.settings-form>div')||input.parentElement;if(wrap)wrap.classList.toggle('has-value',String(input.value||'').length>0);}
   function buildPasswordEyes(){
     document.querySelectorAll('input[type="password"]').forEach(function(input){if(input.parentElement.classList.contains('password-shell'))return;var shell=document.createElement('div');shell.className='password-shell';input.parentNode.insertBefore(shell,input);shell.appendChild(input);var button=document.createElement('button');button.type='button';button.className='password-eye';button.setAttribute('aria-label','Show password');button.setAttribute('aria-pressed','false');button.innerHTML='<svg width="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 12s3.2-5 9-5 9 5 9 5-3.2 5-9 5-9-5-9-5Z"/><circle cx="12" cy="12" r="2.2"/></svg>';button.addEventListener('click',function(){var showing=input.type==='text';input.type=showing?'password':'text';button.setAttribute('aria-pressed',String(!showing));button.setAttribute('aria-label',showing?'Show password':'Hide password');input.focus();});shell.appendChild(button);});
   }
