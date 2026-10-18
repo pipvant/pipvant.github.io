@@ -1967,6 +1967,28 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
 @media(prefers-reduced-motion:reduce){
   .firm-card,.firm-card:hover,.slot-cta,.view-button,.dna-opt{transition:none!important;transform:none!important}
 }
+/* ============ DESKTOP LAYOUT FIX (min-width:1024px only — mobile untouched) ============ */
+@media (min-width:1024px){
+  /* Wider content container on large screens */
+  .content{max-width:1600px!important;padding:0 32px!important}
+  /* Firm detail: was 720px (too narrow), now fills width */
+  .fd-wrap{max-width:1100px!important;padding:24px 32px 0!important}
+  .fd-cta-inner{max-width:1100px!important}
+  /* Lab tools: wider on desktop */
+  #lab .lab-tool{max-width:1200px;margin-left:auto;margin-right:auto}
+  #lab .lab-grid{grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:32px}
+  /* Directory: wider */
+  .directory-wrap{max-width:1400px;margin:0 auto}
+  /* Matcher: reduce excessive side gaps */
+  .matcher-wrap{max-width:1400px;margin:0 auto}
+  /* Screen intros: full width */
+  .screen-intro{max-width:1400px;margin:0 auto}
+}
+/* Extra-wide screens (1440px+): even wider */
+@media (min-width:1440px){
+  .content{max-width:1800px!important}
+  .fd-wrap{max-width:1200px!important}
+}
 </style>
 <div id="siteLanding" aria-label="PIPVANT landing page">
   <div class="lp-grain" aria-hidden="true"></div>
