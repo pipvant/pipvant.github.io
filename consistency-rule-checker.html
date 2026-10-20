@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title data-i18n="meta_title">Consistency Rule Checker — Does Your Best Day Break the Rule? | PIPVANT</title>
+  <meta name="description" data-i18n-content="meta_desc" content="Free prop firm consistency rule checker. Paste your daily profits and see instantly whether your largest day exceeds the firm's consistency cap.">
+  <link rel="canonical" href="https://pipvant.github.io/consistency-rule-checker.html">
+  <meta property="og:title" content="Consistency Rule Checker — Does Your Best Day Break the Rule? | PIPVANT">
+  <meta property="og:description" content="Paste your daily profits. See if your best day breaks the consistency rule. Free forever.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pipvant.github.io/consistency-rule-checker.html">
+  <meta property="og:image" content="https://pipvant.github.io/assets/pipvanta-logo.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Consistency Rule Checker | PIPVANT">
+  <meta name="twitter:description" content="Does your best day break the consistency rule? Check in seconds. Free forever.">
+  <link rel="icon" type="image/png" href="assets/pipvanta-logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {"@type": "Question", "name": "What is a consistency rule?", "acceptedAnswer": {"@type": "Answer", "text": "A consistency rule limits what share of your total profit can come from a single trading day. If your firm caps it at 30% and your biggest day is $1,250 of a $2,430 total (51%), you cannot withdraw until the ratio fits."}},
+      {"@type": "Question", "name": "How is the consistency percentage calculated?", "acceptedAnswer": {"@type": "Answer", "text": "Largest single day's profit divided by total (net) profit for the period, times 100."}},
+      {"@type": "Question", "name": "Is this consistency checker free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes — free forever, no signup, alongside PIPVANT's journal, prop firm matcher and economic calendar."}}
+    ]
+  }
+  </script>
+  <style>
+    :root{--bg:#0A1628;--surface:#0F1D33;--raised:#14253F;--line:#1C2F4D;--line-strong:#2B4266;--text:#F4F6F8;--secondary:#A9B6C6;--muted:#8B9AB0;--accent:#5B8DEF;--accent-strong:#3A6FDE;--gold:#D4AF37;--green:#3ECF8E;--red:#E5604F}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+    h1,h2,h3{font-family:"Space Grotesk",sans-serif;letter-spacing:-.02em}
+    .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+    header.top{position:sticky;top:0;z-index:10;background:rgba(10,22,40,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+    header.top .wrap{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;gap:12px}
+    .brand{display:flex;align-items:center;gap:10px;font-family:"Space Grotesk";font-weight:700;font-size:18px;text-decoration:none;color:var(--text)}
+    .brand img{width:30px;height:30px;border-radius:8px}
+    .top-actions{display:flex;align-items:center;gap:10px}
+    .lang-btn{background:transparent;border:1px solid var(--line-strong);color:var(--secondary);border-radius:10px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+    .lang-btn:hover{border-color:var(--accent);color:var(--text)}
+    .cta-btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 20px;border-radius:10px;background:var(--accent-strong);color:#fff;font-weight:700;text-decoration:none;border:1px solid var(--accent-strong)}
+    .hero{padding:64px 0 40px;text-align:center}
+    .eyebrow{color:var(--accent);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}
+    h1{font-size:clamp(2.2rem,6vw,3.6rem);line-height:1.05;margin:0 0 16px}
+    h1 .gold{background:linear-gradient(135deg,#F5D67B,#D4AF37);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .lede{color:var(--secondary);font-size:17px;line-height:1.7;max-width:680px;margin:0 auto 28px}
+    .calc{background:var(--surface);border:1px solid var(--line-strong);border-radius:18px;padding:28px;max-width:680px;margin:0 auto 20px;text-align:left}
+    .calc label{display:block;color:var(--muted);font-size:13px;font-weight:600;margin:0 0 6px}
+    .calc input,.calc textarea{width:100%;background:var(--raised);border:1px solid var(--line);border-radius:10px;color:var(--text);font-size:16px;padding:12px 14px;margin-bottom:16px;font-family:inherit}
+    .calc input:focus,.calc textarea:focus{outline:none;border-color:var(--accent)}
+    .calc textarea{min-height:110px;resize:vertical;font-family:ui-monospace,Menlo,Consolas,monospace}
+    .hint{color:var(--muted);font-size:12.5px;margin:-10px 0 16px;line-height:1.5}
+    .result{background:var(--raised);border:1px solid var(--line-strong);border-radius:12px;padding:20px;margin-top:8px}
+    .verdict{text-align:center;padding:14px;border-radius:10px;font-weight:700;font-size:16px;margin-bottom:14px;line-height:1.5}
+    .verdict.ok{background:rgba(62,207,142,.12);border:1px solid rgba(62,207,142,.4);color:var(--green)}
+    .verdict.bad{background:rgba(229,96,79,.12);border:1px solid rgba(229,96,79,.4);color:var(--red)}
+    .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+    .stat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 10px;text-align:center}
+    .stat .v{font-family:"Space Grotesk";font-size:1.2rem;font-weight:700}
+    .stat .l{color:var(--muted);font-size:11.5px;margin-top:4px}
+    .bd-title{color:var(--muted);font-size:12.5px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin:0 0 10px}
+    .bd-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:13px}
+    .bd-day{width:56px;color:var(--muted);flex:none}
+    .bd-track{flex:1;height:16px;background:var(--surface);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+    .bd-track i{display:block;height:100%}
+    .bd-val{width:170px;text-align:right;flex:none;font-variant-numeric:tabular-nums}
+    [dir="rtl"] .bd-val{text-align:left}
+    .note{color:var(--muted);font-size:12.5px;line-height:1.6;margin-top:14px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;padding:20px 0 40px}
+    .card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px}
+    .card h3{margin:0 0 8px;font-size:18px}
+    .card p{color:var(--secondary);font-size:14px;line-height:1.65;margin:0}
+    .section{padding:44px 0}
+    h2{font-size:clamp(1.6rem,4vw,2.4rem);margin:0 0 14px}
+    .faq{max-width:760px}
+    .faq details{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin-bottom:10px}
+    .faq summary{font-weight:600;cursor:pointer;font-size:15px}
+    .faq p{color:var(--secondary);line-height:1.7;font-size:14px;margin:10px 0 0}
+    .final{text-align:center;padding:56px 0 72px}
+    .news{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:40px 28px;text-align:center;margin:20px 0}
+    .news-form{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;max-width:520px;margin:0 auto}
+    .news-form input{flex:1;min-width:220px;background:var(--raised);border:1px solid var(--line);border-radius:10px;color:var(--text);font-size:15px;padding:0 16px;min-height:46px;font-family:inherit}
+    .news-form input:focus{outline:none;border-color:var(--accent)}
+    footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted);font-size:13px}
+    footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    footer a{color:var(--muted);text-decoration:none;margin-left:16px}
+    @media(max-width:560px){.stat-grid{grid-template-columns:1fr 1fr}.bd-val{width:120px;font-size:12px}}
+  </style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="/"><img src="assets/pipvanta-logo.png" alt="PIPVANT logo">PIPVANT</a>
+  <div class="top-actions">
+    <button class="lang-btn" id="langToggle" type="button" aria-label="Switch language">العربية</button>
+    <a class="cta-btn" href="/" data-i18n="nav_toolkit">Open full toolkit</a>
+  </div>
+</div></header>
+
+<div class="wrap">
+  <section class="hero">
+    <div class="eyebrow" data-i18n="eyebrow">Free consistency checker</div>
+    <h1><span data-i18n="h1a">One day shouldn't</span> <span class="gold" data-i18n="h1b">carry you.</span></h1>
+    <p class="lede" data-i18n="lede">Many prop firms cap how much of your total profit can come from a single day. Paste your daily profits and check in seconds whether your best day breaks the rule.</p>
+  </section>
+
+  <div class="calc" role="region" aria-label="Consistency rule checker">
+    <label for="cap" data-i18n="lbl_cap">Consistency rule — max share of total profit from one day (%)</label>
+    <input id="cap" type="number" value="30" min="5" max="100" step="1" inputmode="decimal">
+    <label for="days" data-i18n="lbl_days">Daily profits (one per line, or comma-separated)</label>
+    <textarea id="days" spellcheck="false">450,300,1250,200,-150,380</textarea>
+    <p class="hint" data-i18n="hint_days">Include losing days as negative numbers — firms measure against your net total profit.</p>
+    <div class="result">
+      <div class="verdict bad" id="verdict">—</div>
+      <div class="stat-grid">
+        <div class="stat"><div class="v" id="tot">$—</div><div class="l" data-i18n="out_total">Total profit</div></div>
+        <div class="stat"><div class="v" id="big">$—</div><div class="l" data-i18n="out_big">Largest day</div></div>
+        <div class="stat"><div class="v" id="share">—</div><div class="l" data-i18n="out_share">Largest day share</div></div>
+        <div class="stat"><div class="v" id="allowed">$—</div><div class="l" data-i18n="out_allowed">Max allowed best day</div></div>
+        <div class="stat"><div class="v" id="extra">$—</div><div class="l" data-i18n="out_extra">Extra profit needed elsewhere</div></div>
+        <div class="stat"><div class="v" id="winDays">—</div><div class="l" data-i18n="out_windays">Winning days counted</div></div>
+      </div>
+      <p class="bd-title" data-i18n="bd_title">Day-by-day breakdown</p>
+      <div id="breakdown"></div>
+      <p class="note" data-i18n="note">Most firms measure the largest single day against your total (net) profit for the payout period. Some use only winning days — if your firm does, remove the losing days from the list above. The gold bar is your largest day.</p>
+    </div>
+  </div>
+
+  <section class="grid" aria-label="How consistency rules work">
+    <div class="card"><h3 data-i18n="c1t">🎯 Why firms cap your best day</h3><p data-i18n="c1b">The rule separates process from luck. A trader who makes $5,000 evenly across ten days looks fundable; a trader with one $5,000 lottery day and nine losses does not.</p></div>
+    <div class="card"><h3 data-i18n="c2t">⚖️ Two honest ways through</h3><p data-i18n="c2b">Either grow the other days until the total is big enough, or take partials so no single day dominates. You don't lose the profit — the payout is simply delayed until the ratio fits.</p></div>
+    <div class="card"><h3 data-i18n="c3t">📅 Plan the payout, not one trade</h3><p data-i18n="c3b">Run this check before requesting a payout. Knowing you need $1,700 more spread across normal days changes how you size the next two weeks.</p></div>
+  </section>
+
+  <section class="section faq">
+    <h2 data-i18n="faq_h">Consistency rule FAQs</h2>
+    <details><summary data-i18n="q1">What is a consistency rule?</summary><p data-i18n="a1">A consistency rule limits what share of your total profit can come from a single trading day. If your firm caps it at 30% and your biggest day is $1,250 of a $2,430 total (51%), you cannot withdraw until the ratio fits.</p></details>
+    <details><summary data-i18n="q2">How is the percentage calculated?</summary><p data-i18n="a2">Largest single day's profit divided by total (net) profit for the period, times 100. This checker uses the net method — the most common one. Some firms count only winning days.</p></details>
+    <details><summary data-i18n="q3">What if my biggest day is too large?</summary><p data-i18n="a3">Keep trading normally — every additional profitable day raises the total and dilutes the largest day's share. The checker above tells you exactly how much more profit you need.</p></details>
+    <details><summary data-i18n="q4">Is this checker free?</summary><p data-i18n="a4">Yes — free forever, no signup. It's part of PIPVANT's free toolkit: journal, prop firm matcher, risk calculator and economic calendar.</p></details>
+  </section>
+
+  <section class="news">
+    <h2 style="margin-bottom:8px" data-i18n="news_h">Payout wisdom, weekly</h2>
+    <p style="color:var(--secondary);max-width:560px;margin:0 auto 20px;line-height:1.7;font-size:15px" data-i18n="news_b">Consistency rules, payout policies and prop firm news — one short email a week. No spam, unsubscribe anytime.</p>
+    <form data-pipv-newsletter class="news-form">
+      <input type="email" placeholder="you@example.com" required aria-label="Email address">
+      <button type="submit" class="cta-btn" data-i18n="news_btn">Subscribe free</button>
+    </form>
+    <div data-pipv-msg style="min-height:22px;margin-top:10px;font-size:14px"></div>
+  </section>
+
+  <section class="final">
+    <h2 data-i18n="final_h">Steady days. Paid out on time.</h2>
+    <p style="text-align:center;margin:0 auto 24px;max-width:560px;color:var(--secondary);line-height:1.7" data-i18n="final_b">The consistency checker is one of many free tools in your PIPVANT toolkit — journal every trade, compare prop firms and track payouts.</p>
+    <a class="cta-btn" href="/" data-i18n="final_cta">Open the free toolkit →</a>
+    <p style="margin-top:28px;color:var(--muted);font-size:13px"><span data-i18n="also_free">Also free:</span> <a href="profit-split-calculator.html" style="color:var(--accent)" data-i18n="link_split">profit split calculator</a> · <a href="drawdown-simulator.html" style="color:var(--accent)" data-i18n="link_dd">drawdown simulator</a> · <a href="forex-risk-calculator.html" style="color:var(--accent)" data-i18n="link_risk">risk calculator</a></p>
+  </section>
+</div>
+
+<footer><div class="wrap">
+  <span data-i18n="foot">© 2026 PIPVANT by Orovanta — Trade with a process, not a prediction.</span>
+  <span><a href="/" data-i18n="foot_toolkit">Toolkit</a><a href="prop-firm-comparison.html" data-i18n="foot_firms">Prop firms</a><a href="free-trading-journal.html" data-i18n="foot_journal">Journal</a></span>
+</div></footer>
+
+<script>
+(function(){
+  var I18N={
+    en:{dir:'ltr',toggle:'العربية',meta_title:'Consistency Rule Checker — Does Your Best Day Break the Rule? | PIPVANT',eyebrow:'Free consistency checker',h1a:"One day shouldn't",h1b:'carry you.',lede:'Many prop firms cap how much of your total profit can come from a single day. Paste your daily profits and check in seconds whether your best day breaks the rule.',lbl_cap:'Consistency rule — max share of total profit from one day (%)',lbl_days:'Daily profits (one per line, or comma-separated)',hint_days:'Include losing days as negative numbers — firms measure against your net total profit.',out_total:'Total profit',out_big:'Largest day',out_share:'Largest day share',out_allowed:'Max allowed best day',out_extra:'Extra profit needed elsewhere',out_windays:'Winning days counted',bd_title:'Day-by-day breakdown',day:'Day',of_total:'of total',note:'Most firms measure the largest single day against your total (net) profit for the payout period. Some use only winning days — if your firm does, remove the losing days from the list above. The gold bar is your largest day.',v_pass:function(s,c){return '✓ Passes the consistency rule — your largest day is '+s+'% of total profit (cap '+c+'%).';},v_fail:function(s,c){return '✖ Fails the consistency rule — your largest day is '+s+'% of total profit (cap '+c+'%). Earn more on other days to unlock the payout.';},v_none:'✖ No positive total yet — the rule cannot be met until total profit is positive and the largest day is under the cap.',c1t:'🎯 Why firms cap your best day',c1b:'The rule separates process from luck. A trader who makes $5,000 evenly across ten days looks fundable; a trader with one $5,000 lottery day and nine losses does not.',c2t:'⚖️ Two honest ways through',c2b:"Either grow the other days until the total is big enough, or take partials so no single day dominates. You don't lose the profit — the payout is simply delayed until the ratio fits.",c3t:'📅 Plan the payout, not one trade',c3b:'Run this check before requesting a payout. Knowing you need $1,700 more spread across normal days changes how you size the next two weeks.',faq_h:'Consistency rule FAQs',q1:'What is a consistency rule?',a1:'A consistency rule limits what share of your total profit can come from a single trading day. If your firm caps it at 30% and your biggest day is $1,250 of a $2,430 total (51%), you cannot withdraw until the ratio fits.',q2:'How is the percentage calculated?',a2:"Largest single day's profit divided by total (net) profit for the period, times 100. This checker uses the net method — the most common one. Some firms count only winning days.",q3:'What if my biggest day is too large?',a3:'Keep trading normally — every additional profitable day raises the total and dilutes the largest day\'s share. The checker above tells you exactly how much more profit you need.',q4:'Is this checker free?',a4:'Yes — free forever, no signup. It\'s part of PIPVANT\'s free toolkit: journal, prop firm matcher, risk calculator and economic calendar.',news_h:'Payout wisdom, weekly',news_b:'Consistency rules, payout policies and prop firm news — one short email a week. No spam, unsubscribe anytime.',news_btn:'Subscribe free',final_h:'Steady days. Paid out on time.',final_b:'The consistency checker is one of many free tools in your PIPVANT toolkit — journal every trade, compare prop firms and track payouts.',final_cta:'Open the free toolkit →',also_free:'Also free:',link_split:'profit split calculator',link_dd:'drawdown simulator',link_risk:'risk calculator',nav_toolkit:'Open full toolkit',foot:'© 2026 PIPVANT by Orovanta — Trade with a process, not a prediction.',foot_toolkit:'Toolkit',foot_firms:'Prop firms',foot_journal:'Journal'},
+    ar:{dir:'rtl',toggle:'EN',meta_title:'فاحص قاعدة الاتساق — هل يخترق أفضل يوم لك القاعدة؟ | PIPVANT',eyebrow:'فاحص الاتساق المجاني',h1a:'يوم واحد يجب ألا',h1b:'يحملك.',lede:'تحدّد كثير من شركات التداول نسبة ما يمكن أن يأتي من يوم واحد من إجمالي أرباحك. الصق أرباحك اليومية وتحقق في ثوانٍ مما إذا كان أفضل يوم لك يخترق القاعدة.',lbl_cap:'قاعدة الاتساق — أقصى نسبة من إجمالي الربح من يوم واحد (%)',lbl_days:'الأرباح اليومية (قيمة في كل سطر، أو مفصولة بفواصل)',hint_days:'أضف الأيام الخاسرة كأرقام سالبة — الشركات تقيس مقابل صافي إجمالي ربحك.',out_total:'إجمالي الربح',out_big:'أكبر يوم',out_share:'نسبة أكبر يوم',out_allowed:'أقصى يوم مسموح',out_extra:'ربح إضافي مطلوب في أيام أخرى',out_windays:'الأيام الرابحة المحسوبة',bd_title:'تفصيل يوماً بيوم',day:'اليوم',of_total:'من الإجمالي',note:'تقيس معظم الشركات أكبر يوم منفرد مقابل إجمالي (صافي) ربحك لفترة السحب. بعضها يستخدم الأيام الرابحة فقط — إذا كانت شركتك كذلك، احذف الأيام الخاسرة من القائمة أعلاه. الشريط الذهبي هو أكبر يوم لك.',v_pass:function(s,c){return '✓ يجتاز قاعدة الاتساق — أكبر يوم لك هو '+s+'% من إجمالي الربح (الحد '+c+'%).';},v_fail:function(s,c){return '✖ يخترق قاعدة الاتساق — أكبر يوم لك هو '+s+'% من إجمالي الربح (الحد '+c+'%). اربح أكثر في أيام أخرى لتفعيل السحب.';},v_none:'✖ لا يوجد إجمالي إيجابي بعد — لا يمكن تحقيق القاعدة حتى يصبح إجمالي الربح إيجابياً وأكبر يوم تحت الحد.',c1t:'🎯 لماذا تحدد الشركات أفضل يوم لك',c1b:'القاعدة تفصل المنهجية عن الحظ. متداول يحقق 5000 دولار بالتساوي على عشرة أيام يبدو قابلاً للتمويل؛ ومتداول بيوم يانصيب واحد بـ5000 دولار وتسع خسائر لا يبدو كذلك.',c2t:'⚖️ طريقتان نزيهتان للتجاوز',c2b:'إما أن تنمّي الأيام الأخرى حتى يكبر الإجمالي بما يكفي، أو تأخذ أرباحاً جزئية حتى لا يسيطر يوم واحد. لا تخسر الربح — يتأخر السحب فقط حتى يتناسب المعدل.',c3t:'📅 خطط للسحب، لا لصفقة واحدة',c3b:'شغّل هذا الفحص قبل طلب السحب. معرفة أنك تحتاج 1700 دولار إضافية موزعة على أيام عادية تغيّر كيفية تحديد أحجامك في الأسبوعين القادمين.',faq_h:'أسئلة شائعة عن قاعدة الاتساق',q1:'ما هي قاعدة الاتساق؟',a1:'قاعدة الاتساق تحدّد نسبة ما يمكن أن يأتي من يوم تداول واحد من إجمالي ربحك. إذا حددت شركتك الحد بـ30% وكان أكبر يوم لك 1250 دولاراً من إجمالي 2430 دولاراً (51%)، لا يمكنك السحب حتى يتناسب المعدل.',q2:'كيف تُحسب النسبة؟',a2:'ربح أكبر يوم منفرد مقسوماً على إجمالي (صافي) الربح للفترة، مضروباً في 100. يستخدم هذا الفاحص الطريقة الصافية — الأكثر شيوعاً. بعض الشركات تحسب الأيام الرابحة فقط.',q3:'ماذا لو كان أكبر يوم لي كبيراً جداً؟',a3:'واصل التداول بشكل طبيعي — كل يوم رابح إضافي يرفع الإجمالي ويخفف نسبة أكبر يوم. يخبرك الفاحص أعلاه بالضبط كم ربحاً إضافياً تحتاج.',q4:'هل هذا الفاحص مجاني؟',a4:'نعم — مجاني للأبد بلا تسجيل. جزء من مجموعة PIPVANT المجانية: السجل ومطابق شركات التداول وحاسبة المخاطر والتقويم الاقتصادي.',news_h:'حكمة السحوبات، أسبوعياً',news_b:'قواعد الاتساق وسياسات السحب وأخبار شركات التداول — بريد قصير واحد أسبوعياً. بلا إزعاج، يمكنك إلغاء الاشتراك في أي وقت.',news_btn:'اشترك مجاناً',final_h:'أيام ثابتة. سحب في وقته.',final_b:'فاحص الاتساق واحدة من أدوات كثيرة مجانية في مجموعة PIPVANT — سجّل كل صفقة، وقارن شركات التداول، وتتبع السحوبات.',final_cta:'← افتح المجموعة المجانية',also_free:'مجاني أيضاً:',link_split:'حاسبة تقسيم الأرباح',link_dd:'محاكي التراجع',link_risk:'حاسبة المخاطر',nav_toolkit:'افتح المجموعة الكاملة',foot:'© 2026 PIPVANT من Orovanta — تداول بمنهجية، لا بتوقع.',foot_toolkit:'المجموعة',foot_firms:'شركات التداول',foot_journal:'السجل'}
+  };
+  var lang='en';
+  try{var s=JSON.parse(localStorage.getItem('pipvant_settings')||'{}');if(s&&(s.language==='ar'||s.language==='en'))lang=s.language;}catch(e){}
+  function t(k){var v=(I18N[lang]&&I18N[lang][k])||I18N.en[k];return v||k;}
+  function money(n){var s=n<0?'−$':'$';return s+Math.abs(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
+  function parseList(text){
+    return text.split(/[\s,;]+/).map(function(x){return parseFloat(x);}).filter(function(x){return isFinite(x);});
+  }
+  function check(days,capPct){
+    var total=days.reduce(function(a,b){return a+b;},0);
+    var largest=days.length?Math.max.apply(null,days):0;
+    var winDays=days.filter(function(d){return d>0;}).length;
+    var share=total>0&&largest>0?largest/total*100:null;
+    var pass=share!==null&&share<=capPct+1e-9;
+    var allowed=total>0?total*capPct/100:0;
+    var neededTotal=largest>0&&capPct>0?largest/(capPct/100):0;
+    var extra=Math.max(0,neededTotal-total);
+    return {total:total,largest:largest,winDays:winDays,share:share,pass:pass,allowed:allowed,extra:extra};
+  }
+  var cap=document.getElementById('cap'),days=document.getElementById('days');
+  function render(){
+    var capPct=parseFloat(cap.value)||0,list=parseList(days.value);
+    var r=check(list,capPct);
+    var v=document.getElementById('verdict');
+    if(r.share===null){v.className='verdict bad';v.textContent=t('v_none');}
+    else if(r.pass){v.className='verdict ok';v.textContent=t('v_pass')(r.share.toFixed(1),capPct);}
+    else{v.className='verdict bad';v.textContent=t('v_fail')(r.share.toFixed(1),capPct);}
+    document.getElementById('tot').textContent=money(r.total);
+    document.getElementById('big').textContent=money(Math.max(0,r.largest));
+    document.getElementById('share').textContent=r.share===null?'—':r.share.toFixed(1)+'%';
+    document.getElementById('allowed').textContent=money(r.allowed);
+    document.getElementById('extra').textContent=money(r.extra);
+    document.getElementById('winDays').textContent=String(r.winDays);
+    var maxAbs=list.length?Math.max.apply(null,list.map(function(d){return Math.abs(d);})):1;
+    var html='';
+    list.forEach(function(d,i){
+      var isBig=d===r.largest&&d>0;
+      var w=Math.max(2,Math.abs(d)/maxAbs*100);
+      var color=d<0?'var(--red)':(isBig?'linear-gradient(90deg,#F5D67B,#D4AF37)':'var(--accent)');
+      var shareTxt=r.total>0&&d>0?(' · '+(d/r.total*100).toFixed(1)+'% '+t('of_total')):'';
+      html+='<div class="bd-row"><span class="bd-day">'+t('day')+' '+(i+1)+'</span>'
+        +'<span class="bd-track"><i style="width:'+w.toFixed(1)+'%;background:'+color+'"></i></span>'
+        +'<span class="bd-val">'+money(d)+shareTxt+'</span></div>';
+    });
+    document.getElementById('breakdown').innerHTML=html||'<p style="color:var(--muted);font-size:13px">—</p>';
+  }
+  function applyLang(){
+    document.documentElement.lang=lang;document.documentElement.dir=I18N[lang].dir;
+    document.querySelectorAll('[data-i18n]').forEach(function(el){el.textContent=t(el.getAttribute('data-i18n'));});
+    document.querySelector('title').textContent=t('meta_title');
+    document.getElementById('langToggle').textContent=t('toggle');
+    render();
+  }
+  [cap,days].forEach(function(el){el.addEventListener('input',render);el.addEventListener('change',render);});
+  document.getElementById('langToggle').addEventListener('click',function(){lang=lang==='en'?'ar':'en';applyLang();});
+  applyLang();
+})();
+</script>
+<script src="assets/pipv-os.js" defer></script>
+</body>
+</html>
