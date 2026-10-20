@@ -1057,6 +1057,7 @@
     .filter-sheet,.firm-detail-sheet{position:fixed;inset:0;z-index:90;display:none;align-items:flex-end;padding:0;background:rgba(2,8,17,.74)}.filter-sheet.open,.firm-detail-sheet.open{display:flex}.filter-sheet-panel,.firm-detail-panel{width:100%;max-height:88svh;overflow:auto;padding:10px 18px calc(22px + env(safe-area-inset-bottom));border:1px solid var(--line-strong);border-radius:20px 20px 0 0;background:var(--raised);box-shadow:var(--shadow)}
     .sheet-title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:20px}.sheet-title-row h3{margin:0 0 5px}.sheet-title-row p{margin:0;color:var(--muted);font-size:10px;line-height:1.45}.sheet-close{width:38px;height:38px;flex:0 0 auto;border:1px solid var(--line);border-radius:9px;background:var(--surface);display:grid;place-items:center;cursor:pointer}
     .directory-filter-list{display:grid;gap:18px}.directory-range-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:7px}.directory-range-head label{margin:0}.directory-range-head output{color:var(--platinum);font:500 10px/1 "IBM Plex Mono",monospace}.directory-filter-list input[type="range"]{height:28px;padding:0;border:0;background:transparent;accent-color:var(--accent)}
+    .adv-filter-wrap{margin-top:2px}.adv-filter-toggle-row{padding-top:15px}#advFilterPanel{margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}.adv-filter-list{display:grid;gap:16px}.adv-range-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:7px}.adv-range-head label{margin:0}.adv-range-head output{color:var(--platinum);font:500 10px/1 "IBM Plex Mono",monospace}.adv-filter-list input[type="range"]{width:100%;height:28px;padding:0;border:0;background:transparent;accent-color:var(--accent)}.adv-reset-row{margin-top:14px}.toolkit-extras{margin:18px 0 0;text-align:center;color:var(--muted);font-size:13px}.toolkit-extras a{color:var(--accent);text-decoration:none}.toolkit-extras a:hover{text-decoration:underline}
     .directory-chip-group{display:flex;gap:7px;flex-wrap:wrap}.directory-chip{min-height:36px;padding:0 12px;border:1px solid var(--line);border-radius:999px;background:var(--sunken);color:var(--secondary);font-size:10px;font-weight:700;cursor:pointer}.directory-chip[aria-pressed="true"]{border-color:var(--platinum);background:var(--platinum);color:var(--bg)}
     .sheet-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
     .rule-table{border-top:1px solid var(--line)}.rule-row{min-height:52px;padding:11px 0;display:grid;grid-template-columns:minmax(120px,.7fr) 1fr;gap:16px;align-items:center;border-bottom:1px solid var(--line)}.rule-table .rule-row:nth-child(even){background:color-mix(in srgb,var(--surface) 55%,transparent)}.rule-row span{color:var(--muted);font-size:10px}.rule-row strong{color:var(--platinum);font:500 11px/1.35 "IBM Plex Mono",monospace}.notable-rules{margin:22px 0 0;padding:0;list-style:none;border-top:1px solid var(--line)}.notable-rules li{min-height:45px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--line);color:var(--secondary);font-size:11px}.notable-rules i{width:6px;height:6px;border-radius:50%;border:1px solid var(--platinum)}
@@ -2349,6 +2350,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
           <article class="tool-card"><div><div class="tool-icon"><svg width="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 3h6M10 3v6l-5.5 9.5A2 2 0 0 0 6.2 21h11.6a2 2 0 0 0 1.7-2.5L14 9V3"/><path d="M7.5 15h9"/></svg></div><h3>Pro Lab</h3><p>True-cost math, pass simulator, breach guard and payout intel — tools nobody else has.</p></div><button class="tool-link" data-screen="lab" type="button">Enter the lab →</button></article>
           <article class="tool-card"><div><div class="tool-icon"><svg width="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="8"/><path d="m8.5 12 2.2 2.2 4.8-5"/></svg></div><h3>Discipline</h3><p>Keep rules visible and review consistency without gamification.</p></div><button class="tool-link" data-screen="discipline-soon" type="button">Coming soon →</button></article>
         </div>
+        <p class="toolkit-extras">Also free: <a href="profit-split-calculator.html">Profit Split Calculator</a> · <a href="drawdown-simulator.html">Drawdown Simulator</a> · <a href="consistency-rule-checker.html">Consistency Rule Checker</a> · <a href="forex-risk-calculator.html">Forex Risk Calculator</a></p>
       </section>
       <div class="rule"></div>
       <section class="landing-section" aria-labelledby="how-title">
@@ -2394,6 +2396,18 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
             <div><label for="accountSize">Account size</label><select id="accountSize"><option value="">Any</option></select></div>
             <div><label for="market">Market</label><select id="market"><option value="">Any</option></select></div>
             <div><label for="maxPrice">Maximum price</label><input id="maxPrice" type="text" inputmode="decimal" placeholder="Any" aria-label="Maximum price"></div>
+          </div>
+          <div class="adv-filter-wrap">
+            <div class="adv-filter-toggle-row"><button class="btn secondary" id="advFilterToggle" type="button" aria-expanded="false" aria-controls="advFilterPanel">Advanced filters</button></div>
+            <div id="advFilterPanel" hidden>
+              <div class="adv-filter-list">
+                <div><div class="adv-range-head"><label for="advPriceMin">Min price</label><output id="advPriceMinVal">$0</output></div><input id="advPriceMin" type="range" min="0" max="2500" step="25" value="0"></div>
+                <div><div class="adv-range-head"><label for="advPriceMax">Max price</label><output id="advPriceMaxVal">Any</output></div><input id="advPriceMax" type="range" min="0" max="2500" step="25" value="2500"></div>
+                <div><div class="adv-range-head"><label for="advSplitMin">Min profit split</label><output id="advSplitMinVal">0%</output></div><input id="advSplitMin" type="range" min="0" max="100" step="5" value="0"></div>
+                <div><div class="adv-range-head"><label for="advDdMin">Min max drawdown</label><output id="advDdMinVal">0%</output></div><input id="advDdMin" type="range" min="0" max="15" step="0.5" value="0"></div>
+              </div>
+              <div class="adv-reset-row"><button class="btn secondary" id="advFilterReset" type="button">Reset filters</button></div>
+            </div>
           </div>
         </div>
       </div>
@@ -3966,10 +3980,16 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
   function sbGetMatcherFilters(){
     var sizeSel=document.getElementById('accountSize');
     var priceInput=document.getElementById('maxPrice');
+    var advNum=function(id,def){var el=document.getElementById(id);var v=el?Number(el.value):def;return isFinite(v)?v:def;};
+    var advRawMax=advNum('advPriceMax',2500);
     return {
       size:sizeSel&&sizeSel.value?Number(sizeSel.value):0,
       maxPrice:priceInput&&priceInput.value?parseFloat(priceInput.value):0,
-      cat:sbActiveCat||'all'
+      cat:sbActiveCat||'all',
+      advMinPrice:advNum('advPriceMin',0),
+      advMaxPrice:advRawMax>=2500?Infinity:advRawMax,
+      advSplitMin:advNum('advSplitMin',0),
+      advDdMin:advNum('advDdMin',0)
     };
   }
   function sbFirmMatchesFilters(firm,plans,filters){
@@ -3990,6 +4010,27 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
         return v/pr;
       }).filter(isFinite);
       if(!minP.length||Math.min.apply(null,minP)>_maxUsd)return false;
+    }
+    /* Advanced range filters: price band (USD-normalized), min profit split, min max drawdown.
+       Plan-level: a firm qualifies when ANY of its plans meets each active bound. */
+    if(filters.advMinPrice>0||isFinite(filters.advMaxPrice)){
+      var _apMax=isFinite(filters.advMaxPrice)?filters.advMaxPrice:1e12;
+      var _hasPrice=plans.some(function(p){
+        var v=sbNum(p.price);if(!isFinite(v))return false;
+        var cur=(p.currency||'USD').toUpperCase();
+        var pr=(typeof exchangeRates!=='undefined'&&exchangeRates[cur])?exchangeRates[cur]:1;
+        var usd=v/pr;
+        return usd>=filters.advMinPrice&&usd<=_apMax;
+      });
+      if(!_hasPrice)return false;
+    }
+    if(filters.advSplitMin>0){
+      var _hasSplit=plans.some(function(p){var v=p.rules?Number(p.rules.profit_split):NaN;return isFinite(v)&&v>=filters.advSplitMin;});
+      if(!_hasSplit)return false;
+    }
+    if(filters.advDdMin>0){
+      var _hasDd=plans.some(function(p){var v=p.rules?Number(p.rules.max_drawdown_pct):NaN;return isFinite(v)&&v>=filters.advDdMin;});
+      if(!_hasDd)return false;
     }
     return true;
   }
@@ -6419,6 +6460,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     'Do I need a funded account to use it?':'هل أحتاج حساباً ممولاً لاستخدامه؟',
     "No. PIPVANT works for any trader — demo, personal, or funded. The matcher helps you compare prop firms when you're ready for a challenge; the journal and calculator are useful from your very first trade.":'لا. يعمل PIPVANT لأي متداول — تجريبي أو شخصي أو ممول. يساعدك المطابق على مقارنة شركات التداول عندما تكون جاهزاً لتحدٍّ؛ والسجل والحاسبة مفيدان من أول صفقة لك.',
     'Which prop firms are listed?':'ما شركات التداول المدرجة؟',
+    'Also free:':'مجاني أيضاً:','Profit Split Calculator':'حاسبة تقسيم الأرباح','Drawdown Simulator':'محاكي التراجع','Consistency Rule Checker':'فاحص الاتساق','Forex Risk Calculator':'حاسبة مخاطر الفوركس','Advanced filters':'المرشحات المتقدمة','Reset filters':'إعادة تعيين المرشحات','Min price':'الحد الأدنى للسعر','Max price':'الحد الأقصى للسعر','Min profit split':'الحد الأدنى لتقسيم الأرباح','Min max drawdown':'الحد الأدنى لأقصى تراجع',
     "Firms with published, verifiable rules. Every card shows the firm's headquarters country, and every plan shows real prices and conditions — never invented ratings or guessed numbers.":'الشركات ذات القواعد المنشورة والقابلة للتحقق. كل بطاقة تعرض دولة مقر الشركة، وكل خطة تعرض أسعاراً وشروطاً حقيقية — أبداً تقييمات مخترعة أو أرقام مُخمَّنة.',
   };
   var attrAr={'Account setup':'إعداد الحساب','Back to welcome':'العودة للترحيب','Back to log in':'العودة لتسجيل الدخول','Back to account details':'العودة لتفاصيل الحساب','Profile initial':'حرف الملف الشخصي','Primary navigation':'التنقل الرئيسي','Close menu':'إغلاق القائمة','Account overview':'نظرة عامة على الحساب','Open navigation':'فتح التنقل','Notifications':'الإشعارات','Open profile':'فتح الملف الشخصي','Product data indicators':'مؤشرات بيانات المنتج','Quick risk calculator':'حاسبة مخاطر سريعة','Prop firm matcher':'مطابق شركات التداول','Market type':'نوع السوق','Maximum price':'السعر الأقصى','Matcher display controls':'أدوات عرض المطابق','Display currency':'عملة العرض','Result density':'كثافة النتائج','Result view':'عرض النتائج','Result row structure':'بنية صف النتيجة','Firm logo unavailable':'شعار الشركة غير متاح','Rating unavailable':'التقييم غير متاح','Discount unavailable':'الخصم غير متاح','Promotional offer unavailable':'العرض الترويجي غير متاح','Matcher trust indicators':'مؤشرات ثقة المطابق','Methodology statistics':'إحصاءات المنهجية','Trust and review information':'معلومات الثقة والمراجعة','Optional data consent':'موافقة البيانات الاختيارية','Trading journal':'سجل التداول','Journal controls':'أدوات السجل','Date range':'نطاق التاريخ','Performance metrics':'مقاييس الأداء','No Net P&L history':'لا يوجد سجل صافي ربح وخسارة','No cumulative R history':'لا يوجد سجل R تراكمي','Performance charts':'رسوم الأداء','Chart metric':'مقياس الرسم','Empty drawdown strip':'شريط تراجع فارغ','Weekly totals':'الإجماليات الأسبوعية','Trade filters':'مرشحات الصفقات','Search journal':'بحث في السجل','Search journal records':'بحث في سجلات الصفقات','Search symbol or note':'ابحث عن رمز أو ملاحظة','Search trades':'بحث في الصفقات','Trade view':'عرض الصفقات','Group trades':'تجميع الصفقات','Risk calculator':'حاسبة المخاطر','Account size':'حجم الحساب','Decrease risk percentage':'خفض نسبة المخاطرة','Risk percentage':'نسبة المخاطرة','Increase risk percentage':'رفع نسبة المخاطرة','Risk presets':'قيم المخاطرة الجاهزة','Discipline':'الانضباط','Discipline streak':'سلسلة الانضباط','Seven day completion strip':'شريط إكمال سبعة أيام','Weekly statistics':'الإحصاءات الأسبوعية','Notification views':'طرق عرض الإشعارات','Search notifications':'بحث في الإشعارات','Notification filters':'مرشحات الإشعارات','Notification detail':'تفاصيل الإشعار','Keyboard shortcuts':'اختصارات لوحة المفاتيح','Profile':'الملف الشخصي','Change profile photo':'تغيير صورة الملف الشخصي','Edit display name':'تعديل الاسم المعروض','Edit bio':'تعديل النبذة','Close profile editor':'إغلاق محرر الملف الشخصي','Earned certificates':'الشهادات المكتسبة','No equity data yet':'لا توجد بيانات رصيد بعد','Trading statistics':'إحصاءات التداول','Appearance':'المظهر','Language':'اللغة','Settings':'الإعدادات','Trading currency':'عملة التداول','Default risk percentage':'نسبة المخاطرة الافتراضية','Decrease default risk':'خفض المخاطرة الافتراضية','Increase default risk':'رفع المخاطرة الافتراضية','Close password form':'إغلاق نموذج كلمة المرور','Close email form':'إغلاق نموذج البريد','Close delete account form':'إغلاق نموذج حذف الحساب','Close trade form':'إغلاق نموذج الصفقة','Trade direction':'اتجاه الصفقة','Certificates':'الشهادات','About PIPVANT':'حول PIPVANT','Contact':'تواصل','Contact form':'نموذج التواصل','All prop firms':'جميع شركات التداول','Search firms':'البحث عن الشركات','Sort firms':'ترتيب الشركات','Firm directory views':'طرق عرض دليل الشركات','Close firm filters':'إغلاق مرشحات الشركات','Firm rule table':'جدول قواعد الشركة','Close firm details':'إغلاق تفاصيل الشركة','Save firm':'حفظ الشركة','Methodology':'المنهجية','Support':'الدعم','Close account switcher':'إغلاق مبدل الحساب','Trading accounts':'حسابات التداول','Close account form':'إغلاق نموذج الحساب','Economic Calendar':'التقويم الاقتصادي','Countdown to next high-impact event':'العد التنازلي للحدث القوي القادم','Economic events':'الأحداث الاقتصادية','Close calendar filters':'إغلاق مرشحات التقويم','Close event details':'إغلاق تفاصيل الحدث',
@@ -7404,6 +7446,29 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       if(typeof sbRenderFirms==='function')sbRenderFirms();
     });
   });
+  /* Advanced range filters (matcher): expandable panel, live re-render on input, reset. */
+  (function(){
+    var PRICE_CAP=2500;
+    function fmtPrice(v){return '$'+Math.round(Number(v)).toLocaleString('en-US');}
+    var defs=[
+      {id:'advPriceMin',out:'advPriceMinVal',def:'0',fmt:function(v){return fmtPrice(v);}},
+      {id:'advPriceMax',out:'advPriceMaxVal',def:String(PRICE_CAP),fmt:function(v){return Number(v)>=PRICE_CAP?(currentLanguage==='ar'?'الكل':'Any'):fmtPrice(v);}},
+      {id:'advSplitMin',out:'advSplitMinVal',def:'0',fmt:function(v){return Number(v)+'%';}},
+      {id:'advDdMin',out:'advDdMinVal',def:'0',fmt:function(v){return (Math.round(Number(v)*10)/10)+'%';}}
+    ];
+    function paint(d){var el=document.getElementById(d.id),out=document.getElementById(d.out);if(el&&out)out.textContent=d.fmt(el.value);}
+    defs.forEach(function(d){
+      var el=document.getElementById(d.id);if(!el)return;
+      el.addEventListener('input',function(){paint(d);if(typeof sbRenderFirms==='function')sbRenderFirms();});
+    });
+    var tog=document.getElementById('advFilterToggle'),pan=document.getElementById('advFilterPanel');
+    if(tog&&pan)tog.addEventListener('click',function(){pan.hidden=!pan.hidden;tog.setAttribute('aria-expanded',String(!pan.hidden));});
+    var rst=document.getElementById('advFilterReset');
+    if(rst)rst.addEventListener('click',function(){
+      defs.forEach(function(d){var el=document.getElementById(d.id);if(el)el.value=d.def;paint(d);});
+      if(typeof sbRenderFirms==='function')sbRenderFirms();
+    });
+  })();
   document.querySelectorAll('[data-default-risk-step]').forEach(function(button){button.addEventListener('click',function(){
     defaultRisk=Math.min(10,Math.max(.1,Math.round((defaultRisk+parseFloat(button.getAttribute('data-default-risk-step')))*10)/10));
     document.getElementById('defaultRiskValue').textContent=defaultRisk.toFixed(1)+'%';
