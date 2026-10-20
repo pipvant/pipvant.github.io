@@ -2019,6 +2019,29 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
   .content{max-width:1800px!important}
   .fd-wrap{max-width:1200px!important}
 }
+
+/* ===== POLISH PASS 2026-10-20 — component consistency (identity unchanged) =====
+   Audit: pill/badge radii sprawled across 7/8/12/14/20px -> 999px pill language;
+   card radii 16 vs 18px -> 16px; tool cards gain subtle gradient border via the
+   same padding-box/border-box technique .method-pill/.journal-fab already use;
+   firm cards gain a subtle gold top highlight; key numerals tabular where
+   missing; base section padding 54px -> 56px (8px scale); benefit/directory
+   cards gain the firm/tool hover lift. No colors/fonts/layout/content changed. */
+.meta-pill,.promo-badge,.chal-promo{border-radius:999px!important}
+.fd-promo-chip{border-radius:999px}
+.logo-slot .new-badge,.eyebrow .new-badge{border-radius:999px}
+.tool-card{border-radius:16px;border:1px solid transparent;background:linear-gradient(var(--surface),var(--surface)) padding-box,linear-gradient(160deg,rgba(212,175,55,.30),rgba(91,141,239,.16) 42%,rgba(91,141,239,0) 72%) border-box}
+.tool-card:hover{border-color:transparent}
+.benefit-card{border-radius:16px}
+.firm-card{box-shadow:0 8px 24px rgba(0,0,0,.12),inset 0 1px 0 rgba(212,175,55,.12)}
+.benefit-card,.directory-card{transition:transform var(--micro) var(--ease-move),border-color var(--micro) var(--ease-move),box-shadow var(--micro) var(--ease-move)}
+.benefit-card:hover,.directory-card:hover{transform:translateY(-2px);border-color:var(--line-strong)}
+.meta-pill,.chal-minirow .m-size,.chal-minirow .m-price,.firm-card .rank{font-variant-numeric:tabular-nums}
+.section{padding:56px 0}
+.module-section+.module-section{margin-top:40px}
+@media(min-width:640px){.section{padding:72px 0}}
+@media(min-width:1024px){.section{padding:80px 0}}
+@media(prefers-reduced-motion:reduce){.benefit-card,.directory-card{transition:none}}
 </style>
 <div id="siteLanding" aria-label="PIPVANT landing page">
   <div class="lp-grain" aria-hidden="true"></div>
