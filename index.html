@@ -252,6 +252,22 @@
     .fd-stars span.lit{color:#D4AF37}
     .fd-rate-meta{display:flex;align-items:baseline;gap:6px}
     .fd-rate-meta span{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--text)}
+    .fd-review-box{margin-bottom:16px;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--sunken)}
+    .fd-review-lbl{display:block;margin:0 0 8px;font-size:12px;font-weight:700;color:var(--secondary)}
+    .fd-review-input{width:100%;box-sizing:border-box;min-height:64px;resize:vertical;border:1px solid var(--line-strong);border-radius:10px;background:var(--surface);color:var(--text);font-family:inherit;font-size:14px;line-height:1.5;padding:10px 12px}
+    .fd-review-input:focus{outline:none;border-color:var(--gold)}
+    .fd-review-save{margin-top:10px;border:1px solid rgba(212,175,55,.55);border-radius:999px;background:rgba(212,175,55,.12);color:var(--gold);font-family:inherit;font-size:13px;font-weight:700;padding:8px 16px;cursor:pointer}
+    .fd-review-save:active{transform:scale(.97)}
+    .fd-reviews{margin-bottom:16px;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--sunken)}
+    .fd-reviews-title{margin:0 0 10px;font-size:13px;font-weight:800;color:var(--text)}
+    .fd-review-item{padding:10px 0;border-top:1px solid var(--line)}
+    .fd-review-item:first-of-type{border-top:0;padding-top:0}
+    .fd-review-head{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+    .fd-review-avatar{width:28px;height:28px;border-radius:50%;background:var(--raised);border:1px solid var(--line-strong);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--gold)}
+    .fd-review-name{font-size:13px;font-weight:700;color:var(--text)}
+    .fd-review-when{margin-inline-start:auto;font-size:11px;color:var(--muted)}
+    .fd-review-item .fd-stars span{font-size:15px;padding:1px}
+    .fd-review-text{margin:0;font-size:14px;line-height:1.6;color:var(--text);white-space:pre-wrap;overflow-wrap:anywhere}
     .fd-like{display:flex;align-items:center;gap:8px;border:1px solid var(--line-strong);border-radius:999px;background:var(--surface);padding:8px 14px;cursor:pointer;font-family:inherit}
     .fd-like-ico{font-size:17px;filter:grayscale(1);opacity:.55;transition:all .15s}
     .fd-like b{font-size:14px;font-variant-numeric:tabular-nums}
@@ -2588,6 +2604,17 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
             <div class="fd-rate-meta"><span id="fdRateCompact">—</span></div>
           </div>
           <button class="fd-like" id="fdLike" type="button" aria-pressed="false"><span class="fd-like-ico">👍</span><b id="fdLikeCount">0</b></button>
+        </div>
+        <!-- Optional text review: shown to logged-in users after they rate -->
+        <div class="fd-review-box" id="fdReviewBox" style="display:none">
+          <label class="fd-review-lbl" id="fdReviewLbl" for="fdReviewText">Share your experience (optional)</label>
+          <textarea class="fd-review-input" id="fdReviewText" rows="3" maxlength="500" placeholder="Payouts, support, rules — what should other traders know?"></textarea>
+          <button class="fd-review-save" id="fdReviewSave" type="button">Save review</button>
+        </div>
+        <!-- Community text reviews (real user reviews only) -->
+        <div class="fd-reviews" id="fdReviews" style="display:none">
+          <h3 class="fd-reviews-title" id="fdReviewsTitle">Trader reviews</h3>
+          <div id="fdReviewsList"></div>
         </div>
         <div class="fd-tabs" role="tablist" aria-label="Firm detail sections">
           <button class="fd-tab active" type="button" role="tab" aria-selected="true" data-fd-tab="overview" data-fd-lbl="tOverview">Overview</button>
@@ -5422,13 +5449,27 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       })(i);
     }
   }
+  /* Reviews phase 1: the optional review_text column may not exist yet
+     (migration: work/firm-ratings-review-text-migration.sql). The client
+     detects it once and degrades gracefully — ratings always keep working. */
+  var sbReviewTextOK=null;
+  function sbExtractReviews(rows,uid){
+    var out=[],myText='';
+    (rows||[]).forEach(function(x){
+      var t=(x&&typeof x.review_text==='string')?x.review_text.trim():'';
+      if(t){out.push({rating:Number(x.rating)||0,text:t.slice(0,500),at:x.created_at||null,user_id:x.user_id});}
+      if(uid&&x.user_id===uid)myText=t;
+    });
+    out.sort(function(a,b){return String(b.at||'').localeCompare(String(a.at||''));});
+    return {list:out,myText:myText};
+  }
   function sbLoadCommunity(firmId){
     var ar=currentLanguage==='ar';
     var starsEl=document.getElementById('fdStars'),compactEl=document.getElementById('fdRateCompact'),
         likeBtn=document.getElementById('fdLike'),
         likeCnt=document.getElementById('fdLikeCount');
     if(!starsEl)return;
-    function paint(avg,count,myRating,likeCount,liked,canRate){
+    function paint(avg,count,myRating,likeCount,liked,canRate,reviewsPack){
       // Stars show the USER's own rating (empty if not rated); clickable for rating when logged in.
       // The aggregate average is shown separately via sbRatingCompact.
       sbRenderStars(starsEl,myRating||0,canRate,function(n){sbSubmitRating(firmId,n);});
@@ -5443,13 +5484,25 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       else if(starsEl){starsEl.title='';}
       if(likeCnt)likeCnt.textContent=likeCount||0;
       if(likeBtn){likeBtn.setAttribute('aria-pressed',String(!!liked));}
+      try{sbPaintReviews(firmId,reviewsPack||{list:[],myText:''},myRating||0,canRate);}catch(_rp){}
     }
-    paint(0,0,0,0,false,false);
+    paint(0,0,0,0,false,false,{list:[],myText:''});
     if(typeof sb==='undefined'||!sb)return;
     var uid=(typeof sbUser!=='undefined'&&sbUser)?sbUser.id:null;
     var uidAtCall=uid; // session guard: abort stale paints if account changes mid-flight
     function uidNow(){return (typeof sbUser!=='undefined'&&sbUser)?sbUser.id:null;}
-    sb.from('firm_ratings').select('rating,user_id').eq('firm_id',firmId).then(function(r){
+    var _cols=sbReviewTextOK===false?'rating,user_id,created_at':'rating,user_id,review_text,created_at';
+    sb.from('firm_ratings').select(_cols).eq('firm_id',firmId).then(function(r){
+      if(r&&r.error){
+        var _em=String((r.error&&r.error.message)||r.error||'').toLowerCase();
+        if(sbReviewTextOK!==false&&_cols.indexOf('review_text')!==-1&&_em.indexOf('review_text')!==-1){
+          // Migration not applied yet: degrade gracefully, ratings keep working.
+          sbReviewTextOK=false;
+          try{var _h=document.getElementById('fdReviewBox');if(_h)_h.style.display='none';}catch(_hh){}
+          sbLoadCommunity(firmId);
+          return;
+        }
+      }
       if(uidNow()!==uidAtCall)return; // logged out / switched mid-flight
       var rows=(r&&r.data)||[],sum=0,cnt=0,my=0;
       rows.forEach(function(x){
@@ -5459,11 +5512,12 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
         if(uidAtCall&&x.user_id===uidAtCall){var mv=Number(x.rating);my=(mv>=1&&mv<=5)?mv:0;}
       });
       var avg=cnt?sum/cnt:0;
+      var revPack=sbExtractReviews(rows,uidAtCall);
       sb.from('firm_likes').select('id,user_id').eq('firm_id',firmId).then(function(l){
         if(uidNow()!==uidAtCall)return; // logged out / switched mid-flight
         var lrows=(l&&l.data)||[],liked=false;
         lrows.forEach(function(x){if(uidAtCall&&x.user_id===uidAtCall)liked=true;});
-        paint(avg,cnt,my,lrows.length,liked,!!uidAtCall);
+        paint(avg,cnt,my,lrows.length,liked,!!uidAtCall,revPack);
         // BUG FIX: sync global community cache so matcher ranking updates immediately
         // (previously the cache stayed stale until page reload after rating/liking)
         try{
@@ -5478,7 +5532,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
         }catch(_ce){}
         if(likeBtn){likeBtn.onclick=function(ev){if(ev)ev.stopPropagation();sbToggleLike(firmId);};
           likeBtn.title=uidAtCall?'':(ar?'سجل الدخول للإعجاب':'Log in to like');}
-      },function(){if(uidNow()!==uidAtCall)return;paint(avg,cnt,my,0,false,!!uidAtCall);});
+      },function(){if(uidNow()!==uidAtCall)return;paint(avg,cnt,my,0,false,!!uidAtCall,revPack);});
     },function(){
       // ISSUE 2 fix: retry once on failure (race condition left "No ratings yet" permanently)
       setTimeout(function(){
@@ -5486,7 +5540,8 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
           if(typeof sb==='undefined'||!sb)return;
           var _uid2=(typeof sbUser!=='undefined'&&sbUser)?sbUser.id:null;
           if(uidNow()!==uidAtCall)return;
-          sb.from('firm_ratings').select('rating,user_id').eq('firm_id',firmId).then(function(r2){
+          var _cols2=sbReviewTextOK===false?'rating,user_id,created_at':'rating,user_id,review_text,created_at';
+          sb.from('firm_ratings').select(_cols2).eq('firm_id',firmId).then(function(r2){
             if(uidNow()!==uidAtCall)return;
             var rows2=(r2&&r2.data)||[],sum2=0,cnt2=0,my2=0;
             rows2.forEach(function(x){
@@ -5495,10 +5550,101 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
               if(uidAtCall&&x.user_id===uidAtCall){var mv2=Number(x.rating);my2=(mv2>=1&&mv2<=5)?mv2:0;}
             });
             var avg2=cnt2?sum2/cnt2:0;
-            paint(avg2,cnt2,my2,0,false,!!uidAtCall);
+            paint(avg2,cnt2,my2,0,false,!!uidAtCall,sbExtractReviews(rows2,uidAtCall));
           },function(){});
         }catch(_re){}
       },1500);
+    });
+  }
+  /* Phase 1 — optional text review UI + real review list (XSS-safe, DOM-built). */
+  function sbPaintReviews(firmId,pack,myRating,canRate){
+    var ar=currentLanguage==='ar';
+    var box=document.getElementById('fdReviewBox'),wrap=document.getElementById('fdReviews'),list=document.getElementById('fdReviewsList');
+    if(!box||!wrap||!list)return;
+    var can=!!canRate&&myRating>0&&sbReviewTextOK!==false;
+    box.style.display=can?'':'none';
+    if(can){
+      var lbl=document.getElementById('fdReviewLbl');
+      if(lbl)lbl.textContent=ar?'شارك تجربتك (اختياري)':'Share your experience (optional)';
+      var ta=document.getElementById('fdReviewText');
+      if(ta){
+        ta.placeholder=ar?'السحوبات والدعم والقواعد — ما الذي يجب أن يعرفه المتداولون؟':'Payouts, support, rules — what should other traders know?';
+        if(document.activeElement!==ta)ta.value=pack.myText||'';
+      }
+      var sv=document.getElementById('fdReviewSave');
+      if(sv){sv.textContent=ar?'حفظ المراجعة':'Save review';sv.onclick=function(){sbSaveReview(firmId);};}
+    }
+    var items=pack.list||[];
+    wrap.style.display=items.length?'':'none';
+    if(!items.length){list.innerHTML='';return;}
+    var ttl=document.getElementById('fdReviewsTitle');
+    if(ttl)ttl.textContent=ar?'مراجعات المتداولين':'Trader reviews';
+    list.innerHTML='';
+    items.forEach(function(rv){
+      var item=document.createElement('div');item.className='fd-review-item';
+      var head=document.createElement('div');head.className='fd-review-head';
+      var av=document.createElement('span');av.className='fd-review-avatar';av.textContent='•';av.setAttribute('data-rev-uid',rv.user_id||'');
+      var nm=document.createElement('span');nm.className='fd-review-name';nm.textContent=ar?'متداول':'Trader';nm.setAttribute('data-rev-uid',rv.user_id||'');
+      var stars=document.createElement('div');stars.className='fd-stars';stars.setAttribute('role','img');
+      sbRenderStars(stars,rv.rating,false,null);
+      head.appendChild(av);head.appendChild(nm);head.appendChild(stars);
+      if(rv.at&&typeof sbTimeAgo==='function'){
+        var when=document.createElement('span');when.className='fd-review-when';when.textContent=sbTimeAgo(rv.at);head.appendChild(when);
+      }
+      var p=document.createElement('p');p.className='fd-review-text';p.textContent=rv.text;
+      item.appendChild(head);item.appendChild(p);list.appendChild(item);
+    });
+    sbFillReviewerNames(firmId,list);
+  }
+  /* Display names come from profiles when RLS allows; otherwise the honest
+     neutral label stays ("Trader"). No fake names are ever invented. */
+  function sbFillReviewerNames(firmId,listEl){
+    try{
+      if(typeof sb==='undefined'||!sb||typeof sbDetailFirmId==='undefined')return;
+      var uids={};
+      listEl.querySelectorAll('[data-rev-uid]').forEach(function(e){var u=e.getAttribute('data-rev-uid');if(u)uids[u]=1;});
+      var ids=Object.keys(uids);
+      if(!ids.length)return;
+      sb.from('profiles').select('user_id,display_name').in('user_id',ids).then(function(r){
+        try{
+          if(String(sbDetailFirmId)!==String(firmId))return;
+          var rows=(r&&r.data)||[],map={};
+          rows.forEach(function(p){var d=(p.display_name||'').trim();if(d)map[p.user_id]=d;});
+          listEl.querySelectorAll('[data-rev-uid]').forEach(function(e){
+            var u=e.getAttribute('data-rev-uid'),d=map[u];
+            if(!d)return;
+            if(e.classList.contains('fd-review-name'))e.textContent=d;
+            else e.textContent=d.charAt(0).toUpperCase();
+          });
+        }catch(_fe){}
+      },function(){});
+    }catch(_ge){}
+  }
+  function sbSaveReview(firmId){
+    var ar=currentLanguage==='ar';
+    if(typeof sb==='undefined'||!sb)return;
+    var uid=(typeof sbUser!=='undefined'&&sbUser)?sbUser.id:null;
+    if(!uid){if(typeof showToast==='function')showToast(ar?'سجّل الدخول لحفظ المراجعة':'Log in to save your review');return;}
+    var ta=document.getElementById('fdReviewText');
+    var txt=(ta?ta.value:'').trim().slice(0,500);
+    // The review box only shows for raters, so a rating row exists — UPDATE it.
+    // Column may not exist (migration pending) → degrade gracefully, rating is safe.
+    sb.from('firm_ratings').update({review_text:txt||null}).eq('firm_id',firmId).eq('user_id',uid).then(function(r){
+      if(r&&r.error){
+        var em=String((r.error&&r.error.message)||r.error||'').toLowerCase();
+        if(em.indexOf('review_text')!==-1){
+          sbReviewTextOK=false;
+          var h=document.getElementById('fdReviewBox');if(h)h.style.display='none';
+          if(typeof showToast==='function')showToast(ar?'المراجعات ستكون متاحة قريباً':'Reviews are coming soon');
+          return;
+        }
+        if(typeof showToast==='function')showToast(ar?'تعذّر حفظ المراجعة':'Could not save review');
+        return;
+      }
+      if(typeof showToast==='function')showToast(ar?'تم حفظ مراجعتك — شكراً لك!':'Review saved — thank you!');
+      sbLoadCommunity(firmId);
+    },function(){
+      if(typeof showToast==='function')showToast(ar?'تعذّر حفظ المراجعة':'Could not save review');
     });
   }
   function sbSubmitRating(firmId,n){
