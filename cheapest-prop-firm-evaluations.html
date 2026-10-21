@@ -60,6 +60,14 @@
     .codes h3{margin:0 0 6px;font-size:19px}
     .codes p{color:var(--secondary);font-size:14px;line-height:1.7;margin:8px 0}
     .exp{color:var(--gold);font-weight:700;font-size:13px}
+    .table-scroll{overflow-x:auto}
+    table td,table th{font-variant-numeric:tabular-nums}
+    .price-cell strong{color:var(--text)}
+    .price-cell .promo-price{color:var(--gold);font-weight:700}
+    .price-cell .strike{color:var(--muted);text-decoration:line-through;font-weight:500;margin-right:6px}
+    .copy-code-btn{display:inline-flex;align-items:center;min-height:30px;padding:0 11px;border-radius:999px;background:var(--raised);border:1px solid var(--line-strong);color:var(--text);font-family:ui-monospace,monospace;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}
+    .copy-code-btn:hover{border-color:var(--gold);color:var(--gold)}
+    .promo-expiry{display:block;color:var(--gold);font-size:12px;font-weight:600;margin-top:4px}
     .faq{max-width:760px}
     .faq details{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin-bottom:10px}
     .faq summary{font-weight:600;cursor:pointer;font-size:15px}
@@ -85,14 +93,21 @@
   <section class="hero">
     <div class="eyebrow">Evaluation fees · Verified data</div>
     <h1>The cheapest way <span class="gold">in</span> — with the real price tags</h1>
-    <p class="lede">The cheapest entry point for each of 10 verified prop firms, checked against official pages on 2026-10-07. One-time fees and monthly subscriptions are labelled separately — because $49/month is not cheaper than $195 once.</p>
+    <p class="lede">The cheapest entry point for each verified prop firm we track — the table below loads live from our verified database. One-time fees and monthly subscriptions are labelled separately — because a monthly fee is not cheaper than a one-time fee once it repeats.</p>
     <a class="cta-btn" href="/">Launch the free matcher →</a>
   </section>
 
   <section class="section">
     <h2>Cheapest evaluation per firm</h2>
     <p class="body">Sorted by the lowest fee each firm charges for an evaluation. "One-time" means you pay once per attempt; "monthly" means the fee repeats every month until you pass or quit.</p>
-    <table>
+    <div id="liveCheapestWrap" hidden>
+      <div class="table-scroll"><table>
+        <thead><tr><th>Firm</th><th>Cheapest entry</th><th>Price</th><th>Promotion</th><th>True-cost note</th></tr></thead>
+        <tbody id="liveCheapestBody"></tbody>
+      </table></div>
+      <p class="note" id="liveCheapestNote"></p>
+    </div>
+    <table id="staticCheapestTable">
       <tr><th>Firm</th><th>Cheapest entry</th><th>Price</th><th>Pricing model</th></tr>
       <tr><td><a href="https://en.the5ers.com" target="_blank" rel="noopener" style="color:var(--accent)">The5ers ↗</a></td><td>$2.5K account</td><td><strong style="color:var(--text)">$22</strong> <span class="fast">CHEAPEST</span></td><td>One-time</td></tr>
       <tr><td><a href="https://fundingpips.com" target="_blank" rel="noopener" style="color:var(--accent)">Funding Pips ↗</a></td><td>$5K account</td><td><strong style="color:var(--text)">$36</strong></td><td>One-time</td></tr>
@@ -105,7 +120,7 @@
       <tr><td><a href="https://apextraderfunding.com" target="_blank" rel="noopener" style="color:var(--accent)">Apex Trader Funding ↗</a></td><td>$25K account</td><td><strong style="color:var(--text)">$167</strong></td><td>One-time</td></tr>
       <tr><td><a href="https://e8markets.com" target="_blank" rel="noopener" style="color:var(--accent)">E8 Markets ↗</a></td><td>$100K account</td><td><strong style="color:var(--text)">$488</strong></td><td>One-time</td></tr>
     </table>
-    <p class="note">Fees reflect data reviewed 2026-10-07. Apex's $167 is the intraday-trailing evaluation; EOD-trailing starts higher. MyFundedFutures lists several $50K plans — confirm which applies on their official site. Order is by fee, cheapest first — not a quality ranking. Promos change; verify at checkout.</p>
+    <p class="note" id="staticCheapestNote">Fees reflect data reviewed 2026-10-07. Apex's $167 is the intraday-trailing evaluation; EOD-trailing starts higher. MyFundedFutures lists several $50K plans — confirm which applies on their official site. Order is by fee, cheapest first — not a quality ranking. Promos change; verify at checkout.</p>
   </section>
 
   <section class="section">
@@ -114,7 +129,7 @@
     <div class="codes">
       <h3>Expiring this month <span class="exp">· ends 31 Oct 2026</span></h3>
       <p><span class="code">FUNDED40</span> — 40% off Alpha Direct accounts · <span class="code">ALPHA20</span> — 20% off all Alpha accounts · <span class="code">10KFOR40</span> — $10K evaluation for $40. All three published on <a href="https://alphacapitalgroup.uk/alpha-capital-discount-codes" target="_blank" rel="noopener" style="color:var(--accent)">Alpha's official discount-codes page ↗</a>, last updated 5 Oct 2026.</p>
-      <p><span class="code">FPR90</span> — 90% off Funded7's $50K Phase 1 ($79 → $7.90), new customers only, Phase 1 only. Runs through October 2026. Note: Funded7 sits outside our 10-firm verified dataset — this offer was verified separately from two independent sources on 2026-10-10.</p>
+      <p><span class="code">FPR90</span> — 90% off Funded7's $50K Phase 1 ($79 → $7.90), new customers only, Phase 1 only. Runs through October 2026. Note: Funded7 sits outside our verified firm dataset — this offer was verified separately from two independent sources on 2026-10-10.</p>
     </div>
     <div class="codes">
       <h3>Live, but no stated expiry</h3>
@@ -158,5 +173,129 @@
   <span><a href="/">Toolkit</a><a href="prop-firm-comparison.html">Compare</a><a href="cheapest-prop-firm-evaluations.html">Cheapest</a></span>
 </div></footer>
 <script src="assets/pipv-os.js" defer></script>
+<script>
+/* Live cheapest-per-firm table: for every firm, the plan with the lowest price after discount
+   (MIN over firm_plans, discount logic replicates sbDiscountedPrice()/sbBestPromo() from index.html).
+   Public anon reads only. The static table above stays as the fallback — it is only hidden
+   after a successful live render, so a failed fetch never leaves the page empty. */
+(function(){
+  var KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFjcGt6YXZtaWZqd25za2lhcmV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyMDk1ODcsImV4cCI6MjEwNjc4NTU4N30.9-k-DoB6467EXTPKrvWUi-LRDPbSSC30f6BgrZezo2A';
+  var BASE='https://acpkzavmifjwnskiaret.supabase.co/rest/v1/';
+  var H={'apikey':KEY,'Authorization':'Bearer '+KEY};
+  function get(path){return fetch(BASE+path,{headers:H}).then(function(r){if(!r.ok)throw new Error(path+' '+r.status);return r.json();});}
+  function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+  function sym(cur){return cur==='EUR'?'€':cur==='MAD'?'MAD ':'$';}
+  function fmt(n){return (Math.round(n*100)/100).toLocaleString('en-US');}
+  function fmtSize(n){var v=Number(n);if(!isFinite(v))return '';return v>=1000?'$'+(v/1000)+'K account':'$'+v+' account';}
+  function bestPromo(rules){
+    if(!rules||!Array.isArray(rules.promotions)||!rules.promotions.length)return null;
+    var now=Date.now(),best=null;
+    rules.promotions.forEach(function(p){
+      if(!p)return;
+      if(p.expiry){var e=new Date(p.expiry).getTime();if(isFinite(e)&&e<now)return;}
+      if(!best)best=p;
+    });
+    return best;
+  }
+  function promoPct(promo){
+    if(!promo||!promo.discount)return 0;
+    var m=String(promo.discount).match(/(\d+)\s*%/);
+    return m?Number(m[1]):0;
+  }
+  function discountedPrice(plan){
+    var base=Number(plan.price);
+    if(!isFinite(base))return {base:null,final:null,pct:0};
+    var promo=plan.rules?bestPromo(plan.rules):null;
+    var pct=promo?promoPct(promo):0;
+    if(pct>0&&pct<100)return {base:base,final:Math.round(base*(1-pct/100)*100)/100,pct:pct};
+    return {base:base,final:base,pct:0};
+  }
+  function isMonthly(plan){
+    var pm=plan.rules&&plan.rules.pricing_model;
+    return typeof pm==='string'&&pm.toLowerCase().indexOf('monthly')!==-1;
+  }
+  function copyCode(code,btn){
+    function done(){btn.textContent='Copied: '+code;setTimeout(function(){btn.textContent='Copy: '+code;},1800);}
+    function fallback(){var ta=document.createElement('textarea');ta.value=code;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done();}catch(e){}document.body.removeChild(ta);}
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(code).then(done).catch(fallback);}else{fallback();}
+  }
+  Promise.all([
+    get('firms?select=id,name,website,last_verified_at,updated_at'),
+    get('firm_plans?select=firm_id,account_size,price,currency,rules')
+  ]).then(function(res){
+    var firms=res[0],plans=res[1];
+    if(!Array.isArray(firms)||!firms.length||!Array.isArray(plans)||!plans.length)return;
+    var firmById={};firms.forEach(function(f){firmById[f.id]=f;});
+    var cheapest={};
+    plans.forEach(function(p){
+      if(!p||!p.firm_id||!firmById[p.firm_id])return;
+      var dp=discountedPrice(p);
+      if(dp.final==null)return;
+      if(!cheapest[p.firm_id]||dp.final<cheapest[p.firm_id].dp.final)cheapest[p.firm_id]={plan:p,dp:dp};
+    });
+    var rows=Object.keys(cheapest).map(function(id){return {firm:firmById[id],entry:cheapest[id]};});
+    if(!rows.length)return;
+    rows.sort(function(a,b){return a.entry.dp.final-b.entry.dp.final;});
+    var tbody=document.getElementById('liveCheapestBody'),wrap=document.getElementById('liveCheapestWrap');
+    if(!tbody||!wrap)return;
+    tbody.innerHTML='';
+    rows.forEach(function(row,idx){
+      var firm=row.firm,plan=row.entry.plan,dp=row.entry.dp;
+      var monthly=isMonthly(plan);
+      var cur=plan.currency||'USD',s=sym(cur);
+      var tr=document.createElement('tr');
+      var tdFirm=document.createElement('td');
+      if(firm.website){var a=document.createElement('a');a.href=firm.website;a.target='_blank';a.rel='noopener';a.style.color='var(--accent)';a.textContent=(firm.name||'')+' ↗';tdFirm.appendChild(a);}
+      else tdFirm.textContent=firm.name||'';
+      tr.appendChild(tdFirm);
+      var tdEntry=document.createElement('td');tdEntry.textContent=fmtSize(plan.account_size);tr.appendChild(tdEntry);
+      var tdPrice=document.createElement('td');tdPrice.className='price-cell';
+      if(dp.pct>0){
+        var strike=document.createElement('span');strike.className='strike';strike.textContent=s+fmt(dp.base);tdPrice.appendChild(strike);
+        var gold=document.createElement('span');gold.className='promo-price';gold.textContent=s+fmt(dp.final);tdPrice.appendChild(gold);
+      }else{
+        var strong=document.createElement('strong');strong.textContent=s+fmt(dp.final);tdPrice.appendChild(strong);
+      }
+      if(monthly)tdPrice.appendChild(document.createTextNode('/mo'));
+      if(idx===0){var pill=document.createElement('span');pill.className='fast';pill.textContent='CHEAPEST';tdPrice.appendChild(pill);}
+      tr.appendChild(tdPrice);
+      var tdPromo=document.createElement('td');
+      var promo=plan.rules?bestPromo(plan.rules):null;
+      if(promo&&promo.code){
+        var btn=document.createElement('button');btn.type='button';btn.className='copy-code-btn';btn.textContent='Copy: '+promo.code;
+        btn.addEventListener('click',function(){copyCode(String(promo.code),btn);});
+        tdPromo.appendChild(btn);
+        if(promo.discount){var d=document.createElement('span');d.textContent=' '+promo.discount;tdPromo.appendChild(d);}
+      }else if(promo&&promo.discount){
+        tdPromo.textContent=promo.discount;
+      }else{
+        tdPromo.textContent='—';
+      }
+      if(promo&&promo.expiry){
+        var ex=document.createElement('span');ex.className='promo-expiry';
+        var ed=new Date(promo.expiry);
+        ex.textContent='Ends '+(isFinite(ed.getTime())?ed.toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'}):String(promo.expiry));
+        tdPromo.appendChild(ex);
+      }
+      tr.appendChild(tdPromo);
+      var tdNote=document.createElement('td');
+      if(monthly){
+        tdNote.textContent='Monthly subscription: '+s+fmt(dp.final)+' × 2 months = '+s+fmt(dp.final*2)+' · × 4 months = '+s+fmt(dp.final*4);
+      }else if(plan.rules&&plan.rules.pricing_model){
+        tdNote.textContent='One-time fee — pay once per attempt';
+      }else{
+        tdNote.textContent='—';
+      }
+      tr.appendChild(tdNote);
+      tbody.appendChild(tr);
+    });
+    var note=document.getElementById('liveCheapestNote');
+    if(note)note.textContent='Live table — the cheapest plan per firm ('+rows.length+' firms), prices after any active promotion, loaded from PIPVANT\u2019s verified database and sorted by the discounted entry price. Order is by fee, cheapest first — not a quality ranking. Promos change; verify at checkout on the firm\u2019s official site.';
+    wrap.hidden=false;
+    var stat=document.getElementById('staticCheapestTable');if(stat)stat.hidden=true;
+    var sNote=document.getElementById('staticCheapestNote');if(sNote)sNote.hidden=true;
+  }).catch(function(){/* live fetch failed — static table stays visible as fallback */});
+})();
+</script>
 </body>
 </html>

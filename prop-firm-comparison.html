@@ -3,17 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Best Prop Firms 2026 — Compare 10 Verified Firms Free | PIPVANT</title>
-  <meta name="description" content="Compare 10 verified prop firms and 43 funding plans side by side — FTMO, The5ers, Topstep, E8 Markets & more. Free prop firm matcher, no signup.">
+  <title>Best Prop Firms 2026 — Compare Verified Firms Free | PIPVANT</title>
+  <meta name="description" content="Compare verified prop firms and their funding plans side by side — FTMO, The5ers, Topstep, E8 Markets & more, loaded live from verified data. Free prop firm matcher, no signup.">
   <link rel="canonical" href="https://pipvant.github.io/prop-firm-comparison.html">
-  <meta property="og:title" content="Best Prop Firms 2026 — Compare 10 Verified Firms Free">
+  <meta property="og:title" content="Best Prop Firms 2026 — Compare Verified Firms Free">
   <meta property="og:description" content="FTMO, The5ers, Topstep, E8 Markets & more — compared with verified data. Free matcher, no signup.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://pipvant.github.io/prop-firm-comparison.html">
   <meta property="og:image" content="https://pipvant.github.io/assets/pipvanta-logo.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Best Prop Firms 2026 — Compare Free | PIPVANT">
-  <meta name="twitter:description" content="10 verified prop firms, 43 plans, compared with real data. Free, no signup.">
+  <meta name="twitter:description" content="Verified prop firms and plans, compared with live verified data. Free, no signup.">
   <link rel="icon" type="image/png" href="assets/pipvanta-logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,7 +23,7 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {"@type": "Question", "name": "Which prop firm is best in 2026?", "acceptedAnswer": {"@type": "Answer", "text": "The best prop firm depends on your trading style — scalpers need tight spreads, swing traders need generous drawdown. Use a free prop firm matcher to filter 10 verified firms by your criteria instead of trusting paid reviews."}},
+      {"@type": "Question", "name": "Which prop firm is best in 2026?", "acceptedAnswer": {"@type": "Answer", "text": "The best prop firm depends on your trading style — scalpers need tight spreads, swing traders need generous drawdown. Use a free prop firm matcher to filter verified firms by your criteria instead of trusting paid reviews."}},
       {"@type": "Question", "name": "How do prop firm challenges work?", "acceptedAnswer": {"@type": "Answer", "text": "You pay an evaluation fee, hit a profit target without breaching drawdown limits, then trade a funded account and split profits (typically 80-90% to you). Rules differ per firm — compare drawdown type, profit targets and payout terms before buying."}},
       {"@type": "Question", "name": "Is PIPVANT's prop firm matcher free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes — the matcher, trading journal, risk calculator and economic calendar are all free with no signup required for browsing."}}
     ]
@@ -54,6 +54,21 @@
     .card .plans{color:var(--muted);font-size:13px;margin-bottom:12px}
     .card p{color:var(--secondary);font-size:14px;line-height:1.6;margin:0 0 16px}
     .card a{color:var(--accent);font-weight:600;font-size:14px;text-decoration:none}
+    .card{position:relative;overflow:hidden}
+    .card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.55}
+    .card .meta-line{color:var(--secondary);font-size:13px;margin:0 0 4px;min-height:18px}
+    .card .verified-stamp{color:var(--muted);font-size:12px;margin:0 0 10px}
+    .spec-strip{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+    .spec-strip .spec{flex:1;min-width:84px;background:var(--raised);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+    .spec-strip .spec span{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+    .spec-strip .spec strong{color:var(--text);font-size:15px;font-variant-numeric:tabular-nums}
+    .spec-strip .spec strong .strike{color:var(--muted);text-decoration:line-through;font-weight:500;font-size:12px;margin-left:5px}
+    .spec-strip .spec strong .promo-price,.spec-strip .spec strong.promo-price{color:var(--gold)}
+    .promo-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+    .promo-badge{display:inline-flex;align-items:center;background:rgba(212,175,55,.14);border:1px solid var(--gold);color:var(--gold);font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px}
+    .copy-code-btn{display:inline-flex;align-items:center;min-height:32px;padding:0 12px;border-radius:999px;background:var(--raised);border:1px solid var(--line-strong);color:var(--text);font-family:ui-monospace,monospace;font-size:12px;font-weight:700;cursor:pointer}
+    .copy-code-btn:hover{border-color:var(--gold);color:var(--gold)}
+    .live-note{color:var(--muted);font-size:13px;text-align:center;margin:18px 0 0}
     .section{padding:44px 0}
     h2{font-size:clamp(1.6rem,4vw,2.4rem);margin:0 0 14px}
     .section p.body{color:var(--secondary);line-height:1.75;max-width:720px}
@@ -87,12 +102,17 @@
   <section class="hero">
     <div class="eyebrow">Prop firm matcher · Verified data</div>
     <h1>Compare the <span class="gold">best prop firms</span> of 2026 — free.</h1>
-    <p class="lede">10 verified prop firms. 43 funding plans. Filter by drawdown, profit target, price and payout terms — then pick the challenge that fits your trading style. No signup, no paid reviews.</p>
+    <p class="lede"><span id="liveCounts">Verified prop firms and funding plans, loaded live below.</span> Filter by drawdown, profit target, price and payout terms — then pick the challenge that fits your trading style. No signup, no paid reviews.</p>
     <div class="freshness-wrap"><span class="freshness-badge" id="freshnessBadge" hidden><span class="fresh-dot"></span><span id="freshnessText"></span></span></div>
     <a class="cta-btn" href="/">Launch the free matcher →</a>
   </section>
 
-  <section class="grid" aria-label="Prop firms">
+  <div id="liveGridWrap" hidden>
+    <section class="grid" id="liveGrid" aria-label="Prop firms — live verified data" style="padding-bottom:6px"></section>
+    <p class="live-note" id="liveNote"></p>
+  </div>
+
+  <section class="grid" id="staticGrid" aria-label="Prop firms">
     <div class="card"><h3>Alpha Capital Group</h3><div class="plans">6 plans tracked</div><p>UK-based prop firm with a range of evaluation sizes. Compare its profit targets and drawdown rules against the field.</p><a href="/">Compare in matcher →</a></div>
     <div class="card"><h3>Apex Trader Funding</h3><div class="plans">8 plans tracked</div><p>Futures-focused firm known for frequent promotions. Check static vs trailing drawdown on each plan.</p><a href="/">Compare in matcher →</a></div>
     <div class="card"><h3>E8 Markets</h3><div class="plans">1 plan tracked</div><p>Customizable evaluation accounts with daily payouts on E8 Pro (per verified data). See how it stacks up.</p><a href="/">Compare in matcher →</a></div>
@@ -107,7 +127,7 @@
 
   <section class="section">
     <h2>How to choose a prop firm</h2>
-    <p class="body">Most traders pick a firm by price and regret it by rule. The three numbers that actually decide whether you pass: <strong style="color:var(--text)">drawdown type</strong> (static is kinder than trailing), <strong style="color:var(--text)">profit target vs drawdown ratio</strong> (a 10% target with 5% drawdown is twice as hard as it looks), and <strong style="color:var(--text)">payout terms</strong> (minimum days, split, and method). PIPVANT's matcher lets you filter all 43 plans on exactly these dimensions — free, with verified data updated regularly.</p>
+    <p class="body">Most traders pick a firm by price and regret it by rule. The three numbers that actually decide whether you pass: <strong style="color:var(--text)">drawdown type</strong> (static is kinder than trailing), <strong style="color:var(--text)">profit target vs drawdown ratio</strong> (a 10% target with 5% drawdown is twice as hard as it looks), and <strong style="color:var(--text)">payout terms</strong> (minimum days, split, and method). PIPVANT's matcher lets you filter every tracked plan on exactly these dimensions — free, with verified data updated regularly.</p>
     <table>
       <tr><th>What to compare</th><th>Why it matters</th></tr>
       <tr><td>Drawdown type</td><td>Trailing drawdown follows your equity peaks — much harder than static</td></tr>
@@ -172,6 +192,143 @@
       }
     })
     .catch(function(){/* badge stays hidden — never show a guessed date */});
+})();
+</script>
+<script>
+/* Live firm grid: renders every firm from Supabase (firms + firm_plans + firm_ratings + firm_likes,
+   public anon reads only). The static grid above stays as the fallback — it is only hidden
+   after a successful live render, so a failed fetch never leaves the page empty.
+   Discount logic replicates sbDiscountedPrice()/sbBestPromo() from index.html. */
+(function(){
+  var KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFjcGt6YXZtaWZqd25za2lhcmV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyMDk1ODcsImV4cCI6MjEwNjc4NTU4N30.9-k-DoB6467EXTPKrvWUi-LRDPbSSC30f6BgrZezo2A';
+  var BASE='https://acpkzavmifjwnskiaret.supabase.co/rest/v1/';
+  var H={'apikey':KEY,'Authorization':'Bearer '+KEY};
+  function get(path){return fetch(BASE+path,{headers:H}).then(function(r){if(!r.ok)throw new Error(path+' '+r.status);return r.json();});}
+  function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+  function sym(cur){return cur==='EUR'?'€':cur==='MAD'?'MAD ':'$';}
+  function fmt(n){return (Math.round(n*100)/100).toLocaleString('en-US');}
+  function bestPromo(rules){
+    if(!rules||!Array.isArray(rules.promotions)||!rules.promotions.length)return null;
+    var now=Date.now(),best=null;
+    rules.promotions.forEach(function(p){
+      if(!p)return;
+      if(p.expiry){var e=new Date(p.expiry).getTime();if(isFinite(e)&&e<now)return;}
+      if(!best)best=p;
+    });
+    return best;
+  }
+  function promoPct(promo){
+    if(!promo||!promo.discount)return 0;
+    var m=String(promo.discount).match(/(\d+)\s*%/);
+    return m?Number(m[1]):0;
+  }
+  function discountedPrice(plan){
+    var base=Number(plan.price);
+    if(!isFinite(base))return {base:null,final:null,pct:0};
+    var promo=plan.rules?bestPromo(plan.rules):null;
+    var pct=promo?promoPct(promo):0;
+    if(pct>0&&pct<100)return {base:base,final:Math.round(base*(1-pct/100)*100)/100,pct:pct};
+    return {base:base,final:base,pct:0};
+  }
+  function verifiedAgo(iso){
+    if(!iso)return '';
+    var t=new Date(iso).getTime();if(!isFinite(t))return '';
+    var mins=Math.max(0,Math.floor((Date.now()-t)/60000));
+    if(mins<60)return '✓ Data verified '+Math.max(mins,1)+'m ago';
+    var hrs=Math.floor(mins/60);if(hrs<24)return '✓ Data verified '+hrs+'h ago';
+    var days=Math.floor(hrs/24);return '✓ Data verified '+(days===1?'1d':days+'d')+' ago';
+  }
+  function copyCode(code,btn){
+    function done(){btn.textContent='Copied: '+code;setTimeout(function(){btn.textContent='Copy code: '+code;},1800);}
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(code).then(done).catch(function(){fallback();});}else{fallback();}
+    function fallback(){var ta=document.createElement('textarea');ta.value=code;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done();}catch(e){}document.body.removeChild(ta);}
+  }
+  Promise.all([
+    get('firms?select=id,name,website,last_verified_at,updated_at&order=name.asc'),
+    get('firm_plans?select=firm_id,account_size,price,currency,rules'),
+    get('firm_ratings?select=firm_id,rating'),
+    get('firm_likes?select=firm_id')
+  ]).then(function(res){
+    var firms=res[0],plans=res[1],ratings=res[2],likes=res[3];
+    if(!Array.isArray(firms)||!firms.length||!Array.isArray(plans))return;
+    var plansByFirm={},promoByFirm={};
+    plans.forEach(function(p){
+      if(!p||!p.firm_id)return;
+      (plansByFirm[p.firm_id]=plansByFirm[p.firm_id]||[]).push(p);
+      if(!promoByFirm[p.firm_id]){var pr=p.rules?bestPromo(p.rules):null;if(pr)promoByFirm[p.firm_id]=pr;}
+    });
+    var ratingAgg={};
+    (ratings||[]).forEach(function(r){
+      var v=Number(r&&r.rating);if(!r||!isFinite(v)||v<1||v>5)return;
+      var a=ratingAgg[r.firm_id]=ratingAgg[r.firm_id]||{sum:0,count:0};a.sum+=v;a.count++;
+    });
+    var likeAgg={};
+    (likes||[]).forEach(function(l){if(l&&l.firm_id)likeAgg[l.firm_id]=(likeAgg[l.firm_id]||0)+1;});
+    var grid=document.getElementById('liveGrid'),wrap=document.getElementById('liveGridWrap');
+    if(!grid||!wrap)return;
+    grid.innerHTML='';
+    firms.forEach(function(firm){
+      var fplans=plansByFirm[firm.id]||[];
+      var card=document.createElement('div');card.className='card';
+      var h=document.createElement('h3');h.textContent=firm.name||'';card.appendChild(h);
+      var meta=document.createElement('p');meta.className='meta-line';
+      var agg=ratingAgg[firm.id];
+      if(agg&&agg.count>=1)meta.appendChild(document.createTextNode('★ '+(Math.round(agg.sum/agg.count*10)/10).toFixed(1)+' ('+agg.count+')'));
+      var lk=likeAgg[firm.id]||0;
+      if(lk>=1)meta.appendChild(document.createTextNode((meta.textContent?' · ':'')+'♥ '+lk));
+      card.appendChild(meta);
+      var stamp=verifiedAgo(firm.last_verified_at||firm.updated_at);
+      if(stamp){var vs=document.createElement('p');vs.className='verified-stamp';vs.textContent=stamp;card.appendChild(vs);}
+      var plansLine=document.createElement('div');plansLine.className='plans';
+      plansLine.textContent=fplans.length+(fplans.length===1?' plan tracked':' plans tracked');
+      card.appendChild(plansLine);
+      /* Spec strip: cheapest price from / max profit split / max drawdown — all computed from firm_plans */
+      var cheapest=null,maxSplit=null,maxDd=null;
+      fplans.forEach(function(p){
+        var dp=discountedPrice(p);
+        if(dp.final!=null&&(!cheapest||dp.final<cheapest.dp.final))cheapest={plan:p,dp:dp};
+        var r=p.rules||{};
+        var sp=Number(r.profit_split);if(isFinite(sp)&&(maxSplit==null||sp>maxSplit))maxSplit=sp;
+        var dd=Number(r.max_drawdown_pct);if(isFinite(dd)&&(maxDd==null||dd>maxDd))maxDd=dd;
+      });
+      var strip=document.createElement('div');strip.className='spec-strip';
+      var specs=[
+        {label:'Price from',html:cheapest?esc(sym(cheapest.plan.currency||'USD'))+fmt(cheapest.dp.final)+(cheapest.dp.pct>0?' <span class="strike">'+esc(sym(cheapest.plan.currency||'USD'))+fmt(cheapest.dp.base)+'</span>':''):'—',promo:!!(cheapest&&cheapest.dp.pct>0)},
+        {label:'Max split',html:maxSplit!=null?esc(fmt(maxSplit))+'%':'—',promo:false},
+        {label:'Max drawdown',html:maxDd!=null?esc(fmt(maxDd))+'%':'—',promo:false}
+      ];
+      specs.forEach(function(s){
+        var d=document.createElement('div');d.className='spec';
+        var lb=document.createElement('span');lb.textContent=s.label;d.appendChild(lb);
+        var st=document.createElement('strong');if(s.promo)st.className='promo-price';st.innerHTML=s.html;d.appendChild(st);
+        strip.appendChild(d);
+      });
+      card.appendChild(strip);
+      var promo=promoByFirm[firm.id];
+      if(promo){
+        var row=document.createElement('div');row.className='promo-row';
+        var pct=promoPct(promo);
+        var badge=document.createElement('span');badge.className='promo-badge';
+        badge.textContent=pct>0?pct+'% OFF':(promo.discount?String(promo.discount):'Special offer');
+        row.appendChild(badge);
+        if(promo.code){
+          var btn=document.createElement('button');btn.type='button';btn.className='copy-code-btn';
+          btn.textContent='Copy code: '+promo.code;
+          btn.addEventListener('click',function(){copyCode(String(promo.code),btn);});
+          row.appendChild(btn);
+        }
+        card.appendChild(row);
+      }
+      var link=document.createElement('a');link.href='/';link.textContent='Compare in matcher →';card.appendChild(link);
+      grid.appendChild(card);
+    });
+    var counts=document.getElementById('liveCounts');
+    if(counts)counts.textContent=firms.length+' verified prop firms. '+plans.length+' funding plans, loaded live.';
+    var note=document.getElementById('liveNote');
+    if(note)note.textContent='Live grid — every firm, price, rating and promotion above is loaded from PIPVANT\u2019s verified database.';
+    wrap.hidden=false;
+    var stat=document.getElementById('staticGrid');if(stat)stat.hidden=true;
+  }).catch(function(){/* live fetch failed — static grid stays visible as fallback */});
 })();
 </script>
 </body>
