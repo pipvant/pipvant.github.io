@@ -68,6 +68,42 @@
     .news-form{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;max-width:520px;margin:0 auto}
     .news-form input{flex:1;min-width:220px;background:var(--raised);border:1px solid var(--line);border-radius:10px;color:var(--text);font-size:15px;padding:0 16px;min-height:46px;font-family:inherit}
     .news-form input:focus{outline:none;border-color:var(--accent)}
+    .mock{max-width:760px;margin:6px auto 10px;background:var(--surface);border:1px solid var(--line-strong);border-radius:16px;padding:20px 22px;text-align:left;box-shadow:0 18px 50px rgba(0,0,0,.35)}
+    .mock .mock-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+    .mock .mock-title{font-family:"Space Grotesk";font-weight:700;font-size:15px}
+    .mock .mock-badge{font-size:11px;font-weight:700;letter-spacing:.08em;color:#F5D67B;background:rgba(212,175,55,.1);border:1px solid rgba(212,175,55,.4);border-radius:999px;padding:4px 10px}
+    .mock .chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+    .mock .chip{background:var(--raised);border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:12.5px;color:var(--secondary)}
+    .mock .chip strong{color:var(--text);font-variant-numeric:tabular-nums}
+    .demo-banner{background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.45);color:#F5D67B;border-radius:12px;padding:13px 18px;font-size:14px;font-weight:600;line-height:1.6;margin:0 0 16px;text-align:center}
+    .demo{background:var(--surface);border:1px solid var(--line-strong);border-radius:16px;padding:26px 28px;text-align:left}
+    .demo-form{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+    .demo-form input,.demo-form select{background:var(--raised);border:1px solid var(--line);border-radius:10px;color:var(--text);font-size:15px;padding:12px 14px;font-family:inherit;min-height:46px}
+    .demo-form input:focus,.demo-form select:focus{outline:none;border-color:var(--accent)}
+    .demo-form .f-pair{flex:2;min-width:140px}.demo-form .f-dir{flex:1;min-width:110px}.demo-form .f-pnl{flex:1;min-width:120px}
+    .demo-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:6px 0 16px}
+    .demo-stat{background:var(--raised);border:1px solid var(--line);border-radius:10px;padding:13px 12px;text-align:center}
+    .demo-stat .v{font-family:"Space Grotesk";font-size:1.25rem;font-weight:700;font-variant-numeric:tabular-nums}
+    .demo-stat .v.pos{color:#3ECF8E}.demo-stat .v.neg{color:#E5604F}
+    .demo-stat .l{color:var(--muted);font-size:12px;margin-top:3px}
+    .demo-chart{background:var(--raised);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:16px}
+    .demo-chart .cap{color:var(--muted);font-size:12px;margin:0 0 8px}
+    .demo table{width:100%;border-collapse:collapse;font-size:13.5px}
+    .demo th,.demo td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line)}
+    .demo th{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+    .demo td{color:var(--secondary);font-variant-numeric:tabular-nums}
+    .demo td.pos{color:#3ECF8E;font-weight:700}.demo td.neg{color:#E5604F;font-weight:700}
+    .demo .del{background:transparent;border:1px solid var(--line-strong);color:var(--muted);border-radius:8px;padding:4px 10px;cursor:pointer;font-family:inherit;font-size:12px}
+    .demo .del:hover{color:var(--text);border-color:var(--accent)}
+    .demo .ghost{background:transparent;border:1px solid var(--line-strong);color:var(--secondary);border-radius:10px;padding:0 16px;min-height:46px;font-weight:600;cursor:pointer;font-family:inherit;font-size:14px}
+    .demo .ghost:hover{border-color:var(--gold);color:var(--text)}
+    .sample-tag{font-size:10.5px;font-weight:700;letter-spacing:.07em;color:#F5D67B;background:rgba(212,175,55,.1);border:1px solid rgba(212,175,55,.35);border-radius:999px;padding:2px 8px;margin-left:8px;vertical-align:middle}
+    .pipv2-related{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px 28px;margin:20px 0;text-align:left}
+    .pipv2-related h2{font-size:1.3rem;margin:0 0 12px}
+    .pipv2-related ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px 18px}
+    .pipv2-related a{color:var(--accent);text-decoration:none;font-size:14px;font-weight:600}
+    .pipv2-related a:hover{text-decoration:underline}
+    @media(max-width:640px){.demo-stats{grid-template-columns:repeat(2,1fr)}.demo{padding:20px 16px}}
     footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted);font-size:13px}
     footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
     footer a{color:var(--muted);text-decoration:none;margin-left:16px}
@@ -89,6 +125,22 @@
     <a class="cta-btn" href="/">Start journaling free →</a>
   </section>
 
+  <div class="mock" aria-hidden="true">
+    <div class="mock-head"><span class="mock-title">PIPVANT Journal — preview</span><span class="mock-badge">SAMPLE DATA</span></div>
+    <div class="chips">
+      <span class="chip">Win rate <strong>50%</strong></span>
+      <span class="chip">Net P&amp;L <strong>+$480</strong></span>
+      <span class="chip">Profit factor <strong>2.78</strong></span>
+      <span class="chip">Trades <strong>sample set</strong></span>
+    </div>
+    <svg viewBox="0 0 600 140" width="100%" height="90" role="img" aria-label="Sample equity curve">
+      <line x1="0" y1="98" x2="600" y2="98" stroke="#1C2F4D" stroke-width="1"/>
+      <polyline points="0,98 100,62 200,84 300,52 400,70 500,34 600,22" fill="none" stroke="#D4AF37" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+      <circle cx="600" cy="22" r="4" fill="#D4AF37"/>
+    </svg>
+    <p style="color:var(--muted);font-size:12px;margin:8px 0 0">Illustrative preview with sample numbers — try the live demo below with your own sample trades.</p>
+  </div>
+
   <section class="grid" aria-label="Journal features">
     <div class="card"><h3>📊 Automatic statistics</h3><p>Win rate, profit factor, average win/loss, expectancy — computed the moment you save a trade. No spreadsheets, no manual math.</p></div>
     <div class="card"><h3>📈 P&L charts</h3><p>Daily net P&L and cumulative equity curve, rendered beautifully. See your progress — and your drawdowns — at a glance.</p></div>
@@ -96,6 +148,42 @@
     <div class="card"><h3>🔒 Local-first & private</h3><p>Trades save on your device first, then sync to your private account. Your data is yours — nobody else sees it.</p></div>
     <div class="card"><h3>⚡ Instant, no reload</h3><p>Add a trade and your dashboard updates immediately. Built for traders who journal between sessions, not after.</p></div>
     <div class="card"><h3>🏆 Certificates</h3><p>Hit 100 logged trades and earn a cinematic gold certificate — proof of discipline you can actually show.</p></div>
+  </section>
+
+  <section class="section" id="demo">
+    <h2>Try the journal — live demo</h2>
+    <div class="demo-banner">Demo with sample data — your real journal is free inside PIPVANT. Nothing here is a real trading result.</div>
+    <div class="demo" role="region" aria-label="Interactive journal demo">
+      <form class="demo-form" id="demoForm">
+        <input class="f-pair" id="dPair" type="text" value="US100" maxlength="16" aria-label="Instrument" required>
+        <select class="f-dir" id="dDir" aria-label="Direction">
+          <option value="Long">Long</option>
+          <option value="Short">Short</option>
+        </select>
+        <input class="f-pnl" id="dPnl" type="number" step="any" placeholder="P&amp;L $ e.g. 150 or -80" aria-label="Profit or loss in USD" required>
+        <button type="submit" class="cta-btn">Add sample trade</button>
+        <button type="button" class="ghost" id="dReset">Reset samples</button>
+      </form>
+      <div class="demo-stats">
+        <div class="demo-stat"><div class="v" id="dsTrades">0</div><div class="l">Trades</div></div>
+        <div class="demo-stat"><div class="v" id="dsWin">—</div><div class="l">Win rate</div></div>
+        <div class="demo-stat"><div class="v" id="dsNet">$0</div><div class="l">Net P&amp;L (sample)</div></div>
+        <div class="demo-stat"><div class="v" id="dsPf">—</div><div class="l">Profit factor</div></div>
+        <div class="demo-stat"><div class="v" id="dsAvgW">—</div><div class="l">Average win</div></div>
+        <div class="demo-stat"><div class="v" id="dsAvgL">—</div><div class="l">Average loss</div></div>
+      </div>
+      <div class="demo-chart">
+        <p class="cap">Equity curve — cumulative sample P&amp;L, recomputed live</p>
+        <svg id="dChart" viewBox="0 0 600 160" width="100%" height="120" role="img" aria-label="Demo equity curve"></svg>
+      </div>
+      <div style="overflow-x:auto">
+      <table aria-label="Sample trades">
+        <thead><tr><th>#</th><th>Instrument</th><th>Direction</th><th>P&amp;L</th><th></th></tr></thead>
+        <tbody id="dBody"></tbody>
+      </table>
+      </div>
+      <p style="color:var(--muted);font-size:12.5px;margin:12px 0 0">Every row is labelled SAMPLE. Add your own test numbers above — the stats and curve update instantly, exactly like the real journal. <a href="/" style="color:var(--accent)">Open your free journal →</a></p>
+    </div>
   </section>
 
   <section class="section">
@@ -130,6 +218,8 @@
     <div data-pipv-msg style="min-height:22px;margin-top:10px;font-size:14px"></div>
   </section>
 
+  <section class="pipv2-related" aria-label="Related tools"><h2>All free PIPVANT tools</h2><ul><li><a href="forex-risk-calculator.html">Risk calculator</a></li><li><a href="profit-split-calculator.html">Profit split calculator</a></li><li><a href="drawdown-simulator.html">Drawdown simulator</a></li><li><a href="consistency-rule-checker.html">Consistency checker</a></li><li><a href="risk-of-ruin-calculator.html">Risk of ruin calculator</a></li><li><a href="net-payout-calculator.html">Net payout calculator</a></li><li><a href="scaling-plan-calculator.html">Scaling plan calculator</a></li><li><a href="prop-firm-deals.html">Deals</a></li><li><a href="prop-firm-comparison.html">Prop firm matcher</a></li></ul></section>
+
   <section class="final">
     <h2>Stop paying to track your trades.</h2>
     <p class="body" style="text-align:center;margin:0 auto 24px;max-width:560px;color:var(--secondary);line-height:1.7">Log your first trade in under a minute. Watch your stats build themselves.</p>
@@ -142,6 +232,89 @@
   <span>© 2026 PIPVANT by Orovanta — Trade with a process, not a prediction.</span>
   <span><a href="/">Toolkit</a><a href="prop-firm-comparison.html">Prop firms</a><a href="forex-risk-calculator.html">Calculator</a></span>
 </div></footer>
+<script>
+(function(){
+  'use strict';
+  var SAMPLES=[
+    {pair:'US100',dir:'Long',pnl:250},
+    {pair:'US100',dir:'Short',pnl:-120},
+    {pair:'EUR/USD',dir:'Long',pnl:180},
+    {pair:'XAUUSD',dir:'Long',pnl:-90},
+    {pair:'US100',dir:'Long',pnl:320},
+    {pair:'GBP/USD',dir:'Short',pnl:-60}
+  ];
+  var trades=SAMPLES.slice();
+  function $(id){return document.getElementById(id);}
+  var body=$('dBody'),chart=$('dChart');
+  function money(n){var s=(n<0?'-$':'+$')+Math.abs(Math.round(n*100)/100).toLocaleString('en-US');return s;}
+  function compute(){
+    var wins=trades.filter(function(t){return t.pnl>0;});
+    var losses=trades.filter(function(t){return t.pnl<0;});
+    var net=trades.reduce(function(a,t){return a+t.pnl;},0);
+    var gw=wins.reduce(function(a,t){return a+t.pnl;},0);
+    var gl=Math.abs(losses.reduce(function(a,t){return a+t.pnl;},0));
+    return {
+      n:trades.length,
+      winRate:trades.length?Math.round(wins.length/trades.length*1000)/10:null,
+      net:net,
+      pf:gl>0?Math.round(gw/gl*100)/100:(gw>0?Infinity:null),
+      avgW:wins.length?gw/wins.length:null,
+      avgL:losses.length?-gl/losses.length:null
+    };
+  }
+  function drawCurve(){
+    var W=600,H=160,PAD=14;
+    var cum=[0];trades.forEach(function(t){cum.push(cum[cum.length-1]+t.pnl);});
+    var min=Math.min.apply(null,cum.concat([0])),max=Math.max.apply(null,cum.concat([0]));
+    if(max===min){max=min+1;}
+    function X(i){return cum.length===1?W/2:PAD+i*(W-2*PAD)/(cum.length-1);}
+    function Y(v){return H-PAD-((v-min)/(max-min))*(H-2*PAD);}
+    var pts=cum.map(function(v,i){return X(i).toFixed(1)+','+Y(v).toFixed(1);}).join(' ');
+    var zeroY=Y(0).toFixed(1);
+    chart.innerHTML='<line x1="0" y1="'+zeroY+'" x2="'+W+'" y2="'+zeroY+'" stroke="#1C2F4D" stroke-width="1"/>'+
+      '<polyline points="'+pts+'" fill="none" stroke="#D4AF37" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>'+
+      '<circle cx="'+X(cum.length-1).toFixed(1)+'" cy="'+Y(cum[cum.length-1]).toFixed(1)+'" r="4" fill="#D4AF37"/>';
+  }
+  function render(){
+    body.innerHTML='';
+    trades.forEach(function(t,i){
+      var tr=document.createElement('tr');
+      var c1=document.createElement('td');c1.textContent=String(i+1);
+      var c2=document.createElement('td');c2.textContent=t.pair;
+      var tag=document.createElement('span');tag.className='sample-tag';tag.textContent='SAMPLE';c2.appendChild(tag);
+      var c3=document.createElement('td');c3.textContent=t.dir;
+      var c4=document.createElement('td');c4.textContent=money(t.pnl);c4.className=t.pnl>=0?'pos':'neg';
+      var c5=document.createElement('td');
+      var del=document.createElement('button');del.type='button';del.className='del';del.textContent='Remove';
+      del.setAttribute('aria-label','Remove sample trade '+(i+1));
+      del.addEventListener('click',function(){trades.splice(i,1);render();});
+      c5.appendChild(del);
+      tr.appendChild(c1);tr.appendChild(c2);tr.appendChild(c3);tr.appendChild(c4);tr.appendChild(c5);
+      body.appendChild(tr);
+    });
+    var st=compute();
+    $('dsTrades').textContent=String(st.n);
+    $('dsWin').textContent=st.winRate===null?'—':st.winRate+'%';
+    var netEl=$('dsNet');netEl.textContent=(st.net>0?'+$':st.net<0?'-$':'$')+Math.abs(st.net).toLocaleString('en-US');
+    netEl.className='v '+(st.net>0?'pos':st.net<0?'neg':'');
+    $('dsPf').textContent=st.pf===null?'—':(st.pf===Infinity?'∞':st.pf.toFixed(2));
+    $('dsAvgW').textContent=st.avgW===null?'—':money(st.avgW);
+    $('dsAvgL').textContent=st.avgL===null?'—':money(st.avgL);
+    drawCurve();
+  }
+  $('demoForm').addEventListener('submit',function(ev){
+    ev.preventDefault();
+    var pair=$('dPair').value.trim()||'US100';
+    var pnl=parseFloat($('dPnl').value);
+    if(!isFinite(pnl))return;
+    trades.push({pair:pair,dir:$('dDir').value,pnl:pnl});
+    $('dPnl').value='';
+    render();
+  });
+  $('dReset').addEventListener('click',function(){trades=SAMPLES.slice();render();});
+  render();
+})();
+</script>
 <script src="assets/pipv-os.js" defer></script>
 </body>
 </html>

@@ -25,7 +25,9 @@
     "mainEntity": [
       {"@type": "Question", "name": "How do I calculate position size in forex?", "acceptedAnswer": {"@type": "Answer", "text": "Position size = (account size × risk %) ÷ stop loss in pips ÷ pip value. Example: $10,000 account risking 1% ($100) with a 50-pip stop = $2 per pip. A calculator does this instantly."}},
       {"@type": "Question", "name": "What is a good risk percentage per trade?", "acceptedAnswer": {"@type": "Answer", "text": "Most professional traders risk 0.5–2% per trade. Prop firm challenges effectively force ~1%: blowing a 10% drawdown takes only ten 1%-risk losses in a row."}},
-      {"@type": "Question", "name": "Is this risk calculator free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes — PIPVANT's risk calculator is free forever with no signup. It's part of a free toolkit that also includes a trading journal, prop firm matcher and economic calendar."}}
+      {"@type": "Question", "name": "Is this risk calculator free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes — PIPVANT's risk calculator is free forever with no signup. It's part of a free toolkit that also includes a trading journal, prop firm matcher and economic calendar."}},
+      {"@type": "Question", "name": "Are the instrument preset values exact for my broker?", "acceptedAnswer": {"@type": "Answer", "text": "Presets use standard contract specifications (for example $10 per pip per standard lot on major forex pairs). Contract sizes differ between brokers and CFDs, so every preset value stays editable — confirm the pip or tick value with your own broker before trading."}},
+      {"@type": "Question", "name": "How does the prop firm plan preset work?", "acceptedAnswer": {"@type": "Answer", "text": "Pick a firm and plan and the calculator loads that plan's real daily loss and max drawdown rules from PIPVANT's verified database, then shows what share of those limits your chosen risk per trade would use."}}
     ]
   }
   </script>
@@ -52,6 +54,27 @@
     .result .num{font-family:"Space Grotesk";font-size:2.4rem;font-weight:700;background:linear-gradient(135deg,#F5D67B,#D4AF37);-webkit-background-clip:text;background-clip:text;color:transparent}
     .result .lbl{color:var(--muted);font-size:13px;margin-top:4px}
     .result .risk{color:var(--secondary);font-size:14px;margin-top:10px}
+    .calc select{width:100%;background:var(--raised);border:1px solid var(--line);border-radius:10px;color:var(--text);font-size:16px;padding:12px 14px;margin-bottom:16px;font-family:inherit;appearance:none}
+    .calc select:focus{outline:none;border-color:var(--accent)}
+    .calc input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(91,141,239,.18)}
+    .hint{color:var(--muted);font-size:12.5px;margin:-10px 0 16px;line-height:1.55}
+    .hint.gold{color:#F5D67B}
+    .stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}
+    .stat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 12px;text-align:center}
+    .stat .v{font-family:"Space Grotesk";font-size:1.3rem;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums}
+    .stat .v.blue{color:var(--accent)}
+    .stat .l{color:var(--muted);font-size:12px;margin-top:4px}
+    .plan-readout{margin-top:14px;background:rgba(212,175,55,.06);border:1px solid rgba(212,175,55,.35);border-radius:12px;padding:16px 18px;text-align:left}
+    .plan-readout h4{margin:0 0 8px;font-size:14px;color:#F5D67B;font-family:"Space Grotesk"}
+    .plan-readout p{margin:0 0 6px;color:var(--secondary);font-size:13.5px;line-height:1.6}
+    .plan-readout p:last-child{margin-bottom:0}
+    .plan-readout strong{color:var(--text);font-variant-numeric:tabular-nums}
+    .pipv2-related{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px 28px;margin:20px 0;text-align:left}
+    .pipv2-related h2{font-size:1.3rem;margin:0 0 12px}
+    .pipv2-related ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px 18px}
+    .pipv2-related a{color:var(--accent);text-decoration:none;font-size:14px;font-weight:600}
+    .pipv2-related a:hover{text-decoration:underline}
+    @media(max-width:520px){.stat-grid{grid-template-columns:1fr 1fr}}
     .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;padding:20px 0 40px}
     .card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px}
     .card h3{margin:0 0 8px;font-size:18px}
@@ -87,18 +110,52 @@
   </section>
 
   <div class="calc" role="region" aria-label="Position size calculator">
+    <label for="instrument">Instrument preset (standard contract specs — editable below)</label>
+    <select id="instrument">
+      <option value="manual">Manual — set the values yourself</option>
+      <option value="forex" selected>Forex majors (EUR/USD, GBP/USD…) — pips</option>
+      <option value="xauusd">XAUUSD (gold) — points (0.01)</option>
+      <option value="us100">US100 / NASDAQ — index points</option>
+      <option value="us30">US30 / Dow Jones — index points</option>
+      <option value="us500">US500 / S&amp;P 500 — index points</option>
+      <option value="btcusd">BTCUSD — USD moves</option>
+    </select>
+    <p class="hint" id="instNote">Preset values are standard contract specifications, shown as assumptions you can edit — contract sizes differ by broker, so confirm the pip/tick value with your own broker before trading.</p>
     <label for="acct">Account size (USD)</label>
     <input id="acct" type="number" value="10000" min="1" inputmode="decimal">
     <label for="risk">Risk per trade (%)</label>
     <input id="risk" type="number" value="1" min="0.1" max="100" step="0.1" inputmode="decimal">
-    <label for="sl">Stop loss (pips)</label>
-    <input id="sl" type="number" value="50" min="1" inputmode="decimal">
-    <label for="pipv">Pip value (USD per pip per standard lot)</label>
+    <label for="sl" id="slLabel">Stop loss (pips)</label>
+    <input id="sl" type="number" value="50" min="0" step="any" inputmode="decimal">
+    <label for="pipsize" id="pipSizeLabel">Pip / tick size (price units per pip)</label>
+    <input id="pipsize" type="number" value="0.0001" min="0" step="any" inputmode="decimal">
+    <label for="pipv" id="pipvLabel">Pip value (USD per pip per standard lot)</label>
     <input id="pipv" type="number" value="10" min="0.01" step="0.01" inputmode="decimal">
+    <label for="firmSel">Prop firm plan preset (live data — optional)</label>
+    <select id="firmSel">
+      <option value="">Manual entry — no firm selected</option>
+    </select>
+    <label for="planSel">Plan (fills account size + shows your risk vs its real loss limits)</label>
+    <select id="planSel">
+      <option value="">Select a firm first</option>
+    </select>
+    <p class="hint" id="liveHint">Loading live firm data… You can always type every value manually — the plan preset only fills the account size and reads that plan's published daily loss and max drawdown rules.</p>
     <div class="result">
       <div class="num" id="lots">0.20</div>
-      <div class="lbl">STANDARD LOTS</div>
+      <div class="lbl" id="lotsLabel">STANDARD LOTS</div>
       <div class="risk" id="riskamt">Risking $100.00 on this trade</div>
+      <div class="stat-grid">
+        <div class="stat"><div class="v blue" id="stRisk">$100.00</div><div class="l">Risk amount</div></div>
+        <div class="stat"><div class="v" id="stPerUnit">$2.00</div><div class="l" id="stPerUnitLabel">Per pip, whole position</div></div>
+        <div class="stat"><div class="v" id="stStop">50 pips</div><div class="l">Stop distance</div></div>
+        <div class="stat"><div class="v" id="stRiskPct">1.0%</div><div class="l">Of account, per trade</div></div>
+      </div>
+    </div>
+    <div class="plan-readout" id="planReadout" hidden>
+      <h4 id="planTitle">Against this plan's rules</h4>
+      <p id="planDaily"></p>
+      <p id="planMax"></p>
+      <p id="planNote"></p>
     </div>
   </div>
   <p style="text-align:center;color:var(--muted);font-size:13px;max-width:560px;margin:0 auto 10px">Try it above — then save your risk settings in the full toolkit so every calculation is one tap.</p>
@@ -115,6 +172,8 @@
     <details><summary>What is a good risk percentage per trade?</summary><p>Most professionals risk 0.5–2% per trade. On prop firm challenges, 1% is the practical standard — it keeps you far from the drawdown limit while letting winners compound.</p></details>
     <details><summary>What is pip value?</summary><p>For most USD-quoted pairs, one standard lot = $10 per pip. Mini lot = $1/pip, micro lot = $0.10/pip. Adjust the pip value field for JPY pairs or cross rates.</p></details>
     <details><summary>Is this calculator free?</summary><p>Yes — free forever, no signup. It's part of PIPVANT's free toolkit: journal, prop firm matcher, risk calculator and economic calendar.</p></details>
+    <details><summary>Are the instrument preset values exact for my broker?</summary><p>Presets use standard contract specifications — for example $10 per pip per standard lot on major forex pairs, and 100 oz per standard gold lot. Contract sizes differ between brokers and CFD providers, so every preset value (pip/tick size and value) stays editable. Confirm the pip or tick value with your own broker before trading.</p></details>
+    <details><summary>How does the prop firm plan preset work?</summary><p>Pick a firm and a plan and the calculator loads that plan's real daily loss and max drawdown rules from PIPVANT's verified database. It then shows what share of those limits your chosen risk per trade would use — for example, at 1% risk on a plan with a 5% daily loss limit, one trade uses 20% of the daily limit.</p></details>
   </section>
 
   <section class="news">
@@ -126,6 +185,8 @@
     </form>
     <div data-pipv-msg style="min-height:22px;margin-top:10px;font-size:14px"></div>
   </section>
+
+  <section class="pipv2-related" aria-label="Related tools"><h2>All free PIPVANT tools</h2><ul><li><a href="forex-risk-calculator.html">Risk calculator</a></li><li><a href="profit-split-calculator.html">Profit split calculator</a></li><li><a href="drawdown-simulator.html">Drawdown simulator</a></li><li><a href="consistency-rule-checker.html">Consistency checker</a></li><li><a href="risk-of-ruin-calculator.html">Risk of ruin calculator</a></li><li><a href="net-payout-calculator.html">Net payout calculator</a></li><li><a href="scaling-plan-calculator.html">Scaling plan calculator</a></li><li><a href="prop-firm-deals.html">Deals</a></li><li><a href="prop-firm-comparison.html">Prop firm matcher</a></li></ul></section>
 
   <section class="final">
     <h2>Calculate once. Trade with confidence.</h2>
@@ -142,18 +203,137 @@
 
 <script>
 (function(){
-  var acct=document.getElementById('acct'),risk=document.getElementById('risk'),
-      sl=document.getElementById('sl'),pipv=document.getElementById('pipv'),
-      lots=document.getElementById('lots'),riskamt=document.getElementById('riskamt');
+  'use strict';
+  var KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFjcGt6YXZtaWZqd25za2lhcmV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyMDk1ODcsImV4cCI6MjEwNjc4NTU4N30.9-k-DoB6467EXTPKrvWUi-LRDPbSSC30f6BgrZezo2A';
+  var BASE='https://acpkzavmifjwnskiaret.supabase.co/rest/v1/';
+  /* Instrument presets: standard contract specifications ONLY (calculation constants).
+     Every value lands in an editable field; brokers/CFD providers differ, so the page
+     tells the user to confirm with their broker. Nothing here is market data.
+     value = USD per unit of stop distance, per standard lot/unit.
+       forex majors: 1 pip = 0.0001, $10/pip per standard lot.
+       XAUUSD: 1 point = 0.01 price move, standard lot = 100 oz -> $1 per point per lot.
+       US100/US30/US500 CFDs: 1 point, assumed 1 index unit per lot -> $1 per point per lot.
+       BTCUSD: 1 unit = a $1 price move, per 1 BTC lot -> $1 per unit per lot. */
+  var PRESETS={
+    forex:{unit:'pips',singular:'pip',size:0.0001,value:10,note:'Standard spec assumed: pip = 0.0001 and $10 per pip per standard lot (major pairs quoted in USD). Editable — confirm with your broker.'},
+    xauusd:{unit:'points (0.01)',singular:'point',size:0.01,value:1,note:'Standard spec assumed: 1 point = a 0.01 price move and a standard lot = 100 oz, so $1 per point per lot. Editable — confirm with your broker.'},
+    us100:{unit:'points',singular:'point',size:1,value:1,note:'Standard spec assumed: stop in index points, $1 per point per lot (1 index unit per lot). CFD contract sizes vary — edit the value field to match your broker.'},
+    us30:{unit:'points',singular:'point',size:1,value:1,note:'Standard spec assumed: stop in index points, $1 per point per lot (1 index unit per lot). CFD contract sizes vary — edit the value field to match your broker.'},
+    us500:{unit:'points',singular:'point',size:1,value:1,note:'Standard spec assumed: stop in index points, $1 per point per lot (1 index unit per lot). CFD contract sizes vary — edit the value field to match your broker.'},
+    btcusd:{unit:'USD moves ($1)',singular:'USD move',size:1,value:1,note:'Standard spec assumed: stop in $1 price moves, $1 per move per lot (1 BTC per lot). Editable — confirm with your broker.'}
+  };
+  var DEFAULT_NOTE='Preset values are standard contract specifications, shown as assumptions you can edit — contract sizes differ by broker, so confirm the pip/tick value with your own broker before trading.';
+  function $(id){return document.getElementById(id);}
+  var acct=$('acct'),risk=$('risk'),sl=$('sl'),pipsize=$('pipsize'),pipv=$('pipv'),
+      instrument=$('instrument'),instNote=$('instNote'),
+      lots=$('lots'),lotsLabel=$('lotsLabel'),riskamt=$('riskamt'),
+      firmSel=$('firmSel'),planSel=$('planSel'),liveHint=$('liveHint'),
+      planReadout=$('planReadout'),planTitle=$('planTitle'),planDaily=$('planDaily'),planMax=$('planMax'),planNote=$('planNote');
+  var FIRMS=[],PLANS=[],selectedPlan=null;
+  function money(n){return '$'+Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
+  function pct1(n){return (Math.round(n*10)/10)+'%';}
+  function num(v){var n=Number(v);return isFinite(n)?n:NaN;}
+  function currentPreset(){return PRESETS[instrument.value]||null;}
+  function applyPreset(){
+    var pr=currentPreset();
+    if(!pr){instNote.textContent=DEFAULT_NOTE;return;}
+    pipsize.value=pr.size;pipv.value=pr.value;
+    $('slLabel').textContent='Stop loss ('+pr.unit+')';
+    $('pipSizeLabel').textContent='Pip / tick size (price units per '+pr.singular+')';
+    $('pipvLabel').textContent='Value per '+pr.singular+' (USD, per standard lot/unit)';
+    $('stPerUnitLabel').textContent='Per '+pr.singular+', whole position';
+    instNote.textContent=pr.note;
+    calc();
+  }
+  function limitUSD(plan,pctKey,usdKey){
+    if(!plan)return null;
+    var r=plan.rules||{};
+    var pct=num(r[pctKey]);
+    if(isFinite(pct)&&pct>0)return {usd:(Number(plan.account_size)||0)*pct/100,label:pct+'%'};
+    var usd=num(r[usdKey]);
+    if(isFinite(usd)&&usd>0)return {usd:usd,label:money(usd)};
+    return null;
+  }
   function calc(){
     var a=parseFloat(acct.value)||0,r=parseFloat(risk.value)||0,
         s=parseFloat(sl.value)||0,p=parseFloat(pipv.value)||0;
-    var riskUSD=a*r/100, perPip=riskUSD/(s||1), lot=perPip/(p||1);
+    var pr=currentPreset();
+    var unit=pr?pr.unit:'pips';
+    var riskUSD=a*r/100;
+    var lot=(s>0&&p>0)?riskUSD/(s*p):NaN;
     lots.textContent=isFinite(lot)?lot.toFixed(2):'—';
-    riskamt.textContent='Risking $'+riskUSD.toFixed(2)+' on this trade';
+    riskamt.textContent='Risking '+money(riskUSD)+' on this trade';
+    $('stRisk').textContent=money(riskUSD);
+    $('stPerUnit').textContent=isFinite(lot)?money(lot*p):'—';
+    $('stStop').textContent=(s||0)+' '+unit;
+    $('stRiskPct').textContent=pct1(r);
+    if(!selectedPlan){planReadout.hidden=true;return;}
+    var daily=limitUSD(selectedPlan,'daily_loss_pct','daily_loss_usd');
+    var maxdd=limitUSD(selectedPlan,'max_drawdown_pct','max_drawdown_usd');
+    planTitle.textContent='Against '+(selectedPlan.firmName||'this firm')+' — $'+(Number(selectedPlan.account_size)||0).toLocaleString('en-US')+' plan rules';
+    if(daily&&daily.usd>0){
+      var share=riskUSD/daily.usd*100;
+      planDaily.innerHTML='Daily loss limit <strong>'+daily.label+'</strong> ('+money(daily.usd)+'): at <strong>'+pct1(r)+' risk</strong> ('+money(riskUSD)+') you\u2019d use <strong>'+pct1(share)+' of the daily loss limit</strong> — about <strong>'+Math.max(Math.floor(daily.usd/(riskUSD||Infinity)),0)+' full-risk losses</strong> would hit it.';
+    }else{
+      planDaily.textContent='Daily loss limit: not published in this plan\u2019s verified rules.';
+    }
+    if(maxdd&&maxdd.usd>0){
+      var share2=riskUSD/maxdd.usd*100;
+      planMax.innerHTML='Max drawdown <strong>'+maxdd.label+'</strong> ('+money(maxdd.usd)+'): one trade at this size uses <strong>'+pct1(share2)+' of the total drawdown budget</strong> — about <strong>'+Math.max(Math.floor(maxdd.usd/(riskUSD||Infinity)),0)+' full-risk losses</strong> from the starting balance would exhaust it.';
+    }else{
+      planMax.textContent='Max drawdown: not published in this plan\u2019s verified rules.';
+    }
+    planNote.textContent='Readouts use this plan\u2019s published rules from PIPVANT\u2019s verified database and your own inputs above — both stay editable.';
+    planReadout.hidden=false;
   }
-  [acct,risk,sl,pipv].forEach(function(el){el.addEventListener('input',calc)});
+  function fillPlans(firmId){
+    planSel.innerHTML='';
+    var o0=document.createElement('option');o0.value='';o0.textContent='Select a plan';planSel.appendChild(o0);
+    PLANS.filter(function(pl){return String(pl.firm_id)===String(firmId);})
+      .sort(function(a,b){return (Number(a.account_size)||0)-(Number(b.account_size)||0);})
+      .forEach(function(pl,idx){
+        var o=document.createElement('option');o.value=String(idx);
+        var r=pl.rules||{};var sp=num(r.profit_split);
+        o.textContent='$'+(Number(pl.account_size)||0).toLocaleString('en-US')+(isFinite(sp)?' — '+sp+'% split':'');
+        planSel.appendChild(o);
+      });
+  }
+  function planListFor(firmId){
+    return PLANS.filter(function(pl){return String(pl.firm_id)===String(firmId);})
+      .sort(function(a,b){return (Number(a.account_size)||0)-(Number(b.account_size)||0);});
+  }
+  function loadLive(){
+    var H={'apikey':KEY,'Authorization':'Bearer '+KEY};
+    function get(path){return fetch(BASE+path,{headers:H}).then(function(r){if(!r.ok)throw new Error(path);return r.json();});}
+    Promise.all([get('firms?select=id,name&order=name.asc'),get('firm_plans?select=firm_id,account_size,rules')])
+    .then(function(res){
+      FIRMS=Array.isArray(res[0])?res[0]:[];PLANS=Array.isArray(res[1])?res[1]:[];
+      if(!FIRMS.length)throw new Error('empty');
+      FIRMS.forEach(function(f){var o=document.createElement('option');o.value=f.id;o.textContent=f.name||'';firmSel.appendChild(o);});
+      liveHint.textContent='Live firm data loaded. Picking a plan fills the account size and reads that plan\u2019s real daily loss and max drawdown rules — everything stays editable.';
+    })
+    .catch(function(){liveHint.textContent='Live firm list unavailable right now — the instrument presets and manual entry above still work exactly as before.';});
+  }
+  firmSel.addEventListener('change',function(){
+    selectedPlan=null;
+    if(!firmSel.value){planSel.innerHTML='';var o=document.createElement('option');o.value='';o.textContent='Select a firm first';planSel.appendChild(o);calc();return;}
+    fillPlans(firmSel.value);calc();
+  });
+  planSel.addEventListener('change',function(){
+    var idx=parseInt(planSel.value,10);
+    var list=planListFor(firmSel.value);
+    if(!isFinite(idx)||!list[idx]){selectedPlan=null;calc();return;}
+    selectedPlan=list[idx];
+    var firm=FIRMS.filter(function(f){return String(f.id)===String(firmSel.value);})[0];
+    selectedPlan.firmName=firm?firm.name:'';
+    if(selectedPlan.account_size)acct.value=selectedPlan.account_size;
+    calc();
+  });
+  instrument.addEventListener('change',applyPreset);
+  [acct,risk,sl,pipsize,pipv].forEach(function(el){el.addEventListener('input',calc);el.addEventListener('change',calc);});
+  applyPreset();
   calc();
+  loadLive();
 })();
 </script>
 <script src="assets/pipv-os.js" defer></script>

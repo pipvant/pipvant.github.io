@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <style>
-    :root{--bg:#0A1628;--surface:#0F1D33;--raised:#14253F;--line:#1C2F4D;--text:#F4F6F8;--secondary:#A9B6C6;--muted:#8B9AB0;--accent:#5B8DEF;--accent-strong:#3A6FDE;--green:#7EE2A8;--red:#E28A7E}
+    :root{--bg:#0A1628;--surface:#0F1D33;--raised:#14253F;--line:#1C2F4D;--line-strong:#2B4266;--text:#F4F6F8;--secondary:#A9B6C6;--muted:#8B9AB0;--accent:#5B8DEF;--accent-strong:#3A6FDE;--gold:#D4AF37;--green:#3ECF8E;--red:#E5604F}
     *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column}
     h1{font-family:"Space Grotesk",sans-serif;letter-spacing:-.02em}
     header.top{background:rgba(10,22,40,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
@@ -18,39 +18,73 @@
     .brand{display:flex;align-items:center;gap:10px;font-family:"Space Grotesk";font-weight:700;font-size:18px;text-decoration:none;color:var(--text)}
     .brand img{width:30px;height:30px;border-radius:8px}
     main{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px}
-    .card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:44px 40px;max-width:460px;width:100%;text-align:center}
+    .card{background:var(--surface);border:1px solid var(--line-strong);border-top:3px solid var(--gold);border-radius:16px;padding:44px 40px;max-width:460px;width:100%;text-align:center}
+    .pill{display:inline-block;background:rgba(212,175,55,.1);border:1px solid rgba(212,175,55,.4);color:#F5D67B;font-weight:700;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;padding:7px 16px;border-radius:999px;margin-bottom:18px}
+    .cta-btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 20px;border-radius:10px;background:var(--accent-strong);color:#fff;font-weight:700;text-decoration:none;border:1px solid var(--accent-strong);font-size:14px}
+    .check-circle{width:64px;height:64px;border-radius:50%;border:2px solid var(--gold);background:rgba(212,175,55,.08);display:flex;align-items:center;justify-content:center;margin:0 auto 18px}
+    .resub-form{display:flex;flex-direction:column;gap:10px;margin-top:18px}
+    .resub-form input{width:100%;background:var(--raised);border:1px solid var(--line);border-radius:11px;color:var(--text);font-size:15px;padding:13px 16px;font-family:inherit}
+    .resub-form input:focus{outline:none;border-color:var(--gold)}
+    .resub-form button{min-height:48px;border-radius:11px;border:1px solid var(--gold);cursor:pointer;font-family:inherit;font-weight:700;font-size:15px;color:#0A1628;background:var(--gold)}
+    .panel-links{margin-top:18px;font-size:13.5px;color:var(--muted);line-height:1.7}
+    .panel-links a{color:var(--accent);text-decoration:none;font-weight:600}
     .card h1{font-size:1.7rem;margin:0 0 10px}
     .card p{color:var(--secondary);font-size:14.5px;line-height:1.7;margin:0 0 24px}
     .card input{width:100%;background:var(--raised);border:1px solid var(--line);border-radius:11px;color:var(--text);font-size:15px;padding:13px 16px;margin-bottom:12px;font-family:inherit}
-    .card input:focus{outline:none;border-color:var(--accent)}
+    .card input:focus{outline:none;border-color:var(--gold)}
     .card button{width:100%;min-height:48px;border-radius:11px;border:none;cursor:pointer;font-family:inherit;font-weight:700;font-size:15px;color:#fff;background:var(--accent-strong)}
     .card button:disabled{opacity:.5;cursor:wait}
     #msg{min-height:24px;margin-top:14px;font-size:14px;line-height:1.6}
-    footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-size:13px;text-align:center}
-    footer a{color:var(--muted);text-decoration:none}
+    footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted);font-size:13px}
+    footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;max-width:1080px;margin:0 auto;padding:0 20px}
+    footer a{color:var(--muted);text-decoration:none;margin-left:16px}
   </style>
 </head>
 <body>
 <header class="top"><div class="wrap">
   <a class="brand" href="/"><img src="assets/pipvanta-logo.png" alt="PIPVANT logo">PIPVANT</a>
+  <a class="cta-btn" href="/">Open full toolkit</a>
 </div></header>
 <main>
   <div class="card">
+    <div class="pill">Weekly insights list</div>
     <h1>Unsubscribe</h1>
-    <p>Enter the email you subscribed with. You will be removed from the weekly insights list immediately — no questions, no tricks.</p>
-    <input type="email" id="em" placeholder="you@example.com" autocomplete="email" aria-label="Email address">
-    <button id="go">Unsubscribe me</button>
-    <div id="msg" role="status"></div>
+    <div id="formBlock">
+      <p>Enter the email you subscribed with. You will be removed from the weekly insights list immediately — no questions, no tricks.</p>
+      <input type="email" id="em" placeholder="you@example.com" autocomplete="email" aria-label="Email address">
+      <button id="go">Unsubscribe me</button>
+      <div id="msg" role="status"></div>
+    </div>
+    <div id="confirmPanel" hidden>
+      <div class="check-circle" aria-hidden="true">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M4 12.5L9.5 18L20 6.5" stroke="#D4AF37" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <h1 style="font-size:1.45rem">You are unsubscribed</h1>
+      <p><strong id="confirmEmail" style="color:var(--text)"></strong> has been removed from the weekly insights list. You will not receive the weekly email again.</p>
+      <p style="margin-bottom:0">Changed your mind? Re-subscribe below — same free weekly email, one short message a week.</p>
+      <form data-pipv-newsletter class="resub-form">
+        <input type="email" id="resubEmail" placeholder="you@example.com" required aria-label="Email address for re-subscribing">
+        <button type="submit">Re-subscribe</button>
+        <div data-pipv-msg style="min-height:22px;font-size:14px"></div>
+      </form>
+      <div class="panel-links">
+        <a href="/">Open the free toolkit →</a><br>
+        Or rejoin any time from the newsletter section on the <a href="/">PIPVANT homepage</a>.
+      </div>
+    </div>
   </div>
 </main>
-<footer><a href="/">← Back to PIPVANT</a></footer>
+<footer><div class="wrap">
+  <span>© 2026 PIPVANT by Orovanta — Trade with a process, not a prediction.</span>
+  <span><a href="/">Toolkit</a><a href="prop-firm-comparison.html">Prop firms</a><a href="free-trading-journal.html">Journal</a><a href="forex-risk-calculator.html">Calculator</a></span>
+</div></footer>
 <script>
 (function(){
   'use strict';
   var SB_URL='https://acpkzavmifjwnskiaret.supabase.co/rest/v1';
   var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFjcGt6YXZtaWZqd25za2lhcmV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyMDk1ODcsImV4cCI6MjEwNjc4NTU4N30.9-k-DoB6467EXTPKrvWUi-LRDPbSSC30f6BgrZezo2A';
   var em=document.getElementById('em'), go=document.getElementById('go'), msg=document.getElementById('msg');
-  function say(t,ok){ msg.textContent=t; msg.style.color=ok?'#7EE2A8':'#E28A7E'; }
+  function say(t,ok){ msg.textContent=t; msg.style.color=ok?'#3ECF8E':'#E5604F'; }
   function valid(e){ return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(e||'').trim()); }
   go.addEventListener('click',function(){
     var email=em.value.trim().toLowerCase();
@@ -63,12 +97,24 @@
       keepalive:true
     }).then(function(r){
       go.disabled=false;
-      if(r.ok){ em.value=''; say('Done — '+email+' is unsubscribed. You will not receive the weekly email again.',true); }
+      if(r.ok){ em.value=''; say('Done — '+email+' is unsubscribed. You will not receive the weekly email again.',true);
+        var panel=document.getElementById('confirmPanel'),fb=document.getElementById('formBlock'),
+            ce=document.getElementById('confirmEmail'),re=document.getElementById('resubEmail');
+        if(ce)ce.textContent=email; if(re)re.value=email;
+        if(fb)fb.hidden=true; if(panel)panel.hidden=false;
+      }
       else{ say('Something went wrong — please try again in a minute.',false); }
     }).catch(function(){ go.disabled=false; say('Something went wrong — please try again in a minute.',false); });
   });
   em.addEventListener('keydown',function(e){ if(e.key==='Enter') go.click(); });
+  /* Prefill from the email link (?email=) so unsubscribing is one click.
+     Falls back to the empty form when the param is absent or invalid. */
+  try{
+    var q=new URLSearchParams(window.location.search),pre=(q.get('email')||'').trim().toLowerCase();
+    if(pre&&valid(pre)){ em.value=pre; go.focus(); }
+  }catch(e){}
 })();
 </script>
+<script src="assets/pipv-os.js" defer></script>
 </body>
 </html>
