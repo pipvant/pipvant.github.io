@@ -2371,6 +2371,28 @@ html[dir="rtl"] .pv-ob-opt{text-align:right}
 #profile .profile-side-stack .profile-surface{background:var(--sunken)}
 /* one section-head language across all quiet sections: gold dash before every surface title */
 #profile .profile-surface-head h3:before{content:"";display:inline-block;width:15px;height:2px;margin-inline-end:9px;border-radius:2px;background:linear-gradient(90deg,#ecd06a,var(--gold));vertical-align:middle}
+/* ideas batch: trader-card share button in the badges head + matcher watchlist chip/alerts.
+   Watchlist storage reuses the existing shortlist (localStorage pipvant_shortlist). */
+#profile .pv-head-actions{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+#shareTraderCardBtn{display:inline-flex;align-items:center;gap:8px;flex:0 0 auto;min-height:38px;padding:0 14px;font-size:12px}
+#shareTraderCardBtn svg{flex:0 0 auto}
+#traderCardFeedback{margin:0;padding:10px 20px 0;min-height:0;color:var(--gold);font-size:12px;font-weight:600}
+#traderCardFeedback:empty{padding:0}
+.wl-chip{position:relative;display:inline-flex;align-items:center;gap:8px;flex:1 1 0;min-height:44px;padding:0 16px;border:0;border-radius:10px;background:transparent;color:var(--muted);font-size:13px;font-weight:600;letter-spacing:.02em;cursor:pointer;transition:all .18s ease;justify-content:center;white-space:nowrap}
+.wl-chip:hover{color:var(--text)}
+.wl-chip:active{transform:scale(.98)}
+.wl-chip svg{flex:0 0 auto}
+.wl-chip .wl-count{font:600 11px/1 "IBM Plex Mono",monospace;color:var(--silver);opacity:.7;font-variant-numeric:tabular-nums}
+.wl-chip[aria-pressed="true"]{color:#0A1628;background:linear-gradient(135deg,#E8C547,#D4AF37);font-weight:700;box-shadow:0 2px 12px rgba(212,175,55,.25)}
+.wl-chip[aria-pressed="true"] .wl-count{color:#0A1628;opacity:.7}
+.wl-chip[aria-pressed="true"] svg{fill:#0A1628}
+.wl-badge{position:absolute;top:5px;inset-inline-end:7px;min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:linear-gradient(135deg,#e8c455,#D4AF37);color:#0A1628;font:800 10px/1 "Space Grotesk",sans-serif;display:grid;place-items:center;box-shadow:0 0 0 2px var(--sunken),0 2px 8px rgba(212,175,55,.5)}
+.wl-chip[aria-pressed="true"] .wl-badge{box-shadow:0 0 0 2px #D4AF37,0 2px 8px rgba(0,0,0,.3)}
+.wl-alerts{margin:0 0 16px;padding:11px 14px;border:1px solid color-mix(in srgb,var(--gold) 35%,var(--line));border-radius:12px;background:linear-gradient(160deg,rgba(212,175,55,.09),rgba(212,175,55,0) 62%),var(--surface);display:grid;gap:7px}
+.wl-alerts[hidden]{display:none}
+.wl-alert-row{display:flex;gap:9px;align-items:center;font-size:12.5px;color:var(--secondary);line-height:1.45}
+.wl-alert-row strong{color:var(--text);font-weight:700}
+.wl-alert-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);flex:0 0 auto;box-shadow:0 0 8px rgba(212,175,55,.85)}
 </style>
 <div id="siteLanding" aria-label="PIPVANT landing page">
   <div class="lp-grain" aria-hidden="true"></div>
@@ -2786,7 +2808,10 @@ html[dir="rtl"] .pv-ob-opt{text-align:right}
         <button class="cat-btn" type="button" data-cat="all" aria-pressed="true"><span class="cat-label">All</span><span class="cat-count">19</span></button>
         <button class="cat-btn" type="button" data-cat="futures" aria-pressed="false"><span class="cat-label">Futures</span><span class="cat-count">4</span></button>
         <button class="cat-btn" type="button" data-cat="cfds" aria-pressed="false"><span class="cat-label">CFDs</span><span class="cat-count">15</span></button>
+        <button class="wl-chip" id="sbWatchChip" type="button" aria-pressed="false" aria-label="Watchlist"><svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6 4h12v17l-6-4-6 4Z"/></svg><span class="wl-label">Watchlist</span><span class="wl-count" id="sbWatchCount">0</span><span class="wl-badge" id="sbWatchBadge" hidden></span></button>
       </div>
+
+      <div class="wl-alerts" id="sbWatchAlerts" hidden></div>
 
       <!-- TOP RATED GATE — entry banner only; the verdict card + podium live on the Top Rated page -->
       <button class="tr-gate" id="sbTopRatedGate" type="button" data-screen="top-rated" hidden aria-label="Open top rated by traders">
@@ -3381,7 +3406,8 @@ html[dir="rtl"] .pv-ob-opt{text-align:right}
           </section>
 
           <section class="profile-badges" aria-labelledby="profile-badges-title">
-            <div class="profile-surface-head"><h3 id="profile-badges-title">Certificate badges</h3><p>Marks earned through verified mission completion</p></div>
+            <div class="profile-surface-head pv-head-actions"><div><h3 id="profile-badges-title">Certificate badges</h3><p>Marks earned through verified mission completion</p></div><button class="btn secondary" id="shareTraderCardBtn" type="button"><svg width="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="6" r="2.6"/><circle cx="18" cy="18" r="2.6"/><path d="m8.3 10.8 7.4-3.6M8.3 13.2l7.4 3.6"/></svg><span>Share trader card</span></button></div>
+            <p id="traderCardFeedback" aria-live="polite"></p>
             <div class="profile-badges-body">
               <div class="profile-badges-empty" id="profileBadgesEmpty"><span class="profile-badges-empty-mark" aria-hidden="true"><svg width="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="9" r="5"/><path d="m8.5 13-1 8 4.5-2 4.5 2-1-8"/></svg></span><span>No certificates earned yet — complete missions to earn them</span></div>
               <div class="profile-badge-list" id="profileBadgeList" aria-label="Earned certificates" hidden></div>
@@ -5655,6 +5681,8 @@ html[dir="rtl"] .pv-ob-opt{text-align:right}
     if(!sbFirms.length)return;
     var filters=sbGetMatcherFilters();
     var firms=sbFirms.filter(function(f){return sbFirmMatchesFilters(f,sbPlansByFirm[f.id]||[],filters);});
+    /* Watchlist view: restrict to saved firms (the existing shortlist store). */
+    if(window.sbWatchlistOnly){firms=firms.filter(function(f){try{return sbIsShortlisted(f.id);}catch(e){return false;}});}
     /* RANKING: sort by PIPVANT Score (best first, name tiebreak). */
     try{
       firms.sort(function(a,b){
@@ -5692,7 +5720,11 @@ html[dir="rtl"] .pv-ob-opt{text-align:right}
       // blame the answers, not data verification.
       if(firms.length===0&&(sbFirms||[]).length>0){
         var _mh=mEmpty.querySelector('h3'),_mp=mEmpty.querySelector('p');
-        if(sbActiveCat==='crypto'){
+        if(window.sbWatchlistOnly&&sbGetShortlist().length===0){
+          /* Honest watchlist empty state: nothing saved yet. */
+          if(_mh)_mh.textContent=currentLanguage==='ar'?'لا توجد شركات محفوظة بعد':'No firms saved yet';
+          if(_mp)_mp.textContent=currentLanguage==='ar'?'اضغط على إشارة الحفظ على أي شركة لحفظها هنا.':'Tap the bookmark on any firm to save it here.';
+        }else if(sbActiveCat==='crypto'){
           /* Honest empty state: no crypto firms verified yet — never invent firms. */
           if(_mh)_mh.textContent=currentLanguage==='ar'?'لا توجد شركات كريبتو بعد':'No crypto firms yet';
           if(_mp)_mp.textContent=currentLanguage==='ar'?'ما زلنا نتحقق من شركات الكريبتو — رجع لاحقاً.':'We\u2019re still verifying crypto firms \u2014 check back soon.';
@@ -5792,6 +5824,7 @@ html[dir="rtl"] .pv-ob-opt{text-align:right}
       }else if(fb){fb.hidden=true;}
     }catch(fbe){}
     sbUpdateCountChips();
+    try{if(typeof pvWatchRefresh==='function')pvWatchRefresh();}catch(_wl){}
     if(typeof sbUpdateMethodologyStats==='function')sbUpdateMethodologyStats();
     /* BIG BATCH P1: verdict card + rated-by-traders strips for this filtered set */
     try{sbRenderVerdictAndRated(firms);}catch(_vr){}
@@ -7424,6 +7457,7 @@ html[dir="rtl"] .pv-ob-opt{text-align:right}
   var titlesEn={landing:['Toolkit','Trade with a process'],matcher:['Tool 01','Prop firm matcher'],'all-firms':['Matcher','All firms'],'top-rated':['Community','Top rated by traders'],journal:['Tool 02','Trading journal'],calculator:['Tool 03','Risk calculator'],calendar:['Tool 04','Economic Calendar'],lab:['Tool 05','Pro Lab'],discipline:['Parked','Discipline'],'discipline-soon':['Next version','Discipline'],notifications:['Inbox','Notifications'],profile:['Account','Profile'],settings:['Account','Settings'],certificate:['Account','Certificates'],methodology:['PIPVANT','Methodology'],support:['PIPVANT','Support'],about:['PIPVANT','About'],contact:['PIPVANT','Contact'],'firm-detail':['Matcher','Firm details']};
   var titlesAr={landing:['الأدوات','تداول وفق منهج'],matcher:['الأداة 01','مطابق شركات التداول'],'all-firms':['المطابق','جميع الشركات'],'top-rated':['المجتمع','الأعلى تقييماً من المتداولين'],journal:['الأداة 02','سجل التداول'],calculator:['الأداة 03','حاسبة المخاطر'],calendar:['الأداة 04','التقويم الاقتصادي'],lab:['الأداة 05','مختبر المحترفين'],discipline:['متوقف مؤقتاً','الانضباط'],'discipline-soon':['الإصدار القادم','الانضباط'],notifications:['الوارد','الإشعارات'],profile:['الحساب','الملف الشخصي'],settings:['الحساب','الإعدادات'],certificate:['الحساب','الشهادات'],methodology:['PIPVANT','المنهجية'],support:['PIPVANT','الدعم'],about:['PIPVANT','حول'],contact:['PIPVANT','تواصل'],'firm-detail':['المطابق','تفاصيل الشركة']};
   var ar={
+    'Watchlist':'قائمة المتابعة','Share trader card':'مشاركة بطاقة المتداول',
     'Tool 02':'الأداة 02','Trading journal':'سجل التداول','Your profile, activity, and verified achievements in one place.':'ملفك ونشاطك وإنجازاتك الموثقة في مكان واحد.','Cost of mistakes':'تكلفة الأخطاء','Closed trades only — grouped by tag':'الصفقات المغلقة فقط — مجمعة حسب الوسم','BY TAG':'حسب الوسم','Tag trades with the mistake chips to see what they cost you':'وسّم صفقاتك برقائق الأخطاء لترى كم كلفتك','Mistake (optional)':'الخطأ (اختياري)','Revenge trade':'صفقة انتقامية','Early exit':'خروج مبكر','Late entry':'دخول متأخر','Oversized position':'حجم مفرط','Against plan':'ضد الخطة','Hide amounts':'إخفاء المبالغ','Seconds':'الثواني','Previous month':'الشهر السابق','Next month':'الشهر التالي',
     'True Cost Calculator':'حاسبة التكلفة الحقيقية','Pass Simulator':'محاكي اجتياز التحدي','Rule-change Radar':'رادار تغيير القواعد','Breach Guard':'حارس الاختراق','Trading DNA — find your match':'بصمة التداول — اعثر على ما يناسبك','▶ Run Simulation':'▶ تشغيل المحاكاة',
     'The sticker price lies. Commissions, resets and fees are the real price of a funded account.':'السعر المعلن مضلل. العمولات وإعادة التعيين والرسوم هي السعر الحقيقي للحساب الممول.',
@@ -11171,6 +11205,182 @@ html[dir="rtl"] .pv-ob-opt{text-align:right}
     }catch(e){var fb=pvEl('shareStatsFeedback');if(fb)fb.textContent=pvLT('Could not build the share card on this device.','تعذّر إنشاء بطاقة المشاركة على هذا الجهاز.');if(finish)finish();}
   }
   (function pvShareWire(){var b=pvEl('shareStatsBtn');if(b)b.addEventListener('click',pvShareStats);})();
+
+  /* ---- Trader card (shareable profile PNG, 1080x1080) ----
+     Same family as the journal stats card: same export machinery
+     (html-to-image + saveDataUrl/dataUrlToFile + navigator.share chain),
+     same KPI definitions as pvShareStats/updateJournalKPIs, real data only. */
+  function pvTraderCardData(){
+    var closed=(window.sessionJournalEntries||[]).filter(function(e){return e&&e.type==='trade'&&e.pnl!=null&&isFinite(Number(e.pnl));});
+    if(!closed.length)return null;
+    var n=closed.length,wins=0,net=0,gp=0,gl=0,totalR=0;
+    closed.forEach(function(e){var p=Number(e.pnl);net+=p;if(p>0){wins++;gp+=p;}else if(p<0){gl+=Math.abs(p);}var r=parseFloat(e.rMultiple);if(isFinite(r))totalR+=r;});
+    var winRate=Math.round(wins/n*100);
+    var pf=gl>0?gp/gl:(gp>0?Infinity:0);
+    var hideR=false;try{hideR=(typeof jcalState!=='undefined'&&!!jcalState.hide);}catch(e){}
+    var sym='$';try{if(typeof currencyMeta!=='undefined'&&typeof currentCurrency!=='undefined'&&currencyMeta[currentCurrency])sym=currencyMeta[currentCurrency].symbol;}catch(e){}
+    var money=function(v){return (v>0?'+':(v<0?'−':''))+sym+Math.abs(v).toLocaleString('en-US',{maximumFractionDigits:2});};
+    var rFmt=function(v){return (v>0?'+':'')+(Math.round(v*10)/10)+'R';};
+    var name='',bio='';
+    try{if(typeof profileSession!=='undefined'){name=String(profileSession.name||'').trim();bio=String(profileSession.bio||'').trim();}}catch(e){}
+    if(!name){var nn=document.querySelector('[data-profile-name]');if(nn)name=nn.textContent.trim();}
+    if(!name||name==='—')name=pvLT('PIPVANT trader','متداول PIPVANT');
+    var score=null;
+    try{if(typeof window._cachedTraderScore==='number'&&isFinite(window._cachedTraderScore))score=Math.round(window._cachedTraderScore);}catch(e){}
+    if(score===null){var sv=pvEl('traderScoreValue');if(sv){var st=parseInt(sv.textContent,10);if(isFinite(st))score=st;}}
+    var certs=[];
+    try{if(typeof profileSession!=='undefined'&&Array.isArray(profileSession.certificates))certs=profileSession.certificates.slice(0,4);}catch(e){}
+    var stats;
+    if(hideR){stats=[[pvLT('Win rate','نسبة الفوز'),winRate+'%'],[pvLT('Total R','إجمالي R'),rFmt(totalR)],[pvLT('Trades','الصفقات'),String(n)],[pvLT('Avg R / trade','متوسط R لكل صفقة'),rFmt(n?totalR/n:0)]];}
+    else{stats=[[pvLT('Win rate','نسبة الفوز'),winRate+'%'],[pvLT('Profit factor','عامل الربح'),isFinite(pf)?pf.toFixed(2):'—'],[pvLT('Trades','الصفقات'),String(n)],[pvLT('Net P&L','صافي الربح والخسارة'),money(net)]];}
+    return {name:name,bio:bio,score:score,certs:certs,stats:stats};
+  }
+  function pvShareTraderCard(){
+    var fb=pvEl('traderCardFeedback');
+    var note=function(msg){if(fb)fb.textContent=msg;};
+    var data=pvTraderCardData();
+    if(!data){note(pvLT('No closed trades yet — log a trade first, then share your trader card.','لا توجد صفقات مغلقة بعد — سجّل صفقة أولاً، ثم شارك بطاقة المتداول الخاصة بك.'));return;}
+    var monthLbl=new Date().toLocaleDateString('en-GB',{month:'short',year:'numeric'});
+    note(pvLT('Preparing your trader card…','جاري تجهيز بطاقة المتداول…'));
+    var build=function(withLogo){
+      var card=document.createElement('div');
+      card.style.cssText='position:absolute;left:-12000px;top:0;width:1080px;height:1080px;background:linear-gradient(160deg,#0d1d33 0%,#0A1628 55%,#081222 100%);color:#EAF1FB;font-family:"Space Grotesk",Arial,sans-serif;padding:84px;box-sizing:border-box;';
+      var logoHtml=withLogo?'<img src="assets/pipvanta-logo.png" alt="PV" style="width:104px;height:104px;border-radius:24px;object-fit:contain;">':'<div style="width:104px;height:104px;border-radius:24px;background:linear-gradient(135deg,#e8c455,#D4AF37);color:#0A1628;font-weight:800;font-size:42px;display:grid;place-items:center;">PV</div>';
+      var bioHtml=data.bio?'<div style="font-size:27px;color:#D4AF37;font-weight:600;margin-top:14px;">'+pvEsc(data.bio)+'</div>':'';
+      var scoreHtml='';
+      if(data.score!==null){
+        scoreHtml='<div style="display:flex;align-items:center;gap:30px;background:rgba(212,175,55,.06);border:1px solid rgba(212,175,55,.35);border-radius:24px;padding:28px 36px;margin-top:40px;"><div style="width:118px;height:118px;flex:0 0 auto;border-radius:50%;border:6px solid rgba(212,175,55,.9);display:grid;place-items:center;font-size:46px;font-weight:800;color:#fff;">'+data.score+'</div><div><div style="font-size:22px;font-weight:700;letter-spacing:.13em;color:#8FA6C8;text-transform:uppercase;">'+pvEsc(pvLT('Activity score','نتيجة النشاط'))+'</div><div style="font-size:30px;font-weight:700;margin-top:8px;">'+data.score+' <span style="color:#8FA6C8;font-size:24px;">/ 100</span></div></div></div>';
+      }
+      var cells=data.stats.map(function(s){return '<div style="background:rgba(91,141,239,.06);border:1px solid rgba(234,241,251,.1);border-radius:24px;padding:30px 34px;"><div style="font-size:22px;font-weight:700;letter-spacing:.13em;color:#8FA6C8;text-transform:uppercase;">'+pvEsc(s[0])+'</div><div style="font-size:50px;font-weight:800;margin-top:10px;font-variant-numeric:tabular-nums;">'+pvEsc(s[1])+'</div></div>';}).join('');
+      var certsHtml='';
+      if(data.certs.length){
+        var chips=data.certs.map(function(c){var disp=(currentLanguage==='ar'&&typeof ar!=='undefined'&&ar[c])?ar[c]:c;return '<span style="display:inline-block;border:1px solid rgba(212,175,55,.55);color:#E8C964;border-radius:999px;padding:9px 18px;font-size:22px;font-weight:700;margin:0 10px 10px 0;">★ '+pvEsc(disp)+'</span>';}).join('');
+        certsHtml='<div style="margin-top:34px;"><div style="font-size:21px;font-weight:700;letter-spacing:.13em;color:#8FA6C8;text-transform:uppercase;margin-bottom:14px;">'+pvEsc(pvLT('Certificates','الشهادات'))+'</div><div>'+chips+'</div></div>';
+      }
+      card.innerHTML='<div style="display:flex;align-items:center;gap:28px;">'+logoHtml+'<div><div style="font-size:44px;font-weight:800;letter-spacing:.06em;">PIPVANT</div><div style="font-size:23px;color:#D4AF37;font-weight:700;letter-spacing:.18em;margin-top:4px;">'+pvEsc(pvLT('TRADER CARD','بطاقة المتداول'))+'</div></div></div><div style="height:3px;background:linear-gradient(90deg,#D4AF37,rgba(212,175,55,0));margin:46px 0 40px;border-radius:2px;"></div><div style="font-size:60px;font-weight:800;line-height:1.12;">'+pvEsc(data.name)+'</div>'+bioHtml+scoreHtml+'<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:40px;">'+cells+'</div>'+certsHtml+'<div style="position:absolute;left:84px;right:84px;bottom:62px;display:flex;justify-content:space-between;align-items:center;color:#8FA6C8;font-size:24px;font-weight:600;"><span>PIPVANT · pipvant.github.io</span><span>'+pvEsc(monthLbl)+'</span></div>';
+      document.body.appendChild(card);
+      var finish=function(){try{card.remove();}catch(e){}};
+      var deliver=function(dataUrl){
+        var fname='pipvant-trader-card.png';
+        try{
+          if(navigator.canShare&&navigator.share&&typeof dataUrlToFile==='function'){var file=dataUrlToFile(dataUrl,fname);if(navigator.canShare({files:[file]})){navigator.share({title:'PIPVANT trader card',files:[file]}).then(function(){note(pvLT('Trader card shared.','تمت مشاركة بطاقة المتداول.'));}).catch(function(){if(typeof saveDataUrl==='function')saveDataUrl(dataUrl,fname);});finish();return;}}
+        }catch(e){}
+        if(typeof saveDataUrl==='function')saveDataUrl(dataUrl,fname);
+        note(pvLT('Trader card downloaded.','تم تنزيل بطاقة المتداول.'));
+        finish();
+      };
+      if(window.htmlToImage&&window.htmlToImage.toPng){window.htmlToImage.toPng(card,{pixelRatio:1,cacheBust:true,backgroundColor:'#0A1628'}).then(deliver).catch(function(){pvTraderCanvasFallback(data,monthLbl,deliver,finish);});}
+      else{pvTraderCanvasFallback(data,monthLbl,deliver,finish);}
+    };
+    var img=new Image();
+    img.onload=function(){build(true);};
+    img.onerror=function(){build(false);};
+    img.src='assets/pipvanta-logo.png';
+  }
+  function pvTraderCanvasFallback(data,monthLbl,deliver,finish){
+    try{
+      var c=document.createElement('canvas');c.width=1080;c.height=1080;var x=c.getContext('2d');
+      var g=x.createLinearGradient(0,0,1080,1080);g.addColorStop(0,'#0d1d33');g.addColorStop(.55,'#0A1628');g.addColorStop(1,'#081222');x.fillStyle=g;x.fillRect(0,0,1080,1080);
+      x.fillStyle='#EAF1FB';x.font='800 46px "Space Grotesk",Arial';x.fillText('PIPVANT',84,150);
+      x.fillStyle='#D4AF37';x.font='700 25px "Space Grotesk",Arial';x.fillText(pvLT('TRADER CARD','بطاقة المتداول'),84,196);
+      x.fillRect(84,232,300,4);
+      x.fillStyle='#EAF1FB';x.font='800 58px "Space Grotesk",Arial';x.fillText(String(data.name),84,330);
+      var y=380;
+      if(data.bio){x.fillStyle='#D4AF37';x.font='600 27px "Space Grotesk",Arial';x.fillText(String(data.bio),84,y);y+=58;}
+      if(data.score!==null){x.fillStyle='#8FA6C8';x.font='700 22px "Space Grotesk",Arial';x.fillText(pvLT('ACTIVITY SCORE','نتيجة النشاط'),84,y+10);x.fillStyle='#EAF1FB';x.font='800 52px "Space Grotesk",Arial';x.fillText(data.score+' / 100',84,y+72);y+=120;}
+      data.stats.forEach(function(s,i){var col=i%2,row=Math.floor(i/2);var px=84+col*462,py=y+row*200;x.fillStyle='rgba(91,141,239,.07)';x.fillRect(px,py,440,172);x.strokeStyle='rgba(234,241,251,.12)';x.strokeRect(px,py,440,172);x.fillStyle='#8FA6C8';x.font='700 21px "Space Grotesk",Arial';x.fillText(String(s[0]).toUpperCase(),px+32,py+54);x.fillStyle='#EAF1FB';x.font='800 46px "Space Grotesk",Arial';x.fillText(String(s[1]),px+32,py+120);});
+      if(data.certs.length){x.fillStyle='#D4AF37';x.font='700 24px "Space Grotesk",Arial';x.fillText('★ '+data.certs.join('  ·  '),84,950);}
+      x.fillStyle='#8FA6C8';x.font='600 24px "Space Grotesk",Arial';x.fillText('PIPVANT · pipvant.github.io',84,1012);x.fillText(String(monthLbl),880,1012);
+      deliver(c.toDataURL('image/png'));
+    }catch(e){var fb=pvEl('traderCardFeedback');if(fb)fb.textContent=pvLT('Could not build the trader card on this device.','تعذّر إنشاء بطاقة المتداول على هذا الجهاز.');if(finish)finish();}
+  }
+  (function pvTraderWire(){var b=pvEl('shareTraderCardBtn');if(b)b.addEventListener('click',pvShareTraderCard);})();
+
+  /* ---- Firm watchlist (matcher) ----
+     Storage is the EXISTING shortlist — localStorage 'pipvant_shortlist' via
+     sbGetShortlist/sbIsShortlisted/sbToggleShortlist — the same store behind the
+     card hearts, the "Save to shortlist" buttons, the firm-detail #fdHeart and
+     the directory Saved tab (it also syncs to user_settings when logged in).
+     This block only adds: the filter chip, watchlist-only filtering support
+     (in sbRenderFirms), and change alerts from the site's own data-changes.json. */
+  window.sbWatchlistOnly=false;
+  var pvWatchChanges=null; /* null = feed not loaded yet */
+  function pvWatchNorm(s){return String(s||'').trim().toLowerCase();}
+  function pvWatchRecentChanges(){
+    if(!pvWatchChanges||!pvWatchChanges.length)return [];
+    var firms=(typeof sbFirms!=='undefined'&&Array.isArray(sbFirms))?sbFirms:[];
+    var savedNames={};
+    firms.forEach(function(f){try{if(sbIsShortlisted(f.id))savedNames[pvWatchNorm(f.name)]=true;}catch(e){}});
+    if(!Object.keys(savedNames).length)return [];
+    var today=new Date();today.setHours(0,0,0,0);
+    var seen={},out=[];
+    pvWatchChanges.forEach(function(c){
+      if(!c||!c.firm||!c.date)return;
+      if(!savedNames[pvWatchNorm(c.firm)])return;
+      var t=new Date(String(c.date)+'T00:00:00');if(isNaN(t.getTime()))return;
+      var days=Math.round((today.getTime()-t.getTime())/86400000);
+      if(days<-1||days>7)return;
+      var key=pvWatchNorm(c.firm)+'|'+(c.kind||'')+'|'+(c.field||'')+'|'+c.date;
+      if(seen[key])return;seen[key]=1;
+      out.push({firm:c.firm,kind:c.kind||'promo',date:c.date,days:days});
+    });
+    out.sort(function(a,b){return a.days-b.days;});
+    return out;
+  }
+  function pvWatchKindLabel(kind){
+    if(kind==='price')return pvLT('price updated','تم تحديث السعر');
+    if(kind==='rule')return pvLT('rules updated','تم تحديث القواعد');
+    return pvLT('promo updated','تم تحديث العرض');
+  }
+  function pvWatchRel(days){
+    if(days<=0)return pvLT('today','اليوم');
+    if(days===1)return pvLT('yesterday','أمس');
+    return pvLT(days+' days ago','قبل '+days+' أيام');
+  }
+  function pvWatchRefresh(){
+    var chip=pvEl('sbWatchChip');if(!chip)return;
+    var list=[];try{list=sbGetShortlist();}catch(e){}
+    var cnt=pvEl('sbWatchCount');if(cnt)cnt.textContent=String(list.length);
+    chip.setAttribute('aria-pressed',String(!!window.sbWatchlistOnly));
+    var changes=pvWatchRecentChanges();
+    var badge=pvEl('sbWatchBadge');
+    if(badge){if(changes.length){badge.hidden=false;badge.textContent=String(changes.length);}else{badge.hidden=true;badge.textContent='';}}
+    var strip=pvEl('sbWatchAlerts');
+    if(strip){
+      if(window.sbWatchlistOnly&&changes.length){
+        strip.innerHTML=changes.slice(0,3).map(function(c){return '<div class="wl-alert-row"><span class="wl-alert-dot" aria-hidden="true"></span><span><strong>'+pvEsc(c.firm)+'</strong> — '+pvEsc(pvWatchKindLabel(c.kind))+' · '+pvEsc(pvWatchRel(c.days))+'</span></div>';}).join('');
+        strip.hidden=false;
+      }else{strip.hidden=true;strip.innerHTML='';}
+    }
+  }
+  window.pvWatchRefresh=pvWatchRefresh;
+  (function pvWatchWire(){
+    var chip=pvEl('sbWatchChip');
+    if(chip)chip.addEventListener('click',function(){
+      window.sbWatchlistOnly=!window.sbWatchlistOnly;
+      pvWatchRefresh();
+      if(typeof sbRenderFirms==='function')sbRenderFirms();
+    });
+    /* Change feed: once per session, same path + options as data-ledger.html. */
+    try{
+      fetch('data-changes.json',{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('data-changes.json '+r.status);return r.json();}).then(function(d){
+        pvWatchChanges=(d&&Array.isArray(d.changes))?d.changes:[];
+        pvWatchRefresh();
+      }).catch(function(){pvWatchChanges=[];pvWatchRefresh();});
+    }catch(e){pvWatchChanges=[];}
+    /* Keep the chip in sync when a firm is saved/unsaved anywhere: every save
+       surface (card hearts, card shortlist buttons, directory bookmarks,
+       firm-detail heart) funnels through sbToggleShortlist — wrap it so the
+       chip count/badge refresh and the filtered view updates immediately.
+       (Click delegation would not work: the save handlers stopPropagation.) */
+    if(typeof sbToggleShortlist==='function'&&!sbToggleShortlist.__pvWrapped){
+      var pvOrigToggleShortlist=sbToggleShortlist;
+      var pvWrappedToggle=function(fid){var r=pvOrigToggleShortlist(fid);try{pvWatchRefresh();if(window.sbWatchlistOnly&&typeof sbRenderFirms==='function')sbRenderFirms();}catch(e){}return r;};
+      pvWrappedToggle.__pvWrapped=true;
+      sbToggleShortlist=pvWrappedToggle;
+    }
+    pvWatchRefresh();
+  })();
 
   tradeSheet.addEventListener('click',function(e){if(e.target===tradeSheet)closeTradeSheet();});
   document.querySelectorAll('.chip[data-direction]').forEach(function(chip){chip.addEventListener('click',function(){
