@@ -25,7 +25,8 @@
     "mainEntity": [
       {"@type": "Question", "name": "Which prop firm is best in 2026?", "acceptedAnswer": {"@type": "Answer", "text": "The best prop firm depends on your trading style — scalpers need tight spreads, swing traders need generous drawdown. Use a free prop firm matcher to filter verified firms by your criteria instead of trusting paid reviews."}},
       {"@type": "Question", "name": "How do prop firm challenges work?", "acceptedAnswer": {"@type": "Answer", "text": "You pay an evaluation fee, hit a profit target without breaching drawdown limits, then trade a funded account and split profits (typically 80-90% to you). Rules differ per firm — compare drawdown type, profit targets and payout terms before buying."}},
-      {"@type": "Question", "name": "Is PIPVANT's prop firm matcher free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes — the matcher, trading journal, risk calculator and economic calendar are all free with no signup required for browsing."}}
+      {"@type": "Question", "name": "Is PIPVANT's prop firm matcher free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes — the matcher, trading journal, risk calculator and economic calendar are all free with no signup required for browsing."}},
+      {"@type": "Question", "name": "Can I share a prop firm comparison?", "acceptedAnswer": {"@type": "Answer", "text": "Yes — tick Compare on up to four firm cards and copy the comparison link. Anyone who opens it lands on the same head-to-head comparison with a spec table, built from live verified data."}}
     ]
   }
   </script>
@@ -90,6 +91,38 @@
     footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
     footer a{color:var(--muted);text-decoration:none;margin-left:16px}
     @media(max-width:640px){table{font-size:12px}th,td{padding:10px 10px}}
+    /* Shareable comparison links */
+    .card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+    .card-head h3{flex:1;min-width:0}
+    .compare-pill{flex:none;display:inline-flex;align-items:center;min-height:30px;padding:0 12px;border-radius:999px;background:var(--raised);border:1px solid var(--line-strong);color:var(--secondary);font-family:Inter,system-ui,sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:border-color .15s,color .15s,background .15s}
+    .compare-pill:hover{border-color:var(--gold);color:var(--text)}
+    .compare-pill[aria-pressed="true"]{background:linear-gradient(135deg,#F5D67B,#D4AF37);border-color:var(--gold);color:#0A1628}
+    .card.selected{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold),0 16px 36px rgba(0,0,0,.35)}
+    .compare-bar{position:sticky;top:66px;z-index:9;display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:rgba(15,29,51,.94);backdrop-filter:blur(12px);border:1px solid var(--line-strong);border-radius:999px;padding:8px 8px 8px 20px;margin:20px 0 2px;box-shadow:0 14px 34px rgba(0,0,0,.35)}
+    .compare-bar[hidden]{display:none}
+    .cb-count{font-weight:700;font-size:14px;white-space:nowrap}
+    .cb-note{color:var(--gold);font-size:13px;font-weight:600}
+    .cb-spacer{flex:1}
+    .cb-btn{display:inline-flex;align-items:center;min-height:38px;padding:0 16px;border-radius:999px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;border:1px solid var(--line-strong);background:var(--raised);color:var(--text)}
+    .cb-btn:hover{border-color:var(--gold)}
+    .cb-copy{background:linear-gradient(135deg,#F5D67B,#D4AF37);border-color:var(--gold);color:#0A1628}
+    .cb-copy:disabled{opacity:.5;cursor:not-allowed;background:var(--raised);border-color:var(--line-strong);color:var(--muted)}
+    .shared-head{margin:22px 0 4px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:30px 26px 24px;position:relative;overflow:hidden}
+    .shared-head::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+    .shared-head table{margin:18px 0 4px}
+    .shared-eyebrow{color:var(--gold);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px}
+    .shared-logos{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+    .shared-logo{display:flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:14px;background:linear-gradient(145deg,#FFFFFF,#E7ECF3);border:1px solid var(--line-strong);color:#0A1628;font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:16px;padding:7px;overflow:hidden}
+    .shared-title{font-size:clamp(1.5rem,4.5vw,2.3rem);margin:0 0 10px;line-height:1.15}
+    .shared-title .vs{color:var(--gold);font-size:.58em;font-weight:600}
+    .shared-sub{color:var(--secondary);font-size:14.5px;line-height:1.65;margin:0;max-width:640px}
+    .shared-all{display:inline-flex;margin-top:16px;color:var(--accent);font-weight:600;font-size:14px;text-decoration:none}
+    .spec-table td,.spec-table th{text-align:center}
+    .spec-table th.row-label{text-align:left;white-space:nowrap}
+    .spec-table .th-logo{display:flex;align-items:center;justify-content:center;width:30px;height:30px;margin:0 auto 6px;border-radius:8px;background:linear-gradient(145deg,#FFFFFF,#E7ECF3);color:#0A1628;font-weight:700;font-size:11px;padding:4px;overflow:hidden}
+    .spec-table .th-name{display:block;font-size:13px}
+    .spec-table .strike{color:var(--muted);text-decoration:line-through;font-weight:500;font-size:12px;margin-left:5px}
+    @media(max-width:640px){.compare-bar{top:60px;border-radius:18px;padding:10px 12px}.cb-spacer{display:none}.shared-head{padding:22px 16px 18px}.spec-table th.row-label{white-space:normal}}
   </style>
 </head>
 <body>
@@ -107,7 +140,23 @@
     <a class="cta-btn" href="/">Launch the free matcher →</a>
   </section>
 
+  <div class="compare-bar" id="compareBar" hidden>
+    <span class="cb-count" id="compareCount">0 selected</span>
+    <span class="cb-note" id="compareNote" role="status"></span>
+    <span class="cb-spacer"></span>
+    <button type="button" class="cb-btn" id="compareClear">Clear</button>
+    <button type="button" class="cb-btn cb-copy" id="compareCopy" disabled>Copy comparison link</button>
+  </div>
+
   <div id="liveGridWrap" hidden>
+    <section class="shared-head" id="sharedHead" hidden aria-label="Shared comparison">
+      <div class="shared-eyebrow">Shared comparison</div>
+      <div class="shared-logos" id="sharedLogos"></div>
+      <h2 class="shared-title" id="sharedTitle"></h2>
+      <p class="shared-sub">A head-to-head built from PIPVANT's verified database — cheapest prices include live promotions, and ratings come from real trader reviews.</p>
+      <div id="sharedTableWrap"></div>
+      <a class="shared-all" id="sharedViewAll" href="prop-firm-comparison.html">View all firms →</a>
+    </section>
     <section class="grid" id="liveGrid" aria-label="Prop firms — live verified data" style="padding-bottom:6px"></section>
     <p class="live-note" id="liveNote"></p>
   </div>
@@ -143,6 +192,7 @@
     <details><summary>Which prop firm is best in 2026?</summary><p>There is no single best — it depends on your style. Scalpers need tight spreads and fast execution; swing traders need generous drawdown. Use the free matcher to filter by your criteria instead of trusting paid reviews.</p></details>
     <details><summary>How do prop firm challenges work?</summary><p>You pay an evaluation fee, hit a profit target without breaching drawdown limits, then trade a funded account and split profits (typically 80-90% to you). Rules differ per firm — always compare before buying.</p></details>
     <details><summary>Can you lose more than the evaluation fee?</summary><p>With reputable firms, no — your risk is capped at the fee you paid. That is the entire appeal: trade large capital with defined, limited risk.</p></details>
+    <details><summary>Can I share a comparison with someone?</summary><p>Yes — tick “Compare” on up to four firm cards above, then use “Copy comparison link”. Anyone who opens the link lands on the same head-to-head comparison, with the spec table and live verified data.</p></details>
     <details><summary>Is PIPVANT's matcher really free?</summary><p>Yes. The matcher, trading journal, risk calculator and economic calendar are free. No signup needed to browse firms.</p></details>
   </section>
 
@@ -243,6 +293,70 @@
     if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(code).then(done).catch(function(){fallback();});}else{fallback();}
     function fallback(){var ta=document.createElement('textarea');ta.value=code;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done();}catch(e){}document.body.removeChild(ta);}
   }
+  function copyText(text,done){
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done).catch(function(){fallback();});}else{fallback();}
+    function fallback(){var ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done();}catch(e){}document.body.removeChild(ta);}
+  }
+  /* Firm logos — mirrors sbLogoInto() from index.html: Google favicon 128px from the firm's
+     own domain, curated overrides, letter fallback (Blue Guardian has no hi-res logo). */
+  var LOGO_OVERRIDES={
+    'takeprofittrader.com':'https://takeprofittrader.com/assets/mobile-logo.svg',
+    'apextraderfunding.com':'https://apextraderfunding.com/cdn-cgi/image/width=512,height=512,fit=cover,gravity=auto,format=auto//app/uploads/cropped-APEX_FAV-192x192.png'
+  };
+  var LETTER_ONLY_DOMAINS=['blueguardian.com'];
+  function logoInto(el,firm,fallbackText){
+    if(!el||!firm)return;
+    var letter=(fallbackText||(firm.name||'?').charAt(0)).toUpperCase();
+    el.setAttribute('aria-label',firm.name||'Firm');
+    var domain='';
+    try{domain=String(new URL(firm.website||'').hostname).replace(/^www\./,'');}catch(e){domain='';}
+    if(!domain){el.textContent=letter;return;}
+    el.textContent='';
+    if(LETTER_ONLY_DOMAINS.indexOf(domain)!==-1){el.textContent=letter;return;}
+    var img=document.createElement('img');
+    img.alt=firm.name||'';img.loading='lazy';
+    img.style.cssText='width:100%;height:100%;object-fit:contain;border-radius:6px;';
+    img.onerror=function(){img.remove();el.textContent=letter;};
+    img.src=LOGO_OVERRIDES[domain]||('https://www.google.com/s2/favicons?domain='+domain+'&sz=128');
+    el.appendChild(img);
+  }
+  function initials(name){
+    var w=String(name||'').split(/\s+/).filter(Boolean);
+    return (((w[0]||'').charAt(0)+(w[1]||'').charAt(0)).toUpperCase()||'—');
+  }
+  /* SHARE-LINK CORE (pure) */
+  function slugifyName(name){
+    var s=String(name||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+    return s||'firm';
+  }
+  function buildSlugMap(firms){
+    var byId={},slugById={},bySlug={},used={};
+    (firms||[]).forEach(function(f){
+      if(!f||!f.id)return;
+      byId[f.id]=f;
+      var base=slugifyName(f.name),slug=base,i=2;
+      while(used[slug]){slug=base+'-'+i;i++;}
+      used[slug]=1;slugById[f.id]=slug;bySlug[slug]=f;
+    });
+    return {byId:byId,slugById:slugById,bySlug:bySlug};
+  }
+  function parseSharedIds(search,bySlug){
+    var m=String(search||'').match(/[?&]firms=([^&]*)/);
+    if(!m)return [];
+    var raw=m[1];try{raw=decodeURIComponent(raw);}catch(e){}
+    var out=[],seen={};
+    raw.split(',').forEach(function(s){
+      s=String(s||'').trim().toLowerCase();
+      if(!s||seen[s])return;seen[s]=1;
+      var f=bySlug[s];if(f)out.push(f.id);
+    });
+    return out;
+  }
+  function buildShareUrl(href,slugs){
+    var base=String(href||'').split('#')[0].split('?')[0];
+    return base+'?firms='+slugs.join(',');
+  }
+  /* /SHARE-LINK CORE */
   Promise.all([
     get('firms?select=id,name,website,last_verified_at,updated_at&order=name.asc'),
     get('firm_plans?select=firm_id,account_size,price,currency,rules'),
@@ -264,25 +378,11 @@
     });
     var likeAgg={};
     (likes||[]).forEach(function(l){if(l&&l.firm_id)likeAgg[l.firm_id]=(likeAgg[l.firm_id]||0)+1;});
-    var grid=document.getElementById('liveGrid'),wrap=document.getElementById('liveGridWrap');
-    if(!grid||!wrap)return;
-    grid.innerHTML='';
+    /* Per-firm summaries — computed once from the fetched data; the cards and the
+       shared-comparison spec table both read from here, so they can never disagree. */
+    var summary={};
     firms.forEach(function(firm){
       var fplans=plansByFirm[firm.id]||[];
-      var card=document.createElement('div');card.className='card';
-      var h=document.createElement('h3');h.textContent=firm.name||'';card.appendChild(h);
-      var meta=document.createElement('p');meta.className='meta-line';
-      var agg=ratingAgg[firm.id];
-      if(agg&&agg.count>=1)meta.appendChild(document.createTextNode('★ '+(Math.round(agg.sum/agg.count*10)/10).toFixed(1)+' ('+agg.count+')'));
-      var lk=likeAgg[firm.id]||0;
-      if(lk>=1)meta.appendChild(document.createTextNode((meta.textContent?' · ':'')+'♥ '+lk));
-      card.appendChild(meta);
-      var stamp=verifiedAgo(firm.last_verified_at||firm.updated_at);
-      if(stamp){var vs=document.createElement('p');vs.className='verified-stamp';vs.textContent=stamp;card.appendChild(vs);}
-      var plansLine=document.createElement('div');plansLine.className='plans';
-      plansLine.textContent=fplans.length+(fplans.length===1?' plan tracked':' plans tracked');
-      card.appendChild(plansLine);
-      /* Spec strip: cheapest price from / max profit split / max drawdown — all computed from firm_plans */
       var cheapest=null,maxSplit=null,maxDd=null;
       fplans.forEach(function(p){
         var dp=discountedPrice(p);
@@ -291,7 +391,96 @@
         var sp=Number(r.profit_split);if(isFinite(sp)&&(maxSplit==null||sp>maxSplit))maxSplit=sp;
         var dd=Number(r.max_drawdown_pct);if(isFinite(dd)&&(maxDd==null||dd>maxDd))maxDd=dd;
       });
+      var agg=ratingAgg[firm.id];
+      summary[firm.id]={
+        plans:fplans,cheapest:cheapest,maxSplit:maxSplit,maxDd:maxDd,
+        rating:(agg&&agg.count>=1)?{avg:Math.round(agg.sum/agg.count*10)/10,count:agg.count}:null,
+        likes:likeAgg[firm.id]||0
+      };
+    });
+    /* Shareable comparison state */
+    var slugMaps=buildSlugMap(firms);
+    var sharedIds=parseSharedIds(window.location.search,slugMaps.bySlug);
+    var sharedMode=sharedIds.length>=2;
+    var sharedFirms=sharedIds.map(function(id){return slugMaps.byId[id];}).filter(Boolean);
+    var selected=new Set(sharedMode?sharedIds:[]);
+    var grid=document.getElementById('liveGrid'),wrap=document.getElementById('liveGridWrap');
+    if(!grid||!wrap)return;
+    var bar=document.getElementById('compareBar'),countEl=document.getElementById('compareCount'),
+        noteEl=document.getElementById('compareNote'),copyBtn=document.getElementById('compareCopy'),
+        clearBtn=document.getElementById('compareClear');
+    var noteTimer=null;
+    function flashNote(msg){
+      if(!noteEl)return;
+      noteEl.textContent=msg;
+      if(noteTimer)clearTimeout(noteTimer);
+      noteTimer=setTimeout(function(){noteEl.textContent='';updateBar();},2600);
+    }
+    function updateBar(){
+      if(!bar)return;
+      var n=selected.size;
+      bar.hidden=n===0;
+      if(countEl)countEl.textContent=n===1?'1 firm selected':n+' firms selected';
+      if(copyBtn)copyBtn.disabled=n<2;
+      if(noteEl){
+        if(n===1)noteEl.textContent='Select at least 2 firms to copy a link';
+        else if(noteEl.textContent==='Select at least 2 firms to copy a link')noteEl.textContent='';
+      }
+    }
+    function syncPills(){
+      var pills=grid.querySelectorAll('.compare-pill');
+      Array.prototype.forEach.call(pills,function(p){
+        var on=selected.has(p.getAttribute('data-firm-id'));
+        p.setAttribute('aria-pressed',on?'true':'false');
+        p.textContent=on?'✓ Added':'Compare';
+        var card=p.parentNode?p.parentNode.parentNode:null;
+        if(card&&card.classList)card.classList.toggle('selected',on);
+      });
+    }
+    function toggleSelect(id){
+      if(selected.has(id)){selected.delete(id);}
+      else{
+        if(selected.size>=4){flashNote('Up to 4 firms per shared comparison');return;}
+        selected.add(id);
+      }
+      syncPills();updateBar();
+    }
+    if(copyBtn)copyBtn.addEventListener('click',function(){
+      if(selected.size<2)return;
+      var slugs=[];selected.forEach(function(id){if(slugMaps.slugById[id])slugs.push(slugMaps.slugById[id]);});
+      var url=buildShareUrl(window.location.href,slugs);
+      copyText(url,function(){copyBtn.textContent='Link copied ✓';setTimeout(function(){copyBtn.textContent='Copy comparison link';},1800);});
+    });
+    if(clearBtn)clearBtn.addEventListener('click',function(){
+      if(sharedMode){window.location.assign(window.location.pathname);return;}
+      selected.clear();syncPills();updateBar();
+    });
+    grid.innerHTML='';
+    var renderFirms=sharedMode?sharedFirms:firms;
+    renderFirms.forEach(function(firm){
+      var sum=summary[firm.id]||{plans:[],cheapest:null,maxSplit:null,maxDd:null,rating:null,likes:0};
+      var fplans=sum.plans;
+      var card=document.createElement('div');card.className='card';
+      var headRow=document.createElement('div');headRow.className='card-head';
+      var h=document.createElement('h3');h.textContent=firm.name||'';headRow.appendChild(h);
+      var pill=document.createElement('button');pill.type='button';pill.className='compare-pill';
+      pill.setAttribute('data-firm-id',firm.id);pill.setAttribute('aria-pressed','false');pill.textContent='Compare';
+      pill.setAttribute('aria-label','Select '+(firm.name||'firm')+' for a shareable comparison');
+      pill.addEventListener('click',function(){toggleSelect(firm.id);});
+      headRow.appendChild(pill);
+      card.appendChild(headRow);
+      var meta=document.createElement('p');meta.className='meta-line';
+      if(sum.rating)meta.appendChild(document.createTextNode('★ '+sum.rating.avg.toFixed(1)+' ('+sum.rating.count+')'));
+      if(sum.likes>=1)meta.appendChild(document.createTextNode((meta.textContent?' · ':'')+'♥ '+sum.likes));
+      card.appendChild(meta);
+      var stamp=verifiedAgo(firm.last_verified_at||firm.updated_at);
+      if(stamp){var vs=document.createElement('p');vs.className='verified-stamp';vs.textContent=stamp;card.appendChild(vs);}
+      var plansLine=document.createElement('div');plansLine.className='plans';
+      plansLine.textContent=fplans.length+(fplans.length===1?' plan tracked':' plans tracked');
+      card.appendChild(plansLine);
+      /* Spec strip: cheapest price from / max profit split / max drawdown — all computed from firm_plans */
       var strip=document.createElement('div');strip.className='spec-strip';
+      var cheapest=sum.cheapest,maxSplit=sum.maxSplit,maxDd=sum.maxDd;
       var specs=[
         {label:'Price from',html:cheapest?esc(sym(cheapest.plan.currency||'USD'))+fmt(cheapest.dp.final)+(cheapest.dp.pct>0?' <span class="strike">'+esc(sym(cheapest.plan.currency||'USD'))+fmt(cheapest.dp.base)+'</span>':''):'—',promo:!!(cheapest&&cheapest.dp.pct>0)},
         {label:'Max split',html:maxSplit!=null?esc(fmt(maxSplit))+'%':'—',promo:false},
@@ -322,10 +511,75 @@
       var link=document.createElement('a');link.href='/';link.textContent='Compare in matcher →';card.appendChild(link);
       grid.appendChild(card);
     });
+    syncPills();updateBar();
+    /* Shared view: branded head-to-head header + spec table, from the same fetched data */
+    if(sharedMode){
+      var head=document.getElementById('sharedHead');
+      if(head){
+        var logosEl=document.getElementById('sharedLogos');
+        if(logosEl){
+          logosEl.innerHTML='';
+          sharedFirms.forEach(function(firm){
+            var t=document.createElement('span');t.className='shared-logo';
+            logoInto(t,firm,initials(firm.name));
+            logosEl.appendChild(t);
+          });
+        }
+        var titleEl=document.getElementById('sharedTitle');
+        if(titleEl){
+          titleEl.innerHTML='';
+          sharedFirms.forEach(function(firm,i){
+            if(i>0){var vs2=document.createElement('span');vs2.className='vs';vs2.textContent=' vs ';titleEl.appendChild(vs2);}
+            titleEl.appendChild(document.createTextNode(firm.name||''));
+          });
+        }
+        var viewAll=document.getElementById('sharedViewAll');
+        if(viewAll)viewAll.href=window.location.pathname;
+        var twrap=document.getElementById('sharedTableWrap');
+        if(twrap){
+          twrap.innerHTML='';
+          var table=document.createElement('table');table.className='spec-table';
+          var htr=document.createElement('tr');
+          var corner=document.createElement('th');corner.textContent='';htr.appendChild(corner);
+          sharedFirms.forEach(function(firm){
+            var th=document.createElement('th');
+            var lg=document.createElement('span');lg.className='th-logo';logoInto(lg,firm,initials(firm.name));th.appendChild(lg);
+            var nm=document.createElement('span');nm.className='th-name';nm.textContent=firm.name||'';th.appendChild(nm);
+            htr.appendChild(th);
+          });
+          table.appendChild(htr);
+          function specRow(label,vals){
+            var tr=document.createElement('tr');
+            var th=document.createElement('th');th.className='row-label';th.textContent=label;tr.appendChild(th);
+            vals.forEach(function(v){
+              var td=document.createElement('td');
+              if(v&&typeof v==='object'&&v.html!=null)td.innerHTML=v.html;else td.textContent=(v==null?'—':v);
+              tr.appendChild(td);
+            });
+            table.appendChild(tr);
+          }
+          specRow('Cheapest price',sharedFirms.map(function(f){
+            var s=summary[f.id];if(!s||!s.cheapest)return '—';
+            var cur=sym(s.cheapest.plan.currency||'USD');
+            var hhtml=esc(cur)+fmt(s.cheapest.dp.final);
+            if(s.cheapest.dp.pct>0)hhtml+=' <span class="strike">'+esc(cur)+fmt(s.cheapest.dp.base)+'</span>';
+            return {html:hhtml};
+          }));
+          specRow('Max profit split',sharedFirms.map(function(f){var s=summary[f.id];return s&&s.maxSplit!=null?fmt(s.maxSplit)+'%':'—';}));
+          specRow('Max drawdown',sharedFirms.map(function(f){var s=summary[f.id];return s&&s.maxDd!=null?fmt(s.maxDd)+'%':'—';}));
+          specRow('Plans tracked',sharedFirms.map(function(f){var s=summary[f.id];return s?String(s.plans.length):'—';}));
+          specRow('Trader rating',sharedFirms.map(function(f){var s=summary[f.id];return s&&s.rating?('★ '+s.rating.avg.toFixed(1)+' ('+s.rating.count+')'):'Not rated yet';}));
+          twrap.appendChild(table);
+        }
+        head.hidden=false;
+      }
+    }
     var counts=document.getElementById('liveCounts');
     if(counts)counts.textContent=firms.length+' verified prop firms. '+plans.length+' funding plans, loaded live.';
     var note=document.getElementById('liveNote');
-    if(note)note.textContent='Live grid — every firm, price, rating and promotion above is loaded from PIPVANT\u2019s verified database.';
+    if(note)note.textContent=sharedMode
+      ?'Shared comparison — showing only the firms from this link, with live prices and ratings from PIPVANT\u2019s verified database.'
+      :'Live grid — every firm, price, rating and promotion above is loaded from PIPVANT\u2019s verified database.';
     wrap.hidden=false;
     var stat=document.getElementById('staticGrid');if(stat)stat.hidden=true;
   }).catch(function(){/* live fetch failed — static grid stays visible as fallback */});
