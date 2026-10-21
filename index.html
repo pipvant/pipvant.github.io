@@ -9,7 +9,7 @@
   <meta name="theme-color" content="#0A1628">
   <!-- Mega-audit fix: set theme before first paint (prevents dark→light flash). -->
   <script>try{var _s=JSON.parse(localStorage.getItem('pipvant_settings')||'{}');var _t=_s&&_s.theme;if(_t==='light'||_t==='dark')document.documentElement.setAttribute('data-theme',_t);}catch(e){}</script>
-  <script>try{var _pool=['ninja','ronin','torii','dragon','kitsune','koi','cranes','sakura','lanterns','aurora','ocean','desert','wolf','eagle','orbit','rain','cinematic','trader','neo-ronin','miko','pirate','astronaut','ramadan'];var _b=null;if(localStorage.getItem('pipvant_bgperdevice')==='1'){var _coarse=false;try{_coarse=window.matchMedia('(pointer: coarse)').matches;}catch(_ce){}var _dev=(_coarse||window.innerWidth<760)?'m':'d';_b=localStorage.getItem(_dev==='m'?'pipvant_bgscene_m':'pipvant_bgscene_d');if(!_b||(_pool.indexOf(_b)<0&&_b!=='classic'&&_b!=='auto'&&_b!=='moods'&&_b!=='custom'))_b=localStorage.getItem('pipvant_bgscene');}else{_b=localStorage.getItem('pipvant_bgscene');}if(!_b||(_pool.indexOf(_b)<0&&_b!=='classic'&&_b!=='auto'&&_b!=='moods'&&_b!=='custom'))_b='ninja';if(_b==='auto'){var _d=new Date();function _p(n){return String(n).padStart(2,'0');}var _s=_d.getFullYear()+'-'+_p(_d.getMonth()+1)+'-'+_p(_d.getDate());var _h=2166136261;for(var _i=0;_i<_s.length;_i++){_h^=_s.charCodeAt(_i);_h=Math.imul(_h,16777619);}_b=_pool[(_h>>>0)%_pool.length];}if(_b==='moods'){var _t=new Date();var _m=_t.getHours()*60+_t.getMinutes();_b=(_m>=300&&_m<720)?'cranes':(_m>=720&&_m<1050)?'desert':(_m>=1050&&_m<1350)?'rain':'ninja';}document.documentElement.setAttribute('data-bgscene',_b);var _vi=localStorage.getItem('pipvant_bgintensity');if(_vi!=='subtle'&&_vi!=='vivid')_vi='balanced';document.documentElement.setAttribute('data-bgintensity',_vi);}catch(e){document.documentElement.setAttribute('data-bgscene','ninja');document.documentElement.setAttribute('data-bgintensity','balanced');}</script>
+  <script>try{var _pool=['ninja','ronin','torii','dragon','kitsune','koi','cranes','sakura','lanterns','aurora','ocean','desert','wolf','eagle','orbit','rain','cinematic','trader','neo-ronin','miko','pirate','astronaut','ramadan'];var _b=null;if(localStorage.getItem('pipvant_bgperdevice')==='1'){var _coarse=false;try{_coarse=window.matchMedia('(pointer: coarse)').matches;}catch(_ce){}var _dev=(_coarse||window.innerWidth<760)?'m':'d';_b=localStorage.getItem(_dev==='m'?'pipvant_bgscene_m':'pipvant_bgscene_d');if(!_b||(_pool.indexOf(_b)<0&&_b!=='classic'&&_b!=='auto'&&_b!=='moods'&&_b!=='custom'))_b=localStorage.getItem('pipvant_bgscene');}else{_b=localStorage.getItem('pipvant_bgscene');}if(!_b||(_pool.indexOf(_b)<0&&_b!=='classic'&&_b!=='auto'&&_b!=='moods'&&_b!=='custom'))_b='ninja';if(_b==='auto'){var _d=new Date();function _p(n){return String(n).padStart(2,'0');}var _s=_d.getFullYear()+'-'+_p(_d.getMonth()+1)+'-'+_p(_d.getDate());var _h=2166136261;for(var _i=0;_i<_s.length;_i++){_h^=_s.charCodeAt(_i);_h=Math.imul(_h,16777619);}_b=_pool[(_h>>>0)%_pool.length];}if(_b==='moods'){var _t=new Date();var _m=_t.getHours()*60+_t.getMinutes();_b=(_m>=300&&_m<720)?'cranes':(_m>=720&&_m<1050)?'desert':(_m>=1050&&_m<1350)?'rain':'ninja';}if(_b==='dragon'||_b==='trader'||_b==='ramadan'){var _u=null;try{_u=JSON.parse(localStorage.getItem('pipvant_bgunlocked')||'[]');}catch(_ue){_u=null;}if(!_u||_u.indexOf(_b)<0)_b='ninja';}document.documentElement.setAttribute('data-bgscene',_b);var _vi=localStorage.getItem('pipvant_bgintensity');if(_vi!=='subtle'&&_vi!=='vivid')_vi='balanced';document.documentElement.setAttribute('data-bgintensity',_vi);}catch(e){document.documentElement.setAttribute('data-bgscene','ninja');document.documentElement.setAttribute('data-bgintensity','balanced');}</script>
   <link rel="icon" type="image/png" href="assets/pipvanta-logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1641,6 +1641,15 @@
     /* Wow pack: card expand affordance + hover-live thumbnails */
     .bgs-expand{position:absolute;top:13px;inset-inline-end:13px;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:rgba(6,13,26,.55);color:#8FA8CC;z-index:2;cursor:pointer;transition:color var(--fast),background var(--fast)}
     .bgs-expand svg{width:13px;height:13px}
+    /* Scene unlocks: locked prestige cards — dimmed painting, lock badge
+       in the star's slot (star/expand/check hidden), requirement line. */
+    .bgs-card.is-locked .bgs-thumb img{filter:grayscale(.55) brightness(.6)}
+    .bgs-card.is-locked .bgs-star,.bgs-card.is-locked .bgs-expand,.bgs-card.is-locked .bgs-check{display:none!important}
+    .bgs-card .bgs-lockbadge{display:none}
+    .bgs-card.is-locked .bgs-lockbadge{position:absolute;top:13px;inset-inline-start:13px;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:rgba(6,13,26,.72);color:#D4AF37;border:1px solid rgba(212,175,55,.55);z-index:2;backdrop-filter:blur(4px)}
+    .bgs-lockbadge svg{width:13px;height:13px}
+    .bgs-req{display:none;font-size:11px;line-height:1.4;color:var(--muted);padding:0 2px 2px}
+    .bgs-card.is-locked .bgs-req{display:block}
     .bgs-expand:hover{color:#D4AF37;background:rgba(6,13,26,.85)}
     #backgrounds .bgs-check{top:46px}
     @keyframes bgsThumbKB{from{transform:scale(1)}to{transform:scale(1.07)}}
@@ -2191,6 +2200,13 @@ html[dir="rtl"] .pv-ob-opt{text-align:right}
 .pv-ob-dirs{display:flex;gap:8px}
 .pv-ob-dir{flex:1;padding:11px;border-radius:12px;border:1px solid rgba(234,241,251,.14);background:rgba(91,141,239,.05);color:#EAF1FB;font:700 14px "Space Grotesk",sans-serif;cursor:pointer}
 .pv-ob-dir[aria-pressed="true"]{border-color:#D4AF37;background:rgba(212,175,55,.09)}
+.pv-ob-scenes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pv-ob-scene{display:grid;gap:7px;padding:8px;border-radius:14px;border:1px solid rgba(234,241,251,.14);background:rgba(91,141,239,.05);color:#EAF1FB;font:700 12.5px "Space Grotesk",sans-serif;cursor:pointer;text-align:start}
+.pv-ob-scene[aria-pressed="true"]{border-color:#D4AF37;box-shadow:0 0 0 1px #D4AF37;background:rgba(212,175,55,.08)}
+.pv-ob-scene-art{display:block;height:64px;border-radius:9px;overflow:hidden;background:#0A1628}
+.pv-ob-scene-art img{width:100%;height:100%;object-fit:cover;display:block}
+.pv-ob-scene-classic{background:radial-gradient(130% 100% at 50% -20%,rgba(91,141,239,.38),transparent 62%),#0A1628}
+.pv-ob-scene-name{padding:0 2px}
 .pv-ob-hint{margin:12px 0 0;color:#9FB2CC;font-size:12.5px;line-height:1.55}
 .pv-ob-feedback{min-height:18px;margin:12px 0 0;font-size:12.5px;color:#F2B8B8}
 .pv-ob-feedback:empty{margin:0;min-height:0}
@@ -4246,7 +4262,7 @@ html[dir="rtl"] .jump-row{text-align:right}
 
 <div class="pv-ob-overlay" id="pvOnboarding" hidden role="dialog" aria-modal="true" aria-labelledby="pvObTitle">
   <div class="pv-ob-card">
-    <div class="pv-ob-dots" aria-hidden="true"><span class="pv-ob-dot" data-pv-ob-dot="1"></span><span class="pv-ob-dot" data-pv-ob-dot="2"></span><span class="pv-ob-dot" data-pv-ob-dot="3"></span></div>
+    <div class="pv-ob-dots" aria-hidden="true"><span class="pv-ob-dot" data-pv-ob-dot="1"></span><span class="pv-ob-dot" data-pv-ob-dot="2"></span><span class="pv-ob-dot" data-pv-ob-dot="3"></span><span class="pv-ob-dot" data-pv-ob-dot="4"></span></div>
     <p class="pv-ob-eyebrow" id="pvObEyebrow">Welcome to your journal</p>
     <h3 class="pv-ob-title" id="pvObTitle">What are you trading on?</h3>
     <p class="pv-ob-sub" id="pvObSub"></p>
@@ -4269,6 +4285,17 @@ html[dir="rtl"] .jump-row{text-align:right}
     <div class="pv-ob-step" data-pv-ob-step="3" hidden>
       <div class="pv-ob-field"><label for="pvObRisk">Risk per trade (%)</label><input id="pvObRisk" type="number" inputmode="decimal" step="0.1" min="0.1" max="10" value="1"></div>
       <p class="pv-ob-hint" id="pvObRiskHint">This becomes the default in your risk calculator. You can change it any time in Settings.</p>
+    </div>
+    <div class="pv-ob-step" data-pv-ob-step="4" hidden>
+      <div class="pv-ob-scenes" role="group" aria-label="Atmosphere">
+        <button type="button" class="pv-ob-scene" data-pv-ob-scene="ninja" aria-pressed="false"><span class="pv-ob-scene-art"><img src="assets/bgs/thumbs/ninja.webp" alt="" loading="lazy"></span><span class="pv-ob-scene-name">Ninja Night</span></button>
+        <button type="button" class="pv-ob-scene" data-pv-ob-scene="torii" aria-pressed="false"><span class="pv-ob-scene-art"><img src="assets/bgs/thumbs/torii.webp" alt="" loading="lazy"></span><span class="pv-ob-scene-name">Torii Gate</span></button>
+        <button type="button" class="pv-ob-scene" data-pv-ob-scene="sakura" aria-pressed="false"><span class="pv-ob-scene-art"><img src="assets/bgs/thumbs/sakura.webp" alt="" loading="lazy"></span><span class="pv-ob-scene-name">Sakura Swordsman</span></button>
+        <button type="button" class="pv-ob-scene" data-pv-ob-scene="rain" aria-pressed="false"><span class="pv-ob-scene-art"><img src="assets/bgs/thumbs/rain.webp" alt="" loading="lazy"></span><span class="pv-ob-scene-name">Midnight Rain</span></button>
+        <button type="button" class="pv-ob-scene" data-pv-ob-scene="desert" aria-pressed="false"><span class="pv-ob-scene-art"><img src="assets/bgs/thumbs/desert.webp" alt="" loading="lazy"></span><span class="pv-ob-scene-name">Desert Moon</span></button>
+        <button type="button" class="pv-ob-scene" data-pv-ob-scene="classic" aria-pressed="false"><span class="pv-ob-scene-art pv-ob-scene-classic"></span><span class="pv-ob-scene-name">Classic</span></button>
+      </div>
+      <p class="pv-ob-hint" id="pvObSceneHint">Your backdrop, everywhere in the app. Change it any time in Settings → Backgrounds.</p>
     </div>
     <p class="pv-ob-feedback" id="pvObFeedback" aria-live="polite"></p>
     <div class="pv-ob-actions"><button type="button" class="btn secondary" id="pvObSkip">Skip for now</button><button type="button" class="btn primary" id="pvObNext">Continue</button></div>
@@ -8040,7 +8067,22 @@ html[dir="rtl"] .jump-row{text-align:right}
   function pvBgMoodBucket(d){var m=d.getHours()*60+d.getMinutes();if(m>=300&&m<720)return 'cranes';if(m>=720&&m<1050)return 'desert';if(m>=1050&&m<1350)return 'rain';return 'ninja';}
   function pvBgBucketLabel(sceneKey){var ar=(typeof currentLanguage!=='undefined'&&currentLanguage==='ar');if(sceneKey==='cranes')return ar?'الصباح':'Morning';if(sceneKey==='desert')return ar?'بعد الظهر':'Afternoon';if(sceneKey==='rain')return ar?'الجلسة':'Session';return ar?'الليل':'Night';}
   function pvBgResolveChoice(c){if(c==='auto')return PV_BG_POOL[pvBgHashDate(pvBgTodayKey())%PV_BG_POOL.length];if(c==='moods')return pvBgMoodBucket(new Date());return c;}
-  function pvBgEffectiveScene(){return pvBgResolveChoice(pvBgChoice);}
+  function pvBgEffectiveScene(){return pvBgFilterLocked(pvBgResolveChoice(pvBgChoice));}
+  /* --- Scene unlocks: prestige scenes earned by discipline ---
+     dragon = 10 logged trades, trader = 7-day trading streak,
+     ramadan = first certificate. Earned keys persist in
+     'pipvant_bgunlocked' (clearUserState keep-list) — once unlocked,
+     unlocked forever. pvBgIsLocked() is the single source of truth;
+     every resolution path (concrete choice, Auto, Moods, SOTD,
+     per-device) filters through pvBgFilterLocked -> 'ninja'. The head
+     pre-paint script duplicates the same final check on _b. */
+  var PV_BG_LOCKS={dragon:1,trader:1,ramadan:1};
+  var pvBgUnlocked=[];
+  try{pvBgUnlocked=JSON.parse(localStorage.getItem('pipvant_bgunlocked')||'[]');if(!Array.isArray(pvBgUnlocked))pvBgUnlocked=[];}catch(e){pvBgUnlocked=[];}
+  pvBgUnlocked=pvBgUnlocked.filter(function(k){return !!PV_BG_LOCKS[k];});
+  function pvBgIsLocked(key){return !!(PV_BG_LOCKS[key]&&pvBgUnlocked.indexOf(key)<0);}
+  function pvBgFilterLocked(sceneKey){return pvBgIsLocked(sceneKey)?'ninja':sceneKey;}
+  window.pvBgIsLocked=pvBgIsLocked;
   window.pvBgEffectiveScene=pvBgEffectiveScene;
   window.pvBgApply=pvBgApply;
   function pvBgSyncPicker(){
@@ -8066,7 +8108,7 @@ html[dir="rtl"] .jump-row{text-align:right}
        per-device editing is remote); the Settings entry row always mirrors
        the CURRENT device's choice + effective scene (pvBgChoice/pvBgScene). */
     var dispChoice=pvBgDisplayedChoice();
-    var eff=pvBgResolveChoice(dispChoice);
+    var eff=pvBgFilterLocked(pvBgResolveChoice(dispChoice));
     var hero=document.getElementById('bgsHeroPhoto'),hn=document.getElementById('bgsHeroName'),note=document.getElementById('bgsHeroNote');
     if(hero){
       if(eff==='classic'){hero.style.backgroundImage='';hero.classList.add('is-classic');}
@@ -8092,6 +8134,7 @@ html[dir="rtl"] .jump-row{text-align:right}
   }
   function pvBgApply(key,persist){
     if(PV_BG_CHOICES.indexOf(key)<0)key='ninja';
+    if(pvBgIsLocked(key))key='ninja';
     /* Per-device remote edit: while the gallery is editing the OTHER
        device's scene, card picks write only that device's key and refresh
        the gallery (picker + hero) — the live backdrop stays on this
@@ -8157,6 +8200,7 @@ html[dir="rtl"] .jump-row{text-align:right}
   document.querySelectorAll('[data-bgscene-choice]').forEach(function(btn){
     btn.addEventListener('click',function(){
       var k=btn.getAttribute('data-bgscene-choice');
+      if(pvBgIsLocked(k)){if(typeof showToast==='function')showToast(pvBgLockText(k));return;}
       if(k==='custom'&&!pvBgCustom.has){pvBgCustomPick();return;}
       pvBgApply(k);
     });
@@ -8164,7 +8208,7 @@ html[dir="rtl"] .jump-row{text-align:right}
   /* --- Favourites --- */
   var pvBgFavs=[];
   try{pvBgFavs=JSON.parse(localStorage.getItem('pipvant_bgfavs')||'[]');if(!Array.isArray(pvBgFavs))pvBgFavs=[];}catch(e){pvBgFavs=[];}
-  pvBgFavs=pvBgFavs.filter(function(k){return PV_BG_SCENES.indexOf(k)>=0;});
+  pvBgFavs=pvBgFavs.filter(function(k){return PV_BG_SCENES.indexOf(k)>=0&&!pvBgIsLocked(k);});
   function pvBgSaveFavs(){try{localStorage.setItem('pipvant_bgfavs',JSON.stringify(pvBgFavs));}catch(e){}}
   function pvBgSourceCard(key){
     var cards=document.querySelectorAll('[data-bgscene-choice]');
@@ -8176,6 +8220,7 @@ html[dir="rtl"] .jump-row{text-align:right}
     if(wrap&&grid){
       grid.innerHTML='';
       pvBgFavs.forEach(function(key){
+        if(pvBgIsLocked(key))return;
         var src=pvBgSourceCard(key);if(!src)return;
         var clone=src.cloneNode(true);
         clone.classList.add('bgs-fav-clone');
@@ -8192,11 +8237,106 @@ html[dir="rtl"] .jump-row{text-align:right}
     pvBgSyncPicker();
   }
   function pvBgToggleFav(key){
+    if(pvBgIsLocked(key))return;
     var i=pvBgFavs.indexOf(key);
     if(i>=0)pvBgFavs.splice(i,1);else pvBgFavs.push(key);
     pvBgSaveFavs();pvBgRenderFavs();
     if(typeof pvBgFsSyncFav==='function')pvBgFsSyncFav();
   }
+  /* --- Unlock progress: every counter reuses the app's own source ---
+     trades = sessionJournalEntries (ALL entries of type 'trade', the
+     journal's own list); streak = updateRailTradingStreak()'s own
+     computation, read back from #railStreak (the value the rail widget
+     shows); certificates = pvCelebCertCount() (profileSession). */
+  function pvBgTradeCount(){
+    try{
+      var list=(typeof sessionJournalEntries!=='undefined'&&Array.isArray(sessionJournalEntries))?sessionJournalEntries:[];
+      var n=0;for(var i=0;i<list.length;i++){if(list[i]&&list[i].type==='trade')n++;}
+      return n;
+    }catch(e){return 0;}
+  }
+  function pvBgStreakValue(){
+    try{
+      if(typeof updateRailTradingStreak==='function')updateRailTradingStreak();
+      var el=document.getElementById('railStreak');
+      var v=el?parseInt(el.textContent,10):NaN;
+      return isFinite(v)?v:0;
+    }catch(e){return 0;}
+  }
+  function pvBgLockProgress(key){
+    try{
+      if(key==='dragon')return {cur:pvBgTradeCount(),need:10};
+      if(key==='trader')return {cur:pvBgStreakValue(),need:7};
+      if(key==='ramadan')return {cur:(typeof pvCelebCertCount==='function')?pvCelebCertCount():0,need:1};
+    }catch(e){}
+    return null;
+  }
+  function pvBgLockText(key){
+    var ar=(typeof currentLanguage!=='undefined'&&currentLanguage==='ar');
+    var p=pvBgLockProgress(key);
+    var cur=p?Math.min(p.cur,p.need):0;
+    if(key==='dragon')return ar?('سجّل 10 صفقات · '+cur+'/10'):('Log 10 trades · '+cur+'/10');
+    if(key==='trader')return ar?('صِل إلى سلسلة 7 أيام · '+cur+'/7'):('Reach a 7-day streak · '+cur+'/7');
+    if(key==='ramadan')return ar?'اكسب أول شهادة لك':'Earn your first certificate';
+    return '';
+  }
+  /* Locked presentation: badge + live requirement line are built once
+     per card; .is-locked drives the dimmed painting, hides the star /
+     expand / check (CSS) and swaps in the lock badge instead. */
+  function pvBgSyncLocks(){
+    try{
+      Object.keys(PV_BG_LOCKS).forEach(function(key){
+        var card=pvBgSourceCard(key);if(!card)return;
+        var locked=pvBgIsLocked(key);
+        if(!card.querySelector('.bgs-lockbadge')){
+          var badge=document.createElement('span');
+          badge.className='bgs-lockbadge';badge.setAttribute('aria-hidden','true');
+          badge.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+          card.appendChild(badge);
+          var req=document.createElement('span');
+          req.className='bgs-req';
+          var nm=card.querySelector('.bgs-name');
+          if(nm&&nm.nextSibling)card.insertBefore(req,nm.nextSibling);else card.appendChild(req);
+        }
+        var reqEl=card.querySelector('.bgs-req');
+        if(reqEl)reqEl.textContent=locked?pvBgLockText(key):'';
+        card.classList.toggle('is-locked',locked);
+        if(locked)card.setAttribute('aria-disabled','true');else card.removeAttribute('aria-disabled');
+      });
+    }catch(e){}
+  }
+  /* Checker: runs on journal / profile / gallery activation (via
+     pvForwardOnScreen). A newly-met requirement is earned forever:
+     persisted first, then toast + pvCelebrate() (direct call — the
+     unlock celebration is not daily-gated). */
+  var pvBgUnlockBusy=false;
+  function pvBgCheckUnlocks(){
+    if(pvBgUnlockBusy)return;
+    pvBgUnlockBusy=true;
+    try{
+      var newly=[];
+      Object.keys(PV_BG_LOCKS).forEach(function(key){
+        if(pvBgUnlocked.indexOf(key)>=0)return;
+        var p=pvBgLockProgress(key);
+        if(p&&p.cur>=p.need)newly.push(key);
+      });
+      newly.forEach(function(key){
+        pvBgUnlocked.push(key);
+        try{localStorage.setItem('pipvant_bgunlocked',JSON.stringify(pvBgUnlocked));}catch(e){}
+        pvBgSyncLocks();
+        if(typeof showToast==='function'){
+          var ar=(typeof currentLanguage!=='undefined'&&currentLanguage==='ar');
+          showToast((ar?'تم فتح: ':'Unlocked: ')+pvBgSceneName(key));
+        }
+        if(typeof pvCelebrate==='function')pvCelebrate();
+      });
+      pvBgSyncLocks();
+    }catch(e){}
+    pvBgUnlockBusy=false;
+  }
+  window.pvBgCheckUnlocks=pvBgCheckUnlocks;
+  window.pvBgSyncLocks=pvBgSyncLocks;
+  document.addEventListener('click',function(ev){var b=ev.target&&ev.target.closest?ev.target.closest('[data-language-choice]'):null;if(b)setTimeout(function(){pvBgSyncLocks();},0);});
   var pvBgPickerEl=document.querySelector('.bgs-picker');
   if(pvBgPickerEl){
     pvBgPickerEl.addEventListener('click',function(ev){
@@ -8218,6 +8358,8 @@ html[dir="rtl"] .jump-row{text-align:right}
   var pvSurpriseBtn=document.getElementById('bgsSurpriseBtn');
   if(pvSurpriseBtn)pvSurpriseBtn.addEventListener('click',function(){
     var pool=pvBgFavs.length?pvBgFavs.slice():PV_BG_POOL.slice();
+    pool=pool.filter(function(k){return !pvBgIsLocked(k);});
+    if(!pool.length)pool=PV_BG_POOL.filter(function(k){return !pvBgIsLocked(k);});
     var filtered=pool.filter(function(k){return k!==pvBgScene;});
     if(filtered.length)pool=filtered;
     var pick=pool[Math.floor(Math.random()*pool.length)];
@@ -8407,6 +8549,7 @@ html[dir="rtl"] .jump-row{text-align:right}
     document.querySelectorAll('[data-bgscene-choice]').forEach(function(c){
       var k=c.getAttribute('data-bgscene-choice');
       if(k==='auto'||k==='moods'||k==='classic'||c.classList.contains('bgs-fav-clone'))return;
+      if(pvBgIsLocked(k))return;
       if(k==='custom'&&!pvBgCustom.has)return;
       if(out.indexOf(k)<0)out.push(k);
     });
@@ -8521,12 +8664,12 @@ html[dir="rtl"] .jump-row{text-align:right}
     var heroFig=document.querySelector('.bgs-hero');
     if(heroFig)heroFig.addEventListener('click',function(ev){
       if(ev.target&&ev.target.closest&&ev.target.closest('#bgsHeroDownload,#bgsHeroShare'))return;
-      var eff=pvBgResolveChoice(pvBgDisplayedChoice());
+      var eff=pvBgFilterLocked(pvBgResolveChoice(pvBgDisplayedChoice()));
       if(eff==='classic')return;
       pvBgFsOpen(eff);
     });
     var heroDl=document.getElementById('bgsHeroDownload');
-    if(heroDl)heroDl.addEventListener('click',function(ev){ev.stopPropagation();pvBgDownload(pvBgResolveChoice(pvBgDisplayedChoice()));});
+    if(heroDl)heroDl.addEventListener('click',function(ev){ev.stopPropagation();pvBgDownload(pvBgFilterLocked(pvBgResolveChoice(pvBgDisplayedChoice())));});
   })();
   /* --- Gyro tilt motion (mobile) ---
      Feeds the SAME parallax pipeline as the pointer (pvPar.tx/ty through
@@ -8844,6 +8987,7 @@ html[dir="rtl"] .jump-row{text-align:right}
     pvBgApplyIntensity(iv||document.documentElement.getAttribute('data-bgintensity')||'balanced',false);
     pvBgApplySaver(pvBgSaverRead(),false);
     pvBgRenderFavs();
+    pvBgSyncLocks();
     pvBgSyncParToggle();
     pvBgScheduleRollover();
     pvBgCustomLoad().then(function(){
@@ -8936,6 +9080,7 @@ html[dir="rtl"] .jump-row{text-align:right}
   }
   function pvForwardOnScreen(id){
     pvBgSyncCalm();
+    if(id==='journal'||id==='profile'||id==='backgrounds')pvBgCheckUnlocks();
     if(id==='journal')pvCelebMaybeJournal();
     if(id==='landing'&&typeof pvSotdRender==='function')pvSotdRender();
   }
@@ -9074,7 +9219,7 @@ html[dir="rtl"] .jump-row{text-align:right}
       var hideAt=0;
       try{hideAt=Number(localStorage.getItem('pipvant_sotd_hide'))||0;}catch(e){}
       if(hideAt&&Date.now()-hideAt<30*24*60*60*1000){card.hidden=true;return;}
-      var today=PV_BG_POOL[pvBgHashDate(pvBgTodayKey())%PV_BG_POOL.length];
+      var today=pvBgFilterLocked(PV_BG_POOL[pvBgHashDate(pvBgTodayKey())%PV_BG_POOL.length]);
       pvSotdKey=today;
       var img=document.getElementById('sotdThumb');
       if(img&&img.getAttribute('src')!=='assets/bgs/thumbs/'+today+'.webp')img.src='assets/bgs/thumbs/'+today+'.webp';
@@ -11348,7 +11493,7 @@ html[dir="rtl"] .jump-row{text-align:right}
     try{
       // H1-storage fix: removed 'pipvant_news_alerted' from keep-list (was
       // suppressing news alerts for the next user on the same device).
-      var keep={'pipvant_landing_seen':1,'pipvant_seen_landing':1,'pipvantConsent':1,'pipvant_rates':1,'pipvant_last_screen':1,'pipvant_shortlist':1,'pipvant_bgscene':1,'pipvant_bgfavs':1,'pipvant_bgintensity':1,'pipvant_bgparallax':1,'pipvant_bgtilt':1,'pipvant_bgsaver':1,'pipvant_bgcalm':1,'pipvant_bgperdevice':1,'pipvant_bgscene_m':1,'pipvant_bgscene_d':1,'pipvant_sotd_hide':1,'pipvant_cert_count':1,'pipvant_cert_positive_seen':1};
+      var keep={'pipvant_landing_seen':1,'pipvant_seen_landing':1,'pipvantConsent':1,'pipvant_rates':1,'pipvant_last_screen':1,'pipvant_shortlist':1,'pipvant_bgscene':1,'pipvant_bgfavs':1,'pipvant_bgintensity':1,'pipvant_bgparallax':1,'pipvant_bgtilt':1,'pipvant_bgsaver':1,'pipvant_bgcalm':1,'pipvant_bgperdevice':1,'pipvant_bgscene_m':1,'pipvant_bgscene_d':1,'pipvant_sotd_hide':1,'pipvant_cert_count':1,'pipvant_cert_positive_seen':1,'pipvant_bgunlocked':1};
       var drop=[];
       for(var i=0;i<localStorage.length;i++){
         var k=localStorage.key(i);
@@ -12952,13 +13097,22 @@ html[dir="rtl"] .jump-row{text-align:right}
   });
 
   /* ===== LAUNCH ADDITIONS: journal 3-step onboarding + stats share card ===== */
-  var pvObStep=1,pvObType='prop',pvObDir='Long',pvObTradeDone=false,pvObLoadDone=false,pvObOpen=false;
+  var pvObStep=1,pvObType='prop',pvObDir='Long',pvObTradeDone=false,pvObLoadDone=false,pvObOpen=false,pvObScene=null;
+  var PV_OB_SCENES=['ninja','torii','sakura','rain','desert','classic'];
+  /* The atmosphere step pre-selects the scene already in effect when it
+     is one of the six offered (all are always-unlocked scenes). */
+  function pvObDefaultScene(){
+    try{
+      var eff=(typeof pvBgScene!=='undefined')?pvBgScene:'ninja';
+      return PV_OB_SCENES.indexOf(eff)>=0?eff:null;
+    }catch(e){return null;}
+  }
   function pvEl(id){return document.getElementById(id);}
   function pvLT(en,ar){return currentLanguage==='ar'?ar:en;}
   function pvEsc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
   function pvObRender(){
-    var titles=[pvLT('What are you trading on?','على ماذا تتداول؟'),pvLT('Log your first trade','سجّل أول صفقة لك'),pvLT('Set your risk rule','حدّد قاعدة المخاطرة')];
-    var subs=[pvLT('One quick setup so your journal speaks your language.','إعداد سريع واحد ليعكس سجلك طريقة تداولك.'),pvLT('Enter a trade you already took — it lands in your journal like any other.','أدخل صفقة نفذتها بالفعل — ستظهر في سجلك كأي صفقة أخرى.'),pvLT('A fixed risk per trade keeps one bad day from ending the month.','مخاطرة ثابتة لكل صفقة تمنع يوماً سيئاً واحداً من إنهاء الشهر.')];
+    var titles=[pvLT('What are you trading on?','على ماذا تتداول؟'),pvLT('Log your first trade','سجّل أول صفقة لك'),pvLT('Set your risk rule','حدّد قاعدة المخاطرة'),pvLT('Choose your atmosphere','اختر أجواءك')];
+    var subs=[pvLT('One quick setup so your journal speaks your language.','إعداد سريع واحد ليعكس سجلك طريقة تداولك.'),pvLT('Enter a trade you already took — it lands in your journal like any other.','أدخل صفقة نفذتها بالفعل — ستظهر في سجلك كأي صفقة أخرى.'),pvLT('A fixed risk per trade keeps one bad day from ending the month.','مخاطرة ثابتة لكل صفقة تمنع يوماً سيئاً واحداً من إنهاء الشهر.'),pvLT('One last thing — the backdrop you will trade in front of every day.','آخر شيء — الخلفية التي ستتداول أمامها كل يوم.')];
     var t=pvEl('pvObTitle');if(t)t.textContent=titles[pvObStep-1];
     var s=pvEl('pvObSub');if(s)s.textContent=subs[pvObStep-1];
     var eb=pvEl('pvObEyebrow');if(eb)eb.textContent=pvLT('Welcome to your journal','مرحباً بك في سجلك');
@@ -12975,11 +13129,14 @@ html[dir="rtl"] .jump-row{text-align:right}
     var rkL=document.querySelector('label[for="pvObRisk"]');if(rkL)rkL.textContent=pvLT('Risk per trade (%)','المخاطرة لكل صفقة (%)');
     var hint=pvEl('pvObRiskHint');if(hint)hint.textContent=pvLT('This becomes the default in your risk calculator. You can change it any time in Settings.','تصبح هذه القيمة هي الافتراضية في حاسبة المخاطرة، ويمكنك تغييرها في أي وقت من الإعدادات.');
     var skip=pvEl('pvObSkip');if(skip)skip.textContent=pvLT('Skip for now','تخطَّ الآن');
-    var next=pvEl('pvObNext');if(next)next.textContent=pvObStep===3?pvLT('Finish','إنهاء'):pvLT('Continue','متابعة');
+    var next=pvEl('pvObNext');if(next)next.textContent=pvObStep===4?pvLT('Start journaling','ابدأ التسجيل'):pvLT('Continue','متابعة');
+    var sceneNames={ninja:pvLT('Ninja Night','ليلة النينجا'),torii:pvLT('Torii Gate','بوابة توريي'),sakura:pvLT('Sakura Swordsman','سيّاف الساكورا'),rain:pvLT('Midnight Rain','مطر منتصف الليل'),desert:pvLT('Desert Moon','قمر الصحراء'),classic:pvLT('Classic','كلاسيكية')};
+    document.querySelectorAll('[data-pv-ob-scene]').forEach(function(b){var k=b.getAttribute('data-pv-ob-scene');var nm=b.querySelector('.pv-ob-scene-name');if(nm&&sceneNames[k])nm.textContent=sceneNames[k];b.setAttribute('aria-pressed',String(!!pvObScene&&k===pvObScene));});
+    var sh=pvEl('pvObSceneHint');if(sh)sh.textContent=pvLT('Your backdrop, everywhere in the app. Change it any time in Settings → Backgrounds.','خلفيتك في كل مكان بالتطبيق. بدّلها في أي وقت من الإعدادات ← الخلفيات.');
     var fb=pvEl('pvObFeedback');if(fb)fb.textContent='';
   }
   function pvOpenOnboarding(){
-    var ov=pvEl('pvOnboarding');if(!ov||pvObOpen)return;pvObOpen=true;pvObStep=1;pvObTradeDone=false;
+    var ov=pvEl('pvOnboarding');if(!ov||pvObOpen)return;pvObOpen=true;pvObStep=1;pvObTradeDone=false;pvObScene=pvObDefaultScene();
     var rk=pvEl('pvObRisk');if(rk){var cur=1;try{if(typeof defaultRisk==='number'&&isFinite(defaultRisk)&&defaultRisk>0)cur=defaultRisk;}catch(e){}rk.value=cur;}
     pvObRender();ov.hidden=false;
   }
@@ -13016,12 +13173,13 @@ html[dir="rtl"] .jump-row{text-align:right}
   function pvObAdvance(){
     if(pvObStep===1){try{localStorage.setItem('pv_journal_account_type',pvObType);}catch(e){}pvObStep=2;pvObRender();return;}
     if(pvObStep===2){if(pvObCreateFirstTrade()){pvObStep=3;pvObRender();}return;}
+    if(pvObStep===4){pvCloseOnboarding();return;}
     /* Step 3: write the REAL settings path — defaultRisk persisted by sbSaveSettings()
        (localStorage pipvant_settings + user_settings.default_risk) and applied to the
        risk calculator via setRiskValue(). */
     var rk=pvEl('pvObRisk');var v=parseFloat(rk?rk.value:'');
     if(isFinite(v)){v=Math.min(10,Math.max(0.1,v));try{defaultRisk=v;}catch(e){}try{var drv=pvEl('defaultRiskValue');if(drv)drv.textContent=v.toFixed(1)+'%';}catch(e){}try{if(typeof setRiskValue==='function')setRiskValue(v);}catch(e){}try{if(typeof sbSaveSettings==='function')sbSaveSettings();}catch(e){}}
-    pvCloseOnboarding();
+    pvObStep=4;pvObRender();
   }
   function pvMaybeShowOnboarding(){
     try{
@@ -13041,6 +13199,11 @@ html[dir="rtl"] .jump-row{text-align:right}
     var ov=pvEl('pvOnboarding');if(!ov)return;
     document.querySelectorAll('[data-pv-ob-type]').forEach(function(b){b.addEventListener('click',function(){pvObType=b.getAttribute('data-pv-ob-type')||'prop';pvObRender();});});
     document.querySelectorAll('[data-pv-ob-dir]').forEach(function(b){b.addEventListener('click',function(){pvObDir=b.getAttribute('data-pv-ob-dir')||'Long';pvObRender();});});
+    /* Atmosphere step: tapping a mini card applies the scene immediately
+       (pvBgApply — the backdrop changes live behind the sheet) and the
+       gold ring marks the pick; the choice persists via pvBgApply itself,
+       so finishing or skipping keeps it. Locked scenes are never offered. */
+    document.querySelectorAll('[data-pv-ob-scene]').forEach(function(b){b.addEventListener('click',function(){pvObScene=b.getAttribute('data-pv-ob-scene')||'ninja';try{if(typeof pvBgApply==='function')pvBgApply(pvObScene);}catch(e){}pvObRender();});});
     var next=pvEl('pvObNext');if(next)next.addEventListener('click',pvObAdvance);
     var skip=pvEl('pvObSkip');if(skip)skip.addEventListener('click',function(){pvCloseOnboarding();});
     ov.addEventListener('click',function(e){if(e.target===ov)pvCloseOnboarding();});
