@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-21T06:44:09.088393+00:00",
+  "updated": "2026-10-21T07:44:47.131153+00:00",
   "changes": [
     {
       "date": "2026-10-21",
@@ -52,6 +52,24 @@
       "field": "promotion",
       "old": "{\"code\": \"SAVENOW\", \"discount\": \"90% OFF ALL EVALS!\", \"expiry\": \"Ends in 1d 22h 29m 38s\"}",
       "new": "{\"code\": \"SAVENOW\", \"discount\": \"90% OFF ALL EVALS!\", \"expiry\": \"Ends in 1d 21h 29m 45s\"}",
+      "source": "https://apextraderfunding.com/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-21",
+      "firm": "Alpha Capital Group",
+      "field": "promotion",
+      "old": "{\"code\": \"MYALPHA\", \"discount\": \"30% off\", \"expiry\": null}",
+      "new": "(removed from site)",
+      "source": "https://alphacapitalgroup.uk",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-21",
+      "firm": "Apex Trader Funding",
+      "field": "promotion",
+      "old": "{\"code\": \"SAVENOW\", \"discount\": \"90% OFF ALL EVALS!\", \"expiry\": \"Ends in 1d 21h 29m 45s\"}",
+      "new": "{\"code\": \"SAVENOW\", \"discount\": \"90% OFF ALL EVALS!\", \"expiry\": \"Ends in 1d 20h 29m 20s\"}",
       "source": "https://apextraderfunding.com/",
       "kind": "promo"
     },
