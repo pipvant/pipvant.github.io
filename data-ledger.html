@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Data Ledger — Every Verified Prop Firm Change | PIPVANT</title>
+  <meta name="description" content="PIPVANT's public data ledger: a verifiable log of every prop firm price, rule and promotion change found during verification, with the official source for each entry.">
+  <link rel="canonical" href="https://pipvant.github.io/data-ledger.html">
+  <meta property="og:title" content="Data Ledger — Verified Prop Firm Changes | PIPVANT">
+  <meta property="og:description" content="What changed, when, and where we verified it — the public change log behind PIPVANT's verified data.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pipvant.github.io/data-ledger.html">
+  <meta property="og:image" content="https://pipvant.github.io/assets/pipvanta-logo.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Data Ledger — Verified Changes | PIPVANT">
+  <meta name="twitter:description" content="A public, source-linked log of verified prop firm price, rule and promo changes.">
+  <link rel="icon" type="image/png" href="assets/pipvanta-logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {"@type": "Question", "name": "What is the PIPVANT data ledger?", "acceptedAnswer": {"@type": "Answer", "text": "It is the public change log behind PIPVANT's verified prop firm data. Every row records one verified change — a price, a rule or a promotion — with the date it was found, the old and new values, and a link to the official firm page it was verified on."}},
+      {"@type": "Question", "name": "How does a change get into the ledger?", "acceptedAnswer": {"@type": "Answer", "text": "PIPVANT re-checks firm data against official firm websites on a regular schedule. When a check finds a value that differs from the verified database, the change is recorded here with its source. Unverified or ambiguous findings are never published as changes."}},
+      {"@type": "Question", "name": "Why is a firm or a date missing from the ledger?", "acceptedAnswer": {"@type": "Answer", "text": "The ledger only lists changes. If a firm's prices and rules matched the verified data at the last check, there is nothing to record — no news is good news, and it is not dressed up as an entry."}}
+    ]
+  }
+  </script>
+  <style>
+    :root{--bg:#0A1628;--surface:#0F1D33;--raised:#14253F;--line:#1C2F4D;--line-strong:#2B4266;--text:#F4F6F8;--secondary:#A9B6C6;--muted:#8B9AB0;--accent:#5B8DEF;--accent-strong:#3A6FDE;--gold:#D4AF37}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+    h1,h2,h3{font-family:"Space Grotesk",sans-serif;letter-spacing:-.02em}
+    .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+    header.top{position:sticky;top:0;z-index:10;background:rgba(10,22,40,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+    header.top .wrap{display:flex;align-items:center;justify-content:space-between;padding:14px 20px}
+    .brand{display:flex;align-items:center;gap:10px;font-family:"Space Grotesk";font-weight:700;font-size:18px;text-decoration:none;color:var(--text)}
+    .brand img{width:30px;height:30px;border-radius:8px}
+    .cta-btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 20px;border-radius:10px;background:var(--accent-strong);color:#fff;font-weight:700;text-decoration:none;border:1px solid var(--accent-strong)}
+    .hero{padding:64px 0 40px;text-align:center}
+    .eyebrow{color:var(--accent);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}
+    h1{font-size:clamp(2.2rem,6vw,3.6rem);line-height:1.05;margin:0 0 16px}
+    h1 .gold{background:linear-gradient(135deg,#F5D67B,#D4AF37);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .lede{color:var(--secondary);font-size:17px;line-height:1.7;max-width:680px;margin:0 auto 28px}
+    .chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;padding:6px 0 22px}
+    .chip{display:inline-flex;align-items:center;min-height:36px;padding:0 16px;border-radius:999px;background:var(--surface);border:1px solid var(--line-strong);color:var(--secondary);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+    .chip:hover{border-color:var(--gold);color:var(--text)}
+    .chip.active{background:rgba(212,175,55,.14);border-color:var(--gold);color:var(--gold)}
+    .day-group{margin:0 0 30px}
+    .day-head{display:flex;align-items:center;gap:12px;margin:0 0 12px}
+    .date-pill{display:inline-flex;align-items:center;background:rgba(212,175,55,.14);border:1px solid var(--gold);color:var(--gold);font-size:12px;font-weight:700;padding:5px 12px;border-radius:999px;letter-spacing:.03em}
+    .day-head .day-date{color:var(--muted);font-size:13px}
+    .row-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 20px;margin-bottom:10px;display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap}
+    .row-card .firm{font-family:"Space Grotesk";font-weight:700;font-size:16px;color:var(--gold);min-width:150px}
+    .row-card .change{flex:1;min-width:220px;color:var(--secondary);font-size:14px;line-height:1.65}
+    .row-card .change .field{color:var(--text);font-weight:600}
+    .row-card .change .old{color:var(--muted);text-decoration:line-through}
+    .row-card .change .arrow{color:var(--muted);margin:0 4px}
+    .row-card .change .new{color:var(--text);font-weight:600;font-variant-numeric:tabular-nums}
+    .kind{display:inline-flex;align-items:center;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 9px;border-radius:999px;border:1px solid var(--line-strong);color:var(--accent);background:var(--raised)}
+    .row-card a.src{color:var(--accent);font-weight:600;font-size:13px;text-decoration:none;white-space:nowrap}
+    .empty{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:36px 28px;text-align:center;color:var(--secondary);line-height:1.7;margin:20px 0 40px}
+    .live-note{color:var(--muted);font-size:13px;text-align:center;margin:6px 0 30px}
+    .section{padding:44px 0}
+    h2{font-size:clamp(1.6rem,4vw,2.4rem);margin:0 0 14px}
+    .section p.body{color:var(--secondary);line-height:1.75;max-width:720px}
+    .faq{max-width:760px}
+    .faq details{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin-bottom:10px}
+    .faq summary{font-weight:600;cursor:pointer;font-size:15px}
+    .faq p{color:var(--secondary);line-height:1.7;font-size:14px;margin:10px 0 0}
+    .final{text-align:center;padding:56px 0 72px}
+    footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted);font-size:13px}
+    footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    footer a{color:var(--muted);text-decoration:none;margin-left:16px}
+  </style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="/"><img src="assets/pipvanta-logo.png" alt="PIPVANT logo">PIPVANT</a>
+  <a class="cta-btn" href="/">Open free toolkit</a>
+</div></header>
+
+<div class="wrap">
+  <section class="hero">
+    <div class="eyebrow">Data ledger · Verified changes</div>
+    <h1>What changed. <span class="gold">When. Where we checked.</span></h1>
+    <p class="lede"><span id="ledgerCounts">Loading the verified change log…</span> Every row is one change found while verifying firm data against official firm pages — old value, new value, and the source it was checked on.</p>
+    <a class="cta-btn" href="prop-firm-deals.html">See active deals →</a>
+  </section>
+
+  <div class="chips" id="firmChips" role="group" aria-label="Filter changes by firm" hidden></div>
+  <div id="ledgerList"></div>
+  <div class="empty" id="ledgerEmpty" hidden>
+    <strong style="color:var(--text)">No verified changes recorded yet.</strong><br>
+    The ledger lists only changes that were actually found and verified against an official firm page. When the next verification pass finds a price, rule or promotion change, it will appear here.
+  </div>
+  <p class="live-note" id="ledgerNote"></p>
+
+  <section class="section">
+    <h2>Why publish a change log?</h2>
+    <p class="body">Prop firms change prices, drawdown rules and promotions quietly — and a comparison built on stale data quietly misleads. PIPVANT re-checks its firm data against official firm websites on a regular schedule, and this ledger is the receipt: instead of asking you to trust a "verified" badge, it shows exactly what changed, when it changed, and the official page it was verified on. If nothing changed at a check, nothing is written here.</p>
+  </section>
+
+  <section class="section faq">
+    <h2>Ledger FAQs</h2>
+    <details><summary>What is the PIPVANT data ledger?</summary><p>It is the public change log behind PIPVANT's verified prop firm data. Every row records one verified change — a price, a rule or a promotion — with the date it was found, the old and new values, and a link to the official firm page it was verified on.</p></details>
+    <details><summary>How does a change get into the ledger?</summary><p>PIPVANT re-checks firm data against official firm websites on a regular schedule. When a check finds a value that differs from the verified database, the change is recorded here with its source. Unverified or ambiguous findings are never published as changes.</p></details>
+    <details><summary>Why is a firm or a date missing from the ledger?</summary><p>The ledger only lists changes. If a firm's prices and rules matched the verified data at the last check, there is nothing to record — no news is good news, and it is not dressed up as an entry.</p></details>
+  </section>
+
+  <section class="final">
+    <h2>Data you can audit.</h2>
+    <p class="body" style="text-align:center;margin:0 auto 24px;max-width:560px;color:var(--secondary);line-height:1.7">The same verified data powers the matcher, the challenges table and the deals page — this ledger is how you check our work.</p>
+    <a class="cta-btn" href="prop-firm-comparison.html">Compare firms with verified data — free →</a>
+    <p style="margin-top:28px;color:var(--muted);font-size:13px">Also free: <a href="prop-firm-deals.html" style="color:var(--accent)">prop firm deals</a> · <a href="free-trading-journal.html" style="color:var(--accent)">trading journal</a> · <a href="forex-risk-calculator.html" style="color:var(--accent)">risk calculator</a></p>
+  </section>
+</div>
+
+<footer><div class="wrap">
+  <span>© 2026 PIPVANT by Orovanta — Trade with a process, not a prediction.</span>
+  <span><a href="/">Toolkit</a><a href="prop-firm-comparison.html">Comparison</a><a href="prop-firm-deals.html">Deals</a></span>
+</div></footer>
+<script src="assets/pipv-os.js" defer></script>
+<script>
+/* Data Ledger: renders data-changes.json (produced by the verification pipeline; schema:
+   {"updated": ISO string, "changes": [{"date","firm","field","old","new","source","kind"}]}).
+   Rows newest first, grouped under gold date pills (Today / Yesterday / date), firm filter chips,
+   source link when present. Fetch failure or an empty changes list -> honest empty state. */
+(function(){
+  var list=document.getElementById('ledgerList'),empty=document.getElementById('ledgerEmpty'),
+      chips=document.getElementById('firmChips'),counts=document.getElementById('ledgerCounts'),
+      note=document.getElementById('ledgerNote');
+  var allChanges=[],activeFirm='';
+  function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+  function dayKey(iso){return String(iso||'').slice(0,10);}
+  function todayKey(off){
+    var d=new Date();d.setDate(d.getDate()-(off||0));
+    var m=('0'+(d.getMonth()+1)).slice(-2),dd=('0'+d.getDate()).slice(-2);
+    return d.getFullYear()+'-'+m+'-'+dd;
+  }
+  function pillLabel(key){
+    if(key===todayKey(0))return 'Today';
+    if(key===todayKey(1))return 'Yesterday';
+    var d=new Date(key+'T00:00:00');
+    if(isFinite(d.getTime()))return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    return key;
+  }
+  function fmtDate(key){
+    var d=new Date(key+'T00:00:00');
+    if(isFinite(d.getTime()))return d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+    return key;
+  }
+  function showEmpty(msg){
+    if(counts)counts.textContent='No verified changes to show.';
+    if(msg)empty.innerHTML=msg;
+    empty.hidden=false;list.innerHTML='';chips.hidden=true;note.textContent='';
+  }
+  function render(){
+    var rows=allChanges.filter(function(c){return !activeFirm||c.firm===activeFirm;});
+    list.innerHTML='';
+    if(!rows.length){
+      empty.innerHTML='<strong style="color:var(--text)">No changes recorded for this firm yet.</strong><br>Only verified changes are listed — try another firm, or view the full ledger.';
+      empty.hidden=false;return;
+    }
+    empty.hidden=true;
+    var groups={},order=[];
+    rows.forEach(function(c){
+      var k=dayKey(c.date);
+      if(!groups[k]){groups[k]=[];order.push(k);}
+      groups[k].push(c);
+    });
+    order.forEach(function(k){
+      var g=document.createElement('div');g.className='day-group';
+      var head=document.createElement('div');head.className='day-head';
+      var pill=document.createElement('span');pill.className='date-pill';pill.textContent=pillLabel(k);head.appendChild(pill);
+      var dt=document.createElement('span');dt.className='day-date';dt.textContent=fmtDate(k);head.appendChild(dt);
+      g.appendChild(head);
+      groups[k].forEach(function(c){
+        var row=document.createElement('div');row.className='row-card';
+        var f=document.createElement('div');f.className='firm';f.textContent=c.firm||'';row.appendChild(f);
+        var ch=document.createElement('div');ch.className='change';
+        var fld=document.createElement('span');fld.className='field';fld.textContent=(c.field||'Change')+': ';ch.appendChild(fld);
+        var o=document.createElement('span');o.className='old';o.textContent=c.old==null?'':String(c.old);ch.appendChild(o);
+        var ar=document.createElement('span');ar.className='arrow';ar.textContent='→';ch.appendChild(ar);
+        var n=document.createElement('span');n.className='new';n.textContent=c.new==null?'':String(c.new);ch.appendChild(n);
+        row.appendChild(ch);
+        var kind=document.createElement('span');kind.className='kind';
+        kind.textContent=(c.kind==='price'||c.kind==='rule'||c.kind==='promo')?c.kind:'change';
+        row.appendChild(kind);
+        if(c.source){
+          var a=document.createElement('a');a.className='src';a.href=String(c.source);
+          a.target='_blank';a.rel='noopener';a.textContent='Source ↗';row.appendChild(a);
+        }
+        g.appendChild(row);
+      });
+      list.appendChild(g);
+    });
+  }
+  function renderChips(){
+    var seen={},firms=[];
+    allChanges.forEach(function(c){if(c.firm&&!seen[c.firm]){seen[c.firm]=1;firms.push(c.firm);}});
+    firms.sort();
+    if(firms.length<2){chips.hidden=true;return;}
+    chips.innerHTML='';
+    var all=document.createElement('button');all.type='button';all.className='chip'+(activeFirm===''?' active':'');
+    all.textContent='All firms';
+    all.addEventListener('click',function(){activeFirm='';renderChips();render();});
+    chips.appendChild(all);
+    firms.forEach(function(name){
+      var b=document.createElement('button');b.type='button';b.className='chip'+(activeFirm===name?' active':'');
+      b.textContent=name;
+      b.addEventListener('click',function(){activeFirm=name;renderChips();render();});
+      chips.appendChild(b);
+    });
+    chips.hidden=false;
+  }
+  fetch('data-changes.json',{cache:'no-store'})
+    .then(function(r){if(!r.ok)throw new Error('data-changes.json '+r.status);return r.json();})
+    .then(function(data){
+      var changes=(data&&Array.isArray(data.changes))?data.changes:[];
+      allChanges=changes.filter(function(c){return c&&c.date&&c.firm;});
+      allChanges.sort(function(a,b){return String(b.date).localeCompare(String(a.date));});
+      if(!allChanges.length){showEmpty();return;}
+      var firmSet={};allChanges.forEach(function(c){firmSet[c.firm]=1;});
+      var fc=Object.keys(firmSet).length;
+      if(counts)counts.textContent=allChanges.length+' verified change'+(allChanges.length===1?'':'s')+' across '+fc+' firm'+(fc===1?'':'s')+'.';
+      renderChips();render();
+      if(note){
+        var upd=data&&data.updated?new Date(data.updated):null;
+        note.textContent='Ledger last updated '+(upd&&isFinite(upd.getTime())?upd.toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'}):'')+'. Entries are recorded only from verified checks against official firm pages.';
+        if(!upd||!isFinite(upd.getTime()))note.textContent='Entries are recorded only from verified checks against official firm pages.';
+      }
+    })
+    .catch(function(){
+      showEmpty('<strong style="color:var(--text)">The ledger could not be loaded.</strong><br>The verified change log is unavailable right now. Nothing is shown rather than guessed — please try again shortly.');
+    });
+})();
+</script>
+</body>
+</html>

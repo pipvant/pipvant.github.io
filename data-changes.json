@@ -1,0 +1,86 @@
+{
+  "updated": "2026-10-21T00:44:23.952220+00:00",
+  "changes": [
+    {
+      "date": "2026-10-20",
+      "firm": "TakeProfitTrader",
+      "field": "new promo NOFEE40 added",
+      "old": "(none)",
+      "new": "40% Off For Life + Never Pay An Activation Fee",
+      "source": "https://takeprofittrader.com",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-20",
+      "firm": "Alpha Capital Group",
+      "field": "Alpha One 6% Max Daily Loss",
+      "old": "4.0%",
+      "new": "3.00%",
+      "source": "https://alphacapitalgroup.uk/product",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-20",
+      "firm": "Alpha Capital Group",
+      "field": "new promo MYALPHA added",
+      "old": "(none)",
+      "new": "30% off",
+      "source": "https://alphacapitalgroup.uk",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-20",
+      "firm": "FTMO",
+      "field": "100K 2-Step promo price",
+      "old": "€540",
+      "new": "€439",
+      "source": "https://ftmo.com/en/#pricing",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-20",
+      "firm": "FTMO",
+      "field": "100K 1-Step promo price",
+      "old": "€499",
+      "new": "€399",
+      "source": "https://ftmo.com/en/#pricing",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-20",
+      "firm": "FundedNext",
+      "field": "STRTN promo refreshed",
+      "old": "up to 16% off",
+      "new": "up to 33% off",
+      "source": "https://fundednext.com/cfds",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-16",
+      "firm": "E8 Markets",
+      "field": "100K E8 Pro price",
+      "old": "$488",
+      "new": "$468",
+      "source": "https://e8markets.com/",
+      "kind": "price"
+    },
+    {
+      "date": "2026-10-16",
+      "firm": "Funding Pips",
+      "field": "split terms",
+      "old": "60-100%",
+      "new": "Bi-Weekly 80% / Monthly 100% (up to 100%)",
+      "source": "https://fundingpips.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-16",
+      "firm": "FundedNext",
+      "field": "6K Stellar 2-Step",
+      "old": "$59.99",
+      "new": "$49.99",
+      "source": "https://fundednext.com/usa/cfds/stellar-2-step",
+      "kind": "price"
+    }
+  ]
+}

@@ -11,6 +11,16 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://pipvant.github.io/prop-firm-deals.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://pipvant.github.io/data-ledger.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://pipvant.github.io/free-trading-journal.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
