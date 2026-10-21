@@ -97,6 +97,21 @@
     footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
     footer a{color:var(--muted);text-decoration:none;margin-left:16px}
     @media(max-width:560px){.form-grid{grid-template-columns:1fr}.stat-grid{grid-template-columns:1fr 1fr}}
+  
+    .pipv2-chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
+    .pipv2-chips .pipv2-lbl{width:100%;color:var(--muted);font-size:12.5px;font-weight:600}
+    .pipv2-chip{background:var(--raised);border:1px solid var(--line-strong);color:var(--secondary);border-radius:999px;padding:8px 14px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit}
+    .pipv2-chip:hover{border-color:var(--gold);color:var(--text)}
+    .pipv2-sharewrap{margin:0 auto 20px;text-align:left}
+    .pipv2-share-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 18px}
+    .pipv2-copy{background:transparent;border:1px solid var(--gold);color:var(--gold);border-radius:999px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+    .pipv2-copy:hover{background:rgba(212,175,55,.1)}
+    .pipv2-msg{color:var(--green);font-size:13px;font-weight:600}
+    .pipv2-related{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px 28px;margin:20px 0;text-align:left}
+    .pipv2-related h2{font-size:1.3rem;margin:0 0 12px}
+    .pipv2-related ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px 18px}
+    .pipv2-related a{color:var(--accent);text-decoration:none;font-size:14px;font-weight:600}
+    .pipv2-related a:hover{text-decoration:underline}
   </style>
 </head>
 <body>
@@ -116,6 +131,7 @@
   </section>
 
   <div class="calc" role="region" aria-label="Drawdown simulator">
+    <div class="pipv2-chips"><span class="pipv2-lbl" data-p2="examples">Worked examples — tap to fill:</span><button type="button" class="pipv2-chip" data-p2-preset="0">Example: trailing drawdown, mixed week</button><button type="button" class="pipv2-chip" data-p2-preset="1">Example: static drawdown, steady defence</button><button type="button" class="pipv2-chip" data-p2-preset="2">Example: EOD trailing with breakeven lock</button></div>
     <div class="form-grid">
       <div><label for="acct" data-i18n="lbl_acct">Account size (USD)</label><input id="acct" type="number" value="50000" min="1" inputmode="decimal"></div>
       <div><label for="dd" data-i18n="lbl_dd">Max drawdown (%)</label><input id="dd" type="number" value="10" min="0.5" max="100" step="0.5" inputmode="decimal"></div>
@@ -150,6 +166,8 @@
     </div>
   </div>
 
+  <div class="pipv2-sharewrap" style="max-width:680px"><div class="pipv2-share-row"><button type="button" class="pipv2-copy" id="pipv2Copy">Copy result link</button><span class="pipv2-msg" id="pipv2Msg" hidden data-p2="copied">Link copied — it re-opens with these exact inputs.</span></div></div>
+
   <section class="grid" aria-label="Know your drawdown">
     <div class="card"><h3 data-i18n="c1t">📉 Static rewards defense</h3><p data-i18n="c1b">With a static floor, profits only add cushion. Your only job is to never let the account fall below the line you started with minus the max drawdown.</p></div>
     <div class="card"><h3 data-i18n="c2t">📈 Trailing punishes givebacks</h3><p data-i18n="c2b">With a trailing floor, every new high raises the line. Giving back a big winner can breach you — try the sample above and watch day 6 squeeze the buffer.</p></div>
@@ -174,6 +192,7 @@
     <div data-pipv-msg style="min-height:22px;margin-top:10px;font-size:14px"></div>
   </section>
 
+  <section class="pipv2-related" aria-label="Related tools"><h2 data-p2="related_h">All free PIPVANT tools</h2><ul><li><a href="forex-risk-calculator.html" data-p2="rt_risk">Risk calculator</a></li><li><a href="profit-split-calculator.html" data-p2="rt_split">Profit split calculator</a></li><li><a href="drawdown-simulator.html" data-p2="rt_dd">Drawdown simulator</a></li><li><a href="consistency-rule-checker.html" data-p2="rt_cons">Consistency checker</a></li><li><a href="risk-of-ruin-calculator.html" data-p2="rt_ruin">Risk of ruin calculator</a></li><li><a href="net-payout-calculator.html" data-p2="rt_net">Net payout calculator</a></li><li><a href="scaling-plan-calculator.html" data-p2="rt_scale">Scaling plan calculator</a></li><li><a href="prop-firm-deals.html" data-p2="rt_deals">Deals</a></li><li><a href="prop-firm-comparison.html" data-p2="rt_matcher">Prop firm matcher</a></li></ul></section>
   <section class="final">
     <h2 data-i18n="final_h">Test your edge before the market does.</h2>
     <p style="text-align:center;margin:0 auto 24px;max-width:560px;color:var(--secondary);line-height:1.7" data-i18n="final_b">The drawdown simulator is one of many free tools in your PIPVANT toolkit — journal every trade, compare prop firms and size your risk.</p>
@@ -267,6 +286,50 @@
   [acct,dd,type,daily,pnl].forEach(function(el){el.addEventListener('input',render);el.addEventListener('change',render);});
   document.getElementById('langToggle').addEventListener('click',function(){lang=lang==='en'?'ar':'en';applyLang();});
   applyLang();
+})();
+</script>
+<script>
+/* PIPVANT share-link + presets + related-tools (added 2026-10-21) */
+(function(){
+  var FIELDS=[["acct", "a"], ["dd", "d"], ["type", "t"], ["daily", "dl"], ["pnl", "pnl"]];
+  var PRESETS=[{"vals": {"acct": "50000", "dd": "10", "type": "trailing", "daily": "5", "pnl": "1200,-1800,2400,-900,3100,-2600,1500"}, "en": "Example: trailing drawdown, mixed week", "ar": "مثال: تراجع متحرك، أسبوع مختلط"}, {"vals": {"acct": "100000", "dd": "8", "type": "static", "daily": "4", "pnl": "800,600,-1200,900,1100,-700,500,1400"}, "en": "Example: static drawdown, steady defence", "ar": "مثال: تراجع ثابت، دفاع ثابت"}, {"vals": {"acct": "25000", "dd": "6", "type": "eod", "daily": "3", "pnl": "2000,1500,-2800,900,-1600,1200"}, "en": "Example: EOD trailing with breakeven lock", "ar": "مثال: متحرك بإغلاق اليوم مع قفل التعادل"}];
+  var LBL={
+    en:{examples:'Worked examples — tap to fill:',copy:'Copy result link',copied:'Link copied — it re-opens with these exact inputs.',related_h:'All free PIPVANT tools',rt_risk:'Risk calculator',rt_split:'Profit split calculator',rt_dd:'Drawdown simulator',rt_cons:'Consistency checker',rt_ruin:'Risk of ruin calculator',rt_net:'Net payout calculator',rt_scale:'Scaling plan calculator',rt_deals:'Deals',rt_matcher:'Prop firm matcher'},
+    ar:{examples:'أمثلة محلولة — اضغط للملء:',copy:'انسخ رابط النتيجة',copied:'تم نسخ الرابط — يُفتح بنفس هذه المدخلات بالضبط.',related_h:'كل أدوات PIPVANT المجانية',rt_risk:'حاسبة المخاطر',rt_split:'حاسبة تقسيم الأرباح',rt_dd:'محاكي التراجع',rt_cons:'فاحص الاتساق',rt_ruin:'حاسبة خطر التصفية',rt_net:'حاسبة صافي السحب',rt_scale:'حاسبة خطة التوسع',rt_deals:'العروض',rt_matcher:'مطابق شركات التداول'}
+  };
+  function lang(){return document.documentElement.lang==='ar'?'ar':'en';}
+  function apply(){
+    var d=LBL[lang()];
+    document.querySelectorAll('[data-p2]').forEach(function(el){var k=el.getAttribute('data-p2');if(d[k])el.textContent=d[k];});
+    document.querySelectorAll('[data-p2-preset]').forEach(function(btn){
+      var p=PRESETS[parseInt(btn.getAttribute('data-p2-preset'),10)];if(p)btn.textContent=lang()==='ar'?p.ar:p.en;
+    });
+    var c=document.getElementById('pipv2Copy');if(c)c.textContent=d.copy;
+  }
+  function fire(el){el.dispatchEvent(new Event('input',{bubbles:true}));el.dispatchEvent(new Event('change',{bubbles:true}));}
+  function fill(vals){
+    FIELDS.forEach(function(f){var el=document.getElementById(f[0]);if(el&&vals[f[0]]!==undefined){el.value=vals[f[0]];fire(el);}});
+  }
+  document.querySelectorAll('[data-p2-preset]').forEach(function(btn){
+    btn.addEventListener('click',function(){var p=PRESETS[parseInt(btn.getAttribute('data-p2-preset'),10)];if(p)fill(p.vals);});
+  });
+  var copyBtn=document.getElementById('pipv2Copy');
+  if(copyBtn)copyBtn.addEventListener('click',function(){
+    var u=new URL(window.location.href.split('?')[0]);
+    FIELDS.forEach(function(f){var el=document.getElementById(f[0]);if(el&&el.value!=='')u.searchParams.set(f[1],el.value);});
+    var link=u.toString();var msg=document.getElementById('pipv2Msg');
+    function done(){if(msg){msg.hidden=false;setTimeout(function(){msg.hidden=true;},2600);}}
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(link).then(done).catch(function(){fallback();});}else{fallback();}
+    function fallback(){var ta=document.createElement('textarea');ta.value=link;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done();}catch(e){}document.body.removeChild(ta);}
+  });
+  (function loadFromUrl(){
+    var q=new URLSearchParams(window.location.search);var vals={};var any=false;
+    FIELDS.forEach(function(f){var v=q.get(f[1]);if(v!==null&&v!==''){vals[f[0]]=v;any=true;}});
+    if(any)fill(vals);
+  })();
+  var lt=document.getElementById('langToggle');
+  if(lt)lt.addEventListener('click',function(){setTimeout(apply,30);});
+  apply();
 })();
 </script>
 <script src="assets/pipv-os.js" defer></script>

@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title data-i18n="meta_title">Scaling Plan Calculator — How Long to $500K? | PIPVANT</title>
+  <meta name="description" data-i18n-content="meta_desc" content="Free scaling plan calculator for prop firm traders. Enter your starting size, monthly return assumption and scaling steps — see a month-by-month timeline to your target size.">
+  <link rel="canonical" href="https://pipvant.github.io/scaling-plan-calculator.html">
+  <meta property="og:title" content="Scaling Plan Calculator — How Long to Your Target? | PIPVANT">
+  <meta property="og:description" content="Starting size + return assumption + scaling steps = your timeline to $200K, $500K or $1M. Free forever.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pipvant.github.io/scaling-plan-calculator.html">
+  <meta property="og:image" content="https://pipvant.github.io/assets/pipvanta-logo.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Scaling Plan Calculator | PIPVANT">
+  <meta name="twitter:description" content="How many months to your target account size? Assumption-based projection. Free forever.">
+  <link rel="icon" type="image/png" href="assets/pipvanta-logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {"@type": "Question", "name": "What is a prop firm scaling plan?", "acceptedAnswer": {"@type": "Answer", "text": "A scaling plan grows your funded account size in steps — for example +25% every 4 months — when you trade consistently. This calculator projects how those steps, combined with your assumed monthly return, carry your starting size to a target size."}},
+      {"@type": "Question", "name": "Is this projection a promise?", "acceptedAnswer": {"@type": "Answer", "text": "No. Every number here is an assumption-based projection from the inputs you enter — your monthly return and scaling steps are assumptions, not guarantees. Real results depend on your trading and on your firm's actual scaling conditions."}},
+      {"@type": "Question", "name": "Is this scaling plan calculator free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes — PIPVANT's scaling plan calculator is free forever with no signup, alongside the journal, prop firm matcher and economic calendar."}}
+    ]
+  }
+  </script>
+  <style>
+    :root{--bg:#0A1628;--surface:#0F1D33;--raised:#14253F;--line:#1C2F4D;--line-strong:#2B4266;--text:#F4F6F8;--secondary:#A9B6C6;--muted:#8B9AB0;--accent:#5B8DEF;--accent-strong:#3A6FDE;--gold:#D4AF37;--green:#3ECF8E;--red:#E5604F;--amber:#E8A13D}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+    h1,h2,h3{font-family:"Space Grotesk",sans-serif;letter-spacing:-.02em}
+    .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+    header.top{position:sticky;top:0;z-index:10;background:rgba(10,22,40,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+    header.top .wrap{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;gap:12px}
+    .brand{display:flex;align-items:center;gap:10px;font-family:"Space Grotesk";font-weight:700;font-size:18px;text-decoration:none;color:var(--text)}
+    .brand img{width:30px;height:30px;border-radius:8px}
+    .top-actions{display:flex;align-items:center;gap:10px}
+    .lang-btn{background:transparent;border:1px solid var(--line-strong);color:var(--secondary);border-radius:999px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+    .lang-btn:hover{border-color:var(--accent);color:var(--text)}
+    .cta-btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 20px;border-radius:999px;background:var(--accent-strong);color:#fff;font-weight:700;text-decoration:none;border:1px solid var(--accent-strong);cursor:pointer;font-family:inherit;font-size:15px}
+    .hero{padding:64px 0 40px;text-align:center}
+    .eyebrow{color:var(--accent);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}
+    h1{font-size:clamp(2.2rem,6vw,3.6rem);line-height:1.05;margin:0 0 16px}
+    h1 .gold{background:linear-gradient(135deg,#F5D67B,#D4AF37);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .lede{color:var(--secondary);font-size:17px;line-height:1.7;max-width:680px;margin:0 auto 28px}
+    .calc{background:var(--surface);border:1px solid var(--line-strong);border-radius:16px;padding:28px;max-width:720px;margin:0 auto 20px;text-align:left}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+    .calc label{display:block;color:var(--muted);font-size:13px;font-weight:600;margin:0 0 6px}
+    .calc input,.calc select{width:100%;background:var(--raised);border:1px solid var(--line);border-radius:10px;color:var(--text);font-size:16px;padding:12px 14px;margin-bottom:16px;font-family:inherit}
+    .calc input:focus,.calc select:focus{outline:none;border-color:var(--accent)}
+    .calc select{appearance:none}
+    .hint{color:var(--muted);font-size:12.5px;margin:-10px 0 16px;line-height:1.5}
+    .result{background:var(--raised);border:1px solid var(--line-strong);border-radius:12px;padding:20px;text-align:center;margin-top:8px}
+    .result .num{font-family:"Space Grotesk";font-size:2.4rem;font-weight:700;background:linear-gradient(135deg,#F5D67B,#D4AF37);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .result .lbl{color:var(--muted);font-size:13px;margin-top:4px}
+    .note{color:var(--muted);font-size:12.5px;line-height:1.6;margin-top:14px;text-align:center}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;padding:20px 0 40px}
+    .card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px}
+    .card h3{margin:0 0 8px;font-size:18px}
+    .card p{color:var(--secondary);font-size:14px;line-height:1.65;margin:0}
+    .section{padding:44px 0}
+    h2{font-size:clamp(1.6rem,4vw,2.4rem);margin:0 0 14px}
+    .faq{max-width:760px}
+    .faq details{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin-bottom:10px}
+    .faq summary{font-weight:600;cursor:pointer;font-size:15px}
+    .faq p{color:var(--secondary);line-height:1.7;font-size:14px;margin:10px 0 0}
+    .final{text-align:center;padding:56px 0 72px}
+    .news{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:40px 28px;text-align:center;margin:20px 0}
+    .news-form{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;max-width:520px;margin:0 auto}
+    .news-form input{flex:1;min-width:220px;background:var(--raised);border:1px solid var(--line);border-radius:10px;color:var(--text);font-size:15px;padding:0 16px;min-height:46px;font-family:inherit}
+    .news-form input:focus{outline:none;border-color:var(--accent)}
+    footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted);font-size:13px}
+    footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    footer a{color:var(--muted);text-decoration:none;margin-left:16px}
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
+    .chips .chips-lbl{width:100%;color:var(--muted);font-size:12.5px;font-weight:600}
+    .chip{background:var(--raised);border:1px solid var(--line-strong);color:var(--secondary);border-radius:999px;padding:8px 14px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit}
+    .chip:hover,.chip.active{border-color:var(--gold);color:var(--text)}
+    .share-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:16px}
+    .copy-btn{background:transparent;border:1px solid var(--gold);color:var(--gold);border-radius:999px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+    .copy-btn:hover{background:rgba(212,175,55,.1)}
+    .share-msg{color:var(--green);font-size:13px;font-weight:600}
+    .tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;margin-top:16px;max-height:520px;overflow-y:auto}
+    table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:420px}
+    th{background:var(--surface);color:var(--muted);font-weight:600;text-align:left;padding:10px 12px;font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+    td{padding:9px 12px;border-top:1px solid var(--line);white-space:nowrap;font-variant-numeric:tabular-nums}
+    tr.hl td{background:rgba(212,175,55,.10);font-weight:700}
+    .warn{display:none;background:rgba(232,161,61,.12);border:1px solid rgba(232,161,61,.45);color:var(--amber);border-radius:10px;padding:14px 16px;font-weight:700;font-size:14.5px;line-height:1.55;margin-top:14px;text-align:center}
+    .warn.show{display:block}
+    .related{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px 28px;margin:20px 0}
+    .related h2{font-size:1.3rem;margin:0 0 12px}
+    .related ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px 18px}
+    .related a{color:var(--accent);text-decoration:none;font-size:14px;font-weight:600}
+    .related a:hover{text-decoration:underline}
+    @media(max-width:560px){.form-grid{grid-template-columns:1fr}.result .num{font-size:2rem}}
+  </style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="/"><img src="assets/pipvanta-logo.png" alt="PIPVANT logo">PIPVANT</a>
+  <div class="top-actions">
+    <button class="lang-btn" id="langToggle" type="button" aria-label="Switch language">العربية</button>
+    <a class="cta-btn" href="/" data-i18n="nav_toolkit">Open full toolkit</a>
+  </div>
+</div></header>
+
+<div class="wrap">
+  <section class="hero">
+    <div class="eyebrow" data-i18n="eyebrow">Free scaling plan calculator</div>
+    <h1><span data-i18n="h1a">Small account today.</span> <span class="gold" data-i18n="h1b">Target — when?</span></h1>
+    <p class="lede" data-i18n="lede">Enter your starting size, an assumed monthly return and your firm's scaling steps. This is an assumption-based projection — not a promise — showing the timeline to your target size.</p>
+  </section>
+
+  <div class="calc" role="region" aria-label="Scaling plan calculator">
+    <div class="chips">
+      <span class="chips-lbl" data-i18n="examples_lbl">Worked examples — tap to fill:</span>
+      <button type="button" class="chip" data-preset="p1" data-i18n="ex1">Example: $25K start, 3% monthly, +25% steps to $200K</button>
+      <button type="button" class="chip" data-preset="p2" data-i18n="ex2">Example: $50K start, 2% monthly, doubling steps to $500K</button>
+      <button type="button" class="chip" data-preset="p3" data-i18n="ex3">Example: $100K start, 4% monthly, +25% steps to $1M</button>
+    </div>
+    <div class="form-grid">
+      <div><label for="startSize" data-i18n="lbl_start">Starting account size (USD)</label><input id="startSize" type="number" value="25000" min="1" inputmode="decimal"></div>
+      <div><label for="monthlyReturn" data-i18n="lbl_monthly">Monthly return — assumption (%)</label><input id="monthlyReturn" type="number" value="3" min="-50" max="100" step="0.25" inputmode="decimal"></div>
+    </div>
+    <label data-i18n="lbl_preset">Scaling step presets (shortcuts — the step and interval stay editable)</label>
+    <div class="chips" style="margin-bottom:4px">
+      <button type="button" class="chip" data-step-preset="s25" data-i18n="sp_25">+25% every 4 months</button>
+      <button type="button" class="chip" data-step-preset="s100" data-i18n="sp_100">+100% every 4 months</button>
+      <button type="button" class="chip" data-step-preset="custom" data-i18n="sp_custom">Custom</button>
+    </div>
+    <div class="form-grid">
+      <div><label for="scaleStep" data-i18n="lbl_step">Scaling step — assumption (%)</label><input id="scaleStep" type="number" value="25" min="0" max="500" step="1" inputmode="decimal"></div>
+      <div><label for="intervalMonths" data-i18n="lbl_interval">Scaling interval (months)</label><input id="intervalMonths" type="number" value="4" min="1" max="24" step="1" inputmode="decimal"></div>
+      <div><label for="targetSel" data-i18n="lbl_target">Target account size</label><select id="targetSel">
+        <option value="200000" selected>$200,000</option>
+        <option value="500000">$500,000</option>
+        <option value="1000000">$1,000,000</option>
+        <option value="custom" data-i18n="opt_custom">Custom…</option>
+      </select></div>
+      <div><label for="targetCustom" data-i18n="lbl_target_custom">Custom target (USD)</label><input id="targetCustom" type="number" value="" min="1" placeholder="—" inputmode="decimal" disabled></div>
+    </div>
+    <p class="hint" data-i18n="hint_model">Model: each period, the size first compounds at your assumed monthly return for the whole interval, then the scaling step is applied — as if the step is granted at the end of every interval. Both the return and the steps are your assumptions.</p>
+    <div class="result">
+      <div class="num" id="monthsOut">—</div>
+      <div class="lbl" data-i18n="out_months">Months to target (assumption-based projection)</div>
+      <div class="warn" id="notReached" role="alert"></div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th data-i18n="th_period">Period</th><th data-i18n="th_months">Months elapsed</th><th data-i18n="th_size">Account size</th><th data-i18n="th_growth">Cumulative growth</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table></div>
+      <p class="note" data-i18n="note">Projection only — capped at 10 years (120 months). Real scaling depends on your firm's conditions and your actual results; nothing here is a promise or financial advice.</p>
+    </div>
+    <div class="share-row">
+      <button type="button" class="copy-btn" id="copyLink" data-i18n="copy_link">Copy result link</button>
+      <span class="share-msg" id="copyMsg" hidden data-i18n="copied">Link copied — it re-opens with these exact inputs.</span>
+    </div>
+  </div>
+
+  <section class="grid" aria-label="How scaling really works">
+    <div class="card"><h3 data-i18n="c1t">🪜 Steps beat hope</h3><p data-i18n="c1b">Most of the journey to a large account comes from granted scaling steps, not from squeezing a higher monthly return out of a small account. Compare step presets before comparing returns.</p></div>
+    <div class="card"><h3 data-i18n="c2t">⚠️ Returns are the fragile input</h3><p data-i18n="c2b">The monthly return in this calculator is an assumption you type — one bad quarter breaks any smooth line. Run it again at half your assumed return and see how honest the timeline still looks.</p></div>
+    <div class="card"><h3 data-i18n="c3t">🎯 A target is a sizing tool</h3><p data-i18n="c3b">Knowing the target is, say, 28 projected months away tells you how to pace risk today: there is no mathematical reason to rush a process that compounds.</p></div>
+  </section>
+
+  <section class="section faq">
+    <h2 data-i18n="faq_h">Scaling plan FAQs</h2>
+    <details><summary data-i18n="q1">What is a prop firm scaling plan?</summary><p data-i18n="a1">A scaling plan grows your funded account size in steps — for example +25% every 4 months — when you trade consistently. This calculator projects how those steps, combined with your assumed monthly return, carry your starting size to a target size.</p></details>
+    <details><summary data-i18n="q2">Is this projection a promise?</summary><p data-i18n="a2">No. Every number here is an assumption-based projection from the inputs you enter — your monthly return and scaling steps are assumptions, not guarantees. Real results depend on your trading and on your firm's actual scaling conditions.</p></details>
+    <details><summary data-i18n="q3">Why does the timeline stop at 10 years?</summary><p data-i18n="a3">Projections beyond 10 years compound assumptions into fiction. If your target is not reached within 120 months at these inputs, the calculator says so honestly instead of extrapolating forever.</p></details>
+    <details><summary data-i18n="q4">Is this calculator free?</summary><p data-i18n="a4">Yes — free forever, no signup. It's part of PIPVANT's free toolkit: journal, prop firm matcher, risk calculator and economic calendar.</p></details>
+  </section>
+
+  <section class="news">
+    <h2 style="margin-bottom:8px" data-i18n="news_h">Scaling wisdom, weekly</h2>
+    <p style="color:var(--secondary);max-width:560px;margin:0 auto 20px;line-height:1.7;font-size:15px" data-i18n="news_b">Scaling plans and prop firm news — one short email a week. No spam, <a href="unsubscribe.html" style="color:var(--accent)">unsubscribe anytime</a>.</p>
+    <form data-pipv-newsletter class="news-form">
+      <input type="email" placeholder="you@example.com" required aria-label="Email address">
+      <button type="submit" class="cta-btn" data-i18n="news_btn">Subscribe free</button>
+    </form>
+    <div data-pipv-msg style="min-height:22px;margin-top:10px;font-size:14px"></div>
+  </section>
+
+  <section class="related" aria-label="Related tools">
+    <h2 data-i18n="related_h">All free PIPVANT tools</h2>
+    <ul>
+      <li><a href="forex-risk-calculator.html" data-i18n="rt_risk">Risk calculator</a></li>
+      <li><a href="profit-split-calculator.html" data-i18n="rt_split">Profit split calculator</a></li>
+      <li><a href="drawdown-simulator.html" data-i18n="rt_dd">Drawdown simulator</a></li>
+      <li><a href="consistency-rule-checker.html" data-i18n="rt_cons">Consistency checker</a></li>
+      <li><a href="risk-of-ruin-calculator.html" data-i18n="rt_ruin">Risk of ruin calculator</a></li>
+      <li><a href="net-payout-calculator.html" data-i18n="rt_net">Net payout calculator</a></li>
+      <li><a href="scaling-plan-calculator.html" data-i18n="rt_scale">Scaling plan calculator</a></li>
+      <li><a href="prop-firm-deals.html" data-i18n="rt_deals">Deals</a></li>
+      <li><a href="prop-firm-comparison.html" data-i18n="rt_matcher">Prop firm matcher</a></li>
+    </ul>
+  </section>
+
+  <section class="final">
+    <h2 data-i18n="final_h">A plan you can pace against.</h2>
+    <p style="text-align:center;margin:0 auto 24px;max-width:560px;color:var(--secondary);line-height:1.7" data-i18n="final_b">The scaling plan calculator is one of many free tools in your PIPVANT toolkit — journal every trade, compare prop firms and track payouts.</p>
+    <a class="cta-btn" href="/" data-i18n="final_cta">Open the free toolkit →</a>
+  </section>
+</div>
+
+<footer><div class="wrap">
+  <span data-i18n="foot">© 2026 PIPVANT by Orovanta — Trade with a process, not a prediction.</span>
+  <span><a href="/" data-i18n="foot_toolkit">Toolkit</a><a href="prop-firm-comparison.html" data-i18n="foot_firms">Prop firms</a><a href="free-trading-journal.html" data-i18n="foot_journal">Journal</a></span>
+</div></footer>
+
+<script>
+(function(){
+  var I18N={
+    en:{dir:'ltr',toggle:'العربية',meta_title:'Scaling Plan Calculator — How Long to Your Target? | PIPVANT',eyebrow:'Free scaling plan calculator',h1a:'Small account today.',h1b:'Target — when?',lede:"Enter your starting size, an assumed monthly return and your firm's scaling steps. This is an assumption-based projection — not a promise — showing the timeline to your target size.",examples_lbl:'Worked examples — tap to fill:',ex1:'Example: $25K start, 3% monthly, +25% steps to $200K',ex2:'Example: $50K start, 2% monthly, doubling steps to $500K',ex3:'Example: $100K start, 4% monthly, +25% steps to $1M',lbl_start:'Starting account size (USD)',lbl_monthly:'Monthly return — assumption (%)',lbl_preset:'Scaling step presets (shortcuts — the step and interval stay editable)',sp_25:'+25% every 4 months',sp_100:'+100% every 4 months',sp_custom:'Custom',lbl_step:'Scaling step — assumption (%)',lbl_interval:'Scaling interval (months)',lbl_target:'Target account size',opt_custom:'Custom…',lbl_target_custom:'Custom target (USD)',hint_model:'Model: each period, the size first compounds at your assumed monthly return for the whole interval, then the scaling step is applied — as if the step is granted at the end of every interval. Both the return and the steps are your assumptions.',out_months:'Months to target (assumption-based projection)',th_period:'Period',th_months:'Months elapsed',th_size:'Account size',th_growth:'Cumulative growth',not_reached:function(size,target){return 'Not reached within 10 years at these assumptions — projected size after 120 months is $'+size+', still below the $'+target+' target. Raise the assumed return or the scaling step, or lower the target.';},already:function(){return 'Already at or above target — 0 months needed at these inputs.';},note:'Projection only — capped at 10 years (120 months). Real scaling depends on your firm\'s conditions and your actual results; nothing here is a promise or financial advice.',copy_link:'Copy result link',copied:'Link copied — it re-opens with these exact inputs.',months_suffix:' months',start_lbl:'Start',c1t:'🪜 Steps beat hope',c1b:'Most of the journey to a large account comes from granted scaling steps, not from squeezing a higher monthly return out of a small account. Compare step presets before comparing returns.',c2t:'⚠️ Returns are the fragile input',c2b:'The monthly return in this calculator is an assumption you type — one bad quarter breaks any smooth line. Run it again at half your assumed return and see how honest the timeline still looks.',c3t:'🎯 A target is a sizing tool',c3b:'Knowing the target is, say, 28 projected months away tells you how to pace risk today: there is no mathematical reason to rush a process that compounds.',faq_h:'Scaling plan FAQs',q1:'What is a prop firm scaling plan?',a1:'A scaling plan grows your funded account size in steps — for example +25% every 4 months — when you trade consistently. This calculator projects how those steps, combined with your assumed monthly return, carry your starting size to a target size.',q2:'Is this projection a promise?',a2:"No. Every number here is an assumption-based projection from the inputs you enter — your monthly return and scaling steps are assumptions, not guarantees. Real results depend on your trading and on your firm's actual scaling conditions.",q3:'Why does the timeline stop at 10 years?',a3:'Projections beyond 10 years compound assumptions into fiction. If your target is not reached within 120 months at these inputs, the calculator says so honestly instead of extrapolating forever.',q4:'Is this calculator free?',a4:"Yes — free forever, no signup. It's part of PIPVANT's free toolkit: journal, prop firm matcher, risk calculator and economic calendar.",news_h:'Scaling wisdom, weekly',news_b:'Scaling plans and prop firm news — one short email a week. No spam, unsubscribe anytime.',news_btn:'Subscribe free',related_h:'All free PIPVANT tools',rt_risk:'Risk calculator',rt_split:'Profit split calculator',rt_dd:'Drawdown simulator',rt_cons:'Consistency checker',rt_ruin:'Risk of ruin calculator',rt_net:'Net payout calculator',rt_scale:'Scaling plan calculator',rt_deals:'Deals',rt_matcher:'Prop firm matcher',final_h:'A plan you can pace against.',final_b:'The scaling plan calculator is one of many free tools in your PIPVANT toolkit — journal every trade, compare prop firms and track payouts.',final_cta:'Open the free toolkit →',nav_toolkit:'Open full toolkit',foot:'© 2026 PIPVANT by Orovanta — Trade with a process, not a prediction.',foot_toolkit:'Toolkit',foot_firms:'Prop firms',foot_journal:'Journal'},
+    ar:{dir:'rtl',toggle:'EN',meta_title:'حاسبة خطة التوسع — كم يلزمك للوصول إلى هدفك؟ | PIPVANT',eyebrow:'حاسبة خطة التوسع المجانية',h1a:'حساب صغير اليوم.',h1b:'الهدف — متى؟',lede:'أدخل حجم بدايتك وعائداً شهرياً مفترضاً وخطوات توسع شركتك. هذا إسقاط قائم على افتراضات — لا وعد — يريك الجدول الزمني إلى حجم هدفك.',examples_lbl:'أمثلة محلولة — اضغط للملء:',ex1:'مثال: بداية 25 ألف دولار، 3% شهرياً، خطوات +25% إلى 200 ألف',ex2:'مثال: بداية 50 ألف دولار، 2% شهرياً، خطوات مضاعفة إلى 500 ألف',ex3:'مثال: بداية 100 ألف دولار، 4% شهرياً، خطوات +25% إلى مليون',lbl_start:'حجم الحساب الابتدائي (دولار أمريكي)',lbl_monthly:'العائد الشهري — افتراض (%)',lbl_preset:'إعدادات خطوة التوسع (اختصارات — تبقى الخطوة والفاصل قابلين للتحرير)',sp_25:'‏+25% كل 4 أشهر',sp_100:'‏+100% كل 4 أشهر',sp_custom:'مخصص',lbl_step:'خطوة التوسع — افتراض (%)',lbl_interval:'فاصل التوسع (أشهر)',lbl_target:'حجم الحساب المستهدف',opt_custom:'مخصص…',lbl_target_custom:'هدف مخصص (دولار أمريكي)',hint_model:'النموذج: في كل فترة، يتراكم الحجم أولاً بعائدك الشهري المفترض طوال الفاصل، ثم تُطبق خطوة التوسع — كأن الخطوة تُمنح في نهاية كل فاصل. كل من العائد والخطوات افتراضات منك.',out_months:'الأشهر حتى الهدف (إسقاط قائم على افتراضات)',th_period:'الفترة',th_months:'الأشهر المنقضية',th_size:'حجم الحساب',th_growth:'النمو التراكمي',not_reached:function(size,target){return 'لم يُبلغ الهدف خلال 10 سنوات بهذه الافتراضات — الحجم المسقط بعد 120 شهراً هو '+size+' دولار، ولا يزال دون هدف '+target+' دولار. ارفع العائد المفترض أو خطوة التوسع، أو اخفض الهدف.';},already:function(){return 'أنت عند الهدف أو فوقه أصلاً — لا يلزم أي شهر بهذه المدخلات.';},note:'إسقاط فقط — بحد أقصى 10 سنوات (120 شهراً). التوسع الحقيقي يعتمد على شروط شركتك ونتائجك الفعلية؛ لا شيء هنا وعد أو نصيحة مالية.',copy_link:'انسخ رابط النتيجة',copied:'تم نسخ الرابط — يُفتح بنفس هذه المدخلات بالضبط.',months_suffix:' شهراً',start_lbl:'البداية',c1t:'🪜 الخطوات تتفوق على الأمل',c1b:'معظم الرحلة إلى حساب كبير يأتي من خطوات توسع ممنوحة، لا من عصر عائد شهري أعلى من حساب صغير. قارن إعدادات الخطوات قبل مقارنة العوائد.',c2t:'⚠️ العائد هو المدخل الهش',c2b:'العائد الشهري في هذه الحاسبة افتراض تكتبه أنت — ربع سيئ واحد يكسر أي خط أملس. أعد التشغيل بنصف عائدك المفترض وانظر مدى صدق الجدول الزمني بعد.',c3t:'🎯 الهدف أداة لتحديد الحجم',c3b:'معرفة أن الهدف يبعد، مثلاً، 28 شهراً مسقطاً تخبرك كيف توزع مخاطرتك اليوم: لا يوجد سبب رياضي لاستعجال عملية تتراكم.',faq_h:'أسئلة شائعة عن خطة التوسع',q1:'ما هي خطة توسع شركة التداول؟',a1:'خطة التوسع تنمّي حجم حسابك الممول بخطوات — مثلاً +25% كل 4 أشهر — عندما تتداول باتساق. تسقط هذه الحاسبة كيف تحملك تلك الخطوات، مع عائدك الشهري المفترض، من حجم بدايتك إلى حجم هدفك.',q2:'هل هذا الإسقاط وعد؟',a2:'لا. كل رقم هنا إسقاط قائم على افتراضات من المدخلات التي تدخلها — عائدك الشهري وخطوات التوسع افتراضات، لا ضمانات. النتائج الحقيقية تعتمد على تداولك وعلى شروط التوسع الفعلية لدى شركتك.',q3:'لماذا يتوقف الجدول الزمني عند 10 سنوات؟',a3:'الإسقاطات بعد 10 سنوات تتراكم فيها الافتراضات إلى خيال. إذا لم يُبلغ هدفك خلال 120 شهراً بهذه المدخلات، تقول الحاسبة ذلك بصراحة بدل الاستقراء إلى الأبد.',q4:'هل هذه الحاسبة مجانية؟',a4:'نعم — مجانية للأبد بلا تسجيل. جزء من مجموعة PIPVANT المجانية: السجل ومطابق شركات التداول وحاسبة المخاطر والتقويم الاقتصادي.',news_h:'حكمة التوسع، أسبوعياً',news_b:'خطط التوسع وأخبار شركات التداول — بريد قصير واحد أسبوعياً. بلا إزعاج، يمكنك إلغاء الاشتراك في أي وقت.',news_btn:'اشترك مجاناً',related_h:'كل أدوات PIPVANT المجانية',rt_risk:'حاسبة المخاطر',rt_split:'حاسبة تقسيم الأرباح',rt_dd:'محاكي التراجع',rt_cons:'فاحص الاتساق',rt_ruin:'حاسبة خطر التصفية',rt_net:'حاسبة صافي السحب',rt_scale:'حاسبة خطة التوسع',rt_deals:'العروض',rt_matcher:'مطابق شركات التداول',final_h:'خطة يمكنك ضبط إيقاعك عليها.',final_b:'حاسبة خطة التوسع واحدة من أدوات كثيرة مجانية في مجموعة PIPVANT — سجّل كل صفقة، وقارن شركات التداول، وتتبع السحوبات.',final_cta:'← افتح المجموعة المجانية',nav_toolkit:'افتح المجموعة الكاملة',foot:'© 2026 PIPVANT من Orovanta — تداول بمنهجية، لا بتوقع.',foot_toolkit:'المجموعة',foot_firms:'شركات التداول',foot_journal:'السجل'}
+  };
+  var lang='en';
+  try{var s=JSON.parse(localStorage.getItem('pipvant_settings')||'{}');if(s&&(s.language==='ar'||s.language==='en'))lang=s.language;}catch(e){}
+  function t(k){var v=(I18N[lang]&&I18N[lang][k])||I18N.en[k];return v===undefined?k:v;}
+  function money0(n){return '$'+Math.round(n).toLocaleString('en-US');}
+  var startSize=document.getElementById('startSize'),monthlyReturn=document.getElementById('monthlyReturn'),
+      scaleStep=document.getElementById('scaleStep'),intervalMonths=document.getElementById('intervalMonths'),
+      targetSel=document.getElementById('targetSel'),targetCustom=document.getElementById('targetCustom');
+  var PRESETS={p1:{startSize:25000,monthlyReturn:3,scaleStep:25,intervalMonths:4,targetSel:'200000'},p2:{startSize:50000,monthlyReturn:2,scaleStep:100,intervalMonths:4,targetSel:'500000'},p3:{startSize:100000,monthlyReturn:4,scaleStep:25,intervalMonths:4,targetSel:'1000000'}};
+  function targetValue(){
+    if(targetSel.value==='custom'){var c=parseFloat(targetCustom.value);return isFinite(c)&&c>0?c:0;}
+    return parseFloat(targetSel.value)||0;
+  }
+  function calc(){
+    var start=Math.max(1,parseFloat(startSize.value)||0),
+        mr=parseFloat(monthlyReturn.value)||0,
+        step=Math.max(0,parseFloat(scaleStep.value)||0),
+        interval=Math.min(24,Math.max(1,parseInt(intervalMonths.value,10)||4)),
+        target=targetValue();
+    targetCustom.disabled=targetSel.value!=='custom';
+    var html='<tr><td>'+t('start_lbl')+'</td><td>0</td><td>'+money0(start)+'</td><td>0.0%</td></tr>';
+    var warn=document.getElementById('notReached');
+    if(target>0&&start>=target){
+      document.getElementById('monthsOut').textContent='0'+t('months_suffix');
+      warn.textContent=t('already')();warn.classList.add('show');
+      document.getElementById('rows').innerHTML=html;return;
+    }
+    var size=start,months=0,period=0,reached=false;
+    var monthMult=Math.pow(1+mr/100,interval);
+    while(months+interval<=120&&target>0){
+      size=size*monthMult*(1+step/100);
+      months+=interval;period++;
+      var growth=(size/start-1)*100;
+      var hit=size>=target;
+      html+='<tr'+(hit?' class="hl"':'')+'><td>'+period+'</td><td>'+months+'</td><td>'+money0(size)+'</td><td>+'+growth.toFixed(1)+'%</td></tr>';
+      if(hit){reached=true;break;}
+      if(!(size>0))break;
+    }
+    if(target<=0){document.getElementById('monthsOut').textContent='—';warn.textContent='';warn.classList.remove('show');}
+    else if(reached){document.getElementById('monthsOut').textContent=months+t('months_suffix');warn.textContent='';warn.classList.remove('show');}
+    else{document.getElementById('monthsOut').textContent='>120'+t('months_suffix');warn.textContent=t('not_reached')(Math.round(size).toLocaleString('en-US'),Math.round(target).toLocaleString('en-US'));warn.classList.add('show');}
+    document.getElementById('rows').innerHTML=html;
+  }
+  var EL={startSize:startSize,monthlyReturn:monthlyReturn,scaleStep:scaleStep,intervalMonths:intervalMonths,targetSel:targetSel,targetCustom:targetCustom};
+  var PARAMS={startSize:'start',monthlyReturn:'mr',scaleStep:'step',intervalMonths:'int',targetSel:'target',targetCustom:'tc'};
+  Object.keys(EL).forEach(function(k){EL[k].addEventListener('input',calc);EL[k].addEventListener('change',calc);});
+  document.querySelectorAll('[data-preset]').forEach(function(btn){btn.addEventListener('click',function(){
+    var p=PRESETS[btn.getAttribute('data-preset')];if(!p)return;
+    Object.keys(p).forEach(function(k){EL[k].value=p[k];});
+    targetCustom.value='';calc();
+  });});
+  document.querySelectorAll('[data-step-preset]').forEach(function(btn){btn.addEventListener('click',function(){
+    var k=btn.getAttribute('data-step-preset');
+    if(k==='s25'){scaleStep.value=25;intervalMonths.value=4;}
+    else if(k==='s100'){scaleStep.value=100;intervalMonths.value=4;}
+    else if(k==='custom'){scaleStep.focus();}
+    document.querySelectorAll('[data-step-preset]').forEach(function(b){b.classList.remove('active');});
+    btn.classList.add('active');
+    calc();
+  });});
+  function buildLink(){
+    var u=new URL(window.location.href.split('?')[0]);
+    Object.keys(PARAMS).forEach(function(k){if(EL[k].value!=='')u.searchParams.set(PARAMS[k],EL[k].value);});
+    return u.toString();
+  }
+  function loadFromUrl(){
+    var q=new URLSearchParams(window.location.search);
+    Object.keys(PARAMS).forEach(function(k){var v=q.get(PARAMS[k]);if(v!==null&&v!=='')EL[k].value=v;});
+  }
+  document.getElementById('copyLink').addEventListener('click',function(){
+    var link=buildLink();var msg=document.getElementById('copyMsg');
+    function done(){msg.hidden=false;setTimeout(function(){msg.hidden=true;},2600);}
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(link).then(done).catch(function(){fallback();});}else{fallback();}
+    function fallback(){var ta=document.createElement('textarea');ta.value=link;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done();}catch(e){}document.body.removeChild(ta);}
+  });
+  function applyLang(){
+    document.documentElement.lang=lang;document.documentElement.dir=I18N[lang].dir;
+    document.querySelectorAll('[data-i18n]').forEach(function(el){var v=t(el.getAttribute('data-i18n'));if(typeof v==='string')el.textContent=v;});
+    document.querySelector('title').textContent=t('meta_title');
+    document.getElementById('langToggle').textContent=t('toggle');
+    calc();
+  }
+  document.getElementById('langToggle').addEventListener('click',function(){lang=lang==='en'?'ar':'en';applyLang();});
+  loadFromUrl();
+  applyLang();
+})();
+</script>
+<script src="assets/pipv-os.js" defer></script>
+</body>
+</html>

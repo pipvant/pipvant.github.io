@@ -81,6 +81,21 @@
     footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
     footer a{color:var(--muted);text-decoration:none;margin-left:16px}
     @media(max-width:520px){.stat-grid{grid-template-columns:1fr 1fr}.result .num{font-size:2rem}}
+  
+    .pipv2-chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
+    .pipv2-chips .pipv2-lbl{width:100%;color:var(--muted);font-size:12.5px;font-weight:600}
+    .pipv2-chip{background:var(--raised);border:1px solid var(--line-strong);color:var(--secondary);border-radius:999px;padding:8px 14px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit}
+    .pipv2-chip:hover{border-color:var(--gold);color:var(--text)}
+    .pipv2-sharewrap{margin:0 auto 20px;text-align:left}
+    .pipv2-share-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 18px}
+    .pipv2-copy{background:transparent;border:1px solid var(--gold);color:var(--gold);border-radius:999px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+    .pipv2-copy:hover{background:rgba(212,175,55,.1)}
+    .pipv2-msg{color:var(--green);font-size:13px;font-weight:600}
+    .pipv2-related{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px 28px;margin:20px 0;text-align:left}
+    .pipv2-related h2{font-size:1.3rem;margin:0 0 12px}
+    .pipv2-related ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px 18px}
+    .pipv2-related a{color:var(--accent);text-decoration:none;font-size:14px;font-weight:600}
+    .pipv2-related a:hover{text-decoration:underline}
   </style>
 </head>
 <body>
@@ -100,6 +115,7 @@
   </section>
 
   <div class="calc" role="region" aria-label="Profit split calculator">
+    <div class="pipv2-chips"><span class="pipv2-lbl" data-p2="examples">Worked examples — tap to fill:</span><button type="button" class="pipv2-chip" data-p2-preset="0">Example: $100K account, $5,000 profit, 80% split</button><button type="button" class="pipv2-chip" data-p2-preset="1">Example: $50K account, $8,000 profit, 90% split</button><button type="button" class="pipv2-chip" data-p2-preset="2">Example: $25K account, $1,500 profit, weekly payouts</button></div>
     <label for="acct" data-i18n="lbl_acct">Account size (USD)</label>
     <input id="acct" type="number" value="100000" min="1" inputmode="decimal">
     <label for="profit" data-i18n="lbl_profit">Profit made (USD)</label>
@@ -128,6 +144,8 @@
     <p class="note" data-i18n="note">Projections assume the same profit each paid cycle, scaled by your cycle consistency.</p>
   </div>
 
+  <div class="pipv2-sharewrap" style="max-width:620px"><div class="pipv2-share-row"><button type="button" class="pipv2-copy" id="pipv2Copy">Copy result link</button><span class="pipv2-msg" id="pipv2Msg" hidden data-p2="copied">Link copied — it re-opens with these exact inputs.</span></div></div>
+
   <section class="grid" aria-label="Why the split matters">
     <div class="card"><h3 data-i18n="c1t">🎯 The split is the real price</h3><p data-i18n="c1b">A cheap challenge with an 80% split can pay more than an expensive one at 60%. Always compare what you keep — not the sticker price.</p></div>
     <div class="card"><h3 data-i18n="c2t">📈 Consistency compounds</h3><p data-i18n="c2b">Five $4,000 payouts a year at 80% beats one lucky $20,000 month. Project above with your real cycle consistency, not your best week.</p></div>
@@ -152,6 +170,7 @@
     <div data-pipv-msg style="min-height:22px;margin-top:10px;font-size:14px"></div>
   </section>
 
+  <section class="pipv2-related" aria-label="Related tools"><h2 data-p2="related_h">All free PIPVANT tools</h2><ul><li><a href="forex-risk-calculator.html" data-p2="rt_risk">Risk calculator</a></li><li><a href="profit-split-calculator.html" data-p2="rt_split">Profit split calculator</a></li><li><a href="drawdown-simulator.html" data-p2="rt_dd">Drawdown simulator</a></li><li><a href="consistency-rule-checker.html" data-p2="rt_cons">Consistency checker</a></li><li><a href="risk-of-ruin-calculator.html" data-p2="rt_ruin">Risk of ruin calculator</a></li><li><a href="net-payout-calculator.html" data-p2="rt_net">Net payout calculator</a></li><li><a href="scaling-plan-calculator.html" data-p2="rt_scale">Scaling plan calculator</a></li><li><a href="prop-firm-deals.html" data-p2="rt_deals">Deals</a></li><li><a href="prop-firm-comparison.html" data-p2="rt_matcher">Prop firm matcher</a></li></ul></section>
   <section class="final">
     <h2 data-i18n="final_h">Calculate once. Trade with confidence.</h2>
     <p style="text-align:center;margin:0 auto 24px;max-width:560px;color:var(--secondary);line-height:1.7" data-i18n="final_b">The profit split calculator is one of many free tools in your PIPVANT toolkit — journal every trade, compare prop firms and track payouts.</p>
@@ -201,6 +220,50 @@
   [acct,profit,split,freq,cons].forEach(function(el){el.addEventListener('input',calc);el.addEventListener('change',calc);});
   document.getElementById('langToggle').addEventListener('click',function(){lang=lang==='en'?'ar':'en';applyLang();});
   applyLang();
+})();
+</script>
+<script>
+/* PIPVANT share-link + presets + related-tools (added 2026-10-21) */
+(function(){
+  var FIELDS=[["acct", "a"], ["profit", "p"], ["split", "s"], ["freq", "f"], ["cons", "c"]];
+  var PRESETS=[{"vals": {"acct": "100000", "profit": "5000", "split": "80", "freq": "12", "cons": "75"}, "en": "Example: $100K account, $5,000 profit, 80% split", "ar": "مثال: حساب 100 ألف دولار، ربح 5000 دولار، تقسيم 80%"}, {"vals": {"acct": "50000", "profit": "8000", "split": "90", "freq": "26", "cons": "75"}, "en": "Example: $50K account, $8,000 profit, 90% split", "ar": "مثال: حساب 50 ألف دولار، ربح 8000 دولار، تقسيم 90%"}, {"vals": {"acct": "25000", "profit": "1500", "split": "80", "freq": "52", "cons": "50"}, "en": "Example: $25K account, $1,500 profit, weekly payouts", "ar": "مثال: حساب 25 ألف دولار، ربح 1500 دولار، سحوبات أسبوعية"}];
+  var LBL={
+    en:{examples:'Worked examples — tap to fill:',copy:'Copy result link',copied:'Link copied — it re-opens with these exact inputs.',related_h:'All free PIPVANT tools',rt_risk:'Risk calculator',rt_split:'Profit split calculator',rt_dd:'Drawdown simulator',rt_cons:'Consistency checker',rt_ruin:'Risk of ruin calculator',rt_net:'Net payout calculator',rt_scale:'Scaling plan calculator',rt_deals:'Deals',rt_matcher:'Prop firm matcher'},
+    ar:{examples:'أمثلة محلولة — اضغط للملء:',copy:'انسخ رابط النتيجة',copied:'تم نسخ الرابط — يُفتح بنفس هذه المدخلات بالضبط.',related_h:'كل أدوات PIPVANT المجانية',rt_risk:'حاسبة المخاطر',rt_split:'حاسبة تقسيم الأرباح',rt_dd:'محاكي التراجع',rt_cons:'فاحص الاتساق',rt_ruin:'حاسبة خطر التصفية',rt_net:'حاسبة صافي السحب',rt_scale:'حاسبة خطة التوسع',rt_deals:'العروض',rt_matcher:'مطابق شركات التداول'}
+  };
+  function lang(){return document.documentElement.lang==='ar'?'ar':'en';}
+  function apply(){
+    var d=LBL[lang()];
+    document.querySelectorAll('[data-p2]').forEach(function(el){var k=el.getAttribute('data-p2');if(d[k])el.textContent=d[k];});
+    document.querySelectorAll('[data-p2-preset]').forEach(function(btn){
+      var p=PRESETS[parseInt(btn.getAttribute('data-p2-preset'),10)];if(p)btn.textContent=lang()==='ar'?p.ar:p.en;
+    });
+    var c=document.getElementById('pipv2Copy');if(c)c.textContent=d.copy;
+  }
+  function fire(el){el.dispatchEvent(new Event('input',{bubbles:true}));el.dispatchEvent(new Event('change',{bubbles:true}));}
+  function fill(vals){
+    FIELDS.forEach(function(f){var el=document.getElementById(f[0]);if(el&&vals[f[0]]!==undefined){el.value=vals[f[0]];fire(el);}});
+  }
+  document.querySelectorAll('[data-p2-preset]').forEach(function(btn){
+    btn.addEventListener('click',function(){var p=PRESETS[parseInt(btn.getAttribute('data-p2-preset'),10)];if(p)fill(p.vals);});
+  });
+  var copyBtn=document.getElementById('pipv2Copy');
+  if(copyBtn)copyBtn.addEventListener('click',function(){
+    var u=new URL(window.location.href.split('?')[0]);
+    FIELDS.forEach(function(f){var el=document.getElementById(f[0]);if(el&&el.value!=='')u.searchParams.set(f[1],el.value);});
+    var link=u.toString();var msg=document.getElementById('pipv2Msg');
+    function done(){if(msg){msg.hidden=false;setTimeout(function(){msg.hidden=true;},2600);}}
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(link).then(done).catch(function(){fallback();});}else{fallback();}
+    function fallback(){var ta=document.createElement('textarea');ta.value=link;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done();}catch(e){}document.body.removeChild(ta);}
+  });
+  (function loadFromUrl(){
+    var q=new URLSearchParams(window.location.search);var vals={};var any=false;
+    FIELDS.forEach(function(f){var v=q.get(f[1]);if(v!==null&&v!==''){vals[f[0]]=v;any=true;}});
+    if(any)fill(vals);
+  })();
+  var lt=document.getElementById('langToggle');
+  if(lt)lt.addEventListener('click',function(){setTimeout(apply,30);});
+  apply();
 })();
 </script>
 <script src="assets/pipv-os.js" defer></script>
