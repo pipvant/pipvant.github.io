@@ -1771,6 +1771,59 @@ html[data-theme="light"] .rated-stars .stars-bg{color:rgba(10,22,40,.16)}
   .verdict-ring-prog{transition:none}
   .rated-card,.verdict-cta{transition:none}
 }
+/* ---- TOP RATED: gate banner (matcher entry) + dedicated page + logo tiles ---- */
+.tr-gate{position:relative;display:flex;align-items:center;gap:14px;width:100%;margin:0 0 16px;padding:12px 16px;border-radius:16px;border:1px solid transparent;background:radial-gradient(360px 130px at 96% 50%,rgba(212,175,55,.13),rgba(212,175,55,0) 65%) padding-box,linear-gradient(var(--surface),var(--surface)) padding-box,linear-gradient(120deg,rgba(212,175,55,.5),rgba(212,175,55,.12) 45%,rgba(255,255,255,.07) 75%,rgba(91,141,239,.2)) border-box;color:var(--text);font:inherit;text-align:start;cursor:pointer;transition:transform .22s ease,box-shadow .22s ease}
+.tr-gate[hidden]{display:none}
+.tr-gate:focus-visible{outline:2px solid var(--accent,#5B8DEF);outline-offset:2px}
+.tr-gate:active{transform:scale(.99)}
+.gate-stack{display:flex;align-items:center;flex:0 0 auto}
+.gate-tile{position:relative;width:34px;height:34px;border-radius:50%;background:linear-gradient(160deg,#ffffff,#dfe5ec);color:#0A1628;display:grid;place-items:center;font-family:"Space Grotesk",sans-serif;font-size:12px;font-weight:700;overflow:hidden;border:1px solid rgba(10,22,40,.12);box-shadow:0 2px 8px rgba(3,8,18,.35)}
+.gate-tile+.gate-tile{margin-inline-start:-10px}
+.gate-tile-1{box-shadow:0 0 0 2px var(--gold,#D4AF37),0 2px 8px rgba(3,8,18,.35);z-index:1}
+.gate-star{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#ecd06a,#D4AF37);color:#0A1628;display:grid;place-items:center;font-size:14px;line-height:1;margin-inline-start:-8px;border:1px solid rgba(10,22,40,.12);box-shadow:0 2px 8px rgba(3,8,18,.3);flex:0 0 auto}
+.gate-copy{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:2px}
+.gate-eyebrow{font-size:10.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--gold,#D4AF37)}
+html[dir="rtl"] .gate-eyebrow{letter-spacing:.02em}
+.gate-line{font-size:13.5px;color:var(--secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gate-arrow{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;background:linear-gradient(135deg,#ecd06a,#D4AF37);color:#0A1628;font-size:12.5px;font-weight:800;box-shadow:0 6px 16px -6px rgba(212,175,55,.55);white-space:nowrap}
+@media(hover:hover) and (pointer:fine){.tr-gate:hover{transform:translateY(-1px);box-shadow:0 14px 30px -14px rgba(212,175,55,.35)}}
+@media(max-width:640px){.tr-gate{flex-wrap:wrap}.gate-line{white-space:normal}}
+@media (prefers-reduced-motion:reduce){.tr-gate{transition:none}}
+.verdict-namerow{display:flex;align-items:center;gap:16px;margin:0 0 12px;min-width:0}
+.verdict-namerow .verdict-name{margin:0}
+.verdict-logo{width:64px;height:64px;flex:0 0 auto;border-radius:16px;background:linear-gradient(160deg,#ffffff,#dfe5ec);color:#0A1628;display:grid;place-items:center;font-family:"Space Grotesk",sans-serif;font-size:24px;font-weight:700;overflow:hidden;border:1px solid rgba(212,175,55,.35);box-shadow:0 8px 20px -8px rgba(3,8,18,.55)}
+@media(max-width:640px){.verdict-logo{width:48px;height:48px;border-radius:12px;font-size:18px}.verdict-namerow{gap:12px}}
+.rated-logo{width:36px;height:36px;border-radius:11px;background:linear-gradient(160deg,#ffffff,#dfe5ec);color:#0A1628;display:grid;place-items:center;font-family:"Space Grotesk",sans-serif;font-size:11px;font-weight:700;letter-spacing:.02em;flex:0 0 auto;overflow:hidden;border:1px solid rgba(10,22,40,.1)}
+.rated-1 .rated-logo{border-color:rgba(212,175,55,.55)}
+.tr-wrap{max-width:980px}
+.tr-head{margin:6px 0 22px}
+.tr-title{font-family:"Space Grotesk",sans-serif;font-size:30px;line-height:1.12;font-weight:700;letter-spacing:-.01em;margin:0 0 8px;color:var(--text)}
+.tr-sub{margin:0;color:var(--secondary);font-size:14.5px;line-height:1.55;max-width:640px}
+.tr-block{margin:26px 0 0}
+.tr-block-title{font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+html[dir="rtl"] .tr-block-title{letter-spacing:.02em}
+.tr-list{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:16px;background:var(--surface);overflow:hidden}
+.tr-row{display:flex;align-items:center;gap:12px;width:100%;padding:12px 16px;background:transparent;border:0;border-bottom:1px solid var(--line);color:var(--text);font:inherit;text-align:start;cursor:pointer;transition:background .18s ease}
+.tr-row:last-child{border-bottom:0}
+.tr-row:focus-visible{outline:2px solid var(--accent,#5B8DEF);outline-offset:-2px}
+@media(hover:hover) and (pointer:fine){.tr-row:hover{background:rgba(91,141,239,.06)}}
+.tr-row:active{background:rgba(91,141,239,.1)}
+.tr-rank{width:22px;flex:0 0 auto;text-align:center;font-weight:800;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.tr-row:first-child .tr-rank{color:var(--gold,#D4AF37)}
+.tr-logo{width:40px;height:40px;border-radius:11px;background:linear-gradient(160deg,#ffffff,#dfe5ec);color:#0A1628;display:grid;place-items:center;font-family:"Space Grotesk",sans-serif;font-size:14px;font-weight:700;flex:0 0 auto;overflow:hidden;border:1px solid rgba(10,22,40,.1)}
+.tr-name{flex:1 1 auto;min-width:0;font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tr-agg{color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tr-agg b{color:var(--gold,#D4AF37);font-size:15px;font-weight:700}
+.tr-likes{display:inline-flex;align-items:center;gap:5px;color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tr-likes svg{width:12px;height:12px;color:rgba(212,175,55,.75)}
+.tr-price{color:var(--secondary);font-size:12.5px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.tr-score-chip{flex:0 0 auto;padding:5px 11px;border-radius:999px;background:rgba(212,175,55,.12);border:1px solid rgba(212,175,55,.4);color:var(--gold,#D4AF37);font-size:12.5px;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tr-empty{margin:0;font-size:13px;color:var(--muted)}
+#top-rated .verdict-card{margin-bottom:20px}
+#top-rated .rated-row{gap:14px}
+#top-rated .rated-card{padding:20px}
+@media(max-width:640px){.tr-title{font-size:25px}}
+@media(max-width:480px){.tr-likes{display:none}.tr-price{display:none}}
 .firm-detail-actions .compare-toggle{position:static!important;width:auto!important;height:auto!important;top:auto!important;left:auto!important;min-height:36px;padding:0 14px;border-radius:999px!important;background:transparent!important;border:1px solid var(--line-strong)!important;color:var(--secondary);font-size:12px!important;font-weight:700;display:inline-flex;align-items:center;gap:6px;backdrop-filter:none}
 .firm-detail-actions .compare-toggle[aria-pressed="true"]{background:linear-gradient(135deg,#e8c455,#D4AF37)!important;border-color:var(--gold,#D4AF37)!important;color:#0A1628!important;box-shadow:0 0 0 1px var(--gold,#D4AF37),0 2px 12px rgba(212,175,55,.4)}
 /* expanded details */
@@ -2329,6 +2382,7 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
     <button class="rail-profile" data-screen="profile" type="button" title="Profile"><span class="rail-avatar" data-rail-avatar>—</span><span><strong data-rail-name>—</strong><small>View profile</small></span><svg width="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m9 6 6 6-6 6"/></svg></button>
     <nav class="rail-nav">
       <button class="rail-btn active" data-screen="matcher" type="button" title="Matcher"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 7h16M7 12h10m-7 5h4"/></svg><span>Matcher</span></button>
+      <button class="rail-btn" data-screen="top-rated" type="button" title="Top Rated"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3.8l2.4 5.1 5.6.7-4.1 3.9 1.1 5.6L12 16.4l-5 2.7 1.1-5.6L4 9.6l5.6-.7z"/></svg><span>Top Rated</span></button>
       <button class="rail-btn" data-screen="journal" type="button" title="Journal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6M9 11h6M9 15h3"/></svg><span>Journal</span></button>
       <button class="rail-btn" data-screen="calculator" type="button" title="Risk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h2m4 0h2M8 15h2m4 0h2"/></svg><span>Risk</span></button>
       <button class="rail-btn" data-screen="calendar" type="button" title="Calendar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16M8 14h3M14 14h2M8 17h2"/></svg><span>Calendar</span></button>
@@ -2421,9 +2475,10 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
       </section>
       <div class="rule"></div>
       <section class="section" aria-labelledby="toolkit-title">
-        <div class="section-head"><div><p class="eyebrow">The toolkit</p><h2 id="toolkit-title">Five tools. One process.</h2></div><p>Independent utilities that support how you prepare, execute, and review.</p></div>
+        <div class="section-head"><div><p class="eyebrow">The toolkit</p><h2 id="toolkit-title">Six tools. One process.</h2></div><p>Independent utilities that support how you prepare, execute, and review.</p></div>
         <div class="tool-grid">
           <article class="tool-card"><div><div class="tool-icon"><svg width="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 7h16M7 12h10m-7 5h4"/></svg></div><h3>Matcher</h3><p>Filter prop firms by the rules and constraints that matter to you.</p></div><button class="tool-link" data-screen="matcher" type="button">Explore matcher →</button></article>
+          <article class="tool-card"><div><div class="tool-icon"><svg width="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3.8l2.4 5.1 5.6.7-4.1 3.9 1.1 5.6L12 16.4l-5 2.7 1.1-5.6L4 9.6l5.6-.7z"/></svg></div><h3>Top Rated</h3><p>See the best match and the firms traders rate highest, ranked live.</p></div><button class="tool-link" data-screen="top-rated" type="button">See rankings →</button></article>
           <article class="tool-card"><div><div class="tool-icon"><svg width="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6M9 11h6M9 15h3"/></svg></div><h3>Journal</h3><p>Review your execution with clean records and meaningful context.</p></div><button class="tool-link" data-screen="journal" type="button">Open journal →</button></article>
           <article class="tool-card"><div><div class="tool-icon"><svg width="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h2m4 0h2"/></svg></div><h3>Risk calculator</h3><p>Turn account risk and stop distance into an exact position size.</p></div><button class="tool-link" data-screen="calculator" type="button">Open calculator →</button></article>
           <article class="tool-card"><div><div class="tool-icon"><svg width="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 3h6M10 3v6l-5.5 9.5A2 2 0 0 0 6.2 21h11.6a2 2 0 0 0 1.7-2.5L14 9V3"/><path d="M7.5 15h9"/></svg></div><h3>Pro Lab</h3><p>True-cost math, pass simulator, breach guard and payout intel — tools nobody else has.</p></div><button class="tool-link" data-screen="lab" type="button">Enter the lab →</button></article>
@@ -2497,38 +2552,15 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
         <button class="cat-btn" type="button" data-cat="cfds" aria-pressed="false"><span class="cat-label">CFDs</span><span class="cat-count">15</span></button>
       </div>
 
-      <!-- BIG BATCH P1 — Verdict card (populated by sbRenderVerdictAndRated at end of sbRenderFirms) -->
-      <section class="verdict-card" id="sbVerdictCard" hidden aria-label="Best match">
-        <div class="verdict-main">
-          <p class="verdict-eyebrow" id="sbVerdictEyebrow">Your best match</p>
-          <h3 class="verdict-name" id="sbVerdictName">—</h3>
-          <ul class="verdict-reasons" id="sbVerdictReasons"></ul>
-          <button class="verdict-cta" id="sbVerdictCta" type="button">See the plan <span aria-hidden="true">→</span></button>
-        </div>
-        <div class="verdict-scorewrap" aria-hidden="true">
-          <div class="verdict-ringwrap">
-            <svg class="verdict-ring" viewBox="0 0 120 120" focusable="false">
-              <defs>
-                <linearGradient id="pvGoldGrad" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0" stop-color="#F0D47A"/>
-                  <stop offset="1" stop-color="#D4AF37"/>
-                </linearGradient>
-              </defs>
-              <circle class="verdict-ring-track" cx="60" cy="60" r="52"></circle>
-              <circle class="verdict-ring-prog" id="sbVerdictRingProg" cx="60" cy="60" r="52"></circle>
-            </svg>
-            <div class="verdict-scorenum"><span id="sbVerdictScore">–</span><small>/100</small></div>
-          </div>
-          <p class="verdict-scorelabel" id="sbVerdictScoreLabel">PIPVANT SCORE</p>
-        </div>
-      </section>
-
-      <!-- BIG BATCH P1 — Rated by Traders strip (aggregate only, from window._sbCommunity) -->
-      <section class="rated-strip" id="sbRatedStrip" hidden aria-label="Rated by traders">
-        <p class="rated-title" id="sbRatedTitle">Rated by traders</p>
-        <div class="rated-row" id="sbRatedRow"></div>
-        <p class="rated-empty" id="sbRatedEmpty" hidden>No trader ratings yet — be the first on a firm page</p>
-      </section>
+      <!-- TOP RATED GATE — entry banner only; the verdict card + podium live on the Top Rated page -->
+      <button class="tr-gate" id="sbTopRatedGate" type="button" data-screen="top-rated" hidden aria-label="Open top rated by traders">
+        <span class="gate-stack" id="sbGateStack" aria-hidden="true"></span>
+        <span class="gate-copy">
+          <span class="gate-eyebrow" id="sbGateEyebrow">Top rated by traders</span>
+          <span class="gate-line" id="sbGateLine">Be the first to rate a firm</span>
+        </span>
+        <span class="gate-arrow" id="sbGateArrow">Rankings <span aria-hidden="true">→</span></span>
+      </button>
 
       <section class="matcher-list" data-view="rows" data-density="comfortable" aria-labelledby="top-firms-title">
         <div class="matcher-list-head">
@@ -2661,13 +2693,6 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
           <div class="directory-meta"><button type="button" data-methodology-section="ranking">How we rank</button><span id="directoryFreshness">Data updated —</span></div>
         </div>
 
-        <!-- BIG BATCH P1 — Rated by Traders strip (directory; same aggregate data as matcher) -->
-        <section class="rated-strip" id="dirRatedStrip" hidden aria-label="Rated by traders">
-          <p class="rated-title" id="dirRatedTitle">Rated by traders</p>
-          <div class="rated-row" id="dirRatedRow"></div>
-          <p class="rated-empty" id="dirRatedEmpty" hidden>No trader ratings yet — be the first on a firm page</p>
-        </section>
-
         <div class="directory-results refresh-content" id="directoryResults">
           <div class="directory-empty" id="directoryEmpty"><div class="directory-empty-inner"><div class="directory-empty-mark" aria-hidden="true"><svg width="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5"/></svg></div><h3>No firms listed yet — verified firms will appear here.</h3><p>Every listing will remain blank until its rules, pricing, and source date have been checked.</p><button class="btn secondary" type="button" data-methodology-section="verification">How we verify</button></div></div>
           <div class="directory-empty" id="directoryNoMatch" hidden><div class="directory-empty-inner"><div class="directory-empty-mark" aria-hidden="true"><svg width="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="11" r="6"/><path d="m16 16 4 4M8 8l6 6M14 8l-6 6"/></svg></div><h3>No firms match these filters.</h3><p>Clear the active filters or search to return to the complete directory.</p><button class="btn secondary" id="clearDirectoryFiltersInline" type="button">Clear filters</button></div></div>
@@ -2681,6 +2706,66 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
             <div class="directory-trust"><span>External rating <strong>—</strong></span><span>Years in business <strong>—</strong></span><span>Payout frequency <strong>—</strong></span></div>
           </article>
         </template>
+      </div>
+    </section>
+
+    <!-- TOP RATED — community rankings: verdict hero + podium + leaderboards (moved off the matcher) -->
+    <section class="screen" id="top-rated" aria-label="Top rated by traders">
+      <div class="tr-wrap">
+        <header class="tr-head">
+          <p class="eyebrow" id="trPageEyebrow">Community</p>
+          <h2 class="tr-title" id="trPageTitle">Top rated by traders</h2>
+          <p class="tr-sub" id="trPageSub">The best match by PIPVANT Score, and the firms traders rate highest — from real ratings only.</p>
+        </header>
+
+        <!-- Verdict hero (populated by sbRenderVerdictAndRated; global #1 by PIPVANT Score) -->
+        <section class="verdict-card" id="sbVerdictCard" hidden aria-label="Best match">
+          <div class="verdict-main">
+            <p class="verdict-eyebrow" id="sbVerdictEyebrow">Your best match</p>
+            <div class="verdict-namerow">
+              <div class="verdict-logo" id="sbVerdictLogo" aria-hidden="true"></div>
+              <h3 class="verdict-name" id="sbVerdictName">—</h3>
+            </div>
+            <ul class="verdict-reasons" id="sbVerdictReasons"></ul>
+            <button class="verdict-cta" id="sbVerdictCta" type="button">See the plan <span aria-hidden="true">→</span></button>
+          </div>
+          <div class="verdict-scorewrap" aria-hidden="true">
+            <div class="verdict-ringwrap">
+              <svg class="verdict-ring" viewBox="0 0 120 120" focusable="false">
+                <defs>
+                  <linearGradient id="pvGoldGrad" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="#F0D47A"/>
+                    <stop offset="1" stop-color="#D4AF37"/>
+                  </linearGradient>
+                </defs>
+                <circle class="verdict-ring-track" cx="60" cy="60" r="52"></circle>
+                <circle class="verdict-ring-prog" id="sbVerdictRingProg" cx="60" cy="60" r="52"></circle>
+              </svg>
+              <div class="verdict-scorenum"><span id="sbVerdictScore">–</span><small>/100</small></div>
+            </div>
+            <p class="verdict-scorelabel" id="sbVerdictScoreLabel">PIPVANT SCORE</p>
+          </div>
+        </section>
+
+        <!-- Podium — top 3 by trader ratings (aggregate only, from window._sbCommunity) -->
+        <section class="rated-strip" id="sbRatedStrip" hidden aria-label="Rated by traders">
+          <p class="rated-title" id="sbRatedTitle">Rated by traders</p>
+          <div class="rated-row" id="sbRatedRow"></div>
+          <p class="rated-empty" id="sbRatedEmpty" hidden>No trader ratings yet — be the first on a firm page</p>
+        </section>
+
+        <!-- All rated firms leaderboard -->
+        <section class="tr-block" aria-labelledby="trBoardTitle">
+          <h3 class="tr-block-title" id="trBoardTitle">All rated firms</h3>
+          <div class="tr-list" id="trLeaderboard"></div>
+          <p class="tr-empty" id="trBoardEmpty" hidden>No trader ratings yet — be the first on a firm page</p>
+        </section>
+
+        <!-- Top by PIPVANT Score -->
+        <section class="tr-block" id="trScoreBlock" aria-labelledby="trScoreTitle">
+          <h3 class="tr-block-title" id="trScoreTitle">Top by PIPVANT Score</h3>
+          <div class="tr-list" id="trScoreList"></div>
+        </section>
       </div>
     </section>
 
@@ -3592,6 +3677,31 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
     img.src=LOGO_OVERRIDES[domain]||('https://www.google.com/s2/favicons?domain='+domain+'&sz=128');
     el.appendChild(img);
     sbRefreshNewBadge(el,firm);
+  }
+  /* Logo into any tile element — replicates sbFirmLogo's exact logic
+     (same overrides + letter-only domains + Google favicon source) with a
+     caller-supplied fallback text (letter or initials); no NEW badge. */
+  function sbLogoInto(el,firm,fallbackText){
+    if(!el||!firm)return;
+    if(firm.id)el.setAttribute('data-firm-id',firm.id);
+    var letter=(fallbackText||(firm.name||'?').charAt(0)).toUpperCase();
+    el.setAttribute('aria-label',firm.name||'Firm');
+    var LOGO_OVERRIDES={
+      'takeprofittrader.com':'https://takeprofittrader.com/assets/mobile-logo.svg',
+      'apextraderfunding.com':'https://apextraderfunding.com/cdn-cgi/image/width=512,height=512,fit=cover,gravity=auto,format=auto//app/uploads/cropped-APEX_FAV-192x192.png'
+    };
+    var LETTER_ONLY_DOMAINS=['blueguardian.com'];
+    var domain='';
+    try{domain=String(new URL(firm.website||'').hostname).replace(/^www\./,'');}catch(e){domain='';}
+    if(!domain){el.textContent=letter;return;}
+    el.textContent='';
+    if(LETTER_ONLY_DOMAINS.indexOf(domain)!==-1){el.textContent=letter;return;}
+    var img=document.createElement('img');
+    img.alt=firm.name||'';img.loading='lazy';
+    img.style.cssText='width:100%;height:100%;object-fit:contain;border-radius:6px;';
+    img.onerror=function(){img.remove();el.textContent=letter;};
+    img.src=LOGO_OVERRIDES[domain]||('https://www.google.com/s2/favicons?domain='+domain+'&sz=128');
+    el.appendChild(img);
   }
   function sbNum(v){if(v==null||v==='')return NaN;return Number(v);}
   function sbFmtSize(v){var n=sbNum(v);if(!isFinite(n))return '—';var sym='$',val=n;if(typeof convertPrice==='function'&&typeof currentCurrency!=='undefined'&&currentCurrency!=='USD'){val=convertPrice(n);sym=currentCurrency==='EUR'?'€':'MAD ';}return val>=1000000?sym+(Math.round(val/10000)/100)+'M':(val>=1000?sym+(Math.round(val/10)/100)+'k':sym+(Math.round(val*100)/100));}
@@ -5039,14 +5149,25 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
      discounted price, and the verified stamp. Rated strips: aggregate-only
      top-3 by average rating from window._sbCommunity (ratingCount>=1);
      honest empty state when no firm has any rating yet. */
-  function sbRenderVerdictAndRated(filteredFirms){
+  function sbRenderVerdictAndRated(){
     var ar=(typeof currentLanguage!=='undefined'&&currentLanguage==='ar');
-    /* ---- Verdict card ---- */
+    /* ---- Global PIPVANT Score ranking (verdict hero + score list + gate) ---- */
+    var _scoreSorted=[];
+    (sbFirms||[]).forEach(function(f){
+      var _r=null,_s=0;
+      try{_r=sbPipvScore(f);_s=(_r&&isFinite(_r.score))?Number(_r.score):0;}catch(_se){_r=null;_s=0;}
+      _scoreSorted.push({firm:f,score:_s,obj:_r});
+    });
+    _scoreSorted.sort(function(a,b){
+      if(b.score!==a.score)return b.score-a.score;
+      return String(a.firm.name||'').localeCompare(String(b.firm.name||''));
+    });
+    /* ---- Verdict card (Top Rated page; global #1 across ALL firms) ---- */
     var vc=document.getElementById('sbVerdictCard');
     if(vc){
       var top=null,topScore=null;
-      if(filteredFirms&&filteredFirms.length){
-        try{var _sc=sbPipvScore(filteredFirms[0]);if(_sc&&isFinite(_sc.score)&&_sc.score>0){top=filteredFirms[0];topScore=_sc;}}catch(_ve){}
+      if(_scoreSorted.length&&_scoreSorted[0].score>0&&_scoreSorted[0].obj){
+        top=_scoreSorted[0].firm;topScore=_scoreSorted[0].obj;
       }
       if(top&&topScore){
         var plans=sbPlansByFirm[top.id]||[];
@@ -5076,6 +5197,7 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
         if(top.last_verified_at){var _va=sbTimeAgo(top.last_verified_at);if(_va)reasons.push((ar?'✓ تم التحقق من البيانات ':'✓ Data verified ')+_va);}
         var eb=document.getElementById('sbVerdictEyebrow');if(eb)eb.textContent=ar?'أفضل اختيار لك':'Your best match';
         var nm2=document.getElementById('sbVerdictName');if(nm2)nm2.textContent=top.name||'—';
+        var lgEl=document.getElementById('sbVerdictLogo');if(lgEl)sbLogoInto(lgEl,top);
         var scEl=document.getElementById('sbVerdictScore');if(scEl)scEl.textContent=topScore.score;
         var rgEl=document.getElementById('sbVerdictRingProg');
         if(rgEl){var _pct=Math.max(0,Math.min(100,Number(topScore.score)||0));rgEl.style.strokeDashoffset=(326.7*(1-_pct/100)).toFixed(1);}
@@ -5094,7 +5216,7 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
         vc.hidden=true;
       }
     }
-    /* ---- Rated by Traders strips (matcher + directory) ---- */
+    /* ---- Rated by Traders (Top Rated page: podium strip + leaderboard) ---- */
     var comm=window._sbCommunity||{};
     var rated=[];
     (sbFirms||[]).forEach(function(f){
@@ -5120,7 +5242,7 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
       clip.appendChild(fg);wrap.appendChild(bg);wrap.appendChild(clip);
       return wrap;
     }
-    [['sbRatedStrip','sbRatedTitle','sbRatedRow','sbRatedEmpty'],['dirRatedStrip','dirRatedTitle','dirRatedRow','dirRatedEmpty']].forEach(function(ids){
+    [['sbRatedStrip','sbRatedTitle','sbRatedRow','sbRatedEmpty']].forEach(function(ids){
       var strip=document.getElementById(ids[0]);if(!strip)return;
       var ttl=document.getElementById(ids[1]);if(ttl)ttl.textContent=ar?'الأعلى تقييماً من المتداولين':'Rated by traders';
       var row=document.getElementById(ids[2]),emp=document.getElementById(ids[3]);
@@ -5138,7 +5260,7 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
           var md=document.createElement('span');md.className='rated-medal';md.textContent='#'+rank;mw.appendChild(md);
           tp.appendChild(mw);
           var wds=String(it.firm.name||'').trim().split(/\s+/);
-          var av=document.createElement('span');av.className='rated-avatar';av.textContent=(((wds[0]||'').charAt(0)+(wds[1]||'').charAt(0)).toUpperCase()||'—');tp.appendChild(av);
+          var av=document.createElement('span');av.className='rated-logo';tp.appendChild(av);sbLogoInto(av,it.firm,(((wds[0]||'').charAt(0)+(wds[1]||'').charAt(0)).toUpperCase()||'—'));
           var fn=document.createElement('span');fn.className='rated-firm';fn.textContent=it.firm.name||'—';tp.appendChild(fn);
           b.appendChild(tp);
           var mid=document.createElement('div');mid.className='rated-mid';mid.appendChild(pvStarsEl(it.avg));b.appendChild(mid);
@@ -5161,6 +5283,92 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
       }
       strip.hidden=false;
     });
+    /* ---- Top Rated page head ---- */
+    var phE=document.getElementById('trPageEyebrow');if(phE)phE.textContent=ar?'المجتمع':'Community';
+    var phT=document.getElementById('trPageTitle');if(phT)phT.textContent=ar?'الأعلى تقييماً من المتداولين':'Top rated by traders';
+    var phS=document.getElementById('trPageSub');if(phS)phS.textContent=ar?'أفضل اختيار حسب نتيجة PIPVANT، والشركات الأعلى تقييماً من المتداولين — من تقييمات حقيقية فقط.':'The best match by PIPVANT Score, and the firms traders rate highest — from real ratings only.';
+    /* ---- All rated firms leaderboard (Top Rated page) ---- */
+    var bTitle=document.getElementById('trBoardTitle');if(bTitle)bTitle.textContent=ar?'كل الشركات المُقيّمة':'All rated firms';
+    var board=document.getElementById('trLeaderboard'),boardEmpty=document.getElementById('trBoardEmpty');
+    if(board){
+      board.innerHTML='';
+      rated.forEach(function(it,idx){
+        var r=document.createElement('button');r.type='button';r.className='tr-row';
+        var rk=document.createElement('span');rk.className='tr-rank';rk.textContent=idx+1;r.appendChild(rk);
+        var lg=document.createElement('span');lg.className='tr-logo';r.appendChild(lg);sbLogoInto(lg,it.firm,(it.firm.name||'?').charAt(0).toUpperCase());
+        var nm=document.createElement('span');nm.className='tr-name';nm.textContent=it.firm.name||'—';r.appendChild(nm);
+        r.appendChild(pvStarsEl(it.avg));
+        var ag=document.createElement('span');ag.className='tr-agg';
+        var aggB=sbRatingCompact(it.avg,it.count,ar).replace(/^★\s*/,'');
+        var mB=aggB.match(/^(\d+(?:\.\d+)?)\s*(.*)$/);
+        if(mB){var bN=document.createElement('b');bN.textContent=mB[1];ag.appendChild(bN);if(mB[2])ag.appendChild(document.createTextNode(' '+mB[2]));}
+        else ag.textContent=aggB;
+        r.appendChild(ag);
+        if(it.likes>0){var lk2=document.createElement('span');lk2.className='tr-likes';lk2.innerHTML=PV_THUMB;lk2.appendChild(document.createTextNode(String(it.likes)));r.appendChild(lk2);}
+        r.addEventListener('click',function(){if(typeof sbOpenFirmDetail==='function')sbOpenFirmDetail(it.firm.id);});
+        board.appendChild(r);
+      });
+      board.style.display=rated.length?'':'none';
+    }
+    if(boardEmpty){
+      boardEmpty.textContent=ar?'لا توجد تقييمات من المتداولين بعد — كن أول من يقيّم من صفحة أي شركة':'No trader ratings yet — be the first on a firm page';
+      boardEmpty.hidden=rated.length>0;
+    }
+    /* ---- Top by PIPVANT Score (Top Rated page) ---- */
+    var sTitle=document.getElementById('trScoreTitle');if(sTitle)sTitle.textContent=ar?'الأفضل حسب نتيجة PIPVANT':'Top by PIPVANT Score';
+    var scoreTop=_scoreSorted.filter(function(e){return e.score>0;}).slice(0,5);
+    var sList=document.getElementById('trScoreList');
+    if(sList){
+      sList.innerHTML='';
+      scoreTop.forEach(function(e,idx){
+        var r=document.createElement('button');r.type='button';r.className='tr-row';
+        var rk=document.createElement('span');rk.className='tr-rank';rk.textContent=idx+1;r.appendChild(rk);
+        var lg=document.createElement('span');lg.className='tr-logo';r.appendChild(lg);sbLogoInto(lg,e.firm,(e.firm.name||'?').charAt(0).toUpperCase());
+        var nm=document.createElement('span');nm.className='tr-name';nm.textContent=e.firm.name||'—';r.appendChild(nm);
+        var pr=document.createElement('span');pr.className='tr-price';
+        var ptxt='—';
+        try{var mp=sbMinDiscountedPrice(sbPlansByFirm[e.firm.id]||[]);if(mp&&mp.text&&mp.text!=='—')ptxt=(ar?'ابتداءً من ':'From ')+mp.text;}catch(_pe){}
+        pr.textContent=ptxt;r.appendChild(pr);
+        var chip=document.createElement('span');chip.className='tr-score-chip';chip.textContent=e.score+'/100';r.appendChild(chip);
+        r.addEventListener('click',function(){if(typeof sbOpenFirmDetail==='function')sbOpenFirmDetail(e.firm.id);});
+        sList.appendChild(r);
+      });
+    }
+    var sBlock=document.getElementById('trScoreBlock');if(sBlock)sBlock.hidden=!scoreTop.length;
+    /* ---- Top Rated gate (matcher entry banner) ---- */
+    var gate=document.getElementById('sbTopRatedGate');
+    if(gate){
+      if(!(sbFirms&&sbFirms.length)){
+        gate.hidden=true;
+      }else{
+        var gEb=document.getElementById('sbGateEyebrow');if(gEb)gEb.textContent=ar?'الأعلى تقييماً من المتداولين':'Top rated by traders';
+        var gAr=document.getElementById('sbGateArrow');
+        if(gAr){gAr.innerHTML='';gAr.appendChild(document.createTextNode(ar?'الترتيب':'Rankings'));var gArr=document.createElement('span');gArr.setAttribute('aria-hidden','true');gArr.textContent=ar?' ←':' →';gAr.appendChild(gArr);}
+        var stack=document.getElementById('sbGateStack');
+        if(stack){
+          stack.innerHTML='';
+          var stackFirms=top3.length?top3.map(function(it){return it.firm;}):(top?[top]:[]);
+          stackFirms.slice(0,3).forEach(function(f,ix){
+            var t=document.createElement('span');t.className='gate-tile'+(ix===0?' gate-tile-1':'');
+            var wd=String(f.name||'').trim().split(/\s+/);
+            var ini=(((wd[0]||'').charAt(0)+(wd[1]||'').charAt(0)).toUpperCase()||'—');
+            stack.appendChild(t);sbLogoInto(t,f,ini);
+          });
+          if(!top3.length&&stackFirms.length){
+            var st=document.createElement('span');st.className='gate-star';st.setAttribute('aria-hidden','true');st.textContent='★';stack.appendChild(st);
+          }
+        }
+        var gLine=document.getElementById('sbGateLine');
+        if(gLine){
+          if(top3.length){
+            gLine.textContent='★ '+Number(top3[0].avg).toFixed(1)+' — '+(top3[0].firm.name||'')+(ar?' في الصدارة · ':' leads · ')+rated.length+(ar?' شركة مُقيّمة':' firms rated');
+          }else{
+            gLine.textContent=ar?'كن أول من يقيّم شركة':'Be the first to rate a firm';
+          }
+        }
+        gate.hidden=false;
+      }
+    }
   }
   function sbRenderFirms(){
     sbHideMarketUI();
@@ -6918,8 +7126,8 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
     sbFillDetailSheet(card.getAttribute('data-firm-id'));
   });
   /* ================= /Supabase data layer ================= */
-  var titlesEn={landing:['Toolkit','Trade with a process'],matcher:['Tool 01','Prop firm matcher'],'all-firms':['Matcher','All firms'],journal:['Tool 02','Trading journal'],calculator:['Tool 03','Risk calculator'],calendar:['Tool 04','Economic Calendar'],lab:['Tool 05','Pro Lab'],discipline:['Parked','Discipline'],'discipline-soon':['Next version','Discipline'],notifications:['Inbox','Notifications'],profile:['Account','Profile'],settings:['Account','Settings'],certificate:['Account','Certificates'],methodology:['PIPVANT','Methodology'],support:['PIPVANT','Support'],about:['PIPVANT','About'],contact:['PIPVANT','Contact'],'firm-detail':['Matcher','Firm details']};
-  var titlesAr={landing:['الأدوات','تداول وفق منهج'],matcher:['الأداة 01','مطابق شركات التداول'],'all-firms':['المطابق','جميع الشركات'],journal:['الأداة 02','سجل التداول'],calculator:['الأداة 03','حاسبة المخاطر'],calendar:['الأداة 04','التقويم الاقتصادي'],lab:['الأداة 05','مختبر المحترفين'],discipline:['متوقف مؤقتاً','الانضباط'],'discipline-soon':['الإصدار القادم','الانضباط'],notifications:['الوارد','الإشعارات'],profile:['الحساب','الملف الشخصي'],settings:['الحساب','الإعدادات'],certificate:['الحساب','الشهادات'],methodology:['PIPVANT','المنهجية'],support:['PIPVANT','الدعم'],about:['PIPVANT','حول'],contact:['PIPVANT','تواصل'],'firm-detail':['المطابق','تفاصيل الشركة']};
+  var titlesEn={landing:['Toolkit','Trade with a process'],matcher:['Tool 01','Prop firm matcher'],'all-firms':['Matcher','All firms'],'top-rated':['Community','Top rated by traders'],journal:['Tool 02','Trading journal'],calculator:['Tool 03','Risk calculator'],calendar:['Tool 04','Economic Calendar'],lab:['Tool 05','Pro Lab'],discipline:['Parked','Discipline'],'discipline-soon':['Next version','Discipline'],notifications:['Inbox','Notifications'],profile:['Account','Profile'],settings:['Account','Settings'],certificate:['Account','Certificates'],methodology:['PIPVANT','Methodology'],support:['PIPVANT','Support'],about:['PIPVANT','About'],contact:['PIPVANT','Contact'],'firm-detail':['Matcher','Firm details']};
+  var titlesAr={landing:['الأدوات','تداول وفق منهج'],matcher:['الأداة 01','مطابق شركات التداول'],'all-firms':['المطابق','جميع الشركات'],'top-rated':['المجتمع','الأعلى تقييماً من المتداولين'],journal:['الأداة 02','سجل التداول'],calculator:['الأداة 03','حاسبة المخاطر'],calendar:['الأداة 04','التقويم الاقتصادي'],lab:['الأداة 05','مختبر المحترفين'],discipline:['متوقف مؤقتاً','الانضباط'],'discipline-soon':['الإصدار القادم','الانضباط'],notifications:['الوارد','الإشعارات'],profile:['الحساب','الملف الشخصي'],settings:['الحساب','الإعدادات'],certificate:['الحساب','الشهادات'],methodology:['PIPVANT','المنهجية'],support:['PIPVANT','الدعم'],about:['PIPVANT','حول'],contact:['PIPVANT','تواصل'],'firm-detail':['المطابق','تفاصيل الشركة']};
   var ar={
     'Cost of mistakes':'تكلفة الأخطاء','Closed trades only — grouped by tag':'الصفقات المغلقة فقط — مجمعة حسب الوسم','BY TAG':'حسب الوسم','Tag trades with the mistake chips to see what they cost you':'وسّم صفقاتك برقائق الأخطاء لترى كم كلفتك','Mistake (optional)':'الخطأ (اختياري)','Revenge trade':'صفقة انتقامية','Early exit':'خروج مبكر','Late entry':'دخول متأخر','Oversized position':'حجم مفرط','Against plan':'ضد الخطة','Hide amounts':'إخفاء المبالغ','Seconds':'الثواني','Previous month':'الشهر السابق','Next month':'الشهر التالي',
     'True Cost Calculator':'حاسبة التكلفة الحقيقية','Pass Simulator':'محاكي اجتياز التحدي','Rule-change Radar':'رادار تغيير القواعد','Breach Guard':'حارس الاختراق','Trading DNA — find your match':'بصمة التداول — اعثر على ما يناسبك','▶ Run Simulation':'▶ تشغيل المحاكاة',
@@ -7423,7 +7631,7 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
         // always computed on all trades).
         var _pf=typeof getFilteredJournalEntries==='function'?getFilteredJournalEntries():sessionJournalEntries;
         sbUpdateProfileStats(_pf.filter(function(e){return e.type==='trade';}));
-      }catch(_e){}}if(activeScreen&&!instant){void activeScreen.offsetWidth;activeScreen.classList.add('motion-enter');if(!viewedScreens[id]){viewedScreens[id]=true;runCountUps(activeScreen);setTimeout(function(){activeScreen.querySelectorAll('.motion-cascade').forEach(function(group){group.classList.add('motion-done');});},560);}if(id==='certificates'){var earned=activeScreen.querySelector('.earned-certificate:not([hidden])');if(earned&&!earned.dataset.motionIssued){earned.dataset.motionIssued='true';earned.classList.add('issuing');setTimeout(function(){earned.classList.remove('issuing');},920);}}setTimeout(function(){activeScreen.classList.remove('motion-enter');},520);}
+      }catch(_e){}}if(id==='top-rated'){try{if(typeof sbRenderVerdictAndRated==='function')sbRenderVerdictAndRated();}catch(_te){}}if(activeScreen&&!instant){void activeScreen.offsetWidth;activeScreen.classList.add('motion-enter');if(!viewedScreens[id]){viewedScreens[id]=true;runCountUps(activeScreen);setTimeout(function(){activeScreen.querySelectorAll('.motion-cascade').forEach(function(group){group.classList.add('motion-done');});},560);}if(id==='certificates'){var earned=activeScreen.querySelector('.earned-certificate:not([hidden])');if(earned&&!earned.dataset.motionIssued){earned.dataset.motionIssued='true';earned.classList.add('issuing');setTimeout(function(){earned.classList.remove('issuing');},920);}}setTimeout(function(){activeScreen.classList.remove('motion-enter');},520);}
       document.querySelectorAll('[data-screen]').forEach(function(el){el.classList.toggle('active',el.getAttribute('data-screen')===id);});
       var screenCopy=(currentLanguage==='ar'?titlesAr:titlesEn)[id];document.getElementById('crumb').textContent=screenCopy[0];document.getElementById('screenTitle').textContent=screenCopy[1];refreshBottomIndicator();refreshAllSegmentIndicators();
     }
