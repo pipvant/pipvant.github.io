@@ -4,16 +4,16 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Prop Firm Payouts Compared 2026 — Splits, Speed & Terms | PIPVANT</title>
-  <meta name="description" content="Compare prop firm payouts: profit splits, first payout timing and payout frequency for 10 verified firms — FTMO, The5ers, Apex, Topstep & more. Real data, free.">
+  <meta name="description" content="Compare prop firm payouts: profit splits and payout frequency for verified firms — FTMO, The5ers, Apex, Topstep, Lucid Trading & more, loaded live from verified data. Real data, free.">
   <link rel="canonical" href="https://pipvant.github.io/prop-firm-payouts.html">
   <meta property="og:title" content="Prop Firm Payouts Compared 2026 — Splits, Speed & Terms">
-  <meta property="og:description" content="FTMO, The5ers, Apex, Topstep & more — payout splits and speed with verified data. Free, no signup.">
+  <meta property="og:description" content="Verified prop firms' payout splits and frequency, loaded live. Free, no signup.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://pipvant.github.io/prop-firm-payouts.html">
   <meta property="og:image" content="https://pipvant.github.io/assets/pipvanta-logo.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Prop Firm Payouts Compared 2026 | PIPVANT">
-  <meta name="twitter:description" content="10 verified prop firms' payouts compared with real data. Free, no signup.">
+  <meta name="twitter:description" content="Verified prop firms' payouts compared with live data. Free, no signup.">
   <link rel="icon" type="image/png" href="assets/pipvanta-logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,9 +23,9 @@
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [
-      {"@type": "Question", "name": "Which prop firm has the fastest payouts?", "acceptedAnswer": {"@type": "Answer", "text": "Based on verified October 2026 data, TakeProfitTrader, E8 Markets (E8 Pro) and MyFundedFutures (Rapid) offer daily payouts. Topstep and FTMO pay on-demand after their qualifying periods. Always confirm current terms on the firm's official site."}},
-      {"@type": "Question", "name": "What is a good profit split with a prop firm?", "acceptedAnswer": {"@type": "Answer", "text": "80% to the trader is the industry standard baseline, with many firms scaling to 90-100% through add-ons or account growth. Apex offers 100% on Sim Funded accounts; The5ers scales from 50% up to 100%."}},
-      {"@type": "Question", "name": "How long until the first prop firm payout?", "acceptedAnswer": {"@type": "Answer", "text": "It varies widely: some firms pay within days of going live, others require 14-30 days of trading first. FTMO pays on-demand after 14 days; The5ers pays bi-weekly after 14 days. Check each firm's minimum trading days requirement."}},
+      {"@type": "Question", "name": "Which prop firm has the fastest payouts?", "acceptedAnswer": {"@type": "Answer", "text": "Based on PIPVANT's verified data, TakeProfitTrader and Lucid Trading (on select programs) offer daily payouts, and MyFundedFutures pays within 48 hours. Payout frequency is a per-plan term — always confirm the current terms for your plan on the firm's official site."}},
+      {"@type": "Question", "name": "What is a good profit split with a prop firm?", "acceptedAnswer": {"@type": "Answer", "text": "80% to the trader is the industry standard baseline, with many firms scaling higher through add-ons or account growth. Apex offers 100% on its tracked plans. PIPVANT shows the split range from each firm's verified plan data."}},
+      {"@type": "Question", "name": "How long until the first prop firm payout?", "acceptedAnswer": {"@type": "Answer", "text": "It varies widely: some firms pay within days of going live, others require a minimum number of trading days first. Check each firm's minimum trading days and payout frequency before buying an evaluation."}},
       {"@type": "Question", "name": "Is PIPVANT's payout comparison free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes — the prop firm matcher, trading journal, risk calculator and economic calendar are all free with no signup required for browsing."}}
     ]
   }
@@ -45,18 +45,35 @@
     h1{font-size:clamp(2.2rem,6vw,3.6rem);line-height:1.05;margin:0 0 16px}
     h1 .gold{background:linear-gradient(135deg,#F5D67B,#D4AF37);-webkit-background-clip:text;background-clip:text;color:transparent}
     .lede{color:var(--secondary);font-size:17px;line-height:1.7;max-width:680px;margin:0 auto 28px}
+    .freshness-wrap{text-align:center;margin:0 0 18px}
+    .freshness-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border:1px solid var(--line-strong);border-radius:999px;background:var(--surface);color:var(--secondary);font-size:13px;font-weight:600}
+    .freshness-badge .fresh-dot{width:8px;height:8px;border-radius:50%;background:#3ECF6E;box-shadow:0 0 8px rgba(62,207,110,.5)}
     .section{padding:44px 0}
     h2{font-size:clamp(1.6rem,4vw,2.4rem);margin:0 0 14px}
     .section p.body{color:var(--secondary);line-height:1.75;max-width:720px}
-    table{width:100%;border-collapse:collapse;margin:24px 0;background:var(--surface);border-radius:14px;overflow:hidden;font-size:14px}
+    .table-scroll{overflow-x:auto}
+    table{width:100%;border-collapse:collapse;margin:24px 0;background:var(--surface);border-radius:16px;overflow:hidden;font-size:14px}
     th,td{text-align:left;padding:13px 16px;border-bottom:1px solid var(--line)}
     th{background:var(--raised);font-weight:600;color:var(--text)}
-    td{color:var(--secondary)}
+    td{color:var(--secondary);font-variant-numeric:tabular-nums}
+    td.firm-cell{color:var(--text);font-weight:600;white-space:nowrap}
     tr:last-child td{border-bottom:none}
     .note{color:var(--muted);font-size:13px;line-height:1.7;max-width:720px}
-    .fast{display:inline-block;background:rgba(212,175,55,.14);border:1px solid var(--gold);color:var(--gold);font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;margin-left:8px;vertical-align:middle}
+    .fast{display:inline-block;background:rgba(212,175,55,.14);border:1px solid var(--gold);color:var(--gold);font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;margin-left:8px;vertical-align:middle}
+    .speed-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent);margin-right:8px;vertical-align:middle}
+    .stat-line{display:block;color:var(--muted);font-size:12px;font-weight:400;margin-top:3px;white-space:normal}
+    .feed{display:grid;gap:10px;margin:24px 0}
+    .feed-item{display:flex;align-items:center;gap:18px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 20px}
+    .feed-amount{font-family:"Space Grotesk",sans-serif;font-size:26px;font-weight:700;color:var(--gold);font-variant-numeric:tabular-nums;min-width:150px}
+    .feed-meta{flex:1;min-width:180px}
+    .feed-firm{color:var(--text);font-weight:600;font-size:15px}
+    .feed-firm a{color:var(--accent);text-decoration:none}
+    .feed-sub{color:var(--muted);font-size:13px;margin-top:2px}
+    .feed-links a{color:var(--accent);font-weight:600;font-size:14px;text-decoration:none;margin-left:14px;white-space:nowrap}
+    .empty-state{background:var(--surface);border:1px dashed var(--line-strong);border-radius:16px;padding:28px;text-align:center;color:var(--secondary);line-height:1.7;margin:24px 0}
+    .empty-state strong{color:var(--text)}
     .faq{max-width:760px}
-    .faq details{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin-bottom:10px}
+    .faq details{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 20px;margin-bottom:10px}
     .faq summary{font-weight:600;cursor:pointer;font-size:15px}
     .faq p{color:var(--secondary);line-height:1.7;font-size:14px;margin:10px 0 0}
     .final{text-align:center;padding:56px 0 72px}
@@ -67,7 +84,7 @@
     footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted);font-size:13px}
     footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
     footer a{color:var(--muted);text-decoration:none;margin-left:16px}
-    @media(max-width:640px){table{font-size:12px}th,td{padding:10px 10px}}
+    @media(max-width:640px){th,td{padding:10px 10px}.feed-amount{font-size:22px;min-width:0}}
   </style>
 </head>
 <body>
@@ -80,39 +97,63 @@
   <section class="hero">
     <div class="eyebrow">Prop firm payouts · Verified data</div>
     <h1>Who pays <span class="gold">fastest</span>, and who pays most?</h1>
-    <p class="lede">The challenge is only half the story — the payout terms decide your cash flow. Below: profit splits, first-payout timing and payout frequency for 10 verified prop firms, checked against official sources on 2026-10-07.</p>
+    <p class="lede">The challenge is only half the story — the payout terms decide your cash flow. Below: profit splits and payout frequency for <span id="liveCounts">22 verified prop firms</span>, checked against official sources and loaded live. "Not stated" means the firm's verified plan data doesn't publish it — we don't guess.</p>
+    <div class="freshness-wrap"><span class="freshness-badge" id="freshnessBadge" hidden><span class="fresh-dot"></span><span id="freshnessText"></span></span></div>
     <a class="cta-btn" href="/">Launch the free matcher →</a>
   </section>
 
   <section class="section">
     <h2>Payouts compared</h2>
-    <p class="body">Every row verified against the firm's official pages on 2026-10-07. "Not stated" means the firm doesn't publish it clearly — we don't guess.</p>
+    <p class="body">Split and payout frequency are read live from each firm's verified plan data, ordered by payout speed — fastest first, not a quality ranking.</p>
+
+    <div id="liveTableWrap" hidden>
+      <div class="table-scroll">
+      <table id="livePolicyTable">
+        <thead id="livePolicyHead"></thead>
+        <tbody id="livePolicyBody"></tbody>
+      </table>
+      </div>
+      <p class="note" id="liveTableNote"></p>
+    </div>
+
+    <div id="staticTableWrap">
+    <div class="table-scroll">
     <table>
       <tr><th>Firm</th><th>Profit split (trader)</th><th>Payout frequency</th></tr>
-      <tr><td><a href="https://takeprofittrader.com" target="_blank" rel="noopener" style="color:var(--accent)">TakeProfitTrader ↗</a></td><td>80% → 90%</td><td>Daily <span class="fast">FASTEST</span></td></tr>
-      <tr><td><a href="https://e8markets.com" target="_blank" rel="noopener" style="color:var(--accent)">E8 Markets ↗</a></td><td>80–100%</td><td>Daily (E8 Pro) <span class="fast">FASTEST</span></td></tr>
-      <tr><td><a href="https://myfundedfutures.com" target="_blank" rel="noopener" style="color:var(--accent)">MyFundedFutures ↗</a></td><td>80% → 90%</td><td>Daily (Rapid) <span class="fast">FASTEST</span></td></tr>
-      <tr><td><a href="https://www.topstep.com" target="_blank" rel="noopener" style="color:var(--accent)">Topstep ↗</a></td><td>90%</td><td>On-demand</td></tr>
-      <tr><td><a href="https://ftmo.com" target="_blank" rel="noopener" style="color:var(--accent)">FTMO ↗</a></td><td>80% → 90%</td><td>On-demand (after 14 days)</td></tr>
-      <tr><td><a href="https://apextraderfunding.com" target="_blank" rel="noopener" style="color:var(--accent)">Apex Trader Funding ↗</a></td><td>100% (Sim Funded)</td><td>Every 5 trading days</td></tr>
-      <tr><td><a href="https://en.the5ers.com" target="_blank" rel="noopener" style="color:var(--accent)">The5ers ↗</a></td><td>50% → 100% (scaling)</td><td>Bi-weekly (after 14 days)</td></tr>
-      <tr><td><a href="https://alphacapitalgroup.uk" target="_blank" rel="noopener" style="color:var(--accent)">Alpha Capital Group ↗</a></td><td>80–90%</td><td>Bi-weekly / on-demand</td></tr>
-      <tr><td><a href="https://fundingpips.com" target="_blank" rel="noopener" style="color:var(--accent)">Funding Pips ↗</a></td><td>80–100%</td><td>Bi-weekly / monthly</td></tr>
-      <tr><td><a href="https://fundednext.com" target="_blank" rel="noopener" style="color:var(--accent)">FundedNext ↗</a></td><td>80–95%</td><td>5–21 days (by plan)</td></tr>
+      <tr><td><a href="https://takeprofittrader.com" target="_blank" rel="noopener" style="color:var(--accent)">TakeProfitTrader ↗</a></td><td>80%</td><td>Daily <span class="fast">FASTEST</span></td></tr>
+      <tr><td><a href="https://lucidtrading.com/" target="_blank" rel="noopener" style="color:var(--accent)">Lucid Trading ↗</a></td><td>90%</td><td>Daily (select programs) <span class="fast">FASTEST</span></td></tr>
+      <tr><td><a href="https://myfundedfutures.com" target="_blank" rel="noopener" style="color:var(--accent)">MyFundedFutures ↗</a></td><td>80%</td><td>48h</td></tr>
+      <tr><td><a href="https://www.topstep.com" target="_blank" rel="noopener" style="color:var(--accent)">Topstep ↗</a></td><td>90%</td><td>Weekly</td></tr>
+      <tr><td><a href="https://apextraderfunding.com" target="_blank" rel="noopener" style="color:var(--accent)">Apex Trader Funding ↗</a></td><td>100%</td><td>Every 5 trading days</td></tr>
+      <tr><td><a href="https://en.the5ers.com" target="_blank" rel="noopener" style="color:var(--accent)">The5ers ↗</a></td><td>80%</td><td>Bi-weekly</td></tr>
+      <tr><td><a href="https://fundingpips.com" target="_blank" rel="noopener" style="color:var(--accent)">Funding Pips ↗</a></td><td>80% (scales higher)</td><td>Bi-weekly</td></tr>
+      <tr><td><a href="https://tradeify.co" target="_blank" rel="noopener" style="color:var(--accent)">Tradeify ↗</a></td><td>90%</td><td>On-demand</td></tr>
     </table>
-    <p class="note">Splits shown are the trader's share; several firms scale the split with account growth or add-ons — confirm the exact terms for your plan on the firm's official site (linked above) before buying. Terms change; this table reflects data reviewed 2026-10-07. Order is by payout speed, fastest first — not a quality ranking.</p>
+    </div>
+    <p class="note">Snapshot of the verified payout terms. Splits shown are the trader's share from each firm's tracked plan data; several firms scale the split with account growth or add-ons — confirm the exact terms for your plan on the firm's official site (linked above) before buying. The live table above replaces this snapshot when data loads.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Recent payouts</h2>
+    <p class="body">Real payout records published in PIPVANT's database — firm, amount and date, with a proof or source link where one was recorded. Nothing is listed here until a record exists.</p>
+    <div id="payoutFeedState"><p class="note">Loading payout records…</p></div>
+    <div class="feed" id="payoutFeed" hidden></div>
+    <div id="payoutFeedEmpty" hidden>
+      <div class="empty-state"><strong>No payout records published yet.</strong><br>When verified payout records are added, they will appear here — newest first, with amounts, dates and proof links.</div>
+    </div>
   </section>
 
   <section class="section">
     <h2>Why payout terms matter more than you think</h2>
-    <p class="body">Two traders pass the same $100K challenge. One waits 14 days for the first payout, the other withdraws daily. After three months, the second trader has compounded both capital <em>and</em> confidence. When comparing firms, weigh three things alongside the evaluation fee: <strong style="color:var(--text)">minimum trading days</strong> before the first payout, <strong style="color:var(--text)">payout frequency</strong> after that, and <strong style="color:var(--text)">how the split scales</strong> — a 50% starting split that grows to 100% beats a flat 80% for traders who stick around.</p>
+    <p class="body">Two traders pass the same $100K challenge. One waits 14 days for the first payout, the other withdraws daily. After three months, the second trader has compounded both capital <em>and</em> confidence. When comparing firms, weigh three things alongside the evaluation fee: <strong style="color:var(--text)">minimum trading days</strong> before the first payout, <strong style="color:var(--text)">payout frequency</strong> after that, and <strong style="color:var(--text)">how the split scales</strong> — a starting split that grows beats a flat split for traders who stick around.</p>
   </section>
 
   <section class="section faq">
     <h2>Payout FAQs</h2>
-    <details><summary>Which prop firm has the fastest payouts?</summary><p>Per verified October 2026 data: TakeProfitTrader, E8 Markets (E8 Pro) and MyFundedFutures (Rapid) offer daily payouts. Topstep and FTMO pay on-demand after qualifying periods. Confirm current terms on official sites.</p></details>
-    <details><summary>What is a good profit split?</summary><p>80% to the trader is the standard baseline; many firms scale to 90–100% via add-ons or account growth. Apex pays 100% on Sim Funded accounts; The5ers scales from 50% to 100%.</p></details>
-    <details><summary>How long until the first payout?</summary><p>Widely variable — some firms pay within days of going live, others require 14–30 trading days first. FTMO: on-demand after 14 days. The5ers: bi-weekly after 14 days. Always check minimum trading days.</p></details>
+    <details><summary>Which prop firm has the fastest payouts?</summary><p>Per PIPVANT's verified plan data: TakeProfitTrader and Lucid Trading (select programs) offer daily payouts, and MyFundedFutures pays within 48 hours. Payout frequency is per-plan — confirm current terms on official sites.</p></details>
+    <details><summary>What is a good profit split?</summary><p>80% to the trader is the standard baseline; many firms scale higher via add-ons or account growth. Apex pays 100% on its tracked plans.</p></details>
+    <details><summary>How long until the first payout?</summary><p>Widely variable — some firms pay within days of going live, others require a minimum number of trading days first. Always check the minimum trading days for your plan.</p></details>
     <details><summary>Is PIPVANT's comparison really free?</summary><p>Yes. The matcher, trading journal, risk calculator and economic calendar are free. No signup needed to browse firms.</p></details>
   </section>
 
@@ -139,5 +180,233 @@
   <span><a href="/">Toolkit</a><a href="prop-firm-comparison.html">Compare</a><a href="ftmo-alternatives.html">FTMO alt.</a></span>
 </div></footer>
 <script src="assets/pipv-os.js" defer></script>
+<script>
+/* Freshness badge: shows the honest floor — every tracked firm was verified at least this recently.
+   Reads MIN(last_verified_at) from Supabase, falling back to updated_at before the first daily check. */
+(function(){
+  var KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFjcGt6YXZtaWZqd25za2lhcmV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyMDk1ODcsImV4cCI6MjEwNjc4NTU4N30.9-k-DoB6467EXTPKrvWUi-LRDPbSSC30f6BgrZezo2A';
+  var URL='https://acpkzavmifjwnskiaret.supabase.co/rest/v1/firms?select=last_verified_at,updated_at';
+  function rel(d){return d<=0?'today':d===1?'yesterday':d+'d ago';}
+  fetch(URL,{headers:{'apikey':KEY,'Authorization':'Bearer '+KEY}})
+    .then(function(r){return r.json();})
+    .then(function(rows){
+      if(!Array.isArray(rows)||!rows.length)return;
+      var oldest=null;
+      rows.forEach(function(f){var v=f.last_verified_at||f.updated_at;if(v&&(!oldest||v<oldest))oldest=v;});
+      if(!oldest)return;
+      var days=Math.floor((Date.now()-new Date(oldest).getTime())/86400000);
+      var badge=document.getElementById('freshnessBadge'),txt=document.getElementById('freshnessText');
+      if(badge&&txt){
+        txt.textContent='✓ Data verified '+rel(days);
+        badge.title='Oldest verification: '+new Date(oldest).toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'});
+        badge.hidden=false;
+      }
+    })
+    .catch(function(){/* badge stays hidden — never show a guessed date */});
+})();
+</script>
+<script>
+/* Live payout data (public anon reads only):
+   - Policy table: split + payout frequency aggregated per firm from firm_plans.rules
+     (profit_split / profit_split_up_to flag / payout_frequency). A "Payout methods" column
+     is rendered ONLY if a methods field actually exists in some plan's rules — in the
+     current verified data none does, so the column stays hidden and a note says so.
+   - Recent payouts feed + per-firm stats: computed ONLY from firm_payouts rows
+     (schema verified via REST: id, firm_id, amount, currency, payout_date, proof_url,
+     source, created_at). If the table is empty, the feed shows an honest empty state
+     and the stats column is not rendered at all.
+   The static snapshot table stays as fallback until the live render succeeds. */
+(function(){
+  var KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFjcGt6YXZtaWZqd25za2lhcmV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyMDk1ODcsImV4cCI6MjEwNjc4NTU4N30.9-k-DoB6467EXTPKrvWUi-LRDPbSSC30f6BgrZezo2A';
+  var BASE='https://acpkzavmifjwnskiaret.supabase.co/rest/v1/';
+  var H={'apikey':KEY,'Authorization':'Bearer '+KEY};
+  function get(path){return fetch(BASE+path,{headers:H}).then(function(r){if(!r.ok)throw new Error(path+' '+r.status);return r.json();});}
+  function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+  function sym(cur){return cur==='EUR'?'€':cur==='MAD'?'MAD ':'$';}
+  function fmt(n){return (Math.round(n*100)/100).toLocaleString('en-US');}
+  function cap(s){s=String(s==null?'':s);return s?s.charAt(0).toUpperCase()+s.slice(1):s;}
+  function fmtDate(iso){
+    if(!iso)return '';
+    var d=new Date(iso);if(!isFinite(d.getTime()))return '';
+    return d.toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'});
+  }
+  function isUrl(s){return /^https?:\/\//i.test(String(s||''));}
+  /* Payout-speed rank derived from the frequency text — lower is faster */
+  function speedRank(freq){
+    var t=String(freq||'').toLowerCase();
+    if(!t)return 8;
+    if(t.indexOf('daily')!==-1)return 0;
+    if(t.indexOf('48h')!==-1||t.indexOf('48 h')!==-1||t.indexOf('24/7')!==-1||t.indexOf('24h')!==-1)return 1;
+    if(t.indexOf('on-demand')!==-1||t.indexOf('on demand')!==-1)return 2;
+    if(t.indexOf('5 trading')!==-1||t.indexOf('5 days')!==-1)return 3;
+    if(t.indexOf('bi-weekly')!==-1||t.indexOf('biweekly')!==-1||t.indexOf('fortnight')!==-1)return 5;
+    if(t.indexOf('weekly')!==-1)return 4;
+    if(t.indexOf('monthly')!==-1)return 6;
+    return 7;
+  }
+  function methodsOf(rules){
+    if(!rules)return [];
+    var raw=rules.payout_methods||rules.payout_method||rules.payment_methods||rules.methods;
+    if(!raw)return [];
+    if(Array.isArray(raw))return raw.map(function(x){return String(x);}).filter(Boolean);
+    return [String(raw)];
+  }
+  var payoutsPromise=get('firm_payouts?select=id,firm_id,amount,currency,payout_date,proof_url,source,created_at&order=payout_date.desc&limit=1000')
+    .then(function(rows){return {ok:true,rows:Array.isArray(rows)?rows:[]};})
+    .catch(function(){return {ok:false,rows:[]};});
+
+  /* --- Recent payouts feed (independent of the policy table) --- */
+  payoutsPromise.then(function(res){
+    var state=document.getElementById('payoutFeedState');
+    var feed=document.getElementById('payoutFeed');
+    var empty=document.getElementById('payoutFeedEmpty');
+    if(!res.ok){
+      if(state)state.innerHTML='<p class="note">Payout records could not be loaded right now — please check back later.</p>';
+      return;
+    }
+    if(!res.rows.length){
+      if(state)state.hidden=true;
+      if(empty)empty.hidden=false;
+      return;
+    }
+    /* Firm names/websites for the feed */
+    get('firms?select=id,name,website').then(function(firms){
+      var byId={};
+      (firms||[]).forEach(function(f){byId[f.id]=f;});
+      renderFeed(res.rows.slice(0,20),byId);
+    }).catch(function(){renderFeed(res.rows.slice(0,20),{});});
+    function renderFeed(rows,byId){
+      if(state)state.hidden=true;
+      if(!feed)return;
+      feed.innerHTML='';
+      rows.forEach(function(row){
+        var firm=byId[row.firm_id]||{};
+        var item=document.createElement('div');item.className='feed-item';
+        var amt=document.createElement('div');amt.className='feed-amount';
+        var a=Number(row.amount);
+        amt.textContent=isFinite(a)?sym(row.currency||'USD')+fmt(a):'—';
+        item.appendChild(amt);
+        var meta=document.createElement('div');meta.className='feed-meta';
+        var fn=document.createElement('div');fn.className='feed-firm';
+        if(firm.name&&firm.website){var link=document.createElement('a');link.href=firm.website;link.target='_blank';link.rel='noopener';link.textContent=firm.name;fn.appendChild(link);}
+        else fn.textContent=firm.name||'Prop firm';
+        meta.appendChild(fn);
+        var sub=document.createElement('div');sub.className='feed-sub';
+        var d=fmtDate(row.payout_date||row.created_at);
+        sub.textContent=d?('Paid '+d):'';
+        meta.appendChild(sub);
+        item.appendChild(meta);
+        var links=document.createElement('div');links.className='feed-links';
+        if(row.proof_url&&isUrl(row.proof_url)){var pl=document.createElement('a');pl.href=row.proof_url;pl.target='_blank';pl.rel='noopener';pl.textContent='View proof ↗';links.appendChild(pl);}
+        if(row.source){
+          if(isUrl(row.source)){var sl=document.createElement('a');sl.href=row.source;sl.target='_blank';sl.rel='noopener';sl.textContent='Source ↗';links.appendChild(sl);}
+          else{var ss=document.createElement('span');ss.style.cssText='color:var(--muted);font-size:13px;margin-left:14px';ss.textContent='Source: '+row.source;links.appendChild(ss);}
+        }
+        item.appendChild(links);
+        feed.appendChild(item);
+      });
+      feed.hidden=false;
+    }
+  });
+
+  /* --- Live policy table --- */
+  Promise.all([
+    get('firms?select=id,name,website,last_verified_at,updated_at&order=name.asc'),
+    get('firm_plans?select=firm_id,account_size,price,currency,rules'),
+    payoutsPromise
+  ]).then(function(res){
+    var firms=res[0],plans=res[1],payouts=res[2];
+    if(!Array.isArray(firms)||!firms.length||!Array.isArray(plans))return;
+    var plansByFirm={};
+    plans.forEach(function(p){if(p&&p.firm_id)(plansByFirm[p.firm_id]=plansByFirm[p.firm_id]||[]).push(p);});
+    /* Per-firm payout stats — only from firm_payouts rows */
+    var stats={};
+    if(payouts.ok){
+      payouts.rows.forEach(function(row){
+        if(!row||!row.firm_id)return;
+        var s=stats[row.firm_id]=stats[row.firm_id]||{count:0,total:0,cur:(row.currency||'USD')};
+        s.count++;
+        var a=Number(row.amount);if(isFinite(a))s.total+=a;
+      });
+    }
+    var hasStats=payouts.ok&&payouts.rows.length>0;
+    var rows=firms.map(function(firm){
+      var fplans=plansByFirm[firm.id]||[];
+      var splits=[],freqSeen={},freqs=[],methodsSeen={},methods=[],scales=false,bestRank=8;
+      fplans.forEach(function(p){
+        var r=p.rules||{};
+        var sp=Number(r.profit_split);if(isFinite(sp)&&splits.indexOf(sp)===-1)splits.push(sp);
+        if(r.profit_split_up_to===true)scales=true;
+        if(r.payout_frequency){var f=String(r.payout_frequency);if(!freqSeen[f]){freqSeen[f]=true;freqs.push(f);var rk=speedRank(f);if(rk<bestRank)bestRank=rk;}}
+        methodsOf(r).forEach(function(m){if(!methodsSeen[m]){methodsSeen[m]=true;methods.push(m);}});
+      });
+      splits.sort(function(a,b){return a-b;});
+      freqs.sort(function(a,b){return speedRank(a)-speedRank(b);});
+      return {firm:firm,splits:splits,scales:scales,freqs:freqs,bestRank:bestRank,methods:methods,stat:stats[firm.id]||null};
+    });
+    var anyMethods=rows.some(function(r){return r.methods.length;});
+    rows.sort(function(a,b){
+      if(a.bestRank!==b.bestRank)return a.bestRank-b.bestRank;
+      return String(a.firm.name).localeCompare(String(b.firm.name));
+    });
+    var head=document.getElementById('livePolicyHead'),body=document.getElementById('livePolicyBody');
+    if(!head||!body)return;
+    head.innerHTML='';
+    var htr=document.createElement('tr');
+    ['Firm','Profit split (trader)','Payout frequency'].concat(anyMethods?['Payout methods']:[]).concat(hasStats?['Recorded payouts']:[]).forEach(function(label){
+      var th=document.createElement('th');th.textContent=label;htr.appendChild(th);
+    });
+    head.appendChild(htr);
+    body.innerHTML='';
+    rows.forEach(function(row){
+      var tr=document.createElement('tr');
+      var fc=document.createElement('td');fc.className='firm-cell';
+      if(row.firm.website){var a=document.createElement('a');a.href=row.firm.website;a.target='_blank';a.rel='noopener';a.style.color='var(--accent)';a.textContent=row.firm.name+' ↗';fc.appendChild(a);}
+      else fc.textContent=row.firm.name;
+      if(hasStats&&row.stat){
+        var sl=document.createElement('span');sl.className='stat-line';
+        sl.textContent=row.stat.count+(row.stat.count===1?' recorded payout':' recorded payouts')+' · '+sym(row.stat.cur)+fmt(row.stat.total)+' total';
+        fc.appendChild(sl);
+      }
+      tr.appendChild(fc);
+      var sc=document.createElement('td');
+      if(row.splits.length){
+        sc.appendChild(document.createTextNode(row.splits.length>1?(fmt(row.splits[0])+'% → '+fmt(row.splits[row.splits.length-1])+'%'):fmt(row.splits[0])+'%'));
+        if(row.scales){var sm=document.createElement('span');sm.style.color='var(--muted)';sm.textContent=' (scales higher)';sc.appendChild(sm);}
+      }else sc.textContent='Not stated';
+      tr.appendChild(sc);
+      var pc=document.createElement('td');
+      if(row.freqs.length){
+        var dot=document.createElement('span');dot.className='speed-dot';pc.appendChild(dot);
+        pc.appendChild(document.createTextNode(row.freqs.map(cap).join(' / ')));
+        if(row.bestRank===0){var pill=document.createElement('span');pill.className='fast';pill.textContent='FASTEST';pc.appendChild(pill);}
+      }else pc.textContent='Not stated';
+      tr.appendChild(pc);
+      if(anyMethods){
+        var mc=document.createElement('td');
+        mc.textContent=row.methods.length?row.methods.join(', '):'—';
+        tr.appendChild(mc);
+      }
+      if(hasStats){
+        var stc=document.createElement('td');
+        stc.textContent=row.stat?(row.stat.count+' · '+sym(row.stat.cur)+fmt(row.stat.total)):'—';
+        tr.appendChild(stc);
+      }
+      body.appendChild(tr);
+    });
+    var counts=document.getElementById('liveCounts');
+    if(counts)counts.textContent=firms.length+' verified prop firms';
+    var note=document.getElementById('liveTableNote');
+    if(note){
+      note.textContent='Live table — splits and payout frequencies are aggregated from each firm\u2019s verified plan data and ordered by fastest payout frequency. '+
+        (anyMethods?'':'Payout methods are not published in the verified plan data, so no methods column is shown — check each firm\u2019s official site. ')+
+        (hasStats?'“Recorded payouts” counts and totals are computed only from payout records published in PIPVANT\u2019s database. ':'')+
+        'Terms change — confirm the exact terms for your plan on the firm\u2019s official site before buying.';
+    }
+    var tw=document.getElementById('liveTableWrap');if(tw)tw.hidden=false;
+    var stw=document.getElementById('staticTableWrap');if(stw)stw.hidden=true;
+  }).catch(function(){/* live fetch failed — static snapshot table stays visible as fallback */});
+})();
+</script>
 </body>
 </html>
