@@ -2367,28 +2367,12 @@ html[dir="rtl"] .pv-ob-opt{text-align:right}
 #profile .profile-side-stack .profile-surface{background:var(--sunken)}
 /* one section-head language across all quiet sections: gold dash before every surface title */
 #profile .profile-surface-head h3:before{content:"";display:inline-block;width:15px;height:2px;margin-inline-end:9px;border-radius:2px;background:linear-gradient(90deg,#ecd06a,var(--gold));vertical-align:middle}
-/* ideas batch: trader-card share button in the badges head + matcher watchlist chip/alerts.
-   Watchlist storage reuses the existing shortlist (localStorage pipvant_shortlist). */
+/* ideas batch: trader-card share button in the badges head. */
 #profile .pv-head-actions{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
 #shareTraderCardBtn{display:inline-flex;align-items:center;gap:8px;flex:0 0 auto;min-height:38px;padding:0 14px;font-size:12px}
 #shareTraderCardBtn svg{flex:0 0 auto}
 #traderCardFeedback{margin:0;padding:10px 20px 0;min-height:0;color:var(--gold);font-size:12px;font-weight:600}
 #traderCardFeedback:empty{padding:0}
-.wl-chip{position:relative;display:inline-flex;align-items:center;gap:8px;flex:1 1 0;min-height:44px;padding:0 16px;border:0;border-radius:10px;background:transparent;color:var(--muted);font-size:13px;font-weight:600;letter-spacing:.02em;cursor:pointer;transition:all .18s ease;justify-content:center;white-space:nowrap}
-.wl-chip:hover{color:var(--text)}
-.wl-chip:active{transform:scale(.98)}
-.wl-chip svg{flex:0 0 auto}
-.wl-chip .wl-count{font:600 11px/1 "IBM Plex Mono",monospace;color:var(--silver);opacity:.7;font-variant-numeric:tabular-nums}
-.wl-chip[aria-pressed="true"]{color:#0A1628;background:linear-gradient(135deg,#E8C547,#D4AF37);font-weight:700;box-shadow:0 2px 12px rgba(212,175,55,.25)}
-.wl-chip[aria-pressed="true"] .wl-count{color:#0A1628;opacity:.7}
-.wl-chip[aria-pressed="true"] svg{fill:#0A1628}
-.wl-badge{position:absolute;top:5px;inset-inline-end:7px;min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:linear-gradient(135deg,#e8c455,#D4AF37);color:#0A1628;font:800 10px/1 "Space Grotesk",sans-serif;display:grid;place-items:center;box-shadow:0 0 0 2px var(--sunken),0 2px 8px rgba(212,175,55,.5)}
-.wl-chip[aria-pressed="true"] .wl-badge{box-shadow:0 0 0 2px #D4AF37,0 2px 8px rgba(0,0,0,.3)}
-.wl-alerts{margin:0 0 16px;padding:11px 14px;border:1px solid color-mix(in srgb,var(--gold) 35%,var(--line));border-radius:12px;background:linear-gradient(160deg,rgba(212,175,55,.09),rgba(212,175,55,0) 62%),var(--surface);display:grid;gap:7px}
-.wl-alerts[hidden]{display:none}
-.wl-alert-row{display:flex;gap:9px;align-items:center;font-size:12.5px;color:var(--secondary);line-height:1.45}
-.wl-alert-row strong{color:var(--text);font-weight:700}
-.wl-alert-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);flex:0 0 auto;box-shadow:0 0 8px rgba(212,175,55,.85)}
 /* ===== IDEAS BATCH 2: jump menu (premium command palette) ===== */
 .jump-overlay{position:fixed;inset:0;z-index:1300;background:rgba(4,10,20,.66);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:flex;align-items:flex-start;justify-content:center;padding:11vh 16px 16px}
 .jump-overlay[hidden]{display:none}
@@ -2856,10 +2840,7 @@ html[dir="rtl"] .jump-row{text-align:right}
         <button class="cat-btn" type="button" data-cat="all" aria-pressed="true"><span class="cat-label">All</span><span class="cat-count">19</span></button>
         <button class="cat-btn" type="button" data-cat="futures" aria-pressed="false"><span class="cat-label">Futures</span><span class="cat-count">4</span></button>
         <button class="cat-btn" type="button" data-cat="cfds" aria-pressed="false"><span class="cat-label">CFDs</span><span class="cat-count">15</span></button>
-        <button class="wl-chip" id="sbWatchChip" type="button" aria-pressed="false" aria-label="Watchlist"><svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6 4h12v17l-6-4-6 4Z"/></svg><span class="wl-label">Watchlist</span><span class="wl-count" id="sbWatchCount">0</span><span class="wl-badge" id="sbWatchBadge" hidden></span></button>
       </div>
-
-      <div class="wl-alerts" id="sbWatchAlerts" hidden></div>
 
       <!-- TOP RATED GATE — entry banner only; the verdict card + podium live on the Top Rated page -->
       <button class="tr-gate" id="sbTopRatedGate" type="button" data-screen="top-rated" hidden aria-label="Open top rated by traders">
@@ -5736,8 +5717,6 @@ html[dir="rtl"] .jump-row{text-align:right}
     if(!sbFirms.length)return;
     var filters=sbGetMatcherFilters();
     var firms=sbFirms.filter(function(f){return sbFirmMatchesFilters(f,sbPlansByFirm[f.id]||[],filters);});
-    /* Watchlist view: restrict to saved firms (the existing shortlist store). */
-    if(window.sbWatchlistOnly){firms=firms.filter(function(f){try{return sbIsShortlisted(f.id);}catch(e){return false;}});}
     /* RANKING: sort by PIPVANT Score (best first, name tiebreak). */
     try{
       firms.sort(function(a,b){
@@ -5775,11 +5754,7 @@ html[dir="rtl"] .jump-row{text-align:right}
       // blame the answers, not data verification.
       if(firms.length===0&&(sbFirms||[]).length>0){
         var _mh=mEmpty.querySelector('h3'),_mp=mEmpty.querySelector('p');
-        if(window.sbWatchlistOnly&&sbGetShortlist().length===0){
-          /* Honest watchlist empty state: nothing saved yet. */
-          if(_mh)_mh.textContent=currentLanguage==='ar'?'لا توجد شركات محفوظة بعد':'No firms saved yet';
-          if(_mp)_mp.textContent=currentLanguage==='ar'?'اضغط على إشارة الحفظ على أي شركة لحفظها هنا.':'Tap the bookmark on any firm to save it here.';
-        }else if(sbActiveCat==='crypto'){
+        if(sbActiveCat==='crypto'){
           /* Honest empty state: no crypto firms verified yet — never invent firms. */
           if(_mh)_mh.textContent=currentLanguage==='ar'?'لا توجد شركات كريبتو بعد':'No crypto firms yet';
           if(_mp)_mp.textContent=currentLanguage==='ar'?'ما زلنا نتحقق من شركات الكريبتو — رجع لاحقاً.':'We\u2019re still verifying crypto firms \u2014 check back soon.';
@@ -5879,7 +5854,6 @@ html[dir="rtl"] .jump-row{text-align:right}
       }else if(fb){fb.hidden=true;}
     }catch(fbe){}
     sbUpdateCountChips();
-    try{if(typeof pvWatchRefresh==='function')pvWatchRefresh();}catch(_wl){}
     if(typeof sbUpdateMethodologyStats==='function')sbUpdateMethodologyStats();
     /* BIG BATCH P1: verdict card + rated-by-traders strips for this filtered set */
     try{sbRenderVerdictAndRated(firms);}catch(_vr){}
@@ -7512,7 +7486,7 @@ html[dir="rtl"] .jump-row{text-align:right}
   var titlesEn={landing:['Toolkit','Trade with a process'],matcher:['Tool 01','Prop firm matcher'],'all-firms':['Matcher','All firms'],'top-rated':['Community','Top rated by traders'],journal:['Tool 02','Trading journal'],calculator:['Tool 03','Risk calculator'],calendar:['Tool 04','Economic Calendar'],lab:['Tool 05','Pro Lab'],discipline:['Parked','Discipline'],'discipline-soon':['Next version','Discipline'],notifications:['Inbox','Notifications'],profile:['Account','Profile'],settings:['Account','Settings'],certificate:['Account','Certificates'],methodology:['PIPVANT','Methodology'],support:['PIPVANT','Support'],about:['PIPVANT','About'],contact:['PIPVANT','Contact'],'firm-detail':['Matcher','Firm details']};
   var titlesAr={landing:['الأدوات','تداول وفق منهج'],matcher:['الأداة 01','مطابق شركات التداول'],'all-firms':['المطابق','جميع الشركات'],'top-rated':['المجتمع','الأعلى تقييماً من المتداولين'],journal:['الأداة 02','سجل التداول'],calculator:['الأداة 03','حاسبة المخاطر'],calendar:['الأداة 04','التقويم الاقتصادي'],lab:['الأداة 05','مختبر المحترفين'],discipline:['متوقف مؤقتاً','الانضباط'],'discipline-soon':['الإصدار القادم','الانضباط'],notifications:['الوارد','الإشعارات'],profile:['الحساب','الملف الشخصي'],settings:['الحساب','الإعدادات'],certificate:['الحساب','الشهادات'],methodology:['PIPVANT','المنهجية'],support:['PIPVANT','الدعم'],about:['PIPVANT','حول'],contact:['PIPVANT','تواصل'],'firm-detail':['المطابق','تفاصيل الشركة']};
   var ar={
-    'Watchlist':'قائمة المتابعة','Share trader card':'مشاركة بطاقة المتداول',
+    'Share trader card':'مشاركة بطاقة المتداول',
     'Tool 02':'الأداة 02','Trading journal':'سجل التداول','Your profile, activity, and verified achievements in one place.':'ملفك ونشاطك وإنجازاتك الموثقة في مكان واحد.','Cost of mistakes':'تكلفة الأخطاء','Closed trades only — grouped by tag':'الصفقات المغلقة فقط — مجمعة حسب الوسم','BY TAG':'حسب الوسم','Tag trades with the mistake chips to see what they cost you':'وسّم صفقاتك برقائق الأخطاء لترى كم كلفتك','Mistake (optional)':'الخطأ (اختياري)','Revenge trade':'صفقة انتقامية','Early exit':'خروج مبكر','Late entry':'دخول متأخر','Oversized position':'حجم مفرط','Against plan':'ضد الخطة','Hide amounts':'إخفاء المبالغ','Seconds':'الثواني','Previous month':'الشهر السابق','Next month':'الشهر التالي',
     'True Cost Calculator':'حاسبة التكلفة الحقيقية','Pass Simulator':'محاكي اجتياز التحدي','Rule-change Radar':'رادار تغيير القواعد','Breach Guard':'حارس الاختراق','Trading DNA — find your match':'بصمة التداول — اعثر على ما يناسبك','▶ Run Simulation':'▶ تشغيل المحاكاة',
     'The sticker price lies. Commissions, resets and fees are the real price of a funded account.':'السعر المعلن مضلل. العمولات وإعادة التعيين والرسوم هي السعر الحقيقي للحساب الممول.',
@@ -11741,92 +11715,6 @@ html[dir="rtl"] .jump-row{text-align:right}
     }catch(e){var fb=pvEl('traderCardFeedback');if(fb)fb.textContent=pvLT('Could not build the trader card on this device.','تعذّر إنشاء بطاقة المتداول على هذا الجهاز.');if(finish)finish();}
   }
   (function pvTraderWire(){var b=pvEl('shareTraderCardBtn');if(b)b.addEventListener('click',pvShareTraderCard);})();
-
-  /* ---- Firm watchlist (matcher) ----
-     Storage is the EXISTING shortlist — localStorage 'pipvant_shortlist' via
-     sbGetShortlist/sbIsShortlisted/sbToggleShortlist — the same store behind the
-     card hearts, the "Save to shortlist" buttons, the firm-detail #fdHeart and
-     the directory Saved tab (it also syncs to user_settings when logged in).
-     This block only adds: the filter chip, watchlist-only filtering support
-     (in sbRenderFirms), and change alerts from the site's own data-changes.json. */
-  window.sbWatchlistOnly=false;
-  var pvWatchChanges=null; /* null = feed not loaded yet */
-  function pvWatchNorm(s){return String(s||'').trim().toLowerCase();}
-  function pvWatchRecentChanges(){
-    if(!pvWatchChanges||!pvWatchChanges.length)return [];
-    var firms=(typeof sbFirms!=='undefined'&&Array.isArray(sbFirms))?sbFirms:[];
-    var savedNames={};
-    firms.forEach(function(f){try{if(sbIsShortlisted(f.id))savedNames[pvWatchNorm(f.name)]=true;}catch(e){}});
-    if(!Object.keys(savedNames).length)return [];
-    var today=new Date();today.setHours(0,0,0,0);
-    var seen={},out=[];
-    pvWatchChanges.forEach(function(c){
-      if(!c||!c.firm||!c.date)return;
-      if(!savedNames[pvWatchNorm(c.firm)])return;
-      var t=new Date(String(c.date)+'T00:00:00');if(isNaN(t.getTime()))return;
-      var days=Math.round((today.getTime()-t.getTime())/86400000);
-      if(days<-1||days>7)return;
-      var key=pvWatchNorm(c.firm)+'|'+(c.kind||'')+'|'+(c.field||'')+'|'+c.date;
-      if(seen[key])return;seen[key]=1;
-      out.push({firm:c.firm,kind:c.kind||'promo',date:c.date,days:days});
-    });
-    out.sort(function(a,b){return a.days-b.days;});
-    return out;
-  }
-  function pvWatchKindLabel(kind){
-    if(kind==='price')return pvLT('price updated','تم تحديث السعر');
-    if(kind==='rule')return pvLT('rules updated','تم تحديث القواعد');
-    return pvLT('promo updated','تم تحديث العرض');
-  }
-  function pvWatchRel(days){
-    if(days<=0)return pvLT('today','اليوم');
-    if(days===1)return pvLT('yesterday','أمس');
-    return pvLT(days+' days ago','قبل '+days+' أيام');
-  }
-  function pvWatchRefresh(){
-    var chip=pvEl('sbWatchChip');if(!chip)return;
-    var list=[];try{list=sbGetShortlist();}catch(e){}
-    var cnt=pvEl('sbWatchCount');if(cnt)cnt.textContent=String(list.length);
-    chip.setAttribute('aria-pressed',String(!!window.sbWatchlistOnly));
-    var changes=pvWatchRecentChanges();
-    var badge=pvEl('sbWatchBadge');
-    if(badge){if(changes.length){badge.hidden=false;badge.textContent=String(changes.length);}else{badge.hidden=true;badge.textContent='';}}
-    var strip=pvEl('sbWatchAlerts');
-    if(strip){
-      if(window.sbWatchlistOnly&&changes.length){
-        strip.innerHTML=changes.slice(0,3).map(function(c){return '<div class="wl-alert-row"><span class="wl-alert-dot" aria-hidden="true"></span><span><strong>'+pvEsc(c.firm)+'</strong> — '+pvEsc(pvWatchKindLabel(c.kind))+' · '+pvEsc(pvWatchRel(c.days))+'</span></div>';}).join('');
-        strip.hidden=false;
-      }else{strip.hidden=true;strip.innerHTML='';}
-    }
-  }
-  window.pvWatchRefresh=pvWatchRefresh;
-  (function pvWatchWire(){
-    var chip=pvEl('sbWatchChip');
-    if(chip)chip.addEventListener('click',function(){
-      window.sbWatchlistOnly=!window.sbWatchlistOnly;
-      pvWatchRefresh();
-      if(typeof sbRenderFirms==='function')sbRenderFirms();
-    });
-    /* Change feed: once per session, same path + options as data-ledger.html. */
-    try{
-      fetch('data-changes.json',{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('data-changes.json '+r.status);return r.json();}).then(function(d){
-        pvWatchChanges=(d&&Array.isArray(d.changes))?d.changes:[];
-        pvWatchRefresh();
-      }).catch(function(){pvWatchChanges=[];pvWatchRefresh();});
-    }catch(e){pvWatchChanges=[];}
-    /* Keep the chip in sync when a firm is saved/unsaved anywhere: every save
-       surface (card hearts, card shortlist buttons, directory bookmarks,
-       firm-detail heart) funnels through sbToggleShortlist — wrap it so the
-       chip count/badge refresh and the filtered view updates immediately.
-       (Click delegation would not work: the save handlers stopPropagation.) */
-    if(typeof sbToggleShortlist==='function'&&!sbToggleShortlist.__pvWrapped){
-      var pvOrigToggleShortlist=sbToggleShortlist;
-      var pvWrappedToggle=function(fid){var r=pvOrigToggleShortlist(fid);try{pvWatchRefresh();if(window.sbWatchlistOnly&&typeof sbRenderFirms==='function')sbRenderFirms();}catch(e){}return r;};
-      pvWrappedToggle.__pvWrapped=true;
-      sbToggleShortlist=pvWrappedToggle;
-    }
-    pvWatchRefresh();
-  })();
 
   tradeSheet.addEventListener('click',function(e){if(e.target===tradeSheet)closeTradeSheet();});
   document.querySelectorAll('.chip[data-direction]').forEach(function(chip){chip.addEventListener('click',function(){
