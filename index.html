@@ -2349,6 +2349,28 @@ html[dir="rtl"] .pv-ob-opt{text-align:right}
 #profile .profile-editor-card{border-radius:16px}
 #profile .profile-editor-close{border-radius:50%}
 #profile .profile-editor .btn.primary{background:linear-gradient(135deg,#ecd06a,#D4AF37);border-color:transparent;color:#0A1628;font-weight:800;box-shadow:0 8px 20px -8px rgba(212,175,55,.55)}
+/* ===== PROFILE POLISH ROUND 2 — content-sized tiles, single intro line, hero balance, whole-page composition ===== */
+/* intro line only — the app chrome already titles this screen */
+#profile .profile-page-head{margin:2px 0 24px;text-align:center}
+#profile .profile-page-head .tr-sub{margin-inline:auto;font-size:13.5px}
+/* stat tiles size to content — no fixed heights, no bottom-pinning; quiet tier (flat, no deep shadow) */
+#profile .profile-stat-card{min-height:0;box-shadow:inset 0 1px 0 rgba(255,255,255,.018)}
+#profile .profile-stat-visual{margin-top:14px}
+#profile .trade-breakdown{margin-top:13px}
+#profile .profile-most-traded{margin-top:13px}
+/* balance hero — verdict-level: gold glow anchored top-left, fine gold hairline on the top edge, richer equity stage */
+#profile .profile-balance{background:radial-gradient(620px 280px at 4% -38%,rgba(212,175,55,.21),rgba(212,175,55,0) 62%) padding-box,linear-gradient(168deg,rgba(255,255,255,.05),rgba(255,255,255,0) 44%) padding-box,linear-gradient(var(--surface),var(--surface)) padding-box,linear-gradient(140deg,rgba(212,175,55,.55),rgba(212,175,55,.12) 42%,rgba(255,255,255,.07) 72%,rgba(91,141,239,.22)) border-box;box-shadow:inset 0 1px 0 rgba(212,175,55,.5),0 20px 48px -22px rgba(3,8,18,.55)}
+#profile .profile-equity-empty{min-height:114px;margin-top:20px}
+#profileEquityGradient stop:first-child{stop-color:#D4AF37;stop-opacity:.26}
+#profile .profile-equity-empty.has-equity .equity-line{filter:drop-shadow(0 0 7px rgba(91,141,239,.42))}
+/* activity score ring rhymes with the hero — stronger gold glow */
+#profile .score-value-ring{filter:drop-shadow(0 0 11px rgba(212,175,55,.55))}
+/* composition rhythm + differentiation: badges read as a gold-tinted strip; setup status as a sunken checklist panel */
+#profile .profile-badges{margin-top:8px;border-color:color-mix(in srgb,var(--gold) 22%,var(--line));background:linear-gradient(168deg,rgba(212,175,55,.09),rgba(212,175,55,0) 54%),var(--surface)}
+#profile .profile-content-grid{margin-top:8px}
+#profile .profile-side-stack .profile-surface{background:var(--sunken)}
+/* one section-head language across all quiet sections: gold dash before every surface title */
+#profile .profile-surface-head h3:before{content:"";display:inline-block;width:15px;height:2px;margin-inline-end:9px;border-radius:2px;background:linear-gradient(90deg,#ecd06a,var(--gold));vertical-align:middle}
 </style>
 <div id="siteLanding" aria-label="PIPVANT landing page">
   <div class="lp-grain" aria-hidden="true"></div>
@@ -3288,8 +3310,6 @@ html[dir="rtl"] .pv-ob-opt{text-align:right}
     <section class="screen" id="profile" aria-label="Profile">
       <div class="profile-wrap">
         <header class="profile-page-head">
-          <p class="eyebrow">Account</p>
-          <h2 class="tr-title">Profile</h2>
           <p class="tr-sub">Your profile, activity, and verified achievements in one place.</p>
         </header>
         <header class="profile-head">
