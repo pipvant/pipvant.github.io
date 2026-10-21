@@ -1690,25 +1690,87 @@
   box-shadow:0 2px 12px rgba(212,175,55,.5)!important;transform:scale(1.05);
 }
 /* BIG BATCH P1 — Verdict card + Rated-by-Traders strip + card compare pill */
-.verdict-card{margin:0 0 14px;border:1px solid rgba(212,175,55,.45);border-left:4px solid var(--gold,#D4AF37);border-radius:16px;background:linear-gradient(145deg,var(--surface),color-mix(in srgb,var(--raised) 54%,var(--surface)));padding:18px}
+/* Verdict hero — one strong moment: the score ring on a quiet glass surface,
+   single soft gold glow, hairline gold-tinted border, typography leads. */
+.verdict-card{position:relative;display:flex;align-items:center;gap:32px;margin:0 0 16px;border-radius:20px;padding:28px 32px;border:1px solid transparent;background:radial-gradient(460px 220px at 88% -35%,rgba(212,175,55,.12),rgba(212,175,55,0) 62%) padding-box,linear-gradient(168deg,rgba(255,255,255,.05),rgba(255,255,255,0) 44%) padding-box,linear-gradient(var(--surface),var(--surface)) padding-box,linear-gradient(140deg,rgba(212,175,55,.55),rgba(212,175,55,.10) 42%,rgba(255,255,255,.07) 72%,rgba(91,141,239,.22)) border-box;box-shadow:0 20px 48px -20px rgba(3,8,18,.55)}
 .verdict-card[hidden]{display:none}
-.verdict-eyebrow{margin:0 0 6px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--gold,#D4AF37)}
-.verdict-name{margin:0 0 10px;font-family:"Space Grotesk",sans-serif;font-size:24px;font-weight:700;color:var(--text)}
-.verdict-reasons{margin:0 0 14px;padding:0;list-style:none;display:grid;gap:6px}
-.verdict-reasons li{font-size:13px;color:var(--secondary);display:flex;gap:8px;align-items:flex-start}
-.verdict-reasons li::before{content:"✓";color:var(--accent,#5B8DEF);font-weight:800;flex:0 0 auto}
-.verdict-cta{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 18px;border:0;border-radius:999px;background:linear-gradient(135deg,#e8c455,#D4AF37);color:#0A1628;font-size:13px;font-weight:800;cursor:pointer}
+.verdict-main{flex:1 1 auto;min-width:0}
+.verdict-eyebrow{display:inline-flex;align-items:center;gap:6px;margin:0 0 14px;padding:5px 12px;border-radius:999px;background:linear-gradient(135deg,#ecd06a,#D4AF37);color:#0A1628;font-size:11px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;box-shadow:0 2px 8px rgba(212,175,55,.22)}
+.verdict-eyebrow::before{content:"";width:12px;height:12px;flex:0 0 auto;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230A1628'%3E%3Cpath d='M19 5h-2V3H7v2H5a2 2 0 0 0-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7a2 2 0 0 0-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z'/%3E%3C/svg%3E") center/contain no-repeat}
+.verdict-name{margin:0 0 12px;font-family:"Space Grotesk",sans-serif;font-size:31px;line-height:1.08;font-weight:700;letter-spacing:-.01em;color:var(--text)}
+.verdict-reasons{margin:0 0 20px;padding:0;list-style:none;display:grid;gap:9px}
+.verdict-reasons li{font-size:13.5px;line-height:1.45;color:var(--secondary);display:flex;gap:10px;align-items:flex-start}
+.verdict-reasons li:first-child{font-size:14.5px;color:var(--text);font-weight:600}
+.verdict-reasons li::before{content:"✓";display:flex;align-items:center;justify-content:center;width:19px;height:19px;margin-top:1px;border-radius:50%;background:rgba(212,175,55,.13);border:1px solid rgba(212,175,55,.38);color:var(--gold,#D4AF37);font-size:11px;font-weight:800;flex:0 0 auto}
+.verdict-cta{display:inline-flex;align-items:center;gap:8px;min-height:42px;padding:0 20px;border:0;border-radius:999px;background:linear-gradient(135deg,#ecd06a,#D4AF37);color:#0A1628;font-size:13.5px;font-weight:800;cursor:pointer;box-shadow:0 8px 20px -8px rgba(212,175,55,.55);transition:transform .22s ease,box-shadow .22s ease}
 .verdict-cta:active{transform:scale(.97)}
-.rated-strip{margin:0 0 14px;border:1px solid var(--line);border-radius:16px;background:var(--surface);padding:14px 18px}
+.verdict-cta:focus-visible{outline:2px solid var(--accent,#5B8DEF);outline-offset:2px}
+.verdict-scorewrap{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:10px}
+.verdict-ringwrap{position:relative;width:118px;height:118px}
+.verdict-ring{display:block;width:100%;height:100%;transform:rotate(-90deg)}
+.verdict-ring-track{fill:none;stroke:rgba(255,255,255,.08);stroke-width:9}
+.verdict-ring-prog{fill:none;stroke:url(#pvGoldGrad);stroke-width:9;stroke-linecap:round;stroke-dasharray:326.7;stroke-dashoffset:326.7;transition:stroke-dashoffset .8s cubic-bezier(.25,.8,.3,1)}
+.verdict-scorenum{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:2px}
+.verdict-scorenum span{font-family:"Space Grotesk",sans-serif;font-size:33px;font-weight:700;line-height:1;color:var(--text);font-variant-numeric:tabular-nums}
+.verdict-scorenum small{font-size:12px;font-weight:600;color:var(--muted);margin-top:11px}
+.verdict-scorelabel{margin:0;font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+html[dir="rtl"] .verdict-scorelabel,html[dir="rtl"] .verdict-eyebrow{letter-spacing:.02em}
+html[data-theme="light"] .verdict-ring-track{stroke:rgba(10,22,40,.10)}
+@media(hover:hover) and (pointer:fine){.verdict-cta:hover{transform:translateY(-1px);box-shadow:0 12px 24px -8px rgba(212,175,55,.6)}}
+@media(max-width:640px){
+  .verdict-card{padding:20px;gap:0}
+  .verdict-name{font-size:26px;padding-inline-end:94px}
+  .verdict-scorewrap{position:absolute;top:18px;inset-inline-end:18px;gap:6px}
+  .verdict-ringwrap{width:80px;height:80px}
+  .verdict-scorenum span{font-size:23px}
+  .verdict-scorenum small{font-size:10px;margin-top:7px}
+  .verdict-scorelabel{font-size:8.5px}
+}
+/* Rated by Traders — podium cards, quiet surfaces; gold reserved for #1. */
+.rated-strip{margin:0 0 16px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(168deg,rgba(255,255,255,.03),rgba(255,255,255,0) 46%),var(--surface);padding:20px}
 .rated-strip[hidden]{display:none}
-.rated-title{margin:0 0 10px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-.rated-row{display:flex;gap:10px;flex-wrap:wrap}
-.rated-card{flex:1 1 180px;display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid rgba(212,175,55,.35);border-radius:12px;padding:10px 14px;background:transparent;cursor:pointer;text-align:left;color:var(--text);font:inherit}
+.rated-title{margin:0 0 14px;font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.rated-row{display:flex;gap:12px;flex-wrap:wrap}
+.rated-card{position:relative;flex:1 1 210px;display:flex;flex-direction:column;gap:12px;border:1px solid var(--line-strong);border-radius:16px;padding:16px;background:linear-gradient(165deg,rgba(255,255,255,.04),rgba(255,255,255,0) 55%),var(--raised);cursor:pointer;text-align:start;color:var(--text);font:inherit;transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}
 .rated-card:active{transform:scale(.98)}
-.rated-card .rated-firm{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:14px}
-.rated-card .rated-agg{color:var(--gold,#D4AF37);font-weight:700;font-size:13px;font-variant-numeric:tabular-nums;white-space:nowrap}
-.rated-card .rated-likes{color:var(--muted);font-size:12px;white-space:nowrap}
+.rated-card:focus-visible{outline:2px solid var(--accent,#5B8DEF);outline-offset:2px}
+.rated-1{border:1px solid transparent;background:linear-gradient(165deg,rgba(255,255,255,.05),rgba(255,255,255,0) 55%) padding-box,linear-gradient(var(--raised),var(--raised)) padding-box,linear-gradient(140deg,rgba(212,175,55,.75),rgba(212,175,55,.18) 55%,rgba(91,141,239,.22)) border-box;box-shadow:0 16px 36px -16px rgba(212,175,55,.38)}
+.rated-2{border-color:rgba(201,210,220,.38)}
+.rated-3{border-color:rgba(192,138,77,.38)}
+.rated-toppill{position:absolute;top:-8px;inset-inline-end:14px;padding:3px 9px;border-radius:999px;background:linear-gradient(135deg,#ecd06a,#D4AF37);color:#0A1628;font-size:9px;font-weight:800;letter-spacing:.09em;box-shadow:0 3px 10px rgba(212,175,55,.35);z-index:1}
+html[dir="rtl"] .rated-toppill{letter-spacing:0}
+.rated-top{display:flex;align-items:center;gap:10px;min-width:0}
+.rated-medalwrap{position:relative;flex:0 0 auto;width:30px;height:30px}
+.rated-medal{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.05);border:1px solid var(--line-strong);color:var(--secondary);font-size:11.5px;font-weight:800;font-variant-numeric:tabular-nums}
+.rated-1 .rated-medal{background:linear-gradient(135deg,#ecd06a,#D4AF37);border-color:transparent;color:#0A1628}
+.rated-2 .rated-medal{background:linear-gradient(135deg,#eef0f2,#9AA7B4);border-color:transparent;color:#0A1628}
+.rated-3 .rated-medal{background:linear-gradient(135deg,#d9a05f,#a8742f);border-color:transparent;color:#160f04}
+.rated-crown{position:absolute;top:-8px;left:50%;transform:translateX(-50%);width:13px;height:13px;color:var(--gold,#D4AF37);pointer-events:none}
+.rated-avatar{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#1E3A5F,#5B8DEF);color:#fff;font-family:"Space Grotesk",sans-serif;font-size:12px;font-weight:700;letter-spacing:.02em;flex:0 0 auto}
+.rated-1 .rated-avatar{background:linear-gradient(135deg,#a8842c,#D4AF37);color:#0A1628}
+.rated-card .rated-firm{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:15px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rated-mid{display:flex;align-items:center}
+.rated-stars{position:relative;display:inline-block;line-height:0}
+.rated-stars .stars-inner{display:flex;gap:2px;width:78px}
+.rated-stars .stars-inner svg{width:14px;height:14px;display:block;flex:0 0 auto}
+.rated-stars .stars-bg{color:rgba(255,255,255,.16)}
+.rated-stars .stars-clip{position:absolute;top:0;inset-inline-start:0;height:100%;overflow:hidden}
+.rated-stars .stars-fg{color:var(--gold,#D4AF37)}
+html[data-theme="light"] .rated-stars .stars-bg{color:rgba(10,22,40,.16)}
+.rated-bottom{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto}
+.rated-card .rated-agg{color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.rated-card .rated-agg b{color:var(--gold,#D4AF37);font-size:15px;font-weight:700}
+.rated-card .rated-likes{display:inline-flex;align-items:center;gap:5px;color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.rated-card .rated-likes svg{width:12px;height:12px;color:rgba(212,175,55,.75)}
 .rated-empty{margin:0;font-size:13px;color:var(--muted)}
+@media(hover:hover) and (pointer:fine){
+  .rated-card:hover{transform:translateY(-2px);border-color:rgba(212,175,55,.45);box-shadow:0 16px 32px -16px rgba(3,8,18,.6)}
+  .rated-1:hover{box-shadow:0 20px 40px -16px rgba(212,175,55,.45)}
+}
+@media (prefers-reduced-motion:reduce){
+  .verdict-ring-prog{transition:none}
+  .rated-card,.verdict-cta{transition:none}
+}
 .firm-detail-actions .compare-toggle{position:static!important;width:auto!important;height:auto!important;top:auto!important;left:auto!important;min-height:36px;padding:0 14px;border-radius:999px!important;background:transparent!important;border:1px solid var(--line-strong)!important;color:var(--secondary);font-size:12px!important;font-weight:700;display:inline-flex;align-items:center;gap:6px;backdrop-filter:none}
 .firm-detail-actions .compare-toggle[aria-pressed="true"]{background:linear-gradient(135deg,#e8c455,#D4AF37)!important;border-color:var(--gold,#D4AF37)!important;color:#0A1628!important;box-shadow:0 0 0 1px var(--gold,#D4AF37),0 2px 12px rgba(212,175,55,.4)}
 /* expanded details */
@@ -2437,10 +2499,28 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
 
       <!-- BIG BATCH P1 — Verdict card (populated by sbRenderVerdictAndRated at end of sbRenderFirms) -->
       <section class="verdict-card" id="sbVerdictCard" hidden aria-label="Best match">
-        <p class="verdict-eyebrow" id="sbVerdictEyebrow">Your best match</p>
-        <h3 class="verdict-name" id="sbVerdictName">—</h3>
-        <ul class="verdict-reasons" id="sbVerdictReasons"></ul>
-        <button class="verdict-cta" id="sbVerdictCta" type="button">See the plan <span aria-hidden="true">→</span></button>
+        <div class="verdict-main">
+          <p class="verdict-eyebrow" id="sbVerdictEyebrow">Your best match</p>
+          <h3 class="verdict-name" id="sbVerdictName">—</h3>
+          <ul class="verdict-reasons" id="sbVerdictReasons"></ul>
+          <button class="verdict-cta" id="sbVerdictCta" type="button">See the plan <span aria-hidden="true">→</span></button>
+        </div>
+        <div class="verdict-scorewrap" aria-hidden="true">
+          <div class="verdict-ringwrap">
+            <svg class="verdict-ring" viewBox="0 0 120 120" focusable="false">
+              <defs>
+                <linearGradient id="pvGoldGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#F0D47A"/>
+                  <stop offset="1" stop-color="#D4AF37"/>
+                </linearGradient>
+              </defs>
+              <circle class="verdict-ring-track" cx="60" cy="60" r="52"></circle>
+              <circle class="verdict-ring-prog" id="sbVerdictRingProg" cx="60" cy="60" r="52"></circle>
+            </svg>
+            <div class="verdict-scorenum"><span id="sbVerdictScore">–</span><small>/100</small></div>
+          </div>
+          <p class="verdict-scorelabel" id="sbVerdictScoreLabel">PIPVANT SCORE</p>
+        </div>
       </section>
 
       <!-- BIG BATCH P1 — Rated by Traders strip (aggregate only, from window._sbCommunity) -->
@@ -4996,6 +5076,10 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
         if(top.last_verified_at){var _va=sbTimeAgo(top.last_verified_at);if(_va)reasons.push((ar?'✓ تم التحقق من البيانات ':'✓ Data verified ')+_va);}
         var eb=document.getElementById('sbVerdictEyebrow');if(eb)eb.textContent=ar?'أفضل اختيار لك':'Your best match';
         var nm2=document.getElementById('sbVerdictName');if(nm2)nm2.textContent=top.name||'—';
+        var scEl=document.getElementById('sbVerdictScore');if(scEl)scEl.textContent=topScore.score;
+        var rgEl=document.getElementById('sbVerdictRingProg');
+        if(rgEl){var _pct=Math.max(0,Math.min(100,Number(topScore.score)||0));rgEl.style.strokeDashoffset=(326.7*(1-_pct/100)).toFixed(1);}
+        var slEl=document.getElementById('sbVerdictScoreLabel');if(slEl)slEl.textContent=ar?'نتيجة PIPVANT':'PIPVANT SCORE';
         var ul=document.getElementById('sbVerdictReasons');
         if(ul){ul.innerHTML='';reasons.slice(0,3).forEach(function(r){var li=document.createElement('li');li.textContent=r;ul.appendChild(li);});}
         var cta=document.getElementById('sbVerdictCta');
@@ -5023,17 +5107,49 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
       return String(a.firm.name||'').localeCompare(String(b.firm.name||''));
     });
     var top3=rated.slice(0,3);
+    /* Podium card assets: one star path reused ×5; gold overlay clipped to avg/5. */
+    var PV_STAR='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>';
+    var PV_STARS5=PV_STAR+PV_STAR+PV_STAR+PV_STAR+PV_STAR;
+    var PV_CROWN='<svg class="rated-crown" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3.5l4.6 5.9L21 6.2l-1.5 10.3H4.5L3 6.2l4.4 3.2L12 3.5zM4.5 18.5h15V20H4.5z"/></svg>';
+    var PV_THUMB='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg>';
+    function pvStarsEl(avg){
+      var wrap=document.createElement('span');wrap.className='rated-stars';wrap.setAttribute('aria-hidden','true');
+      var bg=document.createElement('span');bg.className='stars-inner stars-bg';bg.innerHTML=PV_STARS5;
+      var clip=document.createElement('span');clip.className='stars-clip';clip.style.width=Math.max(0,Math.min(100,(Number(avg)||0)/5*100))+'%';
+      var fg=document.createElement('span');fg.className='stars-inner stars-fg';fg.innerHTML=PV_STARS5;
+      clip.appendChild(fg);wrap.appendChild(bg);wrap.appendChild(clip);
+      return wrap;
+    }
     [['sbRatedStrip','sbRatedTitle','sbRatedRow','sbRatedEmpty'],['dirRatedStrip','dirRatedTitle','dirRatedRow','dirRatedEmpty']].forEach(function(ids){
       var strip=document.getElementById(ids[0]);if(!strip)return;
       var ttl=document.getElementById(ids[1]);if(ttl)ttl.textContent=ar?'الأعلى تقييماً من المتداولين':'Rated by traders';
       var row=document.getElementById(ids[2]),emp=document.getElementById(ids[3]);
       if(row){
         row.innerHTML='';
-        top3.forEach(function(it){
-          var b=document.createElement('button');b.type='button';b.className='rated-card';
-          var fn=document.createElement('span');fn.className='rated-firm';fn.textContent=it.firm.name||'—';b.appendChild(fn);
-          var ag=document.createElement('span');ag.className='rated-agg';ag.textContent=sbRatingCompact(it.avg,it.count,ar);b.appendChild(ag);
-          if(it.likes>0){var lk=document.createElement('span');lk.className='rated-likes';lk.textContent='👍 '+it.likes;b.appendChild(lk);}
+        top3.forEach(function(it,idx){
+          var rank=idx+1;
+          var b=document.createElement('button');b.type='button';b.className='rated-card rated-'+rank;
+          var aggRaw=sbRatingCompact(it.avg,it.count,ar).replace(/^★\s*/,'');
+          b.setAttribute('aria-label',(it.firm.name||'')+' · '+aggRaw);
+          if(rank===1){var pill=document.createElement('span');pill.className='rated-toppill';pill.textContent=ar?'الأعلى تقييماً':'TOP RATED';b.appendChild(pill);}
+          var tp=document.createElement('div');tp.className='rated-top';
+          var mw=document.createElement('span');mw.className='rated-medalwrap';
+          if(rank===1){var _ct=document.createElement('span');_ct.innerHTML=PV_CROWN;if(_ct.firstChild)mw.appendChild(_ct.firstChild);}
+          var md=document.createElement('span');md.className='rated-medal';md.textContent='#'+rank;mw.appendChild(md);
+          tp.appendChild(mw);
+          var wds=String(it.firm.name||'').trim().split(/\s+/);
+          var av=document.createElement('span');av.className='rated-avatar';av.textContent=(((wds[0]||'').charAt(0)+(wds[1]||'').charAt(0)).toUpperCase()||'—');tp.appendChild(av);
+          var fn=document.createElement('span');fn.className='rated-firm';fn.textContent=it.firm.name||'—';tp.appendChild(fn);
+          b.appendChild(tp);
+          var mid=document.createElement('div');mid.className='rated-mid';mid.appendChild(pvStarsEl(it.avg));b.appendChild(mid);
+          var bt=document.createElement('div');bt.className='rated-bottom';
+          var ag=document.createElement('span');ag.className='rated-agg';
+          var mAgg=aggRaw.match(/^(\d+(?:\.\d+)?)\s*(.*)$/);
+          if(mAgg){var num=document.createElement('b');num.textContent=mAgg[1];ag.appendChild(num);if(mAgg[2])ag.appendChild(document.createTextNode(' '+mAgg[2]));}
+          else ag.textContent=aggRaw;
+          bt.appendChild(ag);
+          if(it.likes>0){var lk=document.createElement('span');lk.className='rated-likes';lk.innerHTML=PV_THUMB;lk.appendChild(document.createTextNode(String(it.likes)));bt.appendChild(lk);}
+          b.appendChild(bt);
           b.addEventListener('click',function(){if(typeof sbOpenFirmDetail==='function')sbOpenFirmDetail(it.firm.id);});
           row.appendChild(b);
         });
