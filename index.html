@@ -9,7 +9,7 @@
   <meta name="theme-color" content="#0A1628">
   <!-- Mega-audit fix: set theme before first paint (prevents dark→light flash). -->
   <script>try{var _s=JSON.parse(localStorage.getItem('pipvant_settings')||'{}');var _t=_s&&_s.theme;if(_t==='light'||_t==='dark')document.documentElement.setAttribute('data-theme',_t);}catch(e){}</script>
-  <script>try{var _pool=['ninja','ronin','torii','dragon','kitsune','koi','cranes','sakura','lanterns','aurora','ocean','desert','wolf','eagle','orbit','rain','cinematic','trader','neo-ronin','miko','pirate','astronaut','ramadan'];var _b=localStorage.getItem('pipvant_bgscene');if(!_b||(_pool.indexOf(_b)<0&&_b!=='classic'&&_b!=='auto'&&_b!=='moods'&&_b!=='custom'))_b='ninja';if(_b==='auto'){var _d=new Date();function _p(n){return String(n).padStart(2,'0');}var _s=_d.getFullYear()+'-'+_p(_d.getMonth()+1)+'-'+_p(_d.getDate());var _h=2166136261;for(var _i=0;_i<_s.length;_i++){_h^=_s.charCodeAt(_i);_h=Math.imul(_h,16777619);}_b=_pool[(_h>>>0)%_pool.length];}if(_b==='moods'){var _t=new Date();var _m=_t.getHours()*60+_t.getMinutes();_b=(_m>=300&&_m<720)?'cranes':(_m>=720&&_m<1050)?'desert':(_m>=1050&&_m<1350)?'rain':'ninja';}document.documentElement.setAttribute('data-bgscene',_b);var _vi=localStorage.getItem('pipvant_bgintensity');if(_vi!=='subtle'&&_vi!=='vivid')_vi='balanced';document.documentElement.setAttribute('data-bgintensity',_vi);}catch(e){document.documentElement.setAttribute('data-bgscene','ninja');document.documentElement.setAttribute('data-bgintensity','balanced');}</script>
+  <script>try{var _pool=['ninja','ronin','torii','dragon','kitsune','koi','cranes','sakura','lanterns','aurora','ocean','desert','wolf','eagle','orbit','rain','cinematic','trader','neo-ronin','miko','pirate','astronaut','ramadan'];var _b=null;if(localStorage.getItem('pipvant_bgperdevice')==='1'){var _coarse=false;try{_coarse=window.matchMedia('(pointer: coarse)').matches;}catch(_ce){}var _dev=(_coarse||window.innerWidth<760)?'m':'d';_b=localStorage.getItem(_dev==='m'?'pipvant_bgscene_m':'pipvant_bgscene_d');if(!_b||(_pool.indexOf(_b)<0&&_b!=='classic'&&_b!=='auto'&&_b!=='moods'&&_b!=='custom'))_b=localStorage.getItem('pipvant_bgscene');}else{_b=localStorage.getItem('pipvant_bgscene');}if(!_b||(_pool.indexOf(_b)<0&&_b!=='classic'&&_b!=='auto'&&_b!=='moods'&&_b!=='custom'))_b='ninja';if(_b==='auto'){var _d=new Date();function _p(n){return String(n).padStart(2,'0');}var _s=_d.getFullYear()+'-'+_p(_d.getMonth()+1)+'-'+_p(_d.getDate());var _h=2166136261;for(var _i=0;_i<_s.length;_i++){_h^=_s.charCodeAt(_i);_h=Math.imul(_h,16777619);}_b=_pool[(_h>>>0)%_pool.length];}if(_b==='moods'){var _t=new Date();var _m=_t.getHours()*60+_t.getMinutes();_b=(_m>=300&&_m<720)?'cranes':(_m>=720&&_m<1050)?'desert':(_m>=1050&&_m<1350)?'rain':'ninja';}document.documentElement.setAttribute('data-bgscene',_b);var _vi=localStorage.getItem('pipvant_bgintensity');if(_vi!=='subtle'&&_vi!=='vivid')_vi='balanced';document.documentElement.setAttribute('data-bgintensity',_vi);}catch(e){document.documentElement.setAttribute('data-bgscene','ninja');document.documentElement.setAttribute('data-bgintensity','balanced');}</script>
   <link rel="icon" type="image/png" href="assets/pipvanta-logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1534,6 +1534,37 @@
     /* Visibility intensity — balanced reproduces the tuned default look */
     html[data-bgintensity="subtle"] .bgs-photo{opacity:.55}
     html[data-bgintensity="vivid"] .bgs-photo{filter:saturate(1.12) brightness(1.05)}
+    /* Forward pack — Calm in Journal: CSS-only softening of the backdrop
+       while the journal screen is active (stored intensity untouched). */
+    body.bgs-calm #bgSceneLayer .bgs-photo{opacity:.55}
+    /* Forward pack — victory celebration overlay (transient, inside the
+       scene layer, above the buffers; pointer-events none). */
+    .bgs-celebrate{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:3}
+    .bgs-celebrate-pulse{position:absolute;inset:0;background:radial-gradient(62% 52% at 50% 42%,rgba(212,175,55,.85),rgba(212,175,55,0) 70%);opacity:0;animation:bgsCelebPulse 1.2s ease-out forwards}
+    @keyframes bgsCelebPulse{0%{opacity:0}30%{opacity:.35}100%{opacity:0}}
+    .bgs-celebrate-petal{position:absolute;top:-4%;width:9px;height:13px;border-radius:62% 38% 62% 38%;opacity:0;animation-name:bgsCelebFall;animation-timing-function:linear;animation-fill-mode:forwards}
+    @keyframes bgsCelebFall{0%{transform:translate(0,-4vh) rotate(0deg);opacity:0}10%{opacity:.9}85%{opacity:.85}100%{transform:translate(var(--cel-drift,0px),106vh) rotate(var(--cel-rot,220deg));opacity:0}}
+    /* Forward pack — per-device gallery switcher */
+    .settings-segmented.two{grid-template-columns:repeat(2,minmax(0,1fr));--segment-count:2}
+    .bgs-device-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+    .bgs-device-bar[hidden]{display:none}
+    .bgs-device-label{font:600 10px/1 "IBM Plex Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+    .bgs-device-bar .settings-segmented{min-width:230px}
+    .bgs-device-bar .settings-segment{display:inline-flex;align-items:center;justify-content:center;gap:7px}
+    /* Forward pack — Scene of the Day card (toolkit home only) */
+    .sotd-card{position:relative;display:flex;align-items:center;gap:14px;margin-top:14px;max-width:610px;padding:10px 44px 10px 10px;border:1px solid var(--line);border-radius:14px;background:rgba(15,29,51,.76);box-shadow:inset 0 1px 0 rgba(255,255,255,.025)}
+    .sotd-card[hidden]{display:none}
+    .sotd-thumb{width:104px;aspect-ratio:16/9;object-fit:cover;border-radius:9px;border:1px solid rgba(255,255,255,.06);background:#0A1628;flex:none}
+    .sotd-copy{display:grid;gap:3px;min-width:0}
+    .sotd-eyebrow{font:600 9.5px/1 "IBM Plex Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:#D4AF37}
+    .sotd-name{font-size:15px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .sotd-try{flex:none;margin-inline-start:auto;min-height:36px;padding:0 15px;border:1px solid rgba(212,175,55,.5);border-radius:999px;background:rgba(212,175,55,.1);color:#D4AF37;font:600 12px/1 Inter,sans-serif;cursor:pointer;transition:background var(--fast),border-color var(--fast)}
+    .sotd-try:hover{background:rgba(212,175,55,.18);border-color:#D4AF37}
+    .sotd-now{flex:none;margin-inline-start:auto;font:600 11px/1 "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:#D4AF37}
+    .sotd-now[hidden]{display:none}
+    .sotd-dismiss{position:absolute;top:6px;inset-inline-end:6px;width:26px;height:26px;border:0;border-radius:50%;background:transparent;color:var(--muted);font-size:16px;line-height:1;cursor:pointer;display:grid;place-items:center}
+    .sotd-dismiss:hover{color:var(--text);background:rgba(255,255,255,.06)}
+    @media (max-width:640px){.sotd-thumb{width:76px}.sotd-name{font-size:13.5px;white-space:normal;line-height:1.25}}
     /* Pointer parallax: far layer (stars) drifts against the scene layer */
     .bgs-par{transform:translate(calc(var(--pvpx,0)*-.5px),calc(var(--pvpy,0)*-.5px))}
     /* Settings background picker */
@@ -2972,6 +3003,13 @@ html[dir="rtl"] .jump-row{text-align:right}
             <div class="hero-trust-chip"><span class="trust-icon" aria-hidden="true"><svg width="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 18 10 12l4 3 6-8"/></svg></span><span><strong>—</strong><small>rules tracked</small></span></div>
             <div class="hero-trust-chip"><span class="trust-icon" aria-hidden="true"><svg width="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg></span><span><strong>—</strong><small>data freshness</small></span></div>
           </div>
+          <article class="sotd-card" id="sotdCard" hidden>
+            <img class="sotd-thumb" id="sotdThumb" alt="" loading="lazy" decoding="async">
+            <div class="sotd-copy"><span class="sotd-eyebrow">Scene of the Day</span><strong class="sotd-name" id="sotdName">&mdash;</strong></div>
+            <button class="sotd-try" id="sotdTry" type="button">Try it</button>
+            <span class="sotd-now" id="sotdNow" hidden>Now showing</span>
+            <button class="sotd-dismiss" id="sotdDismiss" type="button" aria-label="Dismiss">&times;</button>
+          </article>
         </div>
         <div class="calc-card" aria-label="Quick risk calculator">
           <div class="card-head"><h3>Quick risk check</h3><span class="tiny">LIVE CALCULATION</span></div>
@@ -3845,6 +3883,8 @@ html[dir="rtl"] .jump-row{text-align:right}
                       </div>
                       <button class="settings-toggle" id="bgParallaxToggle" type="button" role="switch" aria-checked="true"><span class="settings-copy"><strong>Depth motion</strong><small>The backdrop drifts gently as you move the pointer.</small></span><span class="switch-track" aria-hidden="true"></span></button>
                       <button class="settings-toggle" id="bgTiltToggle" type="button" role="switch" aria-checked="false"><span class="settings-copy"><strong>Tilt motion</strong><small>The backdrop drifts as you tilt your phone. Needs Depth motion on.</small></span><span class="switch-track" aria-hidden="true"></span></button>
+                      <button class="settings-toggle" id="bgCalmToggle" type="button" role="switch" aria-checked="true"><span class="settings-copy"><strong>Calm in Journal</strong><small>Backdrop softens while you journal.</small></span><span class="switch-track" aria-hidden="true"></span></button>
+                      <button class="settings-toggle" id="bgPerDeviceToggle" type="button" role="switch" aria-checked="false"><span class="settings-copy"><strong>Different scene per device</strong><small>Separate scenes for phone and computer.</small></span><span class="switch-track" aria-hidden="true"></span></button>
                       <div class="settings-control bgs-control-row">
                         <div class="settings-copy"><strong>Screensaver</strong><small>Show a clock over the scene when the preview is idle.</small></div>
                         <div class="settings-segmented five" role="group" aria-label="Screensaver delay">
@@ -3859,6 +3899,13 @@ html[dir="rtl"] .jump-row{text-align:right}
         </div>
         <div class="bgs-gallery">
                       <div class="bgs-picker" role="group" aria-label="Background scene">
+                        <div class="bgs-device-bar" id="bgsDeviceBar" hidden>
+                          <span class="bgs-device-label">Device</span>
+                          <div class="settings-segmented two" role="group" aria-label="Device">
+                            <button class="settings-segment" type="button" data-bgs-device="m" aria-pressed="false"><svg width="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 18h2"/></svg><span>Phone</span></button>
+                            <button class="settings-segment" type="button" data-bgs-device="d" aria-pressed="false"><svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="4.5" width="18" height="12" rx="2"/><path d="M9 20.5h6M12 16.5v4"/></svg><span>Computer</span></button>
+                          </div>
+                        </div>
                         <div class="bgs-grid bgs-auto-grid">
                           <button class="bgs-card bgs-auto-card" type="button" data-bgscene-choice="auto" aria-pressed="false"><span class="bgs-thumb bgs-auto-thumb"><svg width="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8z"/><path d="M19 15.5l.9 3.1 3.1.9-3.1.9-.9 3.1-.9-3.1-3.1-.9 3.1-.9z" transform="translate(-1.5 -1.5) scale(.8)"/></svg></span><span class="bgs-name">Auto — Scene of the Day</span><span class="bgs-check" aria-hidden="true"><svg width="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="m5 13 4 4L19 7"/></svg></span></button>
                           <button class="bgs-card bgs-auto-card" type="button" data-bgscene-choice="moods" aria-pressed="false"><span class="bgs-thumb bgs-moods-thumb"><svg width="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13.2A8.5 8.5 0 1 1 10.8 4a6.8 6.8 0 0 0 9.2 9.2z"/></svg></span><span class="bgs-name">Session Moods</span><span class="bgs-check" aria-hidden="true"><svg width="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="m5 13 4 4L19 7"/></svg></span></button>
@@ -7877,7 +7924,7 @@ html[dir="rtl"] .jump-row{text-align:right}
     'All accounts':'كل الحسابات','Custom':'مخصص','+ Add Trade':'+ إضافة صفقة','Net P&L':'صافي الربح والخسارة','vs prior period —':'مقارنة بالفترة السابقة —','Win Rate':'نسبة الربح','Win':'ربح','Loss':'خسارة','BE':'تعادل','Profit Factor':'معامل الربح','Performance label —':'وصف الأداء —','Avg Win vs Avg Loss':'متوسط الربح مقابل الخسارة','RATIO —':'النسبة —','Avg win —':'متوسط الربح —','Avg loss —':'متوسط الخسارة —','Expectancy':'التوقع','PER TRADE':'لكل صفقة','Cumulative R —':'R التراكمي —','Daily Net Cumulative P&L':'صافي الربح والخسارة التراكمي اليومي','Equity from logged trades only':'الرصيد من الصفقات المسجلة فقط','Cumulative':'تراكمي','Per-trade R':'R لكل صفقة','No trade history available':'لا يوجد سجل صفقات','The chart will populate after the first trade result is recorded.':'سيظهر الرسم بعد تسجيل نتيجة أول صفقة.','Trading Score':'تقييم التداول','Six execution dimensions':'ستة أبعاد للتنفيذ','Win %':'نسبة الربح','Profit factor':'معامل الربح','Avg win/loss':'متوسط الربح/الخسارة','Recovery factor':'معامل التعافي','Consistency':'الاستمرارية','Qualitative label —':'الوصف النوعي —','P&L Calendar':'تقويم الربح والخسارة','Month — · Select a day to filter trades':'الشهر — · اختر يوماً لتصفية الصفقات','MONTH —':'الشهر —','— P&L':'— ربح/خسارة','— trades · — win%':'— صفقات · — نسبة ربح','Week 1':'الأسبوع 1','Week 2':'الأسبوع 2','Week 3':'الأسبوع 3','Week 4':'الأسبوع 4','Week 5':'الأسبوع 5','Day —':'اليوم —','Symbol':'الرمز','Selected':'المحدد','Side':'الاتجاه','Setup':'النموذج','Mistake':'الخطأ','Session':'الجلسة','Tag':'الوسم','Trade Log':'سجل الصفقات','Execution records and review context':'سجلات التنفيذ وسياق المراجعة','0 TRADES':'0 صفقات','Chart':'رسم','Unified':'موحد','All':'الكل','By Symbol':'حسب الرمز','By Day':'حسب اليوم','By Tag':'حسب الوسم','Date / time':'التاريخ / الوقت','Entry / exit':'الدخول / الخروج','Qty':'الكمية','R multiple':'مضاعف R','Notes':'ملاحظات','No trades recorded':'لا توجد صفقات مسجلة','Record the first trade to populate P&L, MAE/MFE, tags, ratings, and linked notes from actual entries.':'سجل أول صفقة لعرض الربح والخسارة وMAE/MFE والوسوم والتقييمات والملاحظات الفعلية.','Direction markers: Long — steel-blue / Short — silver':'ألوان الاتجاه: شراء — أزرق فولاذي / بيع — فضي','Log trade':'تسجيل صفقة','Journal statistics are calculated only from logged trades.':'إحصاءات السجل تُحسب فقط من الصفقات المسجلة.',
     'Trade inputs':'مدخلات الصفقة','All fields are required.':'كل الحقول مطلوبة.','LIVE':'مباشر','Risk %':'نسبة المخاطرة','Stop-loss pips':'نقاط وقف الخسارة','pips':'نقاط','Symbol / pair':'الرمز / الزوج','Select pair':'اختر زوجاً','USD-quoted FX pairs use the standard $10 pip value per lot.':'أزواج الفوركس المسعّرة بالدولار تستخدم قيمة قياسية 10$ للنقطة لكل لوت.','Live calculation':'الحساب المباشر','Updates with every valid input.':'يتحدث مع كل إدخال صالح.','USD ACCOUNT':'حساب بالدولار','POSITION SIZE':'حجم الصفقة','standard lots':'لوت قياسي','$ at risk':'المبلغ المعرض للمخاطر','1R value':'قيمة 1R','This trade risks —% of account':'هذه الصفقة تخاطر بـ —% من الحساب','You risk $— (—% of your $— account) to make $— at —R. A loss costs $—.':'تخاطر بـ $— (—% من حسابك $—) لتحقيق $— عند —R. الخسارة تكلف $—.','Method: account size × risk % ÷ (stop-loss pips × $10 pip value). Verify contract details with your broker.':'الطريقة: حجم الحساب × نسبة المخاطرة ÷ (نقاط الوقف × قيمة النقطة 10$). تحقق من تفاصيل العقد مع وسيطك.','Save to journal':'حفظ في السجل','Live arithmetic only — verify symbol specifications before placing a trade.':'حساب مباشر فقط — تحقق من مواصفات الرمز قبل تنفيذ الصفقة.','Process checklist':'قائمة مراجعة المنهج','Mark each rule complete only after it has been verified.':'علّم القاعدة مكتملة فقط بعد التحقق منها.','Risk ≤1% on every trade':'المخاطرة ≤1% في كل صفقة','Daily':'يومي','Journaled before entering':'مسجلة قبل الدخول','Mon–Fri':'الإثنين–الجمعة','No trading after 2 losses':'لا تداول بعد خسارتين','Reviewed plan pre-session':'مراجعة الخطة قبل الجلسة','3×/wk':'3×/أسبوع','— days':'— أيام','current streak':'السلسلة الحالية','best —':'الأفضل —','Weekly review':'المراجعة الأسبوعية','Review adherence and define one measurable priority for the next week.':'راجع الالتزام وحدد أولوية قابلة للقياس للأسبوع القادم.','THIS WEEK':'هذا الأسبوع','Completion %':'نسبة الإكمال','Best streak':'أفضل سلسلة','Total completions':'إجمالي المكتمل','Which rules were followed consistently?':'ما القواعد التي التزمت بها باستمرار؟','Which rules were not followed?':'ما القواعد التي لم تُتبع؟','Priority rule for next week':'قاعدة الأولوية للأسبوع القادم','Saved reviews':'المراجعات المحفوظة','Your weekly reviews will appear here.':'ستظهر مراجعاتك الأسبوعية هنا.','Checklist state is session-only until account data is connected.':'حالة القائمة لهذه الجلسة فقط حتى يتم ربط بيانات الحساب.',
     'Mark all read':'تعليم الكل كمقروء','Action needed —':'يتطلب إجراء —','Earlier —':'سابقاً —','Display':'العرض','System':'النظام','Today':'اليوم','Mark read':'تعليم كمقروء','Snooze':'تأجيل','Delete':'حذف','Yesterday':'أمس','Earlier this week':'في وقت سابق هذا الأسبوع','← All notifications':'كل الإشعارات →','Notification details will appear here.':'ستظهر تفاصيل الإشعار هنا.','next':'التالي','previous':'السابق','unread':'غير مقروء','snooze':'تأجيل','Notifications use real account and tool events only.':'الإشعارات تستخدم أحداث الحساب والأدوات الحقيقية فقط.','Member since —':'عضو منذ —','Journal not connected':'لا صفقات بعد','No equity data yet':'لا توجد بيانات رصيد بعد','Win rate':'نسبة الربح','Total trades':'إجمالي الصفقات','Winning':'رابحة','Breakeven':'تعادل','Losing':'خاسرة','Most traded':'الأكثر تداولاً','Recent trades':'الصفقات الأخيرة','Latest journal entries':'آخر إدخالات السجل','No trades yet':'لا توجد صفقات بعد','Open Journal':'فتح السجل','Setup status':'حالة الإعداد','Profile details':'تفاصيل الملف','Risk defaults':'إعدادات المخاطر','Certificate badges':'شارات الشهادات','Marks earned through verified mission completion':'علامات مكتسبة عبر إكمال مهام موثقة','No certificates earned yet — complete missions to earn them':'لا توجد شهادات مكتسبة بعد — أكمل المهام لتحصل عليها','Edit profile':'تعديل الملف الشخصي','Changes remain in this session.':'تبقى التغييرات في هذه الجلسة.','Bio':'النبذة','Save changes':'حفظ التغييرات','Revert photo':'إرجاع الصورة','Data':'البيانات','Export my data':'تصدير بياناتي','NEW ENTRY':'إدخال جديد','Pair':'الزوج','Direction':'الاتجاه','Long':'شراء','Short':'بيع','Entry':'الدخول','Stop':'الإيقاف','Size':'الحجم','Close':'إغلاق',
-    'Appearance':'المظهر','Dark':'داكن','Light':'فاتح','Language':'اللغة','English':'الإنجليزية','Control how PIPVANT looks, calculates, and communicates.':'تحكم في مظهر PIPVANT وحساباته وإشعاراته.','Background':'الخلفية','Backgrounds':'الخلفيات','Back to Settings':'العودة إلى الإعدادات','Now showing':'يُعرض الآن','Simple':'بسيطة','Animated backdrop':'خلفية متحركة','A living scene behind the app. Colours and design never change.':'مشهد حي خلف التطبيق. الألوان والتصميم لا يتغيران أبداً.','Japanese Legends':'أساطير اليابان','Nature & World':'الطبيعة والعالم','Ninja Night':'ليلة النينجا','Ronin Road':'طريق الرونين','Torii Gate':'بوابة توريي','Dragon Sky':'سماء التنين','Kitsune Shrine':'ضريح كيتسوني','Koi Stream':'مجرى كوي','Crane Flight':'طيران الرافعات','Sakura Swordsman':'سيّاف الساكورا','Aurora Peaks':'قمم الشفق','Ocean Deep':'عمق المحيط','Desert Moon':'قمر الصحراء','Wolf Cliff':'جرف الذئب','Eagle Summit':'قمة النسر','Orbit':'المدار','Cinematic':'سينمائية','Classic':'كلاسيكية','Lantern Festival':'مهرجان الفوانيس','Midnight Rain':'مطر منتصف الليل','Night Trader':'المتداول الليلي','Neo Ronin':'الرونين العصري','Miko Shrine':'ضريح ميكو','Pirate Captain':'قبطان القراصنة','Astronaut':'رائد الفضاء','Ramadan Nights':'ليالي رمضان','Session Moods':'أجواء الجلسات','Your Photo':'صورتك','Add your photo':'أضف صورتك','Replace':'استبدال','Remove':'إزالة','Copy scene link':'نسخ رابط المشهد','Screensaver starts after a minute idle':'تبدأ شاشة التوقف بعد دقيقة من الخمول','Auto — Scene of the Day':'تلقائي — مشهد اليوم','Favourites':'المفضلة','Surprise me':'فاجئني','Visibility':'الوضوح','How present the backdrop feels.':'مدى حضور الخلفية.','Subtle':'خفيف','Balanced':'متوازن','Vivid':'واضح','Depth motion':'حركة العمق','The backdrop drifts gently as you move the pointer.':'تنساب الخلفية بلطف مع حركة المؤشر.','Tilt motion':'حركة الإمالة','The backdrop drifts as you tilt your phone. Needs Depth motion on.':'تنساب الخلفية مع إمالة هاتفك. تتطلب تفعيل حركة العمق.','Screensaver':'الشاشة الحافظة','Show a clock over the scene when the preview is idle.':'تُعرض ساعة فوق المشهد عندما تكون المعاينة خاملة.','30s':'30 ث','1 min':'دقيقة','2 min':'دقيقتان','5 min':'5 دقائق','Off':'إيقاف','Preview':'معاينة','Close preview':'إغلاق المعاينة','Previous scene':'المشهد السابق','Next scene':'المشهد التالي','Apply':'تطبيق','Download wallpaper':'تحميل كخلفية','Theme':'السمة','Choose the interface that fits your environment.':'اختر الواجهة المناسبة لبيئتك.','Interface language':'لغة الواجهة','Arabic switches the complete interface to RTL.':'العربية تحول الواجهة كاملة إلى اتجاه من اليمين إلى اليسار.','Trading':'التداول','Display currency':'عملة العرض','Used throughout the Risk Calculator display.':'تُستخدم في عرض حاسبة المخاطر.','Default risk':'المخاطرة الافتراضية','Prefills the Risk Calculator. Adjust in 0.1% steps.':'تملأ حاسبة المخاطر مسبقاً. عدّل بخطوات 0.1%.','Account notifications':'إشعارات الحساب','Show account and tool alerts.':'عرض تنبيهات الحساب والأدوات.','Security':'الأمان','Change password':'تغيير كلمة المرور','Replace your current account password.':'استبدل كلمة مرور حسابك الحالية.','Change email':'تغيير البريد الإلكتروني','Update the email used to access your account.':'حدّث البريد المستخدم للدخول إلى حسابك.','Download your current PIPVANT data as JSON.':'نزّل بيانات PIPVANT الحالية بصيغة JSON.','Delete account':'تسجيل الخروج ومسح الجهاز','Skip to main content':'تخطَّ إلى المحتوى الرئيسي','Erase the current account state and return to welcome.':'سجّل الخروج وامسح بيانات هذا الجهاز. تبقى بيانات حسابك على الخادم.','Sign out & clear device':'تسجيل الخروج ومسح الجهاز',"Sign out and erase this device's local data. Your account data stays on the server.":'سجّل الخروج وامسح بيانات هذا الجهاز. تبقى بيانات حسابك على الخادم.',"This signs you out and erases this device's local data. To fully delete your account including server data, contact support.":'هذا يسجّل خروجك ويمسح بيانات هذا الجهاز. لحذف حسابك نهائياً بما فيه بيانات الخادم، تواصل مع الدعم.','Enter your current password, then choose a new one.':'أدخل كلمة المرور الحالية ثم اختر كلمة جديدة.','Current password':'كلمة المرور الحالية','New password':'كلمة المرور الجديدة','Confirm new password':'تأكيد كلمة المرور الجديدة','Update password':'تحديث كلمة المرور','Cancel':'إلغاء','Use the email address you want for account access.':'استعمل البريد الذي تريده للدخول إلى الحساب.','New email':'البريد الإلكتروني الجديد','Update email':'تحديث البريد','This clears the current account state and returns to welcome.':'هذا يمسح حالة الحساب الحالية ويعيدك إلى الترحيب.','Type':'اكتب','to confirm':'للتأكيد','Password updated for this session.':'تم تحديث كلمة المرور لهذه الجلسة.','Email updated for this session.':'تم تحديث البريد لهذه الجلسة.','Passwords do not match.':'كلمتا المرور غير متطابقتين.','Type DELETE to confirm.':'اكتب DELETE للتأكيد.','Hold to sign out':'اضغط مطولاً لتسجيل الخروج','After typing DELETE, hold the delete button.':'بعد كتابة DELETE، اضغط مطولاً على زر الحذف.','Export ready':'التصدير جاهز','Notifications on':'الإشعارات مفعلة','Notifications off':'الإشعارات متوقفة','pts':'نقطة','—W · —L · —BE':'—ر · —خ · —ت','+—R':'+—R','M':'ن','T':'ث','W':'ر','F':'ج','S':'س',
+    'Appearance':'المظهر','Dark':'داكن','Light':'فاتح','Language':'اللغة','English':'الإنجليزية','Control how PIPVANT looks, calculates, and communicates.':'تحكم في مظهر PIPVANT وحساباته وإشعاراته.','Background':'الخلفية','Backgrounds':'الخلفيات','Back to Settings':'العودة إلى الإعدادات','Now showing':'يُعرض الآن','Simple':'بسيطة','Animated backdrop':'خلفية متحركة','A living scene behind the app. Colours and design never change.':'مشهد حي خلف التطبيق. الألوان والتصميم لا يتغيران أبداً.','Japanese Legends':'أساطير اليابان','Nature & World':'الطبيعة والعالم','Ninja Night':'ليلة النينجا','Ronin Road':'طريق الرونين','Torii Gate':'بوابة توريي','Dragon Sky':'سماء التنين','Kitsune Shrine':'ضريح كيتسوني','Koi Stream':'مجرى كوي','Crane Flight':'طيران الرافعات','Sakura Swordsman':'سيّاف الساكورا','Aurora Peaks':'قمم الشفق','Ocean Deep':'عمق المحيط','Desert Moon':'قمر الصحراء','Wolf Cliff':'جرف الذئب','Eagle Summit':'قمة النسر','Orbit':'المدار','Cinematic':'سينمائية','Classic':'كلاسيكية','Lantern Festival':'مهرجان الفوانيس','Midnight Rain':'مطر منتصف الليل','Night Trader':'المتداول الليلي','Neo Ronin':'الرونين العصري','Miko Shrine':'ضريح ميكو','Pirate Captain':'قبطان القراصنة','Astronaut':'رائد الفضاء','Ramadan Nights':'ليالي رمضان','Session Moods':'أجواء الجلسات','Calm in Journal':'هدوء الجورنال','Backdrop softens while you journal.':'تخف الخلفية أثناء الكتابة في السجل.','Different scene per device':'مشهد مختلف لكل جهاز','Separate scenes for phone and computer.':'مشاهد منفصلة للهاتف والحاسوب.','Device':'الجهاز','Phone':'الهاتف','Computer':'الحاسوب','Scene of the Day':'مشهد اليوم','Try it':'جرّبه','Dismiss':'إخفاء','Your Photo':'صورتك','Add your photo':'أضف صورتك','Replace':'استبدال','Remove':'إزالة','Copy scene link':'نسخ رابط المشهد','Screensaver starts after a minute idle':'تبدأ شاشة التوقف بعد دقيقة من الخمول','Auto — Scene of the Day':'تلقائي — مشهد اليوم','Favourites':'المفضلة','Surprise me':'فاجئني','Visibility':'الوضوح','How present the backdrop feels.':'مدى حضور الخلفية.','Subtle':'خفيف','Balanced':'متوازن','Vivid':'واضح','Depth motion':'حركة العمق','The backdrop drifts gently as you move the pointer.':'تنساب الخلفية بلطف مع حركة المؤشر.','Tilt motion':'حركة الإمالة','The backdrop drifts as you tilt your phone. Needs Depth motion on.':'تنساب الخلفية مع إمالة هاتفك. تتطلب تفعيل حركة العمق.','Screensaver':'الشاشة الحافظة','Show a clock over the scene when the preview is idle.':'تُعرض ساعة فوق المشهد عندما تكون المعاينة خاملة.','30s':'30 ث','1 min':'دقيقة','2 min':'دقيقتان','5 min':'5 دقائق','Off':'إيقاف','Preview':'معاينة','Close preview':'إغلاق المعاينة','Previous scene':'المشهد السابق','Next scene':'المشهد التالي','Apply':'تطبيق','Download wallpaper':'تحميل كخلفية','Theme':'السمة','Choose the interface that fits your environment.':'اختر الواجهة المناسبة لبيئتك.','Interface language':'لغة الواجهة','Arabic switches the complete interface to RTL.':'العربية تحول الواجهة كاملة إلى اتجاه من اليمين إلى اليسار.','Trading':'التداول','Display currency':'عملة العرض','Used throughout the Risk Calculator display.':'تُستخدم في عرض حاسبة المخاطر.','Default risk':'المخاطرة الافتراضية','Prefills the Risk Calculator. Adjust in 0.1% steps.':'تملأ حاسبة المخاطر مسبقاً. عدّل بخطوات 0.1%.','Account notifications':'إشعارات الحساب','Show account and tool alerts.':'عرض تنبيهات الحساب والأدوات.','Security':'الأمان','Change password':'تغيير كلمة المرور','Replace your current account password.':'استبدل كلمة مرور حسابك الحالية.','Change email':'تغيير البريد الإلكتروني','Update the email used to access your account.':'حدّث البريد المستخدم للدخول إلى حسابك.','Download your current PIPVANT data as JSON.':'نزّل بيانات PIPVANT الحالية بصيغة JSON.','Delete account':'تسجيل الخروج ومسح الجهاز','Skip to main content':'تخطَّ إلى المحتوى الرئيسي','Erase the current account state and return to welcome.':'سجّل الخروج وامسح بيانات هذا الجهاز. تبقى بيانات حسابك على الخادم.','Sign out & clear device':'تسجيل الخروج ومسح الجهاز',"Sign out and erase this device's local data. Your account data stays on the server.":'سجّل الخروج وامسح بيانات هذا الجهاز. تبقى بيانات حسابك على الخادم.',"This signs you out and erases this device's local data. To fully delete your account including server data, contact support.":'هذا يسجّل خروجك ويمسح بيانات هذا الجهاز. لحذف حسابك نهائياً بما فيه بيانات الخادم، تواصل مع الدعم.','Enter your current password, then choose a new one.':'أدخل كلمة المرور الحالية ثم اختر كلمة جديدة.','Current password':'كلمة المرور الحالية','New password':'كلمة المرور الجديدة','Confirm new password':'تأكيد كلمة المرور الجديدة','Update password':'تحديث كلمة المرور','Cancel':'إلغاء','Use the email address you want for account access.':'استعمل البريد الذي تريده للدخول إلى الحساب.','New email':'البريد الإلكتروني الجديد','Update email':'تحديث البريد','This clears the current account state and returns to welcome.':'هذا يمسح حالة الحساب الحالية ويعيدك إلى الترحيب.','Type':'اكتب','to confirm':'للتأكيد','Password updated for this session.':'تم تحديث كلمة المرور لهذه الجلسة.','Email updated for this session.':'تم تحديث البريد لهذه الجلسة.','Passwords do not match.':'كلمتا المرور غير متطابقتين.','Type DELETE to confirm.':'اكتب DELETE للتأكيد.','Hold to sign out':'اضغط مطولاً لتسجيل الخروج','After typing DELETE, hold the delete button.':'بعد كتابة DELETE، اضغط مطولاً على زر الحذف.','Export ready':'التصدير جاهز','Notifications on':'الإشعارات مفعلة','Notifications off':'الإشعارات متوقفة','pts':'نقطة','—W · —L · —BE':'—ر · —خ · —ت','+—R':'+—R','M':'ن','T':'ث','W':'ر','F':'ج','S':'س',
     'Certificate':'الشهادة','About':'حول','Contact':'تواصل','Certificates':'الشهادات','Complete demanding missions inside PIPVANT to earn verified certificates.':'أكمل مهام صعبة داخل PIPVANT لتحصل على شهادات موثقة.','Earned':'المكتسبة','0 CERTIFICATES':'0 شهادات','No certificates yet — complete missions to earn them.':'لا توجد شهادات بعد — أكمل المهام لتحصل عليها.','PIPVANT · VERIFIED RECORD':'PIPVANT · سجل موثق','Certificate template':'قالب الشهادة','PREVIEW':'معاينة','Verified':'موثق','achievement':'إنجاز','Certificate of achievement':'شهادة إنجاز','Proudly presented to':'تُقدم بفخر إلى','Awarded for completing a verified PIPVANT mission.':'ممنوحة بعد إكمال مهمة موثقة داخل PIPVANT.','Awarded for demonstrating exceptional consistency by logging 500 trades in the PIPVANT Journal.':'ممنوحة لإثبات استمرارية استثنائية عبر تسجيل 500 صفقة في سجل PIPVANT.','DATE —':'التاريخ —','Verification ID':'معرف التحقق','Download':'تنزيل','Share':'مشاركة','Missions':'المهام','6 MISSIONS':'6 مهام','Marathon':'الماراثون','Log 500 trades in the Journal.':'سجل 500 صفقة في السجل.','Profitable':'مربح','Net positive P&L across at least 100 trades.':'صافي ربح إيجابي عبر 100 صفقة على الأقل.','Sharpshooter':'القناص','Win rate of 60% or higher across at least 100 trades.':'نسبة ربح 60٪ أو أكثر عبر 100 صفقة على الأقل.','Iron Discipline':'انضباط حديدي','90 consecutive days of discipline check-ins.':'90 يوماً متتالياً من تسجيلات الانضباط.','Risk Master':'سيد المخاطر','100 consecutive trades without breaking your risk limit.':'100 صفقة متتالية دون تجاوز حد المخاطرة.','Edge Proven':'أفضلية مثبتة','Profit factor of 1.5 or higher across at least 100 trades.':'معامل ربح 1.5 أو أكثر عبر 100 صفقة على الأقل.','Progress':'التقدم','A disciplined suite of tools for clearer trading decisions, structured risk management, and accountable review.':'مجموعة منضبطة من الأدوات لقرارات تداول أوضح وإدارة مخاطر منظمة ومراجعة مسؤولة.','TRADING DECISION TOOLS':'أدوات قرار التداول','PIPVANT is built by Orovanta — an independent startup crafting focused trading tools.':'PIPVANT من تطوير Orovanta — مشروع ناشئ مستقل يصنع أدوات تداول مركزة.','The toolkit':'مجموعة الأدوات','Compare prop-firm rules against criteria that matter to your process.':'قارن قواعد شركات التمويل بالمعايير المهمة لمنهجك.','Review execution, risk, and consistency through your own trade records.':'راجع التنفيذ والمخاطر والاستمرارية من خلال سجلات صفقاتك الخاصة.','Calculate position size from balance, risk, stop distance, and point value.':'احسب حجم الصفقة انطلاقاً من الرصيد والمخاطرة ومسافة الإيقاف وقيمة النقطة.','Keep trading rules visible and structure daily and weekly reviews.':'أبقِ قواعد التداول واضحة ونظّم المراجعات اليومية والأسبوعية.','Principles':'المبادئ','Decision tools — never trade signals':'أدوات للقرار — وليست إشارات تداول','No performance or profit promises':'لا وعود بالأداء أو الأرباح','Real data and records only':'بيانات وسجلات حقيقية فقط','Designed for any trading strategy':'مصمم لأي استراتيجية تداول','Company':'الشركة','Orovanta':'Orovanta','Headquarters':'المقر الرئيسي','Morocco 🇲🇦':'المغرب 🇲🇦','Chief Executive Officer':'الرئيس التنفيذي','CHIEF EXECUTIVE OFFICER':'الرئيس التنفيذي','Sifeddine Beniaich':'سيف الدين بن عياش','Founder · 18':'المؤسس · 18','18-year-old trader building the toolkit he always wanted.':'متداول في عمر 18 سنة يبني مجموعة الأدوات التي طالما أرادها.','Version':'الإصدار','Questions, feedback, or partnership inquiries — we read everything.':'أسئلة أو ملاحظات أو استفسارات شراكة — نقرأ كل شيء.','Message':'الرسالة','Send message':'إرسال الرسالة','Message prepared':'الرسالة جاهزة','This design prototype does not send messages. Your form is complete and remains only in this session.':'هذا النموذج التصميمي لا يرسل الرسائل. النموذج مكتمل ويبقى في هذه الجلسة فقط.','Edit message':'تعديل الرسالة','Support email':'بريد الدعم','Trading days':'أيام التداول','Import my data':'استيراد بياناتي','Restore settings and profile from a JSON file.':'استعادة الإعدادات والملف الشخصي من ملف JSON.','Date':'التاريخ','Cancel':'إلغاء',
     'More':'المزيد','Back to Matcher':'العودة إلى المطابق','Firm directory':'دليل الشركات','All firms':'جميع الشركات','Search, sort, and filter verified firm rules in one consistent directory.':'ابحث ورتب وصفّ قواعد الشركات الموثقة في دليل موحد.','Search firms':'ابحث عن الشركات','Sort firms':'ترتيب الشركات','Recommended':'الموصى به','Price: low to high':'السعر: من الأقل إلى الأعلى','Profit split: high to low':'تقسيم الأرباح: من الأعلى إلى الأقل','Firm directory views':'طرق عرض دليل الشركات','Saved':'المحفوظة','How we rank':'كيف نرتب','Data updated —':'آخر تحديث للبيانات —','No firms listed yet — verified firms will appear here.':'لا توجد شركات مدرجة بعد — ستظهر الشركات الموثقة هنا.','Every listing will remain blank until its rules, pricing, and source date have been checked.':'سيبقى كل إدراج فارغاً حتى يتم التحقق من قواعده وأسعاره وتاريخ مصدره.','How we verify':'كيف نتحقق','How we verify firms':'كيف نتحقق من الشركات','No firms match these filters.':'لا توجد شركات تطابق هذه المرشحات.','Clear the active filters or search to return to the complete directory.':'امسح المرشحات أو البحث للعودة إلى الدليل الكامل.','Clear filters':'مسح المرشحات','Listings will publish only after firm rules, program pricing, limits, and source dates are checked. Ranking criteria will remain visible, and unavailable values will stay marked with an em dash.':'لن تُنشر الشركات إلا بعد التحقق من القواعد والأسعار والحدود وتواريخ المصادر. ستبقى معايير الترتيب ظاهرة والقيم غير المتاحة معروضة بشرطة.','Range':'النطاق','Profit split':'تقسيم الأرباح','Price from':'السعر من','External rating':'التقييم الخارجي','Years in business':'سنوات العمل','Payout frequency':'وتيرة السحب','Filter firms':'تصفية الشركات','Narrow verified listings by program rules.':'ضيّق النتائج الموثقة حسب قواعد البرنامج.','Minimum profit split':'الحد الأدنى لتقسيم الأرباح','Maximum profit target':'الحد الأقصى لهدف الربح','Minimum max drawdown':'الحد الأدنى لأقصى تراجع','Minimum leverage':'الحد الأدنى للرافعة','Program type':'نوع البرنامج','Instant':'فوري','1-Step':'مرحلة واحدة','2-Step':'مرحلتان','Drawdown type':'نوع التراجع','Static':'ثابت','Trailing':'متحرك','Apply filters':'تطبيق المرشحات','Verified firm profile':'ملف شركة موثق','Daily loss limit':'حد الخسارة اليومية','Leverage':'الرافعة','Notable rules':'قواعد بارزة',
     'A transparent standard for matching trader criteria with verified prop-firm information.':'معيار شفاف لمطابقة معايير المتداول مع معلومات شركات التداول الموثقة.','How matching works':'كيف تعمل المطابقة','Matcher compares the criteria a trader selects with the verified rules available for each firm. It does not recommend trades or guarantee that a firm is right for every trader.':'يقارن المطابق المعايير التي يختارها المتداول بالقواعد الموثقة المتاحة لكل شركة. لا يوصي بصفقات ولا يضمن أن شركة تناسب كل متداول.','Criteria first':'المعايير أولاً','Market, account size, price, rules, and other selected constraints define the comparison.':'السوق وحجم الحساب والسعر والقواعد والقيود المختارة تحدد المقارنة.','Visible fit':'ملاءمة واضحة','Each result will explain which criteria matched and which values were unavailable.':'كل نتيجة ستوضح المعايير المتطابقة والقيم غير المتاحة.','Trader decides':'المتداول يقرر','The final choice always stays with the trader after reviewing the firm’s current terms.':'يبقى القرار النهائي للمتداول بعد مراجعة شروط الشركة الحالية.','How we rank firms':'كيف نرتب الشركات','Rankings are based on disclosed comparison criteria, not paid placement or hidden star ratings. A score remains blank until the required source data is verified.':'يعتمد الترتيب على معايير مقارنة معلنة، لا على ترتيب مدفوع أو نجوم مخفية. يبقى التقييم فارغاً حتى يتم التحقق من بيانات المصدر المطلوبة.','Rule alignment':'توافق القواعد','Program terms are compared with the trader’s selected priorities and constraints.':'تُقارن شروط البرنامج بأولويات المتداول وقيوده المختارة.','Data completeness':'اكتمال البيانات','Missing or unclear values reduce confidence instead of being estimated.':'القيم الناقصة أو غير الواضحة تقلل الثقة بدلاً من تقديرها.','Clear rationale':'مبرر واضح','Every published position will include a concise reason for its place in the order.':'كل موضع منشور سيتضمن سبباً مختصراً لمكانه في الترتيب.','Firm information is published only after its rule, price, limit, source, and review date are checked. Unverified values stay unavailable rather than being filled with assumptions.':'لا تُنشر معلومات الشركة إلا بعد التحقق من القواعد والسعر والحدود والمصدر وتاريخ المراجعة. تبقى القيم غير الموثقة غير متاحة بدل ملئها بافتراضات.','Source attached':'المصدر مرفق','Each published fact will be tied to the source used for verification.':'كل معلومة منشورة سترتبط بالمصدر المستخدم للتحقق.','Review date visible':'تاريخ المراجعة ظاهر','Users will see when the information was last checked.':'سيرى المستخدمون متى تم فحص المعلومات آخر مرة.','Changes rechecked':'إعادة فحص التغييرات','Material rule or pricing changes require verification before the listing is updated.':'تتطلب تغييرات القواعد أو الأسعار المهمة التحقق قبل تحديث الإدراج.','Our principles':'مبادئنا','PIPVANT is built as a decision-tool suite, with strict limits on what the product claims and displays.':'بُني PIPVANT كمجموعة أدوات للقرار مع حدود صارمة لما يدعيه المنتج ويعرضه.','Real data only':'بيانات حقيقية فقط','No invented statistics, prices, or performance records.':'لا إحصاءات أو أسعار أو سجلات أداء مخترعة.','No fake listings':'لا إدراجات مزيفة','A firm appears only when its listing can be supported by verified source data.':'لا تظهر الشركة إلا عندما يدعم إدراجها مصدر بيانات موثق.','Tools, not signals':'أدوات وليست إشارات','PIPVANT supports research, sizing, journaling, and review. It never tells users what to trade.':'يدعم PIPVANT البحث وحساب الحجم والتسجيل والمراجعة. ولا يخبر المستخدمين بما يتداولون.','Calculations and certificates never imply guaranteed returns.':'الحسابات والشهادات لا توحي أبداً بعوائد مضمونة.',
@@ -7992,12 +8039,14 @@ html[dir="rtl"] .jump-row{text-align:right}
   function pvBgTodayKey(){var d=new Date();function p(n){return String(n).padStart(2,'0');}return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());}
   function pvBgMoodBucket(d){var m=d.getHours()*60+d.getMinutes();if(m>=300&&m<720)return 'cranes';if(m>=720&&m<1050)return 'desert';if(m>=1050&&m<1350)return 'rain';return 'ninja';}
   function pvBgBucketLabel(sceneKey){var ar=(typeof currentLanguage!=='undefined'&&currentLanguage==='ar');if(sceneKey==='cranes')return ar?'الصباح':'Morning';if(sceneKey==='desert')return ar?'بعد الظهر':'Afternoon';if(sceneKey==='rain')return ar?'الجلسة':'Session';return ar?'الليل':'Night';}
-  function pvBgEffectiveScene(){if(pvBgChoice==='auto')return PV_BG_POOL[pvBgHashDate(pvBgTodayKey())%PV_BG_POOL.length];if(pvBgChoice==='moods')return pvBgMoodBucket(new Date());return pvBgChoice;}
+  function pvBgResolveChoice(c){if(c==='auto')return PV_BG_POOL[pvBgHashDate(pvBgTodayKey())%PV_BG_POOL.length];if(c==='moods')return pvBgMoodBucket(new Date());return c;}
+  function pvBgEffectiveScene(){return pvBgResolveChoice(pvBgChoice);}
   window.pvBgEffectiveScene=pvBgEffectiveScene;
   window.pvBgApply=pvBgApply;
   function pvBgSyncPicker(){
+    var disp=pvBgDisplayedChoice();
     document.querySelectorAll('[data-bgscene-choice]').forEach(function(btn){
-      var on=btn.getAttribute('data-bgscene-choice')===pvBgChoice;
+      var on=btn.getAttribute('data-bgscene-choice')===disp;
       btn.classList.toggle('is-selected',on);
       btn.setAttribute('aria-pressed',String(on));
     });
@@ -8013,7 +8062,11 @@ html[dir="rtl"] .jump-row{text-align:right}
      cache serves both — no double fetch); the entry row names the STORED
      choice ('Auto — Scene of the Day' when Auto is stored). */
   function pvBgSyncShowcase(){
-    var eff=pvBgScene;
+    /* Hero + picker mirror the DISPLAYED choice (the gallery's device when
+       per-device editing is remote); the Settings entry row always mirrors
+       the CURRENT device's choice + effective scene (pvBgChoice/pvBgScene). */
+    var dispChoice=pvBgDisplayedChoice();
+    var eff=pvBgResolveChoice(dispChoice);
     var hero=document.getElementById('bgsHeroPhoto'),hn=document.getElementById('bgsHeroName'),note=document.getElementById('bgsHeroNote');
     if(hero){
       if(eff==='classic'){hero.style.backgroundImage='';hero.classList.add('is-classic');}
@@ -8022,31 +8075,46 @@ html[dir="rtl"] .jump-row{text-align:right}
     }
     if(hn)hn.textContent=pvBgSceneName(eff);
     var hd=document.getElementById('bgsHeroDownload');if(hd)hd.hidden=(eff==='classic'||eff==='custom');
-    var hs=document.getElementById('bgsHeroShare');if(hs)hs.hidden=PV_BG_POOL.indexOf(pvBgChoice)<0;
+    var hs=document.getElementById('bgsHeroShare');if(hs)hs.hidden=PV_BG_POOL.indexOf(dispChoice)<0;
     if(note){
-      if(pvBgChoice==='auto'){note.hidden=false;note.textContent=pvBgSceneName('auto');}
-      else if(pvBgChoice==='moods'){note.hidden=false;note.textContent=pvBgSceneName('moods')+' \u2014 '+pvBgBucketLabel(eff);}
+      if(dispChoice==='auto'){note.hidden=false;note.textContent=pvBgSceneName('auto');}
+      else if(dispChoice==='moods'){note.hidden=false;note.textContent=pvBgSceneName('moods')+' \u2014 '+pvBgBucketLabel(eff);}
       else note.hidden=true;
     }
     var eName=document.getElementById('bgsEntryName'),eThumb=document.getElementById('bgsEntryThumb'),eImg=document.getElementById('bgsEntryImg');
     if(eName)eName.textContent=pvBgSceneName(pvBgChoice);
     if(eThumb&&eImg){
-      if(eff==='classic'){eThumb.classList.add('is-classic');}
-      else if(eff==='custom'){eThumb.classList.remove('is-classic');if(pvBgCustom.url)eImg.src=pvBgCustom.url;}
-      else{eThumb.classList.remove('is-classic');eImg.src='assets/bgs/thumbs/'+eff+'.webp';}
+      var curEff=pvBgScene;
+      if(curEff==='classic'){eThumb.classList.add('is-classic');}
+      else if(curEff==='custom'){eThumb.classList.remove('is-classic');if(pvBgCustom.url)eImg.src=pvBgCustom.url;}
+      else{eThumb.classList.remove('is-classic');eImg.src='assets/bgs/thumbs/'+curEff+'.webp';}
     }
   }
   function pvBgApply(key,persist){
     if(PV_BG_CHOICES.indexOf(key)<0)key='ninja';
+    /* Per-device remote edit: while the gallery is editing the OTHER
+       device's scene, card picks write only that device's key and refresh
+       the gallery (picker + hero) — the live backdrop stays on this
+       device's scene. 'custom' is device-local and always applies here. */
+    if(persist!==false&&key!=='custom'&&!pvBgForceLocal&&pvBgRemoteActive()&&pvBgGalleryIsActive()){
+      try{localStorage.setItem(pvBgKeyFor(pvBgGalleryDevice),key);}catch(e){}
+      pvBgViewChoice=key;
+      pvBgSyncPicker();
+      pvBgSyncShowcase();
+      return;
+    }
     pvBgChoice=key;
     pvBgScene=pvBgEffectiveScene();
     document.documentElement.setAttribute('data-bgscene',pvBgScene);
     if(document.body)document.body.setAttribute('data-bgscene',pvBgScene);
-    if(persist!==false){try{localStorage.setItem('pipvant_bgscene',key);}catch(e){}}
+    if(persist!==false)pvBgStoreWriteCurrent(key);
+    if(!pvBgRemoteActive())pvBgViewChoice=key;
     pvBgSyncPicker();
     pvBgSyncShowcase();
     pvBgShow(pvBgScene);
     pvBgParallaxKick();
+    if(typeof pvBgSyncCalm==='function')pvBgSyncCalm();
+    if(typeof pvSotdRender==='function')pvSotdRender();
   }
   /* --- Painted-scene buffers: lazy per-scene download + crossfade ---
      Two stacked buffers; a scene painting is fetched only when the scene
@@ -8153,7 +8221,8 @@ html[dir="rtl"] .jump-row{text-align:right}
     var filtered=pool.filter(function(k){return k!==pvBgScene;});
     if(filtered.length)pool=filtered;
     var pick=pool[Math.floor(Math.random()*pool.length)];
-    pvBgApply(pick);
+    pvBgForceLocal=true;
+    try{pvBgApply(pick);}finally{pvBgForceLocal=false;}
     var card=pvBgSourceCard(pick),nm=card?card.querySelector('.bgs-name'):null;
     if(typeof showToast==='function')showToast(((typeof currentLanguage!=='undefined'&&currentLanguage==='ar')?'يُعرض الآن: ':'Now showing: ')+(nm?nm.textContent:pick));
   });
@@ -8401,7 +8470,8 @@ html[dir="rtl"] .jump-row{text-align:right}
   function pvBgFsApplyCurrent(){
     if(!pvFs.key)return;
     var key=pvFs.key,nm=pvBgSceneName(key);
-    pvBgApply(key);
+    pvBgForceLocal=true;
+    try{pvBgApply(key);}finally{pvBgForceLocal=false;}
     if(typeof showToast==='function')showToast(((typeof currentLanguage!=='undefined'&&currentLanguage==='ar')?'يُعرض الآن: ':'Now showing: ')+nm);
     pvBgFsClose();
   }
@@ -8451,11 +8521,12 @@ html[dir="rtl"] .jump-row{text-align:right}
     var heroFig=document.querySelector('.bgs-hero');
     if(heroFig)heroFig.addEventListener('click',function(ev){
       if(ev.target&&ev.target.closest&&ev.target.closest('#bgsHeroDownload,#bgsHeroShare'))return;
-      if(pvBgScene==='classic')return;
-      pvBgFsOpen(pvBgScene);
+      var eff=pvBgResolveChoice(pvBgDisplayedChoice());
+      if(eff==='classic')return;
+      pvBgFsOpen(eff);
     });
     var heroDl=document.getElementById('bgsHeroDownload');
-    if(heroDl)heroDl.addEventListener('click',function(ev){ev.stopPropagation();pvBgDownload(pvBgScene);});
+    if(heroDl)heroDl.addEventListener('click',function(ev){ev.stopPropagation();pvBgDownload(pvBgResolveChoice(pvBgDisplayedChoice()));});
   })();
   /* --- Gyro tilt motion (mobile) ---
      Feeds the SAME parallax pipeline as the pointer (pvPar.tx/ty through
@@ -8613,6 +8684,58 @@ html[dir="rtl"] .jump-row{text-align:right}
       im.src=ourl;
     });
   })();
+  /* ===== Forward pack: per-device scenes + calm-in-journal state =====
+     Storage model: 'pipvant_bgscene' stays the single choice while
+     per-device is OFF. When ON ('pipvant_bgperdevice'='1'), the choice for
+     each form factor lives in 'pipvant_bgscene_m' (phone) / '_d'
+     (computer); reads fall back device key -> main key -> 'ninja', so the
+     main key doubles as the seed. pvBgChoice always holds the CURRENT
+     device's stored choice; pvBgViewChoice is what the gallery shows while
+     it edits the other device (pvBgGalleryDevice). The head pre-paint
+     script mirrors pvBgStoreRead() exactly. */
+  var pvBgPerDevice=false;
+  try{pvBgPerDevice=localStorage.getItem('pipvant_bgperdevice')==='1';}catch(e){}
+  var pvBgCalmOn=true;
+  try{pvBgCalmOn=localStorage.getItem('pipvant_bgcalm')!=='0';}catch(e){}
+  var pvBgGalleryDevice=null;
+  var pvBgViewChoice='ninja';
+  var pvBgForceLocal=false;
+  function pvBgDeviceType(){
+    var coarse=false;
+    try{coarse=window.matchMedia('(pointer: coarse)').matches;}catch(e){}
+    return (coarse||window.innerWidth<760)?'m':'d';
+  }
+  function pvBgKeyFor(dev){return dev==='m'?'pipvant_bgscene_m':'pipvant_bgscene_d';}
+  function pvBgValidChoice(v){return (v&&PV_BG_CHOICES.indexOf(v)>=0)?v:null;}
+  function pvBgStoredFor(dev){
+    var v=null;
+    try{v=localStorage.getItem(pvBgKeyFor(dev));}catch(e){}
+    v=pvBgValidChoice(v);
+    if(!v){try{v=localStorage.getItem('pipvant_bgscene');}catch(e){}v=pvBgValidChoice(v);}
+    return v||'ninja';
+  }
+  function pvBgStoreRead(){
+    if(pvBgPerDevice)return pvBgStoredFor(pvBgDeviceType());
+    var v=null;
+    try{v=localStorage.getItem('pipvant_bgscene');}catch(e){}
+    return pvBgValidChoice(v)||'ninja';
+  }
+  function pvBgStoreWriteCurrent(key){
+    try{
+      if(pvBgPerDevice)localStorage.setItem(pvBgKeyFor(pvBgDeviceType()),key);
+      else localStorage.setItem('pipvant_bgscene',key);
+    }catch(e){}
+  }
+  function pvBgRemoteActive(){
+    return !!(pvBgPerDevice&&pvBgGalleryDevice&&pvBgGalleryDevice!==pvBgDeviceType());
+  }
+  function pvBgDisplayedChoice(){
+    return pvBgRemoteActive()?pvBgViewChoice:pvBgChoice;
+  }
+  function pvBgGalleryIsActive(){
+    var bs=document.getElementById('backgrounds');
+    return !!(bs&&bs.classList.contains('active'));
+  }
   /* --- Shareable scene link: ?scene=<key> applies + persists on boot --- */
   function pvBgCopyFallback(url,ok){
     try{
@@ -8633,7 +8756,7 @@ html[dir="rtl"] .jump-row{text-align:right}
   window.pvBgCopyLink=pvBgCopyLink;
   (function(){
     var hsh=document.getElementById('bgsHeroShare');
-    if(hsh)hsh.addEventListener('click',function(ev){ev.stopPropagation();pvBgCopyLink(pvBgChoice);});
+    if(hsh)hsh.addEventListener('click',function(ev){ev.stopPropagation();pvBgCopyLink(pvBgDisplayedChoice());});
     var fsh=document.getElementById('bgsFsShare');
     if(fsh)fsh.addEventListener('click',function(){if(pvFs.key)pvBgCopyLink(pvFs.key);});
   })();
@@ -8707,9 +8830,7 @@ html[dir="rtl"] .jump-row{text-align:right}
     if(fs)fs.classList.remove('bgsfs-idle');
   }
   (function(){
-    var saved=null;
-    try{saved=localStorage.getItem('pipvant_bgscene');}catch(e){}
-    if(!saved)saved=document.documentElement.getAttribute('data-bgscene');
+    var saved=pvBgStoreRead();
     var qsScene=null;
     try{qsScene=new URLSearchParams(location.search).get('scene');}catch(e){}
     if(qsScene&&PV_BG_POOL.indexOf(qsScene)>=0){
@@ -8732,7 +8853,257 @@ html[dir="rtl"] .jump-row{text-align:right}
       }
     });
   })();
-  document.addEventListener('click',function(ev){var b=ev.target&&ev.target.closest?ev.target.closest('[data-language-choice]'):null;if(b)setTimeout(function(){pvBgSyncShowcase();pvBgApplySaver(pvBgSaverRead(),false);},0);});
+  /* ===== Forward pack wiring: toggles + device switcher ===== */
+  function pvBgSyncDeviceBar(){
+    var bar=document.getElementById('bgsDeviceBar');
+    if(!bar)return;
+    bar.hidden=!pvBgPerDevice;
+    if(pvBgPerDevice){
+      if(!pvBgGalleryDevice||pvBgGalleryDevice===pvBgDeviceType()){pvBgGalleryDevice=pvBgDeviceType();pvBgViewChoice=pvBgChoice;}
+      bar.querySelectorAll('[data-bgs-device]').forEach(function(btn){
+        var on=btn.getAttribute('data-bgs-device')===pvBgGalleryDevice;
+        btn.classList.toggle('is-active',on);
+        btn.setAttribute('aria-pressed',String(on));
+      });
+    }
+  }
+  function pvBgSyncForwardToggles(){
+    var calm=document.getElementById('bgCalmToggle');
+    if(calm){calm.setAttribute('aria-checked',String(pvBgCalmOn));calm.classList.toggle('is-on',pvBgCalmOn);}
+    var pd=document.getElementById('bgPerDeviceToggle');
+    if(pd){pd.setAttribute('aria-checked',String(pvBgPerDevice));pd.classList.toggle('is-on',pvBgPerDevice);}
+  }
+  (function(){
+    var calm=document.getElementById('bgCalmToggle');
+    if(calm)calm.addEventListener('click',function(){
+      pvBgCalmOn=!pvBgCalmOn;
+      try{localStorage.setItem('pipvant_bgcalm',pvBgCalmOn?'1':'0');}catch(e){}
+      pvBgSyncForwardToggles();
+      pvBgSyncCalm();
+    });
+    var pd=document.getElementById('bgPerDeviceToggle');
+    if(pd)pd.addEventListener('click',function(){
+      if(!pvBgPerDevice){
+        /* Enable: seed both device keys from the current choice (only
+           where unset, so a re-enable keeps earlier per-device picks). */
+        pvBgPerDevice=true;
+        try{
+          localStorage.setItem('pipvant_bgperdevice','1');
+          if(!pvBgValidChoice(localStorage.getItem('pipvant_bgscene_m')))localStorage.setItem('pipvant_bgscene_m',pvBgChoice);
+          if(!pvBgValidChoice(localStorage.getItem('pipvant_bgscene_d')))localStorage.setItem('pipvant_bgscene_d',pvBgChoice);
+        }catch(e){}
+        pvBgGalleryDevice=pvBgDeviceType();
+        pvBgViewChoice=pvBgChoice;
+      }else{
+        /* Disable: the current device's choice becomes THE choice. */
+        pvBgPerDevice=false;
+        try{
+          localStorage.removeItem('pipvant_bgperdevice');
+          localStorage.setItem('pipvant_bgscene',pvBgChoice);
+        }catch(e){}
+        pvBgGalleryDevice=null;
+      }
+      pvBgSyncForwardToggles();
+      pvBgSyncDeviceBar();
+      pvBgSyncPicker();
+      pvBgSyncShowcase();
+    });
+    var bar=document.getElementById('bgsDeviceBar');
+    if(bar)bar.querySelectorAll('[data-bgs-device]').forEach(function(btn){
+      btn.addEventListener('click',function(){
+        var dev=btn.getAttribute('data-bgs-device');
+        if(dev!=='m'&&dev!=='d')return;
+        pvBgGalleryDevice=dev;
+        pvBgViewChoice=(dev===pvBgDeviceType())?pvBgChoice:pvBgStoredFor(dev);
+        pvBgSyncDeviceBar();
+        pvBgSyncPicker();
+        pvBgSyncShowcase();
+      });
+    });
+    pvBgSyncForwardToggles();
+    pvBgSyncDeviceBar();
+  })();
+
+  /* ===== Forward pack: Calm in Journal =====
+     Screen changes funnel through showScreen's activate(); it calls
+     pvForwardOnScreen(id) (one guarded line) after the screen flips. */
+  function pvBgSyncCalm(){
+    try{
+      var journal=document.getElementById('journal');
+      var on=!!(pvBgCalmOn&&journal&&journal.classList.contains('active')&&pvBgScene!=='classic');
+      document.body.classList.toggle('bgs-calm',on);
+    }catch(e){}
+  }
+  function pvForwardOnScreen(id){
+    pvBgSyncCalm();
+    if(id==='journal')pvCelebMaybeJournal();
+    if(id==='landing'&&typeof pvSotdRender==='function')pvSotdRender();
+  }
+
+  /* ===== Forward pack: victory celebration =====
+     Once per calendar day across both triggers (shared daily flag).
+     Triggers: (1) opening the journal on a green day — net P&L from the
+     journal's own jcalClosedTrades() helper, filtered to today;
+     (2) certificate count increase, compared in the certificate render
+     path. Any failure is a silent no-op. */
+  function pvCelebTodayKey(){
+    var d=new Date();
+    return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  }
+  function pvCelebrate(){
+    try{
+      if(!document.body)return;
+      if(pvBgScene==='classic')return;
+      var reduced=false;
+      try{reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){}
+      if(reduced)return;
+      var layer=document.getElementById('bgSceneLayer');
+      if(!layer)return;
+      if(layer.querySelector('.bgs-celebrate'))return;
+      var wrap=document.createElement('div');
+      wrap.className='bgs-celebrate';
+      wrap.setAttribute('aria-hidden','true');
+      var pulse=document.createElement('span');
+      pulse.className='bgs-celebrate-pulse';
+      wrap.appendChild(pulse);
+      var colors=['#D4AF37','#E8C766','#E8A2B4','#F2D492'];
+      for(var i=0;i<18;i++){
+        var p=document.createElement('span');
+        p.className='bgs-celebrate-petal';
+        p.style.left=(4+Math.random()*92)+'%';
+        p.style.background=colors[i%colors.length];
+        p.style.animationDuration=(2.7+Math.random()*1.4)+'s';
+        p.style.animationDelay=(Math.random()*0.45)+'s';
+        p.style.setProperty('--cel-drift',Math.round((Math.random()*2-1)*90)+'px');
+        p.style.setProperty('--cel-rot',Math.round(180+Math.random()*260)+'deg');
+        wrap.appendChild(p);
+      }
+      layer.appendChild(wrap);
+      setTimeout(function(){try{wrap.remove();}catch(e){}},4300);
+    }catch(e){}
+  }
+  function pvCelebClaimDaily(){
+    try{
+      var key='pipvant_celebrated_'+pvCelebTodayKey();
+      if(localStorage.getItem(key))return false;
+      localStorage.setItem(key,'1');
+      return true;
+    }catch(e){return false;}
+  }
+  var pvCelebJournalCheckedDay='';
+  function pvCelebMaybeJournal(){
+    try{
+      var day=pvCelebTodayKey();
+      if(pvCelebJournalCheckedDay===day)return;
+      pvCelebJournalCheckedDay=day;
+      if(pvBgScene==='classic')return;
+      var trades=(typeof jcalClosedTrades==='function')?jcalClosedTrades():[];
+      var net=0,found=false;
+      for(var i=0;i<trades.length;i++){
+        var ts=new Date(trades[i].timestamp);
+        if(isNaN(ts))continue;
+        var dk=ts.getFullYear()+'-'+String(ts.getMonth()+1).padStart(2,'0')+'-'+String(ts.getDate()).padStart(2,'0');
+        if(dk===day){net+=Number(trades[i].pnl)||0;found=true;}
+      }
+      if(found&&net>0&&pvCelebClaimDaily())pvCelebrate();
+    }catch(e){}
+  }
+  function pvCelebFireForCert(count){
+    var flag='pipvant_celebrated_cert_'+count;
+    var claimed=false;
+    try{if(!localStorage.getItem(flag)){localStorage.setItem(flag,'1');claimed=true;}}catch(e){}
+    if(claimed&&pvCelebClaimDaily())pvCelebrate();
+  }
+  function pvCelebCertCount(){
+    try{return (profileSession&&Array.isArray(profileSession.certificates))?profileSession.certificates.length:0;}catch(e){return 0;}
+  }
+  /* Passive path (renders): track the count; an increase celebrates —
+     except the first positive sighting ever, which is the baseline
+     (existing certificates loading at sign-in), seeded silently. */
+  function pvCelebCheckCerts(){
+    try{
+      var count=pvCelebCertCount();
+      var stored=null,seenPos=false;
+      try{stored=localStorage.getItem('pipvant_cert_count');seenPos=!!localStorage.getItem('pipvant_cert_positive_seen');}catch(e){}
+      if(count>0&&!seenPos){try{localStorage.setItem('pipvant_cert_positive_seen','1');}catch(e){}}
+      if(stored===null){try{localStorage.setItem('pipvant_cert_count',String(count));}catch(e){}return;}
+      var prev=parseInt(stored,10);
+      if(isNaN(prev))prev=0;
+      if(count>prev){
+        try{localStorage.setItem('pipvant_cert_count',String(count));}catch(e){}
+        if(prev===0&&!seenPos)return;
+        pvCelebFireForCert(count);
+      }else if(count<prev){
+        try{localStorage.setItem('pipvant_cert_count',String(count));}catch(e){}
+      }
+    }catch(e){}
+  }
+  /* Certificate hooks: wrap the render path (initial load, realtime
+     refresh, awards) for passive tracking, and wrap the award function
+     itself — a genuine new award always celebrates, comparing against
+     the count snapshotted before the award's own render runs. */
+  if(typeof renderProfileCertificates==='function'){
+    var pvOrigRenderCerts=renderProfileCertificates;
+    renderProfileCertificates=function(values){
+      var r=pvOrigRenderCerts(values);
+      pvCelebCheckCerts();
+      return r;
+    };
+  }
+  if(typeof awardProfileCertificate==='function'){
+    var pvOrigAwardCert=awardProfileCertificate;
+    awardProfileCertificate=function(value){
+      var prevStored=null;
+      try{prevStored=parseInt(localStorage.getItem('pipvant_cert_count'),10);}catch(e){}
+      var r=pvOrigAwardCert(value);
+      if(r===true){
+        var count=pvCelebCertCount();
+        try{localStorage.setItem('pipvant_cert_count',String(count));localStorage.setItem('pipvant_cert_positive_seen','1');}catch(e){}
+        if(isNaN(prevStored)||count>prevStored)pvCelebFireForCert(count);
+      }
+      return r;
+    };
+  }
+
+  /* ===== Forward pack: Scene of the Day card (toolkit home) ===== */
+  var pvSotdKey='';
+  function pvSotdRender(){
+    try{
+      var card=document.getElementById('sotdCard');
+      if(!card)return;
+      var hideAt=0;
+      try{hideAt=Number(localStorage.getItem('pipvant_sotd_hide'))||0;}catch(e){}
+      if(hideAt&&Date.now()-hideAt<30*24*60*60*1000){card.hidden=true;return;}
+      var today=PV_BG_POOL[pvBgHashDate(pvBgTodayKey())%PV_BG_POOL.length];
+      pvSotdKey=today;
+      var img=document.getElementById('sotdThumb');
+      if(img&&img.getAttribute('src')!=='assets/bgs/thumbs/'+today+'.webp')img.src='assets/bgs/thumbs/'+today+'.webp';
+      var nm=document.getElementById('sotdName');
+      if(nm)nm.textContent=pvBgSceneName(today);
+      var isNow=pvBgScene===today;
+      var tryBtn=document.getElementById('sotdTry');
+      if(tryBtn)tryBtn.hidden=isNow;
+      var now=document.getElementById('sotdNow');
+      if(now)now.hidden=!isNow;
+      card.hidden=false;
+    }catch(e){}
+  }
+  (function(){
+    var tryBtn=document.getElementById('sotdTry');
+    if(tryBtn)tryBtn.addEventListener('click',function(){
+      if(pvSotdKey)pvBgApply(pvSotdKey);
+      pvSotdRender();
+    });
+    var dis=document.getElementById('sotdDismiss');
+    if(dis)dis.addEventListener('click',function(){
+      try{localStorage.setItem('pipvant_sotd_hide',String(Date.now()));}catch(e){}
+      var card=document.getElementById('sotdCard');
+      if(card)card.hidden=true;
+    });
+    pvSotdRender();
+  })();
+
+  document.addEventListener('click',function(ev){var b=ev.target&&ev.target.closest?ev.target.closest('[data-language-choice]'):null;if(b)setTimeout(function(){pvBgSyncShowcase();pvBgApplySaver(pvBgSaverRead(),false);pvSotdRender();},0);});
   captureTranslations();
 
   var reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -9095,6 +9466,7 @@ html[dir="rtl"] .jump-row{text-align:right}
     var sequence=++screenSequence,skip=instant||reduceMotion.matches||!previous;
     function activate(){
       if(sequence!==screenSequence)return;window.scrollTo({top:0,behavior:'auto'});document.querySelectorAll('.screen').forEach(function(el){el.classList.remove('motion-enter','motion-exit');el.classList.toggle('active',el.id===id);});
+      try{if(typeof pvForwardOnScreen==='function')pvForwardOnScreen(id);}catch(_fe){}
       var activeScreen=document.getElementById(id);prepareProfilePrestige(activeScreen);
       if(id==='profile'&&typeof sbUpdateProfileStats==='function'&&typeof sessionJournalEntries!=='undefined'){try{
         // Mega-audit fix: profile stats respect the account filter (were
@@ -10976,11 +11348,11 @@ html[dir="rtl"] .jump-row{text-align:right}
     try{
       // H1-storage fix: removed 'pipvant_news_alerted' from keep-list (was
       // suppressing news alerts for the next user on the same device).
-      var keep={'pipvant_landing_seen':1,'pipvant_seen_landing':1,'pipvantConsent':1,'pipvant_rates':1,'pipvant_last_screen':1,'pipvant_shortlist':1,'pipvant_bgscene':1,'pipvant_bgfavs':1,'pipvant_bgintensity':1,'pipvant_bgparallax':1,'pipvant_bgtilt':1,'pipvant_bgsaver':1};
+      var keep={'pipvant_landing_seen':1,'pipvant_seen_landing':1,'pipvantConsent':1,'pipvant_rates':1,'pipvant_last_screen':1,'pipvant_shortlist':1,'pipvant_bgscene':1,'pipvant_bgfavs':1,'pipvant_bgintensity':1,'pipvant_bgparallax':1,'pipvant_bgtilt':1,'pipvant_bgsaver':1,'pipvant_bgcalm':1,'pipvant_bgperdevice':1,'pipvant_bgscene_m':1,'pipvant_bgscene_d':1,'pipvant_sotd_hide':1,'pipvant_cert_count':1,'pipvant_cert_positive_seen':1};
       var drop=[];
       for(var i=0;i<localStorage.length;i++){
         var k=localStorage.key(i);
-        if(k&&k.indexOf('pipvant_')===0&&!keep[k])drop.push(k);
+        if(k&&k.indexOf('pipvant_')===0&&!keep[k]&&k.indexOf('pipvant_celebrated_')!==0)drop.push(k);
       }
       drop.forEach(function(k){try{localStorage.removeItem(k);}catch(e){}});
     }catch(e){}
