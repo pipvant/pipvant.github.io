@@ -112,6 +112,17 @@
     .pipv2-related ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px 18px}
     .pipv2-related a{color:var(--accent);text-decoration:none;font-size:14px;font-weight:600}
     .pipv2-related a:hover{text-decoration:underline}
+    .seg{display:flex;gap:6px;background:var(--raised);border:1px solid var(--line);border-radius:12px;padding:5px;margin-bottom:20px}
+    .seg-btn{flex:1;background:transparent;border:0;color:var(--secondary);font-family:inherit;font-size:14px;font-weight:600;padding:10px 8px;border-radius:8px;cursor:pointer;transition:color .2s,background .2s}
+    .seg-btn:hover{color:var(--text)}
+    .seg-btn.active{background:var(--surface);color:var(--gold);box-shadow:inset 0 0 0 1px var(--line-strong)}
+    [hidden]{display:none!important}
+    .hero-stat{text-align:center;padding:6px 0 18px}
+    .hero-stat .hv{font-family:"Space Grotesk";font-size:2.5rem;font-weight:700;line-height:1.05;background:linear-gradient(135deg,#F5D67B,#D4AF37);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .hero-stat .hl{color:var(--muted);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-top:4px}
+    table.narrow{min-width:0}
+    tr.hl td{background:rgba(212,175,55,.09);color:var(--gold);font-weight:700}
+    @media(max-width:560px){.seg-btn{font-size:13px;padding:9px 4px}}
   </style>
 </head>
 <body>
@@ -131,6 +142,12 @@
   </section>
 
   <div class="calc" role="region" aria-label="Drawdown simulator">
+    <div class="seg" role="tablist" aria-label="Calculator mode">
+      <button type="button" class="seg-btn active" data-tab="sim" role="tab" aria-selected="true" data-i18n="tab_sim">Simulator</button>
+      <button type="button" class="seg-btn" data-tab="recovery" role="tab" aria-selected="false" data-i18n="tab_rec">Recovery</button>
+      <button type="button" class="seg-btn" data-tab="compounding" role="tab" aria-selected="false" data-i18n="tab_cmp">Compounding</button>
+    </div>
+    <div id="panel-sim">
     <div class="pipv2-chips"><span class="pipv2-lbl" data-p2="examples">Worked examples — tap to fill:</span><button type="button" class="pipv2-chip" data-p2-preset="0">Example: trailing drawdown, mixed week</button><button type="button" class="pipv2-chip" data-p2-preset="1">Example: static drawdown, steady defence</button><button type="button" class="pipv2-chip" data-p2-preset="2">Example: EOD trailing with breakeven lock</button></div>
     <div class="form-grid">
       <div><label for="acct" data-i18n="lbl_acct">Account size (USD)</label><input id="acct" type="number" value="50000" min="1" inputmode="decimal"></div>
@@ -163,6 +180,58 @@
         <tbody id="rows"></tbody>
       </table></div>
       <p class="note" data-i18n="note">Assumptions: the daily loss limit is measured against the initial account size (the most common convention). EOD trailing locks the floor at your starting balance — it trails upward but never above breakeven.</p>
+    </div>
+    </div>
+    <div id="panel-rec" hidden>
+      <div class="pipv2-chips"><span class="pipv2-lbl" data-p2="examples">Worked examples — tap to fill:</span><button type="button" class="pipv2-chip" data-rec-preset="0" data-i18n="rec_p1">Example: 25% drawdown on $50,000</button><button type="button" class="pipv2-chip" data-rec-preset="1" data-i18n="rec_p2">Example: 10% drawdown on $100,000</button></div>
+      <div class="form-grid">
+        <div><label for="recStart" data-i18n="rec_lbl_start">Starting balance (USD)</label><input id="recStart" type="number" value="50000" min="1" inputmode="decimal"></div>
+        <div><label for="recDd" data-i18n="rec_lbl_dd">Current drawdown (%)</label><input id="recDd" type="number" value="10" min="0" max="99.9" step="0.5" inputmode="decimal"></div>
+        <div><label for="recWin" data-i18n="rec_lbl_win">Average win per trade (%) — optional</label><input id="recWin" type="number" placeholder="e.g. 2" min="0" step="0.1" inputmode="decimal"></div>
+      </div>
+      <p class="hint" data-i18n="rec_hint">Enter the drawdown you are in right now — we calculate the gain needed to climb back to breakeven.</p>
+      <p class="hint" id="recInvalid" style="color:var(--red)" hidden></p>
+      <div class="result">
+        <div class="hero-stat"><div class="hv" id="recReq">—</div><div class="hl" data-i18n="rec_out_req">Gain required to break even</div></div>
+        <div class="stat-grid">
+          <div class="stat"><div class="v" id="recBal">$—</div><div class="l" data-i18n="rec_out_bal">Current balance</div></div>
+          <div class="stat"><div class="v" id="recLoss">$—</div><div class="l" data-i18n="rec_out_loss">Loss to recover</div></div>
+          <div class="stat"><div class="v" id="recTrades">—</div><div class="l" data-i18n="rec_out_trades">Winning trades to recover</div></div>
+        </div>
+        <p class="note" id="recTradesNote" data-i18n="rec_trades_note" hidden>Best-case estimate — assumes every trade wins at your average win, with no losing trades in between.</p>
+        <div class="tbl-wrap"><table class="narrow">
+          <thead><tr><th data-i18n="rec_th_dd">Drawdown</th><th data-i18n="rec_th_gain">Gain required to break even</th></tr></thead>
+          <tbody id="recRows"></tbody>
+        </table></div>
+        <p class="note" data-i18n="rec_note">Losses and gains are not symmetric: a 50% drawdown needs a 100% gain just to get back to where you started.</p>
+      </div>
+    </div>
+    <div id="panel-cmp" hidden>
+      <div class="pipv2-chips"><span class="pipv2-lbl" data-p2="examples">Worked examples — tap to fill:</span><button type="button" class="pipv2-chip" data-cmp-preset="0" data-i18n="cmp_p1">Example: 2% monthly for a year on $10,000</button><button type="button" class="pipv2-chip" data-cmp-preset="1" data-i18n="cmp_p2">Example: 5% weekly for 12 weeks on $5,000</button></div>
+      <div class="form-grid">
+        <div><label for="cmpStart" data-i18n="cmp_lbl_start">Starting balance (USD)</label><input id="cmpStart" type="number" value="10000" min="1" inputmode="decimal"></div>
+        <div><label for="cmpGain" data-i18n="cmp_lbl_gain">Gain per period (%)</label><input id="cmpGain" type="number" value="2" step="0.1" inputmode="decimal"></div>
+        <div><label for="cmpFreq" data-i18n="cmp_lbl_freq">Period</label><select id="cmpFreq">
+          <option value="month" selected data-i18n="cmp_freq_m">Monthly</option>
+          <option value="week" data-i18n="cmp_freq_w">Weekly</option>
+        </select></div>
+        <div><label for="cmpPeriods" data-i18n="cmp_lbl_periods">Number of periods</label><input id="cmpPeriods" type="number" value="12" min="1" max="1000" step="1" inputmode="numeric"></div>
+        <div><label for="cmpTarget" data-i18n="cmp_lbl_target">Target balance (USD) — optional</label><input id="cmpTarget" type="number" placeholder="e.g. 20000" min="0" inputmode="decimal"></div>
+      </div>
+      <div class="result">
+        <div class="hero-stat"><div class="hv" id="cmpFinal">$—</div><div class="hl" data-i18n="cmp_out_final">Final balance</div></div>
+        <div class="stat-grid">
+          <div class="stat"><div class="v" id="cmpGrowth">—</div><div class="l" data-i18n="cmp_out_growth">Total growth</div></div>
+          <div class="stat"><div class="v" id="cmpPeriodsOut">—</div><div class="l" data-i18n="cmp_out_periods">Periods</div></div>
+          <div class="stat"><div class="v" id="cmpTargetStat">—</div><div class="l" data-i18n="cmp_out_target">Target reached</div></div>
+        </div>
+        <div class="tbl-wrap"><table class="narrow">
+          <thead><tr><th data-i18n="cmp_th_period">Period</th><th data-i18n="cmp_th_bal">Balance</th><th data-i18n="cmp_th_cum">Cumulative growth</th></tr></thead>
+          <tbody id="cmpRows"></tbody>
+        </table></div>
+        <p class="note" id="cmpTrunc" hidden></p>
+        <p class="note" data-i18n="cmp_note">A mathematical projection that assumes the same gain every period. Real markets do not compound this smoothly — for planning and education only, not a promise of returns.</p>
+      </div>
     </div>
   </div>
 
@@ -209,8 +278,8 @@
 <script>
 (function(){
   var I18N={
-    en:{dir:'ltr',toggle:'العربية',meta_title:'Drawdown Simulator — When Would Your Account Breach? | PIPVANT',eyebrow:'Free drawdown simulator',h1a:'Survive the',h1b:'drawdown.',lede:'Paste your daily P&L — or the worst streak you can imagine — and see exactly when each drawdown rule would breach your account.',lbl_acct:'Account size (USD)',lbl_dd:'Max drawdown (%)',lbl_type:'Drawdown type',t_static:'Static — the floor never moves',t_trailing:'Trailing — the floor follows your highest balance',t_eod:'EOD trailing — follows closes, locks at breakeven',lbl_daily:'Daily loss limit (%)',lbl_pnl:'Daily P&L values (one per line, or comma-separated)',hint_pnl:'Use negative numbers for losing days. The simulation updates live.',out_end:'Ending balance',out_buf:'Buffer remaining',out_worst:'Worst drawdown used',bar_lbl:'Buffer remaining',th_day:'Day',th_pnl:'P&L',th_bal:'Balance',th_floor:'Floor',th_buf:'Buffer',th_status:'Status',note:'Assumptions: the daily loss limit is measured against the initial account size (the most common convention). EOD trailing locks the floor at your starting balance — it trails upward but never above breakeven.',v_ok:'✓ Account survived — the rules held through every day.',v_dd:'✖ Drawdown breached on day ',v_daily:'⚠ Daily loss limit breached on day ',v_after:' — the account would have failed here.',st_ok:'OK',st_warn:'Daily limit hit',st_breach:'Drawdown breached',c1t:'📉 Static rewards defense',c1b:'With a static floor, profits only add cushion. Your only job is to never let the account fall below the line you started with minus the max drawdown.',c2t:'📈 Trailing punishes givebacks',c2b:'With a trailing floor, every new high raises the line. Giving back a big winner can breach you — try the sample above and watch day 6 squeeze the buffer.',c3t:'🛡️ The daily limit is the silent killer',c3b:'Most breaches happen on the daily loss limit, not the max drawdown. One oversized day ends the account even when total drawdown looks fine.',faq_h:'Drawdown FAQs',q1:'What is the difference between static and trailing drawdown?',a1:'Static drawdown never moves: the floor is fixed at your starting balance minus the max drawdown. Trailing drawdown follows your highest balance upward, so the floor rises as you profit — you must protect open gains.',q2:'What is EOD trailing with a breakeven lock?',a2:'EOD (end-of-day) trailing only updates the floor at each day\'s close. On many firms it locks at your starting balance (breakeven) — it can trail upward to, but never above, where you started.',q3:'How is the daily loss limit measured?',a3:'Conventions differ by firm. This simulator measures it against the initial account size — the most common convention — so you can compare the worst case across firms.',q4:'Is this simulator free?',a4:'Yes — free forever, no signup. It\'s part of PIPVANT\'s free toolkit: journal, prop firm matcher, risk calculator and economic calendar.',news_h:'Risk wisdom, weekly',news_b:'Drawdown frameworks and prop firm news — one short email a week. No spam, unsubscribe anytime.',news_btn:'Subscribe free',final_h:'Test your edge before the market does.',final_b:'The drawdown simulator is one of many free tools in your PIPVANT toolkit — journal every trade, compare prop firms and size your risk.',final_cta:'Open the free toolkit →',also_free:'Also free:',link_split:'profit split calculator',link_risk:'risk calculator',link_cons:'consistency checker',nav_toolkit:'Open full toolkit',foot:'© 2026 PIPVANT by Orovanta — Trade with a process, not a prediction.',foot_toolkit:'Toolkit',foot_firms:'Prop firms',foot_journal:'Journal'},
-    ar:{dir:'rtl',toggle:'EN',meta_title:'محاكي التراجع — متى سيُخترق حسابك؟ | PIPVANT',eyebrow:'محاكي التراجع المجاني',h1a:'اصمد أمام',h1b:'التراجع.',lede:'الصق صافي الربح والخسارة اليومي — أو أسوأ سلسلة تتخيلها — وشاهد بالضبط متى تخترق كل قاعدة تراجع حسابك.',lbl_acct:'حجم الحساب (دولار أمريكي)',lbl_dd:'أقصى تراجع (%)',lbl_type:'نوع التراجع',t_static:'ثابت — الحد لا يتحرك أبداً',t_trailing:'متحرك — الحد يتبع أعلى رصيد لك',t_eod:'متحرك بإغلاق اليوم — يتبع الإغلاقات ويتوقف عند التعادل',lbl_daily:'حد الخسارة اليومية (%)',lbl_pnl:'قيم الربح والخسارة اليومية (قيمة في كل سطر، أو مفصولة بفواصل)',hint_pnl:'استخدم أرقاماً سالبة للأيام الخاسرة. تتحدث المحاكاة مباشرة.',out_end:'الرصيد النهائي',out_buf:'الهامش المتبقي',out_worst:'أسوأ تراجع مستخدم',bar_lbl:'الهامش المتبقي',th_day:'اليوم',th_pnl:'الربح/الخسارة',th_bal:'الرصيد',th_floor:'الحد',th_buf:'الهامش',th_status:'الحالة',note:'افتراضات: يُقاس حد الخسارة اليومية مقابل حجم الحساب الابتدائي (الأكثر شيوعاً). التراجع المتحرك بإغلاق اليوم يثبّت الحد عند رصيد البداية — يتبع الصعود لكن لا يتجاوز نقطة التعادل أبداً.',v_ok:'✓ نجا الحساب — صمدت القواعد في كل الأيام.',v_dd:'✖ تم اختراق التراجع في اليوم ',v_daily:'⚠ تم تجاوز حد الخسارة اليومية في اليوم ',v_after:' — كان سيفشل الحساب هنا.',st_ok:'سليم',st_warn:'تم تجاوز الحد اليومي',st_breach:'تم اختراق التراجع',c1t:'📉 الثابت يكافئ الدفاع',c1b:'مع حد ثابت، الأرباح تضيف هامش أمان فقط. مهمتك الوحيدة ألا ينزل الحساب تحت الخط: رصيد البداية ناقص أقصى تراجع.',c2t:'📈 المتحرك يعاقب إرجاع الأرباح',c2b:'مع حد متحرك، كل قمة جديدة ترفع الخط. إرجاع ربح كبير قد يخترقك — جرّب المثال أعلاه وراقب كيف يضغط اليوم السادس على الهامش.',c3t:'🛡️ الحد اليومي هو القاتل الصامت',c3b:'معظم الاختراقات تحدث على حد الخسارة اليومية، لا على أقصى تراجع. يوم واحد بحجم مبالغ فيه ينهي الحساب حتى عندما يبدو إجمالي التراجع سليماً.',faq_h:'أسئلة شائعة عن التراجع',q1:'ما الفرق بين التراجع الثابت والمتحرك؟',a1:'التراجع الثابت لا يتحرك أبداً: الحد ثابت عند رصيد البداية ناقص أقصى تراجع. التراجع المتحرك يتبع أعلى رصيد لك صعوداً، فيرتفع الحد كلما ربحت — عليك حماية الأرباح المفتوحة.',q2:'ما هو التراجع المتحرك بإغلاق اليوم مع قفل التعادل؟',a2:'التراجع المتحرك بإغلاق اليوم (EOD) يحدّث الحد عند إغلاق كل يوم فقط. وفي كثير من الشركات يثبَّت عند رصيد البداية (التعادل) — يمكنه التتبع صعوداً حتى نقطة البداية، لكن لا يتجاوزها أبداً.',q3:'كيف يُقاس حد الخسارة اليومية؟',a3:'تختلف الأعراف بين الشركات. يقيس هذا المحاكي الحد مقابل حجم الحساب الابتدائي — الأكثر شيوعاً — لتقارن أسوأ حالة عبر الشركات.',q4:'هل هذا المحاكي مجاني؟',a4:'نعم — مجاني للأبد بلا تسجيل. جزء من مجموعة PIPVANT المجانية: السجل ومطابق شركات التداول وحاسبة المخاطر والتقويم الاقتصادي.',news_h:'حكمة المخاطر، أسبوعياً',news_b:'أطر التراجع وأخبار شركات التداول — بريد قصير واحد أسبوعياً. بلا إزعاج، يمكنك إلغاء الاشتراك في أي وقت.',news_btn:'اشترك مجاناً',final_h:'اختبر ميزتك قبل أن يفعل السوق.',final_b:'محاكي التراجع واحدة من أدوات كثيرة مجانية في مجموعة PIPVANT — سجّل كل صفقة، وقارن شركات التداول، وحدد مخاطرك.',final_cta:'← افتح المجموعة المجانية',also_free:'مجاني أيضاً:',link_split:'حاسبة تقسيم الأرباح',link_risk:'حاسبة المخاطر',link_cons:'فاحص الاتساق',nav_toolkit:'افتح المجموعة الكاملة',foot:'© 2026 PIPVANT من Orovanta — تداول بمنهجية، لا بتوقع.',foot_toolkit:'المجموعة',foot_firms:'شركات التداول',foot_journal:'السجل'}
+    en:{dir:'ltr',toggle:'العربية',meta_title:'Drawdown Simulator — When Would Your Account Breach? | PIPVANT',eyebrow:'Free drawdown simulator',h1a:'Survive the',h1b:'drawdown.',lede:'Paste your daily P&L — or the worst streak you can imagine — and see exactly when each drawdown rule would breach your account.',lbl_acct:'Account size (USD)',lbl_dd:'Max drawdown (%)',lbl_type:'Drawdown type',t_static:'Static — the floor never moves',t_trailing:'Trailing — the floor follows your highest balance',t_eod:'EOD trailing — follows closes, locks at breakeven',lbl_daily:'Daily loss limit (%)',lbl_pnl:'Daily P&L values (one per line, or comma-separated)',hint_pnl:'Use negative numbers for losing days. The simulation updates live.',out_end:'Ending balance',out_buf:'Buffer remaining',out_worst:'Worst drawdown used',bar_lbl:'Buffer remaining',th_day:'Day',th_pnl:'P&L',th_bal:'Balance',th_floor:'Floor',th_buf:'Buffer',th_status:'Status',note:'Assumptions: the daily loss limit is measured against the initial account size (the most common convention). EOD trailing locks the floor at your starting balance — it trails upward but never above breakeven.',v_ok:'✓ Account survived — the rules held through every day.',v_dd:'✖ Drawdown breached on day ',v_daily:'⚠ Daily loss limit breached on day ',v_after:' — the account would have failed here.',st_ok:'OK',st_warn:'Daily limit hit',st_breach:'Drawdown breached',c1t:'📉 Static rewards defense',c1b:'With a static floor, profits only add cushion. Your only job is to never let the account fall below the line you started with minus the max drawdown.',c2t:'📈 Trailing punishes givebacks',c2b:'With a trailing floor, every new high raises the line. Giving back a big winner can breach you — try the sample above and watch day 6 squeeze the buffer.',c3t:'🛡️ The daily limit is the silent killer',c3b:'Most breaches happen on the daily loss limit, not the max drawdown. One oversized day ends the account even when total drawdown looks fine.',faq_h:'Drawdown FAQs',q1:'What is the difference between static and trailing drawdown?',a1:'Static drawdown never moves: the floor is fixed at your starting balance minus the max drawdown. Trailing drawdown follows your highest balance upward, so the floor rises as you profit — you must protect open gains.',q2:'What is EOD trailing with a breakeven lock?',a2:'EOD (end-of-day) trailing only updates the floor at each day\'s close. On many firms it locks at your starting balance (breakeven) — it can trail upward to, but never above, where you started.',q3:'How is the daily loss limit measured?',a3:'Conventions differ by firm. This simulator measures it against the initial account size — the most common convention — so you can compare the worst case across firms.',q4:'Is this simulator free?',a4:'Yes — free forever, no signup. It\'s part of PIPVANT\'s free toolkit: journal, prop firm matcher, risk calculator and economic calendar.',news_h:'Risk wisdom, weekly',news_b:'Drawdown frameworks and prop firm news — one short email a week. No spam, unsubscribe anytime.',news_btn:'Subscribe free',final_h:'Test your edge before the market does.',final_b:'The drawdown simulator is one of many free tools in your PIPVANT toolkit — journal every trade, compare prop firms and size your risk.',final_cta:'Open the free toolkit →',also_free:'Also free:',link_split:'profit split calculator',link_risk:'risk calculator',link_cons:'consistency checker',nav_toolkit:'Open full toolkit',foot:'© 2026 PIPVANT by Orovanta — Trade with a process, not a prediction.',foot_toolkit:'Toolkit',foot_firms:'Prop firms',foot_journal:'Journal',tab_sim:'Simulator',tab_rec:'Recovery',tab_cmp:'Compounding',rec_p1:'Example: 25% drawdown on $50,000',rec_p2:'Example: 10% drawdown on $100,000',rec_lbl_start:'Starting balance (USD)',rec_lbl_dd:'Current drawdown (%)',rec_lbl_win:'Average win per trade (%) — optional',rec_hint:'Enter the drawdown you are in right now — we calculate the gain needed to climb back to breakeven.',rec_out_req:'Gain required to break even',rec_out_bal:'Current balance',rec_out_loss:'Loss to recover',rec_out_trades:'Winning trades to recover',rec_trades_note:'Best-case estimate — assumes every trade wins at your average win, with no losing trades in between.',rec_th_dd:'Drawdown',rec_th_gain:'Gain required to break even',rec_note:'Losses and gains are not symmetric: a 50% drawdown needs a 100% gain just to get back to where you started.',cmp_p1:'Example: 2% monthly for a year on $10,000',cmp_p2:'Example: 5% weekly for 12 weeks on $5,000',cmp_lbl_start:'Starting balance (USD)',cmp_lbl_gain:'Gain per period (%)',cmp_lbl_freq:'Period',cmp_freq_m:'Monthly',cmp_freq_w:'Weekly',cmp_lbl_periods:'Number of periods',cmp_lbl_target:'Target balance (USD) — optional',cmp_out_final:'Final balance',cmp_out_growth:'Total growth',cmp_out_periods:'Periods',cmp_out_target:'Target reached',cmp_th_period:'Period',cmp_th_bal:'Balance',cmp_th_cum:'Cumulative growth',cmp_note:'A mathematical projection that assumes the same gain every period. Real markets do not compound this smoothly — for planning and education only, not a promise of returns.'},
+    ar:{dir:'rtl',toggle:'EN',meta_title:'محاكي التراجع — متى سيُخترق حسابك؟ | PIPVANT',eyebrow:'محاكي التراجع المجاني',h1a:'اصمد أمام',h1b:'التراجع.',lede:'الصق صافي الربح والخسارة اليومي — أو أسوأ سلسلة تتخيلها — وشاهد بالضبط متى تخترق كل قاعدة تراجع حسابك.',lbl_acct:'حجم الحساب (دولار أمريكي)',lbl_dd:'أقصى تراجع (%)',lbl_type:'نوع التراجع',t_static:'ثابت — الحد لا يتحرك أبداً',t_trailing:'متحرك — الحد يتبع أعلى رصيد لك',t_eod:'متحرك بإغلاق اليوم — يتبع الإغلاقات ويتوقف عند التعادل',lbl_daily:'حد الخسارة اليومية (%)',lbl_pnl:'قيم الربح والخسارة اليومية (قيمة في كل سطر، أو مفصولة بفواصل)',hint_pnl:'استخدم أرقاماً سالبة للأيام الخاسرة. تتحدث المحاكاة مباشرة.',out_end:'الرصيد النهائي',out_buf:'الهامش المتبقي',out_worst:'أسوأ تراجع مستخدم',bar_lbl:'الهامش المتبقي',th_day:'اليوم',th_pnl:'الربح/الخسارة',th_bal:'الرصيد',th_floor:'الحد',th_buf:'الهامش',th_status:'الحالة',note:'افتراضات: يُقاس حد الخسارة اليومية مقابل حجم الحساب الابتدائي (الأكثر شيوعاً). التراجع المتحرك بإغلاق اليوم يثبّت الحد عند رصيد البداية — يتبع الصعود لكن لا يتجاوز نقطة التعادل أبداً.',v_ok:'✓ نجا الحساب — صمدت القواعد في كل الأيام.',v_dd:'✖ تم اختراق التراجع في اليوم ',v_daily:'⚠ تم تجاوز حد الخسارة اليومية في اليوم ',v_after:' — كان سيفشل الحساب هنا.',st_ok:'سليم',st_warn:'تم تجاوز الحد اليومي',st_breach:'تم اختراق التراجع',c1t:'📉 الثابت يكافئ الدفاع',c1b:'مع حد ثابت، الأرباح تضيف هامش أمان فقط. مهمتك الوحيدة ألا ينزل الحساب تحت الخط: رصيد البداية ناقص أقصى تراجع.',c2t:'📈 المتحرك يعاقب إرجاع الأرباح',c2b:'مع حد متحرك، كل قمة جديدة ترفع الخط. إرجاع ربح كبير قد يخترقك — جرّب المثال أعلاه وراقب كيف يضغط اليوم السادس على الهامش.',c3t:'🛡️ الحد اليومي هو القاتل الصامت',c3b:'معظم الاختراقات تحدث على حد الخسارة اليومية، لا على أقصى تراجع. يوم واحد بحجم مبالغ فيه ينهي الحساب حتى عندما يبدو إجمالي التراجع سليماً.',faq_h:'أسئلة شائعة عن التراجع',q1:'ما الفرق بين التراجع الثابت والمتحرك؟',a1:'التراجع الثابت لا يتحرك أبداً: الحد ثابت عند رصيد البداية ناقص أقصى تراجع. التراجع المتحرك يتبع أعلى رصيد لك صعوداً، فيرتفع الحد كلما ربحت — عليك حماية الأرباح المفتوحة.',q2:'ما هو التراجع المتحرك بإغلاق اليوم مع قفل التعادل؟',a2:'التراجع المتحرك بإغلاق اليوم (EOD) يحدّث الحد عند إغلاق كل يوم فقط. وفي كثير من الشركات يثبَّت عند رصيد البداية (التعادل) — يمكنه التتبع صعوداً حتى نقطة البداية، لكن لا يتجاوزها أبداً.',q3:'كيف يُقاس حد الخسارة اليومية؟',a3:'تختلف الأعراف بين الشركات. يقيس هذا المحاكي الحد مقابل حجم الحساب الابتدائي — الأكثر شيوعاً — لتقارن أسوأ حالة عبر الشركات.',q4:'هل هذا المحاكي مجاني؟',a4:'نعم — مجاني للأبد بلا تسجيل. جزء من مجموعة PIPVANT المجانية: السجل ومطابق شركات التداول وحاسبة المخاطر والتقويم الاقتصادي.',news_h:'حكمة المخاطر، أسبوعياً',news_b:'أطر التراجع وأخبار شركات التداول — بريد قصير واحد أسبوعياً. بلا إزعاج، يمكنك إلغاء الاشتراك في أي وقت.',news_btn:'اشترك مجاناً',final_h:'اختبر ميزتك قبل أن يفعل السوق.',final_b:'محاكي التراجع واحدة من أدوات كثيرة مجانية في مجموعة PIPVANT — سجّل كل صفقة، وقارن شركات التداول، وحدد مخاطرك.',final_cta:'← افتح المجموعة المجانية',also_free:'مجاني أيضاً:',link_split:'حاسبة تقسيم الأرباح',link_risk:'حاسبة المخاطر',link_cons:'فاحص الاتساق',nav_toolkit:'افتح المجموعة الكاملة',foot:'© 2026 PIPVANT من Orovanta — تداول بمنهجية، لا بتوقع.',foot_toolkit:'المجموعة',foot_firms:'شركات التداول',foot_journal:'السجل',tab_sim:'المحاكاة',tab_rec:'التعافي',tab_cmp:'النمو التراكمي',rec_p1:'مثال: تراجع 25% على 50,000 دولار',rec_p2:'مثال: تراجع 10% على 100,000 دولار',rec_lbl_start:'رصيد البداية (دولار)',rec_lbl_dd:'التراجع الحالي (%)',rec_lbl_win:'متوسط الربح لكل صفقة (%) — اختياري',rec_hint:'أدخل التراجع الذي أنت فيه الآن — نحسب الربح اللازم للصعود مجدداً إلى نقطة التعادل.',rec_out_req:'الربح اللازم للعودة إلى التعادل',rec_out_bal:'الرصيد الحالي',rec_out_loss:'الخسارة المطلوب تعويضها',rec_out_trades:'صفقات رابحة للتعافي',rec_trades_note:'تقدير لأفضل حالة — يفترض أن كل صفقة تربح بمتوسط ربحك، دون أي صفقات خاسرة بينها.',rec_th_dd:'التراجع',rec_th_gain:'الربح اللازم للتعادل',rec_note:'الخسارة والربح غير متماثلين: تراجع 50% يحتاج ربح 100% لمجرد العودة إلى نقطة البداية.',cmp_p1:'مثال: 2% شهرياً لمدة سنة على 10,000 دولار',cmp_p2:'مثال: 5% أسبوعياً لمدة 12 أسبوعاً على 5,000 دولار',cmp_lbl_start:'رصيد البداية (دولار)',cmp_lbl_gain:'الربح في كل فترة (%)',cmp_lbl_freq:'الفترة',cmp_freq_m:'شهري',cmp_freq_w:'أسبوعي',cmp_lbl_periods:'عدد الفترات',cmp_lbl_target:'الرصيد المستهدف (دولار) — اختياري',cmp_out_final:'الرصيد النهائي',cmp_out_growth:'النمو الإجمالي',cmp_out_periods:'الفترات',cmp_out_target:'تحقّق الهدف',cmp_th_period:'الفترة',cmp_th_bal:'الرصيد',cmp_th_cum:'النمو التراكمي',cmp_note:'إسقاط رياضي يفترض نفس الربح في كل فترة. الأسواق الحقيقية لا تنمو بهذه السلاسة — للتخطيط والتعليم فقط، وليس وعداً بعوائد.'}
   };
   var lang='en';
   try{var s=JSON.parse(localStorage.getItem('pipvant_settings')||'{}');if(s&&(s.language==='ar'||s.language==='en'))lang=s.language;}catch(e){}
@@ -289,9 +358,114 @@
 })();
 </script>
 <script>
+/* PIPVANT Recovery + Compounding tabs for the drawdown page (added 2026-10-21) */
+(function(){
+  var $=function(id){return document.getElementById(id);};
+  var L={
+    en:{rec_invalid:'Enter a starting balance above 0 and a drawdown above 0% and below 100%.',period:'Period ',not_reached:'Not reached',hit_badge:'Target reached',trunc:function(n){return 'Showing the first 52 of '+n+' periods.';}},
+    ar:{rec_invalid:'أدخل رصيد بداية أكبر من 0 وتراجعاً أكبر من 0% وأقل من 100%.',period:'الفترة ',not_reached:'لم يتحقق',hit_badge:'تحقق الهدف',trunc:function(n){return 'عرض أول 52 فترة من أصل '+n+'.';}}
+  };
+  function lang(){return document.documentElement.lang==='ar'?'ar':'en';}
+  function d(){return L[lang()]||L.en;}
+  function money(n){var s=n<0?'−$':'$';return s+Math.abs(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
+  function pct(n){return (Math.round(n*100)/100).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})+'%';}
+  function fire(el){el.dispatchEvent(new Event('input',{bubbles:true}));el.dispatchEvent(new Event('change',{bubbles:true}));}
+  /* ---- tab switching ---- */
+  var panels={sim:'panel-sim',recovery:'panel-rec',compounding:'panel-cmp'};
+  function activate(name){
+    if(!panels[name])name='sim';
+    document.querySelectorAll('.seg-btn').forEach(function(b){
+      var on=b.getAttribute('data-tab')===name;
+      b.classList.toggle('active',on);b.setAttribute('aria-selected',on?'true':'false');
+    });
+    Object.keys(panels).forEach(function(k){var p=$(panels[k]);if(p)p.hidden=k!==name;});
+  }
+  window.pipvActivateTab=activate;
+  document.querySelectorAll('.seg-btn').forEach(function(b){b.addEventListener('click',function(){activate(b.getAttribute('data-tab'));});});
+  /* ---- Recovery ---- */
+  var REC_DDS=[5,10,15,20,25,30,40,50];
+  function renderRec(){
+    var S=parseFloat($('recStart').value),ddP=parseFloat($('recDd').value),winP=parseFloat($('recWin').value);
+    var inv=$('recInvalid'),rows='';
+    REC_DDS.forEach(function(x){
+      rows+='<tr'+(isFinite(ddP)&&Math.abs(x-ddP)<1e-9?' class="hl"':'')+'><td>'+x+'%</td><td>'+pct(x/(100-x)*100)+'</td></tr>';
+    });
+    $('recRows').innerHTML=rows;
+    if(!isFinite(S)||S<=0||!isFinite(ddP)||ddP<=0||ddP>=100){
+      if(inv){inv.hidden=false;inv.textContent=d().rec_invalid;}
+      $('recReq').textContent='—';$('recBal').textContent='$—';$('recLoss').textContent='$—';$('recTrades').textContent='—';
+      var nn=$('recTradesNote');if(nn)nn.hidden=true;
+      return;
+    }
+    if(inv)inv.hidden=true;
+    var dd=ddP/100;
+    $('recReq').textContent=pct(dd/(1-dd)*100);
+    $('recBal').textContent=money(S*(1-dd));
+    $('recLoss').textContent=money(S*dd);
+    var note=$('recTradesNote');
+    if(isFinite(winP)&&winP>0){
+      $('recTrades').textContent=String(Math.ceil(Math.log(1/(1-dd))/Math.log(1+winP/100)));
+      if(note)note.hidden=false;
+    }else{
+      $('recTrades').textContent='—';
+      if(note)note.hidden=true;
+    }
+  }
+  /* ---- Compounding ---- */
+  function renderCmp(){
+    var S=parseFloat($('cmpStart').value),g=parseFloat($('cmpGain').value),
+        n=Math.floor(parseFloat($('cmpPeriods').value)),tg=parseFloat($('cmpTarget').value);
+    var trunc=$('cmpTrunc');
+    if(!isFinite(S)||S<=0||!isFinite(g)||g<=-100||!isFinite(n)||n<1){
+      $('cmpFinal').textContent='$—';$('cmpGrowth').textContent='—';$('cmpPeriodsOut').textContent='—';$('cmpTargetStat').textContent='—';
+      $('cmpRows').innerHTML='';if(trunc)trunc.hidden=true;
+      return;
+    }
+    var bal=S,hit=0,html='',show=Math.min(n,52);
+    for(var i=1;i<=n;i++){
+      bal*=(1+g/100);
+      if(tg>0&&!hit&&bal>=tg)hit=i;
+      if(i<=show){
+        var cum=(bal/S-1)*100;
+        html+='<tr'+(i===hit?' class="hl"':'')+'><td>'+i+(i===hit?' · <span class="badge ok">'+d().hit_badge+'</span>':'')+'</td><td>'+money(bal)+'</td><td class="'+(cum<0?'neg':'pos')+'">'+(cum<0?'−':'+')+pct(Math.abs(cum))+'</td></tr>';
+      }
+    }
+    $('cmpRows').innerHTML=html;
+    if(trunc){if(n>52){trunc.hidden=false;trunc.textContent=d().trunc(n);}else trunc.hidden=true;}
+    $('cmpFinal').textContent=money(bal);
+    var growth=(bal/S-1)*100;
+    $('cmpGrowth').textContent=(growth<0?'−':'+')+pct(Math.abs(growth));
+    $('cmpPeriodsOut').textContent=String(n);
+    $('cmpTargetStat').textContent=tg>0?(hit?d().period+hit:d().not_reached):'—';
+  }
+  ['recStart','recDd','recWin'].forEach(function(id){var el=$(id);el.addEventListener('input',renderRec);el.addEventListener('change',renderRec);});
+  ['cmpStart','cmpGain','cmpFreq','cmpPeriods','cmpTarget'].forEach(function(id){var el=$(id);el.addEventListener('input',renderCmp);el.addEventListener('change',renderCmp);});
+  /* ---- example chips (same pipv2 chip pattern) ---- */
+  var REC_PRESETS=[{recStart:'50000',recDd:'25',recWin:'2'},{recStart:'100000',recDd:'10',recWin:'1.5'}];
+  document.querySelectorAll('[data-rec-preset]').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var p=REC_PRESETS[parseInt(btn.getAttribute('data-rec-preset'),10)];if(!p)return;
+      Object.keys(p).forEach(function(id){var el=$(id);if(el){el.value=p[id];fire(el);}});
+      renderRec();
+    });
+  });
+  var CMP_PRESETS=[{cmpStart:'10000',cmpGain:'2',cmpFreq:'month',cmpPeriods:'12',cmpTarget:'15000'},{cmpStart:'5000',cmpGain:'5',cmpFreq:'week',cmpPeriods:'12',cmpTarget:''}];
+  document.querySelectorAll('[data-cmp-preset]').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var p=CMP_PRESETS[parseInt(btn.getAttribute('data-cmp-preset'),10)];if(!p)return;
+      Object.keys(p).forEach(function(id){var el=$(id);if(el){el.value=p[id];fire(el);}});
+      renderCmp();
+    });
+  });
+  var lt=$('langToggle');
+  if(lt)lt.addEventListener('click',function(){setTimeout(function(){renderRec();renderCmp();},40);});
+  renderRec();renderCmp();
+})();
+</script>
+<script>
 /* PIPVANT share-link + presets + related-tools (added 2026-10-21) */
 (function(){
-  var FIELDS=[["acct", "a"], ["dd", "d"], ["type", "t"], ["daily", "dl"], ["pnl", "pnl"]];
+  var FIELDS=[["acct", "a"], ["dd", "d"], ["type", "t"], ["daily", "dl"], ["pnl", "pnl"], ["recStart", "rs"], ["recDd", "rd"], ["recWin", "rw"], ["cmpStart", "cs"], ["cmpGain", "cg"], ["cmpFreq", "cf"], ["cmpPeriods", "cp"], ["cmpTarget", "ct"]];
   var PRESETS=[{"vals": {"acct": "50000", "dd": "10", "type": "trailing", "daily": "5", "pnl": "1200,-1800,2400,-900,3100,-2600,1500"}, "en": "Example: trailing drawdown, mixed week", "ar": "مثال: تراجع متحرك، أسبوع مختلط"}, {"vals": {"acct": "100000", "dd": "8", "type": "static", "daily": "4", "pnl": "800,600,-1200,900,1100,-700,500,1400"}, "en": "Example: static drawdown, steady defence", "ar": "مثال: تراجع ثابت، دفاع ثابت"}, {"vals": {"acct": "25000", "dd": "6", "type": "eod", "daily": "3", "pnl": "2000,1500,-2800,900,-1600,1200"}, "en": "Example: EOD trailing with breakeven lock", "ar": "مثال: متحرك بإغلاق اليوم مع قفل التعادل"}];
   var LBL={
     en:{examples:'Worked examples — tap to fill:',copy:'Copy result link',copied:'Link copied — it re-opens with these exact inputs.',related_h:'All free PIPVANT tools',rt_risk:'Risk calculator',rt_split:'Profit split calculator',rt_dd:'Drawdown simulator',rt_cons:'Consistency checker',rt_ruin:'Risk of ruin calculator',rt_net:'Net payout calculator',rt_scale:'Scaling plan calculator',rt_deals:'Deals',rt_matcher:'Prop firm matcher'},
@@ -311,12 +485,16 @@
     FIELDS.forEach(function(f){var el=document.getElementById(f[0]);if(el&&vals[f[0]]!==undefined){el.value=vals[f[0]];fire(el);}});
   }
   document.querySelectorAll('[data-p2-preset]').forEach(function(btn){
-    btn.addEventListener('click',function(){var p=PRESETS[parseInt(btn.getAttribute('data-p2-preset'),10)];if(p)fill(p.vals);});
+    btn.addEventListener('click',function(){var p=PRESETS[parseInt(btn.getAttribute('data-p2-preset'),10)];if(p){if(window.pipvActivateTab)window.pipvActivateTab('sim');fill(p.vals);}});
   });
   var copyBtn=document.getElementById('pipv2Copy');
   if(copyBtn)copyBtn.addEventListener('click',function(){
     var u=new URL(window.location.href.split('?')[0]);
-    FIELDS.forEach(function(f){var el=document.getElementById(f[0]);if(el&&el.value!=='')u.searchParams.set(f[1],el.value);});
+    var tab='sim';var ab=document.querySelector('.seg-btn.active');if(ab)tab=ab.getAttribute('data-tab')||'sim';
+    var groups={sim:['acct','dd','type','daily','pnl'],recovery:['recStart','recDd','recWin'],compounding:['cmpStart','cmpGain','cmpFreq','cmpPeriods','cmpTarget']};
+    var use={};groups.sim.forEach(function(id){use[id]=1;});if(groups[tab])groups[tab].forEach(function(id){use[id]=1;});
+    FIELDS.forEach(function(f){if(!use[f[0]])return;var el=document.getElementById(f[0]);if(el&&el.value!=='')u.searchParams.set(f[1],el.value);});
+    if(tab!=='sim')u.searchParams.set('tab',tab);
     var link=u.toString();var msg=document.getElementById('pipv2Msg');
     function done(){if(msg){msg.hidden=false;setTimeout(function(){msg.hidden=true;},2600);}}
     if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(link).then(done).catch(function(){fallback();});}else{fallback();}
@@ -324,6 +502,7 @@
   });
   (function loadFromUrl(){
     var q=new URLSearchParams(window.location.search);var vals={};var any=false;
+    var tp=q.get('tab');if((tp==='recovery'||tp==='compounding')&&window.pipvActivateTab)window.pipvActivateTab(tp);
     FIELDS.forEach(function(f){var v=q.get(f[1]);if(v!==null&&v!==''){vals[f[0]]=v;any=true;}});
     if(any)fill(vals);
   })();
