@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-21T03:44:34.763762+00:00",
+  "updated": "2026-10-21T04:52:36.263651+00:00",
   "changes": [
     {
       "date": "2026-10-21",
@@ -25,6 +25,15 @@
       "field": "promotion",
       "old": "{\"code\": \"SAVENOW\", \"discount\": \"90% OFF ALL EVALS!\", \"expiry\": \"Ends in 2d 01h 29m 42s\"}",
       "new": "{\"code\": \"SAVENOW\", \"discount\": \"90% OFF ALL EVALS!\", \"expiry\": \"Ends in 2d 00h 29m 33s\"}",
+      "source": "https://apextraderfunding.com/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-21",
+      "firm": "Apex Trader Funding",
+      "field": "promotion",
+      "old": "{\"code\": \"SAVENOW\", \"discount\": \"90% OFF ALL EVALS!\", \"expiry\": \"Ends in 2d 00h 29m 33s\"}",
+      "new": "{\"code\": \"SAVENOW\", \"discount\": \"90% OFF ALL EVALS!\", \"expiry\": \"Ends in 1d 23h 21m 31s\"}",
       "source": "https://apextraderfunding.com/",
       "kind": "promo"
     },
