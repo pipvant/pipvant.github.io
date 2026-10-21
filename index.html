@@ -1624,6 +1624,18 @@
 .sim-rules{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:14px}
 .sim-rule{font-size:11.5px;font-weight:700;color:var(--muted);border:1px solid var(--line);border-radius:20px;padding:5px 12px;background:rgba(255,255,255,.02)}
 .sim-rule b{color:var(--gold,#D4AF37);font-variant-numeric:tabular-nums}
+.sim-plans{margin-top:22px;border-top:1px solid var(--line);padding-top:20px}
+.sim-plans-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:14px;margin-top:12px;background:var(--surface)}
+.sim-plans-table{width:100%;min-width:680px;border-collapse:collapse;font-size:12px}
+.sim-plans-table th{padding:10px 12px;background:var(--sunken);text-align:left;color:var(--muted);font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+.sim-plans-table td{padding:10px 12px;border-bottom:1px solid var(--line);color:var(--secondary);font:500 12px/1.45 "IBM Plex Mono",monospace;white-space:nowrap;font-variant-numeric:tabular-nums}
+.sim-plans-table tbody tr{cursor:pointer}
+.sim-plans-table tbody tr:hover td{background:rgba(91,141,239,.06)}
+.sim-plans-table tbody tr:last-child td{border-bottom:0}
+.sim-plans-table .sp-firm{font-family:"Space Grotesk",sans-serif;font-weight:600;color:var(--text);font-size:13px}
+.sim-plans-table .sp-pass{color:var(--gold,#D4AF37);font-weight:700;font-size:13px}
+.sim-plans-table .sp-pass.good{color:var(--green,#1d9d63)}
+.sim-plans-table .sp-pass.low{color:var(--red,#d64545)}
 .breach-msg{min-height:26px}
 /* ============ DESIGN OVERHAUL — premium "هربانة" standard ============
    Patterns applied from research-empire/cards-ui.md:
@@ -2797,6 +2809,7 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
             <div class="risk-field"><label for="simRisk">Risk per trade (% of account)</label><input id="simRisk" class="full-calc-input" type="number" min="0.1" max="10" step="0.1" value="1"></div>
             <div class="risk-field"><label for="simTPD">Trades per day</label><input id="simTPD" class="full-calc-input" type="number" min="1" max="20" step="1" value="3"></div>
             <div class="risk-field"><label for="simDays">Trading days</label><input id="simDays" class="full-calc-input" type="number" min="5" max="90" step="1" value="30"></div>
+            <div class="risk-field"><button id="simJournalBtn" type="button" class="lp-btn ghost" style="width:100%;padding:11px;font-size:13.5px;color:var(--text);border-color:var(--line-strong);">Use my journal stats</button><p class="helper" id="simJournalNote" aria-live="polite"></p></div>
           </div>
           <button id="simRunBtn" type="button" class="lp-btn primary" style="width:100%;margin:12px 0;padding:14px;font-size:16px;font-weight:700;" data-i18n="sim_run">▶ Run Simulation</button>
           <div class="lab-results">
@@ -2809,6 +2822,18 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
             <div class="sim-rules" id="simRules"></div>
             <p class="risk-method">Method: each run simulates daily R-multiples from your win rate; pass = hit profit target before max drawdown. Daily-loss rule applied per day. Estimates from your inputs — not a guarantee.</p>
           </div>
+        </div>
+        <div class="sim-plans" id="simPlansWrap">
+          <div class="risk-field" style="max-width:320px"><label for="simPlansSize">Account size</label><select id="simPlansSize" class="full-calc-input"></select></div>
+          <button id="simPlansBtn" type="button" class="lp-btn primary" style="margin:12px 0;padding:12px 22px;font-size:14px;font-weight:700;">Simulate plans at this size</button>
+          <p class="helper" id="simPlansNote" aria-live="polite"></p>
+          <div class="sim-plans-scroll" id="simPlansScroll" hidden>
+            <table class="sim-plans-table" id="simPlansTable">
+              <thead><tr><th>Firm</th><th>Program</th><th>Target</th><th>Max DD</th><th>Daily loss</th><th>Pass % (1,000 runs)</th></tr></thead>
+              <tbody id="simPlansBody"></tbody>
+            </table>
+          </div>
+          <p class="risk-method" id="simPlansCaption">Estimate from your win rate and average R — not a guarantee.</p>
         </div>
       </section>
 
@@ -4334,26 +4359,9 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
     var hero=document.getElementById('simHero');if(!hero)return;
     var rl0=document.getElementById('simRules');if(rl0)rl0.innerHTML='';
     var ar=currentLanguage==='ar';
-    /* Helper: get a % value from rules, accepting both _pct and _usd variants.
-       USD values are converted using account_size. Returns NaN if unavailable. */
-    function simPct(rules,acctSize,pctKey,usdKey){
-      if(!rules)return NaN;
-      var v=Number(rules[pctKey]);
-      if(isFinite(v)&&v>0)return v;
-      var u=Number(rules[usdKey]);
-      var sz=Number(acctSize);
-      if(isFinite(u)&&u>0&&isFinite(sz)&&sz>0)return u/sz*100;
-      return NaN;
-    }
-    function planSimData(p){
-      if(!p||!p.rules)return null;
-      var t=simPct(p.rules,p.account_size,'profit_target_pct','profit_target_usd');
-      var d=simPct(p.rules,p.account_size,'max_drawdown_pct','max_drawdown_usd');
-      if(!isFinite(t)||!isFinite(d)||d<=0)return null;
-      var dl=simPct(p.rules,p.account_size,'daily_loss_pct','daily_loss_usd');
-      return {target:t,maxDD:d,dailyL:dl,plan:p};
-    }
-    var sim=planSimData(plan);
+    /* Plan-data + Monte Carlo core live in the shared helpers below
+       sbSimRun (sbSimPct / sbSimPlanData / sbSimCore) — same rules as before. */
+    var sim=sbSimPlanData(plan);
     var usedFallback=false;
     /* Fallback: if the selected plan lacks simulation data, use the first
        valid plan from the same firm instead of silently showing dashes. */
@@ -4362,7 +4370,7 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
         var fs=document.getElementById('simFirm');
         var fplans=(typeof sbPlansByFirm!=='undefined'&&fs)?(sbPlansByFirm[fs.value]||[]):[];
         for(var fi=0;fi<fplans.length;fi++){
-          var cand=planSimData(fplans[fi]);
+          var cand=sbSimPlanData(fplans[fi]);
           if(cand){sim=cand;usedFallback=true;break;}
         }
       }catch(_fe){}
@@ -4380,27 +4388,9 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
     var riskP=(Number(document.getElementById('simRisk').value)||1)/100;
     var tpd=Math.max(1,Math.round(Number(document.getElementById('simTPD').value)||3));
     var days=Math.max(1,Math.round(Number(document.getElementById('simDays').value)||30));
-    var RUNS=2000,passed=0,breached=0,peaks=[];
-    for(var i=0;i<RUNS;i++){
-      var eq=0,peak=0,done=false,ok=false;
-      for(var d=0;d<days&&!done;d++){
-        var dayPL=0;
-        for(var t=0;t<tpd;t++){
-          var win=Math.random()<winP;
-          var rmult=win?winR:-lossR;
-          var pl=rmult*riskP*100; // in % of account
-          eq+=pl;dayPL+=pl;
-          if(eq>peak)peak=eq;
-          if(eq<=-maxDD){done=true;break;} // max drawdown breach
-          if(eq>=target){done=true;ok=true;break;} // target hit
-        }
-        if(!done&&isFinite(dailyL)&&dayPL<=-dailyL){done=true;} // daily loss breach
-      }
-      if(ok)passed++;else breached++;
-      peaks.push(peak);
-    }
-    peaks.sort(function(a,b){return a-b;});
-    var med=peaks[Math.floor(peaks.length/2)];
+    var RUNS=2000;
+    var core=sbSimCore(target,maxDD,dailyL,winP,winR,lossR,riskP,tpd,days,RUNS);
+    var passed=core.passed,breached=core.runs-core.passed,med=core.medianPeak;
     var prob=Math.round(passed/RUNS*100);
     var ar=currentLanguage==='ar';
     hero.textContent=prob+'%';
@@ -4426,6 +4416,172 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
         }catch(_ne){}
       }
       rl.innerHTML=note+chip(ar?'الهدف':'Target',Math.round(target*10)/10+'%')+chip(ar?'أقصى تراجع':'Max DD',Math.round(maxDD*10)/10+'%')+(isFinite(dailyL)?chip(ar?'يومي':'Daily',Math.round(dailyL*10)/10+'%'):'');
+    }
+  }
+  /* WAVE 3b+ — Shared Pass Simulator helpers.
+     sbSimPct/sbSimPlanData are sbSimRun's original helpers, lifted unchanged.
+     sbSimCore is sbSimRun's per-run loop, extracted verbatim: a run passes
+     when equity hits the profit target before eq <= -maxDD (flat % of
+     account — sbSimRun never differentiated drawdown_type, and neither do
+     we) and before any single day's P&L breaches the daily-loss limit. */
+  function sbSimPct(rules,acctSize,pctKey,usdKey){
+    if(!rules)return NaN;
+    var v=Number(rules[pctKey]);
+    if(isFinite(v)&&v>0)return v;
+    var u=Number(rules[usdKey]);
+    var sz=Number(acctSize);
+    if(isFinite(u)&&u>0&&isFinite(sz)&&sz>0)return u/sz*100;
+    return NaN;
+  }
+  function sbSimPlanData(p){
+    if(!p||!p.rules)return null;
+    var t=sbSimPct(p.rules,p.account_size,'profit_target_pct','profit_target_usd');
+    var d=sbSimPct(p.rules,p.account_size,'max_drawdown_pct','max_drawdown_usd');
+    if(!isFinite(t)||!isFinite(d)||d<=0)return null;
+    var dl=sbSimPct(p.rules,p.account_size,'daily_loss_pct','daily_loss_usd');
+    return {target:t,maxDD:d,dailyL:dl,plan:p};
+  }
+  function sbSimCore(target,maxDD,dailyL,winP,winR,lossR,riskP,tpd,days,RUNS){
+    var passed=0,peaks=[];
+    for(var i=0;i<RUNS;i++){
+      var eq=0,peak=0,done=false,ok=false;
+      for(var d=0;d<days&&!done;d++){
+        var dayPL=0;
+        for(var t=0;t<tpd;t++){
+          var win=Math.random()<winP;
+          var rmult=win?winR:-lossR;
+          var pl=rmult*riskP*100; // in % of account
+          eq+=pl;dayPL+=pl;
+          if(eq>peak)peak=eq;
+          if(eq<=-maxDD){done=true;break;} // max drawdown breach
+          if(eq>=target){done=true;ok=true;break;} // target hit
+        }
+        if(!done&&isFinite(dailyL)&&dayPL<=-dailyL){done=true;} // daily loss breach
+      }
+      if(ok)passed++;
+      peaks.push(peak);
+    }
+    peaks.sort(function(a,b){return a-b;});
+    return {passed:passed,runs:RUNS,prob:Math.round(passed/RUNS*100),medianPeak:peaks[Math.floor(peaks.length/2)]};
+  }
+  /* "Use my journal stats": fills the simulator inputs ONLY from the user's
+     own closed journal trades (numeric pnl + parseable rMultiple "1.50R").
+     Breakevens (pnl==0) count in closed + the win-rate denominator, in
+     neither average. Needs >= 5 closed trades, otherwise fills nothing. */
+  function sbSimJournalFill(){
+    var note=document.getElementById('simJournalNote');if(!note)return;
+    var ar=currentLanguage==='ar';
+    function say(en,arc){note.textContent=ar?arc:en;}
+    var loggedIn=false;
+    try{loggedIn=!!(typeof sbUser!=='undefined'&&sbUser);}catch(_e){}
+    var list=[];
+    try{list=(typeof sessionJournalEntries!=='undefined'&&Array.isArray(sessionJournalEntries))?sessionJournalEntries:(window.sessionJournalEntries||[]);}catch(_e2){list=window.sessionJournalEntries||[];}
+    if(!loggedIn||!list.length){
+      say('Log in and sync your journal first — your trades are not loaded yet.','سجل الدخول وزامن سجلك أولاً — صفقاتك غير محملة بعد.');
+      return;
+    }
+    var closed=0,wins=0,winRsum=0,winRn=0,lossRsum=0,lossRn=0;
+    list.forEach(function(e){
+      if(!e||e.type!=='trade')return;
+      if(e.closed===false)return;
+      if(e.pnl==null||e.pnl==='')return;
+      var pnl=Number(e.pnl);if(!isFinite(pnl))return;
+      var r=parseFloat(e.rMultiple);if(!isFinite(r))return;
+      closed++;
+      if(pnl>0){wins++;winRsum+=r;winRn++;}
+      else if(pnl<0){lossRsum+=Math.abs(r);lossRn++;}
+    });
+    if(closed<5){
+      say('Log at least 5 closed trades in your journal to auto-fill — you have '+closed+'.','سجل 5 صفقات مغلقة على الأقل في سجلك للتعبئة التلقائية — لديك '+closed+'.');
+      return;
+    }
+    var winRate=Math.round(wins/closed*100);
+    var avgWinR=winRn?Math.round(winRsum/winRn*100)/100:0;
+    var noLoss=lossRn===0;
+    var avgLossR=noLoss?1:Math.round(lossRsum/lossRn*100)/100;
+    var wEl=document.getElementById('simWin'),wrEl=document.getElementById('simWinR'),lrEl=document.getElementById('simLossR');
+    if(wEl)wEl.value=winRate;
+    if(wrEl&&avgWinR>0)wrEl.value=avgWinR;
+    if(lrEl)lrEl.value=avgLossR;
+    say('Based on your '+closed+' closed journal trades.'+(noLoss?' No losing trades yet — average loss set to 1.0R.':''),
+        'بناءً على '+closed+' صفقة مغلقة في سجلك.'+(noLoss?' لا صفقات خاسرة بعد — تم تعيين متوسط الخسارة إلى 1.0R.':''));
+    if(typeof sbSimRun==='function')sbSimRun();
+  }
+  /* Per-plan pass table: every plan at one real account size, simulated with
+     the CURRENT simulator inputs via the same core (1,000 runs per plan). */
+  function sbSimPlansPopulate(){
+    var sel=document.getElementById('simPlansSize');if(!sel)return;
+    var ar=currentLanguage==='ar';
+    var lbl=document.querySelector('label[for="simPlansSize"]');
+    if(lbl)lbl.textContent=ar?'حجم الحساب':'Account size';
+    var jb=document.getElementById('simJournalBtn');
+    if(jb)jb.textContent=ar?'استخدم إحصائيات سجلي':'Use my journal stats';
+    var btn=document.getElementById('simPlansBtn');
+    if(btn)btn.textContent=ar?'محاكاة الخطط بهذا الحجم':'Simulate plans at this size';
+    var cap=document.getElementById('simPlansCaption');
+    if(cap)cap.textContent=ar?'تقدير بناءً على نسبة فوزك ومتوسط R — وليس ضماناً.':'Estimate from your win rate and average R — not a guarantee.';
+    var seen={};
+    try{Object.keys(sbPlansByFirm||{}).forEach(function(fid){(sbPlansByFirm[fid]||[]).forEach(function(p){var n=sbNum(p.account_size);if(isFinite(n)&&n>0)seen[n]=1;});});}catch(_e){}
+    var sizes=Object.keys(seen).map(Number).sort(function(a,b){return a-b;});
+    var cur=sel.value;
+    sel.innerHTML='';
+    sizes.forEach(function(s){var o=document.createElement('option');o.value=String(s);o.textContent=sbFmtSize(s);sel.appendChild(o);});
+    if(cur&&seen[Number(cur)])sel.value=cur;
+  }
+  function sbSimPlansRun(){
+    var sel=document.getElementById('simPlansSize');if(!sel)return;
+    var ar=currentLanguage==='ar';
+    sbSimPlansPopulate(); /* refresh sizes + labels in the current language */
+    var size=Number(sel.value);
+    var note=document.getElementById('simPlansNote');
+    var scroll=document.getElementById('simPlansScroll');
+    var body=document.getElementById('simPlansBody');
+    if(!isFinite(size)||size<=0||!body){
+      if(note)note.textContent=ar?'لا توجد أحجام حسابات متاحة بعد.':'No account sizes available yet.';
+      return;
+    }
+    var winP=(Number(document.getElementById('simWin').value)||45)/100;
+    var winR=Number(document.getElementById('simWinR').value)||1.5;
+    var lossR=Number(document.getElementById('simLossR').value)||1;
+    var riskP=(Number(document.getElementById('simRisk').value)||1)/100;
+    var tpd=Math.max(1,Math.round(Number(document.getElementById('simTPD').value)||3));
+    var days=Math.max(1,Math.round(Number(document.getElementById('simDays').value)||30));
+    var RUNS=1000,rows=[],skipped=0;
+    (sbFirms||[]).forEach(function(f){
+      (sbPlansByFirm[f.id]||[]).forEach(function(p){
+        if(sbNum(p.account_size)!==size)return;
+        var data=sbSimPlanData(p);
+        if(!data){skipped++;return;}
+        var core=sbSimCore(data.target,data.maxDD,data.dailyL,winP,winR,lossR,riskP,tpd,days,RUNS);
+        rows.push({firm:f,data:data,prob:core.prob});
+      });
+    });
+    var heads=ar?['الشركة','البرنامج','الهدف','أقصى تراجع','الخسارة اليومية','احتمال النجاح (1,000 تشغيل)']:['Firm','Program','Target','Max DD','Daily loss','Pass % (1,000 runs)'];
+    document.querySelectorAll('#simPlansTable thead th').forEach(function(th,i){if(heads[i])th.textContent=heads[i];});
+    rows.sort(function(a,b){return b.prob-a.prob;});
+    body.innerHTML='';
+    function td(txt,cls){var c=document.createElement('td');c.textContent=txt;if(cls)c.className=cls;return c;}
+    function pct(v){return isFinite(v)?(Math.round(v*10)/10)+'%':'—';}
+    rows.forEach(function(row){
+      var tr=document.createElement('tr');
+      var prog='';try{prog=(row.data.plan.rules&&row.data.plan.rules.program)?String(row.data.plan.rules.program):'';}catch(_e){}
+      tr.appendChild(td(row.firm.name||'—','sp-firm'));
+      tr.appendChild(td(prog||'—'));
+      tr.appendChild(td(pct(row.data.target)));
+      tr.appendChild(td(pct(row.data.maxDD)));
+      tr.appendChild(td(pct(row.data.dailyL)));
+      tr.appendChild(td(row.prob+'%','sp-pass '+(row.prob>=60?'good':row.prob<35?'low':'')));
+      tr.title=ar?'عرض تفاصيل الشركة':'View firm details';
+      (function(fid){tr.addEventListener('click',function(){if(typeof sbOpenFirmDetail==='function')sbOpenFirmDetail(fid);});})(row.firm.id);
+      body.appendChild(tr);
+    });
+    if(scroll)scroll.hidden=!rows.length;
+    if(note){
+      var msg=rows.length
+        ?(ar?('تمت محاكاة '+rows.length+' خطة بحجم '+sbFmtSize(size)+' — 1,000 تشغيل لكل خطة.'):('Simulated '+rows.length+' plan'+(rows.length===1?'':'s')+' at '+sbFmtSize(size)+' — 1,000 runs per plan.'))
+        :(ar?'لا توجد خطط قابلة للمحاكاة بهذا الحجم.':'No simulatable plans at this size.');
+      if(skipped>0)msg+=' '+(ar?('تم تخطي '+skipped+' خطة لعدم اكتمال بيانات الهدف/التراجع.'):('Skipped '+skipped+' plan'+(skipped===1?'':'s')+' missing target/drawdown data.'));
+      note.textContent=msg;
     }
   }
   /* WAVE 3c — Rule-change Radar (honest freshness tracking) */
@@ -4596,6 +4752,9 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
     });
     // Run button: manual trigger for the simulation
     var rb=document.getElementById('simRunBtn');if(rb){rb.addEventListener('click',sbSimRun);}
+    var jb=document.getElementById('simJournalBtn');if(jb){jb.addEventListener('click',sbSimJournalFill);}
+    var pb=document.getElementById('simPlansBtn');if(pb){pb.addEventListener('click',sbSimPlansRun);}
+    sbSimPlansPopulate();
     // Re-run when Supabase data arrives (firm data loads async)
     var tries=0;
     var iv=setInterval(function(){
@@ -4605,7 +4764,7 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
       if(typeof sbFirms!=='undefined'&&sbFirms.length&&hasPlans){
         clearInterval(iv);
         sbLabFillFirms('tcFirm','tcPlan');sbLabFillFirms('simFirm','simPlan');
-        sbTrueCostCalc();sbSimRun();sbRenderRadar();
+        sbTrueCostCalc();sbSimRun();sbSimPlansPopulate();sbRenderRadar();
         if(typeof sbInitLabWave4==='function')sbInitLabWave4();
       }else if(tries>40)clearInterval(iv);
     },500);
