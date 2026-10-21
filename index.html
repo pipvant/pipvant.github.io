@@ -558,13 +558,13 @@
     #profile .profile-dashboard{display:grid;gap:14px}
     #profile .profile-balance{min-height:236px;padding:22px;border:1px solid var(--line-strong);border-radius:16px;background:linear-gradient(145deg,color-mix(in srgb,var(--raised) 72%,var(--surface)),var(--surface));overflow:hidden}
     #profile .profile-card-label,#profile .profile-section-title{margin:0;color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase}
-    #profile .profile-balance-value{display:block;margin-top:13px;color:var(--text);font:600 clamp(3.2rem,14vw,5.6rem)/.9 "Space Grotesk",sans-serif;letter-spacing:-.055em;font-variant-numeric:tabular-nums}
+    #profile .profile-balance-value{display:block;margin-top:13px;color:var(--text);font:600 clamp(2.7rem,7.2vw,4.3rem)/.95 "Space Grotesk",sans-serif;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
     #profile .profile-balance-range{display:block;margin-top:10px;color:var(--muted);font:500 11px/1 "IBM Plex Mono",monospace}
-    #profile .profile-stat-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-    #profile .profile-stat-card{min-width:0;min-height:174px;padding:16px;border:1px solid var(--line);border-radius:12px;background:var(--surface);display:flex;flex-direction:column}
+    #profile .profile-stat-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    #profile .profile-stat-card{min-width:0;min-height:168px;padding:18px 20px;border:1px solid var(--line);border-radius:16px;background:var(--surface);display:flex;flex-direction:column}
     #profile .profile-stat-value{display:block;margin-top:13px;color:var(--platinum);font:600 30px/1 "Space Grotesk",sans-serif;font-variant-numeric:tabular-nums}
     #profile .profile-stat-visual{margin-top:auto}
-    #profile .profile-empty-ring{width:58px;height:58px;border:7px solid var(--line-strong);border-radius:50%;display:grid;place-items:center;color:var(--platinum);font:600 15px/1 "IBM Plex Mono",monospace}
+    #profile .profile-empty-ring{width:74px;height:74px;border:8px solid color-mix(in srgb,var(--accent) 42%,var(--line-strong));border-radius:50%;display:grid;place-items:center;color:var(--platinum);font:600 16px/1 "IBM Plex Mono",monospace}
     #profile .profile-bar-strip{height:46px;display:flex;align-items:flex-end;gap:5px}
     #profile .profile-bar-strip i{width:7px;border-radius:2px 2px 0 0;background:var(--line-strong)}
     #profile .profile-bar-strip i:nth-child(1),#profile .profile-bar-strip i:nth-child(5){height:13px}#profile .profile-bar-strip i:nth-child(2),#profile .profile-bar-strip i:nth-child(4){height:21px}#profile .profile-bar-strip i:nth-child(3){height:30px}
@@ -574,10 +574,10 @@
     #profile .profile-most-traded{margin-top:auto;color:var(--platinum);font:600 42px/1 "Space Grotesk",sans-serif}
     #profile .profile-content-grid{display:grid;gap:14px}
     #profile .profile-surface{border:1px solid var(--line);border-radius:14px;background:var(--surface);overflow:hidden}
-    #profile .profile-surface-head{padding:18px;border-bottom:1px solid var(--line)}
+    #profile .profile-surface-head{padding:18px 20px;border-bottom:1px solid var(--line)}
     #profile .profile-surface-head h3{margin:0 0 5px;font-size:17px}
     #profile .profile-surface-head p{margin:0;color:var(--muted);font-size:11px}
-    #profile .recent-trades-empty{min-height:190px;padding:28px 18px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:var(--sunken)}
+    #profile .recent-trades-empty{min-height:190px;padding:28px 18px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:transparent}
     #profile .recent-trades-empty h4{margin:0 0 17px;font:600 16px/1.2 "Space Grotesk",sans-serif}
     #profile .recent-trades-empty .btn{min-height:42px}
     #profile .profile-health-list{margin:0}
@@ -589,7 +589,7 @@
     #profile .settings-group+.settings-group{border-top:1px solid var(--line)}
     #profile .settings-group-title{margin:0;padding:15px 17px 8px;color:var(--muted);font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;background:var(--sunken)}
                         @media (min-width:760px){#profile .profile-content-grid{grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr);align-items:start}#profile .profile-side-stack{display:grid;gap:14px}}
-    @media (min-width:1024px){#profile .profile-wrap{padding:46px 0 80px}#profile .profile-head{padding-bottom:34px}#profile .profile-balance{padding:28px;min-height:260px}#profile .profile-stat-grid{gap:14px}#profile .profile-stat-card{min-height:190px;padding:19px}#profile .recent-trades-empty{min-height:236px}}
+    @media (min-width:1024px){#profile .profile-wrap{padding:46px 0 80px}#profile .profile-head{padding-bottom:34px}#profile .profile-balance{padding:28px;min-height:260px}#profile .profile-stat-grid{gap:14px}#profile .profile-stat-card{min-height:176px;padding:20px}#profile .recent-trades-empty{min-height:236px}}
     @media (min-width:640px){.hero-trust{grid-template-columns:repeat(4,1fr)}.landing-grid.three{grid-template-columns:repeat(3,1fr)}.benefit-grid{grid-template-columns:repeat(2,1fr)}.steps-grid{grid-template-columns:repeat(3,1fr)}.step-card{border-bottom:0;border-right:1px solid var(--line);padding:32px 24px}.step-card:first-child{padding-left:4px}.step-card:last-child{border-right:0}.final-cta{grid-template-columns:minmax(0,1fr) auto;padding:42px}}
     @media (min-width:1024px){#landing .hero{grid-template-columns:1.04fr .96fr}.landing-section{padding:80px 0}.benefit-grid{grid-template-columns:1.15fr .85fr .85fr}.benefit-card:nth-child(1){grid-row:span 2}.benefit-card:nth-child(4){grid-column:3}.firm-summary{min-height:126px}.firm-expand{grid-template-columns:34px auto minmax(260px,1fr) 68px;min-height:102px}.firm-core{grid-template-columns:minmax(180px,.7fr) minmax(190px,1fr);align-items:center}.firm-topline{grid-column:1}.meta-pills{grid-column:1}.allocation{grid-column:2;grid-row:1/3;align-self:center}.firm-expand>.row-chevron{display:none}#calculator .calculator-layout{grid-template-columns:1fr;max-width:780px;padding-bottom:76px}#discipline .discipline-layout{gap:32px}#discipline .discipline-card{padding:32px}}
     /* Evidence, density, and trust additions for Matcher. */
@@ -2294,6 +2294,61 @@ html[dir="rtl"] .pv-ob-opt{text-align:right}
 .trade-form .chip{border-radius:999px}
 .trade-form .btn.primary{background:linear-gradient(135deg,#ecd06a,#D4AF37);border-color:transparent;color:#0A1628;font-weight:800;box-shadow:0 8px 20px -8px rgba(212,175,55,.55)}
 @media (prefers-reduced-motion:reduce){#journal .journal-entry-row{transition:none}}
+/* ===== PROFILE PREMIUM UPLIFT — Top Rated standard: gold heroes, one card system, ledger rows ===== */
+.profile-page-head{margin:6px 0 26px}
+#profile .profile-dashboard{gap:16px}
+#profile .profile-content-grid{gap:16px}
+#profile .profile-side-stack{gap:16px}
+/* one card system */
+#profile .profile-balance,#profile .trader-score-card,#profile .profile-stat-card,#profile .profile-surface,#profile .profile-badges{background:linear-gradient(168deg,rgba(255,255,255,.03),rgba(255,255,255,0) 46%),var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:0 12px 30px rgba(0,0,0,.10),inset 0 1px 0 rgba(255,255,255,.018)}
+/* balance hero — verdict recipe, living equity stage */
+#profile .profile-balance{display:flex;flex-direction:column;border:1px solid transparent;background:radial-gradient(460px 220px at 88% -30%,rgba(212,175,55,.12),rgba(212,175,55,0) 62%) padding-box,linear-gradient(168deg,rgba(255,255,255,.04),rgba(255,255,255,0) 44%) padding-box,linear-gradient(var(--surface),var(--surface)) padding-box,linear-gradient(140deg,rgba(212,175,55,.5),rgba(212,175,55,.10) 42%,rgba(255,255,255,.07) 72%,rgba(91,141,239,.22)) border-box;box-shadow:0 20px 48px -22px rgba(3,8,18,.55)}
+#profile .profile-balance .profile-card-label{color:var(--gold)}
+#profile .profile-equity-empty{position:relative;flex:1 1 auto;min-height:92px;margin-top:16px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(91,141,239,0),rgba(91,141,239,.035))}
+#profile .profile-equity-empty>span{color:var(--muted);font-size:11.5px}
+#profile .profile-equity-empty.has-equity .profile-equity-chart{display:block!important}
+#profile .profile-equity-empty.has-equity .equity-line{stroke-dashoffset:0}
+#profile .profile-equity-empty.has-equity .equity-fill{opacity:1}
+/* activity score hero — gold ring family */
+#profile .trader-score-card{border:1px solid transparent;background:radial-gradient(340px 210px at 92% 108%,rgba(212,175,55,.13),rgba(212,175,55,0) 65%) padding-box,linear-gradient(168deg,rgba(255,255,255,.04),rgba(255,255,255,0) 44%) padding-box,linear-gradient(var(--surface),var(--surface)) padding-box,linear-gradient(150deg,rgba(212,175,55,.45),rgba(212,175,55,.08) 45%,rgba(255,255,255,.06) 75%,rgba(91,141,239,.2)) border-box;box-shadow:0 20px 48px -22px rgba(3,8,18,.55)}
+#profile .trader-score-copy .profile-card-label{color:var(--gold)}
+#profile .trader-score-copy p{font-size:12.5px;max-width:300px}
+#profile .trader-score-lock{padding:6px 11px;border:1px solid var(--line);border-radius:999px;background:var(--sunken)}
+#profile .trader-score-card.has-score .trader-score-lock{color:var(--gold);border-color:color-mix(in srgb,var(--gold) 45%,var(--line))}
+#profile .trader-score-card.has-score .trader-score-lock:before{border-color:var(--gold);background:var(--gold);opacity:1}
+#profile .score-value-ring{stroke:var(--gold);filter:drop-shadow(0 0 8px rgba(212,175,55,.35))}
+#profile .score-lock-outline{stroke:color-mix(in srgb,var(--gold) 32%,transparent)}
+#profile .trader-score-gauge strong{font-size:34px;color:var(--text)}
+@media(min-width:760px){#profile .trader-score-gauge{width:128px;height:128px}}
+/* stat tiles */
+#profile .profile-stat-value{color:var(--text)}
+#profile .trade-breakdown span{font-size:10.5px;min-height:27px}
+#profile .trade-breakdown b{font-size:11.5px;color:var(--text)}
+#profile .profile-bar-strip i{background:color-mix(in srgb,var(--accent) 34%,var(--line-strong))}
+#profile .profile-bar-strip i:nth-child(3){background:linear-gradient(180deg,#ecd06a,var(--gold))}
+@media(min-width:1024px){#profile .profile-stat-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+/* surfaces: heads, badges, setup checklist */
+#profile .profile-surface-head h3{font:600 15.5px/1.25 "Space Grotesk",sans-serif}
+#profile .profile-surface-head p{color:var(--secondary);font-size:11.5px}
+#profile .profile-badges-body{padding:20px}
+#profile .profile-badges-empty-mark{border-color:color-mix(in srgb,var(--gold) 45%,var(--line-strong));color:var(--gold);background:rgba(212,175,55,.06)}
+#profile .certificate-badge{border-radius:999px}
+#profile .profile-health-row{padding:0 20px;min-height:54px}
+#profile .profile-health-glyph{border-color:color-mix(in srgb,var(--gold) 42%,var(--line-strong));color:var(--gold);background:rgba(212,175,55,.06)}
+#profile .profile-health-value{font:600 12.5px/1 "Inter",sans-serif;color:var(--secondary);letter-spacing:.01em}
+/* recent trades ledger — rows for the JS-rendered list */
+#profile .recent-trades-list{list-style:none;margin:0;padding:8px 12px}
+#profile .recent-trade-row{display:flex;align-items:center;gap:12px;padding:11px 8px;border-bottom:1px solid var(--line);transition:background-color .18s ease}
+#profile .recent-trade-row:last-child{border-bottom:0}
+@media(hover:hover) and (pointer:fine){#profile .recent-trade-row:hover{background:rgba(91,141,239,.045)}}
+#profile .recent-trade-symbol{font:700 13.5px/1.3 "Space Grotesk",sans-serif;color:var(--text)}
+#profile .recent-trade-direction{padding:4px 10px;border:1px solid var(--line-strong);border-radius:999px;color:var(--secondary);font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap}
+#profile .recent-trade-entry{margin-inline-start:auto;color:var(--secondary);font:500 12px/1.4 "IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion:reduce){#profile .recent-trade-row{transition:none}}
+/* editor — auth-grade chrome, gold primary */
+#profile .profile-editor-card{border-radius:16px}
+#profile .profile-editor-close{border-radius:50%}
+#profile .profile-editor .btn.primary{background:linear-gradient(135deg,#ecd06a,#D4AF37);border-color:transparent;color:#0A1628;font-weight:800;box-shadow:0 8px 20px -8px rgba(212,175,55,.55)}
 </style>
 <div id="siteLanding" aria-label="PIPVANT landing page">
   <div class="lp-grain" aria-hidden="true"></div>
@@ -3232,6 +3287,11 @@ html[dir="rtl"] .pv-ob-opt{text-align:right}
 
     <section class="screen" id="profile" aria-label="Profile">
       <div class="profile-wrap">
+        <header class="profile-page-head">
+          <p class="eyebrow">Account</p>
+          <h2 class="tr-title">Profile</h2>
+          <p class="tr-sub">Your profile, activity, and verified achievements in one place.</p>
+        </header>
         <header class="profile-head">
           <div class="profile-avatar-shell">
             <div class="profile-avatar" id="profileAvatar" aria-hidden="true"><img id="profileAvatarImage" alt="" hidden><span id="profileAvatarInitials">—</span></div>
@@ -7344,7 +7404,7 @@ html[dir="rtl"] .pv-ob-opt{text-align:right}
   var titlesEn={landing:['Toolkit','Trade with a process'],matcher:['Tool 01','Prop firm matcher'],'all-firms':['Matcher','All firms'],'top-rated':['Community','Top rated by traders'],journal:['Tool 02','Trading journal'],calculator:['Tool 03','Risk calculator'],calendar:['Tool 04','Economic Calendar'],lab:['Tool 05','Pro Lab'],discipline:['Parked','Discipline'],'discipline-soon':['Next version','Discipline'],notifications:['Inbox','Notifications'],profile:['Account','Profile'],settings:['Account','Settings'],certificate:['Account','Certificates'],methodology:['PIPVANT','Methodology'],support:['PIPVANT','Support'],about:['PIPVANT','About'],contact:['PIPVANT','Contact'],'firm-detail':['Matcher','Firm details']};
   var titlesAr={landing:['الأدوات','تداول وفق منهج'],matcher:['الأداة 01','مطابق شركات التداول'],'all-firms':['المطابق','جميع الشركات'],'top-rated':['المجتمع','الأعلى تقييماً من المتداولين'],journal:['الأداة 02','سجل التداول'],calculator:['الأداة 03','حاسبة المخاطر'],calendar:['الأداة 04','التقويم الاقتصادي'],lab:['الأداة 05','مختبر المحترفين'],discipline:['متوقف مؤقتاً','الانضباط'],'discipline-soon':['الإصدار القادم','الانضباط'],notifications:['الوارد','الإشعارات'],profile:['الحساب','الملف الشخصي'],settings:['الحساب','الإعدادات'],certificate:['الحساب','الشهادات'],methodology:['PIPVANT','المنهجية'],support:['PIPVANT','الدعم'],about:['PIPVANT','حول'],contact:['PIPVANT','تواصل'],'firm-detail':['المطابق','تفاصيل الشركة']};
   var ar={
-    'Tool 02':'الأداة 02','Trading journal':'سجل التداول','Cost of mistakes':'تكلفة الأخطاء','Closed trades only — grouped by tag':'الصفقات المغلقة فقط — مجمعة حسب الوسم','BY TAG':'حسب الوسم','Tag trades with the mistake chips to see what they cost you':'وسّم صفقاتك برقائق الأخطاء لترى كم كلفتك','Mistake (optional)':'الخطأ (اختياري)','Revenge trade':'صفقة انتقامية','Early exit':'خروج مبكر','Late entry':'دخول متأخر','Oversized position':'حجم مفرط','Against plan':'ضد الخطة','Hide amounts':'إخفاء المبالغ','Seconds':'الثواني','Previous month':'الشهر السابق','Next month':'الشهر التالي',
+    'Tool 02':'الأداة 02','Trading journal':'سجل التداول','Your profile, activity, and verified achievements in one place.':'ملفك ونشاطك وإنجازاتك الموثقة في مكان واحد.','Cost of mistakes':'تكلفة الأخطاء','Closed trades only — grouped by tag':'الصفقات المغلقة فقط — مجمعة حسب الوسم','BY TAG':'حسب الوسم','Tag trades with the mistake chips to see what they cost you':'وسّم صفقاتك برقائق الأخطاء لترى كم كلفتك','Mistake (optional)':'الخطأ (اختياري)','Revenge trade':'صفقة انتقامية','Early exit':'خروج مبكر','Late entry':'دخول متأخر','Oversized position':'حجم مفرط','Against plan':'ضد الخطة','Hide amounts':'إخفاء المبالغ','Seconds':'الثواني','Previous month':'الشهر السابق','Next month':'الشهر التالي',
     'True Cost Calculator':'حاسبة التكلفة الحقيقية','Pass Simulator':'محاكي اجتياز التحدي','Rule-change Radar':'رادار تغيير القواعد','Breach Guard':'حارس الاختراق','Trading DNA — find your match':'بصمة التداول — اعثر على ما يناسبك','▶ Run Simulation':'▶ تشغيل المحاكاة',
     'The sticker price lies. Commissions, resets and fees are the real price of a funded account.':'السعر المعلن مضلل. العمولات وإعادة التعيين والرسوم هي السعر الحقيقي للحساب الممول.',
     'Firms change rules silently. We track data freshness honestly — green means recently verified, red means it needs a re-check.':'الشركات تغير القواعد بصمت. نتتبع حداثة البيانات بنزاهة — الأخضر يعني تم التحقق حديثاً، والأحمر يعني يحتاج إعادة فحص.',
