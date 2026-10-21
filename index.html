@@ -1885,6 +1885,46 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
 .rs-link:hover{text-decoration:underline}
 .fd-rulesheet{border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:2px 0 12px;background:rgba(91,141,239,.04)}
 
+/* ---- LAUNCH ADDITIONS: journal onboarding, stats share card, sheet rule sheets ---- */
+.sheet-rules-wrap{padding:2px 6px 12px;border-bottom:1px solid var(--line)}
+.sheet-rules-toggle{display:inline-flex;align-items:center;gap:7px;padding:7px 13px;border-radius:999px;border:1px solid rgba(212,175,55,.4);background:rgba(212,175,55,.06);color:var(--gold,#D4AF37);font:700 11.5px "Space Grotesk",sans-serif;cursor:pointer}
+.sheet-rules-toggle .srt-arrow{transition:transform .18s}
+.sheet-rules-toggle[aria-expanded="true"] .srt-arrow{transform:rotate(180deg)}
+.sheet-rules-wrap .rule-sheet{border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-top:10px;background:rgba(91,141,239,.04)}
+.pv-first-entry{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 12px;padding:12px 16px;border:1px solid rgba(212,175,55,.45);border-radius:14px;background:linear-gradient(135deg,rgba(212,175,55,.13),rgba(212,175,55,.05));color:var(--text);font:600 13.5px "Space Grotesk",sans-serif}
+.pv-first-entry[hidden]{display:none}
+.pv-first-entry-close{border:0;background:transparent;color:var(--muted);font-size:18px;line-height:1;cursor:pointer;padding:2px 6px}
+.pv-ob-overlay{position:fixed;inset:0;z-index:1200;display:grid;place-items:center;padding:18px;background:rgba(4,10,20,.72);backdrop-filter:blur(10px)}
+.pv-ob-overlay[hidden]{display:none}
+.pv-ob-card{width:100%;max-width:440px;max-height:92vh;overflow-y:auto;background:linear-gradient(180deg,#0d1d33,#0A1628);border:1px solid rgba(212,175,55,.45);border-radius:22px;padding:26px 24px 22px;box-shadow:0 32px 80px rgba(0,0,0,.6);color:#EAF1FB;animation:pvObIn .28s ease-out}
+@keyframes pvObIn{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
+.pv-ob-dots{display:flex;gap:8px;margin-bottom:18px}
+.pv-ob-dot{width:9px;height:9px;border-radius:999px;background:rgba(234,241,251,.18);transition:background .2s,box-shadow .2s}
+.pv-ob-dot.done{background:rgba(212,175,55,.55)}
+.pv-ob-dot.on{background:#D4AF37;box-shadow:0 0 10px rgba(212,175,55,.7)}
+.pv-ob-eyebrow{margin:0 0 6px;font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#5B8DEF}
+.pv-ob-title{margin:0 0 8px;font-family:"Space Grotesk",sans-serif;font-size:24px;line-height:1.2;font-weight:700}
+.pv-ob-sub{margin:0 0 18px;color:#9FB2CC;font-size:13.5px;line-height:1.55}
+.pv-ob-opts{display:grid;gap:10px}
+.pv-ob-opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:14px 16px;border:1px solid rgba(234,241,251,.14);border-radius:14px;background:rgba(91,141,239,.05);color:#EAF1FB;font:600 14.5px "Space Grotesk",sans-serif;cursor:pointer;transition:border-color .15s,background .15s}
+html[dir="rtl"] .pv-ob-opt{text-align:right}
+.pv-ob-opt small{display:block;font-weight:500;font-size:12px;color:#9FB2CC;margin-top:2px}
+.pv-ob-opt[aria-pressed="true"]{border-color:#D4AF37;background:rgba(212,175,55,.09);box-shadow:inset 0 0 0 1px rgba(212,175,55,.35)}
+.pv-ob-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pv-ob-field{display:grid;gap:6px;align-content:start}
+.pv-ob-field.full{grid-column:1/-1}
+.pv-ob-field label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#9FB2CC}
+.pv-ob-field input{width:100%;box-sizing:border-box;background:#0A1628;border:1px solid rgba(234,241,251,.16);border-radius:12px;padding:12px 13px;color:#EAF1FB;font:600 15px "Space Grotesk",sans-serif;outline:none}
+.pv-ob-field input:focus{border-color:#D4AF37}
+.pv-ob-dirs{display:flex;gap:8px}
+.pv-ob-dir{flex:1;padding:11px;border-radius:12px;border:1px solid rgba(234,241,251,.14);background:rgba(91,141,239,.05);color:#EAF1FB;font:700 14px "Space Grotesk",sans-serif;cursor:pointer}
+.pv-ob-dir[aria-pressed="true"]{border-color:#D4AF37;background:rgba(212,175,55,.09)}
+.pv-ob-hint{margin:12px 0 0;color:#9FB2CC;font-size:12.5px;line-height:1.55}
+.pv-ob-feedback{min-height:18px;margin:12px 0 0;font-size:12.5px;color:#F2B8B8}
+.pv-ob-feedback:empty{margin:0;min-height:0}
+.pv-ob-actions{display:flex;gap:10px;margin-top:18px}
+.pv-ob-actions .btn{flex:1}
+
 /* ---- 3. COMPARE TRAY + MODAL: premium ---- */
 .compare-tray{
   border-radius:20px!important;padding:14px 22px!important;gap:14px!important;
@@ -2813,8 +2853,11 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
         <button class="account-switch" id="accountSwitch" type="button" aria-haspopup="dialog" aria-controls="accountSheet"><svg width="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 9h5M7 13h3"/></svg><span>All accounts</span><svg width="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m7 10 5 5 5-5"/></svg></button>
         <div class="range-segment" role="group" aria-label="Date range"><button class="range-btn" type="button" data-range="1w" aria-pressed="true">1W</button><button class="range-btn" type="button" data-range="1m" aria-pressed="false">1M</button><button class="range-btn" type="button" data-range="3m" aria-pressed="false">3M</button><button class="range-btn" type="button" data-range="1y" aria-pressed="false">1Y</button><button class="range-btn" type="button" data-range="all" aria-pressed="false">All</button><button class="range-btn" type="button" data-range="custom" aria-pressed="false">Custom</button></div>
         <button class="btn primary journal-add" id="desktopAddTrade" type="button">+ Add Trade</button>
+        <button class="btn secondary" id="shareStatsBtn" type="button">Share stats</button>
       </div>
       <p class="session-feedback" id="journalFeedback" aria-live="polite"></p>
+      <p class="session-feedback" id="shareStatsFeedback" aria-live="polite"></p>
+      <div class="pv-first-entry" id="pvFirstEntryNote" hidden><span id="pvFirstEntryText"></span><button type="button" class="pv-first-entry-close" id="pvFirstEntryClose" aria-label="Dismiss">×</button></div>
 
       <section class="journal-kpis" aria-label="Performance metrics">
         <article class="kpi-card"><div class="kpi-top"><div><span class="kpi-label">Net P&amp;L</span><strong class="kpi-value" id="kpiNetPnl">—</strong></div><span class="tiny" id="journalCurrencyLabel">USD</span></div><div><div class="sparkline-empty" id="kpiNetPnlSpark" aria-label="No Net P&L history"></div><span class="kpi-note" id="kpiNetPnlNote">vs prior period —</span></div></article>
@@ -3535,6 +3578,36 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
   </div>
 </div>
 
+<div class="pv-ob-overlay" id="pvOnboarding" hidden role="dialog" aria-modal="true" aria-labelledby="pvObTitle">
+  <div class="pv-ob-card">
+    <div class="pv-ob-dots" aria-hidden="true"><span class="pv-ob-dot" data-pv-ob-dot="1"></span><span class="pv-ob-dot" data-pv-ob-dot="2"></span><span class="pv-ob-dot" data-pv-ob-dot="3"></span></div>
+    <p class="pv-ob-eyebrow" id="pvObEyebrow">Welcome to your journal</p>
+    <h3 class="pv-ob-title" id="pvObTitle">What are you trading on?</h3>
+    <p class="pv-ob-sub" id="pvObSub"></p>
+    <div class="pv-ob-step" data-pv-ob-step="1">
+      <div class="pv-ob-opts" role="group" aria-label="Account type">
+        <button type="button" class="pv-ob-opt" data-pv-ob-type="prop" aria-pressed="true"><span><span class="pv-ob-opt-name">Prop firm challenge</span><small class="pv-ob-opt-desc">A funded evaluation account</small></span></button>
+        <button type="button" class="pv-ob-opt" data-pv-ob-type="personal" aria-pressed="false"><span><span class="pv-ob-opt-name">Personal account</span><small class="pv-ob-opt-desc">Your own capital</small></span></button>
+        <button type="button" class="pv-ob-opt" data-pv-ob-type="demo" aria-pressed="false"><span><span class="pv-ob-opt-name">Demo</span><small class="pv-ob-opt-desc">Practice — no real money</small></span></button>
+      </div>
+    </div>
+    <div class="pv-ob-step" data-pv-ob-step="2" hidden>
+      <div class="pv-ob-grid">
+        <div class="pv-ob-field full"><label for="pvObPair">Pair / symbol</label><input id="pvObPair" type="text" autocomplete="off" placeholder="US100"></div>
+        <div class="pv-ob-field full"><label id="pvObDirLabel">Direction</label><div class="pv-ob-dirs" role="group" aria-labelledby="pvObDirLabel"><button type="button" class="pv-ob-dir" data-pv-ob-dir="Long" aria-pressed="true">Long</button><button type="button" class="pv-ob-dir" data-pv-ob-dir="Short" aria-pressed="false">Short</button></div></div>
+        <div class="pv-ob-field"><label for="pvObEntry">Entry price</label><input id="pvObEntry" type="number" inputmode="decimal" step="any" placeholder="0.00"></div>
+        <div class="pv-ob-field"><label for="pvObExit">Exit price</label><input id="pvObExit" type="number" inputmode="decimal" step="any" placeholder="0.00"></div>
+        <div class="pv-ob-field full"><label for="pvObSize">Size (lots)</label><input id="pvObSize" type="number" inputmode="decimal" step="any" min="0" placeholder="0.10"></div>
+      </div>
+    </div>
+    <div class="pv-ob-step" data-pv-ob-step="3" hidden>
+      <div class="pv-ob-field"><label for="pvObRisk">Risk per trade (%)</label><input id="pvObRisk" type="number" inputmode="decimal" step="0.1" min="0.1" max="10" value="1"></div>
+      <p class="pv-ob-hint" id="pvObRiskHint">This becomes the default in your risk calculator. You can change it any time in Settings.</p>
+    </div>
+    <p class="pv-ob-feedback" id="pvObFeedback" aria-live="polite"></p>
+    <div class="pv-ob-actions"><button type="button" class="btn secondary" id="pvObSkip">Skip for now</button><button type="button" class="btn primary" id="pvObNext">Continue</button></div>
+  </div>
+</div>
 <div class="trade-sheet" id="tradeSheet" role="dialog" aria-modal="true" aria-labelledby="tradeSheetTitle">  <div class="trade-form">
     <div class="grabber"></div>
     <div class="sheet-head"><div><span class="tiny">NEW ENTRY</span><h3 id="tradeSheetTitle">Log trade</h3></div><button class="btn icon secondary" id="closeTradeSheet" type="button" aria-label="Close trade form"><svg width="19"><use href="#pv-i-x"/></svg></button></div>
@@ -5908,6 +5981,20 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
           pr.innerHTML=dp.final!=null?(dp.pct>0?'<s style="color:var(--muted);font-weight:400">'+sbFmtUSD(dp.base)+'</s> ':'')+sbFmtUSD(dp.final):'—';
           row.appendChild(left);row.appendChild(pr);
           chEl.appendChild(row);
+          /* Launch additions: plain-language Rule Sheet per plan, collapsed behind a toggle (reuses sbRuleSheetEl as-is). */
+          try{
+            var rsEl=(typeof sbRuleSheetEl==='function')?sbRuleSheetEl(firm,p):null;
+            if(rsEl){
+              rsEl.hidden=true;
+              var rsWrap=document.createElement('div');rsWrap.className='sheet-rules-wrap';
+              var rsTog=document.createElement('button');rsTog.type='button';rsTog.className='sheet-rules-toggle';rsTog.setAttribute('aria-expanded','false');
+              var rsLbl=document.createElement('span');rsLbl.textContent=currentLanguage==='ar'?'القواعد بلغة بسيطة':'Rules in plain language';
+              var rsArr=document.createElement('span');rsArr.className='srt-arrow';rsArr.textContent='▾';
+              rsTog.appendChild(rsLbl);rsTog.appendChild(rsArr);
+              (function(el,tg){tg.addEventListener('click',function(){var open=el.hidden;el.hidden=!open;tg.setAttribute('aria-expanded',String(open));});})(rsEl,rsTog);
+              rsWrap.appendChild(rsTog);rsWrap.appendChild(rsEl);chEl.appendChild(rsWrap);
+            }
+          }catch(_rse){}
         });
       }
       var poEl=document.getElementById('sheetPayouts');
@@ -6769,6 +6856,7 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
         sessionJournalEntries.sort(function(a,b){return b.timestamp-a.timestamp;});
         if(typeof applyTradeExtras==='function')applyTradeExtras();
         renderJournalEntries();
+        try{if(typeof window.pvTradesLoadDone==='function')window.pvTradesLoadDone();}catch(_pe){}
         /* Unified source: session (not raw r.data) so Journal and Profile always agree.
            Guard: never overwrite a populated profile with empty data (stale query). */
         if(sessionJournalEntries.length>0){window._profileHasData=true;}
@@ -7631,7 +7719,7 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
         // always computed on all trades).
         var _pf=typeof getFilteredJournalEntries==='function'?getFilteredJournalEntries():sessionJournalEntries;
         sbUpdateProfileStats(_pf.filter(function(e){return e.type==='trade';}));
-      }catch(_e){}}if(id==='top-rated'){try{if(typeof sbRenderVerdictAndRated==='function')sbRenderVerdictAndRated();}catch(_te){}}if(activeScreen&&!instant){void activeScreen.offsetWidth;activeScreen.classList.add('motion-enter');if(!viewedScreens[id]){viewedScreens[id]=true;runCountUps(activeScreen);setTimeout(function(){activeScreen.querySelectorAll('.motion-cascade').forEach(function(group){group.classList.add('motion-done');});},560);}if(id==='certificates'){var earned=activeScreen.querySelector('.earned-certificate:not([hidden])');if(earned&&!earned.dataset.motionIssued){earned.dataset.motionIssued='true';earned.classList.add('issuing');setTimeout(function(){earned.classList.remove('issuing');},920);}}setTimeout(function(){activeScreen.classList.remove('motion-enter');},520);}
+      }catch(_e){}}if(id==='top-rated'){try{if(typeof sbRenderVerdictAndRated==='function')sbRenderVerdictAndRated();}catch(_te){}}if(id==='journal'){try{if(typeof window.pvMaybeShowOnboarding==='function')window.pvMaybeShowOnboarding();}catch(_je){}}if(activeScreen&&!instant){void activeScreen.offsetWidth;activeScreen.classList.add('motion-enter');if(!viewedScreens[id]){viewedScreens[id]=true;runCountUps(activeScreen);setTimeout(function(){activeScreen.querySelectorAll('.motion-cascade').forEach(function(group){group.classList.add('motion-done');});},560);}if(id==='certificates'){var earned=activeScreen.querySelector('.earned-certificate:not([hidden])');if(earned&&!earned.dataset.motionIssued){earned.dataset.motionIssued='true';earned.classList.add('issuing');setTimeout(function(){earned.classList.remove('issuing');},920);}}setTimeout(function(){activeScreen.classList.remove('motion-enter');},520);}
       document.querySelectorAll('[data-screen]').forEach(function(el){el.classList.toggle('active',el.getAttribute('data-screen')===id);});
       var screenCopy=(currentLanguage==='ar'?titlesAr:titlesEn)[id];document.getElementById('crumb').textContent=screenCopy[0];document.getElementById('screenTitle').textContent=screenCopy[1];refreshBottomIndicator();refreshAllSegmentIndicators();
     }
@@ -10582,6 +10670,166 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
       if(typeof refreshAllTradeUI==='function')refreshAllTradeUI();else renderJournalEntries();tradeFormEl.reset();tradeFormEl.querySelectorAll('input,textarea').forEach(updateFloatingField);document.querySelectorAll('.chip[data-direction]').forEach(function(chip){chip.setAttribute('aria-pressed','false');});document.getElementById('tradeFormFeedback').textContent='';closeTradeSheet();
     });
   });
+
+  /* ===== LAUNCH ADDITIONS: journal 3-step onboarding + stats share card ===== */
+  var pvObStep=1,pvObType='prop',pvObDir='Long',pvObTradeDone=false,pvObLoadDone=false,pvObOpen=false;
+  function pvEl(id){return document.getElementById(id);}
+  function pvLT(en,ar){return currentLanguage==='ar'?ar:en;}
+  function pvEsc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  function pvObRender(){
+    var titles=[pvLT('What are you trading on?','على ماذا تتداول؟'),pvLT('Log your first trade','سجّل أول صفقة لك'),pvLT('Set your risk rule','حدّد قاعدة المخاطرة')];
+    var subs=[pvLT('One quick setup so your journal speaks your language.','إعداد سريع واحد ليعكس سجلك طريقة تداولك.'),pvLT('Enter a trade you already took — it lands in your journal like any other.','أدخل صفقة نفذتها بالفعل — ستظهر في سجلك كأي صفقة أخرى.'),pvLT('A fixed risk per trade keeps one bad day from ending the month.','مخاطرة ثابتة لكل صفقة تمنع يوماً سيئاً واحداً من إنهاء الشهر.')];
+    var t=pvEl('pvObTitle');if(t)t.textContent=titles[pvObStep-1];
+    var s=pvEl('pvObSub');if(s)s.textContent=subs[pvObStep-1];
+    var eb=pvEl('pvObEyebrow');if(eb)eb.textContent=pvLT('Welcome to your journal','مرحباً بك في سجلك');
+    document.querySelectorAll('[data-pv-ob-dot]').forEach(function(d){var n=Number(d.getAttribute('data-pv-ob-dot'));d.classList.toggle('on',n===pvObStep);d.classList.toggle('done',n<pvObStep);});
+    document.querySelectorAll('[data-pv-ob-step]').forEach(function(p){p.hidden=Number(p.getAttribute('data-pv-ob-step'))!==pvObStep;});
+    var names={prop:[pvLT('Prop firm challenge','تحدي شركة تمويل'),pvLT('A funded evaluation account','حساب تقييم مموّل')],personal:[pvLT('Personal account','حساب شخصي'),pvLT('Your own capital','رأس مالك الخاص')],demo:[pvLT('Demo','حساب تجريبي'),pvLT('Practice — no real money','تدريب — بلا مال حقيقي')]};
+    document.querySelectorAll('[data-pv-ob-type]').forEach(function(b){var k=b.getAttribute('data-pv-ob-type');var nm=b.querySelector('.pv-ob-opt-name');var ds=b.querySelector('.pv-ob-opt-desc');if(names[k]){if(nm)nm.textContent=names[k][0];if(ds)ds.textContent=names[k][1];}b.setAttribute('aria-pressed',String(k===pvObType));});
+    document.querySelectorAll('[data-pv-ob-dir]').forEach(function(b){var isL=b.getAttribute('data-pv-ob-dir')==='Long';b.setAttribute('aria-pressed',String((isL?'Long':'Short')===pvObDir));b.textContent=isL?pvLT('Long','شراء'):pvLT('Short','بيع');});
+    var pairL=document.querySelector('label[for="pvObPair"]');if(pairL)pairL.textContent=pvLT('Pair / symbol','الزوج / الرمز');
+    var dirL=pvEl('pvObDirLabel');if(dirL)dirL.textContent=pvLT('Direction','الاتجاه');
+    var enL=document.querySelector('label[for="pvObEntry"]');if(enL)enL.textContent=pvLT('Entry price','سعر الدخول');
+    var exL=document.querySelector('label[for="pvObExit"]');if(exL)exL.textContent=pvLT('Exit price','سعر الخروج');
+    var szL=document.querySelector('label[for="pvObSize"]');if(szL)szL.textContent=pvLT('Size (lots)','الحجم (لوت)');
+    var rkL=document.querySelector('label[for="pvObRisk"]');if(rkL)rkL.textContent=pvLT('Risk per trade (%)','المخاطرة لكل صفقة (%)');
+    var hint=pvEl('pvObRiskHint');if(hint)hint.textContent=pvLT('This becomes the default in your risk calculator. You can change it any time in Settings.','تصبح هذه القيمة هي الافتراضية في حاسبة المخاطرة، ويمكنك تغييرها في أي وقت من الإعدادات.');
+    var skip=pvEl('pvObSkip');if(skip)skip.textContent=pvLT('Skip for now','تخطَّ الآن');
+    var next=pvEl('pvObNext');if(next)next.textContent=pvObStep===3?pvLT('Finish','إنهاء'):pvLT('Continue','متابعة');
+    var fb=pvEl('pvObFeedback');if(fb)fb.textContent='';
+  }
+  function pvOpenOnboarding(){
+    var ov=pvEl('pvOnboarding');if(!ov||pvObOpen)return;pvObOpen=true;pvObStep=1;pvObTradeDone=false;
+    var rk=pvEl('pvObRisk');if(rk){var cur=1;try{if(typeof defaultRisk==='number'&&isFinite(defaultRisk)&&defaultRisk>0)cur=defaultRisk;}catch(e){}rk.value=cur;}
+    pvObRender();ov.hidden=false;
+  }
+  function pvCloseOnboarding(){
+    var ov=pvEl('pvOnboarding');if(ov)ov.hidden=true;pvObOpen=false;
+    try{localStorage.setItem('pv_journal_onboarded','1');}catch(e){}
+    if(pvObTradeDone){var note=pvEl('pvFirstEntryNote');var txt=pvEl('pvFirstEntryText');if(note&&txt){txt.textContent=pvLT('Your first entry is in — the next one is the habit.','تم تسجيل أول صفقة لك — الصفقة التالية هي العادة.');note.hidden=false;setTimeout(function(){note.hidden=true;},9000);}}
+  }
+  function pvObCreateFirstTrade(){
+    var fb=pvEl('pvObFeedback');
+    var pair=((pvEl('pvObPair')||{}).value||'').trim().toUpperCase();
+    var entryVal=parseFloat((pvEl('pvObEntry')||{}).value),exitVal=parseFloat((pvEl('pvObExit')||{}).value),sizeVal=parseFloat((pvEl('pvObSize')||{}).value);
+    if(!pair||!isFinite(entryVal)||!isFinite(exitVal)){if(fb)fb.textContent=pvLT('Add the pair, entry and exit to log this trade — or skip for now.','أضف الزوج وسعري الدخول والخروج لتسجيل هذه الصفقة — أو تخطَّ الآن.');return false;}
+    /* Mirror the #tradeForm submit handler: same field shape, same persistence path
+       (persistLocalTrade -> sessionJournalEntries.unshift -> sbSaveTrade -> refreshAllTradeUI). */
+    var dirLow=pvObDir.toLowerCase();
+    var est=null;try{if(typeof estimatePnl==='function')est=estimatePnl(pair,dirLow,entryVal,exitVal,isFinite(sizeVal)?sizeVal:NaN);}catch(e){}
+    var pnl=null,result;
+    if(est!=null&&isFinite(est))pnl=Math.round(est*100)/100;
+    if(exitVal===entryVal){result='breakeven';pnl=0;}
+    else if(pnl!=null)result=pnl>0?'win':(pnl<0?'loss':'breakeven');
+    else result=((dirLow==='long'&&exitVal>entryVal)||(dirLow==='short'&&exitVal<entryVal))?'win':'loss';
+    var acctId=null;try{if(typeof selectedAccountId!=='undefined'&&typeof isAccountUuid==='function'&&isAccountUuid(selectedAccountId))acctId=selectedAccountId;}catch(e){}
+    var tradeEntry={type:'trade',timestamp:Date.now(),account_id:acctId,pair:pair,direction:pvObDir,entry:String(entryVal),stop:'',target:'',size:(isFinite(sizeVal)&&sizeVal>0)?String(sizeVal):'',rMultiple:'—',setup:'',tag:'',rating:'',notes:'',closed:true,exitPrice:String(exitVal),pnl:pnl,result:result};
+    try{
+      if(typeof persistLocalTrade==='function')persistLocalTrade(tradeEntry);
+      sessionJournalEntries.unshift(tradeEntry);
+      if(typeof addPersonalNotif==='function'){try{addPersonalNotif('trade',pvLT('New trade logged','تم تسجيل صفقة جديدة'),pair+' · '+pvObDir);}catch(_n){}}
+      if(typeof sb!=='undefined'&&sb&&typeof sbUser!=='undefined'&&sbUser&&typeof sbSaveTrade==='function')sbSaveTrade(tradeEntry);
+      if(typeof refreshAllTradeUI==='function')refreshAllTradeUI();else if(typeof renderJournalEntries==='function')renderJournalEntries();
+    }catch(err){if(fb)fb.textContent=pvLT('Could not save that trade — please try again from the journal.','تعذّر حفظ هذه الصفقة — حاول مرة أخرى من السجل.');return false;}
+    pvObTradeDone=true;return true;
+  }
+  function pvObAdvance(){
+    if(pvObStep===1){try{localStorage.setItem('pv_journal_account_type',pvObType);}catch(e){}pvObStep=2;pvObRender();return;}
+    if(pvObStep===2){if(pvObCreateFirstTrade()){pvObStep=3;pvObRender();}return;}
+    /* Step 3: write the REAL settings path — defaultRisk persisted by sbSaveSettings()
+       (localStorage pipvant_settings + user_settings.default_risk) and applied to the
+       risk calculator via setRiskValue(). */
+    var rk=pvEl('pvObRisk');var v=parseFloat(rk?rk.value:'');
+    if(isFinite(v)){v=Math.min(10,Math.max(0.1,v));try{defaultRisk=v;}catch(e){}try{var drv=pvEl('defaultRiskValue');if(drv)drv.textContent=v.toFixed(1)+'%';}catch(e){}try{if(typeof setRiskValue==='function')setRiskValue(v);}catch(e){}try{if(typeof sbSaveSettings==='function')sbSaveSettings();}catch(e){}}
+    pvCloseOnboarding();
+  }
+  function pvMaybeShowOnboarding(){
+    try{
+      if(pvObOpen||!pvObLoadDone)return;
+      if(typeof sbUser==='undefined'||!sbUser||!sbUser.id)return;
+      var flagged=false;try{flagged=localStorage.getItem('pv_journal_onboarded')==='1';}catch(e){return;}
+      if(flagged)return;
+      var j=document.getElementById('journal');if(!j||!j.classList.contains('active'))return;
+      var trades=(window.sessionJournalEntries||[]).filter(function(e){return e&&e.type==='trade';});
+      if(trades.length)return;
+      pvOpenOnboarding();
+    }catch(e){}
+  }
+  window.pvMaybeShowOnboarding=pvMaybeShowOnboarding;
+  window.pvTradesLoadDone=function(){pvObLoadDone=true;pvMaybeShowOnboarding();};
+  (function pvObWire(){
+    var ov=pvEl('pvOnboarding');if(!ov)return;
+    document.querySelectorAll('[data-pv-ob-type]').forEach(function(b){b.addEventListener('click',function(){pvObType=b.getAttribute('data-pv-ob-type')||'prop';pvObRender();});});
+    document.querySelectorAll('[data-pv-ob-dir]').forEach(function(b){b.addEventListener('click',function(){pvObDir=b.getAttribute('data-pv-ob-dir')||'Long';pvObRender();});});
+    var next=pvEl('pvObNext');if(next)next.addEventListener('click',pvObAdvance);
+    var skip=pvEl('pvObSkip');if(skip)skip.addEventListener('click',function(){pvCloseOnboarding();});
+    ov.addEventListener('click',function(e){if(e.target===ov)pvCloseOnboarding();});
+    var fc=pvEl('pvFirstEntryClose');if(fc)fc.addEventListener('click',function(){var n=pvEl('pvFirstEntryNote');if(n)n.hidden=true;});
+  })();
+
+  /* ---- Journal stats share card (1080x1080 PNG) ---- */
+  function pvShareStats(){
+    var fb=pvEl('shareStatsFeedback');
+    var note=function(msg){if(fb)fb.textContent=msg;};
+    /* Same closed-trade definition + formulas as updateJournalKPIs():
+       type 'trade' with finite pnl; winRate=round(wins/n*100); PF=grossProfit/grossLoss. */
+    var closed=(window.sessionJournalEntries||[]).filter(function(e){return e&&e.type==='trade'&&e.pnl!=null&&isFinite(Number(e.pnl));});
+    if(!closed.length){note(pvLT('No closed trades yet — log a trade first, then share your stats.','لا توجد صفقات مغلقة بعد — سجّل صفقة أولاً، ثم شارك إحصائياتك.'));return;}
+    var n=closed.length,wins=0,net=0,gp=0,gl=0,best=null,totalR=0,monthNet=0,monthR=0;
+    var now=new Date();
+    closed.forEach(function(e){var p=Number(e.pnl);net+=p;if(p>0){wins++;gp+=p;}else if(p<0){gl+=Math.abs(p);}if(!best||p>Number(best.pnl))best=e;var r=parseFloat(e.rMultiple);var hasR=isFinite(r);if(hasR)totalR+=r;var d=new Date(e.timestamp||0);if(d.getFullYear()===now.getFullYear()&&d.getMonth()===now.getMonth()){monthNet+=p;if(hasR)monthR+=r;}});
+    var winRate=Math.round(wins/n*100);
+    var pf=gl>0?gp/gl:(gp>0?Infinity:0);
+    /* Hide-amounts respect: mirror the P&L calendar — when jcalState.hide is ON, show R stats. */
+    var hideR=false;try{hideR=(typeof jcalState!=='undefined'&&!!jcalState.hide);}catch(e){}
+    var sym='$';try{if(typeof currencyMeta!=='undefined'&&typeof currentCurrency!=='undefined'&&currencyMeta[currentCurrency])sym=currencyMeta[currentCurrency].symbol;}catch(e){}
+    var money=function(v){return (v>0?'+':(v<0?'−':''))+sym+Math.abs(v).toLocaleString('en-US',{maximumFractionDigits:2});};
+    var rFmt=function(v){return (v>0?'+':'')+(Math.round(v*10)/10)+'R';};
+    var stats;
+    if(hideR){stats=[[pvLT('Trades','الصفقات'),String(n)],[pvLT('Win rate','نسبة الفوز'),winRate+'%'],[pvLT('Total R','إجمالي R'),rFmt(totalR)],[pvLT('Avg R / trade','متوسط R لكل صفقة'),rFmt(n?totalR/n:0)],[pvLT('Best trade','أفضل صفقة'),best?((isFinite(parseFloat(best.rMultiple))?rFmt(parseFloat(best.rMultiple)):'—')+' · '+best.pair):'—'],[pvLT('This month','هذا الشهر'),rFmt(monthR)]];}
+    else{stats=[[pvLT('Trades','الصفقات'),String(n)],[pvLT('Win rate','نسبة الفوز'),winRate+'%'],[pvLT('Net P&L','صافي الربح والخسارة'),money(net)],[pvLT('Profit factor','عامل الربح'),isFinite(pf)?pf.toFixed(2):'—'],[pvLT('Best trade','أفضل صفقة'),best?(money(Number(best.pnl))+' · '+best.pair):'—'],[pvLT('This month','هذا الشهر'),money(monthNet)]];}
+    var monthLbl=now.toLocaleDateString('en-GB',{month:'short',year:'numeric'});
+    note(pvLT('Preparing your stats card…','جاري تجهيز بطاقة إحصائياتك…'));
+    var build=function(withLogo){
+      var card=document.createElement('div');
+      card.style.cssText='position:absolute;left:-12000px;top:0;width:1080px;height:1080px;background:linear-gradient(160deg,#0d1d33 0%,#0A1628 55%,#081222 100%);color:#EAF1FB;font-family:"Space Grotesk",Arial,sans-serif;padding:84px;box-sizing:border-box;';
+      var logoHtml=withLogo?'<img src="assets/pipvanta-logo.png" alt="PV" style="width:104px;height:104px;border-radius:24px;object-fit:contain;">':'<div style="width:104px;height:104px;border-radius:24px;background:linear-gradient(135deg,#e8c455,#D4AF37);color:#0A1628;font-weight:800;font-size:42px;display:grid;place-items:center;">PV</div>';
+      var cells=stats.map(function(s){return '<div style="background:rgba(91,141,239,.06);border:1px solid rgba(234,241,251,.1);border-radius:24px;padding:34px 36px;"><div style="font-size:23px;font-weight:700;letter-spacing:.13em;color:#8FA6C8;text-transform:uppercase;">'+pvEsc(s[0])+'</div><div style="font-size:54px;font-weight:800;margin-top:12px;font-variant-numeric:tabular-nums;">'+pvEsc(s[1])+'</div></div>';}).join('');
+      card.innerHTML='<div style="display:flex;align-items:center;gap:28px;">'+logoHtml+'<div><div style="font-size:44px;font-weight:800;letter-spacing:.06em;">PIPVANT</div><div style="font-size:23px;color:#D4AF37;font-weight:700;letter-spacing:.18em;margin-top:4px;">'+pvEsc(pvLT('TRADING JOURNAL','سجل التداول'))+'</div></div></div><div style="height:3px;background:linear-gradient(90deg,#D4AF37,rgba(212,175,55,0));margin:54px 0 46px;border-radius:2px;"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:22px;">'+cells+'</div><div style="position:absolute;left:84px;right:84px;bottom:62px;display:flex;justify-content:space-between;align-items:center;color:#8FA6C8;font-size:24px;font-weight:600;"><span>PIPVANT · pipvant.github.io</span><span>'+pvEsc(monthLbl)+'</span></div>';
+      document.body.appendChild(card);
+      var finish=function(){try{card.remove();}catch(e){}};
+      var deliver=function(dataUrl){
+        var fname='pipvant-stats.png';
+        try{
+          if(navigator.canShare&&navigator.share&&typeof dataUrlToFile==='function'){var file=dataUrlToFile(dataUrl,fname);if(navigator.canShare({files:[file]})){navigator.share({title:'PIPVANT stats',files:[file]}).then(function(){note(pvLT('Stats card shared.','تمت مشاركة بطاقة الإحصائيات.'));}).catch(function(){if(typeof saveDataUrl==='function')saveDataUrl(dataUrl,fname);});finish();return;}}
+        }catch(e){}
+        if(typeof saveDataUrl==='function')saveDataUrl(dataUrl,fname);
+        note(pvLT('Stats card downloaded.','تم تنزيل بطاقة الإحصائيات.'));
+        finish();
+      };
+      /* Export with the same library + helpers the certificates use (html-to-image). */
+      if(window.htmlToImage&&window.htmlToImage.toPng){window.htmlToImage.toPng(card,{pixelRatio:1,cacheBust:true,backgroundColor:'#0A1628'}).then(deliver).catch(function(){pvShareCanvasFallback(stats,monthLbl,deliver,finish);});}
+      else{pvShareCanvasFallback(stats,monthLbl,deliver,finish);}
+    };
+    var img=new Image();
+    img.onload=function(){build(true);};
+    img.onerror=function(){build(false);};
+    img.src='assets/pipvanta-logo.png';
+  }
+  function pvShareCanvasFallback(stats,monthLbl,deliver,finish){
+    try{
+      var c=document.createElement('canvas');c.width=1080;c.height=1080;var x=c.getContext('2d');
+      var g=x.createLinearGradient(0,0,1080,1080);g.addColorStop(0,'#0d1d33');g.addColorStop(.55,'#0A1628');g.addColorStop(1,'#081222');x.fillStyle=g;x.fillRect(0,0,1080,1080);
+      x.fillStyle='#EAF1FB';x.font='800 46px "Space Grotesk",Arial';x.fillText('PIPVANT',84,150);
+      x.fillStyle='#D4AF37';x.font='700 25px "Space Grotesk",Arial';x.fillText(pvLT('TRADING JOURNAL','سجل التداول'),84,196);
+      x.fillRect(84,232,300,4);
+      stats.forEach(function(s,i){var col=i%2,row=Math.floor(i/2);var px=84+col*462,py=292+row*212;x.fillStyle='rgba(91,141,239,.07)';x.fillRect(px,py,440,184);x.strokeStyle='rgba(234,241,251,.12)';x.strokeRect(px,py,440,184);x.fillStyle='#8FA6C8';x.font='700 21px "Space Grotesk",Arial';x.fillText(String(s[0]).toUpperCase(),px+32,py+56);x.fillStyle='#EAF1FB';x.font='800 48px "Space Grotesk",Arial';x.fillText(String(s[1]),px+32,py+126);});
+      x.fillStyle='#8FA6C8';x.font='600 24px "Space Grotesk",Arial';x.fillText('PIPVANT · pipvant.github.io',84,1012);x.fillText(String(monthLbl),880,1012);
+      deliver(c.toDataURL('image/png'));
+    }catch(e){var fb=pvEl('shareStatsFeedback');if(fb)fb.textContent=pvLT('Could not build the share card on this device.','تعذّر إنشاء بطاقة المشاركة على هذا الجهاز.');if(finish)finish();}
+  }
+  (function pvShareWire(){var b=pvEl('shareStatsBtn');if(b)b.addEventListener('click',pvShareStats);})();
+
   tradeSheet.addEventListener('click',function(e){if(e.target===tradeSheet)closeTradeSheet();});
   document.querySelectorAll('.chip[data-direction]').forEach(function(chip){chip.addEventListener('click',function(){
     document.getElementById('tradeFormFeedback').textContent='';document.querySelectorAll('.chip[data-direction]').forEach(function(other){other.setAttribute('aria-pressed',String(other===chip));});
