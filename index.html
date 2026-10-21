@@ -795,6 +795,38 @@
     .eq-tip{position:absolute;z-index:6;pointer-events:none;background:var(--raised);border:1px solid var(--line-strong);border-radius:9px;padding:7px 10px;font-size:10px;line-height:1.55;color:var(--text);box-shadow:var(--shadow);white-space:nowrap;transform:translate(-50%,-118%)}.eq-tip[hidden]{display:none}.eq-tip b{color:var(--platinum)}
     .score-body{padding:17px}.radar-wrap{position:relative;display:grid;place-items:center;min-height:210px}.radar-svg{width:190px;max-width:100%;height:auto}.radar-label{position:absolute;color:var(--muted);font-size:8px;line-height:1.15;text-align:center;max-width:70px}.radar-label.r1{top:0}.radar-label.r2{right:0;top:42px}.radar-label.r3{right:0;bottom:35px}.radar-label.r4{bottom:0}.radar-label.r5{left:0;bottom:35px}.radar-label.r6{left:0;top:42px}.score-track{height:8px;border-radius:99px;background:var(--sunken);border:1px solid var(--line);overflow:hidden}.score-fill{width:0;height:100%;background:var(--accent)}.score-meta{display:flex;align-items:center;justify-content:space-between;margin-top:9px}.score-meta strong{font:600 22px/1 "Space Grotesk",sans-serif}.score-meta span{color:var(--muted);font-size:9px}
     .calendar-card{margin-bottom:var(--journal-gap)}.calendar-layout{display:grid}.calendar-main{min-width:0;padding:14px}.calendar-weekdays,.calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}.calendar-weekdays span{text-align:center;color:var(--muted);font:500 8px/1 "IBM Plex Mono",monospace;padding:4px 0 8px}.day-cell{min-width:0;min-height:66px;padding:6px;border:1px solid var(--line);border-radius:7px;background:color-mix(in srgb,var(--surface) 86%,var(--sunken));color:inherit;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:4px;transition:transform var(--micro) var(--ease-move),opacity var(--micro) var(--ease-move)}.day-cell:active{transform:scale(.97)}.day-cell.active{border-color:var(--accent);background:var(--accent-soft)}.day-cell.today{box-shadow:0 0 0 1.5px var(--accent)}.day-cell.today .day-date{color:var(--accent);font-weight:700}.day-date{font:600 10px/1 "IBM Plex Mono",monospace;color:var(--platinum)}.day-cell small{display:block;color:var(--muted);font-size:9px;line-height:1.3}.day-note{margin-top:auto;align-self:flex-end;color:var(--silver);opacity:.6}.week-rail{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;border-top:1px solid var(--line);background:var(--line)}.week-total{padding:10px 7px;background:var(--sunken);text-align:center}.week-total span{display:block;color:var(--muted);font-size:10px}.week-total strong{display:block;margin-top:5px;font:600 11px/1 "Space Grotesk",sans-serif}
+    /* P2: journal calendar controls, mistake costing, countdown seconds */
+    .jcal-controls{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+    .jcal-btn{min-height:32px;padding:0 10px;border:1px solid var(--line);border-radius:999px;background:var(--sunken);color:var(--muted);font-size:10px;font-weight:700;cursor:pointer;font-variant-numeric:tabular-nums}
+    .jcal-btn[aria-pressed="true"]{border-color:var(--gold,#D4AF37);color:var(--gold,#D4AF37)}
+    .day-cell.blank{opacity:.34;cursor:default}
+    .day-cell .wl-dots{display:flex;gap:3px;align-items:center;min-height:9px}
+    .wl-dot{width:7px;height:7px;border-radius:50%;display:inline-block}
+    .wl-dot.win{background:var(--success)}.wl-dot.loss{background:var(--danger)}.wl-dot.be{background:var(--muted)}
+    .jcal-day-panel{padding:13px 16px;border-top:1px solid var(--line)}
+    .jcal-day-panel[hidden]{display:none}
+    .jcal-day-panel h4{margin:0 0 6px;font-size:12px}
+    .jcal-day-row{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-top:1px solid var(--line);font-size:11px;font-variant-numeric:tabular-nums}
+    .jcal-day-row span{color:var(--muted)}
+    .jcal-day-row strong{font-weight:600}
+    .jcal-empty{margin:0;padding:12px 16px;color:var(--muted);font-size:11px;border-top:1px solid var(--line)}
+    .jcal-empty[hidden]{display:none}
+    .mistake-card{border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden;margin-bottom:var(--journal-gap)}
+    .mistake-body{padding:14px 16px}
+    .mistake-total{margin:0 0 10px;font:600 16px/1.3 "Space Grotesk",sans-serif;font-variant-numeric:tabular-nums}
+    .mistake-empty{margin:0;color:var(--muted);font-size:11px;line-height:1.55}
+    .mistake-table{width:100%;border-collapse:collapse;font-size:11px;font-variant-numeric:tabular-nums}
+    .mistake-table th{padding:7px 8px;border-bottom:1px solid var(--line);color:var(--muted);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;text-align:left}
+    .mistake-table td{padding:7px 8px;border-bottom:1px solid var(--line);color:var(--secondary)}
+    .mistake-table tr:last-child td{border-bottom:0}
+    .mistake-table tr.is-mistake td:first-child{color:var(--danger);font-weight:700}
+    .mistake-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
+    .mistake-chip{min-height:36px;padding:0 12px;border:1px solid var(--line);border-radius:999px;background:var(--sunken);color:var(--secondary);font-size:11px;font-weight:700;cursor:pointer}
+    .mistake-chip[aria-pressed="true"]{border-color:var(--danger);color:var(--danger);background:color-mix(in srgb,var(--danger) 10%,transparent)}
+    .econ-clock{grid-template-columns:repeat(4,1fr)}
+    .econ-clock span{min-width:52px}
+    .next-event-meta-row{display:flex;align-items:center;gap:9px;margin-top:8px}
+    .next-event-meta-row:empty{display:none}
     .journal-filter{position:sticky;top:170px;z-index:12;margin-bottom:var(--journal-gap);border:1px solid var(--line);border-radius:11px;background:color-mix(in srgb,var(--surface) 96%,transparent);backdrop-filter:blur(18px)}.journal-filter-row{display:flex;align-items:center;gap:7px;padding:9px}.filter-action{height:44px;padding:0 12px;border:1px solid var(--line-strong);border-radius:9px;background:var(--sunken);color:var(--text);display:flex;align-items:center;gap:7px;font-size:10px;font-weight:700;cursor:pointer}.active-filter-slot{display:flex;gap:5px;min-width:0;overflow-x:auto;overflow-y:hidden;flex:1;scrollbar-width:none}.active-filter-slot::-webkit-scrollbar{display:none}.active-filter-chip{display:none;min-height:30px;padding:0 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-size:9px;align-items:center;white-space:nowrap}.active-filter-chip.show{display:inline-flex}.facet-panel{display:none;padding:14px;border-top:1px solid var(--line)}.facet-panel.open{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.facet-group strong{display:block;margin-bottom:7px;color:var(--secondary);font-size:9px}.facet-option{display:flex;justify-content:space-between;gap:8px;padding:7px 0;border-top:1px solid color-mix(in srgb,var(--line) 65%,transparent);color:var(--muted);font-size:9px}.facet-option span:last-child{font-family:"IBM Plex Mono",monospace}button.facet-option{width:100%;background:none;border:none;border-top:1px solid color-mix(in srgb,var(--line) 65%,transparent);cursor:pointer;text-align:left;font:inherit;color:var(--muted)}button.facet-option:hover{color:var(--text)}button.facet-option[aria-pressed="true"]{color:var(--accent);font-weight:700}.facet-option[aria-disabled="true"]{opacity:.55;cursor:default}
     @media (max-width:639px){
       .matcher-list-head{flex-wrap:wrap}
@@ -2728,7 +2760,9 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
         <aside class="score-card" aria-labelledby="score-title"><div class="journal-card-head"><div><h3 id="score-title">Trading Score</h3><p>Six execution dimensions</p></div><span class="tiny">0–100</span></div><div class="score-body"><div class="radar-wrap"><svg class="radar-svg" viewBox="0 0 220 190" fill="none" aria-label="Trading score radar"><path d="m110 12 84 42v82l-84 42-84-42V54Z" stroke="var(--line-strong)"/><path d="m110 45 56 28v44l-56 28-56-28V73Z" stroke="var(--line)"/><path d="m110 78 28 14v8l-28 14-28-14v-8Z" stroke="var(--line)"/><path d="M110 12v166M26 54l168 82M194 54 26 136" stroke="var(--line)"/></svg><span class="radar-label r1">Win %</span><span class="radar-label r2">Profit factor</span><span class="radar-label r3">Avg win/loss</span><span class="radar-label r4">Recovery factor</span><span class="radar-label r5">Max drawdown</span><span class="radar-label r6">Consistency</span></div><div class="score-track"><div class="score-fill"></div></div><div class="score-meta"><strong>—</strong><span>Qualitative label —</span></div></div></aside>
       </section>
 
-      <section class="calendar-card" aria-labelledby="calendar-title"><div class="journal-card-head"><div><h3 id="calendar-title">P&amp;L Calendar</h3><p>Month — · Select a day to filter trades</p></div><span class="tiny">MONTH —</span></div><div class="calendar-layout"><div class="calendar-main"><div class="calendar-weekdays" aria-hidden="true"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div><div class="calendar-grid"><span class="day-cell" aria-hidden="true" style="opacity:.34"></span><span class="day-cell" aria-hidden="true" style="opacity:.34"></span><span class="day-cell" aria-hidden="true" style="opacity:.34"></span><button class="day-cell" type="button" data-journal-day="1" aria-label="Filter trades by day 1"><span class="day-date">1</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="2" aria-label="Filter trades by day 2"><span class="day-date">2</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="3" aria-label="Filter trades by day 3"><span class="day-date">3</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="4" aria-label="Filter trades by day 4"><span class="day-date">4</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="5" aria-label="Filter trades by day 5"><span class="day-date">5</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="6" aria-label="Filter trades by day 6"><span class="day-date">6</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="7" aria-label="Filter trades by day 7"><span class="day-date">7</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="8" aria-label="Filter trades by day 8"><span class="day-date">8</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="9" aria-label="Filter trades by day 9"><span class="day-date">9</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="10" aria-label="Filter trades by day 10"><span class="day-date">10</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="11" aria-label="Filter trades by day 11"><span class="day-date">11</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="12" aria-label="Filter trades by day 12"><span class="day-date">12</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="13" aria-label="Filter trades by day 13"><span class="day-date">13</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="14" aria-label="Filter trades by day 14"><span class="day-date">14</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="15" aria-label="Filter trades by day 15"><span class="day-date">15</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="16" aria-label="Filter trades by day 16"><span class="day-date">16</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="17" aria-label="Filter trades by day 17"><span class="day-date">17</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="18" aria-label="Filter trades by day 18"><span class="day-date">18</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="19" aria-label="Filter trades by day 19"><span class="day-date">19</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="20" aria-label="Filter trades by day 20"><span class="day-date">20</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="21" aria-label="Filter trades by day 21"><span class="day-date">21</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="22" aria-label="Filter trades by day 22"><span class="day-date">22</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="23" aria-label="Filter trades by day 23"><span class="day-date">23</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="24" aria-label="Filter trades by day 24"><span class="day-date">24</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="25" aria-label="Filter trades by day 25"><span class="day-date">25</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="26" aria-label="Filter trades by day 26"><span class="day-date">26</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="27" aria-label="Filter trades by day 27"><span class="day-date">27</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="28" aria-label="Filter trades by day 28"><span class="day-date">28</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="29" aria-label="Filter trades by day 29"><span class="day-date">29</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="30" aria-label="Filter trades by day 30"><span class="day-date">30</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="31" aria-label="Filter trades by day 31"><span class="day-date">31</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><span class="day-cell" aria-hidden="true" style="opacity:.34"></span></div></div><aside class="week-rail" aria-label="Weekly totals"><div class="week-total"><span>Week 1</span><strong>—</strong></div><div class="week-total"><span>Week 2</span><strong>—</strong></div><div class="week-total"><span>Week 3</span><strong>—</strong></div><div class="week-total"><span>Week 4</span><strong>—</strong></div><div class="week-total"><span>Week 5</span><strong>—</strong></div></aside></div></section>
+      <section class="mistake-card" aria-labelledby="mistake-cost-title"><div class="journal-card-head"><div><h3 id="mistake-cost-title">Cost of mistakes</h3><p>Closed trades only — grouped by tag</p></div><span class="tiny">BY TAG</span></div><div class="mistake-body" id="mistakeCostBody"><p class="mistake-empty">Tag trades with the mistake chips to see what they cost you</p></div></section>
+
+      <section class="calendar-card" aria-labelledby="calendar-title"><div class="journal-card-head"><div><h3 id="calendar-title">P&amp;L Calendar</h3><p>Month — · Select a day to filter trades</p></div><span class="tiny" id="jcalMonthLabel">MONTH —</span><div class="jcal-controls"><button class="jcal-btn" id="jcalPrev" type="button" aria-label="Previous month">‹</button><button class="jcal-btn" id="jcalNext" type="button" aria-label="Next month">›</button><button class="jcal-btn" id="jcalModeMoney" type="button" aria-pressed="true">$</button><button class="jcal-btn" id="jcalModeR" type="button" aria-pressed="false">R</button><button class="jcal-btn" id="jcalHide" type="button" aria-pressed="false">Hide amounts</button></div></div><div class="calendar-layout"><div class="calendar-main"><div class="calendar-weekdays" aria-hidden="true"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div><div class="calendar-grid" id="jcalGrid"><span class="day-cell" aria-hidden="true" style="opacity:.34"></span><span class="day-cell" aria-hidden="true" style="opacity:.34"></span><span class="day-cell" aria-hidden="true" style="opacity:.34"></span><button class="day-cell" type="button" data-journal-day="1" aria-label="Filter trades by day 1"><span class="day-date">1</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="2" aria-label="Filter trades by day 2"><span class="day-date">2</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="3" aria-label="Filter trades by day 3"><span class="day-date">3</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="4" aria-label="Filter trades by day 4"><span class="day-date">4</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="5" aria-label="Filter trades by day 5"><span class="day-date">5</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="6" aria-label="Filter trades by day 6"><span class="day-date">6</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="7" aria-label="Filter trades by day 7"><span class="day-date">7</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="8" aria-label="Filter trades by day 8"><span class="day-date">8</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="9" aria-label="Filter trades by day 9"><span class="day-date">9</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="10" aria-label="Filter trades by day 10"><span class="day-date">10</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="11" aria-label="Filter trades by day 11"><span class="day-date">11</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="12" aria-label="Filter trades by day 12"><span class="day-date">12</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="13" aria-label="Filter trades by day 13"><span class="day-date">13</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="14" aria-label="Filter trades by day 14"><span class="day-date">14</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="15" aria-label="Filter trades by day 15"><span class="day-date">15</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="16" aria-label="Filter trades by day 16"><span class="day-date">16</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="17" aria-label="Filter trades by day 17"><span class="day-date">17</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="18" aria-label="Filter trades by day 18"><span class="day-date">18</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="19" aria-label="Filter trades by day 19"><span class="day-date">19</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="20" aria-label="Filter trades by day 20"><span class="day-date">20</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="21" aria-label="Filter trades by day 21"><span class="day-date">21</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="22" aria-label="Filter trades by day 22"><span class="day-date">22</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="23" aria-label="Filter trades by day 23"><span class="day-date">23</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="24" aria-label="Filter trades by day 24"><span class="day-date">24</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="25" aria-label="Filter trades by day 25"><span class="day-date">25</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="26" aria-label="Filter trades by day 26"><span class="day-date">26</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="27" aria-label="Filter trades by day 27"><span class="day-date">27</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="28" aria-label="Filter trades by day 28"><span class="day-date">28</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="29" aria-label="Filter trades by day 29"><span class="day-date">29</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="30" aria-label="Filter trades by day 30"><span class="day-date">30</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><button class="day-cell" type="button" data-journal-day="31" aria-label="Filter trades by day 31"><span class="day-date">31</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6"/></svg></button><span class="day-cell" aria-hidden="true" style="opacity:.34"></span></div></div><aside class="week-rail" id="jcalWeekRail" aria-label="Weekly totals"><div class="week-total"><span>Week 1</span><strong>—</strong></div><div class="week-total"><span>Week 2</span><strong>—</strong></div><div class="week-total"><span>Week 3</span><strong>—</strong></div><div class="week-total"><span>Week 4</span><strong>—</strong></div><div class="week-total"><span>Week 5</span><strong>—</strong></div></aside></div><div class="jcal-day-panel" id="jcalDayPanel" hidden></div><p class="jcal-empty" id="jcalEmpty" hidden></p></section>
 
       <div class="journal-filter" aria-label="Trade filters"><div class="journal-filter-row"><button class="filter-action" id="journalFilterButton" type="button" aria-expanded="false"><svg width="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 6h16M7 12h10m-7 6h4"/></svg>Filters</button><div class="active-filter-slot"><span class="active-filter-chip" id="dayFilterChip">Day —</span><span class="active-filter-chip" id="facetFilterChip">All symbols · All sides</span></div></div><div class="facet-panel" id="facetPanel"><div class="facet-group" id="facetSymbol"><strong>Symbol</strong></div><div class="facet-group" id="facetSide"><strong>Side</strong></div><div class="facet-group" id="facetSetup"><strong>Setup</strong></div><div class="facet-group" id="facetTag"><strong>Tag</strong></div></div></div>
 
@@ -3207,8 +3241,8 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
         <span class="pull-refresh-indicator" aria-hidden="true"><span class="pull-refresh-spinner"><svg width="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 4v6h-6"/></svg></span></span>
         <header class="econ-head"><h2>Economic Calendar</h2><span class="econ-timezone" id="calendarTimezone">Times GMT+1</span></header>
         <section class="econ-countdown" aria-labelledby="nextHighImpactLabel">
-          <div class="econ-count-copy"><span class="econ-kicker" id="nextHighImpactLabel">Next high-impact</span><strong id="nextEventName">—</strong><small id="nextEventMeta">No live event data</small></div>
-          <div class="econ-clock" aria-label="Countdown to next high-impact event"><span><strong id="countdownDays">—</strong><small>Days</small></span><span><strong id="countdownHours">—</strong><small>Hours</small></span><span><strong id="countdownMinutes">—</strong><small>Minutes</small></span></div>
+          <div class="econ-count-copy"><span class="econ-kicker" id="nextHighImpactLabel">Next high-impact</span><strong id="nextEventName">—</strong><div class="next-event-meta-row"><span class="econ-currency" id="nextEventFlag"></span><span class="impact-label" id="nextEventImpact"></span></div><small id="nextEventMeta">No live event data</small></div>
+          <div class="econ-clock" aria-label="Countdown to next high-impact event"><span><strong id="countdownDays">—</strong><small>Days</small></span><span><strong id="countdownHours">—</strong><small>Hours</small></span><span><strong id="countdownMinutes">—</strong><small>Minutes</small></span><span><strong id="countdownSeconds">—</strong><small>Seconds</small></span></div>
         </section>
         <div class="econ-toolbar">
           <button class="econ-filter-button" id="openCalendarFilters" type="button" aria-haspopup="dialog" aria-controls="calendarFilterSheet"><svg width="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 6h16M7 12h10m-7 6h4"/></svg><span>Filters</span><span class="econ-filter-count" id="calendarFilterCount" data-count="1">1</span></button>
@@ -3444,6 +3478,7 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
         <div><label for="tradeResult">Result</label><select id="tradeResult"><option value="">Open</option><option value="win">Win</option><option value="loss">Loss</option><option value="breakeven">Breakeven</option></select></div>
         <div><label for="tradeSetup">Setup</label><input id="tradeSetup" name="setup" type="text" placeholder="e.g. Breakout, Pullback" autocomplete="off"></div>
         <div><label for="tradeTag">Tag</label><input id="tradeTag" name="tag" type="text" placeholder="e.g. A+, FOMC" autocomplete="off"></div>
+        <div class="span-2"><label>Mistake (optional)</label><div class="mistake-chips" id="mistakeChips" role="group" aria-label="Mistake quick tags"><button class="mistake-chip" type="button" data-mistake="FOMO" aria-pressed="false">FOMO</button><button class="mistake-chip" type="button" data-mistake="Revenge trade" aria-pressed="false">Revenge trade</button><button class="mistake-chip" type="button" data-mistake="Early exit" aria-pressed="false">Early exit</button><button class="mistake-chip" type="button" data-mistake="Late entry" aria-pressed="false">Late entry</button><button class="mistake-chip" type="button" data-mistake="Oversized position" aria-pressed="false">Oversized position</button><button class="mistake-chip" type="button" data-mistake="Against plan" aria-pressed="false">Against plan</button></div></div>
         <div><label for="tradeRating">Rating (1-5)</label><select id="tradeRating"><option value="">—</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></div>
         <div><label for="tradeDate">Date</label><input id="tradeDate" name="date" type="datetime-local"></div>
         <div class="span-2"><label for="tradeNotes">Notes</label><textarea id="tradeNotes" name="notes" placeholder=""></textarea></div>
@@ -6863,6 +6898,7 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
   var titlesEn={landing:['Toolkit','Trade with a process'],matcher:['Tool 01','Prop firm matcher'],'all-firms':['Matcher','All firms'],journal:['Tool 02','Trading journal'],calculator:['Tool 03','Risk calculator'],calendar:['Tool 04','Economic Calendar'],lab:['Tool 05','Pro Lab'],discipline:['Parked','Discipline'],'discipline-soon':['Next version','Discipline'],notifications:['Inbox','Notifications'],profile:['Account','Profile'],settings:['Account','Settings'],certificate:['Account','Certificates'],methodology:['PIPVANT','Methodology'],support:['PIPVANT','Support'],about:['PIPVANT','About'],contact:['PIPVANT','Contact'],'firm-detail':['Matcher','Firm details']};
   var titlesAr={landing:['الأدوات','تداول وفق منهج'],matcher:['الأداة 01','مطابق شركات التداول'],'all-firms':['المطابق','جميع الشركات'],journal:['الأداة 02','سجل التداول'],calculator:['الأداة 03','حاسبة المخاطر'],calendar:['الأداة 04','التقويم الاقتصادي'],lab:['الأداة 05','مختبر المحترفين'],discipline:['متوقف مؤقتاً','الانضباط'],'discipline-soon':['الإصدار القادم','الانضباط'],notifications:['الوارد','الإشعارات'],profile:['الحساب','الملف الشخصي'],settings:['الحساب','الإعدادات'],certificate:['الحساب','الشهادات'],methodology:['PIPVANT','المنهجية'],support:['PIPVANT','الدعم'],about:['PIPVANT','حول'],contact:['PIPVANT','تواصل'],'firm-detail':['المطابق','تفاصيل الشركة']};
   var ar={
+    'Cost of mistakes':'تكلفة الأخطاء','Closed trades only — grouped by tag':'الصفقات المغلقة فقط — مجمعة حسب الوسم','BY TAG':'حسب الوسم','Tag trades with the mistake chips to see what they cost you':'وسّم صفقاتك برقائق الأخطاء لترى كم كلفتك','Mistake (optional)':'الخطأ (اختياري)','Revenge trade':'صفقة انتقامية','Early exit':'خروج مبكر','Late entry':'دخول متأخر','Oversized position':'حجم مفرط','Against plan':'ضد الخطة','Hide amounts':'إخفاء المبالغ','Seconds':'الثواني','Previous month':'الشهر السابق','Next month':'الشهر التالي',
     'True Cost Calculator':'حاسبة التكلفة الحقيقية','Pass Simulator':'محاكي اجتياز التحدي','Rule-change Radar':'رادار تغيير القواعد','Breach Guard':'حارس الاختراق','Trading DNA — find your match':'بصمة التداول — اعثر على ما يناسبك','▶ Run Simulation':'▶ تشغيل المحاكاة',
     'The sticker price lies. Commissions, resets and fees are the real price of a funded account.':'السعر المعلن مضلل. العمولات وإعادة التعيين والرسوم هي السعر الحقيقي للحساب الممول.',
     'Firms change rules silently. We track data freshness honestly — green means recently verified, red means it needs a re-check.':'الشركات تغير القواعد بصمت. نتتبع حداثة البيانات بنزاهة — الأخضر يعني تم التحقق حديثاً، والأحمر يعني يحتاج إعادة فحص.',
@@ -7428,16 +7464,20 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
   }
   function closeCalendarFilters(){if(calendarFilterSheet)calendarFilterSheet.classList.remove('open');}
   function closeCalendarEvent(){if(calendarEventSheet)calendarEventSheet.classList.remove('open');}
-  function clearCalendarFilters(){document.querySelectorAll('[data-calendar-impact],[data-calendar-currency]').forEach(function(button){button.setAttribute('aria-pressed','false');});refreshCalendarFilterCount();renderCalendar();}
+  function clearCalendarFilters(){document.querySelectorAll('[data-calendar-impact],[data-calendar-currency]').forEach(function(button){button.setAttribute('aria-pressed','false');});refreshCalendarFilterCount();pvSaveCalendarFilters();renderCalendar();}
   document.getElementById('openCalendarFilters').addEventListener('click',function(){calendarFilterSheet.classList.add('open');document.getElementById('closeCalendarFilters').focus();});
   document.getElementById('closeCalendarFilters').addEventListener('click',closeCalendarFilters);
   document.getElementById('applyCalendarFilters').addEventListener('click',function(){refreshCalendarFilterCount();renderCalendar();closeCalendarFilters();});
   document.getElementById('clearCalendarFilters').addEventListener('click',clearCalendarFilters);
   document.getElementById('clearCalendarFiltersInline').addEventListener('click',clearCalendarFilters);
   document.getElementById('closeCalendarEvent').addEventListener('click',closeCalendarEvent);
-  document.querySelectorAll('[data-calendar-impact],[data-calendar-currency]').forEach(function(button){button.addEventListener('click',function(){button.setAttribute('aria-pressed',String(button.getAttribute('aria-pressed')!=='true'));refreshCalendarFilterCount();});});
+  document.querySelectorAll('[data-calendar-impact],[data-calendar-currency]').forEach(function(button){button.addEventListener('click',function(){button.setAttribute('aria-pressed',String(button.getAttribute('aria-pressed')!=='true'));refreshCalendarFilterCount();pvSaveCalendarFilters();});});
   calendarFilterSheet.addEventListener('click',function(event){if(event.target===calendarFilterSheet)closeCalendarFilters();});
   calendarEventSheet.addEventListener('click',function(event){if(event.target===calendarEventSheet)closeCalendarEvent();});
+  /* P2: persist calendar impact/currency filter selections (localStorage) */
+  function pvSaveCalendarFilters(){try{var s={impact:selectedCalendarValues('[data-calendar-impact]','data-calendar-impact'),currency:selectedCalendarValues('[data-calendar-currency]','data-calendar-currency')};localStorage.setItem('pipvant_calendar_filters',JSON.stringify(s));}catch(e){}}
+  function pvRestoreCalendarFilters(){try{var raw=localStorage.getItem('pipvant_calendar_filters');if(!raw)return;var s=JSON.parse(raw);if(!s)return;document.querySelectorAll('[data-calendar-impact]').forEach(function(b){b.setAttribute('aria-pressed',String(!!(s.impact&&s.impact.indexOf(b.getAttribute('data-calendar-impact'))>-1)));});document.querySelectorAll('[data-calendar-currency]').forEach(function(b){b.setAttribute('aria-pressed',String(!!(s.currency&&s.currency.indexOf(b.getAttribute('data-calendar-currency'))>-1)));});}catch(e){}}
+  pvRestoreCalendarFilters();
   refreshCalendarTimezone();refreshCalendarFilterCount();renderCalendar();
 
   var directoryFilterSheet=document.getElementById('directoryFilterSheet');
@@ -9315,6 +9355,7 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
     document.getElementById('tradeResult').value=entry.result||'';
     document.getElementById('tradeSetup').value=entry.setup||'';
     document.getElementById('tradeTag').value=entry.tag||'';
+    if(typeof window.syncMistakeChips==='function')window.syncMistakeChips();
     document.getElementById('tradeRating').value=entry.rating||'';
     if(entry.timestamp){var d=new Date(entry.timestamp);var pad=function(n){return String(n).padStart(2,'0');};document.getElementById('tradeDate').value=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'T'+pad(d.getHours())+':'+pad(d.getMinutes());}
     document.getElementById('tradeNotes').value=entry.notes||'';
@@ -9514,7 +9555,7 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
       }
     }
     count.textContent=hasEntries?(tradeCount+(currentLanguage==='ar'?' إدخالات':(tradeCount===1?' ENTRY':' ENTRIES'))):(currentLanguage==='ar'?'0 صفقات':'0 TRADES');
-    updateJournalKPIs();updateJournalCalendar();updateJournalEquity();updateJournalScore();renderFacetOptions();updateProfileFromSession();if(typeof applyJournalViewMode==='function'&&(window.journalViewMode==='chart'||window.journalViewMode==='unified'))applyJournalViewMode();
+    updateJournalKPIs();updateJournalCalendar();updateMistakeCosts();updateJournalEquity();updateJournalScore();renderFacetOptions();updateProfileFromSession();if(typeof applyJournalViewMode==='function'&&(window.journalViewMode==='chart'||window.journalViewMode==='unified'))applyJournalViewMode();
   }
   /* Central refresh: after any trade save/load/delete, update EVERYTHING.
      Journal (list/KPIs/calendar/equity/score/facets) + profile (stats/missions/score/balance/recent). */
@@ -9908,58 +9949,183 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
       }catch(te){}
     }catch(e){}
   }
-  /* ---- Journal P&L calendar: real per-day trade data ---- */
+  /* ---- Journal P&L calendar (P2): dynamic month grid — prev/next month,
+     $/R toggle, hide-amounts privacy mode, day detail panel. Data source:
+     sessionJournalEntries only. Entry date = e.timestamp (sbLoadTradesQuery
+     maps it from trades.opened_at||created_at; entry objects do not carry
+     closed_at — a trade counts here when it has a finite pnl, i.e. closed). ---- */
+  var jcalState={y:null,m:null,mode:'$',hide:false};
+  function jcalParseR(e){var v=parseFloat(e&&e.rMultiple);return isFinite(v)?v:null;}
+  function jcalClosedTrades(){
+    var sel=(typeof selectedAccountId!=='undefined')?selectedAccountId:'all';
+    var isAll=!sel||sel==='all';
+    return sessionJournalEntries.filter(function(e){
+      if(e.type!=='trade'||e.pnl==null||!isFinite(Number(e.pnl)))return false;
+      if(!isAll&&e.account_id&&String(e.account_id)!==String(sel))return false;
+      return true;
+    });
+  }
   function updateJournalCalendar(){
     try{
-      var now=new Date(),curMonth=now.getMonth(),curYear=now.getFullYear();
-      var _calSel=(typeof selectedAccountId!=='undefined')?selectedAccountId:'all';
-      var _calIsAll=!_calSel||_calSel==='all';
-      var byDay={};
+      var grid=document.getElementById('jcalGrid');if(!grid)return;
+      var arL=currentLanguage==='ar';
+      var now=new Date();
+      if(jcalState.y===null){jcalState.y=now.getFullYear();jcalState.m=now.getMonth();}
+      var Y=jcalState.y,M=jcalState.m;
+      var monthNames=arL?['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر']:['January','February','March','April','May','June','July','August','September','October','November','December'];
+      var lbl=document.getElementById('jcalMonthLabel');if(lbl)lbl.textContent=(monthNames[M]+' '+Y).toUpperCase();
+      var byDay={},maxMoney=0,maxR=0;
+      jcalClosedTrades().forEach(function(e){
+        var d=new Date(e.timestamp||0);
+        if(d.getFullYear()!==Y||d.getMonth()!==M)return;
+        var day=d.getDate(),p=Number(e.pnl),r=jcalParseR(e);
+        if(!byDay[day])byDay[day]={pnl:0,rSum:0,rN:0,trades:0,wins:0,losses:0,bes:0};
+        var a=byDay[day];a.pnl+=p;a.trades++;if(p>0)a.wins++;else if(p<0)a.losses++;else a.bes++;
+        if(r!==null){a.rSum+=r;a.rN++;}
+      });
+      Object.keys(byDay).forEach(function(k){var a=byDay[k];if(Math.abs(a.pnl)>maxMoney)maxMoney=Math.abs(a.pnl);if(a.rN&&Math.abs(a.rSum)>maxR)maxR=Math.abs(a.rSum);});
+      var colorFor=function(v){return v>0?'var(--success)':(v<0?'var(--danger)':'var(--muted)');};
+      var fmtMoney=function(v){return (v>=0?'+':'−')+Math.abs(v).toFixed(2);};
+      var fmtR=function(v){return (v>=0?'+':'−')+Math.abs(v).toFixed(2)+'R';};
+      var firstDow=(new Date(Y,M,1).getDay()+6)%7; /* Monday-first, matches weekday header */
+      var daysInMonth=new Date(Y,M+1,0).getDate();
+      var rows=Math.ceil((firstDow+daysInMonth)/7),totalCells=rows*7;
+      var df=window.journalDayFilter||null;
+      grid.replaceChildren();
+      var weekAgg=[];
+      for(var i=0;i<totalCells;i++){
+        var wi=Math.floor(i/7);
+        if(!weekAgg[wi])weekAgg[wi]={pnl:0,rSum:0,rN:0,trades:0,wins:0,losses:0};
+        var dayNum=i-firstDow+1;
+        if(dayNum<1||dayNum>daysInMonth){
+          var blank=document.createElement('span');blank.className='day-cell blank';blank.setAttribute('aria-hidden','true');grid.appendChild(blank);continue;
+        }
+        var agg=byDay[dayNum];
+        var cell=document.createElement('button');cell.type='button';cell.className='day-cell';
+        cell.setAttribute('data-journal-day',String(dayNum));
+        cell.setAttribute('aria-label',(arL?'تصفية الصفقات حسب اليوم ':'Filter trades by day ')+dayNum);
+        if(Y===now.getFullYear()&&M===now.getMonth()&&dayNum===now.getDate())cell.classList.add('today');
+        if(df&&df.y===Y&&df.m===M&&df.d===dayNum)cell.classList.add('active');
+        var dSpan=document.createElement('span');dSpan.className='day-date';dSpan.textContent=String(dayNum);cell.appendChild(dSpan);
+        var s1=document.createElement('small'),s2=document.createElement('small');
+        if(agg){
+          cell.classList.add('has-data');
+          var w=weekAgg[wi];w.pnl+=agg.pnl;w.rSum+=agg.rSum;w.rN+=agg.rN;w.trades+=agg.trades;w.wins+=agg.wins;w.losses+=agg.losses;
+          var val=jcalState.mode==='R'?(agg.rN?agg.rSum:null):agg.pnl;
+          var maxAbs=jcalState.mode==='R'?maxR:maxMoney;
+          if(val!==null&&val!==0&&maxAbs>0){
+            var pct=8+Math.round(30*Math.min(1,Math.abs(val)/maxAbs));
+            cell.style.background='color-mix(in srgb,'+(val>0?'var(--success)':'var(--danger)')+' '+pct+'%,var(--surface))';
+          }
+          if(jcalState.hide&&jcalState.mode==='$'){
+            var dots=document.createElement('span');dots.className='wl-dots';
+            var addDots=function(n,cls){for(var di=0;di<Math.min(n,4);di++){var dt=document.createElement('i');dt.className='wl-dot '+cls;dots.appendChild(dt);}};
+            addDots(agg.wins,'win');addDots(agg.losses,'loss');addDots(agg.bes,'be');
+            s1.appendChild(dots);
+          }else if(jcalState.mode==='R'){
+            s1.textContent=agg.rN?fmtR(agg.rSum):'— R';s1.style.color=agg.rN?colorFor(agg.rSum):'';
+          }else{
+            s1.textContent=fmtMoney(agg.pnl);s1.style.color=colorFor(agg.pnl);
+          }
+          var wr=Math.round(agg.wins/agg.trades*100);
+          s2.textContent=agg.trades+(arL?' صفقات · ':' trades · ')+wr+' win%';
+        }else{
+          s1.textContent=jcalState.mode==='R'?'— R':'— P&L';
+          s2.textContent='— '+(arL?'صفقات':'trades')+' · — win%';
+        }
+        cell.appendChild(s1);cell.appendChild(s2);
+        grid.appendChild(cell);
+      }
+      var rail=document.getElementById('jcalWeekRail');
+      if(rail){
+        rail.replaceChildren();
+        for(var r2=0;r2<rows;r2++){
+          var wa=weekAgg[r2]||{pnl:0,rSum:0,rN:0,trades:0,wins:0,losses:0};
+          var wt=document.createElement('div');wt.className='week-total';
+          var wl=document.createElement('span');wl.textContent=(arL?'الأسبوع ':'Week ')+(r2+1);
+          var wv=document.createElement('strong');
+          if(!wa.trades){wv.textContent='—';}
+          else if(jcalState.hide&&jcalState.mode==='$'){wv.textContent=wa.wins+'W · '+wa.losses+'L';}
+          else if(jcalState.mode==='R'){wv.textContent=wa.rN?fmtR(wa.rSum):'—';wv.style.color=wa.rN?colorFor(wa.rSum):'';}
+          else{wv.textContent=fmtMoney(wa.pnl);wv.style.color=colorFor(wa.pnl);}
+          wt.appendChild(wl);wt.appendChild(wv);rail.appendChild(wt);
+        }
+      }
+      var empty=document.getElementById('jcalEmpty');
+      if(empty){
+        var hasAny=Object.keys(byDay).length>0;
+        empty.hidden=hasAny;
+        if(!hasAny)empty.textContent=arL?'لا توجد صفقات مغلقة في هذا الشهر':'No closed trades this month';
+      }
+      renderJcalDayPanel();
+    }catch(e){}
+  }
+  function renderJcalDayPanel(){
+    var panel=document.getElementById('jcalDayPanel');if(!panel)return;
+    var df=window.journalDayFilter||null;
+    if(!df||jcalState.y===null||df.y!==jcalState.y||df.m!==jcalState.m){panel.hidden=true;panel.replaceChildren();return;}
+    var arL=currentLanguage==='ar';
+    var dayTrades=jcalClosedTrades().filter(function(e){var d=new Date(e.timestamp||0);return d.getFullYear()===df.y&&d.getMonth()===df.m&&d.getDate()===df.d;});
+    panel.replaceChildren();
+    var h=document.createElement('h4');
+    h.textContent=(arL?'صفقات ':'Trades — ')+df.y+'-'+String(df.m+1).padStart(2,'0')+'-'+String(df.d).padStart(2,'0')+' ('+dayTrades.length+')';
+    panel.appendChild(h);
+    if(!dayTrades.length){
+      var p0=document.createElement('p');p0.className='mistake-empty';p0.textContent=arL?'لا توجد صفقات مغلقة في هذا اليوم':'No closed trades on this day';panel.appendChild(p0);panel.hidden=false;return;
+    }
+    dayTrades.forEach(function(e){
+      var row=document.createElement('div');row.className='jcal-day-row';
+      var left=document.createElement('strong');left.textContent=(e.pair||'—')+' · '+(e.direction||'—');
+      var right=document.createElement('span');
+      var r=jcalParseR(e);
+      var pnlTxt=(Number(e.pnl)>=0?'+$':'−$')+Math.abs(Number(e.pnl)).toFixed(2);
+      right.textContent=(jcalState.hide?'':pnlTxt+' · ')+(r!==null?((r>=0?'+':'−')+Math.abs(r).toFixed(2)+'R'):'— R');
+      right.style.color=Number(e.pnl)>0?'var(--success)':(Number(e.pnl)<0?'var(--danger)':'var(--muted)');
+      row.appendChild(left);row.appendChild(right);panel.appendChild(row);
+    });
+    panel.hidden=false;
+  }
+  /* ---- Cost of mistakes (P2): preset mistake tags + cost-by-tag breakdown ---- */
+  var MISTAKE_TAGS=['fomo','revenge trade','early exit','late entry','oversized position','against plan'];
+  function updateMistakeCosts(){
+    try{
+      var body=document.getElementById('mistakeCostBody');if(!body)return;
+      var arL=currentLanguage==='ar';
+      var byTag={},order=[],mTotal=0,mCount=0;
       sessionJournalEntries.forEach(function(e){
         if(e.type!=='trade'||e.pnl==null||!isFinite(Number(e.pnl)))return;
-        if(!_calIsAll&&e.account_id&&String(e.account_id)!==String(_calSel))return;
-        var d=new Date(e.timestamp||0);
-        if(d.getMonth()!==curMonth||d.getFullYear()!==curYear)return;
-        var day=d.getDate(),p=Number(e.pnl);
-        if(!byDay[day])byDay[day]={pnl:0,trades:0,wins:0};
-        byDay[day].pnl+=p;byDay[day].trades++;if(p>0)byDay[day].wins++;
+        var tag=String(e.tag||'').trim().replace(/^#+/,'');
+        if(!tag)return;
+        var key=tag.toLowerCase();
+        if(!byTag[key]){byTag[key]={label:tag,count:0,pnl:0};order.push(key);}
+        byTag[key].count++;byTag[key].pnl+=Number(e.pnl);
+        if(MISTAKE_TAGS.indexOf(key)>-1){mTotal+=Number(e.pnl);mCount++;}
       });
-      var colorFor=function(p){return p>0?'var(--success)':(p<0?'var(--danger)':'var(--muted)');};
-      document.querySelectorAll('[data-journal-day]').forEach(function(cell){
-        var day=parseInt(cell.getAttribute('data-journal-day'),10);
-        if(day===now.getDate())cell.classList.add('today');else cell.classList.remove('today');
-        var smalls=cell.querySelectorAll('small');
-        if(smalls.length<2)return;
-        var agg=byDay[day];
-        if(agg){
-          var pTxt=(agg.pnl>=0?'+':'−')+Math.abs(agg.pnl).toFixed(2);
-          smalls[0].textContent=pTxt;smalls[0].style.color=colorFor(agg.pnl);
-          var wr=Math.round(agg.wins/agg.trades*100);
-          smalls[1].textContent=agg.trades+(currentLanguage==='ar'?' صفقات · ':' trades · ')+wr+' win%';
-          cell.classList.add('has-data');
-        }else{
-          smalls[0].textContent='— P&L';smalls[0].style.color='';
-          smalls[1].textContent='— trades · — win%';
-          cell.classList.remove('has-data');
-        }
+      body.replaceChildren();
+      if(!order.length){
+        var p=document.createElement('p');p.className='mistake-empty';
+        p.textContent=arL?'وسّم صفقاتك برقائق الأخطاء لترى كم كلفتك':'Tag trades with the mistake chips to see what they cost you';
+        body.appendChild(p);return;
+      }
+      var total=document.createElement('p');total.className='mistake-total';
+      if(!mCount){total.textContent=arL?'لا توجد صفقات موسومة بأخطاء بعد':'No mistake-tagged trades yet';}
+      else if(mTotal<0){total.textContent=(arL?'كلفتك الأخطاء $':'Mistakes cost you $')+Math.abs(mTotal).toFixed(2)+' ('+mCount+(arL?' صفقات)':' trades)');total.style.color='var(--danger)';}
+      else{total.textContent=(arL?'صافي الصفقات الموسومة بالأخطاء: ':'Mistake-tagged trades netted: ')+(mTotal>=0?'+$':'−$')+Math.abs(mTotal).toFixed(2)+' ('+mCount+(arL?' صفقات)':' trades)');total.style.color=mTotal>0?'var(--success)':'var(--muted)';}
+      body.appendChild(total);
+      var table=document.createElement('table');table.className='mistake-table';
+      var thead=document.createElement('thead');var htr=document.createElement('tr');
+      [(arL?'الوسم':'Tag'),(arL?'الصفقات':'Trades'),(arL?'إجمالي الربح والخسارة':'Total P&L')].forEach(function(t){var th=document.createElement('th');th.textContent=t;htr.appendChild(th);});
+      thead.appendChild(htr);table.appendChild(thead);
+      var tbody=document.createElement('tbody');
+      order.sort(function(a,b){return byTag[a].pnl-byTag[b].pnl;}).forEach(function(key){
+        var tr=document.createElement('tr');
+        if(MISTAKE_TAGS.indexOf(key)>-1)tr.className='is-mistake';
+        var c1=document.createElement('td');c1.textContent=byTag[key].label;
+        var c2=document.createElement('td');c2.textContent=String(byTag[key].count);
+        var c3=document.createElement('td');var v=byTag[key].pnl;c3.textContent=(v>=0?'+$':'−$')+Math.abs(v).toFixed(2);c3.style.color=v>0?'var(--success)':(v<0?'var(--danger)':'var(--muted)');
+        tr.appendChild(c1);tr.appendChild(c2);tr.appendChild(c3);tbody.appendChild(tr);
       });
-      var weeks=[0,0,0,0,0],weekHas=[false,false,false,false,false];
-      Object.keys(byDay).forEach(function(k){
-        var wi=Math.min(4,Math.floor((parseInt(k,10)-1)/7));
-        weeks[wi]+=byDay[k].pnl;weekHas[wi]=true;
-      });
-      document.querySelectorAll('.week-total strong').forEach(function(el,i){
-        if(i>=weeks.length)return;
-        if(weekHas[i]){
-          el.textContent=(weeks[i]>=0?'+':'−')+Math.abs(weeks[i]).toFixed(2);
-          el.style.color=colorFor(weeks[i]);
-        }else{el.textContent='—';el.style.color='';}
-      });
-      var monthNames=['January','February','March','April','May','June','July','August','September','October','November','December'];
-      var mLabel=monthNames[curMonth]+' '+curYear;
-      document.querySelectorAll('.calendar-card .tiny').forEach(function(el){
-        if(/MONTH/i.test(el.textContent)||/—/.test(el.textContent))el.textContent=mLabel.toUpperCase();
-      });
+      table.appendChild(tbody);body.appendChild(table);
     }catch(e){}
   }
   /* Journal search handler — Mega-audit fix: 250ms debounce (was a full DOM
@@ -9971,6 +10137,7 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
     if(!window.editingTradeId){
       try{
         var _tf=document.getElementById('tradeForm');if(_tf)_tf.reset();
+        if(typeof window.syncMistakeChips==='function')window.syncMistakeChips();
         document.querySelectorAll('.chip[data-direction]').forEach(function(chip){chip.setAttribute('aria-pressed','false');});
       }catch(e){}
     }
@@ -10395,33 +10562,39 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
     try{
       var feed=document.getElementById('calendarFeedState');
       if(feed)feed.textContent=currentLanguage==='ar'?'البث المباشر ●':'LIVE FEED ●';
+      var arL=currentLanguage==='ar';
       var _nowTs=Date.now();
-      var high=calendarEvents.filter(function(e){return e.impact==='high'&&e._ts&&e._ts>_nowTs;});
-      if(!high.length){
-        // No upcoming high-impact: clear the banner honestly
+      var flags={USD:'🇺🇸',EUR:'🇪🇺',GBP:'🇬🇧',JPY:'🇯🇵',CAD:'🇨🇦',AUD:'🇦🇺',NZD:'🇳🇿',CHF:'🇨🇭',CNY:'🇨🇳'};
+      var pad=function(n){return String(n).padStart(2,'0');};
+      var setClock=function(dd,hh,mi,ss){
+        var a=document.getElementById('countdownDays');if(a)a.textContent=dd;
+        var b=document.getElementById('countdownHours');if(b)b.textContent=hh;
+        var c=document.getElementById('countdownMinutes');if(c)c.textContent=mi;
+        var d=document.getElementById('countdownSeconds');if(d)d.textContent=ss;
+      };
+      var future=calendarEvents.filter(function(e){return e._ts&&e._ts>_nowTs;});
+      future.sort(function(a,b){return a._ts-b._ts;});
+      if(!future.length){
         var nm0=document.getElementById('nextEventName');if(nm0)nm0.textContent='—';
-        var mm0=document.getElementById('nextEventMeta');if(mm0)mm0.textContent=currentLanguage==='ar'?'لا أحداث قادمة':'No upcoming events';
-        // H-2-cal fix: clear stale countdown (was showing old numbers).
-        var _cd=document.getElementById('countdownDays');if(_cd)_cd.textContent='—';
-        var _ch=document.getElementById('countdownHours');if(_ch)_ch.textContent='—';
-        var _cm=document.getElementById('countdownMinutes');if(_cm)_cm.textContent='—';
+        var mm0=document.getElementById('nextEventMeta');if(mm0)mm0.textContent=calendarEvents.length?(arL?'لا توجد أحداث قادمة':'No upcoming events'):(arL?'لا توجد أحداث محملة قادمة':'No upcoming events loaded');
+        var fl0=document.getElementById('nextEventFlag');if(fl0)fl0.textContent='';
+        var im0=document.getElementById('nextEventImpact');if(im0){im0.textContent='';im0.className='impact-label';}
+        setClock('—','—','—','—');
         return;
       }
-      // next high-impact = earliest FUTURE by timestamp
-      var next=high[0],nextTs=next._ts||0;
-      high.forEach(function(e){if(e._ts&&(!nextTs||e._ts<nextTs)){next=e;nextTs=e._ts;}});
-      var nm=document.getElementById('nextEventName');
-      if(nm)nm.textContent=next.name||'—';
+      /* Prefer the next high-impact event; fall back to the next event of any impact. */
+      var high=future.filter(function(e){return e.impact==='high';});
+      var next=high.length?high[0]:future[0];
+      var kick=document.getElementById('nextHighImpactLabel');
+      if(kick)kick.textContent=high.length?(arL?'الحدث عالي التأثير القادم':'Next high-impact'):(arL?'الحدث القادم':'Next event');
+      var nm=document.getElementById('nextEventName');if(nm)nm.textContent=next.name||'—';
+      var fl=document.getElementById('nextEventFlag');if(fl)fl.textContent=((flags[next.currency]||'')+' '+(next.currency||'')).trim();
+      var im=document.getElementById('nextEventImpact');if(im){im.textContent=(next.impact||'').toUpperCase();im.className='impact-label impact-'+(next.impact||'low');}
       var mm=document.getElementById('nextEventMeta');
-      // H-1-cal fix: use device timezone label (was hardcoded 'UTC').
-      if(mm)mm.textContent=(next.currency||'')+' · '+next.dayLabel+' '+next.time+' '+(typeof calendarTimezoneLabel==='function'?calendarTimezoneLabel():'');
-      if(nextTs){
-        var diff=Math.max(0,nextTs-Date.now());
-        var dd=Math.floor(diff/86400000),hh=Math.floor(diff%86400000/3600000),mi=Math.floor(diff%3600000/60000);
-        var cd=document.getElementById('countdownDays');if(cd)cd.textContent=String(dd);
-        var ch=document.getElementById('countdownHours');if(ch)ch.textContent=String(hh);
-        var cm=document.getElementById('countdownMinutes');if(cm)cm.textContent=String(mi);
-      }
+      if(mm)mm.textContent=(next.dayLabel||'')+' · '+(next.time||'—')+' '+(typeof calendarTimezoneLabel==='function'?calendarTimezoneLabel():'');
+      var diff=Math.max(0,(next._ts||0)-Date.now());
+      var dd=Math.floor(diff/86400000),hh=Math.floor(diff%86400000/3600000),mi=Math.floor(diff%3600000/60000),ss=Math.floor(diff%60000/1000);
+      setClock(String(dd),pad(hh),pad(mi),pad(ss));
     }catch(e){}
   }
   function sbLoadCalendar(){
@@ -10656,6 +10829,55 @@ html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
       els.forEach(function(el){if(typeof el._pw==='string')el.value=el._pw;});
       setTimeout(function(){els.forEach(function(el){if(typeof el._pw==='string')render(el);});},0);
     },true);
+  })();
+  /* ---- P2 wiring: mistake chips, journal calendar controls, 1s countdown ---- */
+  (function(){
+    if(jcalState.y===null){var _n0=new Date();jcalState.y=_n0.getFullYear();jcalState.m=_n0.getMonth();}
+    function syncMistakeChips(){
+      var input=document.getElementById('tradeTag');if(!input)return;
+      var cur=input.value.trim().toLowerCase();
+      document.querySelectorAll('#mistakeChips [data-mistake]').forEach(function(chip){
+        chip.setAttribute('aria-pressed',String(cur!==''&&chip.getAttribute('data-mistake').toLowerCase()===cur));
+      });
+    }
+    window.syncMistakeChips=syncMistakeChips;
+    document.querySelectorAll('#mistakeChips [data-mistake]').forEach(function(chip){
+      chip.addEventListener('click',function(){
+        var input=document.getElementById('tradeTag');if(!input)return;
+        var tag=chip.getAttribute('data-mistake');
+        input.value=(input.value.trim().toLowerCase()===tag.toLowerCase())?'':tag;
+        if(typeof updateFloatingField==='function')updateFloatingField(input);
+        syncMistakeChips();
+      });
+    });
+    var tagInput=document.getElementById('tradeTag');
+    if(tagInput)tagInput.addEventListener('input',syncMistakeChips);
+    /* Journal calendar: prev/next month, $/R toggle, hide amounts, day cells */
+    var prev=document.getElementById('jcalPrev'),next=document.getElementById('jcalNext');
+    if(prev)prev.addEventListener('click',function(){jcalState.m--;if(jcalState.m<0){jcalState.m=11;jcalState.y--;}updateJournalCalendar();});
+    if(next)next.addEventListener('click',function(){jcalState.m++;if(jcalState.m>11){jcalState.m=0;jcalState.y++;}updateJournalCalendar();});
+    var mM=document.getElementById('jcalModeMoney'),mR=document.getElementById('jcalModeR');
+    function setJcalMode(mode){jcalState.mode=mode;if(mM)mM.setAttribute('aria-pressed',String(mode==='$'));if(mR)mR.setAttribute('aria-pressed',String(mode==='R'));updateJournalCalendar();}
+    if(mM)mM.addEventListener('click',function(){setJcalMode('$');});
+    if(mR)mR.addEventListener('click',function(){setJcalMode('R');});
+    var hideBtn=document.getElementById('jcalHide');
+    if(hideBtn)hideBtn.addEventListener('click',function(){jcalState.hide=!jcalState.hide;hideBtn.setAttribute('aria-pressed',String(jcalState.hide));updateJournalCalendar();});
+    var grid=document.getElementById('jcalGrid');
+    if(grid)grid.addEventListener('click',function(ev){
+      var btn=ev.target&&ev.target.closest?ev.target.closest('[data-journal-day]'):null;if(!btn)return;
+      var d=parseInt(btn.getAttribute('data-journal-day'),10);if(!isFinite(d))return;
+      var chip=document.getElementById('dayFilterChip');
+      var cur=window.journalDayFilter;
+      if(cur&&cur.y===jcalState.y&&cur.m===jcalState.m&&cur.d===d){
+        window.journalDayFilter=null;if(chip){chip.textContent=(currentLanguage==='ar'?'اليوم —':'Day —');chip.classList.remove('show');}
+      }else{
+        window.journalDayFilter={y:jcalState.y,m:jcalState.m,d:d};
+        if(chip){chip.textContent=(currentLanguage==='ar'?'اليوم ':'Day ')+d;chip.classList.add('show');}
+      }
+      if(typeof renderJournalEntries==='function')renderJournalEntries();
+    });
+    /* Economic calendar hero: tick the countdown every second */
+    setInterval(function(){try{sbUpdateCalendarStatus();}catch(e){}},1000);
   })();
 })();
 </script>
