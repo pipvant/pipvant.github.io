@@ -9,6 +9,7 @@
   <meta name="theme-color" content="#0A1628">
   <!-- Mega-audit fix: set theme before first paint (prevents dark→light flash). -->
   <script>try{var _s=JSON.parse(localStorage.getItem('pipvant_settings')||'{}');var _t=_s&&_s.theme;if(_t==='light'||_t==='dark')document.documentElement.setAttribute('data-theme',_t);}catch(e){}</script>
+  <script>try{var _pool=['ninja','ronin','torii','dragon','kitsune','koi','cranes','sakura','lanterns','aurora','ocean','desert','wolf','eagle','orbit','rain','cinematic'];var _b=localStorage.getItem('pipvant_bgscene');if(!_b||(_pool.indexOf(_b)<0&&_b!=='classic'&&_b!=='auto'))_b='ninja';if(_b==='auto'){var _d=new Date();function _p(n){return String(n).padStart(2,'0');}var _s=_d.getFullYear()+'-'+_p(_d.getMonth()+1)+'-'+_p(_d.getDate());var _h=2166136261;for(var _i=0;_i<_s.length;_i++){_h^=_s.charCodeAt(_i);_h=Math.imul(_h,16777619);}_b=_pool[(_h>>>0)%_pool.length];}document.documentElement.setAttribute('data-bgscene',_b);var _vi=localStorage.getItem('pipvant_bgintensity');if(_vi!=='subtle'&&_vi!=='vivid')_vi='balanced';document.documentElement.setAttribute('data-bgintensity',_vi);}catch(e){document.documentElement.setAttribute('data-bgscene','ninja');document.documentElement.setAttribute('data-bgintensity','balanced');}</script>
   <link rel="icon" type="image/png" href="assets/pipvanta-logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1463,10 +1464,374 @@
       min-height:44px;min-width:44px;
     }
     .chart-toggle,.group-tabs button,.trade-view button,.range-btn,.sort-button{padding:10px 12px;}
+    /* ===== Background scenes (founder feature) — one fixed ambient layer
+       behind the app shell; original SVG silhouettes in the frozen brand
+       palette (navy #0A1628 base, gold #D4AF37 / blue #5B8DEF accents).
+       Zero layout impact: pointer-events none, content paints above. */
+    #bgsDefs{position:absolute;width:0;height:0;overflow:hidden}
+    #bgSceneLayer{position:fixed;inset:-14px;z-index:0;pointer-events:none;overflow:hidden;will-change:transform}
+    html[data-theme="light"] #bgSceneLayer{opacity:.26}
+    .bgs-art{display:none;width:100%;height:100%}
+    html[data-bgscene="ninja"] .bgs-art[data-scene="ninja"],
+    html[data-bgscene="ronin"] .bgs-art[data-scene="ronin"],
+    html[data-bgscene="torii"] .bgs-art[data-scene="torii"],
+    html[data-bgscene="dragon"] .bgs-art[data-scene="dragon"],
+    html[data-bgscene="kitsune"] .bgs-art[data-scene="kitsune"],
+    html[data-bgscene="koi"] .bgs-art[data-scene="koi"],
+    html[data-bgscene="cranes"] .bgs-art[data-scene="cranes"],
+    html[data-bgscene="sakura"] .bgs-art[data-scene="sakura"],
+    html[data-bgscene="lanterns"] .bgs-art[data-scene="lanterns"],
+    html[data-bgscene="aurora"] .bgs-art[data-scene="aurora"],
+    html[data-bgscene="ocean"] .bgs-art[data-scene="ocean"],
+    html[data-bgscene="desert"] .bgs-art[data-scene="desert"],
+    html[data-bgscene="wolf"] .bgs-art[data-scene="wolf"],
+    html[data-bgscene="eagle"] .bgs-art[data-scene="eagle"],
+    html[data-bgscene="orbit"] .bgs-art[data-scene="orbit"],
+    html[data-bgscene="rain"] .bgs-art[data-scene="rain"],
+    html[data-bgscene="cinematic"] .bgs-art[data-scene="cinematic"]{display:block}
+    html[data-bgscene="classic"] #bgSceneLayer{display:none}
+    body.bgs-paused #bgSceneLayer *,body.bgs-paused #bgsDefs *{animation-play-state:paused!important}
+    @media (prefers-reduced-motion:reduce){
+      #bgSceneLayer *,#bgsDefs *{animation:none!important}
+    }
+    /* Scene motion — slow, wide, majestic. Transform/opacity only. */
+    @keyframes bgsKDrift{from{transform:translateX(-34px)}to{transform:translateX(34px)}}
+    @keyframes bgsKDriftL{from{transform:translateX(-78px)}to{transform:translateX(78px)}}
+    @keyframes bgsKFog{from{transform:translateX(-52px)}to{transform:translateX(52px)}}
+    @keyframes bgsKFall{0%{transform:translate(0,-16px) rotate(0deg);opacity:0}9%{opacity:.85}88%{opacity:.85}100%{transform:translate(-96px,372px) rotate(320deg);opacity:0}}
+    @keyframes bgsKPetalWind{0%{transform:translate(0,0) rotate(0deg);opacity:0}10%{opacity:.8}90%{opacity:.8}100%{transform:translate(-320px,64px) rotate(260deg);opacity:0}}
+    @keyframes bgsKSway{from{transform:rotate(-2.4deg)}to{transform:rotate(2.4deg)}}
+    @keyframes bgsKSwaySoft{from{transform:rotate(-1.1deg)}to{transform:rotate(1.1deg)}}
+    @keyframes bgsKLeap{0%,30%{transform:translate(0,0)}36%{transform:translate(0,3px) scale(1,.93)}45%{transform:translate(167px,-108px) rotate(-7deg)}54%,76%{transform:translate(334px,0)}82%{transform:translate(334px,3px) scale(1,.93)}90%{transform:translate(167px,-108px) rotate(7deg)}97%,100%{transform:translate(0,0)}}
+    @keyframes bgsKWalk{from{transform:translateX(-220px)}to{transform:translateX(1660px)}}
+    @keyframes bgsKCaravan{from{transform:translateX(-360px)}to{transform:translateX(1560px)}}
+    @keyframes bgsKBob{from{transform:translateY(0)}to{transform:translateY(-4px)}}
+    @keyframes bgsKUndulate{from{transform:translateY(-13px)}to{transform:translateY(13px)}}
+    @keyframes bgsKTail{from{transform:rotate(-2.2deg)}to{transform:rotate(2.2deg)}}
+    @keyframes bgsKPulse{from{opacity:.5}to{opacity:1}}
+    @keyframes bgsKFirefly{0%{transform:translate(0,0);opacity:.15}50%{opacity:.95}100%{transform:translate(26px,-34px);opacity:.2}}
+    @keyframes bgsKSwimA{0%{transform:translate(0,0) rotate(0deg)}25%{transform:translate(88px,20px) rotate(7deg)}50%{transform:translate(30px,52px) rotate(1deg)}75%{transform:translate(-72px,26px) rotate(-7deg)}100%{transform:translate(0,0) rotate(0deg)}}
+    @keyframes bgsKSwimB{0%{transform:translate(0,0) rotate(0deg)}30%{transform:translate(-96px,-16px) rotate(-6deg)}55%{transform:translate(-30px,-48px) rotate(0deg)}80%{transform:translate(78px,-20px) rotate(6deg)}100%{transform:translate(0,0) rotate(0deg)}}
+    @keyframes bgsKRipple{0%{transform:scale(.35);opacity:.5}100%{transform:scale(1.7);opacity:0}}
+    @keyframes bgsKGlide{from{transform:translateX(-340px)}to{transform:translateX(1580px)}}
+    @keyframes bgsKFlapL{from{transform:rotate(3deg)}to{transform:rotate(-13deg)}}
+    @keyframes bgsKFlapR{from{transform:rotate(-3deg)}to{transform:rotate(13deg)}}
+    @keyframes bgsKRibbon{from{transform:translateY(-16px) skewX(-4deg)}to{transform:translateY(16px) skewX(4deg)}}
+    @keyframes bgsKRibbon2{from{transform:translateY(14px) skewX(3deg)}to{transform:translateY(-14px) skewX(-3deg)}}
+    @keyframes bgsKTwinkle{from{opacity:.14}to{opacity:.95}}
+    @keyframes bgsKWave{from{transform:translateX(-48px)}to{transform:translateX(48px)}}
+    @keyframes bgsKBreach{0%,52%{transform:translateY(64px) rotate(0deg)}66%{transform:translateY(4px) rotate(-4deg)}76%{transform:translateY(20px) rotate(2deg)}90%,100%{transform:translateY(64px) rotate(0deg)}}
+    @keyframes bgsKRays{from{transform:rotate(-2.2deg)}to{transform:rotate(2.2deg)}}
+    @keyframes bgsKHowl{0%,36%{transform:rotate(0deg)}54%,72%{transform:rotate(-23deg)}90%,100%{transform:rotate(0deg)}}
+    @keyframes bgsKSoar{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+    @keyframes bgsKBank{from{transform:rotate(-8deg)}to{transform:rotate(8deg)}}
+    @keyframes bgsKShoot{0%,64%{transform:translate(0,0);opacity:0}70%{transform:translate(-180px,116px);opacity:.95}76%,100%{transform:translate(-372px,238px);opacity:0}}
+    @keyframes bgsKBlobA{from{transform:translate(-46px,-20px) scale(1)}to{transform:translate(58px,30px) scale(1.14)}}
+    @keyframes bgsKBlobB{from{transform:translate(52px,24px) scale(1.1)}to{transform:translate(-48px,-26px) scale(.96)}}
+    @keyframes bgsKSand{0%{transform:translate(0,0);opacity:0}12%{opacity:.4}88%{opacity:.4}100%{transform:translate(-190px,26px);opacity:0}}
+    .bgs-drift{animation:bgsKDrift 26s ease-in-out infinite alternate}
+    .bgs-drift-l{animation:bgsKDriftL 48s ease-in-out infinite alternate}
+    .bgs-fog{animation:bgsKFog 34s ease-in-out infinite alternate}
+    .bgs-fall{animation:bgsKFall 17s linear infinite}
+    .bgs-petal-wind{animation:bgsKPetalWind 13s linear infinite}
+    .bgs-sway{transform-box:fill-box;transform-origin:50% 100%;animation:bgsKSway 7s ease-in-out infinite alternate}
+    .bgs-sway-soft{transform-box:fill-box;transform-origin:50% 100%;animation:bgsKSwaySoft 13s ease-in-out infinite alternate}
+    .bgs-leap{animation:bgsKLeap 30s ease-in-out infinite}
+    .bgs-walk{animation:bgsKWalk 100s linear infinite}
+    .bgs-caravan{animation:bgsKCaravan 150s linear infinite}
+    .bgs-bob{animation:bgsKBob 1.7s ease-in-out infinite alternate}
+    .bgs-bob2{animation:bgsKBob 8s ease-in-out infinite alternate}
+    .bgs-undulate{animation:bgsKUndulate 9s ease-in-out infinite alternate}
+    .bgs-tail{transform-box:fill-box;transform-origin:50% 100%;animation:bgsKTail 8s ease-in-out infinite alternate}
+    .bgs-pulse{animation:bgsKPulse 5s ease-in-out infinite alternate}
+    .bgs-firefly{animation:bgsKFirefly 8s ease-in-out infinite alternate}
+    .bgs-swim-a{animation:bgsKSwimA 30s ease-in-out infinite}
+    .bgs-swim-b{animation:bgsKSwimB 38s ease-in-out infinite}
+    .bgs-ripple{transform-box:fill-box;transform-origin:center;animation:bgsKRipple 7s ease-out infinite}
+    .bgs-glide{animation:bgsKGlide 105s linear infinite}
+    .bgs-flap-l{transform-box:fill-box;transform-origin:100% 90%;animation:bgsKFlapL 3.4s ease-in-out infinite alternate}
+    .bgs-flap-r{transform-box:fill-box;transform-origin:0% 90%;animation:bgsKFlapR 3.4s ease-in-out infinite alternate}
+    .bgs-ribbon{animation:bgsKRibbon 17s ease-in-out infinite alternate}
+    .bgs-ribbon2{animation:bgsKRibbon2 22s ease-in-out infinite alternate}
+    .bgs-twinkle{animation:bgsKTwinkle 4.2s ease-in-out infinite alternate}
+    .bgs-twinkle2{animation:bgsKTwinkle 6.4s ease-in-out infinite alternate-reverse}
+    .bgs-wave-a{animation:bgsKWave 13s ease-in-out infinite alternate}
+    .bgs-wave-b{animation:bgsKWave 18s ease-in-out infinite alternate-reverse}
+    .bgs-wave-c{animation:bgsKWave 24s ease-in-out infinite alternate}
+    .bgs-breach{animation:bgsKBreach 36s ease-in-out infinite}
+    .bgs-rays{transform-box:fill-box;transform-origin:50% 0%;animation:bgsKRays 19s ease-in-out infinite alternate}
+    .bgs-howl{transform-box:fill-box;transform-origin:18% 88%;animation:bgsKHowl 19s ease-in-out infinite}
+    .bgs-soar{transform-box:view-box;transform-origin:720px 400px;animation:bgsKSoar 85s linear infinite}
+    .bgs-bank{transform-box:fill-box;transform-origin:center;animation:bgsKBank 10s ease-in-out infinite alternate}
+    .bgs-shoot{animation:bgsKShoot 19s linear infinite}
+    .bgs-blob-a{animation:bgsKBlobA 30s ease-in-out infinite alternate}
+    .bgs-blob-b{animation:bgsKBlobB 38s ease-in-out infinite alternate}
+    .bgs-sand{animation:bgsKSand 10s linear infinite}
+    .bgs-ring{animation:bgsKPulse 8s ease-in-out infinite alternate}
+    /* Creative additions: lantern rise, rainfall, distant lightning */
+    @keyframes bgsKRise{0%{transform:translateY(40px);opacity:0}6%{opacity:1}90%{opacity:1}100%{transform:translateY(-980px);opacity:0}}
+    @keyframes bgsKFlick{from{opacity:.55}to{opacity:.95}}
+    @keyframes bgsKRainFall{from{transform:translate(0,0)}to{transform:translate(-128px,810px)}}
+    @keyframes bgsKRainFallB{from{transform:translate(0,0)}to{transform:translate(-96px,810px)}}
+    @keyframes bgsKLightning{0%,100%{opacity:0}3%{opacity:.12}6%{opacity:.02}9%{opacity:.09}14%,90%{opacity:0}}
+    .bgs-rise{animation:bgsKRise 64s linear infinite}
+    .bgs-flick{animation:bgsKFlick 3.4s ease-in-out infinite alternate}
+    .bgs-sway-c{transform-box:fill-box;transform-origin:center;animation:bgsKSwaySoft 9s ease-in-out infinite alternate}
+    .bgs-rainfall{animation:bgsKRainFall 2.9s linear infinite}
+    .bgs-rainfall-b{animation:bgsKRainFallB 4.4s linear infinite}
+    .bgs-lightning{animation:bgsKLightning 24s linear infinite}
+    /* Visibility intensity — balanced reproduces the tuned default look */
+    html[data-bgintensity="subtle"] .bgs-art{opacity:.55}
+    html[data-bgintensity="vivid"] .bgs-art{filter:saturate(1.12) brightness(1.05)}
+    /* Pointer parallax: far layer (stars) drifts against the scene layer */
+    .bgs-par{transform:translate(calc(var(--pvpx,0)*-.5px),calc(var(--pvpy,0)*-.5px))}
+    /* Settings background picker */
+    .bgs-picker{display:grid;gap:12px;margin-top:14px}
+    .bgs-group-label{margin:4px 0 0;font:600 10px/1 "IBM Plex Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+    .bgs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(126px,1fr));gap:10px}
+    .bgs-card{position:relative;display:grid;gap:7px;padding:8px;border:1px solid var(--line);border-radius:14px;background:var(--sunken);color:var(--text);cursor:pointer;text-align:start;font:inherit;transition:border-color var(--fast),box-shadow var(--fast)}
+    .bgs-card:hover{border-color:var(--line-strong)}
+    .bgs-card:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+    .bgs-card.is-selected{border-color:#D4AF37;box-shadow:0 0 0 1px #D4AF37,0 12px 28px rgba(0,0,0,.35)}
+    .bgs-thumb{display:block;border-radius:9px;overflow:hidden;aspect-ratio:16/9;background:#0A1628;border:1px solid rgba(255,255,255,.04)}
+    .bgs-thumb svg{width:100%;height:100%;display:block}
+    .bgs-name{font-size:12px;font-weight:600;padding:0 2px 2px}
+    .bgs-check{position:absolute;top:13px;inset-inline-end:13px;width:20px;height:20px;border-radius:50%;background:#D4AF37;color:#0A1628;display:none;place-items:center;box-shadow:0 4px 12px rgba(0,0,0,.4)}
+    .bgs-card.is-selected .bgs-check{display:grid}
+    .bgs-star{position:absolute;top:13px;inset-inline-start:13px;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:rgba(6,13,26,.55);color:#8FA8CC;z-index:2;cursor:pointer;transition:color var(--fast),background var(--fast)}
+    .bgs-star svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2;stroke-linejoin:round}
+    .bgs-star:hover{color:#D4AF37;background:rgba(6,13,26,.8)}
+    .bgs-star.is-fav{color:#D4AF37}
+    .bgs-star.is-fav svg{fill:#D4AF37}
+    .bgs-auto-grid{grid-template-columns:1fr}
+    .bgs-auto-thumb{background:radial-gradient(120% 170% at 16% 0%,rgba(91,141,239,.42),transparent 55%),radial-gradient(120% 170% at 84% 100%,rgba(212,175,55,.34),transparent 55%),#0A1628;display:grid;place-items:center;color:#D4AF37}
+    .bgs-auto-card .bgs-thumb{aspect-ratio:16/4}
+    .bgs-tools{display:flex;justify-content:flex-end}
+    .bgs-surprise{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 16px;border:1px solid rgba(212,175,55,.45);border-radius:999px;background:var(--sunken);color:#D4AF37;font:600 12px/1 Inter,sans-serif;cursor:pointer;transition:border-color var(--fast),background var(--fast),transform var(--fast)}
+    .bgs-surprise:hover{border-color:#D4AF37;background:rgba(212,175,55,.08)}
+    .bgs-surprise:active{transform:scale(.97)}
+    .bgs-surprise:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+    .bgs-control-row{margin-top:14px}
+
+
   </style>
 </head>
 <body class="auth-active auth-checking">
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="pv-i-note" viewBox="0 0 24 24"><path d="M6 3h12v18H6zM9 7h6" fill="none" stroke="currentColor" stroke-width="1.7"/></symbol><symbol id="pv-i-x" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol><symbol id="pv-i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol><symbol id="pv-i-ck16" viewBox="0 0 24 24"><path d="m5 12 4 4 10-10" fill="none" stroke="currentColor" stroke-width="2.4"/></symbol><symbol id="pv-i-ckb" viewBox="0 0 24 24"><path d="m5 13 4 4L19 7" fill="none" stroke="#5B8DEF" stroke-width="2.4"/></symbol></svg>
+
+<svg id="bgsDefs" aria-hidden="true" focusable="false"><defs>
+<radialGradient id="bgsGoldMoon" cx="42%" cy="40%" r="72%"><stop offset="0" stop-color="#F7E7B2"/><stop offset=".62" stop-color="#E4C566"/><stop offset="1" stop-color="#D4AF37"/></radialGradient>
+<radialGradient id="bgsGlowGold" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#D4AF37" stop-opacity=".5"/><stop offset="1" stop-color="#D4AF37" stop-opacity="0"/></radialGradient>
+<radialGradient id="bgsGlowBlue" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#5B8DEF" stop-opacity=".55"/><stop offset="1" stop-color="#5B8DEF" stop-opacity="0"/></radialGradient>
+<linearGradient id="bgsWater" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#10233F"/><stop offset=".55" stop-color="#0A1830"/><stop offset="1" stop-color="#060D1A"/></linearGradient>
+<linearGradient id="bgsAuroraB" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5B8DEF" stop-opacity="0"/><stop offset=".34" stop-color="#5B8DEF" stop-opacity=".6"/><stop offset=".68" stop-color="#D4AF37" stop-opacity=".34"/><stop offset="1" stop-color="#5B8DEF" stop-opacity="0"/></linearGradient>
+<g id="bgs-stars" fill="#C9D2DC"><circle cx="90" cy="80" r="2"/><circle cx="210" cy="150" r="1.4" opacity=".7"/><circle cx="330" cy="60" r="1.8"/><circle cx="470" cy="120" r="1.2" opacity=".6"/><circle cx="560" cy="70" r="2"/><circle cx="700" cy="140" r="1.3" opacity=".7"/><circle cx="820" cy="60" r="1.7"/><circle cx="950" cy="110" r="1.2" opacity=".6"/><circle cx="1080" cy="70" r="1.9"/><circle cx="1240" cy="150" r="1.3" opacity=".7"/><circle cx="1330" cy="80" r="1.6"/><circle cx="620" cy="205" r="1.1" opacity=".5"/><circle cx="150" cy="235" r="1.2" opacity=".5"/><circle cx="1290" cy="235" r="1.1" opacity=".5"/><circle cx="880" cy="215" r="1" opacity=".55"/><circle cx="260" cy="305" r="1" opacity=".45"/></g>
+<path id="bgs-petal" d="M0 0 Q8 -7 16 0 Q8 8 0 0Z" fill="#8FA8CC" opacity=".75"/>
+<g id="bgs-crane"><path class="bgs-flap-l" d="M-2 -2 Q-48 -30 -92 -18 Q-48 -4 -2 8Z" fill="#1B3257"/><path class="bgs-flap-r" d="M2 -2 Q48 -30 92 -18 Q48 -4 2 8Z" fill="#1B3257"/><path d="M-10 0 Q16 -6 40 0 L64 4 L40 8 L-8 8Z" fill="#16294A"/><path d="M38 -1 Q56 -5 68 -13" stroke="#16294A" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M-8 4 L-34 10 M-6 6 L-30 16" stroke="#16294A" stroke-width="3" stroke-linecap="round"/></g>
+<g id="bgs-koi-shape"><path d="M0 0 C28 -15 62 -13 84 0 C62 13 28 15 0 0Z"/><path d="M82 0 L110 -15 L110 15Z"/><path d="M28 -7 Q44 -15 58 -7 L50 -1 Q40 -6 32 -2Z"/></g>
+<g id="bgs-camel" fill="#03060C"><path d="M16 36 Q26 22 50 25 L57 16 Q63 8 74 14 L86 27 Q106 24 114 37 L112 49 Q72 60 30 52 Q14 48 16 36Z"/><path d="M29 50 L27 86 L33 86 L37 53Z M51 55 L51 86 L57 86 L59 55Z M83 55 L85 86 L91 86 L91 53Z M101 50 L105 86 L111 86 L109 48Z"/><path d="M17 38 Q7 46 9 60" stroke="#03060C" stroke-width="4" fill="none"/><circle cx="80" cy="13" r="5"/></g>
+<g id="bgs-lantern-shape"><ellipse class="bgs-flick" rx="31" ry="31" fill="url(#bgsGlowGold)"/><path d="M-13 -15 Q0 -21 13 -15 Q19 0 13 15 Q0 21 -13 15 Q-19 0 -13 -15Z" fill="#E4C566" opacity=".92"/><path d="M-13 -15 Q-6 0 -13 15 M13 -15 Q6 0 13 15 M0 -18 Q3 0 0 18" stroke="#B8912B" stroke-width="1.6" fill="none" opacity=".7"/><rect x="-6" y="-21" width="12" height="4.6" rx="1.6" fill="#0B1830"/><rect x="-5" y="17" width="10" height="4" rx="1.4" fill="#0B1830"/><path d="M0 21 v7" stroke="#D4AF37" stroke-width="2"/></g>
+<g id="bgs-rain-lines" stroke="#8FA8CC" stroke-width="2" stroke-linecap="round" opacity=".3"><line x1="73" y1="30" x2="60" y2="84"/><line x1="213" y1="120" x2="200" y2="174"/><line x1="353" y1="56" x2="340" y2="110"/><line x1="493" y1="190" x2="480" y2="244"/><line x1="633" y1="90" x2="620" y2="144"/><line x1="773" y1="230" x2="760" y2="284"/><line x1="913" y1="40" x2="900" y2="94"/><line x1="1053" y1="160" x2="1040" y2="214"/><line x1="1193" y1="70" x2="1180" y2="124"/><line x1="1333" y1="210" x2="1320" y2="264"/><line x1="143" y1="330" x2="130" y2="384"/><line x1="423" y1="360" x2="410" y2="414"/><line x1="703" y1="330" x2="690" y2="384"/><line x1="983" y1="350" x2="970" y2="404"/><line x1="1263" y1="330" x2="1250" y2="384"/><line x1="283" y1="520" x2="270" y2="574"/><line x1="563" y1="480" x2="550" y2="534"/><line x1="843" y1="540" x2="830" y2="594"/><line x1="1123" y1="500" x2="1110" y2="554"/><line x1="1363" y1="560" x2="1350" y2="614"/><line x1="93" y1="640" x2="80" y2="694"/><line x1="453" y1="660" x2="440" y2="714"/><line x1="733" y1="630" x2="720" y2="684"/><line x1="1013" y1="670" x2="1000" y2="724"/><line x1="1293" y1="640" x2="1280" y2="694"/></g>
+
+<symbol id="bgs-classic" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice"><rect width="1440" height="810" fill="#0A1628"/><ellipse cx="750" cy="-40" rx="760" ry="330" fill="url(#bgsGlowBlue)" opacity=".35"/></symbol>
+
+<symbol id="bgs-cinematic" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice"><g class="bgs-blob-a"><ellipse cx="370" cy="235" rx="430" ry="260" fill="url(#bgsGlowBlue)" opacity=".5"/></g><g class="bgs-blob-b"><ellipse cx="1130" cy="570" rx="470" ry="285" fill="url(#bgsGlowGold)" opacity=".42"/></g><g class="bgs-blob-a" style="animation-duration:44s"><ellipse cx="770" cy="110" rx="310" ry="150" fill="url(#bgsGlowBlue)" opacity=".34"/></g></symbol>
+
+<symbol id="bgs-ninja" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice">
+<use class="bgs-par" href="#bgs-stars" opacity=".5"/>
+<path d="M1206 62a84 84 0 1 0 58 158 66 66 0 1 1-58-158Z" fill="url(#bgsGoldMoon)"/>
+<path d="M0 810V668h150l24-30 24 30h180l30-38 30 38h210l24-30 24 30h190l30-40 30 40h200l24-30 24 30h250v142Z" fill="#0E1E38"/>
+<ellipse class="bgs-fog" cx="330" cy="716" rx="330" ry="26" fill="#5B8DEF" opacity=".05"/>
+<path d="M0 810V724h210l30-36 30 36h260l34-44 34 44h300l30-36 30 36h240l34-42 34 42h174v86Z" fill="#081426"/>
+<g transform="translate(520 592)"><g class="bgs-leap"><path d="M42 14 L14 2 L40 30Z" fill="#22385E"/><path d="M44 30 Q18 40 2 30 Q16 48 42 42Z" fill="#22385E"/><circle cx="52" cy="20" r="12" fill="#16294A"/><path d="M38 34 Q52 26 66 34 L76 66 L64 68 L54 50 L48 80 L34 80 L36 52 L28 66 L18 62 L30 40Z" fill="#16294A"/><path d="M64 38 L94 24 L96 30 L66 48Z" fill="#0B1830"/></g></g>
+<ellipse class="bgs-fog" cx="1090" cy="762" rx="360" ry="30" fill="#5B8DEF" opacity=".045" style="animation-duration:41s"/>
+<g transform="translate(1120 210)"><g class="bgs-fall"><use href="#bgs-petal"/></g></g>
+<g transform="translate(840 150)"><g class="bgs-fall" style="animation-duration:21s;animation-delay:-6s"><use href="#bgs-petal"/></g></g>
+<g transform="translate(1260 260)"><g class="bgs-fall" style="animation-duration:15s;animation-delay:-10s"><use href="#bgs-petal"/></g></g>
+</symbol>
+
+<symbol id="bgs-ronin" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice">
+<use class="bgs-par" href="#bgs-stars" opacity=".4"/>
+<circle cx="1180" cy="130" r="54" fill="url(#bgsGoldMoon)" opacity=".85"/>
+<path d="M0 810V700 Q360 640 760 690 T1440 676 V810Z" fill="#0E1E38"/>
+<path d="M0 810V742 Q480 716 960 738 T1440 730 V810Z" fill="#060D1A"/>
+<g class="bgs-sway" opacity=".9"><path d="M120 744 q4-20 10-30 M150 746 q-2-18 3-28 M700 748 q4-18 10-26 M742 750 q-3-16 2-26 M1180 742 q4-19 10-28 M1216 744 q-2-15 3-24" stroke="#1B3257" stroke-width="3" fill="none" stroke-linecap="round"/></g>
+<g class="bgs-walk"><g transform="translate(0 588)"><g class="bgs-bob"><path d="M6 36 Q60 2 114 36 Q60 48 6 36Z" fill="#122540"/><circle cx="60" cy="48" r="10" fill="#0B1830"/><path d="M42 60 Q60 50 78 60 L88 156 L72 156 L63 100 L57 156 L34 156Z" fill="#0D1B30"/><path d="M44 92 H78" stroke="#D4AF37" stroke-width="4" opacity=".35"/><path d="M76 88 L112 126 M44 92 L18 132" stroke="#050B16" stroke-width="5" stroke-linecap="round"/><path d="M42 64 Q26 84 30 104 L44 100Z" fill="#0D1B30"/></g></g></g>
+<g transform="translate(1330 300)"><g class="bgs-petal-wind"><use href="#bgs-petal"/></g></g>
+<g transform="translate(1200 380)"><g class="bgs-petal-wind" style="animation-duration:16s;animation-delay:-5s"><use href="#bgs-petal"/></g></g>
+<g transform="translate(1390 430)"><g class="bgs-petal-wind" style="animation-duration:19s;animation-delay:-9s"><use href="#bgs-petal"/></g></g>
+</symbol>
+
+<symbol id="bgs-torii" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice">
+<use class="bgs-par" href="#bgs-stars" opacity=".35"/>
+<circle cx="720" cy="116" r="176" fill="url(#bgsGlowGold)" opacity=".3"/>
+<circle cx="720" cy="116" r="86" fill="url(#bgsGoldMoon)" opacity=".55"/>
+<g class="bgs-drift-l"><ellipse cx="600" cy="238" rx="210" ry="30" fill="#0A1628" opacity=".5"/><ellipse cx="760" cy="252" rx="160" ry="24" fill="#0A1628" opacity=".45"/></g>
+<g class="bgs-drift-l" style="animation-duration:58s;animation-delay:-20s"><ellipse cx="860" cy="404" rx="190" ry="26" fill="#0A1628" opacity=".42"/></g>
+<path d="M0 810V660H1440V810Z" fill="#060D1A"/>
+<g transform="translate(720 808) scale(.4) translate(-720 -684)"><path d="M470 300 Q720 266 970 300 L956 332 Q720 300 484 332Z" fill="#050B16"/>
+<path d="M520 358 H920 V380 H520Z" fill="#050B16"/>
+<path d="M548 330 h34 V662 h-34Z M858 330 h34 V662 h-34Z M706 332 h28 V486 h-28Z" fill="#050B16"/>
+<path d="M600 662 H840 l14 22 H586Z" fill="#0B1830"/>
+<g transform="translate(675 534)"><path d="M28 14 Q14 18 12 32 Q24 30 30 22Z M62 14 Q76 18 78 32 Q66 30 60 22Z" fill="#16294A"/><circle cx="45" cy="16" r="15" fill="#16294A"/><path d="M45 0 a9 9 0 0 1 9-9" stroke="#D4AF37" stroke-width="3.4" fill="none" opacity=".85" transform="translate(0 4)"/><path d="M28 36 Q45 30 62 36 L68 76 L59 76 L57 62 L33 62 L31 76 L22 76Z" fill="#16294A"/><path d="M24 76 H66 L74 128 H55 L46 94 L37 128 H17Z" fill="#16294A"/><path d="M57 68 L86 94" stroke="#050B16" stroke-width="5" stroke-linecap="round"/></g></g>
+</symbol>
+
+<symbol id="bgs-dragon" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice">
+<use href="#bgs-stars" opacity=".3"/>
+<g class="bgs-drift-l"><path d="M-80 218 Q240 178 560 210 T1180 204 T1560 214 L1560 252 Q1180 240 820 250 T-80 256Z" fill="#0E1E38" opacity=".85"/></g>
+<g class="bgs-undulate">
+<path d="M-60 392 C220 306 420 478 690 408 C900 354 1120 300 1330 372" stroke="#1B3257" stroke-width="42" fill="none" stroke-linecap="round"/>
+<path d="M1330 372 C1400 398 1452 392 1510 344" stroke="#1B3257" stroke-width="22" fill="none" stroke-linecap="round"/>
+<path d="M300 356 l16-26 14 24 M560 424 l16-24 13 25 M880 368 l15-25 14 24" stroke="#22385E" stroke-width="7" fill="none" stroke-linejoin="round"/>
+<path d="M428 452 q6 22 -8 34 M438 456 q14 18 8 34" stroke="#16294A" stroke-width="8" fill="none" stroke-linecap="round"/>
+<path d="M952 386 q6 22 -8 34 M962 390 q14 18 8 34" stroke="#16294A" stroke-width="8" fill="none" stroke-linecap="round"/>
+<g transform="translate(-88 322)"><path d="M6 58 L44 30 L86 34 L104 56 L84 68 L92 88 L64 76 L44 92 L30 74 L8 78Z" fill="#1B3257"/><path d="M40 32 Q26 6 6 2 Q26 22 30 38Z" fill="#22385E"/><path d="M30 62 Q4 66 -14 58" stroke="#22385E" stroke-width="4" fill="none" stroke-linecap="round"/><circle cx="62" cy="52" r="4.4" fill="#D4AF37"/></g>
+<circle class="bgs-pulse" cx="46" cy="486" r="11" fill="url(#bgsGoldMoon)"/>
+</g>
+<g class="bgs-drift" style="animation-duration:38s"><path d="M-80 560 Q300 524 700 552 T1560 548 L1560 588 Q900 574 300 590 T-80 596Z" fill="#0E1E38" opacity=".8"/></g>
+<g class="bgs-drift-l" style="animation-duration:64s"><path d="M-80 668 Q360 640 820 664 T1560 660 L1560 696 Q900 684 260 698 T-80 702Z" fill="#0B1830" opacity=".85"/></g>
+</symbol>
+
+<symbol id="bgs-kitsune" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice">
+<use class="bgs-par" href="#bgs-stars" opacity=".4"/>
+<circle cx="1246" cy="120" r="40" fill="url(#bgsGoldMoon)" opacity=".7"/>
+<path d="M0 810V706 Q480 684 960 700 T1440 694 V810Z" fill="#060D1A"/>
+<g transform="translate(1182 724) scale(.8) translate(-1182 -724)"><g transform="translate(1052 470)"><path d="M20 8 Q130 -8 240 8 L232 26 Q130 12 28 26Z" fill="#050B16"/><path d="M44 44 h172 V60 H44Z" fill="#050B16"/><path d="M58 26 h20 V236 h-20Z M182 26 h20 V236 h-20Z M120 28 h16 V110 h-16Z" fill="#050B16"/><path d="M30 236 H230 l10 18 H20Z" fill="#0B1830"/></g></g>
+<g transform="translate(268 596)"><circle r="34" fill="url(#bgsGlowGold)" class="bgs-pulse"/><rect x="-9" y="-26" width="18" height="34" rx="4" fill="#0B1830"/><circle cy="-14" r="6" fill="#F5E2A0" class="bgs-pulse"/><path d="M0 8 V108" stroke="#050B16" stroke-width="7"/></g>
+<g transform="translate(836 640) scale(.8)"><circle r="34" fill="url(#bgsGlowGold)" class="bgs-pulse"/><rect x="-9" y="-26" width="18" height="34" rx="4" fill="#0B1830"/><circle cy="-14" r="6" fill="#F5E2A0" class="bgs-pulse"/><path d="M0 8 V76" stroke="#050B16" stroke-width="7"/></g>
+<g transform="translate(600 706)"><g class="bgs-tail"><path d="M-6 -6 C-30 -84 -84 -128 -142 -138 C-112 -84 -66 -40 -6 -6Z" fill="#16294A"/><path d="M0 -8 C-16 -96 -48 -152 -92 -180 C-56 -118 -24 -58 6 -8Z" fill="#1B3257"/><path d="M6 -10 C4 -104 22 -164 52 -196 C62 -122 44 -56 12 -8Z" fill="#16294A"/><path d="M12 -8 C34 -92 76 -140 122 -158 C102 -100 62 -48 18 -6Z" fill="#1B3257"/><path d="M16 -4 C52 -70 104 -102 152 -106 C118 -60 66 -24 20 0Z" fill="#16294A"/></g><path d="M-38 0 C-52 -44 -30 -84 6 -92 L44 -96 C70 -80 78 -44 66 -16 L74 0Z" fill="#1B3257"/><path d="M14 -92 L20 -128 L38 -102 L58 -126 L62 -90 Q38 -78 14 -92Z" fill="#1B3257"/><circle cx="34" cy="-96" r="17" fill="#1B3257"/><circle cx="27" cy="-99" r="2.4" fill="#D4AF37" opacity=".9"/><path d="M64 -20 q26 6 30 22 l-34 -4Z" fill="#16294A"/></g>
+<circle class="bgs-firefly" cx="620" cy="560" r="3" fill="#D4AF37"/>
+<circle class="bgs-firefly" cx="820" cy="620" r="2.4" fill="#D4AF37" style="animation-duration:10s;animation-delay:-3s"/>
+<circle class="bgs-firefly" cx="240" cy="480" r="2.6" fill="#D4AF37" style="animation-duration:9s;animation-delay:-5s"/>
+</symbol>
+
+<symbol id="bgs-koi" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice">
+<rect width="1440" height="810" fill="url(#bgsWater)"/>
+<g class="bgs-rays" opacity=".8"><path d="M300 -20 L430 -20 L300 810 L120 810Z" fill="#5B8DEF" opacity=".05"/><path d="M620 -20 L700 -20 L640 810 L520 810Z" fill="#5B8DEF" opacity=".04"/></g>
+<g transform="translate(392 128)"><circle class="bgs-ripple" r="46" fill="none" stroke="#5B8DEF" stroke-width="2"/></g>
+<g transform="translate(1050 96)"><circle class="bgs-ripple" r="34" fill="none" stroke="#5B8DEF" stroke-width="2" style="animation-delay:-3.4s"/></g>
+<g transform="translate(320 300) scale(1.6)"><g class="bgs-swim-a"><use href="#bgs-koi-shape" fill="#1E3A5F"/></g></g>
+<g transform="translate(1010 470) scale(-1.25 1.25)"><g class="bgs-swim-b"><use href="#bgs-koi-shape" fill="#22385E"/></g></g>
+<g transform="translate(660 606) scale(1.05)"><g class="bgs-swim-a" style="animation-duration:36s"><use href="#bgs-koi-shape" fill="#D4AF37" opacity=".42"/></g></g>
+</symbol>
+
+<symbol id="bgs-cranes" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice">
+<use class="bgs-par" href="#bgs-stars" opacity=".35"/>
+<circle cx="210" cy="128" r="44" fill="url(#bgsGoldMoon)" opacity=".8"/>
+<path d="M0 810V706 L260 652 L520 712 L820 640 L1100 706 L1440 656 V810Z" fill="#0B1830"/>
+<path d="M0 810V748 L330 700 L700 752 L1060 706 L1440 750 V810Z" fill="#060D1A"/>
+<g class="bgs-glide"><g class="bgs-bob2"><use href="#bgs-crane" transform="translate(60 210) scale(1.5)"/><use href="#bgs-crane" transform="translate(180 268) scale(1.15)"/><use href="#bgs-crane" transform="translate(-30 292) scale(1.05)"/><use href="#bgs-crane" transform="translate(286 330) scale(.85)"/><use href="#bgs-crane" transform="translate(96 356) scale(.7)"/></g></g>
+</symbol>
+
+<symbol id="bgs-sakura" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice">
+<use href="#bgs-stars" opacity=".35"/>
+<circle cx="330" cy="140" r="52" fill="url(#bgsGoldMoon)" opacity=".65"/>
+<path d="M0 810V752 Q500 730 1000 746 T1440 742 V810Z" fill="#060D1A"/>
+<g transform="translate(-140 -56)"><path d="M1168 810 C1176 700 1170 620 1130 540 C1106 492 1064 452 1006 428 L1022 402 C1096 434 1152 486 1186 552 C1206 500 1200 420 1160 340 L1188 326 C1232 420 1238 512 1218 590 C1240 660 1246 736 1242 810Z" fill="#081426"/>
+<g class="bgs-sway-soft"><circle cx="1150" cy="300" r="150" fill="#122540"/><circle cx="1006" cy="356" r="104" fill="#101F3A"/><circle cx="1300" cy="330" r="118" fill="#122540"/><circle cx="1216" cy="216" r="102" fill="#16294A" opacity=".85"/><circle cx="1064" cy="238" r="78" fill="#16294A" opacity=".8"/></g></g>
+<g transform="translate(560 618)"><circle cx="34" cy="14" r="12" fill="#1B3257"/><circle cx="34" cy="0" r="4.6" fill="#1B3257"/><path d="M20 28 Q34 22 48 28 L56 74 L47 74 L44 58 L24 58 L22 74 L13 74Z" fill="#1B3257"/><path d="M18 74 H50 L58 132 H40 L33 96 L27 132 H10Z" fill="#16294A"/><path d="M46 62 L64 116" stroke="#050B16" stroke-width="4.6" stroke-linecap="round"/></g>
+<g transform="translate(950 300)"><g class="bgs-fall" style="animation-duration:15s"><use href="#bgs-petal"/></g></g>
+<g transform="translate(1060 250)"><g class="bgs-fall" style="animation-duration:19s;animation-delay:-4s"><use href="#bgs-petal"/></g></g>
+<g transform="translate(880 330)"><g class="bgs-fall" style="animation-duration:22s;animation-delay:-8s"><use href="#bgs-petal"/></g></g>
+<g transform="translate(1140 330)"><g class="bgs-fall" style="animation-duration:13s;animation-delay:-2s"><use href="#bgs-petal"/></g></g>
+<g transform="translate(1010 380)"><g class="bgs-fall" style="animation-duration:18s;animation-delay:-12s"><use href="#bgs-petal"/></g></g>
+<g transform="translate(800 260)"><g class="bgs-fall" style="animation-duration:24s;animation-delay:-15s"><use href="#bgs-petal"/></g></g>
+</symbol>
+
+<symbol id="bgs-lanterns" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice">
+<use class="bgs-par" href="#bgs-stars" opacity=".45"/>
+<circle cx="1306" cy="96" r="26" fill="url(#bgsGoldMoon)" opacity=".45"/>
+<path d="M0 810V700h150l24-30 24 30h180l30-38 30 38h210l24-30 24 30h190l30-40 30 40h200l24-30 24 30h250v110Z" fill="#0E1E38"/>
+<path d="M0 810V756h210l30-36 30 36h260l34-44 34 44h300l30-36 30 36h240l34-42 34 42h174v54Z" fill="#081426"/>
+<g transform="translate(170 856) scale(.7)"><g class="bgs-rise" style="animation-duration:64s;animation-delay:-12s"><g class="bgs-sway-c"><use href="#bgs-lantern-shape"/></g></g></g>
+<g transform="translate(330 856) scale(.55)"><g class="bgs-rise" style="animation-duration:74s;animation-delay:-40s"><g class="bgs-sway-c" style="animation-duration:11s"><use href="#bgs-lantern-shape"/></g></g></g>
+<g transform="translate(470 856) scale(.85)"><g class="bgs-rise" style="animation-duration:58s;animation-delay:-26s"><g class="bgs-sway-c" style="animation-duration:8s"><use href="#bgs-lantern-shape"/></g></g></g>
+<g transform="translate(585 856) scale(1.05)"><g class="bgs-rise" style="animation-duration:66s;animation-delay:-6s"><g class="bgs-sway-c" style="animation-duration:10s"><use href="#bgs-lantern-shape"/></g></g></g>
+<g transform="translate(665 856) scale(.6)"><g class="bgs-rise" style="animation-duration:78s;animation-delay:-52s"><g class="bgs-sway-c"><use href="#bgs-lantern-shape"/></g></g></g>
+<g transform="translate(745 856) scale(1.15)"><g class="bgs-rise" style="animation-duration:60s;animation-delay:-34s"><g class="bgs-sway-c" style="animation-duration:7.5s"><use href="#bgs-lantern-shape"/></g></g></g>
+<g transform="translate(835 856) scale(.75)"><g class="bgs-rise" style="animation-duration:70s;animation-delay:-18s"><g class="bgs-sway-c" style="animation-duration:9.5s"><use href="#bgs-lantern-shape"/></g></g></g>
+<g transform="translate(950 856) scale(.6)"><g class="bgs-rise" style="animation-duration:80s;animation-delay:-60s"><g class="bgs-sway-c" style="animation-duration:11.5s"><use href="#bgs-lantern-shape"/></g></g></g>
+<g transform="translate(1105 856) scale(.9)"><g class="bgs-rise" style="animation-duration:62s;animation-delay:-44s"><g class="bgs-sway-c" style="animation-duration:8.5s"><use href="#bgs-lantern-shape"/></g></g></g>
+<g transform="translate(1285 856) scale(.7)"><g class="bgs-rise" style="animation-duration:72s;animation-delay:-22s"><g class="bgs-sway-c" style="animation-duration:10.5s"><use href="#bgs-lantern-shape"/></g></g></g>
+</symbol>
+
+<symbol id="bgs-aurora" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice">
+<g class="bgs-twinkle"><use class="bgs-par" href="#bgs-stars" opacity=".85"/></g>
+<g class="bgs-twinkle2"><use href="#bgs-stars" opacity=".5" transform="translate(36 18) scale(.97)"/></g>
+<g class="bgs-ribbon"><path d="M-60 200 C300 110 620 262 980 168 C1180 118 1360 128 1500 182 L1500 306 C1120 240 760 366 380 282 C180 238 40 292 -60 322Z" fill="url(#bgsAuroraB)" opacity=".5"/></g>
+<g class="bgs-ribbon2"><path d="M-60 300 C340 224 700 348 1060 268 C1240 228 1400 240 1500 282 L1500 380 C1140 322 780 430 420 360 C200 318 60 360 -60 392Z" fill="url(#bgsAuroraB)" opacity=".3"/></g>
+<path d="M0 810V620 L180 556 L330 606 L520 540 L700 602 L900 548 L1090 606 L1260 560 L1440 612 V810Z" fill="#0B1830"/>
+<path d="M0 810V692 L220 640 L430 686 L680 632 L930 688 L1150 644 L1440 690 V810Z" fill="#060D1A"/>
+<path d="M120 692 l12-34 12 34 M138 692 l9-24 9 24 M1150 690 l12-32 12 32 M1240 694 l9-22 9 22" stroke="#060D1A" stroke-width="6" fill="none"/>
+</symbol>
+
+<symbol id="bgs-ocean" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice">
+<use class="bgs-par" href="#bgs-stars" opacity=".3"/>
+<circle cx="1210" cy="110" r="42" fill="url(#bgsGoldMoon)" opacity=".6"/>
+<g class="bgs-rays"><path d="M180 -20 L300 -20 L560 560 L380 560Z" fill="#5B8DEF" opacity=".05"/><path d="M420 -20 L490 -20 L760 560 L620 560Z" fill="#5B8DEF" opacity=".04"/></g>
+<g class="bgs-wave-a"><path d="M-60 486 Q60 452 180 486 T420 486 T660 486 T900 486 T1140 486 T1380 486 T1560 486 V810 H-60Z" fill="#0C1D38"/></g>
+<g transform="translate(400 512)"><g class="bgs-breach"><path d="M0 44 Q64 -8 156 -2 L202 -30 L194 6 L222 22 L188 32 Q92 62 0 44Z" fill="#0E1E38"/><path d="M60 34 q10 16 30 18 l-8-20Z" fill="#0E1E38"/></g></g>
+<g class="bgs-wave-b"><path d="M-60 576 Q60 544 180 576 T420 576 T660 576 T900 576 T1140 576 T1380 576 T1560 576 V810 H-60Z" fill="#081426"/></g>
+<g class="bgs-wave-c"><path d="M-60 676 Q60 646 180 676 T420 676 T660 676 T900 676 T1140 676 T1380 676 T1560 676 V810 H-60Z" fill="#050B16"/></g>
+</symbol>
+
+<symbol id="bgs-desert" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice">
+<circle cx="770" cy="116" r="178" fill="url(#bgsGlowGold)" opacity=".35"/>
+<circle cx="770" cy="116" r="84" fill="url(#bgsGoldMoon)" opacity=".6"/>
+<path d="M0 810V560 Q420 500 820 556 T1440 540 V810Z" fill="#122540"/>
+<path d="M0 810V640 Q380 590 780 636 T1440 624 V810Z" fill="#0E1E38"/>
+<path d="M0 810V724 Q300 700 560 716 Q640 722 780 714 T1440 720 V810Z" fill="#0A1730"/>
+<g class="bgs-caravan"><g transform="translate(0 632)"><use href="#bgs-camel"/><use href="#bgs-camel" transform="translate(172 8) scale(.86)"/><use href="#bgs-camel" transform="translate(330 4) scale(.94)"/><path d="M486 40 q10-16 20 0 l2 30 h-6 l-3-20 -3 20 h-6Z" fill="#03060C"/><path d="M496 22 a6 6 0 1 1 .01 0" fill="#03060C"/></g></g>
+<circle class="bgs-sand" cx="900" cy="700" r="2.2" fill="#D4AF37"/>
+<circle class="bgs-sand" cx="1120" cy="742" r="1.7" fill="#D4AF37" style="animation-delay:-3s"/>
+<circle class="bgs-sand" cx="640" cy="756" r="1.9" fill="#D4AF37" style="animation-delay:-6s"/>
+<circle class="bgs-sand" cx="1260" cy="706" r="1.5" fill="#D4AF37" style="animation-delay:-1.6s"/>
+<circle class="bgs-sand" cx="420" cy="742" r="1.6" fill="#D4AF37" style="animation-delay:-8s"/>
+</symbol>
+
+<symbol id="bgs-wolf" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice">
+<g class="bgs-twinkle"><use class="bgs-par" href="#bgs-stars" opacity=".7"/></g>
+<circle cx="812" cy="122" r="182" fill="url(#bgsGlowGold)" opacity=".3"/>
+<circle cx="812" cy="122" r="90" fill="url(#bgsGoldMoon)" opacity=".55"/>
+<path d="M0 810V660 Q300 620 560 652 L700 810Z" fill="#0B1830"/>
+<g transform="translate(0 118)"><path d="M560 810 L648 566 L718 528 L830 540 L1440 586 V810Z" fill="#081426"/></g>
+<ellipse class="bgs-fog" cx="420" cy="730" rx="330" ry="24" fill="#5B8DEF" opacity=".05"/>
+<g transform="translate(672 560)"><path d="M8 30 Q-8 22 -12 4 Q4 6 16 18Z" fill="#1E3A5F"/><path d="M10 26 Q42 13 80 20 L88 31 L86 53 L73 53 L69 35 L31 37 L25 53 L12 53 L8 37Z" fill="#1E3A5F"/><path d="M71 51 L73 94 L80 94 L82 52Z M15 51 L13 94 L20 94 L27 53Z" fill="#1E3A5F"/><g class="bgs-howl"><path d="M78 30 L94 12 L99 21 L112 15 L105 28 L119 35 L104 40 L90 41 L80 39Z" fill="#1E3A5F"/><path d="M91 14 L93 3 L100 12Z" fill="#1E3A5F"/></g></g>
+</symbol>
+
+<symbol id="bgs-eagle" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice">
+<use class="bgs-par" href="#bgs-stars" opacity=".3"/>
+<circle cx="196" cy="120" r="40" fill="url(#bgsGoldMoon)" opacity=".75"/>
+<g class="bgs-drift-l"><ellipse cx="420" cy="300" rx="230" ry="30" fill="#0E1E38" opacity=".7"/><ellipse cx="1080" cy="210" rx="190" ry="24" fill="#0E1E38" opacity=".6"/></g>
+<path d="M0 810V640 L200 566 L360 630 L560 552 L760 636 L980 560 L1180 632 L1440 574 V810Z" fill="#0B1830"/>
+<path d="M0 810V716 L260 656 L520 712 L820 652 L1100 710 L1440 664 V810Z" fill="#060D1A"/>
+<g class="bgs-soar"><g transform="translate(720 148)"><g class="bgs-bank"><path d="M-118 8 Q-60 -22 0 -9 Q60 -22 118 8 Q60 19 0 12 Q-60 19 -118 8Z" fill="#16294A"/><path d="M-8 0 Q0 -12 10 -2 L22 2 L10 7 L-6 8Z" fill="#1B3257"/><path d="M-4 10 L-16 24 L0 20 L14 24 L4 10Z" fill="#16294A"/></g></g></g>
+</symbol>
+
+<symbol id="bgs-orbit" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice">
+<g class="bgs-twinkle"><use class="bgs-par" href="#bgs-stars" opacity=".9"/></g>
+<g class="bgs-twinkle2"><use href="#bgs-stars" opacity=".55" transform="translate(-42 26) scale(1.03)"/></g>
+<circle cx="560" cy="190" r="54" fill="#0D1B30"/><circle cx="560" cy="190" r="54" fill="url(#bgsGlowBlue)" opacity=".35"/><circle cx="542" cy="174" r="9" fill="#122540"/><circle cx="578" cy="206" r="6" fill="#122540"/>
+<g transform="translate(1332 36) scale(.62) translate(-1296 -706)"><ellipse class="bgs-ring" cx="1296" cy="706" rx="438" ry="98" fill="none" stroke="#D4AF37" stroke-width="9" opacity=".22" transform="rotate(-14 1296 706)"/>
+<circle cx="1296" cy="706" r="298" fill="#0C1C36"/>
+<path d="M1010 640 Q1150 596 1296 640 T1580 636" stroke="#1B3257" stroke-width="16" fill="none" opacity=".8"/>
+<path d="M1030 742 Q1180 700 1330 740" stroke="#16294A" stroke-width="12" fill="none" opacity=".8"/>
+<path class="bgs-ring" d="M918 752 A438 98 -14 0 0 1674 660" fill="none" stroke="#D4AF37" stroke-width="9" opacity=".5"/></g>
+<g transform="translate(1010 128)"><g class="bgs-shoot" opacity="0"><path d="M0 0 L66 -42" stroke="#E9E2CC" stroke-width="3" stroke-linecap="round"/><circle r="3.4" fill="#FFF6D8"/></g></g>
+</symbol>
+
+<symbol id="bgs-rain" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice">
+<use class="bgs-par" href="#bgs-stars" opacity=".22"/>
+<ellipse class="bgs-lightning" cx="1060" cy="40" rx="580" ry="250" fill="url(#bgsGlowBlue)"/>
+<g class="bgs-drift-l"><ellipse cx="240" cy="6" rx="330" ry="58" fill="#060D1A" opacity=".85"/><ellipse cx="760" cy="-8" rx="380" ry="64" fill="#060D1A" opacity=".9"/><ellipse cx="1300" cy="10" rx="320" ry="54" fill="#060D1A" opacity=".85"/></g>
+<g fill="#0E1E38"><rect x="30" y="668" width="90" height="142"/><rect x="140" y="700" width="70" height="110"/><rect x="230" y="648" width="110" height="162"/><rect x="360" y="706" width="80" height="104"/><rect x="470" y="676" width="95" height="134"/><rect x="585" y="716" width="75" height="94"/><rect x="690" y="658" width="105" height="152"/><rect x="820" y="700" width="85" height="110"/><rect x="930" y="672" width="100" height="138"/><rect x="1055" y="710" width="80" height="100"/><rect x="1160" y="664" width="95" height="146"/><rect x="1280" y="696" width="130" height="114"/></g>
+<g fill="#D4AF37"><rect x="58" y="690" width="6" height="8" opacity=".4"/><rect x="86" y="724" width="6" height="8" opacity=".25"/><rect x="262" y="676" width="6" height="8" opacity=".5"/><rect x="300" y="716" width="6" height="8" opacity=".3"/><rect x="500" y="700" width="6" height="8" opacity=".45"/><rect x="716" y="690" width="6" height="8" opacity=".35"/><rect x="756" y="724" width="6" height="8" opacity=".55"/><rect x="958" y="700" width="6" height="8" opacity=".3"/><rect x="990" y="736" width="6" height="8" opacity=".45"/><rect x="1188" y="692" width="6" height="8" opacity=".4"/><rect x="1316" y="724" width="6" height="8" opacity=".3"/><rect class="bgs-flick" x="262" y="760" width="6" height="8" opacity=".5"/></g>
+<g fill="#060D1A"><rect x="0" y="724" width="120" height="86"/><rect x="180" y="748" width="95" height="62"/><rect x="420" y="716" width="120" height="94"/><rect x="640" y="756" width="90" height="54"/><rect x="880" y="728" width="130" height="82"/><rect x="1120" y="752" width="100" height="58"/><rect x="1300" y="720" width="140" height="90"/></g>
+<g fill="#D4AF37"><rect x="36" y="748" width="6" height="8" opacity=".5"/><rect x="70" y="776" width="6" height="8" opacity=".3"/><rect x="452" y="744" width="6" height="8" opacity=".4"/><rect x="486" y="772" width="6" height="8" opacity=".55"/><rect x="916" y="756" width="6" height="8" opacity=".35"/><rect x="950" y="782" width="6" height="8" opacity=".45"/><rect x="1150" y="778" width="6" height="8" opacity=".3"/><rect x="1340" y="748" width="6" height="8" opacity=".5"/></g>
+<g class="bgs-rainfall"><use href="#bgs-rain-lines"/><use href="#bgs-rain-lines" transform="translate(128 -810)"/></g>
+<g class="bgs-rainfall-b" opacity=".55"><use href="#bgs-rain-lines" transform="translate(430 0)"/><use href="#bgs-rain-lines" transform="translate(526 -810)"/></g>
+</symbol>
+</defs></svg>
 
 <!-- Mega-audit a11y: skip link (was missing). -->
 <a href="#app" class="skip-link" data-i18n="Skip to main content">Skip to main content</a>
@@ -2657,6 +3022,8 @@ html[dir="rtl"] .jump-row{text-align:right}
 </section>
 
 <div class="app">
+
+  <div id="bgSceneLayer" aria-hidden="true"><svg class="bgs-art" data-scene="ninja" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice"><use href="#bgs-ninja" width="1440" height="810"/></svg><svg class="bgs-art" data-scene="ronin" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice"><use href="#bgs-ronin" width="1440" height="810"/></svg><svg class="bgs-art" data-scene="torii" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice"><use href="#bgs-torii" width="1440" height="810"/></svg><svg class="bgs-art" data-scene="dragon" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice"><use href="#bgs-dragon" width="1440" height="810"/></svg><svg class="bgs-art" data-scene="kitsune" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice"><use href="#bgs-kitsune" width="1440" height="810"/></svg><svg class="bgs-art" data-scene="koi" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice"><use href="#bgs-koi" width="1440" height="810"/></svg><svg class="bgs-art" data-scene="cranes" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice"><use href="#bgs-cranes" width="1440" height="810"/></svg><svg class="bgs-art" data-scene="sakura" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice"><use href="#bgs-sakura" width="1440" height="810"/></svg><svg class="bgs-art" data-scene="lanterns" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice"><use href="#bgs-lanterns" width="1440" height="810"/></svg><svg class="bgs-art" data-scene="aurora" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice"><use href="#bgs-aurora" width="1440" height="810"/></svg><svg class="bgs-art" data-scene="ocean" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice"><use href="#bgs-ocean" width="1440" height="810"/></svg><svg class="bgs-art" data-scene="desert" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice"><use href="#bgs-desert" width="1440" height="810"/></svg><svg class="bgs-art" data-scene="wolf" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice"><use href="#bgs-wolf" width="1440" height="810"/></svg><svg class="bgs-art" data-scene="eagle" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice"><use href="#bgs-eagle" width="1440" height="810"/></svg><svg class="bgs-art" data-scene="orbit" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice"><use href="#bgs-orbit" width="1440" height="810"/></svg><svg class="bgs-art" data-scene="rain" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice"><use href="#bgs-rain" width="1440" height="810"/></svg><svg class="bgs-art" data-scene="cinematic" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice"><use href="#bgs-cinematic" width="1440" height="810"/></svg></div>
   <div class="drawer-backdrop" id="drawerBackdrop" aria-hidden="true"></div>
   <aside class="desktop-rail" id="appRail" aria-label="Primary navigation">
     <div class="rail-top"><div class="rail-brand-lockup"><img class="rail-brand-logo" src="assets/pipvanta-logo.png" alt="PIPVANT logo"><strong>PIPVANT</strong></div><button class="rail-close" id="railClose" type="button" aria-label="Close menu"><svg width="19"><use href="#pv-i-x"/></svg></button></div>
@@ -3494,6 +3861,58 @@ html[dir="rtl"] .jump-row{text-align:right}
             </div>
           </section>
 
+          <section class="settings-group wide" aria-labelledby="settings-background-title">
+            <h3 class="settings-group-title" id="settings-background-title">Background</h3>
+            <div class="settings-card">
+              <div class="settings-copy"><strong>Animated backdrop</strong><small>A living scene behind the app. Colours and design never change.</small></div>
+              <div class="bgs-picker" role="group" aria-label="Background scene">
+                <div class="bgs-grid bgs-auto-grid">
+                  <button class="bgs-card bgs-auto-card" type="button" data-bgscene-choice="auto" aria-pressed="false"><span class="bgs-thumb bgs-auto-thumb"><svg width="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8z"/><path d="M19 15.5l.9 3.1 3.1.9-3.1.9-.9 3.1-.9-3.1-3.1-.9 3.1-.9z" transform="translate(-1.5 -1.5) scale(.8)"/></svg></span><span class="bgs-name">Auto — Scene of the Day</span><span class="bgs-check" aria-hidden="true"><svg width="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="m5 13 4 4L19 7"/></svg></span></button>
+                </div>
+                <div class="bgs-tools"><button class="bgs-surprise" id="bgsSurpriseBtn" type="button"><svg width="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8z"/></svg><span>Surprise me</span></button></div>
+                <div id="bgsFavWrap" hidden>
+                  <p class="bgs-group-label">Favourites</p>
+                  <div class="bgs-grid" id="bgsFavGrid"></div>
+                </div>
+                <p class="bgs-group-label">Japanese Legends</p>
+                <div class="bgs-grid">
+                  <button class="bgs-card" type="button" data-bgscene-choice="ninja" aria-pressed="false"><span class="bgs-thumb"><svg class="bgs-thumb-art" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#bgs-ninja" width="1440" height="810"/></svg></span><span class="bgs-name">Ninja Night</span><span class="bgs-star" data-bgs-fav="ninja" role="button" aria-label="Toggle favourite" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.5 5.3 5.8.7-4.3 4 1.1 5.7L12 16.5l-5.1 2.8L8 13.6 3.7 9.6l5.8-.7z"/></svg></span><span class="bgs-check" aria-hidden="true"><svg width="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="m5 13 4 4L19 7"/></svg></span></button>
+                  <button class="bgs-card" type="button" data-bgscene-choice="ronin" aria-pressed="false"><span class="bgs-thumb"><svg class="bgs-thumb-art" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#bgs-ronin" width="1440" height="810"/></svg></span><span class="bgs-name">Ronin Road</span><span class="bgs-star" data-bgs-fav="ronin" role="button" aria-label="Toggle favourite" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.5 5.3 5.8.7-4.3 4 1.1 5.7L12 16.5l-5.1 2.8L8 13.6 3.7 9.6l5.8-.7z"/></svg></span><span class="bgs-check" aria-hidden="true"><svg width="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="m5 13 4 4L19 7"/></svg></span></button>
+                  <button class="bgs-card" type="button" data-bgscene-choice="torii" aria-pressed="false"><span class="bgs-thumb"><svg class="bgs-thumb-art" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#bgs-torii" width="1440" height="810"/></svg></span><span class="bgs-name">Torii Gate</span><span class="bgs-star" data-bgs-fav="torii" role="button" aria-label="Toggle favourite" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.5 5.3 5.8.7-4.3 4 1.1 5.7L12 16.5l-5.1 2.8L8 13.6 3.7 9.6l5.8-.7z"/></svg></span><span class="bgs-check" aria-hidden="true"><svg width="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="m5 13 4 4L19 7"/></svg></span></button>
+                  <button class="bgs-card" type="button" data-bgscene-choice="dragon" aria-pressed="false"><span class="bgs-thumb"><svg class="bgs-thumb-art" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#bgs-dragon" width="1440" height="810"/></svg></span><span class="bgs-name">Dragon Sky</span><span class="bgs-star" data-bgs-fav="dragon" role="button" aria-label="Toggle favourite" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.5 5.3 5.8.7-4.3 4 1.1 5.7L12 16.5l-5.1 2.8L8 13.6 3.7 9.6l5.8-.7z"/></svg></span><span class="bgs-check" aria-hidden="true"><svg width="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="m5 13 4 4L19 7"/></svg></span></button>
+                  <button class="bgs-card" type="button" data-bgscene-choice="kitsune" aria-pressed="false"><span class="bgs-thumb"><svg class="bgs-thumb-art" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#bgs-kitsune" width="1440" height="810"/></svg></span><span class="bgs-name">Kitsune Shrine</span><span class="bgs-star" data-bgs-fav="kitsune" role="button" aria-label="Toggle favourite" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.5 5.3 5.8.7-4.3 4 1.1 5.7L12 16.5l-5.1 2.8L8 13.6 3.7 9.6l5.8-.7z"/></svg></span><span class="bgs-check" aria-hidden="true"><svg width="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="m5 13 4 4L19 7"/></svg></span></button>
+                  <button class="bgs-card" type="button" data-bgscene-choice="koi" aria-pressed="false"><span class="bgs-thumb"><svg class="bgs-thumb-art" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#bgs-koi" width="1440" height="810"/></svg></span><span class="bgs-name">Koi Stream</span><span class="bgs-star" data-bgs-fav="koi" role="button" aria-label="Toggle favourite" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.5 5.3 5.8.7-4.3 4 1.1 5.7L12 16.5l-5.1 2.8L8 13.6 3.7 9.6l5.8-.7z"/></svg></span><span class="bgs-check" aria-hidden="true"><svg width="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="m5 13 4 4L19 7"/></svg></span></button>
+                  <button class="bgs-card" type="button" data-bgscene-choice="cranes" aria-pressed="false"><span class="bgs-thumb"><svg class="bgs-thumb-art" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#bgs-cranes" width="1440" height="810"/></svg></span><span class="bgs-name">Crane Flight</span><span class="bgs-star" data-bgs-fav="cranes" role="button" aria-label="Toggle favourite" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.5 5.3 5.8.7-4.3 4 1.1 5.7L12 16.5l-5.1 2.8L8 13.6 3.7 9.6l5.8-.7z"/></svg></span><span class="bgs-check" aria-hidden="true"><svg width="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="m5 13 4 4L19 7"/></svg></span></button>
+                  <button class="bgs-card" type="button" data-bgscene-choice="sakura" aria-pressed="false"><span class="bgs-thumb"><svg class="bgs-thumb-art" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#bgs-sakura" width="1440" height="810"/></svg></span><span class="bgs-name">Sakura Swordsman</span><span class="bgs-star" data-bgs-fav="sakura" role="button" aria-label="Toggle favourite" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.5 5.3 5.8.7-4.3 4 1.1 5.7L12 16.5l-5.1 2.8L8 13.6 3.7 9.6l5.8-.7z"/></svg></span><span class="bgs-check" aria-hidden="true"><svg width="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="m5 13 4 4L19 7"/></svg></span></button>
+                  <button class="bgs-card" type="button" data-bgscene-choice="lanterns" aria-pressed="false"><span class="bgs-thumb"><svg class="bgs-thumb-art" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#bgs-lanterns" width="1440" height="810"/></svg></span><span class="bgs-name">Lantern Festival</span><span class="bgs-star" data-bgs-fav="lanterns" role="button" aria-label="Toggle favourite" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.5 5.3 5.8.7-4.3 4 1.1 5.7L12 16.5l-5.1 2.8L8 13.6 3.7 9.6l5.8-.7z"/></svg></span><span class="bgs-check" aria-hidden="true"><svg width="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="m5 13 4 4L19 7"/></svg></span></button>
+                </div>
+                <p class="bgs-group-label">Nature &amp; World</p>
+                <div class="bgs-grid">
+                  <button class="bgs-card" type="button" data-bgscene-choice="aurora" aria-pressed="false"><span class="bgs-thumb"><svg class="bgs-thumb-art" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#bgs-aurora" width="1440" height="810"/></svg></span><span class="bgs-name">Aurora Peaks</span><span class="bgs-star" data-bgs-fav="aurora" role="button" aria-label="Toggle favourite" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.5 5.3 5.8.7-4.3 4 1.1 5.7L12 16.5l-5.1 2.8L8 13.6 3.7 9.6l5.8-.7z"/></svg></span><span class="bgs-check" aria-hidden="true"><svg width="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="m5 13 4 4L19 7"/></svg></span></button>
+                  <button class="bgs-card" type="button" data-bgscene-choice="ocean" aria-pressed="false"><span class="bgs-thumb"><svg class="bgs-thumb-art" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#bgs-ocean" width="1440" height="810"/></svg></span><span class="bgs-name">Ocean Deep</span><span class="bgs-star" data-bgs-fav="ocean" role="button" aria-label="Toggle favourite" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.5 5.3 5.8.7-4.3 4 1.1 5.7L12 16.5l-5.1 2.8L8 13.6 3.7 9.6l5.8-.7z"/></svg></span><span class="bgs-check" aria-hidden="true"><svg width="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="m5 13 4 4L19 7"/></svg></span></button>
+                  <button class="bgs-card" type="button" data-bgscene-choice="desert" aria-pressed="false"><span class="bgs-thumb"><svg class="bgs-thumb-art" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#bgs-desert" width="1440" height="810"/></svg></span><span class="bgs-name">Desert Moon</span><span class="bgs-star" data-bgs-fav="desert" role="button" aria-label="Toggle favourite" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.5 5.3 5.8.7-4.3 4 1.1 5.7L12 16.5l-5.1 2.8L8 13.6 3.7 9.6l5.8-.7z"/></svg></span><span class="bgs-check" aria-hidden="true"><svg width="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="m5 13 4 4L19 7"/></svg></span></button>
+                  <button class="bgs-card" type="button" data-bgscene-choice="wolf" aria-pressed="false"><span class="bgs-thumb"><svg class="bgs-thumb-art" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#bgs-wolf" width="1440" height="810"/></svg></span><span class="bgs-name">Wolf Cliff</span><span class="bgs-star" data-bgs-fav="wolf" role="button" aria-label="Toggle favourite" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.5 5.3 5.8.7-4.3 4 1.1 5.7L12 16.5l-5.1 2.8L8 13.6 3.7 9.6l5.8-.7z"/></svg></span><span class="bgs-check" aria-hidden="true"><svg width="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="m5 13 4 4L19 7"/></svg></span></button>
+                  <button class="bgs-card" type="button" data-bgscene-choice="eagle" aria-pressed="false"><span class="bgs-thumb"><svg class="bgs-thumb-art" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#bgs-eagle" width="1440" height="810"/></svg></span><span class="bgs-name">Eagle Summit</span><span class="bgs-star" data-bgs-fav="eagle" role="button" aria-label="Toggle favourite" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.5 5.3 5.8.7-4.3 4 1.1 5.7L12 16.5l-5.1 2.8L8 13.6 3.7 9.6l5.8-.7z"/></svg></span><span class="bgs-check" aria-hidden="true"><svg width="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="m5 13 4 4L19 7"/></svg></span></button>
+                  <button class="bgs-card" type="button" data-bgscene-choice="orbit" aria-pressed="false"><span class="bgs-thumb"><svg class="bgs-thumb-art" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#bgs-orbit" width="1440" height="810"/></svg></span><span class="bgs-name">Orbit</span><span class="bgs-star" data-bgs-fav="orbit" role="button" aria-label="Toggle favourite" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.5 5.3 5.8.7-4.3 4 1.1 5.7L12 16.5l-5.1 2.8L8 13.6 3.7 9.6l5.8-.7z"/></svg></span><span class="bgs-check" aria-hidden="true"><svg width="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="m5 13 4 4L19 7"/></svg></span></button>
+                  <button class="bgs-card" type="button" data-bgscene-choice="rain" aria-pressed="false"><span class="bgs-thumb"><svg class="bgs-thumb-art" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#bgs-rain" width="1440" height="810"/></svg></span><span class="bgs-name">Midnight Rain</span><span class="bgs-star" data-bgs-fav="rain" role="button" aria-label="Toggle favourite" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.5 5.3 5.8.7-4.3 4 1.1 5.7L12 16.5l-5.1 2.8L8 13.6 3.7 9.6l5.8-.7z"/></svg></span><span class="bgs-check" aria-hidden="true"><svg width="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="m5 13 4 4L19 7"/></svg></span></button>
+                </div>
+                <p class="bgs-group-label">Simple</p>
+                <div class="bgs-grid">
+                  <button class="bgs-card" type="button" data-bgscene-choice="cinematic" aria-pressed="false"><span class="bgs-thumb"><svg class="bgs-thumb-art" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#bgs-cinematic" width="1440" height="810"/></svg></span><span class="bgs-name">Cinematic</span><span class="bgs-star" data-bgs-fav="cinematic" role="button" aria-label="Toggle favourite" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.5 5.3 5.8.7-4.3 4 1.1 5.7L12 16.5l-5.1 2.8L8 13.6 3.7 9.6l5.8-.7z"/></svg></span><span class="bgs-check" aria-hidden="true"><svg width="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="m5 13 4 4L19 7"/></svg></span></button>
+                  <button class="bgs-card" type="button" data-bgscene-choice="classic" aria-pressed="false"><span class="bgs-thumb"><svg class="bgs-thumb-art" viewBox="0 0 1440 810" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#bgs-classic" width="1440" height="810"/></svg></span><span class="bgs-name">Classic</span><span class="bgs-star" data-bgs-fav="classic" role="button" aria-label="Toggle favourite" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.5 5.3 5.8.7-4.3 4 1.1 5.7L12 16.5l-5.1 2.8L8 13.6 3.7 9.6l5.8-.7z"/></svg></span><span class="bgs-check" aria-hidden="true"><svg width="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="m5 13 4 4L19 7"/></svg></span></button>
+                </div>
+              </div>
+              <div class="settings-control bgs-control-row">
+                <div class="settings-copy"><strong>Visibility</strong><small>How present the backdrop feels.</small></div>
+                <div class="settings-segmented three" role="group" aria-label="Scene visibility">
+                  <button class="settings-segment" type="button" data-bgintensity-choice="subtle" aria-pressed="false">Subtle</button>
+                  <button class="settings-segment" type="button" data-bgintensity-choice="balanced" aria-pressed="true">Balanced</button>
+                  <button class="settings-segment" type="button" data-bgintensity-choice="vivid" aria-pressed="false">Vivid</button>
+                </div>
+              </div>
+              <button class="settings-toggle" id="bgParallaxToggle" type="button" role="switch" aria-checked="true"><span class="settings-copy"><strong>Depth motion</strong><small>The backdrop drifts gently as you move the pointer.</small></span><span class="switch-track" aria-hidden="true"></span></button>
+            </div>
+          </section>
           <section class="settings-group" aria-labelledby="settings-language-title">
             <h3 class="settings-group-title" id="settings-language-title">Language</h3>
             <div class="settings-card">
@@ -7527,7 +7946,7 @@ html[dir="rtl"] .jump-row{text-align:right}
     'All accounts':'كل الحسابات','Custom':'مخصص','+ Add Trade':'+ إضافة صفقة','Net P&L':'صافي الربح والخسارة','vs prior period —':'مقارنة بالفترة السابقة —','Win Rate':'نسبة الربح','Win':'ربح','Loss':'خسارة','BE':'تعادل','Profit Factor':'معامل الربح','Performance label —':'وصف الأداء —','Avg Win vs Avg Loss':'متوسط الربح مقابل الخسارة','RATIO —':'النسبة —','Avg win —':'متوسط الربح —','Avg loss —':'متوسط الخسارة —','Expectancy':'التوقع','PER TRADE':'لكل صفقة','Cumulative R —':'R التراكمي —','Daily Net Cumulative P&L':'صافي الربح والخسارة التراكمي اليومي','Equity from logged trades only':'الرصيد من الصفقات المسجلة فقط','Cumulative':'تراكمي','Per-trade R':'R لكل صفقة','No trade history available':'لا يوجد سجل صفقات','The chart will populate after the first trade result is recorded.':'سيظهر الرسم بعد تسجيل نتيجة أول صفقة.','Trading Score':'تقييم التداول','Six execution dimensions':'ستة أبعاد للتنفيذ','Win %':'نسبة الربح','Profit factor':'معامل الربح','Avg win/loss':'متوسط الربح/الخسارة','Recovery factor':'معامل التعافي','Consistency':'الاستمرارية','Qualitative label —':'الوصف النوعي —','P&L Calendar':'تقويم الربح والخسارة','Month — · Select a day to filter trades':'الشهر — · اختر يوماً لتصفية الصفقات','MONTH —':'الشهر —','— P&L':'— ربح/خسارة','— trades · — win%':'— صفقات · — نسبة ربح','Week 1':'الأسبوع 1','Week 2':'الأسبوع 2','Week 3':'الأسبوع 3','Week 4':'الأسبوع 4','Week 5':'الأسبوع 5','Day —':'اليوم —','Symbol':'الرمز','Selected':'المحدد','Side':'الاتجاه','Setup':'النموذج','Mistake':'الخطأ','Session':'الجلسة','Tag':'الوسم','Trade Log':'سجل الصفقات','Execution records and review context':'سجلات التنفيذ وسياق المراجعة','0 TRADES':'0 صفقات','Chart':'رسم','Unified':'موحد','All':'الكل','By Symbol':'حسب الرمز','By Day':'حسب اليوم','By Tag':'حسب الوسم','Date / time':'التاريخ / الوقت','Entry / exit':'الدخول / الخروج','Qty':'الكمية','R multiple':'مضاعف R','Notes':'ملاحظات','No trades recorded':'لا توجد صفقات مسجلة','Record the first trade to populate P&L, MAE/MFE, tags, ratings, and linked notes from actual entries.':'سجل أول صفقة لعرض الربح والخسارة وMAE/MFE والوسوم والتقييمات والملاحظات الفعلية.','Direction markers: Long — steel-blue / Short — silver':'ألوان الاتجاه: شراء — أزرق فولاذي / بيع — فضي','Log trade':'تسجيل صفقة','Journal statistics are calculated only from logged trades.':'إحصاءات السجل تُحسب فقط من الصفقات المسجلة.',
     'Trade inputs':'مدخلات الصفقة','All fields are required.':'كل الحقول مطلوبة.','LIVE':'مباشر','Risk %':'نسبة المخاطرة','Stop-loss pips':'نقاط وقف الخسارة','pips':'نقاط','Symbol / pair':'الرمز / الزوج','Select pair':'اختر زوجاً','USD-quoted FX pairs use the standard $10 pip value per lot.':'أزواج الفوركس المسعّرة بالدولار تستخدم قيمة قياسية 10$ للنقطة لكل لوت.','Live calculation':'الحساب المباشر','Updates with every valid input.':'يتحدث مع كل إدخال صالح.','USD ACCOUNT':'حساب بالدولار','POSITION SIZE':'حجم الصفقة','standard lots':'لوت قياسي','$ at risk':'المبلغ المعرض للمخاطر','1R value':'قيمة 1R','This trade risks —% of account':'هذه الصفقة تخاطر بـ —% من الحساب','You risk $— (—% of your $— account) to make $— at —R. A loss costs $—.':'تخاطر بـ $— (—% من حسابك $—) لتحقيق $— عند —R. الخسارة تكلف $—.','Method: account size × risk % ÷ (stop-loss pips × $10 pip value). Verify contract details with your broker.':'الطريقة: حجم الحساب × نسبة المخاطرة ÷ (نقاط الوقف × قيمة النقطة 10$). تحقق من تفاصيل العقد مع وسيطك.','Save to journal':'حفظ في السجل','Live arithmetic only — verify symbol specifications before placing a trade.':'حساب مباشر فقط — تحقق من مواصفات الرمز قبل تنفيذ الصفقة.','Process checklist':'قائمة مراجعة المنهج','Mark each rule complete only after it has been verified.':'علّم القاعدة مكتملة فقط بعد التحقق منها.','Risk ≤1% on every trade':'المخاطرة ≤1% في كل صفقة','Daily':'يومي','Journaled before entering':'مسجلة قبل الدخول','Mon–Fri':'الإثنين–الجمعة','No trading after 2 losses':'لا تداول بعد خسارتين','Reviewed plan pre-session':'مراجعة الخطة قبل الجلسة','3×/wk':'3×/أسبوع','— days':'— أيام','current streak':'السلسلة الحالية','best —':'الأفضل —','Weekly review':'المراجعة الأسبوعية','Review adherence and define one measurable priority for the next week.':'راجع الالتزام وحدد أولوية قابلة للقياس للأسبوع القادم.','THIS WEEK':'هذا الأسبوع','Completion %':'نسبة الإكمال','Best streak':'أفضل سلسلة','Total completions':'إجمالي المكتمل','Which rules were followed consistently?':'ما القواعد التي التزمت بها باستمرار؟','Which rules were not followed?':'ما القواعد التي لم تُتبع؟','Priority rule for next week':'قاعدة الأولوية للأسبوع القادم','Saved reviews':'المراجعات المحفوظة','Your weekly reviews will appear here.':'ستظهر مراجعاتك الأسبوعية هنا.','Checklist state is session-only until account data is connected.':'حالة القائمة لهذه الجلسة فقط حتى يتم ربط بيانات الحساب.',
     'Mark all read':'تعليم الكل كمقروء','Action needed —':'يتطلب إجراء —','Earlier —':'سابقاً —','Display':'العرض','System':'النظام','Today':'اليوم','Mark read':'تعليم كمقروء','Snooze':'تأجيل','Delete':'حذف','Yesterday':'أمس','Earlier this week':'في وقت سابق هذا الأسبوع','← All notifications':'كل الإشعارات →','Notification details will appear here.':'ستظهر تفاصيل الإشعار هنا.','next':'التالي','previous':'السابق','unread':'غير مقروء','snooze':'تأجيل','Notifications use real account and tool events only.':'الإشعارات تستخدم أحداث الحساب والأدوات الحقيقية فقط.','Member since —':'عضو منذ —','Journal not connected':'لا صفقات بعد','No equity data yet':'لا توجد بيانات رصيد بعد','Win rate':'نسبة الربح','Total trades':'إجمالي الصفقات','Winning':'رابحة','Breakeven':'تعادل','Losing':'خاسرة','Most traded':'الأكثر تداولاً','Recent trades':'الصفقات الأخيرة','Latest journal entries':'آخر إدخالات السجل','No trades yet':'لا توجد صفقات بعد','Open Journal':'فتح السجل','Setup status':'حالة الإعداد','Profile details':'تفاصيل الملف','Risk defaults':'إعدادات المخاطر','Certificate badges':'شارات الشهادات','Marks earned through verified mission completion':'علامات مكتسبة عبر إكمال مهام موثقة','No certificates earned yet — complete missions to earn them':'لا توجد شهادات مكتسبة بعد — أكمل المهام لتحصل عليها','Edit profile':'تعديل الملف الشخصي','Changes remain in this session.':'تبقى التغييرات في هذه الجلسة.','Bio':'النبذة','Save changes':'حفظ التغييرات','Revert photo':'إرجاع الصورة','Data':'البيانات','Export my data':'تصدير بياناتي','NEW ENTRY':'إدخال جديد','Pair':'الزوج','Direction':'الاتجاه','Long':'شراء','Short':'بيع','Entry':'الدخول','Stop':'الإيقاف','Size':'الحجم','Close':'إغلاق',
-    'Appearance':'المظهر','Dark':'داكن','Light':'فاتح','Language':'اللغة','English':'الإنجليزية','Control how PIPVANT looks, calculates, and communicates.':'تحكم في مظهر PIPVANT وحساباته وإشعاراته.','Theme':'السمة','Choose the interface that fits your environment.':'اختر الواجهة المناسبة لبيئتك.','Interface language':'لغة الواجهة','Arabic switches the complete interface to RTL.':'العربية تحول الواجهة كاملة إلى اتجاه من اليمين إلى اليسار.','Trading':'التداول','Display currency':'عملة العرض','Used throughout the Risk Calculator display.':'تُستخدم في عرض حاسبة المخاطر.','Default risk':'المخاطرة الافتراضية','Prefills the Risk Calculator. Adjust in 0.1% steps.':'تملأ حاسبة المخاطر مسبقاً. عدّل بخطوات 0.1%.','Account notifications':'إشعارات الحساب','Show account and tool alerts.':'عرض تنبيهات الحساب والأدوات.','Security':'الأمان','Change password':'تغيير كلمة المرور','Replace your current account password.':'استبدل كلمة مرور حسابك الحالية.','Change email':'تغيير البريد الإلكتروني','Update the email used to access your account.':'حدّث البريد المستخدم للدخول إلى حسابك.','Download your current PIPVANT data as JSON.':'نزّل بيانات PIPVANT الحالية بصيغة JSON.','Delete account':'تسجيل الخروج ومسح الجهاز','Skip to main content':'تخطَّ إلى المحتوى الرئيسي','Erase the current account state and return to welcome.':'سجّل الخروج وامسح بيانات هذا الجهاز. تبقى بيانات حسابك على الخادم.','Sign out & clear device':'تسجيل الخروج ومسح الجهاز',"Sign out and erase this device's local data. Your account data stays on the server.":'سجّل الخروج وامسح بيانات هذا الجهاز. تبقى بيانات حسابك على الخادم.',"This signs you out and erases this device's local data. To fully delete your account including server data, contact support.":'هذا يسجّل خروجك ويمسح بيانات هذا الجهاز. لحذف حسابك نهائياً بما فيه بيانات الخادم، تواصل مع الدعم.','Enter your current password, then choose a new one.':'أدخل كلمة المرور الحالية ثم اختر كلمة جديدة.','Current password':'كلمة المرور الحالية','New password':'كلمة المرور الجديدة','Confirm new password':'تأكيد كلمة المرور الجديدة','Update password':'تحديث كلمة المرور','Cancel':'إلغاء','Use the email address you want for account access.':'استعمل البريد الذي تريده للدخول إلى الحساب.','New email':'البريد الإلكتروني الجديد','Update email':'تحديث البريد','This clears the current account state and returns to welcome.':'هذا يمسح حالة الحساب الحالية ويعيدك إلى الترحيب.','Type':'اكتب','to confirm':'للتأكيد','Password updated for this session.':'تم تحديث كلمة المرور لهذه الجلسة.','Email updated for this session.':'تم تحديث البريد لهذه الجلسة.','Passwords do not match.':'كلمتا المرور غير متطابقتين.','Type DELETE to confirm.':'اكتب DELETE للتأكيد.','Hold to sign out':'اضغط مطولاً لتسجيل الخروج','After typing DELETE, hold the delete button.':'بعد كتابة DELETE، اضغط مطولاً على زر الحذف.','Export ready':'التصدير جاهز','Notifications on':'الإشعارات مفعلة','Notifications off':'الإشعارات متوقفة','pts':'نقطة','—W · —L · —BE':'—ر · —خ · —ت','+—R':'+—R','M':'ن','T':'ث','W':'ر','F':'ج','S':'س',
+    'Appearance':'المظهر','Dark':'داكن','Light':'فاتح','Language':'اللغة','English':'الإنجليزية','Control how PIPVANT looks, calculates, and communicates.':'تحكم في مظهر PIPVANT وحساباته وإشعاراته.','Background':'الخلفية','Animated backdrop':'خلفية متحركة','A living scene behind the app. Colours and design never change.':'مشهد حي خلف التطبيق. الألوان والتصميم لا يتغيران أبداً.','Japanese Legends':'أساطير اليابان','Nature & World':'الطبيعة والعالم','Ninja Night':'ليلة النينجا','Ronin Road':'طريق الرونين','Torii Gate':'بوابة توريي','Dragon Sky':'سماء التنين','Kitsune Shrine':'ضريح كيتسوني','Koi Stream':'مجرى كوي','Crane Flight':'طيران الرافعات','Sakura Swordsman':'سيّاف الساكورا','Aurora Peaks':'قمم الشفق','Ocean Deep':'عمق المحيط','Desert Moon':'قمر الصحراء','Wolf Cliff':'جرف الذئب','Eagle Summit':'قمة النسر','Orbit':'المدار','Cinematic':'سينمائية','Classic':'كلاسيكية','Lantern Festival':'مهرجان الفوانيس','Midnight Rain':'مطر منتصف الليل','Auto — Scene of the Day':'تلقائي — مشهد اليوم','Favourites':'المفضلة','Surprise me':'فاجئني','Visibility':'الوضوح','How present the backdrop feels.':'مدى حضور الخلفية.','Subtle':'خفيف','Balanced':'متوازن','Vivid':'واضح','Depth motion':'حركة العمق','The backdrop drifts gently as you move the pointer.':'تنساب الخلفية بلطف مع حركة المؤشر.','Theme':'السمة','Choose the interface that fits your environment.':'اختر الواجهة المناسبة لبيئتك.','Interface language':'لغة الواجهة','Arabic switches the complete interface to RTL.':'العربية تحول الواجهة كاملة إلى اتجاه من اليمين إلى اليسار.','Trading':'التداول','Display currency':'عملة العرض','Used throughout the Risk Calculator display.':'تُستخدم في عرض حاسبة المخاطر.','Default risk':'المخاطرة الافتراضية','Prefills the Risk Calculator. Adjust in 0.1% steps.':'تملأ حاسبة المخاطر مسبقاً. عدّل بخطوات 0.1%.','Account notifications':'إشعارات الحساب','Show account and tool alerts.':'عرض تنبيهات الحساب والأدوات.','Security':'الأمان','Change password':'تغيير كلمة المرور','Replace your current account password.':'استبدل كلمة مرور حسابك الحالية.','Change email':'تغيير البريد الإلكتروني','Update the email used to access your account.':'حدّث البريد المستخدم للدخول إلى حسابك.','Download your current PIPVANT data as JSON.':'نزّل بيانات PIPVANT الحالية بصيغة JSON.','Delete account':'تسجيل الخروج ومسح الجهاز','Skip to main content':'تخطَّ إلى المحتوى الرئيسي','Erase the current account state and return to welcome.':'سجّل الخروج وامسح بيانات هذا الجهاز. تبقى بيانات حسابك على الخادم.','Sign out & clear device':'تسجيل الخروج ومسح الجهاز',"Sign out and erase this device's local data. Your account data stays on the server.":'سجّل الخروج وامسح بيانات هذا الجهاز. تبقى بيانات حسابك على الخادم.',"This signs you out and erases this device's local data. To fully delete your account including server data, contact support.":'هذا يسجّل خروجك ويمسح بيانات هذا الجهاز. لحذف حسابك نهائياً بما فيه بيانات الخادم، تواصل مع الدعم.','Enter your current password, then choose a new one.':'أدخل كلمة المرور الحالية ثم اختر كلمة جديدة.','Current password':'كلمة المرور الحالية','New password':'كلمة المرور الجديدة','Confirm new password':'تأكيد كلمة المرور الجديدة','Update password':'تحديث كلمة المرور','Cancel':'إلغاء','Use the email address you want for account access.':'استعمل البريد الذي تريده للدخول إلى الحساب.','New email':'البريد الإلكتروني الجديد','Update email':'تحديث البريد','This clears the current account state and returns to welcome.':'هذا يمسح حالة الحساب الحالية ويعيدك إلى الترحيب.','Type':'اكتب','to confirm':'للتأكيد','Password updated for this session.':'تم تحديث كلمة المرور لهذه الجلسة.','Email updated for this session.':'تم تحديث البريد لهذه الجلسة.','Passwords do not match.':'كلمتا المرور غير متطابقتين.','Type DELETE to confirm.':'اكتب DELETE للتأكيد.','Hold to sign out':'اضغط مطولاً لتسجيل الخروج','After typing DELETE, hold the delete button.':'بعد كتابة DELETE، اضغط مطولاً على زر الحذف.','Export ready':'التصدير جاهز','Notifications on':'الإشعارات مفعلة','Notifications off':'الإشعارات متوقفة','pts':'نقطة','—W · —L · —BE':'—ر · —خ · —ت','+—R':'+—R','M':'ن','T':'ث','W':'ر','F':'ج','S':'س',
     'Certificate':'الشهادة','About':'حول','Contact':'تواصل','Certificates':'الشهادات','Complete demanding missions inside PIPVANT to earn verified certificates.':'أكمل مهام صعبة داخل PIPVANT لتحصل على شهادات موثقة.','Earned':'المكتسبة','0 CERTIFICATES':'0 شهادات','No certificates yet — complete missions to earn them.':'لا توجد شهادات بعد — أكمل المهام لتحصل عليها.','PIPVANT · VERIFIED RECORD':'PIPVANT · سجل موثق','Certificate template':'قالب الشهادة','PREVIEW':'معاينة','Verified':'موثق','achievement':'إنجاز','Certificate of achievement':'شهادة إنجاز','Proudly presented to':'تُقدم بفخر إلى','Awarded for completing a verified PIPVANT mission.':'ممنوحة بعد إكمال مهمة موثقة داخل PIPVANT.','Awarded for demonstrating exceptional consistency by logging 500 trades in the PIPVANT Journal.':'ممنوحة لإثبات استمرارية استثنائية عبر تسجيل 500 صفقة في سجل PIPVANT.','DATE —':'التاريخ —','Verification ID':'معرف التحقق','Download':'تنزيل','Share':'مشاركة','Missions':'المهام','6 MISSIONS':'6 مهام','Marathon':'الماراثون','Log 500 trades in the Journal.':'سجل 500 صفقة في السجل.','Profitable':'مربح','Net positive P&L across at least 100 trades.':'صافي ربح إيجابي عبر 100 صفقة على الأقل.','Sharpshooter':'القناص','Win rate of 60% or higher across at least 100 trades.':'نسبة ربح 60٪ أو أكثر عبر 100 صفقة على الأقل.','Iron Discipline':'انضباط حديدي','90 consecutive days of discipline check-ins.':'90 يوماً متتالياً من تسجيلات الانضباط.','Risk Master':'سيد المخاطر','100 consecutive trades without breaking your risk limit.':'100 صفقة متتالية دون تجاوز حد المخاطرة.','Edge Proven':'أفضلية مثبتة','Profit factor of 1.5 or higher across at least 100 trades.':'معامل ربح 1.5 أو أكثر عبر 100 صفقة على الأقل.','Progress':'التقدم','A disciplined suite of tools for clearer trading decisions, structured risk management, and accountable review.':'مجموعة منضبطة من الأدوات لقرارات تداول أوضح وإدارة مخاطر منظمة ومراجعة مسؤولة.','TRADING DECISION TOOLS':'أدوات قرار التداول','PIPVANT is built by Orovanta — an independent startup crafting focused trading tools.':'PIPVANT من تطوير Orovanta — مشروع ناشئ مستقل يصنع أدوات تداول مركزة.','The toolkit':'مجموعة الأدوات','Compare prop-firm rules against criteria that matter to your process.':'قارن قواعد شركات التمويل بالمعايير المهمة لمنهجك.','Review execution, risk, and consistency through your own trade records.':'راجع التنفيذ والمخاطر والاستمرارية من خلال سجلات صفقاتك الخاصة.','Calculate position size from balance, risk, stop distance, and point value.':'احسب حجم الصفقة انطلاقاً من الرصيد والمخاطرة ومسافة الإيقاف وقيمة النقطة.','Keep trading rules visible and structure daily and weekly reviews.':'أبقِ قواعد التداول واضحة ونظّم المراجعات اليومية والأسبوعية.','Principles':'المبادئ','Decision tools — never trade signals':'أدوات للقرار — وليست إشارات تداول','No performance or profit promises':'لا وعود بالأداء أو الأرباح','Real data and records only':'بيانات وسجلات حقيقية فقط','Designed for any trading strategy':'مصمم لأي استراتيجية تداول','Company':'الشركة','Orovanta':'Orovanta','Headquarters':'المقر الرئيسي','Morocco 🇲🇦':'المغرب 🇲🇦','Chief Executive Officer':'الرئيس التنفيذي','CHIEF EXECUTIVE OFFICER':'الرئيس التنفيذي','Sifeddine Beniaich':'سيف الدين بن عياش','Founder · 18':'المؤسس · 18','18-year-old trader building the toolkit he always wanted.':'متداول في عمر 18 سنة يبني مجموعة الأدوات التي طالما أرادها.','Version':'الإصدار','Questions, feedback, or partnership inquiries — we read everything.':'أسئلة أو ملاحظات أو استفسارات شراكة — نقرأ كل شيء.','Message':'الرسالة','Send message':'إرسال الرسالة','Message prepared':'الرسالة جاهزة','This design prototype does not send messages. Your form is complete and remains only in this session.':'هذا النموذج التصميمي لا يرسل الرسائل. النموذج مكتمل ويبقى في هذه الجلسة فقط.','Edit message':'تعديل الرسالة','Support email':'بريد الدعم','Trading days':'أيام التداول','Import my data':'استيراد بياناتي','Restore settings and profile from a JSON file.':'استعادة الإعدادات والملف الشخصي من ملف JSON.','Date':'التاريخ','Cancel':'إلغاء',
     'More':'المزيد','Back to Matcher':'العودة إلى المطابق','Firm directory':'دليل الشركات','All firms':'جميع الشركات','Search, sort, and filter verified firm rules in one consistent directory.':'ابحث ورتب وصفّ قواعد الشركات الموثقة في دليل موحد.','Search firms':'ابحث عن الشركات','Sort firms':'ترتيب الشركات','Recommended':'الموصى به','Price: low to high':'السعر: من الأقل إلى الأعلى','Profit split: high to low':'تقسيم الأرباح: من الأعلى إلى الأقل','Firm directory views':'طرق عرض دليل الشركات','Saved':'المحفوظة','How we rank':'كيف نرتب','Data updated —':'آخر تحديث للبيانات —','No firms listed yet — verified firms will appear here.':'لا توجد شركات مدرجة بعد — ستظهر الشركات الموثقة هنا.','Every listing will remain blank until its rules, pricing, and source date have been checked.':'سيبقى كل إدراج فارغاً حتى يتم التحقق من قواعده وأسعاره وتاريخ مصدره.','How we verify':'كيف نتحقق','How we verify firms':'كيف نتحقق من الشركات','No firms match these filters.':'لا توجد شركات تطابق هذه المرشحات.','Clear the active filters or search to return to the complete directory.':'امسح المرشحات أو البحث للعودة إلى الدليل الكامل.','Clear filters':'مسح المرشحات','Listings will publish only after firm rules, program pricing, limits, and source dates are checked. Ranking criteria will remain visible, and unavailable values will stay marked with an em dash.':'لن تُنشر الشركات إلا بعد التحقق من القواعد والأسعار والحدود وتواريخ المصادر. ستبقى معايير الترتيب ظاهرة والقيم غير المتاحة معروضة بشرطة.','Range':'النطاق','Profit split':'تقسيم الأرباح','Price from':'السعر من','External rating':'التقييم الخارجي','Years in business':'سنوات العمل','Payout frequency':'وتيرة السحب','Filter firms':'تصفية الشركات','Narrow verified listings by program rules.':'ضيّق النتائج الموثقة حسب قواعد البرنامج.','Minimum profit split':'الحد الأدنى لتقسيم الأرباح','Maximum profit target':'الحد الأقصى لهدف الربح','Minimum max drawdown':'الحد الأدنى لأقصى تراجع','Minimum leverage':'الحد الأدنى للرافعة','Program type':'نوع البرنامج','Instant':'فوري','1-Step':'مرحلة واحدة','2-Step':'مرحلتان','Drawdown type':'نوع التراجع','Static':'ثابت','Trailing':'متحرك','Apply filters':'تطبيق المرشحات','Verified firm profile':'ملف شركة موثق','Daily loss limit':'حد الخسارة اليومية','Leverage':'الرافعة','Notable rules':'قواعد بارزة',
     'A transparent standard for matching trader criteria with verified prop-firm information.':'معيار شفاف لمطابقة معايير المتداول مع معلومات شركات التداول الموثقة.','How matching works':'كيف تعمل المطابقة','Matcher compares the criteria a trader selects with the verified rules available for each firm. It does not recommend trades or guarantee that a firm is right for every trader.':'يقارن المطابق المعايير التي يختارها المتداول بالقواعد الموثقة المتاحة لكل شركة. لا يوصي بصفقات ولا يضمن أن شركة تناسب كل متداول.','Criteria first':'المعايير أولاً','Market, account size, price, rules, and other selected constraints define the comparison.':'السوق وحجم الحساب والسعر والقواعد والقيود المختارة تحدد المقارنة.','Visible fit':'ملاءمة واضحة','Each result will explain which criteria matched and which values were unavailable.':'كل نتيجة ستوضح المعايير المتطابقة والقيم غير المتاحة.','Trader decides':'المتداول يقرر','The final choice always stays with the trader after reviewing the firm’s current terms.':'يبقى القرار النهائي للمتداول بعد مراجعة شروط الشركة الحالية.','How we rank firms':'كيف نرتب الشركات','Rankings are based on disclosed comparison criteria, not paid placement or hidden star ratings. A score remains blank until the required source data is verified.':'يعتمد الترتيب على معايير مقارنة معلنة، لا على ترتيب مدفوع أو نجوم مخفية. يبقى التقييم فارغاً حتى يتم التحقق من بيانات المصدر المطلوبة.','Rule alignment':'توافق القواعد','Program terms are compared with the trader’s selected priorities and constraints.':'تُقارن شروط البرنامج بأولويات المتداول وقيوده المختارة.','Data completeness':'اكتمال البيانات','Missing or unclear values reduce confidence instead of being estimated.':'القيم الناقصة أو غير الواضحة تقلل الثقة بدلاً من تقديرها.','Clear rationale':'مبرر واضح','Every published position will include a concise reason for its place in the order.':'كل موضع منشور سيتضمن سبباً مختصراً لمكانه في الترتيب.','Firm information is published only after its rule, price, limit, source, and review date are checked. Unverified values stay unavailable rather than being filled with assumptions.':'لا تُنشر معلومات الشركة إلا بعد التحقق من القواعد والسعر والحدود والمصدر وتاريخ المراجعة. تبقى القيم غير الموثقة غير متاحة بدل ملئها بافتراضات.','Source attached':'المصدر مرفق','Each published fact will be tied to the source used for verification.':'كل معلومة منشورة سترتبط بالمصدر المستخدم للتحقق.','Review date visible':'تاريخ المراجعة ظاهر','Users will see when the information was last checked.':'سيرى المستخدمون متى تم فحص المعلومات آخر مرة.','Changes rechecked':'إعادة فحص التغييرات','Material rule or pricing changes require verification before the listing is updated.':'تتطلب تغييرات القواعد أو الأسعار المهمة التحقق قبل تحديث الإدراج.','Our principles':'مبادئنا','PIPVANT is built as a decision-tool suite, with strict limits on what the product claims and displays.':'بُني PIPVANT كمجموعة أدوات للقرار مع حدود صارمة لما يدعيه المنتج ويعرضه.','Real data only':'بيانات حقيقية فقط','No invented statistics, prices, or performance records.':'لا إحصاءات أو أسعار أو سجلات أداء مخترعة.','No fake listings':'لا إدراجات مزيفة','A firm appears only when its listing can be supported by verified source data.':'لا تظهر الشركة إلا عندما يدعم إدراجها مصدر بيانات موثق.','Tools, not signals':'أدوات وليست إشارات','PIPVANT supports research, sizing, journaling, and review. It never tells users what to trade.':'يدعم PIPVANT البحث وحساب الحجم والتسجيل والمراجعة. ولا يخبر المستخدمين بما يتداولون.','Calculations and certificates never imply guaranteed returns.':'الحسابات والشهادات لا توحي أبداً بعوائد مضمونة.',
@@ -7587,7 +8006,7 @@ html[dir="rtl"] .jump-row{text-align:right}
   };
   var attrAr={'Account setup':'إعداد الحساب','Back to welcome':'العودة للترحيب','Back to log in':'العودة لتسجيل الدخول','Back to account details':'العودة لتفاصيل الحساب','Profile initial':'حرف الملف الشخصي','Primary navigation':'التنقل الرئيسي','Close menu':'إغلاق القائمة','Account overview':'نظرة عامة على الحساب','Open navigation':'فتح التنقل','Notifications':'الإشعارات','Open profile':'فتح الملف الشخصي','Product data indicators':'مؤشرات بيانات المنتج','Quick risk calculator':'حاسبة مخاطر سريعة','Prop firm matcher':'مطابق شركات التداول','Market type':'نوع السوق','Maximum price':'السعر الأقصى','Matcher display controls':'أدوات عرض المطابق','Display currency':'عملة العرض','Result density':'كثافة النتائج','Result view':'عرض النتائج','Result row structure':'بنية صف النتيجة','Firm logo unavailable':'شعار الشركة غير متاح','Rating unavailable':'التقييم غير متاح','Discount unavailable':'الخصم غير متاح','Promotional offer unavailable':'العرض الترويجي غير متاح','Matcher trust indicators':'مؤشرات ثقة المطابق','Methodology statistics':'إحصاءات المنهجية','Trust and review information':'معلومات الثقة والمراجعة','Optional data consent':'موافقة البيانات الاختيارية','Trading journal':'سجل التداول','Journal controls':'أدوات السجل','Date range':'نطاق التاريخ','Performance metrics':'مقاييس الأداء','No Net P&L history':'لا يوجد سجل صافي ربح وخسارة','No cumulative R history':'لا يوجد سجل R تراكمي','Performance charts':'رسوم الأداء','Chart metric':'مقياس الرسم','Empty drawdown strip':'شريط تراجع فارغ','Weekly totals':'الإجماليات الأسبوعية','Trade filters':'مرشحات الصفقات','Search journal':'بحث في السجل','Search journal records':'بحث في سجلات الصفقات','Search symbol or note':'ابحث عن رمز أو ملاحظة','Search trades':'بحث في الصفقات','Trade view':'عرض الصفقات','Group trades':'تجميع الصفقات','Risk calculator':'حاسبة المخاطر','Account size':'حجم الحساب','Decrease risk percentage':'خفض نسبة المخاطرة','Risk percentage':'نسبة المخاطرة','Increase risk percentage':'رفع نسبة المخاطرة','Risk presets':'قيم المخاطرة الجاهزة','Discipline':'الانضباط','Discipline streak':'سلسلة الانضباط','Seven day completion strip':'شريط إكمال سبعة أيام','Weekly statistics':'الإحصاءات الأسبوعية','Notification views':'طرق عرض الإشعارات','Search notifications':'بحث في الإشعارات','Notification filters':'مرشحات الإشعارات','Notification detail':'تفاصيل الإشعار','Keyboard shortcuts':'اختصارات لوحة المفاتيح','Profile':'الملف الشخصي','Change profile photo':'تغيير صورة الملف الشخصي','Edit display name':'تعديل الاسم المعروض','Edit bio':'تعديل النبذة','Close profile editor':'إغلاق محرر الملف الشخصي','Earned certificates':'الشهادات المكتسبة','No equity data yet':'لا توجد بيانات رصيد بعد','Trading statistics':'إحصاءات التداول','Appearance':'المظهر','Language':'اللغة','Settings':'الإعدادات','Trading currency':'عملة التداول','Default risk percentage':'نسبة المخاطرة الافتراضية','Decrease default risk':'خفض المخاطرة الافتراضية','Increase default risk':'رفع المخاطرة الافتراضية','Close password form':'إغلاق نموذج كلمة المرور','Close email form':'إغلاق نموذج البريد','Close delete account form':'إغلاق نموذج حذف الحساب','Close trade form':'إغلاق نموذج الصفقة','Trade direction':'اتجاه الصفقة','Certificates':'الشهادات','About PIPVANT':'حول PIPVANT','Contact':'تواصل','Contact form':'نموذج التواصل','All prop firms':'جميع شركات التداول','Search firms':'البحث عن الشركات','Sort firms':'ترتيب الشركات','Firm directory views':'طرق عرض دليل الشركات','Close firm filters':'إغلاق مرشحات الشركات','Firm rule table':'جدول قواعد الشركة','Close firm details':'إغلاق تفاصيل الشركة','Save firm':'حفظ الشركة','Methodology':'المنهجية','Support':'الدعم','Close account switcher':'إغلاق مبدل الحساب','Trading accounts':'حسابات التداول','Close account form':'إغلاق نموذج الحساب','Economic Calendar':'التقويم الاقتصادي','Countdown to next high-impact event':'العد التنازلي للحدث القوي القادم','Economic events':'الأحداث الاقتصادية','Close calendar filters':'إغلاق مرشحات التقويم','Close event details':'إغلاق تفاصيل الحدث',
     'Dismiss':'إغلاق','Jump to':'اذهب إلى','Equity curve from connected Journal data':'منحنى الرصيد من بيانات السجل المتصلة',
-    'Promotion available':'عرض ترويجي متاح','Rationale available':'المبرر متاح','Status messages':'رسائل الحالة','Export .ics':'تصدير .ics','Jump to…':'اذهب إلى…','News alerts':'تنبيهات الأخبار','Browser alerts':'تنبيهات المتصفح','A browser notification 15 minutes before high-impact events, for your selected currencies.':'إشعار من المتصفح قبل 15 دقيقة من الأحداث عالية التأثير، لعملاتك المختارة.','Works while PIPVANT is open in your browser.':'يعمل أثناء فتح PIPVANT في متصفحك.','Your week in numbers':'أسبوعك بالأرقام','This week · Monday to Sunday':'هذا الأسبوع · الاثنين إلى الأحد'};
+    'Promotion available':'عرض ترويجي متاح','Rationale available':'المبرر متاح','Status messages':'رسائل الحالة','Export .ics':'تصدير .ics','Jump to…':'اذهب إلى…','News alerts':'تنبيهات الأخبار','Browser alerts':'تنبيهات المتصفح','A browser notification 15 minutes before high-impact events, for your selected currencies.':'إشعار من المتصفح قبل 15 دقيقة من الأحداث عالية التأثير، لعملاتك المختارة.','Works while PIPVANT is open in your browser.':'يعمل أثناء فتح PIPVANT في متصفحك.','Your week in numbers':'أسبوعك بالأرقام','This week · Monday to Sunday':'هذا الأسبوع · الاثنين إلى الأحد','Background scene':'مشهد الخلفية'};
   var translatableNodes=[];
   function captureTranslations(){
     var walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,{acceptNode:function(node){var p=node.parentElement;if(!p||/^(SCRIPT|STYLE|SVG)$/.test(p.tagName)||!node.nodeValue.trim())return NodeFilter.FILTER_REJECT;return NodeFilter.FILTER_ACCEPT;}});
@@ -7621,6 +8040,194 @@ html[dir="rtl"] .jump-row{text-align:right}
     if(typeof updateProfileIdentity==='function'&&profileSession)updateProfileIdentity(profileSession.name,profileSession.bio);
     if(typeof renderProfileCertificates==='function'&&profileSession)renderProfileCertificates(profileSession.certificates);
   }
+  /* ===== Background scenes (founder feature) =====
+     pvBgApply(key) switches the ambient SVG scene behind the app shell.
+     The stored selection ('pipvant_bgscene') may be a scene key, 'classic',
+     or 'auto' — Scene of the Day: pvBgEffectiveScene() resolves 'auto' to a
+     deterministic daily pick (FNV-1a hash of the local date over the real
+     scenes, 'classic' excluded) and the <html>/<body> data-bgscene attribute
+     always carries the EFFECTIVE scene. The head pre-paint script runs the
+     same hash so there is no flash. Also here: picker favourites
+     ('pipvant_bgfavs'), Surprise, visibility intensity ('pipvant_bgintensity'
+     -> html[data-bgintensity]) and pointer parallax ('pipvant_bgparallax').
+     All keys survive sign-out via the clearUserState keep-list. */
+  var PV_BG_POOL=['ninja','ronin','torii','dragon','kitsune','koi','cranes','sakura','lanterns','aurora','ocean','desert','wolf','eagle','orbit','rain','cinematic'];
+  var PV_BG_SCENES=PV_BG_POOL.concat(['classic']);
+  var PV_BG_CHOICES=PV_BG_SCENES.concat(['auto']);
+  var pvBgChoice='ninja';
+  var pvBgScene='ninja';
+  var pvBgRM=window.matchMedia('(prefers-reduced-motion: reduce)');
+  function pvBgHashDate(str){var h=2166136261;for(var i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
+  function pvBgTodayKey(){var d=new Date();function p(n){return String(n).padStart(2,'0');}return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());}
+  function pvBgEffectiveScene(){if(pvBgChoice!=='auto')return pvBgChoice;return PV_BG_POOL[pvBgHashDate(pvBgTodayKey())%PV_BG_POOL.length];}
+  window.pvBgEffectiveScene=pvBgEffectiveScene;
+  function pvBgSyncPicker(){
+    document.querySelectorAll('[data-bgscene-choice]').forEach(function(btn){
+      var on=btn.getAttribute('data-bgscene-choice')===pvBgChoice;
+      btn.classList.toggle('is-selected',on);
+      btn.setAttribute('aria-pressed',String(on));
+    });
+  }
+  function pvBgApply(key,persist){
+    if(PV_BG_CHOICES.indexOf(key)<0)key='ninja';
+    pvBgChoice=key;
+    pvBgScene=pvBgEffectiveScene();
+    document.documentElement.setAttribute('data-bgscene',pvBgScene);
+    if(document.body)document.body.setAttribute('data-bgscene',pvBgScene);
+    if(persist!==false){try{localStorage.setItem('pipvant_bgscene',key);}catch(e){}}
+    pvBgSyncPicker();
+    pvBgParallaxKick();
+  }
+  document.querySelectorAll('[data-bgscene-choice]').forEach(function(btn){
+    btn.addEventListener('click',function(){pvBgApply(btn.getAttribute('data-bgscene-choice'));});
+  });
+  /* --- Favourites --- */
+  var pvBgFavs=[];
+  try{pvBgFavs=JSON.parse(localStorage.getItem('pipvant_bgfavs')||'[]');if(!Array.isArray(pvBgFavs))pvBgFavs=[];}catch(e){pvBgFavs=[];}
+  pvBgFavs=pvBgFavs.filter(function(k){return PV_BG_SCENES.indexOf(k)>=0;});
+  function pvBgSaveFavs(){try{localStorage.setItem('pipvant_bgfavs',JSON.stringify(pvBgFavs));}catch(e){}}
+  function pvBgSourceCard(key){
+    var cards=document.querySelectorAll('[data-bgscene-choice]');
+    for(var i=0;i<cards.length;i++){if(cards[i].getAttribute('data-bgscene-choice')===key&&!cards[i].classList.contains('bgs-fav-clone'))return cards[i];}
+    return null;
+  }
+  function pvBgRenderFavs(){
+    var wrap=document.getElementById('bgsFavWrap'),grid=document.getElementById('bgsFavGrid');
+    if(wrap&&grid){
+      grid.innerHTML='';
+      pvBgFavs.forEach(function(key){
+        var src=pvBgSourceCard(key);if(!src)return;
+        var clone=src.cloneNode(true);
+        clone.classList.add('bgs-fav-clone');
+        clone.addEventListener('click',function(){pvBgApply(key);});
+        grid.appendChild(clone);
+      });
+      wrap.hidden=pvBgFavs.length===0;
+    }
+    document.querySelectorAll('[data-bgs-fav]').forEach(function(st){
+      var on=pvBgFavs.indexOf(st.getAttribute('data-bgs-fav'))>=0;
+      st.classList.toggle('is-fav',on);
+      st.setAttribute('aria-pressed',String(on));
+    });
+    pvBgSyncPicker();
+  }
+  function pvBgToggleFav(key){
+    var i=pvBgFavs.indexOf(key);
+    if(i>=0)pvBgFavs.splice(i,1);else pvBgFavs.push(key);
+    pvBgSaveFavs();pvBgRenderFavs();
+  }
+  var pvBgPickerEl=document.querySelector('.bgs-picker');
+  if(pvBgPickerEl){
+    pvBgPickerEl.addEventListener('click',function(ev){
+      var star=ev.target&&ev.target.closest?ev.target.closest('[data-bgs-fav]'):null;
+      if(star){ev.preventDefault();ev.stopPropagation();pvBgToggleFav(star.getAttribute('data-bgs-fav'));}
+    },true);
+    pvBgPickerEl.addEventListener('keydown',function(ev){
+      var star=ev.target&&ev.target.closest?ev.target.closest('[data-bgs-fav]'):null;
+      if(star&&(ev.key==='Enter'||ev.key===' ')){ev.preventDefault();ev.stopPropagation();pvBgToggleFav(star.getAttribute('data-bgs-fav'));}
+    },true);
+  }
+  /* --- Surprise me --- */
+  var pvSurpriseBtn=document.getElementById('bgsSurpriseBtn');
+  if(pvSurpriseBtn)pvSurpriseBtn.addEventListener('click',function(){
+    var pool=pvBgFavs.length?pvBgFavs.slice():PV_BG_POOL.slice();
+    var filtered=pool.filter(function(k){return k!==pvBgScene;});
+    if(filtered.length)pool=filtered;
+    var pick=pool[Math.floor(Math.random()*pool.length)];
+    pvBgApply(pick);
+    var card=pvBgSourceCard(pick),nm=card?card.querySelector('.bgs-name'):null;
+    if(typeof showToast==='function')showToast(((typeof currentLanguage!=='undefined'&&currentLanguage==='ar')?'يُعرض الآن: ':'Now showing: ')+(nm?nm.textContent:pick));
+  });
+  /* --- Visibility intensity --- */
+  var pvBgIntensity='balanced';
+  function pvBgApplyIntensity(v,persist){
+    if(v!=='subtle'&&v!=='vivid')v='balanced';
+    pvBgIntensity=v;
+    document.documentElement.setAttribute('data-bgintensity',v);
+    if(persist!==false){try{localStorage.setItem('pipvant_bgintensity',v);}catch(e){}}
+    var first=null;
+    document.querySelectorAll('[data-bgintensity-choice]').forEach(function(b){
+      b.setAttribute('aria-pressed',String(b.getAttribute('data-bgintensity-choice')===v));
+      if(!first)first=b;
+    });
+    if(first&&typeof refreshSegmentIndicator==='function'){
+      var grp=first.closest('.settings-segmented');
+      if(grp)refreshSegmentIndicator(grp);
+    }
+  }
+  document.querySelectorAll('[data-bgintensity-choice]').forEach(function(b){
+    b.addEventListener('click',function(){pvBgApplyIntensity(b.getAttribute('data-bgintensity-choice'));});
+  });
+  /* --- Pointer parallax (desktop fine pointers only; never touch/orientation) --- */
+  var pvBgParallaxOn=true;
+  try{pvBgParallaxOn=localStorage.getItem('pipvant_bgparallax')!=='0';}catch(e){}
+  var pvPar={x:0,y:0,tx:0,ty:0,raf:0,fine:window.matchMedia('(pointer:fine)')};
+  function pvBgParallaxActive(){
+    return pvBgParallaxOn&&pvPar.fine.matches&&!pvBgRM.matches&&pvBgScene!=='classic'&&!document.hidden;
+  }
+  function pvBgParallaxLoop(){
+    pvPar.x+=(pvPar.tx-pvPar.x)*.055;
+    pvPar.y+=(pvPar.ty-pvPar.y)*.055;
+    var layer=document.getElementById('bgSceneLayer');
+    if(layer)layer.style.transform='translate3d('+pvPar.x.toFixed(2)+'px,'+pvPar.y.toFixed(2)+'px,0)';
+    document.documentElement.style.setProperty('--pvpx',pvPar.x.toFixed(2));
+    document.documentElement.style.setProperty('--pvpy',pvPar.y.toFixed(2));
+    if(Math.abs(pvPar.tx-pvPar.x)>.02||Math.abs(pvPar.ty-pvPar.y)>.02){pvPar.raf=requestAnimationFrame(pvBgParallaxLoop);}
+    else pvPar.raf=0;
+  }
+  function pvBgParallaxKick(){
+    if(!pvBgParallaxActive()){
+      if(pvPar.raf){cancelAnimationFrame(pvPar.raf);pvPar.raf=0;}
+      pvPar.x=pvPar.y=pvPar.tx=pvPar.ty=0;
+      var layer=document.getElementById('bgSceneLayer');
+      if(layer)layer.style.transform='';
+      document.documentElement.style.setProperty('--pvpx','0');
+      document.documentElement.style.setProperty('--pvpy','0');
+      return;
+    }
+    if(!pvPar.raf)pvPar.raf=requestAnimationFrame(pvBgParallaxLoop);
+  }
+  document.addEventListener('mousemove',function(ev){
+    if(!pvBgParallaxActive())return;
+    pvPar.tx=(ev.clientX/Math.max(window.innerWidth,1)-.5)*12;
+    pvPar.ty=(ev.clientY/Math.max(window.innerHeight,1)-.5)*8;
+    pvBgParallaxKick();
+  },{passive:true});
+  var pvParToggle=document.getElementById('bgParallaxToggle');
+  function pvBgSyncParToggle(){if(pvParToggle)pvParToggle.setAttribute('aria-checked',String(pvBgParallaxOn));}
+  if(pvParToggle)pvParToggle.addEventListener('click',function(){
+    pvBgParallaxOn=!pvBgParallaxOn;
+    try{localStorage.setItem('pipvant_bgparallax',pvBgParallaxOn?'1':'0');}catch(e){}
+    pvBgSyncParToggle();pvBgParallaxKick();
+  });
+  /* --- Day rollover for Auto + hidden-tab pause --- */
+  function pvBgScheduleMidnight(){
+    var now=new Date();
+    var next=new Date(now.getFullYear(),now.getMonth(),now.getDate()+1,0,0,2);
+    setTimeout(function(){
+      if(pvBgChoice==='auto')pvBgApply('auto',false);
+      pvBgScheduleMidnight();
+    },Math.max(next-now,1000));
+  }
+  document.addEventListener('visibilitychange',function(){
+    if(document.body)document.body.classList.toggle('bgs-paused',document.hidden);
+    if(!document.hidden){
+      if(pvBgChoice==='auto'&&pvBgEffectiveScene()!==pvBgScene)pvBgApply('auto',false);
+      pvBgParallaxKick();
+    }
+  });
+  (function(){
+    var saved=null;
+    try{saved=localStorage.getItem('pipvant_bgscene');}catch(e){}
+    if(!saved)saved=document.documentElement.getAttribute('data-bgscene');
+    pvBgApply(saved,false);
+    var iv=null;
+    try{iv=localStorage.getItem('pipvant_bgintensity');}catch(e){}
+    pvBgApplyIntensity(iv||document.documentElement.getAttribute('data-bgintensity')||'balanced',false);
+    pvBgRenderFavs();
+    pvBgSyncParToggle();
+    pvBgScheduleMidnight();
+  })();
   captureTranslations();
 
   var reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -9864,7 +10471,7 @@ html[dir="rtl"] .jump-row{text-align:right}
     try{
       // H1-storage fix: removed 'pipvant_news_alerted' from keep-list (was
       // suppressing news alerts for the next user on the same device).
-      var keep={'pipvant_landing_seen':1,'pipvant_seen_landing':1,'pipvantConsent':1,'pipvant_rates':1,'pipvant_last_screen':1,'pipvant_shortlist':1};
+      var keep={'pipvant_landing_seen':1,'pipvant_seen_landing':1,'pipvantConsent':1,'pipvant_rates':1,'pipvant_last_screen':1,'pipvant_shortlist':1,'pipvant_bgscene':1,'pipvant_bgfavs':1,'pipvant_bgintensity':1,'pipvant_bgparallax':1};
       var drop=[];
       for(var i=0;i<localStorage.length;i++){
         var k=localStorage.key(i);
