@@ -1734,6 +1734,28 @@
   background:linear-gradient(135deg,#e8c455,#D4AF37)!important;color:#0A1628!important;
   box-shadow:0 2px 12px rgba(212,175,55,.5)!important;transform:scale(1.05);
 }
+/* BIG BATCH P1 — Verdict card + Rated-by-Traders strip + card compare pill */
+.verdict-card{margin:0 0 14px;border:1px solid rgba(212,175,55,.45);border-left:4px solid var(--gold,#D4AF37);border-radius:16px;background:linear-gradient(145deg,var(--surface),color-mix(in srgb,var(--raised) 54%,var(--surface)));padding:18px}
+.verdict-card[hidden]{display:none}
+.verdict-eyebrow{margin:0 0 6px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--gold,#D4AF37)}
+.verdict-name{margin:0 0 10px;font-family:"Space Grotesk",sans-serif;font-size:24px;font-weight:700;color:var(--text)}
+.verdict-reasons{margin:0 0 14px;padding:0;list-style:none;display:grid;gap:6px}
+.verdict-reasons li{font-size:13px;color:var(--secondary);display:flex;gap:8px;align-items:flex-start}
+.verdict-reasons li::before{content:"✓";color:var(--accent,#5B8DEF);font-weight:800;flex:0 0 auto}
+.verdict-cta{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 18px;border:0;border-radius:999px;background:linear-gradient(135deg,#e8c455,#D4AF37);color:#0A1628;font-size:13px;font-weight:800;cursor:pointer}
+.verdict-cta:active{transform:scale(.97)}
+.rated-strip{margin:0 0 14px;border:1px solid var(--line);border-radius:16px;background:var(--surface);padding:14px 18px}
+.rated-strip[hidden]{display:none}
+.rated-title{margin:0 0 10px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.rated-row{display:flex;gap:10px;flex-wrap:wrap}
+.rated-card{flex:1 1 180px;display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid rgba(212,175,55,.35);border-radius:12px;padding:10px 14px;background:transparent;cursor:pointer;text-align:left;color:var(--text);font:inherit}
+.rated-card:active{transform:scale(.98)}
+.rated-card .rated-firm{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:14px}
+.rated-card .rated-agg{color:var(--gold,#D4AF37);font-weight:700;font-size:13px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.rated-card .rated-likes{color:var(--muted);font-size:12px;white-space:nowrap}
+.rated-empty{margin:0;font-size:13px;color:var(--muted)}
+.firm-detail-actions .compare-toggle{position:static!important;width:auto!important;height:auto!important;top:auto!important;left:auto!important;min-height:36px;padding:0 14px;border-radius:999px!important;background:transparent!important;border:1px solid var(--line-strong)!important;color:var(--secondary);font-size:12px!important;font-weight:700;display:inline-flex;align-items:center;gap:6px;backdrop-filter:none}
+.firm-detail-actions .compare-toggle[aria-pressed="true"]{background:linear-gradient(135deg,#e8c455,#D4AF37)!important;border-color:var(--gold,#D4AF37)!important;color:#0A1628!important;box-shadow:0 0 0 1px var(--gold,#D4AF37),0 2px 12px rgba(212,175,55,.4)}
 /* expanded details */
 .firm-details{padding:0 18px 18px 18px!important}
 html[dir="rtl"] .firm-details{padding:0 18px 18px 18px!important}
@@ -2441,6 +2463,21 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
         <button class="cat-btn" type="button" data-cat="cfds" aria-pressed="false"><span class="cat-label">CFDs</span><span class="cat-count">15</span></button>
       </div>
 
+      <!-- BIG BATCH P1 — Verdict card (populated by sbRenderVerdictAndRated at end of sbRenderFirms) -->
+      <section class="verdict-card" id="sbVerdictCard" hidden aria-label="Best match">
+        <p class="verdict-eyebrow" id="sbVerdictEyebrow">Your best match</p>
+        <h3 class="verdict-name" id="sbVerdictName">—</h3>
+        <ul class="verdict-reasons" id="sbVerdictReasons"></ul>
+        <button class="verdict-cta" id="sbVerdictCta" type="button">See the plan <span aria-hidden="true">→</span></button>
+      </section>
+
+      <!-- BIG BATCH P1 — Rated by Traders strip (aggregate only, from window._sbCommunity) -->
+      <section class="rated-strip" id="sbRatedStrip" hidden aria-label="Rated by traders">
+        <p class="rated-title" id="sbRatedTitle">Rated by traders</p>
+        <div class="rated-row" id="sbRatedRow"></div>
+        <p class="rated-empty" id="sbRatedEmpty" hidden>No trader ratings yet — be the first on a firm page</p>
+      </section>
+
       <section class="matcher-list" data-view="rows" data-density="comfortable" aria-labelledby="top-firms-title">
         <div class="matcher-list-head">
           <div><h3 id="top-firms-title">Top Prop Firms</h3><div class="matcher-meta"><a class="method-pill" href="#matcherMethodology">How we verify and rank firms</a><button class="method-pill" type="button" data-screen="methodology">How we verify firms</button><span class="freshness-pill" id="freshnessBadge" hidden><span class="fresh-dot"></span><span id="freshnessText"></span></span></div></div>
@@ -2569,6 +2606,13 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
           </div>
           <div class="directory-meta"><button type="button" data-methodology-section="ranking">How we rank</button><span id="directoryFreshness">Data updated —</span></div>
         </div>
+
+        <!-- BIG BATCH P1 — Rated by Traders strip (directory; same aggregate data as matcher) -->
+        <section class="rated-strip" id="dirRatedStrip" hidden aria-label="Rated by traders">
+          <p class="rated-title" id="dirRatedTitle">Rated by traders</p>
+          <div class="rated-row" id="dirRatedRow"></div>
+          <p class="rated-empty" id="dirRatedEmpty" hidden>No trader ratings yet — be the first on a firm page</p>
+        </section>
 
         <div class="directory-results refresh-content" id="directoryResults">
           <div class="directory-empty" id="directoryEmpty"><div class="directory-empty-inner"><div class="directory-empty-mark" aria-hidden="true"><svg width="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5"/></svg></div><h3>No firms listed yet — verified firms will appear here.</h3><p>Every listing will remain blank until its rules, pricing, and source date have been checked.</p><button class="btn secondary" type="button" data-methodology-section="verification">How we verify</button></div></div>
@@ -3929,8 +3973,21 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
           }else{dslot.classList.remove('show','promo-badge');dslot.style.display='none';}
         }
       }catch(_pfm){}
-      /* WAVE 2b — compare toggle REMOVED from cards (user: cleaner without it; compare lives on detail page) */
-      try{var _ctOld=card.querySelector('.compare-toggle');if(_ctOld)_ctOld.remove();}catch(_ct2){}
+      /* BIG BATCH P1 — compare toggle RESTORED on cards as a pill in the detail
+         actions (no corner overlap with rank/heart). State text + aria-pressed
+         are kept in sync by sbUpdateCompareTray(); login gating stays inside
+         sbToggleCompare(), unchanged. */
+      try{
+        var _ctHost=card.querySelector('.firm-detail-actions')||card;
+        var _ct=card.querySelector('.compare-toggle');
+        if(!_ct){_ct=document.createElement('button');_ct.type='button';_ct.className='compare-toggle';_ctHost.appendChild(_ct);}
+        else if(_ct.parentNode!==_ctHost){_ctHost.appendChild(_ct);}
+        var _ctSel=(window.sbCompareIds||[]).indexOf(String(firm.id))!==-1;
+        _ct.setAttribute('aria-pressed',String(_ctSel));
+        _ct.setAttribute('aria-label',currentLanguage==='ar'?('قارن '+firm.name):('Compare '+firm.name));
+        _ct.textContent=_ctSel?(currentLanguage==='ar'?'✓ تزادت':'✓ Added'):(currentLanguage==='ar'?'⚖ قارن':'⚖ Compare');
+        _ct.onclick=function(ev){if(ev)ev.stopPropagation();if(typeof sbToggleCompare==='function')sbToggleCompare(firm.id);};
+      }catch(_ct2){}
       var toggle=function(){
         if(typeof sbOpenFirmDetail==='function')sbOpenFirmDetail(firm.id);
       };
@@ -4120,7 +4177,12 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     }
     document.querySelectorAll('#matcher .firm-card').forEach(function(card){
       var t=card.querySelector('.compare-toggle'),fid=card.getAttribute('data-firm-id');
-      if(t)t.setAttribute('aria-pressed',String(window.sbCompareIds.indexOf(String(fid))!==-1));
+      if(t){
+        var _sel=window.sbCompareIds.indexOf(String(fid))!==-1;
+        t.setAttribute('aria-pressed',String(_sel));
+        /* BIG BATCH P1: keep the pill's visible state in sync with the tray */
+        t.textContent=_sel?(currentLanguage==='ar'?'✓ تزادت':'✓ Added'):(currentLanguage==='ar'?'⚖ قارن':'⚖ Compare');
+      }
     });
   }
   function sbCmpCellVal(firm,plans,key){
@@ -4634,6 +4696,100 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
   /* Cached firm-card template: survives slots.innerHTML='' clears (bug: the prototype was
      destroyed on the first filtered render, so clearing the filter left an empty list until reload). */
   var sbFirmCardProto=null;
+  /* BIG BATCH P1 — Verdict card + Rated-by-Traders strips.
+     Verdict: top firm by sbPipvScore() among the CURRENTLY FILTERED firms
+     (sbRenderFirms sorts that list by score desc before calling this).
+     Reasons come only from real data: score + its rationale, the cheapest
+     discounted price, and the verified stamp. Rated strips: aggregate-only
+     top-3 by average rating from window._sbCommunity (ratingCount>=1);
+     honest empty state when no firm has any rating yet. */
+  function sbRenderVerdictAndRated(filteredFirms){
+    var ar=(typeof currentLanguage!=='undefined'&&currentLanguage==='ar');
+    /* ---- Verdict card ---- */
+    var vc=document.getElementById('sbVerdictCard');
+    if(vc){
+      var top=null,topScore=null;
+      if(filteredFirms&&filteredFirms.length){
+        try{var _sc=sbPipvScore(filteredFirms[0]);if(_sc&&isFinite(_sc.score)&&_sc.score>0){top=filteredFirms[0];topScore=_sc;}}catch(_ve){}
+      }
+      if(top&&topScore){
+        var plans=sbPlansByFirm[top.id]||[];
+        var reasons=[];
+        // 1) Score + rationale (known rationale phrases localised for AR).
+        var ratParts=[];
+        String(topScore.rationale||'').split(', ').forEach(function(p){
+          p=String(p||'').trim();if(!p)return;
+          var mSplit=p.match(/^(\d+(?:\.\d+)?)% split$/);
+          var mDd=p.match(/^(\d+(?:\.\d+)?)% DD( static)?$/);
+          if(p==='industry leader')ratParts.push(ar?'رائدة في المجال':'Industry leader');
+          else if(mSplit)ratParts.push(ar?('تقسيم أرباح حتى '+mSplit[1]+'%'):('Up to '+mSplit[1]+'% profit split'));
+          else if(mDd)ratParts.push(ar?('أقصى تراجع '+mDd[1]+'%'+(mDd[2]?' (ثابت)':'')):('Max drawdown '+mDd[1]+'%'+(mDd[2]?' (static)':'')));
+          else if(!ar)ratParts.push(p);
+        });
+        reasons.push((ar?'نتيجة PIPVANT: ':'PIPVANT Score: ')+topScore.score+'/100'+(ratParts.length?(' — '+ratParts.join(' · ')):''));
+        // 2) Cheapest discounted price across its plans (real promo data only).
+        try{
+          var mdp=sbMinDiscountedPrice(plans);
+          if(mdp&&isFinite(mdp.salePrice)){
+            var priceLine=(ar?'ابتداءً من ':'From ')+mdp.text;
+            if(mdp.hasPromo&&isFinite(mdp.origPrice)&&mdp.origPrice>mdp.salePrice)priceLine+=(ar?' (بدلاً من ':' (was ')+(mdp.symbol||'$')+(Math.round(mdp.origPrice*100)/100).toLocaleString('en-US')+')';
+            reasons.push(priceLine);
+          }
+        }catch(_vp){}
+        // 3) Verified stamp from last_verified_at.
+        if(top.last_verified_at){var _va=sbTimeAgo(top.last_verified_at);if(_va)reasons.push((ar?'✓ تم التحقق من البيانات ':'✓ Data verified ')+_va);}
+        var eb=document.getElementById('sbVerdictEyebrow');if(eb)eb.textContent=ar?'أفضل اختيار لك':'Your best match';
+        var nm2=document.getElementById('sbVerdictName');if(nm2)nm2.textContent=top.name||'—';
+        var ul=document.getElementById('sbVerdictReasons');
+        if(ul){ul.innerHTML='';reasons.slice(0,3).forEach(function(r){var li=document.createElement('li');li.textContent=r;ul.appendChild(li);});}
+        var cta=document.getElementById('sbVerdictCta');
+        if(cta){
+          cta.innerHTML='';
+          cta.appendChild(document.createTextNode(ar?'شوف الخطة':'See the plan'));
+          var arr2=document.createElement('span');arr2.setAttribute('aria-hidden','true');arr2.textContent=' →';cta.appendChild(arr2);
+          cta.onclick=function(ev){if(ev)ev.stopPropagation();if(typeof sbOpenFirmDetail==='function')sbOpenFirmDetail(top.id);};
+        }
+        vc.hidden=false;
+      }else{
+        vc.hidden=true;
+      }
+    }
+    /* ---- Rated by Traders strips (matcher + directory) ---- */
+    var comm=window._sbCommunity||{};
+    var rated=[];
+    (sbFirms||[]).forEach(function(f){
+      var c=comm[f.id];
+      if(c&&c.avgRating&&c.ratingCount>=1)rated.push({firm:f,avg:Number(c.avgRating),count:c.ratingCount,likes:Number(c.likes)||0});
+    });
+    rated.sort(function(a,b){
+      if(b.avg!==a.avg)return b.avg-a.avg;
+      if(b.count!==a.count)return b.count-a.count;
+      return String(a.firm.name||'').localeCompare(String(b.firm.name||''));
+    });
+    var top3=rated.slice(0,3);
+    [['sbRatedStrip','sbRatedTitle','sbRatedRow','sbRatedEmpty'],['dirRatedStrip','dirRatedTitle','dirRatedRow','dirRatedEmpty']].forEach(function(ids){
+      var strip=document.getElementById(ids[0]);if(!strip)return;
+      var ttl=document.getElementById(ids[1]);if(ttl)ttl.textContent=ar?'الأعلى تقييماً من المتداولين':'Rated by traders';
+      var row=document.getElementById(ids[2]),emp=document.getElementById(ids[3]);
+      if(row){
+        row.innerHTML='';
+        top3.forEach(function(it){
+          var b=document.createElement('button');b.type='button';b.className='rated-card';
+          var fn=document.createElement('span');fn.className='rated-firm';fn.textContent=it.firm.name||'—';b.appendChild(fn);
+          var ag=document.createElement('span');ag.className='rated-agg';ag.textContent=sbRatingCompact(it.avg,it.count,ar);b.appendChild(ag);
+          if(it.likes>0){var lk=document.createElement('span');lk.className='rated-likes';lk.textContent='👍 '+it.likes;b.appendChild(lk);}
+          b.addEventListener('click',function(){if(typeof sbOpenFirmDetail==='function')sbOpenFirmDetail(it.firm.id);});
+          row.appendChild(b);
+        });
+        row.style.display=top3.length?'':'none';
+      }
+      if(emp){
+        emp.textContent=ar?'لا توجد تقييمات من المتداولين بعد — كن أول من يقيّم من صفحة أي شركة':'No trader ratings yet — be the first on a firm page';
+        emp.hidden=top3.length>0;
+      }
+      strip.hidden=false;
+    });
+  }
   function sbRenderFirms(){
     sbHideMarketUI();
     if(!sbFirms.length)return;
@@ -4777,6 +4933,8 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     }catch(fbe){}
     sbUpdateCountChips();
     if(typeof sbUpdateMethodologyStats==='function')sbUpdateMethodologyStats();
+    /* BIG BATCH P1: verdict card + rated-by-traders strips for this filtered set */
+    try{sbRenderVerdictAndRated(firms);}catch(_vr){}
   }
   function sbUpdateMethodologyStats(){
     try{
