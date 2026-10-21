@@ -1560,6 +1560,26 @@
     /* Forward pack — Calm in Journal: CSS-only softening of the backdrop
        while the journal screen is active (stored intensity untouched). */
     body.bgs-calm #bgSceneLayer .bgs-photo{opacity:.55}
+    /* Portrait fit (phones): the COMPLETE painting, never cover-cropped.
+       body.bgs-fit is toggled by pvBgFitSync() from a (max-aspect-ratio:
+       3/4) matchMedia, so wider viewports never match and keep the
+       original cover full-bleed untouched. Two layers per buffer, swapped
+       together by the existing crossfade: .bgs-fill is the same painting
+       cover-scaled, heavily blurred and darkened, bleeding past the
+       layer edges so the whole screen carries the scene's own colours;
+       .bgs-photo becomes the sharp full painting (contain, natural
+       aspect via --bgs-ar set by pvBgShow from the loaded image),
+       anchored in the upper screen, its top/bottom edges feathered into
+       the fill by a mask — no hard letterbox lines. The scrim keeps the
+       per-scene calibration on top and deepens to app navy over the
+       lower ~45% so cards and text stay readable. */
+    .bgs-fill{position:absolute;inset:-56px;display:none;background-size:cover;background-position:center;will-change:transform;animation:bgsKB 60s ease-in-out infinite alternate}
+    body.bgs-fit .bgs-fill{display:block;filter:blur(28px) saturate(1.05) brightness(.8)}
+    html[data-bgintensity="vivid"] body.bgs-fit .bgs-fill{filter:blur(28px) saturate(1.18) brightness(.85)}
+    html[data-bgintensity="subtle"] body.bgs-fit .bgs-fill{opacity:.7}
+    body.bgs-fit .bgs-photo{top:9%;left:7%;right:7%;bottom:auto;height:auto;aspect-ratio:var(--bgs-ar,1.7778);background-size:contain;background-repeat:no-repeat;transform-origin:50% 50%;border-radius:16px;animation-name:bgsKBfit;-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 8%,#000 82%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 8%,#000 82%,transparent 100%)}
+    @keyframes bgsKBfit{from{transform:scale(1)}to{transform:scale(1.04)}}
+    body.bgs-fit .bgs-scrim{background:linear-gradient(180deg,rgba(10,22,40,var(--bgs-st,.58)),rgba(10,22,40,var(--bgs-sb,.38)) 30%,rgba(10,22,40,.86) 58%,rgba(10,22,40,.97))}
     /* Forward pack — victory celebration overlay (transient, inside the
        scene layer, above the buffers; pointer-events none). */
     .bgs-celebrate{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:3}
@@ -2979,7 +2999,7 @@ html[dir="rtl"] .jump-row{text-align:right}
 
 <div class="app">
 
-  <div id="bgSceneLayer" aria-hidden="true"><div class="bgs-buffer" id="bgsBufA"><div class="bgs-photo"></div><div class="bgs-scrim"></div><div class="bgs-fxwrap"></div></div><div class="bgs-buffer" id="bgsBufB"><div class="bgs-photo"></div><div class="bgs-scrim"></div><div class="bgs-fxwrap"></div></div></div>
+  <div id="bgSceneLayer" aria-hidden="true"><div class="bgs-buffer" id="bgsBufA"><div class="bgs-fill"></div><div class="bgs-photo"></div><div class="bgs-scrim"></div><div class="bgs-fxwrap"></div></div><div class="bgs-buffer" id="bgsBufB"><div class="bgs-fill"></div><div class="bgs-photo"></div><div class="bgs-scrim"></div><div class="bgs-fxwrap"></div></div></div>
   <div class="bgsfs" id="bgsFs" hidden role="dialog" aria-modal="true" aria-label="Scene preview" tabindex="-1">
     <div class="bgsfs-photo" id="bgsFsPhoto"></div>
     <div class="bgsfs-fxwrap" id="bgsFsFx" aria-hidden="true"></div>
@@ -8263,6 +8283,7 @@ html[dir="rtl"] .jump-row{text-align:right}
     if(!pvBgRemoteActive())pvBgViewChoice=key;
     pvBgSyncPicker();
     pvBgSyncShowcase();
+    if(typeof pvBgFitSync==='function')pvBgFitSync();
     pvBgShow(pvBgScene);
     pvBgParallaxKick();
     if(typeof pvBgSyncCalm==='function')pvBgSyncCalm();
@@ -8297,6 +8318,8 @@ html[dir="rtl"] .jump-row{text-align:right}
     img.onload=function(){
       if(token!==pvBgToken)return;
       back.querySelector('.bgs-photo').style.backgroundImage='url("'+url+'")';
+      var fill=back.querySelector('.bgs-fill');if(fill)fill.style.backgroundImage='url("'+url+'")';
+      if(img.naturalWidth>0&&img.naturalHeight>0)back.style.setProperty('--bgs-ar',(img.naturalWidth/img.naturalHeight).toFixed(5));
       var fxw=back.querySelector('.bgs-fxwrap');if(fxw)fxw.innerHTML=pvBgOverlayHTML(key);
       back.setAttribute('data-key',key);
       back.classList.add('is-on');
@@ -8306,6 +8329,28 @@ html[dir="rtl"] .jump-row{text-align:right}
     img.onerror=function(){};
     img.src=url;
   }
+  /* --- Portrait fit sync ---
+     On narrow portrait viewports (max-aspect-ratio 3/4) the backdrop
+     switches to the complete-painting treatment (see the bgs-fit CSS:
+     blurred fill + sharp contain painting). The class lives on <body>
+     and is re-evaluated on every apply and on aspect flips
+     (rotation/resize), so it can never get stuck. Wider viewports
+     never carry the class and render exactly as before. */
+  var pvBgFitMQ=null;
+  try{pvBgFitMQ=window.matchMedia('(max-aspect-ratio: 3/4)');}catch(e){}
+  function pvBgFitSync(){
+    try{
+      if(!document.body)return;
+      document.body.classList.toggle('bgs-fit',!!(pvBgFitMQ&&pvBgFitMQ.matches));
+    }catch(e){}
+  }
+  if(pvBgFitMQ){
+    if(pvBgFitMQ.addEventListener)pvBgFitMQ.addEventListener('change',pvBgFitSync);
+    else if(pvBgFitMQ.addListener)pvBgFitMQ.addListener(pvBgFitSync);
+  }
+  window.addEventListener('orientationchange',pvBgFitSync);
+  window.addEventListener('resize',pvBgFitSync);
+  pvBgFitSync();
   document.querySelectorAll('[data-bgscene-choice]').forEach(function(btn){
     btn.addEventListener('click',function(){
       var k=btn.getAttribute('data-bgscene-choice');
