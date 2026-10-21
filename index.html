@@ -2393,6 +2393,49 @@ html[dir="rtl"] .pv-ob-opt{text-align:right}
 .wl-alert-row{display:flex;gap:9px;align-items:center;font-size:12.5px;color:var(--secondary);line-height:1.45}
 .wl-alert-row strong{color:var(--text);font-weight:700}
 .wl-alert-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);flex:0 0 auto;box-shadow:0 0 8px rgba(212,175,55,.85)}
+/* ===== IDEAS BATCH 2: jump menu (premium command palette) ===== */
+.jump-overlay{position:fixed;inset:0;z-index:1300;background:rgba(4,10,20,.66);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:flex;align-items:flex-start;justify-content:center;padding:11vh 16px 16px}
+.jump-overlay[hidden]{display:none}
+.jump-panel{width:100%;max-width:620px;max-height:74vh;display:flex;flex-direction:column;background:linear-gradient(180deg,#0e1f38,#0A1628);border:1px solid rgba(212,175,55,.35);border-radius:18px;box-shadow:0 34px 90px rgba(0,0,0,.62),inset 0 1px 0 rgba(255,255,255,.05);overflow:hidden;animation:pvJumpIn .18s ease-out}
+@keyframes pvJumpIn{from{opacity:0;transform:translateY(-8px) scale(.99)}to{opacity:1;transform:none}}
+.jump-input-row{display:flex;align-items:center;gap:11px;padding:15px 17px;border-bottom:1px solid var(--line)}
+.jump-input-row>svg{color:var(--gold);flex:0 0 auto}
+.jump-input{flex:1;min-width:0;background:transparent;border:0;outline:0;color:var(--text);font:600 16px/1.3 "Space Grotesk",sans-serif}
+.jump-input::placeholder{color:var(--muted);font-weight:500}
+.jump-esc{flex:0 0 auto;font:700 9px/1 "IBM Plex Mono",monospace;letter-spacing:.08em;color:var(--muted);border:1px solid var(--line-strong);border-bottom-width:2px;border-radius:6px;padding:4px 6px}
+.jump-results{overflow-y:auto;padding:8px}
+.jump-group{padding:8px 9px 4px;color:var(--muted);font-size:10px;font-weight:800;letter-spacing:.13em;text-transform:uppercase}
+.jump-row{display:flex;align-items:center;gap:12px;width:100%;padding:8px 9px;border:1px solid transparent;border-radius:12px;background:transparent;color:var(--text);cursor:pointer;text-align:left}
+html[dir="rtl"] .jump-row{text-align:right}
+.jump-row-main{min-width:0;flex:1}
+.jump-row-main strong{display:block;font:600 14.5px/1.25 "Space Grotesk",sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.jump-row-main small{display:block;color:var(--muted);font-size:11px;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.jump-meta{flex:0 0 auto;color:var(--silver);font:600 11.5px/1 "IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+.jump-row.active{background:linear-gradient(120deg,rgba(212,175,55,.16),rgba(212,175,55,.05));border-color:rgba(212,175,55,.45)}
+.jump-row.active .jump-meta{color:var(--gold)}
+.jump-logo{width:34px;height:34px;flex:0 0 auto;border-radius:10px;background:linear-gradient(160deg,#fdfefe,#dfe7f2);display:grid;place-items:center;overflow:hidden;color:#0A1628;font:800 13px "Space Grotesk",sans-serif}
+.jump-icon{width:34px;height:34px;flex:0 0 auto;border-radius:10px;border:1px solid var(--line);background:rgba(91,141,239,.07);display:grid;place-items:center;color:var(--accent)}
+.jump-empty{padding:24px 14px;color:var(--muted);font-size:13px;text-align:center}
+.jump-foot{display:flex;gap:16px;padding:10px 17px;border-top:1px solid var(--line);color:var(--muted);font-size:10.5px;font-weight:600}
+.jump-foot span{display:inline-flex;align-items:center;gap:5px}
+@media(max-width:640px){.jump-overlay{padding:60px 10px 10px}.jump-panel{max-height:calc(100vh - 80px)}}
+@media(prefers-reduced-motion:reduce){.jump-panel{animation:none}}
+/* ===== IDEAS BATCH 2: calendar browser-alerts row (settings-row system, reused verbatim) ===== */
+.econ-alerts{margin:16px 0 2px}
+.econ-alerts-note{margin:8px 2px 0;color:var(--muted);font-size:11px;line-height:1.5}
+.econ-alerts-note.warn{color:var(--warning)}
+/* ===== IDEAS BATCH 2: weekly summary card (journal unified card system) ===== */
+.weekly-card{border:1px solid var(--line);border-radius:16px;background:linear-gradient(168deg,rgba(255,255,255,.03),rgba(255,255,255,0) 46%),var(--surface);overflow:hidden;margin-bottom:var(--journal-gap)}
+.weekly-body{padding:16px 20px 18px}
+.weekly-hero{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.weekly-hero-label{color:var(--gold);font-size:10.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase}
+.weekly-hero-value{font:600 32px/1 "Space Grotesk",sans-serif;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.weekly-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}
+.weekly-cell .wc-label{display:block;color:var(--muted);font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase}
+.weekly-cell .wc-value{display:block;margin-top:6px;font:600 17px/1.2 "Space Grotesk",sans-serif;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.weekly-cell .wc-sub{display:block;margin-top:3px;color:var(--muted);font-size:11px;line-height:1.45}
+.weekly-vs{margin:14px 0 0;padding-top:12px;border-top:1px solid var(--line);font-size:12px;font-weight:600}
+@media(max-width:720px){.weekly-grid{grid-template-columns:repeat(2,1fr)}}
 </style>
 <div id="siteLanding" aria-label="PIPVANT landing page">
   <div class="lp-grain" aria-hidden="true"></div>
@@ -2667,6 +2710,7 @@ html[dir="rtl"] .pv-ob-opt{text-align:right}
     <button class="menu-button" id="menuButton" type="button" aria-label="Open navigation" aria-expanded="false"><span></span><span></span><span></span></button>
     <div class="topbar-title"><small id="crumb">Toolkit</small><strong id="screenTitle">Trade with a process</strong></div>
     <div class="header-actions">
+      <button class="header-icon" id="jumpMenuButton" type="button" aria-label="Jump to" aria-haspopup="dialog"><svg width="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8"/></svg></button>
       <button class="header-icon" id="notificationButton" type="button" aria-label="Notifications" aria-expanded="false"><svg width="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 8h18c0-1-3-1-3-8M10 20h4"/></svg><span class="notification-badge" id="notificationBadge" aria-hidden="true"></span></button>
       <div class="notification-panel" id="notificationPanel" role="dialog" aria-label="Notifications"><div class="notification-head"><h3>Notifications</h3><span id="notificationPanelCount">— NEW</span><button class="notif-panel-close" type="button" data-close-notifications aria-label="Close notifications"><svg width="18"><use href="#pv-i-x"/></svg></button></div><div class="notification-empty"><div><div class="empty-glyph" aria-hidden="true"><svg width="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 8h18c0-1-3-1-3-8M10 20h4"/></svg></div><h3>No pending notifications</h3><p>Account and tool alerts will appear here.</p></div></div><button class="notification-footer" id="viewAllNotifications" type="button"><span>View all notifications</span><span aria-hidden="true">→</span></button></div>
     <div class="notif-detail-overlay" id="notifDetailOverlay" role="dialog" aria-modal="true" aria-label="Notification details">
@@ -2678,6 +2722,14 @@ html[dir="rtl"] .pv-ob-opt{text-align:right}
       <button class="header-avatar" data-screen="profile" type="button" aria-label="Open profile" data-header-avatar>—</button>
     </div>
   </header>
+
+  <div class="jump-overlay" id="jumpMenu" hidden>
+    <div class="jump-panel" role="dialog" aria-modal="true" aria-label="Jump to">
+      <div class="jump-input-row"><svg width="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8"/></svg><input class="jump-input" id="jumpInput" type="text" placeholder="Jump to…" autocomplete="off" spellcheck="false" aria-label="Jump to"><span class="jump-esc">ESC</span></div>
+      <div class="jump-results" id="jumpResults" role="listbox" aria-label="Results"></div>
+      <div class="jump-foot"><span id="jumpHintNav">↑↓ Navigate</span><span id="jumpHintOpen">↵ Open</span><span id="jumpHintClose">Esc Close</span></div>
+    </div>
+  </div>
 
   <main class="content" id="app">
     <section class="screen active" id="landing" aria-labelledby="landing-title">
@@ -3091,6 +3143,11 @@ html[dir="rtl"] .pv-ob-opt{text-align:right}
         <article class="kpi-card"><div class="kpi-top"><div><span class="kpi-label">Profit Factor</span><strong class="kpi-value" id="kpiProfitFactor">—</strong></div></div><div class="kpi-visual"><div class="gauge"><svg viewBox="0 0 120 62" fill="none" aria-label="Profit factor gauge"><path d="M12 54a48 48 0 0 1 96 0" stroke="var(--line-strong)" stroke-width="8" stroke-linecap="round"/><path id="kpiPfNeedle" d="M60 54 L60 14" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/></svg><div class="gauge-labels"><span>1.0</span><span>2.0</span></div></div></div><span class="kpi-note" id="kpiPfNote">Performance label —</span></article>
         <article class="kpi-card"><div class="kpi-top"><div><span class="kpi-label">Avg Win vs Avg Loss</span><strong class="kpi-value" id="kpiAvgWL">—</strong></div><span class="tiny" id="kpiAvgWLLabel">RATIO —</span></div><div><div class="split-track"><span id="kpiAvgWinBar"></span><span id="kpiAvgLossBar"></span></div><div class="split-labels"><span id="kpiAvgWinLbl">Avg win —</span><span id="kpiAvgLossLbl">Avg loss —</span></div></div></article>
         <article class="kpi-card"><div class="kpi-top"><div><span class="kpi-label">Expectancy</span><strong class="kpi-value" id="kpiExpectancy">+—R</strong></div></div><div><div class="sparkline-empty" aria-label="No cumulative R history"></div><span class="kpi-note" id="kpiExpectancyNote">Cumulative R —</span></div></article>
+      </section>
+
+      <section class="weekly-card" aria-labelledby="weekly-title">
+        <div class="journal-card-head"><div><h3 id="weekly-title">Your week in numbers</h3><p id="weekly-sub">This week · Monday to Sunday</p></div><span class="tiny" id="weeklyMode">NET P&amp;L</span></div>
+        <div class="weekly-body" id="weeklyBody"><p class="mistake-empty">No closed trades this week yet.</p></div>
       </section>
 
       <section class="journal-analytics" aria-label="Performance charts">
@@ -3595,6 +3652,13 @@ html[dir="rtl"] .pv-ob-opt{text-align:right}
           <button class="econ-filter-button" id="openCalendarFilters" type="button" aria-haspopup="dialog" aria-controls="calendarFilterSheet"><svg width="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 6h16M7 12h10m-7 6h4"/></svg><span>Filters</span><span class="econ-filter-count" id="calendarFilterCount" data-count="1">1</span></button>
           <button class="econ-filter-button econ-export-button" id="exportCalendarIcs" type="button"><svg width="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 4v11m0 0 4-4m-4 4-4-4"/><path d="M4 19h16"/></svg><span>Export .ics</span></button>
           <span class="tiny" id="calendarFeedState">LIVE FEED —</span>
+        </div>
+        <div class="econ-alerts">
+          <h3 class="settings-group-title" id="econAlertsTitle">News alerts</h3>
+          <div class="settings-card">
+            <button class="settings-toggle" id="browserNewsToggle" type="button" role="switch" aria-checked="false"><span class="settings-copy"><strong id="browserNewsLabel">Browser alerts</strong><small id="browserNewsSub">A browser notification 15 minutes before high-impact events, for your selected currencies.</small></span><span class="switch-track" aria-hidden="true"></span></button>
+          </div>
+          <p class="econ-alerts-note" id="browserNewsNote">Works while PIPVANT is open in your browser.</p>
         </div>
         <section class="econ-list refresh-content" aria-label="Economic events">
           <div class="econ-empty" id="calendarEmpty"><div class="econ-empty-inner"><div class="econ-empty-mark" aria-hidden="true"><svg width="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16M9 14h6"/></svg></div><h3>No events yet — the calendar appears when the live feed connects.</h3><p>Event times, impact, and results will remain unavailable until verified data arrives.</p></div></div>
@@ -7557,8 +7621,8 @@ html[dir="rtl"] .pv-ob-opt{text-align:right}
     "Firms with published, verifiable rules. Every card shows the firm's headquarters country, and every plan shows real prices and conditions — never invented ratings or guessed numbers.":'الشركات ذات القواعد المنشورة والقابلة للتحقق. كل بطاقة تعرض دولة مقر الشركة، وكل خطة تعرض أسعاراً وشروطاً حقيقية — أبداً تقييمات مخترعة أو أرقام مُخمَّنة.',
   };
   var attrAr={'Account setup':'إعداد الحساب','Back to welcome':'العودة للترحيب','Back to log in':'العودة لتسجيل الدخول','Back to account details':'العودة لتفاصيل الحساب','Profile initial':'حرف الملف الشخصي','Primary navigation':'التنقل الرئيسي','Close menu':'إغلاق القائمة','Account overview':'نظرة عامة على الحساب','Open navigation':'فتح التنقل','Notifications':'الإشعارات','Open profile':'فتح الملف الشخصي','Product data indicators':'مؤشرات بيانات المنتج','Quick risk calculator':'حاسبة مخاطر سريعة','Prop firm matcher':'مطابق شركات التداول','Market type':'نوع السوق','Maximum price':'السعر الأقصى','Matcher display controls':'أدوات عرض المطابق','Display currency':'عملة العرض','Result density':'كثافة النتائج','Result view':'عرض النتائج','Result row structure':'بنية صف النتيجة','Firm logo unavailable':'شعار الشركة غير متاح','Rating unavailable':'التقييم غير متاح','Discount unavailable':'الخصم غير متاح','Promotional offer unavailable':'العرض الترويجي غير متاح','Matcher trust indicators':'مؤشرات ثقة المطابق','Methodology statistics':'إحصاءات المنهجية','Trust and review information':'معلومات الثقة والمراجعة','Optional data consent':'موافقة البيانات الاختيارية','Trading journal':'سجل التداول','Journal controls':'أدوات السجل','Date range':'نطاق التاريخ','Performance metrics':'مقاييس الأداء','No Net P&L history':'لا يوجد سجل صافي ربح وخسارة','No cumulative R history':'لا يوجد سجل R تراكمي','Performance charts':'رسوم الأداء','Chart metric':'مقياس الرسم','Empty drawdown strip':'شريط تراجع فارغ','Weekly totals':'الإجماليات الأسبوعية','Trade filters':'مرشحات الصفقات','Search journal':'بحث في السجل','Search journal records':'بحث في سجلات الصفقات','Search symbol or note':'ابحث عن رمز أو ملاحظة','Search trades':'بحث في الصفقات','Trade view':'عرض الصفقات','Group trades':'تجميع الصفقات','Risk calculator':'حاسبة المخاطر','Account size':'حجم الحساب','Decrease risk percentage':'خفض نسبة المخاطرة','Risk percentage':'نسبة المخاطرة','Increase risk percentage':'رفع نسبة المخاطرة','Risk presets':'قيم المخاطرة الجاهزة','Discipline':'الانضباط','Discipline streak':'سلسلة الانضباط','Seven day completion strip':'شريط إكمال سبعة أيام','Weekly statistics':'الإحصاءات الأسبوعية','Notification views':'طرق عرض الإشعارات','Search notifications':'بحث في الإشعارات','Notification filters':'مرشحات الإشعارات','Notification detail':'تفاصيل الإشعار','Keyboard shortcuts':'اختصارات لوحة المفاتيح','Profile':'الملف الشخصي','Change profile photo':'تغيير صورة الملف الشخصي','Edit display name':'تعديل الاسم المعروض','Edit bio':'تعديل النبذة','Close profile editor':'إغلاق محرر الملف الشخصي','Earned certificates':'الشهادات المكتسبة','No equity data yet':'لا توجد بيانات رصيد بعد','Trading statistics':'إحصاءات التداول','Appearance':'المظهر','Language':'اللغة','Settings':'الإعدادات','Trading currency':'عملة التداول','Default risk percentage':'نسبة المخاطرة الافتراضية','Decrease default risk':'خفض المخاطرة الافتراضية','Increase default risk':'رفع المخاطرة الافتراضية','Close password form':'إغلاق نموذج كلمة المرور','Close email form':'إغلاق نموذج البريد','Close delete account form':'إغلاق نموذج حذف الحساب','Close trade form':'إغلاق نموذج الصفقة','Trade direction':'اتجاه الصفقة','Certificates':'الشهادات','About PIPVANT':'حول PIPVANT','Contact':'تواصل','Contact form':'نموذج التواصل','All prop firms':'جميع شركات التداول','Search firms':'البحث عن الشركات','Sort firms':'ترتيب الشركات','Firm directory views':'طرق عرض دليل الشركات','Close firm filters':'إغلاق مرشحات الشركات','Firm rule table':'جدول قواعد الشركة','Close firm details':'إغلاق تفاصيل الشركة','Save firm':'حفظ الشركة','Methodology':'المنهجية','Support':'الدعم','Close account switcher':'إغلاق مبدل الحساب','Trading accounts':'حسابات التداول','Close account form':'إغلاق نموذج الحساب','Economic Calendar':'التقويم الاقتصادي','Countdown to next high-impact event':'العد التنازلي للحدث القوي القادم','Economic events':'الأحداث الاقتصادية','Close calendar filters':'إغلاق مرشحات التقويم','Close event details':'إغلاق تفاصيل الحدث',
-    'Dismiss':'إغلاق','Equity curve from connected Journal data':'منحنى الرصيد من بيانات السجل المتصلة',
-    'Promotion available':'عرض ترويجي متاح','Rationale available':'المبرر متاح','Status messages':'رسائل الحالة','Export .ics':'تصدير .ics'};
+    'Dismiss':'إغلاق','Jump to':'اذهب إلى','Equity curve from connected Journal data':'منحنى الرصيد من بيانات السجل المتصلة',
+    'Promotion available':'عرض ترويجي متاح','Rationale available':'المبرر متاح','Status messages':'رسائل الحالة','Export .ics':'تصدير .ics','Jump to…':'اذهب إلى…','News alerts':'تنبيهات الأخبار','Browser alerts':'تنبيهات المتصفح','A browser notification 15 minutes before high-impact events, for your selected currencies.':'إشعار من المتصفح قبل 15 دقيقة من الأحداث عالية التأثير، لعملاتك المختارة.','Works while PIPVANT is open in your browser.':'يعمل أثناء فتح PIPVANT في متصفحك.','Your week in numbers':'أسبوعك بالأرقام','This week · Monday to Sunday':'هذا الأسبوع · الاثنين إلى الأحد'};
   var translatableNodes=[];
   function captureTranslations(){
     var walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,{acceptNode:function(node){var p=node.parentElement;if(!p||/^(SCRIPT|STYLE|SVG)$/.test(p.tagName)||!node.nodeValue.trim())return NodeFilter.FILTER_REJECT;return NodeFilter.FILTER_ACCEPT;}});
@@ -8947,6 +9011,281 @@ html[dir="rtl"] .pv-ob-opt{text-align:right}
       chip.setAttribute('aria-pressed',prefs.indexOf(cur)>-1?'true':'false');
     });
   }
+  /* ---- Pre-news browser alerts (ideas batch 2): EXTENDS the load-time
+     in-app news scan inside sbLoadCalendar (60-min "news soon" alert).
+     This scheduler fires ONCE per event group exactly when the event is
+     15 minutes out: the same in-app notification (notifStore, type 'news'),
+     plus a browser Notification when the user opted in and permission is
+     granted. Dedup lives in the SAME pipvant_news_alerted store with a
+     'pre15_' key prefix; currency selection and the high-impact rule are
+     the existing getNotifCurrPrefs() prefs — no parallel prefs. The opt-in
+     itself follows the existing per-user prefs mechanism (localStorage
+     notifUserKey()+'_browser15'). ---- */
+  function pvBrowserNewsOn(){
+    try{return localStorage.getItem(notifUserKey()+'_browser15')==='1';}catch(e){return false;}
+  }
+  function pvRenderBrowserNewsToggle(){
+    var btn=document.getElementById('browserNewsToggle');if(!btn)return;
+    var on=pvBrowserNewsOn();
+    btn.setAttribute('aria-checked',String(on));
+    var t=document.getElementById('econAlertsTitle');if(t)t.textContent=pvLT('News alerts','تنبيهات الأخبار');
+    var l=document.getElementById('browserNewsLabel');if(l)l.textContent=pvLT('Browser alerts','تنبيهات المتصفح');
+    var s=document.getElementById('browserNewsSub');if(s)s.textContent=pvLT('A browser notification 15 minutes before high-impact events, for your selected currencies.','إشعار من المتصفح قبل 15 دقيقة من الأحداث عالية التأثير، لعملاتك المختارة.');
+    var note=document.getElementById('browserNewsNote');
+    if(note){
+      var msg=pvLT('Works while PIPVANT is open in your browser.','يعمل أثناء فتح PIPVANT في متصفحك.');
+      var warn=false;
+      if(on&&typeof Notification!=='undefined'&&Notification.permission==='denied'){msg=pvLT('Browser permission is blocked — in-app alerts still work.','إذن المتصفح محظور — التنبيهات داخل التطبيق ما زالت تعمل.');warn=true;}
+      else if(on&&typeof Notification==='undefined'){msg=pvLT('This browser does not support notifications — in-app alerts still work.','هذا المتصفح لا يدعم الإشعارات — التنبيهات داخل التطبيق ما زالت تعمل.');warn=true;}
+      note.textContent=msg;
+      note.classList.toggle('warn',warn);
+    }
+  }
+  function pvToggleBrowserNews(){
+    if(pvBrowserNewsOn()){try{localStorage.setItem(notifUserKey()+'_browser15','0');}catch(e){}pvRenderBrowserNewsToggle();return;}
+    try{localStorage.setItem(notifUserKey()+'_browser15','1');}catch(e){}
+    pvRenderBrowserNewsToggle();
+    if(typeof Notification!=='undefined'&&Notification.permission==='default'){
+      try{
+        var p=Notification.requestPermission(function(){pvRenderBrowserNewsToggle();});
+        if(p&&typeof p.then==='function')p.then(function(){pvRenderBrowserNewsToggle();});
+      }catch(e){}
+    }
+  }
+  function pvFireBrowserNotification(title,body,tag){
+    try{
+      if(!pvBrowserNewsOn())return false;
+      if(typeof Notification==='undefined'||Notification.permission!=='granted')return false;
+      var n=new Notification(title,{body:body,tag:tag,icon:'assets/pipvanta-logo.png'});
+      n.onclick=function(){try{window.focus();}catch(e){}try{showScreen('calendar');}catch(e){}try{n.close();}catch(e){}};
+      return true;
+    }catch(e){return false;}
+  }
+  function pvCheckPreNewsAlerts(){
+    try{
+      pvRenderBrowserNewsToggle();
+      if(typeof notificationsEnabled!=='undefined'&&!notificationsEnabled)return;
+      if(typeof calendarEvents==='undefined'||!calendarEvents.length)return;
+      var now=Date.now(),LEAD=15*60000;
+      var prefs=(typeof getNotifCurrPrefs==='function')?getNotifCurrPrefs():['USD','GBP'];
+      var alerted={};
+      try{alerted=JSON.parse(localStorage.getItem('pipvant_news_alerted')||'{}');}catch(e){}
+      /* Same grouping as the load-time scan: same-minute events group
+         together, exact duplicate rows deduped by title+currency. */
+      var groups={};
+      calendarEvents.forEach(function(ev){
+        if(ev.impact!=='high'||!ev._ts)return;
+        if(prefs.indexOf(ev.currency)<0)return;
+        var diff=ev._ts-now;
+        if(diff>0&&diff<=LEAD){
+          var mk=Math.floor(ev._ts/60000);
+          var g=groups[mk]||(groups[mk]={ts:ev._ts,items:[],_seen:{}});
+          var ek=(ev.name||'')+'|'+(ev.currency||'');
+          if(!g._seen[ek]){g._seen[ek]=1;g.items.push(ev);}
+        }
+      });
+      /* Prune stale pre15 keys (events more than an hour past). */
+      var cutoff=Math.floor((now-3600000)/60000);
+      Object.keys(alerted).forEach(function(k){
+        var m=k.match(/^pre15_(\d+)_/);
+        if(m&&Number(m[1])<cutoff)delete alerted[k];
+      });
+      var changed=false;
+      Object.keys(groups).forEach(function(mk){
+        var g=groups[mk];if(!g.items.length)return;
+        var names=g.items.map(function(e){return e.name||'';}).sort().join('|');
+        var key='pre15_'+mk+'_'+names;
+        if(alerted[key])return;
+        alerted[key]=1;changed=true;
+        var ev0=g.items[0];
+        var tz=(typeof calendarTimezoneLabel==='function')?calendarTimezoneLabel():'';
+        var arL=currentLanguage==='ar';
+        var title,body,ref;
+        if(g.items.length===1){
+          title=arL?'خبر عالي التأثير بعد 15 دقيقة':'High-impact news in 15 minutes';
+          body=(ev0.currency||'')+' '+(ev0.name||'')+' — '+ev0.time+' '+tz;
+          ref={eventTs:ev0._ts,eventName:ev0.name,currency:ev0.currency,impact:ev0.impactLabel||ev0.impact,time:ev0.time,dayLabel:ev0.dayLabel,forecast:ev0.forecast,previous:ev0.previous};
+        }else{
+          title=arL?(g.items.length+' أخبار عالية التأثير بعد 15 دقيقة'):('High-impact news in 15 minutes ('+g.items.length+')');
+          body=(ev0.currency||'')+' '+g.items.map(function(e){return e.name||'';}).join(arL?'، ':', ')+' — '+ev0.time+' '+tz;
+          ref={eventTs:g.ts,eventCount:g.items.length,eventNames:g.items.map(function(e){return e.name||'';}),currency:ev0.currency,impact:ev0.impactLabel||ev0.impact,time:ev0.time,dayLabel:ev0.dayLabel};
+        }
+        var nid='news_pre15_'+key;
+        if(typeof notifStore!=='undefined'&&!notifStore.some(function(x){return x.id===nid;})){
+          notifStore.push({id:nid,scope:'everyone',title:title,message:body,type:'news',ts:Date.now(),read:(typeof isNotifRead==='function')?isNotifRead(nid):false,ref:ref});
+        }
+        if(typeof renderNotifications==='function')renderNotifications();
+        /* Browser delivery: title = event name; body = currency · impact ·
+           time (+ forecast when published). */
+        var bTitle,bBody;
+        if(g.items.length===1){
+          bTitle=ev0.name||title;
+          bBody=(ev0.currency||'')+' · '+String(ev0.impactLabel||'HIGH').toUpperCase()+' · '+ev0.time+' '+tz+((ev0.forecast&&ev0.forecast!=='—')?((arL?' · التوقع: ':' · Forecast: ')+ev0.forecast):'');
+        }else{
+          bTitle=title;
+          bBody=g.items.map(function(e){return (e.currency||'')+' '+(e.name||'');}).join(' · ')+' — '+ev0.time+' '+tz;
+        }
+        pvFireBrowserNotification(bTitle,bBody,nid);
+      });
+      if(changed){try{localStorage.setItem('pipvant_news_alerted',JSON.stringify(alerted));}catch(e){}}
+    }catch(e){}
+  }
+  window.pvCheckPreNewsAlerts=pvCheckPreNewsAlerts;
+  (function pvBrowserNewsWire(){
+    var btn=document.getElementById('browserNewsToggle');
+    if(btn)btn.addEventListener('click',pvToggleBrowserNews);
+    pvRenderBrowserNewsToggle();
+  })();
+  /* ---- Jump menu (ideas batch 2): premium command palette.
+     Index is built live at open/render time: screens from titlesEn/titlesAr
+     (navigated through showScreen — the same mechanism as [data-screen]),
+     firms from sbFirms with logo thumbs (sbLogoInto) + cheapest discounted
+     price (sbMinDiscountedPrice), and the standalone tool pages with the
+     labels they carry in the app toolkit. ---- */
+  (function pvJumpMenu(){
+    var overlay=document.getElementById('jumpMenu');if(!overlay)return;
+    var input=document.getElementById('jumpInput');
+    var results=document.getElementById('jumpResults');
+    var openBtn=document.getElementById('jumpMenuButton');
+    var TOOLS=[
+      {n:'Cheapest Prop Firm Evaluations',u:'cheapest-prop-firm-evaluations.html',k:'cheapest evaluations fees discount'},
+      {n:'Consistency Rule Checker',u:'consistency-rule-checker.html',k:'consistency rule best day'},
+      {n:'Drawdown Simulator',u:'drawdown-simulator.html',k:'drawdown breach simulator recovery compounding'},
+      {n:'Forex Risk Calculator',u:'forex-risk-calculator.html',k:'forex risk calculator position size'},
+      {n:'FTMO vs Competitors',u:'ftmo-vs-competitors.html',k:'ftmo versus competitors compare'},
+      {n:'Net Payout Calculator',u:'net-payout-calculator.html',k:'net payout bank calculator'},
+      {n:'Profit Split Calculator',u:'profit-split-calculator.html',k:'profit split keep calculator'},
+      {n:'Risk of Ruin Calculator',u:'risk-of-ruin-calculator.html',k:'risk of ruin monte carlo probability'},
+      {n:'Scaling Plan Calculator',u:'scaling-plan-calculator.html',k:'scaling plan growth calculator'},
+      {n:'Prop Firm Deals',u:'prop-firm-deals.html',k:'deals discounts promo codes offers'},
+      {n:'Data Ledger',u:'data-ledger.html',k:'data ledger verified changes history'},
+      {n:'Prop Firm Comparison',u:'prop-firm-comparison.html',k:'compare firms comparison table'}
+    ];
+    var SCREEN_SKIP={'firm-detail':1,'discipline':1};
+    var SCREEN_KW={landing:'home start toolkit tools',matcher:'prop firms match compare find','all-firms':'directory every firm list',calculator:'risk position size calculator',calendar:'economic news events calendar',lab:'pro lab true cost pass simulator breach guard',certificate:'certificates earned awards',notifications:'inbox alerts notifications','discipline-soon':'discipline coming soon',profile:'account profile stats',settings:'account settings preferences'};
+    var items=[],activeIdx=0,lastFocus=null;
+    function screensIndex(){
+      var T=(currentLanguage==='ar'&&typeof titlesAr!=='undefined')?titlesAr:titlesEn,out=[];
+      Object.keys(T).forEach(function(id){
+        if(SCREEN_SKIP[id])return;
+        if(!document.getElementById(id))return;
+        out.push({type:'screen',id:id,name:T[id][1],meta:T[id][0],kw:id+' '+(SCREEN_KW[id]||'')});
+      });
+      return out;
+    }
+    function firmsIndex(){
+      var out=[];
+      if(typeof sbFirms==='undefined'||!sbFirms||!sbFirms.length)return out;
+      sbFirms.forEach(function(f){
+        var meta='';
+        try{
+          var mp=sbMinDiscountedPrice((typeof sbPlansByFirm!=='undefined'&&sbPlansByFirm[f.id])||[]);
+          if(mp&&mp.text&&mp.text!=='—')meta=(currentLanguage==='ar'?'ابتداءً من ':'From ')+mp.text;
+        }catch(e){}
+        out.push({type:'firm',firm:f,name:f.name||'',meta:meta,kw:f.name||''});
+      });
+      return out;
+    }
+    function toolsIndex(){
+      return TOOLS.map(function(t){return {type:'tool',name:t.n,url:t.u,meta:currentLanguage==='ar'?'صفحة مستقلة':'Standalone page',kw:t.n+' '+t.k};});
+    }
+    function setActive(i){
+      if(!items.length){activeIdx=0;return;}
+      activeIdx=Math.max(0,Math.min(i,items.length-1));
+      items.forEach(function(it,j){
+        it.el.classList.toggle('active',j===activeIdx);
+        it.el.setAttribute('aria-selected',String(j===activeIdx));
+      });
+      var el=items[activeIdx]&&items[activeIdx].el;
+      if(el&&el.scrollIntoView){try{el.scrollIntoView({block:'nearest'});}catch(e){}}
+    }
+    function render(q){
+      q=(q||'').trim().toLowerCase();
+      results.replaceChildren();items=[];
+      var groups=[
+        {title:pvLT('Go to','اذهب إلى'),rows:screensIndex(),cap:0},
+        {title:pvLT('Firms','الشركات'),rows:firmsIndex(),cap:6},
+        {title:pvLT('Tools & pages','الأدوات والصفحات'),rows:toolsIndex(),cap:0}
+      ];
+      groups.forEach(function(g){
+        var rows=g.rows.filter(function(r){return !q||(r.name+' '+r.meta+' '+r.kw).toLowerCase().indexOf(q)>-1;});
+        if(g.cap)rows=rows.slice(0,g.cap);
+        if(!rows.length)return;
+        var h=document.createElement('div');h.className='jump-group';h.textContent=g.title;results.appendChild(h);
+        rows.forEach(function(r){
+          var b=document.createElement('button');b.type='button';b.className='jump-row';b.setAttribute('role','option');b.setAttribute('aria-selected','false');
+          if(r.type==='firm'){
+            var lg=document.createElement('span');lg.className='jump-logo';b.appendChild(lg);
+            try{sbLogoInto(lg,r.firm,(r.name||'?').charAt(0).toUpperCase());}
+            catch(e){lg.textContent=(r.name||'?').charAt(0).toUpperCase();}
+          }else{
+            var ic=document.createElement('span');ic.className='jump-icon';
+            ic.innerHTML=r.type==='tool'
+              ?'<svg width="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>'
+              :'<svg width="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>';
+            b.appendChild(ic);
+          }
+          var main=document.createElement('span');main.className='jump-row-main';
+          var st=document.createElement('strong');st.textContent=r.name;main.appendChild(st);
+          if(r.type==='screen'&&r.meta){var sm=document.createElement('small');sm.textContent=r.meta;main.appendChild(sm);}
+          b.appendChild(main);
+          if(r.meta&&r.type!=='screen'){var mt=document.createElement('span');mt.className='jump-meta';mt.textContent=r.meta;b.appendChild(mt);}
+          var idx=items.length;
+          items.push({el:b,data:r});
+          b.addEventListener('click',function(){choose(idx);});
+          b.addEventListener('mousemove',function(){if(activeIdx!==idx)setActive(idx);});
+          results.appendChild(b);
+        });
+      });
+      if(!items.length){
+        var e=document.createElement('div');e.className='jump-empty';
+        e.textContent=pvLT('No matches — try a firm name or a tool.','لا توجد نتائج — جرّب اسم شركة أو أداة.');
+        results.appendChild(e);
+      }
+      setActive(0);
+    }
+    function choose(i){
+      var it=items[i];if(!it)return;
+      var r=it.data;closeMenu();
+      if(r.type==='screen'){try{showScreen(r.id);}catch(e){}}
+      else if(r.type==='firm'){try{sbOpenFirmDetail(r.firm.id);}catch(e){}}
+      else if(r.type==='tool'){window.location.href=r.url;}
+    }
+    function openMenu(){
+      lastFocus=document.activeElement;
+      overlay.hidden=false;
+      input.value='';
+      var hn=document.getElementById('jumpHintNav');if(hn)hn.textContent=pvLT('↑↓ Navigate','↑↓ للتنقل');
+      var ho=document.getElementById('jumpHintOpen');if(ho)ho.textContent=pvLT('↵ Open','↵ فتح');
+      var hc=document.getElementById('jumpHintClose');if(hc)hc.textContent=pvLT('Esc Close','Esc إغلاق');
+      input.placeholder=pvLT('Jump to…','اذهب إلى…');
+      render('');
+      setTimeout(function(){try{input.focus();}catch(e){}},0);
+    }
+    function closeMenu(){
+      overlay.hidden=true;
+      if(lastFocus&&lastFocus.focus){try{lastFocus.focus();}catch(e){}}
+    }
+    function typingTarget(t){
+      return !!(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.tagName==='SELECT'||t.isContentEditable));
+    }
+    if(openBtn)openBtn.addEventListener('click',function(){openMenu();});
+    input.addEventListener('input',function(){render(input.value);});
+    overlay.addEventListener('click',function(e){if(e.target===overlay)closeMenu();});
+    document.addEventListener('keydown',function(e){
+      var isOpen=!overlay.hidden;
+      if((e.ctrlKey||e.metaKey)&&(e.key==='k'||e.key==='K')){e.preventDefault();if(isOpen)closeMenu();else openMenu();return;}
+      if(!isOpen){
+        if(e.key==='/'&&!typingTarget(e.target)){e.preventDefault();openMenu();}
+        return;
+      }
+      if(e.key==='Escape'){e.preventDefault();closeMenu();}
+      else if(e.key==='ArrowDown'){e.preventDefault();setActive(activeIdx+1);}
+      else if(e.key==='ArrowUp'){e.preventDefault();setActive(activeIdx-1);}
+      else if(e.key==='Enter'){e.preventDefault();choose(activeIdx);}
+    });
+    window.pvOpenJumpMenu=openMenu;
+  })();
   function renderNotifications(){
     var groups=document.getElementById('notificationGroups');
     var empty=document.getElementById('notificationEmpty');
@@ -10169,7 +10508,7 @@ html[dir="rtl"] .pv-ob-opt{text-align:right}
       }
     }
     count.textContent=hasEntries?(tradeCount+(currentLanguage==='ar'?' إدخالات':(tradeCount===1?' ENTRY':' ENTRIES'))):(currentLanguage==='ar'?'0 صفقات':'0 TRADES');
-    updateJournalKPIs();updateJournalCalendar();updateMistakeCosts();updateJournalBreakdowns();updateJournalEquity();updateJournalScore();renderFacetOptions();updateProfileFromSession();if(typeof applyJournalViewMode==='function'&&(window.journalViewMode==='chart'||window.journalViewMode==='unified'))applyJournalViewMode();
+    updateJournalKPIs();updateJournalCalendar();updateMistakeCosts();updateJournalBreakdowns();updateWeeklySummary();updateJournalEquity();updateJournalScore();renderFacetOptions();updateProfileFromSession();if(typeof applyJournalViewMode==='function'&&(window.journalViewMode==='chart'||window.journalViewMode==='unified'))applyJournalViewMode();
   }
   /* Central refresh: after any trade save/load/delete, update EVERYTHING.
      Journal (list/KPIs/calendar/equity/score/facets) + profile (stats/missions/score/balance/recent). */
@@ -10823,6 +11162,122 @@ html[dir="rtl"] .pv-ob-opt{text-align:right}
     }catch(e){}
   }
   document.querySelectorAll('[data-breakdown-view]').forEach(function(b){b.addEventListener('click',function(){breakdownView=b.getAttribute('data-breakdown-view');updateJournalBreakdowns();});});
+  /* ---- Weekly summary: current ISO week (Mon 00:00 → Sun 23:59, device-local)
+     from the same closed-trade set as the P&L calendar (jcalClosedTrades:
+     type 'trade', finite pnl, account-aware). Mistake cost reuses the
+     Cost-of-mistakes aggregation (tag normalised, MISTAKE_TAGS set) restricted
+     to this week. When jcalState.hide is ON, money becomes R — same
+     convention as breakdowns / share card. ---- */
+  function updateWeeklySummary(){
+    try{
+      var body=document.getElementById('weeklyBody');if(!body)return;
+      var arL=currentLanguage==='ar';
+      var t1=document.getElementById('weekly-title');if(t1)t1.textContent=arL?'أسبوعك بالأرقام':'Your week in numbers';
+      var t2=document.getElementById('weekly-sub');if(t2)t2.textContent=arL?'هذا الأسبوع · الاثنين إلى الأحد':'This week · Monday to Sunday';
+      var hideR=false;try{hideR=!!(typeof jcalState!=='undefined'&&jcalState.hide);}catch(e){}
+      var modeEl=document.getElementById('weeklyMode');if(modeEl)modeEl.textContent=hideR?(arL?'صافي R':'NET R'):(arL?'صافي الربح والخسارة':'NET P&L');
+      var sym=(typeof currencyMeta!=='undefined'&&currencyMeta[currentCurrency]&&currencyMeta[currentCurrency].symbol)||'$';
+      var fmtM=function(v){var core=Math.abs(v).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});return (v>=0?'+':'−')+(currentCurrency==='MAD'?core+' MAD':sym+core);};
+      var fmtR=function(v){return (v>=0?'+':'−')+Math.abs(v).toFixed(2)+'R';};
+      var colorFor=function(v){return v>0?'var(--success)':(v<0?'var(--danger)':'var(--muted)');};
+      var closed=(typeof jcalClosedTrades==='function')?jcalClosedTrades():[];
+      var now=new Date();
+      var mon=new Date(now.getFullYear(),now.getMonth(),now.getDate()-((now.getDay()+6)%7));mon.setHours(0,0,0,0);
+      var nextMon=new Date(mon);nextMon.setDate(nextMon.getDate()+7);
+      var prevMon=new Date(mon);prevMon.setDate(prevMon.getDate()-7);
+      var inWin=function(e,a,b){var ts=Number(e.timestamp||0);return ts>=a.getTime()&&ts<b.getTime();};
+      var week=closed.filter(function(e){return inWin(e,mon,nextMon);});
+      var prev=closed.filter(function(e){return inWin(e,prevMon,mon);});
+      var sumPnl=function(list){return list.reduce(function(s,e){return s+Number(e.pnl);},0);};
+      var sumR=function(list){var s=0,n=0;list.forEach(function(e){var r=(typeof jcalParseR==='function')?jcalParseR(e):null;if(r!==null){s+=r;n++;}});return {sum:s,n:n};};
+      /* Previous-week comparison (only when last week has ≥1 closed trade). */
+      var vsLine=null;
+      if(prev.length){
+        vsLine=document.createElement('p');vsLine.className='weekly-vs';
+        if(hideR){
+          var rw0=sumR(week),rp0=sumR(prev);
+          if(rw0.n&&rp0.n){var dR=rw0.sum-rp0.sum;vsLine.textContent=(arL?'مقارنة بالأسبوع الماضي: ':'vs last week: ')+(dR>0?'▲ ':(dR<0?'▼ ':''))+fmtR(dR);vsLine.style.color=colorFor(dR);}
+          else vsLine=null;
+        }else{
+          var dP=sumPnl(week)-sumPnl(prev);
+          vsLine.textContent=(arL?'مقارنة بالأسبوع الماضي: ':'vs last week: ')+(dP>0?'▲ ':(dP<0?'▼ ':''))+fmtM(dP);
+          vsLine.style.color=colorFor(dP);
+        }
+      }
+      body.replaceChildren();
+      if(!week.length){
+        var p0=document.createElement('p');p0.className='mistake-empty';
+        p0.textContent=arL?'لا توجد صفقات مغلقة هذا الأسبوع بعد.':'No closed trades this week yet.';
+        body.appendChild(p0);
+        if(vsLine)body.appendChild(vsLine);
+        return;
+      }
+      var n=week.length,wins=0;
+      week.forEach(function(e){if(Number(e.pnl)>0)wins++;});
+      var winRate=Math.round(wins/n*100);
+      /* Hero: net P&L (or total R when amounts are hidden). */
+      var hero=document.createElement('div');hero.className='weekly-hero';
+      var hLbl=document.createElement('span');hLbl.className='weekly-hero-label';
+      var hVal=document.createElement('strong');hVal.className='weekly-hero-value';
+      if(hideR){
+        var rw=sumR(week);
+        hLbl.textContent=arL?'إجمالي R':'Total R';
+        hVal.textContent=rw.n?fmtR(rw.sum):'—';
+        hVal.style.color=rw.n?colorFor(rw.sum):'var(--muted)';
+      }else{
+        var net=sumPnl(week);
+        hLbl.textContent=arL?'صافي الربح والخسارة':'Net P&L';
+        hVal.textContent=fmtM(net);
+        hVal.style.color=colorFor(net);
+      }
+      hero.appendChild(hLbl);hero.appendChild(hVal);body.appendChild(hero);
+      /* Best day: weekday with the highest net (money, or R when hidden). */
+      var dayNames=arL?['الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت','الأحد']:['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+      var byDay={};
+      week.forEach(function(e){
+        var d=new Date(e.timestamp||0);var di=(d.getDay()+6)%7;
+        if(!byDay[di])byDay[di]={pnl:0,rSum:0,rN:0};
+        byDay[di].pnl+=Number(e.pnl);
+        var r=(typeof jcalParseR==='function')?jcalParseR(e):null;if(r!==null){byDay[di].rSum+=r;byDay[di].rN++;}
+      });
+      var bestDay=null;
+      Object.keys(byDay).forEach(function(k){
+        var a=byDay[k];var v=hideR?(a.rN?a.rSum:null):a.pnl;
+        if(v===null)return;
+        if(!bestDay||v>bestDay.v)bestDay={di:Number(k),v:v};
+      });
+      /* Top mistake: worst MISTAKE_TAGS tag this week (Cost-of-mistakes def). */
+      var byTag={};
+      week.forEach(function(e){
+        var tag=String(e.tag||'').trim().replace(/^#+/,'');if(!tag)return;
+        var key=tag.toLowerCase();
+        if(MISTAKE_TAGS.indexOf(key)<0)return;
+        if(!byTag[key])byTag[key]={label:tag,pnl:0,rSum:0,rN:0};
+        byTag[key].pnl+=Number(e.pnl);
+        var r=(typeof jcalParseR==='function')?jcalParseR(e):null;if(r!==null){byTag[key].rSum+=r;byTag[key].rN++;}
+      });
+      var topMistake=null;
+      Object.keys(byTag).forEach(function(k){
+        var a=byTag[k];var v=hideR?(a.rN?a.rSum:null):a.pnl;
+        if(v===null)return;
+        if(!topMistake||v<topMistake.v)topMistake={label:a.label,v:v};
+      });
+      var grid=document.createElement('div');grid.className='weekly-grid';
+      var cell=function(label,value,sub,color){
+        var c=document.createElement('div');c.className='weekly-cell';
+        var l=document.createElement('span');l.className='wc-label';l.textContent=label;c.appendChild(l);
+        var v=document.createElement('span');v.className='wc-value';v.textContent=value;if(color)v.style.color=color;c.appendChild(v);
+        if(sub){var s=document.createElement('span');s.className='wc-sub';s.textContent=sub;c.appendChild(s);}
+        return c;
+      };
+      grid.appendChild(cell(arL?'الصفقات':'Trades',String(n),arL?'مغلقة هذا الأسبوع':'closed this week'));
+      grid.appendChild(cell(arL?'نسبة الفوز':'Win rate',winRate+'%',wins+'W · '+(n-wins)+(arL?' خسارة/تعادل':' L/BE')));
+      grid.appendChild(cell(arL?'أفضل يوم':'Best day',bestDay?dayNames[bestDay.di]:'—',bestDay?(hideR?fmtR(bestDay.v):fmtM(bestDay.v)):null,bestDay?colorFor(bestDay.v):null));
+      grid.appendChild(cell(arL?'أغلى خطأ':'Top mistake',topMistake?topMistake.label:(arL?'لا أخطاء موسومة':'No tagged mistakes'),topMistake?(hideR?fmtR(topMistake.v):fmtM(topMistake.v)):null,topMistake?colorFor(topMistake.v):null));
+      body.appendChild(grid);
+      if(vsLine)body.appendChild(vsLine);
+    }catch(e){}
+  }
   /* Journal search handler — Mega-audit fix: 250ms debounce (was a full DOM
      rebuild on every keystroke). */
   var _journalSearchT=0;
@@ -11744,6 +12199,8 @@ html[dir="rtl"] .pv-ob-opt{text-align:right}
             try{localStorage.setItem('pipvant_news_alerted',JSON.stringify(_alerted));}catch(e){}
           }
         }catch(e){}
+        /* Ideas batch 2: 15-minute pre-alerts ride the same load cycle. */
+        try{pvCheckPreNewsAlerts();}catch(e){}
       })
       .catch(function(){/* keep honest empty state */});
   }
@@ -11767,6 +12224,7 @@ html[dir="rtl"] .pv-ob-opt{text-align:right}
   var _newsRecheck=0;
   setInterval(function(){
     try{sbUpdateCalendarStatus();}catch(e){}
+    try{pvCheckPreNewsAlerts();}catch(e){}
     try{
       _newsRecheck++;
       if(_newsRecheck>=10){_newsRecheck=0;if(typeof sbLoadCalendar==='function')sbLoadCalendar();}
@@ -11892,7 +12350,7 @@ html[dir="rtl"] .pv-ob-opt{text-align:right}
     if(mM)mM.addEventListener('click',function(){setJcalMode('$');});
     if(mR)mR.addEventListener('click',function(){setJcalMode('R');});
     var hideBtn=document.getElementById('jcalHide');
-    if(hideBtn)hideBtn.addEventListener('click',function(){jcalState.hide=!jcalState.hide;hideBtn.setAttribute('aria-pressed',String(jcalState.hide));updateJournalCalendar();});
+    if(hideBtn)hideBtn.addEventListener('click',function(){jcalState.hide=!jcalState.hide;hideBtn.setAttribute('aria-pressed',String(jcalState.hide));updateJournalCalendar();if(typeof updateWeeklySummary==='function')updateWeeklySummary();});
     var grid=document.getElementById('jcalGrid');
     if(grid)grid.addEventListener('click',function(ev){
       var btn=ev.target&&ev.target.closest?ev.target.closest('[data-journal-day]'):null;if(!btn)return;
