@@ -103,10 +103,14 @@
     .field-shell span{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);font-weight:600}
     .field-shell .suffix{left:auto;right:14px}
     input,select{width:100%;height:48px;border-radius:10px;border:1px solid var(--line);background:var(--sunken);color:var(--text);padding:0 14px;outline:none;font-variant-numeric:tabular-nums}
-    input[type="password"]{width:100%;height:48px;border-radius:10px;border:1px solid var(--line);background:var(--sunken);color:var(--text);padding:0 14px;outline:none;font-variant-numeric:tabular-nums}
-    input[type="password"]:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
-    /* pw-mask: text input rendered as password dots (bypasses UA password-field rendering bugs) */
-    .pw-mask{-webkit-text-security:disc;text-security:disc}
+    /* pw-mask: text input rendered as password dots (bypasses UA password-field rendering bugs).
+       All password fields are type=text.pw-mask since 394a6b7 — no input[type=password] exists;
+       its dead rules (left from failed fixes ef6e174/e4be1af) were removed 2026-10-21.
+       Background/color are restated here so the field's painting never depends on cascade order. */
+    .pw-mask{-webkit-text-security:disc;text-security:disc;background:var(--sunken);color:var(--text)}
+    /* Autofill hardening: a browser/password-manager autofill must never repaint the field
+       with its own solid background — pin the field surface + text colour through autofill. */
+    input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus,input:autofill,input:autofill:hover,input:autofill:focus{-webkit-text-fill-color:var(--text);caret-color:var(--text);-webkit-box-shadow:0 0 0 60px var(--sunken) inset;box-shadow:0 0 0 60px var(--sunken) inset;transition:background-color 9999s ease-in-out 0s}
     input.money{padding-left:30px}
     input.suffixed{padding-right:38px}
     input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
