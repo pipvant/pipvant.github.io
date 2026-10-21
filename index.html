@@ -7,6 +7,13 @@
   <!-- Mega-audit SEO fixes: canonical + theme-color (were missing). -->
   <link rel="canonical" href="https://pipvant.github.io/">
   <meta name="theme-color" content="#0A1628">
+  <!-- PWA: installable app shell (manifest + icons + service worker registered at end of body). -->
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="PIPVANT">
   <!-- Mega-audit fix: set theme before first paint (prevents dark→light flash). -->
   <script>try{var _s=JSON.parse(localStorage.getItem('pipvant_settings')||'{}');var _t=_s&&_s.theme;if(_t==='light'||_t==='dark')document.documentElement.setAttribute('data-theme',_t);}catch(e){}</script>
   <script>try{var _pool=['ninja','ronin','torii','dragon','kitsune','koi','cranes','sakura','lanterns','aurora','ocean','desert','wolf','eagle','orbit','rain','cinematic','trader','neo-ronin','miko','pirate','astronaut','ramadan'];var _b=null;if(localStorage.getItem('pipvant_bgperdevice')==='1'){var _coarse=false;try{_coarse=window.matchMedia('(pointer: coarse)').matches;}catch(_ce){}var _dev=(_coarse||window.innerWidth<760)?'m':'d';_b=localStorage.getItem(_dev==='m'?'pipvant_bgscene_m':'pipvant_bgscene_d');if(!_b||(_pool.indexOf(_b)<0&&_b!=='classic'&&_b!=='auto'&&_b!=='moods'&&_b!=='custom'))_b=localStorage.getItem('pipvant_bgscene');}else{_b=localStorage.getItem('pipvant_bgscene');}if(!_b||(_pool.indexOf(_b)<0&&_b!=='classic'&&_b!=='auto'&&_b!=='moods'&&_b!=='custom'))_b='ninja';if(_b==='auto'){var _d=new Date();function _p(n){return String(n).padStart(2,'0');}var _s=_d.getFullYear()+'-'+_p(_d.getMonth()+1)+'-'+_p(_d.getDate());var _h=2166136261;for(var _i=0;_i<_s.length;_i++){_h^=_s.charCodeAt(_i);_h=Math.imul(_h,16777619);}_b=_pool[(_h>>>0)%_pool.length];}if(_b==='moods'){var _t=new Date();var _m=_t.getHours()*60+_t.getMinutes();_b=(_m>=300&&_m<720)?'cranes':(_m>=720&&_m<1050)?'desert':(_m>=1050&&_m<1350)?'rain':'ninja';}if(_b==='dragon'||_b==='trader'||_b==='ramadan'){var _u=null;try{_u=JSON.parse(localStorage.getItem('pipvant_bgunlocked')||'[]');}catch(_ue){_u=null;}if(!_u||_u.indexOf(_b)<0)_b='ninja';}document.documentElement.setAttribute('data-bgscene',_b);var _vi=localStorage.getItem('pipvant_bgintensity');if(_vi!=='subtle'&&_vi!=='vivid')_vi='balanced';document.documentElement.setAttribute('data-bgintensity',_vi);}catch(e){document.documentElement.setAttribute('data-bgscene','ninja');document.documentElement.setAttribute('data-bgintensity','balanced');}</script>
@@ -1727,6 +1734,32 @@
 
 
   </style>
+<style>
+    /* ===== Launch tier: CSV import sheet (modeled on the calendar sheets) ===== */
+    .csv-import-sheet{position:fixed;inset:0;z-index:96;display:none;align-items:flex-end;background:rgba(2,8,17,.74)}
+    .csv-import-sheet.open{display:flex}
+    .csv-import-panel{max-height:88svh}
+    .csv-import-privacy{margin:0 0 14px;padding:10px 12px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--accent-soft);color:var(--secondary);font-size:.82rem;line-height:1.45}
+    .csv-import-summary{margin:0 0 12px;color:var(--text);font-size:.92rem;line-height:1.55}
+    .csv-import-summary:empty{display:none}
+    .csv-import-tablewrap{margin:0 0 14px;border:1px solid var(--line);border-radius:var(--r-md);overflow:auto;max-height:32svh}
+    .csv-import-table{width:100%;border-collapse:collapse;font-size:.83rem}
+    .csv-import-table th{position:sticky;top:0;background:var(--surface);color:var(--muted);text-align:left;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;padding:8px 10px;border-bottom:1px solid var(--line-strong)}
+    .csv-import-table td{padding:8px 10px;border-bottom:1px solid var(--line);color:var(--text);white-space:nowrap}
+    .csv-import-table tr:last-child td{border-bottom:0}
+    .csv-import-table .pv-pos{color:var(--success)}
+    .csv-import-table .pv-neg{color:var(--danger)}
+    .csv-import-error{margin:0 0 14px;padding:10px 12px;border:1px solid color-mix(in srgb,var(--danger) 55%,transparent);border-radius:var(--r-md);color:var(--danger);font-size:.86rem;line-height:1.5}
+    .csv-import-map{margin:0 0 14px}
+    .csv-import-map-title{margin:0 0 10px;color:var(--secondary);font-size:.86rem}
+    .csv-import-map-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px}
+    .csv-import-map-field{display:flex;flex-direction:column;gap:5px}
+    .csv-import-map-field label{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+    .csv-import-map-field select{background:var(--surface);border:1px solid var(--line-strong);border-radius:var(--r-sm);color:var(--text);padding:9px 10px;font-size:.86rem;width:100%}
+    .csv-import-map-field select.pv-map-missing{border-color:var(--gold)}
+    html[data-theme="light"] .csv-import-sheet{background:rgba(10,22,40,.42)}
+    @media (min-width:640px){.csv-import-sheet{align-items:center;justify-content:center;padding:24px}.csv-import-panel{width:min(100%,560px);border-radius:18px;padding:24px}}
+  </style>
 </head>
 <body class="auth-active auth-checking">
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="pv-i-note" viewBox="0 0 24 24"><path d="M6 3h12v18H6zM9 7h6" fill="none" stroke="currentColor" stroke-width="1.7"/></symbol><symbol id="pv-i-x" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol><symbol id="pv-i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol><symbol id="pv-i-ck16" viewBox="0 0 24 24"><path d="m5 12 4 4 10-10" fill="none" stroke="currentColor" stroke-width="2.4"/></symbol><symbol id="pv-i-ckb" viewBox="0 0 24 24"><path d="m5 13 4 4L19 7" fill="none" stroke="#5B8DEF" stroke-width="2.4"/></symbol></svg>
@@ -3405,6 +3438,8 @@ html[dir="rtl"] .jump-row{text-align:right}
         <div class="range-segment" role="group" aria-label="Date range"><button class="range-btn" type="button" data-range="1w" aria-pressed="true">1W</button><button class="range-btn" type="button" data-range="1m" aria-pressed="false">1M</button><button class="range-btn" type="button" data-range="3m" aria-pressed="false">3M</button><button class="range-btn" type="button" data-range="1y" aria-pressed="false">1Y</button><button class="range-btn" type="button" data-range="all" aria-pressed="false">All</button><button class="range-btn" type="button" data-range="custom" aria-pressed="false">Custom</button></div>
         <button class="btn primary journal-add" id="desktopAddTrade" type="button">+ Add Trade</button>
         <button class="btn secondary" id="shareStatsBtn" type="button">Share stats</button>
+        <button class="btn secondary" id="importCsvBtn" type="button"><svg width="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true" style="vertical-align:-2px;margin-right:5px;"><path d="M12 15V3m0 12 4-4m-4 4-4-4M5 19h14"/></svg><span id="importCsvBtnLabel">Import CSV</span></button>
+        <input type="file" id="csvImportFile" accept=".csv,text/csv" hidden>
       </div>
       <p class="session-feedback" id="journalFeedback" aria-live="polite"></p>
       <p class="session-feedback" id="shareStatsFeedback" aria-live="polite"></p>
@@ -3756,6 +3791,10 @@ html[dir="rtl"] .jump-row{text-align:right}
                   <div class="profile-health-row"><span class="profile-health-glyph" aria-hidden="true">—</span><span>Notifications</span><span class="profile-health-value">—</span></div>
                 </div>
               </section>
+              <section class="profile-surface" id="pvInstallSurface" aria-labelledby="pv-install-title" hidden>
+                <div class="profile-surface-head"><h3 id="pv-install-title">Get the app</h3></div>
+                <button class="settings-action" id="pvInstallRowProfile" type="button" style="min-height:52px;padding:0 2px;"><span class="settings-copy"><strong id="pvInstallLabelProfile">Install app</strong><small id="pvInstallHintProfile">Add PIPVANT to your home screen for one-tap access.</small></span><svg width="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 3v11m0 0 4-4m-4 4-4-4M4 19h16"/></svg></button>
+              </section>
             </div>
           </div>
         </div>
@@ -3843,6 +3882,13 @@ html[dir="rtl"] .jump-row{text-align:right}
             <h3 class="settings-group-title" id="settings-notifications-title">Notifications</h3>
             <div class="settings-card">
               <button class="settings-toggle" id="notificationsToggle" type="button" role="switch" aria-checked="true"><span class="settings-copy"><strong>Account notifications</strong><small>Show account and tool alerts.</small></span><span class="switch-track" aria-hidden="true"></span></button>
+            </div>
+          </section>
+
+          <section class="settings-group" aria-labelledby="settings-app-title" id="pvInstallGroup" hidden>
+            <h3 class="settings-group-title" id="settings-app-title">App</h3>
+            <div class="settings-card">
+              <button class="settings-action" id="pvInstallRowSettings" type="button"><span class="settings-copy"><strong id="pvInstallLabelSettings">Install app</strong><small id="pvInstallHintSettings">Add PIPVANT to your home screen for one-tap access.</small></span><svg width="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 3v11m0 0 4-4m-4 4-4-4M4 19h16"/></svg></button>
             </div>
           </section>
 
@@ -4301,6 +4347,24 @@ html[dir="rtl"] .jump-row{text-align:right}
     <div class="pv-ob-actions"><button type="button" class="btn secondary" id="pvObSkip">Skip for now</button><button type="button" class="btn primary" id="pvObNext">Continue</button></div>
   </div>
 </div>
+<div class="csv-import-sheet" id="csvImportSheet" role="dialog" aria-modal="true" aria-labelledby="csvImportTitle">
+  <div class="calendar-sheet-panel csv-import-panel">
+    <div class="grabber"></div>
+    <div class="sheet-title-row"><div><p class="eyebrow" id="csvImportEyebrow">Journal import</p><h3 id="csvImportTitle">Import trades from CSV</h3><p id="csvImportFileLine">—</p></div><button class="sheet-close" id="closeCsvImport" type="button" aria-label="Close CSV import"><svg width="18"><use href="#pv-i-x"/></svg></button></div>
+    <p class="csv-import-privacy" id="csvImportPrivacy">Your file never leaves this device — parsing happens locally in your browser.</p>
+    <div class="csv-import-map" id="csvImportMap" hidden>
+      <p class="csv-import-map-title" id="csvImportMapTitle">Match the columns in your file:</p>
+      <div class="csv-import-map-grid" id="csvImportMapGrid"></div>
+    </div>
+    <p class="csv-import-summary" id="csvImportSummary"></p>
+    <div class="csv-import-tablewrap" id="csvImportTableWrap" hidden>
+      <table class="csv-import-table"><thead><tr><th id="csvThSymbol">Symbol</th><th id="csvThSide">Side</th><th id="csvThTime">Open time</th><th id="csvThProfit">Profit</th></tr></thead><tbody id="csvImportPreviewBody"></tbody></table>
+    </div>
+    <p class="csv-import-error" id="csvImportError" role="alert" hidden></p>
+    <div class="sheet-actions"><button class="btn secondary" id="cancelCsvImport" type="button">Cancel</button><button class="btn primary" id="confirmCsvImport" type="button" disabled>Import</button></div>
+  </div>
+</div>
+
 <div class="trade-sheet" id="tradeSheet" role="dialog" aria-modal="true" aria-labelledby="tradeSheetTitle">  <div class="trade-form">
     <div class="grabber"></div>
     <div class="sheet-head"><div><span class="tiny">NEW ENTRY</span><h3 id="tradeSheetTitle">Log trade</h3></div><button class="btn icon secondary" id="closeTradeSheet" type="button" aria-label="Close trade form"><svg width="19"><use href="#pv-i-x"/></svg></button></div>
@@ -7616,6 +7680,20 @@ html[dir="rtl"] .jump-row{text-align:right}
       sessionJournalEntries.sort(function(a,b){return (b.timestamp||0)-(a.timestamp||0);});
     }catch(e){}
   }
+  /* Launch tier bridges: expose journal internals for the PWA/CSV pack
+     (separate script tag at end of body). Guarded: a failure here changes
+     nothing for the app itself. */
+  try{
+    window.persistLocalTrade=persistLocalTrade;
+    window.removeLocalTrade=removeLocalTrade;
+    window.loadLocalTrades=loadLocalTrades;
+    window.syncLocalTradesToCloud=syncLocalTradesToCloud;
+    window.refreshAllTradeUI=refreshAllTradeUI;
+    window.showToast=showToast;
+    window.pvLang=function(){try{return currentLanguage;}catch(e){return 'en';}};
+    window.pvHasSession=function(){try{return !!(sb&&sbUser);}catch(e){return false;}};
+    window.pvDeleteCloudTrade=function(id){try{if(sb&&sbUser&&id)return sb.from('trades').delete().eq('id',id).eq('user_id',sbUser.id);}catch(e){}return null;};
+  }catch(e){}
   // Mega-audit rewrite: bulk insert + returns a promise + single UI refresh.
   // Fixes: T-perf (was N UI rebuilds + N round-trips + N storage RW),
   // T-logout (logout's 5s race was dead code — this returned undefined),
@@ -11493,7 +11571,7 @@ html[dir="rtl"] .jump-row{text-align:right}
     try{
       // H1-storage fix: removed 'pipvant_news_alerted' from keep-list (was
       // suppressing news alerts for the next user on the same device).
-      var keep={'pipvant_landing_seen':1,'pipvant_seen_landing':1,'pipvantConsent':1,'pipvant_rates':1,'pipvant_last_screen':1,'pipvant_shortlist':1,'pipvant_bgscene':1,'pipvant_bgfavs':1,'pipvant_bgintensity':1,'pipvant_bgparallax':1,'pipvant_bgtilt':1,'pipvant_bgsaver':1,'pipvant_bgcalm':1,'pipvant_bgperdevice':1,'pipvant_bgscene_m':1,'pipvant_bgscene_d':1,'pipvant_sotd_hide':1,'pipvant_cert_count':1,'pipvant_cert_positive_seen':1,'pipvant_bgunlocked':1};
+      var keep={'pipvant_landing_seen':1,'pipvant_seen_landing':1,'pipvantConsent':1,'pipvant_rates':1,'pipvant_last_screen':1,'pipvant_shortlist':1,'pipvant_bgscene':1,'pipvant_bgfavs':1,'pipvant_bgintensity':1,'pipvant_bgparallax':1,'pipvant_bgtilt':1,'pipvant_bgsaver':1,'pipvant_bgcalm':1,'pipvant_bgperdevice':1,'pipvant_bgscene_m':1,'pipvant_bgscene_d':1,'pipvant_sotd_hide':1,'pipvant_cert_count':1,'pipvant_cert_positive_seen':1,'pipvant_bgunlocked':1,'pipvant_csv_imported':1};
       var drop=[];
       for(var i=0;i<localStorage.length;i++){
         var k=localStorage.key(i);
@@ -13894,6 +13972,466 @@ html[dir="rtl"] .jump-row{text-align:right}
     /* Economic calendar hero: tick the countdown every second */
     setInterval(function(){try{sbUpdateCalendarStatus();}catch(e){}},1000);
   })();
+})();
+</script>
+<script>
+/* ===== Launch tier: PWA install affordance + Journal CSV import =====
+   Guarded throughout: any failure is a silent no-op and can never break
+   the app. Journal writes go through the app's own bridges
+   (window.persistLocalTrade / syncLocalTradesToCloud / refreshAllTradeUI). */
+(function(){
+'use strict';
+function pvLang(){ try{ return typeof window.pvLang==='function'?window.pvLang():'en'; }catch(e){ return 'en'; } }
+function AR(){ return pvLang()==='ar'; }
+function L(en,ar){ return AR()?ar:en; }
+function el(id){ return document.getElementById(id); }
+function toast(msg){ try{ if(typeof window.showToast==='function')window.showToast(msg); }catch(e){} }
+function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+/* ---------------- PWA: service worker registration ---------------- */
+try{
+  if('serviceWorker' in navigator && (location.protocol==='https:' || location.hostname==='localhost' || location.hostname==='127.0.0.1')){
+    window.addEventListener('load',function(){
+      try{ navigator.serviceWorker.register('sw.js').catch(function(){}); }catch(e){}
+    });
+  }
+}catch(e){}
+
+/* ---------------- PWA: install affordance ---------------- */
+var deferredPrompt=null;
+function isStandalone(){
+  try{
+    if(window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches)return true;
+    if(window.navigator.standalone===true)return true;
+  }catch(e){}
+  return false;
+}
+function isIOS(){
+  var ua=navigator.userAgent||'';
+  return /iphone|ipad|ipod/i.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+}
+function refreshInstallUI(){
+  try{
+    var show=false;
+    if(!isStandalone()){ if(deferredPrompt||isIOS())show=true; }
+    var g=el('pvInstallGroup'),s=el('pvInstallSurface');
+    if(g)g.hidden=!show;
+    if(s)s.hidden=!show;
+    var lbl=L('Install app','تثبيت التطبيق');
+    var hint=(isIOS()&&!deferredPrompt)
+      ? L('Tap Share, then “Add to Home Screen”.','اضغط مشاركة، ثم «إضافة إلى الشاشة الرئيسية».')
+      : L('Add PIPVANT to your home screen for one-tap access.','أضف PIPVANT إلى شاشتك الرئيسية للوصول بلمسة واحدة.');
+    ['pvInstallLabelSettings','pvInstallLabelProfile'].forEach(function(id){ var n=el(id); if(n)n.textContent=lbl; });
+    ['pvInstallHintSettings','pvInstallHintProfile'].forEach(function(id){ var n=el(id); if(n)n.textContent=hint; });
+    var t=el('pv-install-title'); if(t)t.textContent=L('Get the app','احصل على التطبيق');
+    var gt=el('settings-app-title'); if(gt)gt.textContent=L('App','التطبيق');
+  }catch(e){}
+}
+window.addEventListener('beforeinstallprompt',function(e){
+  try{ e.preventDefault(); deferredPrompt=e; refreshInstallUI(); }catch(err){}
+});
+window.addEventListener('appinstalled',function(){
+  deferredPrompt=null; refreshInstallUI();
+  toast(L('PIPVANT installed.','تم تثبيت PIPVANT.'));
+});
+function onInstallTap(){
+  if(deferredPrompt){
+    var p=deferredPrompt; deferredPrompt=null;
+    try{
+      p.prompt();
+      if(p.userChoice&&typeof p.userChoice.then==='function'){ p.userChoice.then(function(){ refreshInstallUI(); },function(){ refreshInstallUI(); }); }
+      else refreshInstallUI();
+    }catch(e){ refreshInstallUI(); }
+  }else{
+    toast(L('To install: open the Share menu and tap “Add to Home Screen”.','للتثبيت: افتح قائمة المشاركة واضغط «إضافة إلى الشاشة الرئيسية».'));
+  }
+}
+['pvInstallRowSettings','pvInstallRowProfile'].forEach(function(id){ var n=el(id); if(n)n.addEventListener('click',onInstallTap); });
+try{
+  var mq=window.matchMedia&&window.matchMedia('(display-mode: standalone)');
+  if(mq&&typeof mq.addEventListener==='function')mq.addEventListener('change',refreshInstallUI);
+}catch(e){}
+refreshInstallUI();
+
+/* ---------------- Journal CSV import ---------------- */
+var FP_KEY='pipvant_csv_imported', MAX_ROWS=2000;
+var csv=null;
+var FIELDS=[
+  {key:'symbol',req:1,en:'Symbol',ar:'الرمز',names:['symbol','instrument','pair','item','ticker','market','symbol name']},
+  {key:'openTime',req:1,en:'Open time',ar:'وقت الفتح',names:['open time','opentime','open','opened','opened at','open date','date','time','date/time','open datetime']},
+  {key:'closeTime',req:0,en:'Close time',ar:'وقت الإغلاق',names:['close time','closetime','close','closed','closed at','close date','close datetime']},
+  {key:'direction',req:1,en:'Direction',ar:'الاتجاه',names:['type','direction','side','action','buy/sell','cmd','b/s']},
+  {key:'size',req:0,en:'Size / lots',ar:'الحجم / اللوت',names:['lots','volume','size','qty','quantity','amount','units','lot']},
+  {key:'openPrice',req:0,en:'Open price',ar:'سعر الفتح',names:['open price','openprice','price open','entry price','entry','price']},
+  {key:'closePrice',req:0,en:'Close price',ar:'سعر الإغلاق',names:['close price','closeprice','price close','exit price','exit','price']},
+  {key:'profit',req:1,en:'Profit',ar:'الربح',names:['net profit','net pnl','net','profit','pnl','p&l','pl','result']},
+  {key:'commission',req:0,en:'Commission',ar:'العمولة',names:['commission','commissions','comm','fees','fee']},
+  {key:'swap',req:0,en:'Swap',ar:'السواب',names:['swap','swaps','rollover']},
+  {key:'ticket',req:0,en:'Ticket / ID',ar:'رقم التذكرة',names:['ticket','order','order id','deal','deal id','position','position id','trade id','id']}
+];
+function normH(h){ return String(h||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim(); }
+function fpLoad(){ try{ var a=JSON.parse(localStorage.getItem(FP_KEY)||'[]'); return Array.isArray(a)?a:[]; }catch(e){ return []; } }
+function fpSave(a){ try{ localStorage.setItem(FP_KEY,JSON.stringify(a.slice(-5000))); }catch(e){} }
+function fpHash(str){ var h=5381; for(var i=0;i<str.length;i++){ h=((h<<5)+h+str.charCodeAt(i))|0; } return 'h'+(h>>>0).toString(36); }
+
+function detectDelim(text){
+  var line='',inQ=false,i,c;
+  for(i=0;i<text.length;i++){ c=text[i]; if(c==='"')inQ=!inQ; if(c==='\n'&&!inQ)break; line+=c; }
+  var counts={',':0,';':0,'\t':0}; inQ=false;
+  for(i=0;i<line.length;i++){ c=line[i]; if(c==='"')inQ=!inQ; else if(!inQ&&Object.prototype.hasOwnProperty.call(counts,c))counts[c]++; }
+  var best=',',bn=0;
+  for(var k in counts){ if(counts[k]>bn){ bn=counts[k]; best=k; } }
+  return best;
+}
+function parseCsvText(text,delim){
+  var rows=[],row=[],cell='',inQ=false,i,c;
+  text=String(text||'').replace(/^﻿/,'');
+  function endCell(){ row.push(cell); cell=''; }
+  function endRow(){ endCell(); rows.push(row); row=[]; }
+  for(i=0;i<text.length;i++){
+    c=text[i];
+    if(inQ){
+      if(c==='"'){ if(text[i+1]==='"'){ cell+='"'; i++; } else inQ=false; }
+      else cell+=c;
+    }
+    else if(c==='"'&&cell===''){ inQ=true; }
+    else if(c===delim){ endCell(); }
+    else if(c==='\n'){ endRow(); }
+    else if(c==='\r'){ /* skip */ }
+    else cell+=c;
+  }
+  if(cell!==''||row.length)endRow();
+  return rows.filter(function(r){ return !(r.length===1&&String(r[0]).trim()===''); });
+}
+function parseNum(v){
+  if(v==null)return NaN;
+  var s=String(v).trim().replace(/[\s ]/g,'');
+  if(s==='')return NaN;
+  var neg=false;
+  if(s.charAt(0)==='('&&s.charAt(s.length-1)===')'){ neg=true; s=s.slice(1,-1); }
+  s=s.replace(/^[$€£]/,'');
+  if(s.indexOf(',')!==-1&&s.indexOf('.')===-1){
+    var parts=s.split(',');
+    if(parts.length===2&&parts[1].length<=4)s=parts[0]+'.'+parts[1];
+    else s=s.replace(/,/g,'');
+  }else{ s=s.replace(/,/g,''); }
+  if(s===''||s==='-')return NaN;
+  var n=parseFloat(s);
+  return isFinite(n)?(neg?-n:n):NaN;
+}
+function parseTs(v){
+  if(v==null)return NaN;
+  var s=String(v).trim(); if(!s)return NaN;
+  var m=s.match(/^(\d{4})[.\/](\d{1,2})[.\/](\d{1,2})(?:[ T]+(\d{1,2}):(\d{2})(?::(\d{2}))?)?/);
+  if(m)return new Date(+m[1],+m[2]-1,+m[3],+(m[4]||0),+(m[5]||0),+(m[6]||0)).getTime();
+  m=s.match(/^(\d{1,2})[.\/](\d{1,2})[.\/](\d{4})(?:[ T]+(\d{1,2}):(\d{2})(?::(\d{2}))?)?/);
+  if(m)return new Date(+m[3],+m[2]-1,+m[1],+(m[4]||0),+(m[5]||0),+(m[6]||0)).getTime();
+  m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})(?:[ T]+(\d{1,2}):(\d{2})(?::(\d{2}))?)?/);
+  if(m)return new Date(+m[1],+m[2]-1,+m[3],+(m[4]||0),+(m[5]||0),+(m[6]||0)).getTime();
+  m=s.match(/^(\d{1,2})-(\d{1,2})-(\d{4})(?:[ T]+(\d{1,2}):(\d{2})(?::(\d{2}))?)?/);
+  if(m)return new Date(+m[3],+m[2]-1,+m[1],+(m[4]||0),+(m[5]||0),+(m[6]||0)).getTime();
+  var d=Date.parse(s);
+  return isFinite(d)?d:NaN;
+}
+function parseDir(v){
+  var s=String(v||'').trim().toLowerCase();
+  if(s==='buy'||s==='long'||s==='b'||s==='0')return 'Long';
+  if(s==='sell'||s==='short'||s==='s'||s==='1')return 'Short';
+  return null;
+}
+function autoMap(headers){
+  var norm=headers.map(normH),map={},claimed={};
+  FIELDS.forEach(function(f){
+    for(var n=0;n<f.names.length;n++){
+      var want=normH(f.names[n]);
+      var done=false;
+      for(var i=0;i<norm.length;i++){
+        if(!claimed[i]&&norm[i]===want){ map[f.key]=i; claimed[i]=1; done=true; break; }
+      }
+      if(done)break;
+    }
+  });
+  FIELDS.forEach(function(f){
+    if(map[f.key]!=null)return;
+    for(var n=0;n<f.names.length;n++){
+      var want=normH(f.names[n]);
+      if(want.length<3)continue;
+      var done=false;
+      for(var i=0;i<norm.length;i++){
+        if(!claimed[i]&&norm[i].indexOf(want)!==-1){ map[f.key]=i; claimed[i]=1; done=true; break; }
+      }
+      if(done)break;
+    }
+  });
+  return map;
+}
+function computeProfitPlain(){
+  try{
+    if(!csv||csv.map.profit==null)return true;
+    var n=normH(csv.headers[csv.map.profit]);
+    return ['profit','pnl','p l','pl'].indexOf(n)!==-1;
+  }catch(e){ return true; }
+}
+function cellOf(row,idx){ return idx==null||idx<0?'':String(row[idx]==null?'':row[idx]).trim(); }
+function buildCandidates(){
+  if(!csv)return;
+  var map=csv.map,out=[],invalid=0,seenFp={};
+  var stored={}; fpLoad().forEach(function(f){ stored[f]=1; });
+  var liveTickets={};
+  try{ (window.sessionJournalEntries||[]).forEach(function(e){ if(e&&e._csvTicket)liveTickets[String(e._csvTicket)]=1; }); }catch(e){}
+  csv.truncated=csv.dataRows.length>MAX_ROWS;
+  var rows=csv.dataRows.slice(0,MAX_ROWS);
+  rows.forEach(function(row){
+    var symbol=cellOf(row,map.symbol).toUpperCase();
+    var openTs=parseTs(cellOf(row,map.openTime));
+    var dir=parseDir(cellOf(row,map.direction));
+    if(!symbol||!isFinite(openTs)||!dir){ invalid++; return; }
+    var profit=parseNum(cellOf(row,map.profit));
+    var pnl=isFinite(profit)?profit:null;
+    if(pnl!=null&&csv.profitIsPlain){
+      var comm=parseNum(cellOf(row,map.commission)),swap=parseNum(cellOf(row,map.swap));
+      if(isFinite(comm))pnl+=comm;
+      if(isFinite(swap))pnl+=swap;
+    }
+    if(pnl!=null)pnl=Math.round(pnl*100)/100;
+    var closeTs=parseTs(cellOf(row,map.closeTime));
+    var openP=parseNum(cellOf(row,map.openPrice)),closeP=parseNum(cellOf(row,map.closePrice));
+    var size=parseNum(cellOf(row,map.size));
+    var ticket=cellOf(row,map.ticket);
+    var isClosed=isFinite(closeTs)||isFinite(closeP)||pnl!=null;
+    var fp=ticket?('t:'+ticket):('c:'+fpHash(symbol+'|'+openTs+'|'+(pnl==null?'':pnl)+'|'+dir));
+    var dup=!!stored[fp]||(ticket&&!!liveTickets[ticket])||!!seenFp[fp];
+    seenFp[fp]=1;
+    out.push({pair:symbol,timestamp:openTs,direction:dir,size:isFinite(size)?size:null,
+      entry:isFinite(openP)?openP:null,exit:isFinite(closeP)?closeP:null,pnl:pnl,
+      ticket:ticket||null,fp:fp,dup:dup,closed:isClosed});
+  });
+  csv.candidates=out;
+  csv.invalidCount=invalid;
+  csv.dupCount=out.filter(function(c){ return c.dup; }).length;
+}
+function fmtMoney(v){ if(v==null||!isFinite(v))return '—'; return (v>0?'+':'')+Number(v).toFixed(2); }
+function fmtTime(ts){ try{ return new Date(ts).toLocaleString(AR()?'ar-MA':'en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}); }catch(e){ return ''; } }
+function freshCount(){ return csv?csv.candidates.filter(function(c){ return !c.dup; }).length:0; }
+
+function buildMapUI(){
+  var grid=el('csvImportMapGrid');
+  if(!grid||!csv)return;
+  grid.innerHTML='';
+  FIELDS.forEach(function(f){
+    var wrap=document.createElement('div'); wrap.className='csv-import-map-field';
+    var lab=document.createElement('label'); lab.textContent=(AR()?f.ar:f.en)+(f.req?' *':'');
+    lab.setAttribute('for','csvMap-'+f.key);
+    var sel=document.createElement('select'); sel.id='csvMap-'+f.key; sel.setAttribute('data-csv-field',f.key);
+    var none=document.createElement('option'); none.value='-1'; none.textContent=L('— Not used —','— غير مستخدم —'); sel.appendChild(none);
+    csv.headers.forEach(function(h,i){
+      var o=document.createElement('option'); o.value=String(i); o.textContent=h?h:(L('Column ','عمود ')+(i+1));
+      sel.appendChild(o);
+    });
+    sel.value=csv.map[f.key]!=null?String(csv.map[f.key]):'-1';
+    if(f.req&&csv.map[f.key]==null)sel.className='pv-map-missing';
+    sel.addEventListener('change',function(){
+      var v=parseInt(sel.value,10);
+      Object.keys(csv.map).forEach(function(k){ if(k!==f.key&&csv.map[k]===v)csv.map[k]=null; });
+      csv.map[f.key]=(isFinite(v)&&v>=0)?v:null;
+      sel.classList.toggle('pv-map-missing',!!(f.req&&csv.map[f.key]==null));
+      csv.profitIsPlain=computeProfitPlain();
+      buildCandidates();
+      renderCsvSheet(false);
+    });
+    wrap.appendChild(lab); wrap.appendChild(sel); grid.appendChild(wrap);
+  });
+  csv.mapBuilt=true;
+}
+function renderCsvSheet(rebuildMap){
+  var sheet=el('csvImportSheet'); if(!sheet||!csv)return;
+  el('csvImportEyebrow').textContent=L('Journal import','استيراد السجل');
+  el('csvImportTitle').textContent=csv.doneState?L('Import complete','اكتمل الاستيراد'):L('Import trades from CSV','استيراد الصفقات من CSV');
+  el('csvImportPrivacy').textContent=L('Your file never leaves this device — parsing happens locally in your browser.','ملفك لا يغادر هذا الجهاز أبداً — تتم المعالجة محلياً في متصفحك.');
+  var delimName=csv.delim===';'?L('Semicolon-separated','مفصول بفواصل منقوطة'):(csv.delim==='\t'?L('Tab-separated','مفصول بعلامات تبويب'):L('Comma-separated','مفصول بفواصل'));
+  el('csvImportFileLine').textContent=csv.name+(csv.delim?' · '+delimName:'');
+  el('csvThSymbol').textContent=L('Symbol','الرمز');
+  el('csvThSide').textContent=L('Side','الاتجاه');
+  el('csvThTime').textContent=L('Open time','وقت الفتح');
+  el('csvThProfit').textContent=L('Profit','الربح');
+  el('csvImportMapTitle').textContent=L('Match the columns in your file:','طابق أعمدة ملفك:');
+  var errEl=el('csvImportError');
+  if(csv.error){ errEl.textContent=csv.error; errEl.hidden=false; } else { errEl.hidden=true; errEl.textContent=''; }
+  var mapWrap=el('csvImportMap');
+  if(csv.needsMap&&!csv.doneState){ mapWrap.hidden=false; if(rebuildMap||!csv.mapBuilt)buildMapUI(); }
+  else mapWrap.hidden=true;
+  var sum=el('csvImportSummary'),parts=[];
+  if(csv.doneState){
+    sum.textContent=L('Imported '+csv.lastCount+' trades into your journal.','تم استيراد '+csv.lastCount+' صفقة إلى سجلك.');
+  }else if(csv.candidates&&csv.candidates.length){
+    var n=freshCount();
+    if(n>0)parts.push(L(n+' trades ready to import',n+' صفقة جاهزة للاستيراد'));
+    if(csv.dupCount>0)parts.push(L(csv.dupCount+' duplicates skipped',csv.dupCount+' مكررة تم تخطيها'));
+    if(n===0&&csv.dupCount>0)parts.push(L('Everything in this file is already in your journal.','كل ما في هذا الملف موجود أصلاً في سجلك.'));
+    if(csv.invalidCount>0)parts.push(L(csv.invalidCount+' rows skipped (unreadable)',csv.invalidCount+' صفوف تم تخطيها (غير مقروءة)'));
+    if(csv.truncated)parts.push(L('File has more than 2,000 rows — only the first 2,000 will be imported.','يحتوي الملف على أكثر من 2000 صف — سيتم استيراد أول 2000 فقط.'));
+    sum.textContent=parts.join(' · ');
+  }else if(!csv.error){
+    sum.textContent=csv.invalidCount>0
+      ? L('No trades could be read from this file. Check the format and try again.','تعذر قراءة أي صفقة من هذا الملف. تحقق من التنسيق وحاول مجدداً.')
+      : '';
+  }else{
+    sum.textContent='';
+  }
+  var tw=el('csvImportTableWrap'),tb=el('csvImportPreviewBody');
+  var preview=csv.doneState?[]:csv.candidates.filter(function(c){ return !c.dup; }).slice(0,3);
+  if(preview.length){
+    tw.hidden=false;
+    tb.innerHTML=preview.map(function(c){
+      var cls=c.pnl==null?'':(c.pnl>0?' class="pv-pos"':(c.pnl<0?' class="pv-neg"':''));
+      return '<tr><td>'+esc(c.pair)+'</td><td>'+esc(c.direction)+'</td><td>'+esc(fmtTime(c.timestamp))+'</td><td'+cls+'>'+esc(fmtMoney(c.pnl))+'</td></tr>';
+    }).join('');
+  }else{ tw.hidden=true; tb.innerHTML=''; }
+  var confirm=el('confirmCsvImport'),cancel=el('cancelCsvImport');
+  if(csv.doneState){
+    confirm.disabled=false;
+    confirm.textContent=L('Undo import','التراجع عن الاستيراد');
+    cancel.textContent=L('Done','تم');
+  }else{
+    var n2=freshCount();
+    confirm.disabled=n2===0;
+    confirm.textContent=L('Import '+n2+' trades','استيراد '+n2+' صفقة');
+    cancel.textContent=L('Cancel','إلغاء');
+  }
+}
+function openCsvSheet(){
+  var sheet=el('csvImportSheet'); if(!sheet)return;
+  sheet.classList.add('open');
+  var c=el('closeCsvImport'); if(c)try{ c.focus(); }catch(e){}
+}
+function closeCsvSheet(){
+  var sheet=el('csvImportSheet'); if(sheet)sheet.classList.remove('open');
+}
+function onFileChosen(file){
+  if(!file)return;
+  var reader;
+  try{ reader=new FileReader(); }catch(e){ return; }
+  reader.onerror=function(){
+    csv={name:file.name,delim:null,error:L('Could not read this file.','تعذر قراءة هذا الملف.'),candidates:[],invalidCount:0,dupCount:0,needsMap:false,doneState:false};
+    openCsvSheet(); renderCsvSheet(false);
+  };
+  reader.onload=function(){
+    try{
+      var text=String(reader.result||'');
+      if(!text.trim()){
+        csv={name:file.name,delim:null,error:L('This file is empty.','هذا الملف فارغ.'),candidates:[],invalidCount:0,dupCount:0,needsMap:false,doneState:false};
+        openCsvSheet(); renderCsvSheet(false); return;
+      }
+      var delim=detectDelim(text);
+      var rows=parseCsvText(text,delim);
+      if(rows.length<2){
+        csv={name:file.name,delim:delim,error:L('No trade rows found in this file.','لم يتم العثور على صفوف صفقات في هذا الملف.'),candidates:[],invalidCount:0,dupCount:0,needsMap:false,doneState:false};
+        openCsvSheet(); renderCsvSheet(false); return;
+      }
+      var headers=rows[0].map(function(h){ return String(h||'').trim(); });
+      var map=autoMap(headers);
+      var missingReq=FIELDS.filter(function(f){ return f.req&&map[f.key]==null; });
+      csv={name:file.name,delim:delim,headers:headers,dataRows:rows.slice(1),map:map,
+        needsMap:missingReq.length>0,mapBuilt:false,candidates:[],dupCount:0,invalidCount:0,
+        truncated:false,doneState:false,error:null,profitIsPlain:true,lastBatch:null,lastFps:null,lastCount:0};
+      csv.profitIsPlain=computeProfitPlain();
+      buildCandidates();
+      if(!csv.needsMap&&csv.candidates.length===0&&csv.invalidCount>0){
+        csv.error=L('No trades could be read from this file. Check the format and try again.','تعذر قراءة أي صفقة من هذا الملف. تحقق من التنسيق وحاول مجدداً.');
+      }
+      openCsvSheet(); renderCsvSheet(true);
+    }catch(e){
+      csv={name:file.name,delim:null,error:L('This file could not be parsed as CSV.','تعذر تحليل هذا الملف بصيغة CSV.'),candidates:[],invalidCount:0,dupCount:0,needsMap:false,doneState:false};
+      openCsvSheet(); renderCsvSheet(false);
+    }
+  };
+  try{ reader.readAsText(file); }catch(e){}
+}
+function doImport(){
+  if(!csv||csv.doneState)return;
+  var fresh=csv.candidates.filter(function(c){ return !c.dup; });
+  if(!fresh.length)return;
+  var batch='csv-'+Date.now().toString(36)+'-'+Math.floor(Math.random()*1e6).toString(36);
+  var entries=[],fps=[];
+  fresh.forEach(function(c){
+    var result=null;
+    if(c.closed&&c.pnl!=null&&isFinite(c.pnl))result=c.pnl>0?'win':(c.pnl<0?'loss':'breakeven');
+    entries.push({type:'trade',timestamp:c.timestamp,account_id:null,pair:c.pair,direction:c.direction,
+      entry:c.entry!=null?String(c.entry):'',stop:'',target:'',size:c.size!=null?String(c.size):'',
+      rMultiple:'—',setup:'',tag:'',rating:'',notes:L('Imported from CSV','مستوردة من CSV'),
+      closed:!!c.closed,exitPrice:c.exit!=null?String(c.exit):null,pnl:c.pnl,result:result,
+      _csvTicket:c.ticket||null,_importBatch:batch});
+    fps.push(c.fp);
+  });
+  try{
+    entries.forEach(function(e){ if(typeof window.persistLocalTrade==='function')window.persistLocalTrade(e); });
+    var list=window.sessionJournalEntries||[];
+    entries.forEach(function(e){ list.push(e); });
+    list.sort(function(a,b){ return (b.timestamp||0)-(a.timestamp||0); });
+    window.sessionJournalEntries=list;
+  }catch(e){}
+  try{ if(typeof window.syncLocalTradesToCloud==='function')window.syncLocalTradesToCloud(); }catch(e){}
+  try{ if(typeof window.refreshAllTradeUI==='function')window.refreshAllTradeUI(); }catch(e){}
+  try{
+    var stored=fpLoad();
+    fps.forEach(function(f){ if(stored.indexOf(f)===-1)stored.push(f); });
+    fpSave(stored);
+  }catch(e){}
+  csv.lastBatch=batch; csv.lastFps=fps; csv.lastCount=entries.length; csv.doneState=true;
+  renderCsvSheet(false);
+  toast(L('Imported '+entries.length+' trades.','تم استيراد '+entries.length+' صفقة.'));
+}
+function undoImport(){
+  if(!csv||!csv.lastBatch)return;
+  var batch=csv.lastBatch,removed=0;
+  try{
+    var list=(window.sessionJournalEntries||[]).slice(),keep=[];
+    list.forEach(function(e){
+      if(e&&e._importBatch===batch){
+        removed++;
+        try{ if(e._localId&&typeof window.removeLocalTrade==='function')window.removeLocalTrade(e._localId); }catch(_e){}
+        try{ if(e._dbId&&typeof window.pvDeleteCloudTrade==='function')window.pvDeleteCloudTrade(e._dbId); }catch(_e){}
+      }else keep.push(e);
+    });
+    window.sessionJournalEntries=keep;
+  }catch(e){}
+  try{
+    var fps=csv.lastFps||[];
+    fpSave(fpLoad().filter(function(f){ return fps.indexOf(f)===-1; }));
+  }catch(e){}
+  try{ if(typeof window.refreshAllTradeUI==='function')window.refreshAllTradeUI(); }catch(e){}
+  csv.doneState=false; csv.lastBatch=null; csv.lastFps=null; csv.lastCount=0;
+  buildCandidates();
+  renderCsvSheet(false);
+  toast(L('Import undone — '+removed+' trades removed.','تم التراجع عن الاستيراد — حُذفت '+removed+' صفقة.'));
+}
+/* CSV wiring */
+var importBtn=el('importCsvBtn'),fileInput=el('csvImportFile');
+function refreshCsvLabels(){
+  var b=el('importCsvBtnLabel'); if(b)b.textContent=L('Import CSV','استيراد CSV');
+  refreshInstallUI();
+  var sheet=el('csvImportSheet');
+  if(sheet&&sheet.classList.contains('open')&&csv)renderCsvSheet(false);
+}
+if(importBtn&&fileInput){
+  importBtn.addEventListener('click',function(){ try{ fileInput.value=''; fileInput.click(); }catch(e){} });
+  fileInput.addEventListener('change',function(){
+    var f=fileInput.files&&fileInput.files[0];
+    if(f)onFileChosen(f);
+  });
+}
+var closeBtn=el('closeCsvImport'),cancelBtn=el('cancelCsvImport'),confirmBtn=el('confirmCsvImport'),sheetEl=el('csvImportSheet');
+if(closeBtn)closeBtn.addEventListener('click',closeCsvSheet);
+if(cancelBtn)cancelBtn.addEventListener('click',closeCsvSheet);
+if(confirmBtn)confirmBtn.addEventListener('click',function(){ if(csv&&csv.doneState)undoImport(); else doImport(); });
+if(sheetEl)sheetEl.addEventListener('click',function(ev){ if(ev.target===sheetEl)closeCsvSheet(); });
+document.addEventListener('keydown',function(ev){
+  try{ if(ev.key==='Escape'&&sheetEl&&sheetEl.classList.contains('open'))closeCsvSheet(); }catch(e){}
+});
+refreshCsvLabels();
+document.querySelectorAll('[data-language-choice]').forEach(function(b){
+  b.addEventListener('click',function(){ setTimeout(refreshCsvLabels,80); });
+});
 })();
 </script>
 <!-- PIPVANT Company OS: privacy-friendly analytics (no cookies, page+referrer only) -->
