@@ -1794,6 +1794,27 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
   box-shadow:0 2px 8px rgba(212,175,55,.35);
 }
 
+/* ---- BIG BATCH P1 — Challenges firm filter + Rule Sheets ---- */
+.chal-filter-bar{display:none;align-items:center;gap:10px;margin:0 0 12px}
+.matcher-list[data-view="challenges"] .chal-filter-bar{display:flex}
+.chal-filter-bar label{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.chal-filter-bar select{background:var(--surface);color:var(--text);border:1px solid var(--line-strong);border-radius:999px;padding:9px 14px;font-size:13px;font-weight:600;min-height:44px;cursor:pointer}
+.challenges-table tbody tr.chal-row{cursor:pointer}
+.chal-expand-btn{width:32px;height:32px;border-radius:999px;border:1px solid var(--line-strong);background:transparent;color:var(--gold,#D4AF37);font-size:15px;line-height:1;cursor:pointer;display:grid;place-items:center;transition:transform .15s}
+.chal-expand-btn[aria-expanded="true"]{transform:rotate(180deg)}
+.challenges-table tbody tr.chal-rules-row td{white-space:normal!important;background:rgba(10,22,40,.35)}
+.challenges-table tbody tr.chal-rules-row:hover td{background:rgba(10,22,40,.35)!important}
+.rule-sheet{padding:6px 4px 10px;text-align:left}
+html[dir="rtl"] .rule-sheet{text-align:right}
+.rs-title{font-family:"Space Grotesk",sans-serif;font-weight:700;color:var(--gold,#D4AF37);font-size:13px;margin-bottom:8px}
+.rs-list{margin:0;padding:0;list-style:none;display:grid;gap:6px}
+.rs-list li{font:500 12.5px/1.55 "Space Grotesk",sans-serif;color:var(--secondary);white-space:normal}
+.rs-flag{color:var(--gold,#D4AF37);font-weight:800;margin-right:6px}
+html[dir="rtl"] .rs-flag{margin-right:0;margin-left:6px}
+.rs-link{display:inline-block;margin-top:10px;color:var(--accent,#5B8DEF);font-size:12.5px;font-weight:700;text-decoration:none}
+.rs-link:hover{text-decoration:underline}
+.fd-rulesheet{border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:2px 0 12px;background:rgba(91,141,239,.04)}
+
 /* ---- 3. COMPARE TRAY + MODAL: premium ---- */
 .compare-tray{
   border-radius:20px!important;padding:14px 22px!important;gap:14px!important;
@@ -2535,6 +2556,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
           </tbody>
         </table>
 
+        <div class="chal-filter-bar"><label id="sbChalFirmFilterLbl" for="sbChalFirmFilter">Firm</label><select id="sbChalFirmFilter" aria-label="Filter challenges by firm"><option value="">All firms</option></select></div>
         <div class="challenges-scroll"><table class="challenges-table" aria-label="Challenge plans comparison">
           <thead><tr>
             <th><button class="sort-button chal-sort" type="button" data-chal-col="firm">Firm</button></th>
@@ -2547,6 +2569,7 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
             <th><button class="sort-button chal-sort" type="button" data-chal-col="split">Split</button></th>
             <th><button class="sort-button chal-sort" type="button" data-chal-col="payout">Payout</button></th>
             <th><button class="sort-button chal-sort" type="button" data-chal-col="price">Price</button></th>
+            <th><span class="visually-hidden">Rules</span></th>
           </tr></thead>
           <tbody></tbody>
         </table></div>
@@ -4627,6 +4650,105 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     if(pct>0)return {base:base,final:Math.round(base*(1-pct/100)*100)/100,pct:pct};
     return {base:base,final:base,pct:0};
   }
+  /* BIG BATCH P1 — Challenges firm filter state (composes with sort + matcher filters) */
+  var sbChalFirmFilter='';
+  function sbPopulateChalFirmFilter(firms){
+    var sel=document.getElementById('sbChalFirmFilter');if(!sel)return;
+    var ar=currentLanguage==='ar';
+    var lbl=document.getElementById('sbChalFirmFilterLbl');if(lbl)lbl.textContent=ar?'الشركة':'Firm';
+    sel.setAttribute('aria-label',ar?'تصفية التحديات حسب الشركة':'Filter challenges by firm');
+    var seen={};
+    sel.innerHTML='';
+    var all=document.createElement('option');all.value='';all.textContent=ar?'كل الشركات':'All firms';sel.appendChild(all);
+    (firms||[]).forEach(function(f){
+      if(!f||seen[String(f.id)])return;
+      if(!(sbPlansByFirm[f.id]||[]).length)return;
+      seen[String(f.id)]=1;
+      var o=document.createElement('option');o.value=String(f.id);o.textContent=f.name||'—';sel.appendChild(o);
+    });
+    if(sbChalFirmFilter&&!seen[sbChalFirmFilter])sbChalFirmFilter='';
+    sel.value=sbChalFirmFilter;
+  }
+  /* BIG BATCH P1 — Rule Sheets (plain language, real plan.rules data only).
+     Extends sbDdExplain()'s wording, never contradicts it: static keeps
+     "measured from starting balance", trailing keeps "follows your peak". */
+  function sbDdPlain(t,ar){
+    var s=String(t||'').toLowerCase();
+    if(!s)return null;
+    if(s.indexOf('trailing')!==-1&&/eod|end.of.day/.test(s))return ar?'متحرك في نهاية اليوم — الحد يتحرك فقط في نهاية اليوم.':'End-of-day trailing — the floor moves only at end of day.';
+    if(s.indexOf('trailing')!==-1)return ar?'متحرك — الحد يتبع أعلى رصيد وصلت إليه صعوداً.':'Trailing — the floor follows your peak balance up.';
+    if(s.indexOf('static')!==-1)return ar?'ثابت — الحد لا يتحرك أبداً؛ يُحسب من الرصيد الابتدائي.':'Static — the floor never moves; it is measured from your starting balance.';
+    return sbDdExplain(t,ar);
+  }
+  function sbRuleSheetData(firm,plan){
+    var r=(plan&&plan.rules)||{};
+    var ar=currentLanguage==='ar';
+    var bullets=[];
+    function add(text,flag){if(text)bullets.push({t:text,flag:!!flag});}
+    if(r.program)add((ar?'البرنامج: ':'Program: ')+String(r.program));
+    var tgt=sbPlanTarget(r);
+    if(tgt&&tgt!=='—'){
+      var tgtTxt=(ar?'هدف الربح: ':'Profit target: ')+tgt;
+      if(r.profit_target_pct_phase2!=null&&isFinite(Number(r.profit_target_pct_phase2)))tgtTxt+=(ar?' · المرحلة 2: ':' · Phase 2: ')+r.profit_target_pct_phase2+'%';
+      add(tgtTxt);
+    }else if(r.profit_target_pct_phase2!=null&&isFinite(Number(r.profit_target_pct_phase2))){
+      add((ar?'هدف الربح للمرحلة 2: ':'Phase 2 profit target: ')+r.profit_target_pct_phase2+'%');
+    }
+    if(r.daily_loss_pct!=null&&isFinite(Number(r.daily_loss_pct)))add((ar?'حد الخسارة اليومية: ':'Daily loss limit: ')+r.daily_loss_pct+'%');
+    else if(r.daily_loss_usd!=null&&isFinite(Number(r.daily_loss_usd)))add((ar?'حد الخسارة اليومية: ':'Daily loss limit: ')+sbFmtUSD(r.daily_loss_usd));
+    var mdTxt=null;
+    if(r.max_drawdown_pct!=null&&isFinite(Number(r.max_drawdown_pct)))mdTxt=r.max_drawdown_pct+'%';
+    else if(r.max_drawdown_usd!=null&&isFinite(Number(r.max_drawdown_usd)))mdTxt=sbFmtUSD(r.max_drawdown_usd);
+    if(mdTxt){
+      var ddType=String(r.drawdown_type||'');
+      var expl=sbDdPlain(ddType,ar);
+      add((ar?'أقصى تراجع: ':'Max drawdown: ')+mdTxt+(expl&&expl!=='—'?(' — '+expl):''),/trailing/i.test(ddType));
+    }
+    if(r.profit_split!=null&&isFinite(Number(r.profit_split)))add((ar?'تقسيم الأرباح: ':'Profit split: ')+r.profit_split+'%');
+    var pf=sbCapPayout(r.payout_frequency);
+    if(pf&&pf!=='—')add((ar?'تكرار الدفع: ':'Payout frequency: ')+pf);
+    var consPct=(r.consistency_pct!=null&&isFinite(Number(r.consistency_pct)))?Number(r.consistency_pct):null;
+    if(consPct!=null)add((ar?'قاعدة الاتساق: ':'Consistency rule: ')+consPct+'%',true);
+    try{
+      var tc=sbTrueCost(plan);
+      if(tc&&tc.hasFee)add((ar?'رسوم التفعيل: ':'Activation fee: ')+sbFmtUSD(tc.fee),true);
+    }catch(_tce){}
+    if(r.leverage)add((ar?'الرافعة: ':'Leverage: ')+String(r.leverage));
+    if(r.max_contracts!=null&&isFinite(Number(r.max_contracts)))add((ar?'أقصى عقود: ':'Max contracts: ')+r.max_contracts);
+    var kr=Array.isArray(r.key_rules)?r.key_rules:[];
+    var keyLines=kr.slice(0,8).map(function(line){
+      var t=String(line||'');
+      var flag=/consist|trail|activation|minimum payout|min(imum)?\s+(payout|withdraw)|payout\s+(cap|limit|minimum)|withdrawal\s+(minimum|cap|limit)/i.test(t);
+      return {t:t,flag:flag};
+    }).filter(function(x){return x.t;});
+    var src=(plan&&plan.source)||(firm&&firm.source)||(firm&&firm.website)||'';
+    if(!/^https?:\/\//i.test(src))src='';
+    if(!bullets.length&&!keyLines.length)return null;
+    return {bullets:bullets,keyLines:keyLines,source:src,ar:ar,hasConsistency:consPct!=null||keyLines.some(function(x){return /consist/i.test(x.t);})};
+  }
+  function sbRuleSheetEl(firm,plan){
+    var data=sbRuleSheetData(firm,plan);
+    if(!data)return null;
+    var ar=data.ar;
+    var wrap=document.createElement('div');wrap.className='rule-sheet';
+    var h=document.createElement('div');h.className='rs-title';h.textContent=ar?'القواعد بلغة بسيطة':'Rules in plain language';wrap.appendChild(h);
+    var ul=document.createElement('ul');ul.className='rs-list';
+    function line(text,flag){
+      var li=document.createElement('li');
+      if(flag){var f=document.createElement('span');f.className='rs-flag';f.setAttribute('aria-hidden','true');f.textContent='⚑';li.appendChild(f);}
+      li.appendChild(document.createTextNode(text));
+      return li;
+    }
+    data.bullets.forEach(function(b){ul.appendChild(line(b.t,b.flag));});
+    data.keyLines.forEach(function(k){ul.appendChild(line(k.t,k.flag));});
+    wrap.appendChild(ul);
+    if(data.source){
+      var a=document.createElement('a');a.className='rs-link';a.href=data.source;a.target='_blank';a.rel='noopener';
+      a.textContent=ar?'اقرأ القواعد الرسمية':'Read the official rules';
+      wrap.appendChild(a);
+    }
+    return wrap;
+  }
   function sbRenderChallenges(firms){
     var tbody=document.querySelector('#matcher .challenges-table tbody');
     if(!tbody)return;
@@ -4637,6 +4759,9 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
         rows.push({firm:firm,plan:plan});
       });
     });
+    /* BIG BATCH P1 — firm filter composes with the existing sort + matcher filters */
+    try{sbPopulateChalFirmFilter(firms);}catch(_pff){}
+    if(sbChalFirmFilter)rows=rows.filter(function(row){return String(row.firm.id)===String(sbChalFirmFilter);});
     var dir=sbChalSortDir==='desc'?-1:1;
     rows.sort(function(a,b){
       var va=sbChalRowVal(a.firm,a.plan,sbChalSortCol),vb=sbChalRowVal(b.firm,b.plan,sbChalSortCol);
@@ -4651,6 +4776,13 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     rows.forEach(function(row){
       var firm=row.firm,plan=row.plan,r=plan.rules||{};
       var tr=document.createElement('tr');
+      tr.className='chal-row';
+      tr.setAttribute('data-firm-id',String(firm.id));
+      /* BIG BATCH P1 — row click-through to the firm detail page (interactive elements excluded) */
+      tr.addEventListener('click',function(ev){
+        if(ev.target&&ev.target.closest&&ev.target.closest('button, a, select, input, [data-promo-code]'))return;
+        if(typeof sbOpenFirmDetail==='function')sbOpenFirmDetail(firm.id);
+      });
       function td(html,cls){var c=document.createElement('td');if(cls)c.className=cls;if(typeof html==='string')c.innerHTML=html;else if(html)c.appendChild(html);return c;}
       tr.appendChild(td('<span class="chal-firm"></span>',''));
       tr.querySelector('.chal-firm').textContent=firm.name||'—';
@@ -4675,7 +4807,30 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
         priceHtml='<span class="chal-price">'+(dp.pct>0?'<s>'+sbFmtUSD(dp.base)+'</s>':'')+'<b>'+sbFmtUSD(dp.final)+'</b>'+(dp.pct>0?'<br><span class="chal-promo"'+(_cc?' data-promo-code="'+_cc+'" title="'+_cc+'"':'')+'>-'+dp.pct+'%'+(_cc?' · '+_cc:'')+'</span>':'')+'</span>';
       }
       tr.appendChild(td(priceHtml));
+      /* BIG BATCH P1 — per-row expansion chevron → Rule Sheet under the row */
+      var sheet=null;
+      try{sheet=sbRuleSheetEl(firm,plan);}catch(_rse){}
+      var rulesRow=null;
+      if(sheet){
+        var expandBtn=document.createElement('button');
+        expandBtn.type='button';expandBtn.className='chal-expand-btn';
+        expandBtn.setAttribute('aria-expanded','false');
+        expandBtn.setAttribute('aria-label',(currentLanguage==='ar'?'قواعد الخطة':'Plan rules')+' — '+(firm.name||''));
+        expandBtn.textContent='▾';
+        rulesRow=document.createElement('tr');rulesRow.className='chal-rules-row';rulesRow.hidden=true;
+        var rc=document.createElement('td');rc.colSpan=11;rc.appendChild(sheet);rulesRow.appendChild(rc);
+        expandBtn.addEventListener('click',function(ev){
+          ev.stopPropagation();
+          var open=rulesRow.hidden;
+          rulesRow.hidden=!open;
+          expandBtn.setAttribute('aria-expanded',String(open));
+        });
+        tr.appendChild(td(expandBtn));
+      }else{
+        tr.appendChild(td(''));
+      }
       tbody.appendChild(tr);
+      if(rulesRow)tbody.appendChild(rulesRow);
     });
     // update sort indicators
     document.querySelectorAll('.chal-sort').forEach(function(b){
@@ -5524,6 +5679,8 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
       }catch(_pce){}
       row.appendChild(left);row.appendChild(pr);
       el.appendChild(row);
+      /* BIG BATCH P1 — "Rules in plain language" block per plan (real rules data only) */
+      try{var _fdSheet=sbRuleSheetEl(firm,p);if(_fdSheet){_fdSheet.classList.add('fd-rulesheet');el.appendChild(_fdSheet);}}catch(_fdse){}
     }
     groups.forEach(function(pr){
       if(groups.length>1&&pr){
@@ -8735,6 +8892,8 @@ html[dir="rtl"] .challenges-table tbody tr:hover td:first-child{box-shadow:inset
     if(openB)openB.textContent=currentLanguage==='ar'?'قارن':'Compare';
     if(clearB)clearB.textContent=currentLanguage==='ar'?'مسح':'Clear';
   })();
+  /* BIG BATCH P1 — challenges firm filter wiring */
+  (function(){var _cff=document.getElementById('sbChalFirmFilter');if(_cff)_cff.addEventListener('change',function(){sbChalFirmFilter=_cff.value;if(typeof sbRenderFirms==='function')sbRenderFirms();});})();
   /* WAVE 2a — challenges table sorting (per-plan rows) */
   document.querySelectorAll('.chal-sort').forEach(function(button){button.addEventListener('click',function(){
     var col=button.getAttribute('data-chal-col');
