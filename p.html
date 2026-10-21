@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>PIPVANT Trader on PIPVANT</title>
+  <meta name="description" content="A PIPVANT trader's public track record — win rate, profit factor, trades and certificates, shared by the trader. Track your own trades free with PIPVANT.">
+  <meta property="og:title" content="PIPVANT Trader on PIPVANT">
+  <meta property="og:description" content="Win rate, profit factor, trades and certificates — a public track record shared from PIPVANT, the free trading journal and prop-firm toolkit.">
+  <meta property="og:type" content="profile">
+  <meta property="og:url" content="https://pipvant.github.io/p.html">
+  <meta property="og:image" content="https://pipvant.github.io/assets/bgs/ninja.webp">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="PIPVANT Trader on PIPVANT">
+  <meta name="twitter:description" content="A public trading track record shared from PIPVANT — free journal, risk tools and prop-firm matcher.">
+  <meta name="theme-color" content="#0A1628">
+  <link rel="icon" type="image/png" href="assets/pipvanta-logo.png">
+  <style>
+    :root{--bg:#0A1628;--surface:#0F1D33;--raised:#14253F;--sunken:#060D1A;--line:#1C2F4D;--line-strong:#2B4266;--text:#F4F6F8;--secondary:#A9B6C6;--muted:#8B9AB0;--accent:#5B8DEF;--gold:#D4AF37}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:"Space Grotesk",Inter,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh}
+    .wrap{max-width:600px;margin:0 auto;padding:0 16px 40px}
+    header.top{display:flex;align-items:center;gap:10px;padding:16px 2px 6px}
+    header.top img{width:30px;height:30px;border-radius:8px;object-fit:contain}
+    header.top .brand{font-weight:700;font-size:17px;letter-spacing:.04em}
+    header.top .brand span{color:var(--gold)}
+    .card{border:1px solid var(--line);border-radius:18px;background:var(--surface);overflow:hidden;margin-top:14px}
+    .banner{position:relative;height:190px;background:var(--sunken)}
+    .banner img{width:100%;height:100%;object-fit:cover;display:block}
+    .banner:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,22,40,.18) 0%,rgba(10,22,40,.55) 62%,#0F1D33 100%)}
+    .identity{position:relative;padding:0 22px 22px;margin-top:-44px;text-align:left}
+    .avatar{width:88px;height:88px;border-radius:50%;border:2px solid var(--gold);background:linear-gradient(150deg,var(--raised),var(--sunken));display:grid;place-items:center;font-size:36px;font-weight:700;color:var(--gold);position:relative;z-index:1}
+    h1{margin:14px 0 0;font-size:27px;line-height:1.15;overflow-wrap:anywhere}
+    .role{margin:6px 0 0;color:var(--gold);font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+    .since{margin:5px 0 0;color:var(--muted);font-size:12.5px}
+    .stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+    .stat{border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:16px 18px}
+    .stat .lbl{color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.11em;text-transform:uppercase}
+    .stat .val{margin-top:7px;font-size:29px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1}
+    .stat .sub{margin-top:6px;color:var(--secondary);font-size:11.5px}
+    .certs{margin-top:14px;border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:16px 18px}
+    .certs .lbl{color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.11em;text-transform:uppercase}
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:11px}
+    .chip{border:1px solid color-mix(in srgb,var(--gold) 55%,var(--line));color:var(--gold);border-radius:999px;padding:6px 12px;font-size:12px;font-weight:600;background:rgba(212,175,55,.07)}
+    .updated{margin:12px 2px 0;color:var(--muted);font-size:11px}
+    .cta{margin-top:14px;border:1px solid color-mix(in srgb,var(--gold) 45%,var(--line));border-radius:14px;background:linear-gradient(160deg,rgba(212,175,55,.10),rgba(91,141,239,.05));padding:20px;text-align:left}
+    .cta h2{margin:0;font-size:19px}
+    .cta p{margin:7px 0 0;color:var(--secondary);font-size:13px;line-height:1.55}
+    .cta a{display:inline-block;margin-top:14px;background:var(--gold);color:#0A1628;font-weight:700;font-size:14px;text-decoration:none;border-radius:10px;padding:12px 20px}
+    .state{margin-top:14px;border:1px solid var(--line);border-radius:18px;background:var(--surface);padding:34px 22px;text-align:center}
+    .state h2{margin:0;font-size:20px}
+    .state p{margin:9px auto 0;color:var(--secondary);font-size:13.5px;line-height:1.6;max-width:420px}
+    .state .cta{margin-top:18px;text-align:left}
+    .retry{margin-top:16px;background:transparent;border:1px solid var(--line-strong);color:var(--text);border-radius:10px;padding:11px 18px;font:600 13.5px inherit;cursor:pointer}
+    footer{margin-top:22px;text-align:center;color:var(--muted);font-size:11.5px}
+    footer b{color:var(--secondary)}
+    .skl{border-radius:18px;border:1px solid var(--line);background:var(--surface);margin-top:14px;overflow:hidden}
+    .skl .b{height:190px}
+    .skl .pad{padding:22px}
+    .bar{border-radius:8px;background:linear-gradient(100deg,var(--raised) 40%,#1B3157 50%,var(--raised) 60%);background-size:200% 100%;animation:shim 1.3s infinite linear}
+    @keyframes shim{to{background-position:-200% 0}}
+    .skl .avatar2{width:88px;height:88px;border-radius:50%;margin-top:-44px;position:relative}
+    .skl .l1{height:26px;width:55%;margin-top:16px}
+    .skl .l2{height:13px;width:35%;margin-top:10px}
+    .skl .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+    .skl .cell{height:86px}
+    [hidden]{display:none !important}
+    @media (min-width:760px){.banner{height:230px}.identity{margin-top:-52px}h1{font-size:32px}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <img src="assets/pipvanta-logo.png" alt="">
+      <div class="brand">PIP<span>VANT</span></div>
+    </header>
+
+    <!-- Loading -->
+    <div class="skl" id="stateLoading" aria-hidden="true">
+      <div class="b bar"></div>
+      <div class="pad">
+        <div class="avatar2 bar"></div>
+        <div class="l1 bar"></div>
+        <div class="l2 bar"></div>
+        <div class="grid"><div class="cell bar"></div><div class="cell bar"></div><div class="cell bar"></div><div class="cell bar"></div></div>
+      </div>
+    </div>
+
+    <!-- Profile -->
+    <main id="stateProfile" hidden>
+      <section class="card">
+        <div class="banner"><img id="pBanner" src="assets/bgs/ninja.webp" alt=""></div>
+        <div class="identity">
+          <div class="avatar" id="pAvatar">—</div>
+          <h1 id="pName">Trader</h1>
+          <p class="role">PIPVANT Trader</p>
+          <p class="since" id="pSince"></p>
+        </div>
+      </section>
+
+      <section class="stats" aria-label="Trading statistics">
+        <div class="stat"><div class="lbl">Win rate</div><div class="val" id="pWinRate">—</div><div class="sub" id="pWinSub"></div></div>
+        <div class="stat"><div class="lbl">Profit factor</div><div class="val" id="pPf">—</div><div class="sub" id="pPfSub"></div></div>
+        <div class="stat"><div class="lbl">Trades</div><div class="val" id="pTrades">—</div><div class="sub">logged in the journal</div></div>
+        <div class="stat"><div class="lbl">Day streak</div><div class="val" id="pStreak">—</div><div class="sub">trading days in a row</div></div>
+      </section>
+
+      <section class="certs" id="pCerts" hidden>
+        <div class="lbl">Certificates earned</div>
+        <div class="chips" id="pCertChips"></div>
+      </section>
+
+      <p class="updated" id="pUpdated"></p>
+
+      <section class="cta">
+        <h2>Track your own trades with PIPVANT</h2>
+        <p>Free trading journal, risk calculators, economic calendar and a verified prop-firm matcher — your own public track record included.</p>
+        <a href="./index.html">Start free</a>
+      </section>
+    </main>
+
+    <!-- Not found / private -->
+    <div class="state" id="stateNotFound" hidden>
+      <h2>Profile not available</h2>
+      <p>This profile is private or doesn't exist. The trader may have turned off their public profile.</p>
+      <section class="cta">
+        <h2>Track your own trades with PIPVANT</h2>
+        <p>Free trading journal, risk calculators, economic calendar and a verified prop-firm matcher.</p>
+        <a href="./index.html">Start free</a>
+      </section>
+    </div>
+
+    <!-- Error -->
+    <div class="state" id="stateError" hidden>
+      <h2>Something went wrong</h2>
+      <p>We couldn't load this profile. Check your connection and try again.</p>
+      <button class="retry" id="pRetry" type="button">Try again</button>
+    </div>
+
+    <footer><b>PIPVANT</b> by Orovanta — Trade with discipline.</footer>
+  </div>
+
+  <script>
+  (function(){
+    'use strict';
+    /* Public profile page: exactly ONE data request — the profile row —
+       via the same anon REST pattern as the site's other public pages. */
+    var KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFjcGt6YXZtaWZqd25za2lhcmV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyMDk1ODcsImV4cCI6MjEwNjc4NTU4N30.9-k-DoB6467EXTPKrvWUi-LRDPbSSC30f6BgrZezo2A';
+    var BASE='https://acpkzavmifjwnskiaret.supabase.co/rest/v1/';
+    var SCENES={ninja:1,ronin:1,torii:1,dragon:1,kitsune:1,koi:1,cranes:1,sakura:1,lanterns:1,aurora:1,ocean:1,desert:1,wolf:1,eagle:1,orbit:1,rain:1,cinematic:1,trader:1,'neo-ronin':1,miko:1,pirate:1,astronaut:1,ramadan:1};
+    var $=function(id){return document.getElementById(id);};
+    function show(id){
+      ['stateLoading','stateProfile','stateNotFound','stateError'].forEach(function(s){$(s).hidden=s!==id;});
+    }
+    function fmtInt(n){return isFinite(n)?String(Math.round(n)):'—';}
+    function render(d,updatedAt){
+      var scene=(d&&SCENES[d.scene])?d.scene:'ninja';
+      var banner=$('pBanner');
+      banner.onerror=function(){if(banner.getAttribute('src')!=='assets/bgs/ninja.webp')banner.setAttribute('src','assets/bgs/ninja.webp');};
+      banner.setAttribute('src','assets/bgs/'+scene+'.webp');
+      var name=(d&&typeof d.name==='string'&&d.name.trim())?d.name.trim():'Trader';
+      $('pName').textContent=name;
+      $('pAvatar').textContent=name.charAt(0).toUpperCase()||'—';
+      document.title=name+' on PIPVANT';
+      var ogT=document.querySelector('meta[property="og:title"]');if(ogT)ogT.setAttribute('content',name+' on PIPVANT');
+      var ogI=document.querySelector('meta[property="og:image"]');if(ogI)ogI.setAttribute('content','https://pipvant.github.io/assets/bgs/'+scene+'.webp');
+      $('pSince').textContent=(d&&d.memberSince)?('Member since '+d.memberSince):'';
+      var closed=(d&&isFinite(Number(d.closedTrades)))?Number(d.closedTrades):0;
+      var wr=(d&&d.winRate!=null&&isFinite(Number(d.winRate)))?Number(d.winRate):null;
+      $('pWinRate').textContent=wr!=null?wr+'%':'—';
+      $('pWinSub').textContent=closed>0?('from '+closed+' closed trade'+(closed===1?'':'s')):'no closed trades yet';
+      var pf=(d&&d.profitFactor!==undefined)?d.profitFactor:null;
+      if(closed>0){
+        if(pf===null){$('pPf').textContent='∞';$('pPfSub').textContent='no losing trades yet';}
+        else if(isFinite(Number(pf))){$('pPf').textContent=Number(pf).toFixed(2);$('pPfSub').textContent='gross profit ÷ gross loss';}
+        else{$('pPf').textContent='—';$('pPfSub').textContent='';}
+      }else{$('pPf').textContent='—';$('pPfSub').textContent='no closed trades yet';}
+      $('pTrades').textContent=fmtInt(d?Number(d.trades):NaN);
+      $('pStreak').textContent=fmtInt(d?Number(d.streak):NaN);
+      var certs=(d&&Array.isArray(d.certificates))?d.certificates.filter(function(c){return typeof c==='string'&&c;}):[];
+      if(certs.length){
+        var box=$('pCertChips');
+        certs.forEach(function(c){var s=document.createElement('span');s.className='chip';s.textContent=c;box.appendChild(s);});
+        $('pCerts').hidden=false;
+      }
+      var upd=(d&&d.updatedAt)||updatedAt;
+      if(upd){
+        var dt=new Date(upd);
+        if(isFinite(dt.getTime())){
+          $('pUpdated').textContent='Track record updated '+dt.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})+'.';
+        }
+      }
+      show('stateProfile');
+    }
+    function load(){
+      show('stateLoading');
+      var slug='';
+      try{slug=new URLSearchParams(window.location.search).get('u')||'';}catch(e){}
+      if(!/^[a-z0-9](?:[a-z0-9-]{1,28}[a-z0-9])?$/.test(slug)){show('stateNotFound');return;}
+      var url=BASE+'public_profiles?select=slug,display,updated_at&slug=eq.'+encodeURIComponent(slug);
+      fetch(url,{headers:{'apikey':KEY,'Authorization':'Bearer '+KEY}})
+        .then(function(r){if(!r.ok)throw new Error('http '+r.status);return r.json();})
+        .then(function(rows){
+          if(!Array.isArray(rows)||!rows.length){show('stateNotFound');return;}
+          var d=rows[0].display||{};
+          render(d,rows[0].updated_at);
+        })
+        .catch(function(){show('stateError');});
+    }
+    $('pRetry').addEventListener('click',load);
+    load();
+  })();
+  </script>
+</body>
+</html>

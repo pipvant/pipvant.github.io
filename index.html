@@ -585,6 +585,22 @@
     #profile .profile-surface-head{padding:18px 20px;border-bottom:1px solid var(--line)}
     #profile .profile-surface-head h3{margin:0 0 5px;font-size:17px}
     #profile .profile-surface-head p{margin:0;color:var(--muted);font-size:11px}
+    #profile #pvPubToggle:disabled{opacity:.55;cursor:default}
+    #profile .pv-pub-body{padding:16px 20px 18px}
+    #profile .pv-pub-body[hidden]{display:none}
+    #profile .pv-pub-label{display:block;margin:0 0 8px;color:var(--muted);font-size:11px;font-weight:600;letter-spacing:.04em}
+    #profile .pv-pub-slugrow{display:flex;align-items:stretch;border:1px solid var(--line-strong);border-radius:10px;background:var(--sunken);overflow:hidden}
+    #profile .pv-pub-prefix{display:flex;align-items:center;padding:0 2px 0 12px;color:var(--muted);font:500 12px/1 "IBM Plex Mono",monospace;white-space:nowrap}
+    #profile .pv-pub-slugrow input{flex:1;min-width:60px;border:0;background:transparent;color:var(--text);font:600 13px/1 "IBM Plex Mono",monospace;padding:12px 12px 12px 2px;outline:none}
+    html[dir="rtl"] #profile .pv-pub-prefix{padding:0 12px 0 2px}
+    html[dir="rtl"] #profile .pv-pub-slugrow input{padding:12px 2px 12px 12px}
+    #profile .pv-pub-link{margin:10px 0 0;color:var(--secondary);font:500 11px/1.5 "IBM Plex Mono",monospace;overflow-wrap:anywhere}
+    #profile .pv-pub-actions{display:flex;gap:9px;margin-top:14px;flex-wrap:wrap}
+    #profile .pv-pub-feedback{min-height:16px;margin:0;padding:2px 20px 14px;color:var(--accent);font-size:11px;line-height:1.45}
+    #profile .pv-pub-feedback:empty{padding-bottom:0;min-height:0}
+    #profile .pv-pub-feedback.is-error{color:var(--danger)}
+    #profile .pv-pub-na{margin:0;padding:14px 20px 16px;color:var(--muted);font-size:11px}
+    #profile .pv-pub-na[hidden]{display:none}
     #profile .recent-trades-empty{min-height:190px;padding:28px 18px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:transparent}
     #profile .recent-trades-empty h4{margin:0 0 17px;font:600 16px/1.2 "Space Grotesk",sans-serif}
     #profile .recent-trades-empty .btn{min-height:42px}
@@ -3774,6 +3790,19 @@ html[dir="rtl"] .jump-row{text-align:right}
               <div class="profile-badges-empty" id="profileBadgesEmpty"><span class="profile-badges-empty-mark" aria-hidden="true"><svg width="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="9" r="5"/><path d="m8.5 13-1 8 4.5-2 4.5 2-1-8"/></svg></span><span>No certificates earned yet — complete missions to earn them</span></div>
               <div class="profile-badge-list" id="profileBadgeList" aria-label="Earned certificates" hidden></div>
             </div>
+          </section>
+
+          <section class="profile-surface" id="pvPubCard" aria-labelledby="pv-pub-title">
+            <div class="profile-surface-head"><h3 id="pv-pub-title">Public profile</h3><p>Share a public page with your summary stats — never your trades, email or balance.</p></div>
+            <button class="settings-toggle" id="pvPubToggle" type="button" role="switch" aria-checked="false"><span class="settings-copy"><strong>Public profile page</strong><small id="pvPubState">Private — only you can see your stats.</small></span><span class="switch-track" aria-hidden="true"></span></button>
+            <div class="pv-pub-body" id="pvPubBody" hidden>
+              <label class="pv-pub-label" for="pvPubSlug">Your link</label>
+              <div class="pv-pub-slugrow"><span class="pv-pub-prefix">pipvant.github.io/p.html?u=</span><input id="pvPubSlug" type="text" maxlength="30" autocomplete="off" autocapitalize="none" spellcheck="false" data-en-aria-label="Public profile link name" aria-label="Public profile link name"></div>
+              <p class="pv-pub-link" id="pvPubLink"></p>
+              <div class="pv-pub-actions"><button class="btn secondary" id="pvPubCopy" type="button">Copy link</button><button class="btn secondary" id="pvPubUpdate" type="button" hidden>Update link</button></div>
+            </div>
+            <p class="pv-pub-feedback" id="pvPubFeedback" aria-live="polite"></p>
+            <p class="pv-pub-na" id="pvPubNA" hidden>Not available yet</p>
           </section>
 
           <div class="profile-content-grid">
@@ -8086,10 +8115,11 @@ html[dir="rtl"] .jump-row{text-align:right}
     'Which prop firms are listed?':'ما شركات التداول المدرجة؟',
     'Also free:':'مجاني أيضاً:','Profit Split Calculator':'حاسبة تقسيم الأرباح','Drawdown Simulator':'محاكي التراجع','Consistency Rule Checker':'فاحص الاتساق','Forex Risk Calculator':'حاسبة مخاطر الفوركس','Advanced filters':'المرشحات المتقدمة','Reset filters':'إعادة تعيين المرشحات','Min price':'الحد الأدنى للسعر','Max price':'الحد الأقصى للسعر','Min profit split':'الحد الأدنى لتقسيم الأرباح','Min max drawdown':'الحد الأدنى لأقصى تراجع',
     "Firms with published, verifiable rules. Every card shows the firm's headquarters country, and every plan shows real prices and conditions — never invented ratings or guessed numbers.":'الشركات ذات القواعد المنشورة والقابلة للتحقق. كل بطاقة تعرض دولة مقر الشركة، وكل خطة تعرض أسعاراً وشروطاً حقيقية — أبداً تقييمات مخترعة أو أرقام مُخمَّنة.',
+    'Public profile':'الملف العام','Public profile page':'صفحة الملف العام','Share a public page with your summary stats — never your trades, email or balance.':'شارك صفحة عامة بإحصائياتك الموجزة — أبداً صفقاتك أو بريدك أو رصيدك.','Your link':'رابطك','Copy link':'نسخ الرابط','Update link':'تحديث الرابط','Not available yet':'غير متاح بعد',
   };
   var attrAr={'Account setup':'إعداد الحساب','Back to welcome':'العودة للترحيب','Back to log in':'العودة لتسجيل الدخول','Back to account details':'العودة لتفاصيل الحساب','Profile initial':'حرف الملف الشخصي','Primary navigation':'التنقل الرئيسي','Close menu':'إغلاق القائمة','Account overview':'نظرة عامة على الحساب','Open navigation':'فتح التنقل','Notifications':'الإشعارات','Open profile':'فتح الملف الشخصي','Product data indicators':'مؤشرات بيانات المنتج','Quick risk calculator':'حاسبة مخاطر سريعة','Prop firm matcher':'مطابق شركات التداول','Market type':'نوع السوق','Maximum price':'السعر الأقصى','Matcher display controls':'أدوات عرض المطابق','Display currency':'عملة العرض','Result density':'كثافة النتائج','Result view':'عرض النتائج','Result row structure':'بنية صف النتيجة','Firm logo unavailable':'شعار الشركة غير متاح','Rating unavailable':'التقييم غير متاح','Discount unavailable':'الخصم غير متاح','Promotional offer unavailable':'العرض الترويجي غير متاح','Matcher trust indicators':'مؤشرات ثقة المطابق','Methodology statistics':'إحصاءات المنهجية','Trust and review information':'معلومات الثقة والمراجعة','Optional data consent':'موافقة البيانات الاختيارية','Trading journal':'سجل التداول','Journal controls':'أدوات السجل','Date range':'نطاق التاريخ','Performance metrics':'مقاييس الأداء','No Net P&L history':'لا يوجد سجل صافي ربح وخسارة','No cumulative R history':'لا يوجد سجل R تراكمي','Performance charts':'رسوم الأداء','Chart metric':'مقياس الرسم','Empty drawdown strip':'شريط تراجع فارغ','Weekly totals':'الإجماليات الأسبوعية','Trade filters':'مرشحات الصفقات','Search journal':'بحث في السجل','Search journal records':'بحث في سجلات الصفقات','Search symbol or note':'ابحث عن رمز أو ملاحظة','Search trades':'بحث في الصفقات','Trade view':'عرض الصفقات','Group trades':'تجميع الصفقات','Risk calculator':'حاسبة المخاطر','Account size':'حجم الحساب','Decrease risk percentage':'خفض نسبة المخاطرة','Risk percentage':'نسبة المخاطرة','Increase risk percentage':'رفع نسبة المخاطرة','Risk presets':'قيم المخاطرة الجاهزة','Discipline':'الانضباط','Discipline streak':'سلسلة الانضباط','Seven day completion strip':'شريط إكمال سبعة أيام','Weekly statistics':'الإحصاءات الأسبوعية','Notification views':'طرق عرض الإشعارات','Search notifications':'بحث في الإشعارات','Notification filters':'مرشحات الإشعارات','Notification detail':'تفاصيل الإشعار','Keyboard shortcuts':'اختصارات لوحة المفاتيح','Profile':'الملف الشخصي','Change profile photo':'تغيير صورة الملف الشخصي','Edit display name':'تعديل الاسم المعروض','Edit bio':'تعديل النبذة','Close profile editor':'إغلاق محرر الملف الشخصي','Earned certificates':'الشهادات المكتسبة','No equity data yet':'لا توجد بيانات رصيد بعد','Trading statistics':'إحصاءات التداول','Appearance':'المظهر','Language':'اللغة','Settings':'الإعدادات','Trading currency':'عملة التداول','Default risk percentage':'نسبة المخاطرة الافتراضية','Decrease default risk':'خفض المخاطرة الافتراضية','Increase default risk':'رفع المخاطرة الافتراضية','Close password form':'إغلاق نموذج كلمة المرور','Close email form':'إغلاق نموذج البريد','Close delete account form':'إغلاق نموذج حذف الحساب','Close trade form':'إغلاق نموذج الصفقة','Trade direction':'اتجاه الصفقة','Certificates':'الشهادات','About PIPVANT':'حول PIPVANT','Contact':'تواصل','Contact form':'نموذج التواصل','All prop firms':'جميع شركات التداول','Search firms':'البحث عن الشركات','Sort firms':'ترتيب الشركات','Firm directory views':'طرق عرض دليل الشركات','Close firm filters':'إغلاق مرشحات الشركات','Firm rule table':'جدول قواعد الشركة','Close firm details':'إغلاق تفاصيل الشركة','Save firm':'حفظ الشركة','Methodology':'المنهجية','Support':'الدعم','Close account switcher':'إغلاق مبدل الحساب','Trading accounts':'حسابات التداول','Close account form':'إغلاق نموذج الحساب','Economic Calendar':'التقويم الاقتصادي','Countdown to next high-impact event':'العد التنازلي للحدث القوي القادم','Economic events':'الأحداث الاقتصادية','Close calendar filters':'إغلاق مرشحات التقويم','Close event details':'إغلاق تفاصيل الحدث',
     'Dismiss':'إغلاق','Jump to':'اذهب إلى','Equity curve from connected Journal data':'منحنى الرصيد من بيانات السجل المتصلة',
-    'Promotion available':'عرض ترويجي متاح','Rationale available':'المبرر متاح','Status messages':'رسائل الحالة','Export .ics':'تصدير .ics','Jump to…':'اذهب إلى…','News alerts':'تنبيهات الأخبار','Browser alerts':'تنبيهات المتصفح','A browser notification 15 minutes before high-impact events, for your selected currencies.':'إشعار من المتصفح قبل 15 دقيقة من الأحداث عالية التأثير، لعملاتك المختارة.','Works while PIPVANT is open in your browser.':'يعمل أثناء فتح PIPVANT في متصفحك.','Your week in numbers':'أسبوعك بالأرقام','This week · Monday to Sunday':'هذا الأسبوع · الاثنين إلى الأحد','Background scene':'مشهد الخلفية'};
+    'Promotion available':'عرض ترويجي متاح','Rationale available':'المبرر متاح','Status messages':'رسائل الحالة','Export .ics':'تصدير .ics','Jump to…':'اذهب إلى…','News alerts':'تنبيهات الأخبار','Browser alerts':'تنبيهات المتصفح','A browser notification 15 minutes before high-impact events, for your selected currencies.':'إشعار من المتصفح قبل 15 دقيقة من الأحداث عالية التأثير، لعملاتك المختارة.','Works while PIPVANT is open in your browser.':'يعمل أثناء فتح PIPVANT في متصفحك.','Your week in numbers':'أسبوعك بالأرقام','This week · Monday to Sunday':'هذا الأسبوع · الاثنين إلى الأحد','Background scene':'مشهد الخلفية','Public profile link name':'اسم رابط الملف العام'};
   var translatableNodes=[];
   function captureTranslations(){
     var walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,{acceptNode:function(node){var p=node.parentElement;if(!p||/^(SCRIPT|STYLE|SVG)$/.test(p.tagName)||!node.nodeValue.trim())return NodeFilter.FILTER_REJECT;return NodeFilter.FILTER_ACCEPT;}});
@@ -8122,6 +8152,7 @@ html[dir="rtl"] .jump-row{text-align:right}
     if(typeof sbBreachCalc==='function')sbBreachCalc();
     if(typeof updateProfileIdentity==='function'&&profileSession)updateProfileIdentity(profileSession.name,profileSession.bio);
     if(typeof renderProfileCertificates==='function'&&profileSession)renderProfileCertificates(profileSession.certificates);
+    if(typeof pvPubRender==='function')pvPubRender();
   }
   /* ===== Background scenes (founder feature) =====
      pvBgApply(key) switches the painted anime scene behind the app shell.
@@ -8414,6 +8445,289 @@ html[dir="rtl"] .jump-row{text-align:right}
   }
   window.pvBgCheckUnlocks=pvBgCheckUnlocks;
   window.pvBgSyncLocks=pvBgSyncLocks;
+
+  /* ===== Public profile (opt-in shareable snapshot) =====
+     The Profile card publishes an AGGREGATES-ONLY snapshot of the user's
+     own stats to public_profiles (see work/public-profile-migration.sql)
+     and p.html renders it read-only for anyone with the link.
+     Snapshot field set (display jsonb) — and nothing else, by design:
+       v            snapshot schema version (1)
+       name         display name (profileSession / auth metadata)
+       memberSince  "October 2026" from the auth user's created_at
+       scene        pvBgEffectiveScene() — backdrop painting key only
+       trades       ALL logged trades (pvBgTradeCount, type 'trade')
+       closedTrades closed trades (type 'trade' with finite pnl)
+       winRate      round(wins/closed*100), null when no closed trades
+       profitFactor grossProfit/grossLoss rounded to 2dp (the journal's
+                    own formula); null when closed>0 with zero losses
+                    (p.html renders that as ∞); 0 when no wins or losses
+       streak       rail trading streak (pvBgStreakValue read-back)
+       certificates certificate NAMES only (profileSession), max 12
+       updatedAt    ISO time the snapshot was computed
+     NEVER published: email, individual trades, P&L or balance figures —
+     ratios and counts only. Requires the migration; until the table
+     exists every call fails soft into a "Not available yet" state and
+     nothing else in the app is affected. */
+  var pvPub={known:false,on:false,slug:'',savedSlug:'',unavailable:false,busy:false,feedback:null};
+  var PV_PUB_URL='https://pipvant.github.io/p.html?u=';
+  var PV_PUB_RESERVED={index:1,p:1,admin:1,pipvant:1,support:1,about:1,contact:1,settings:1,profile:1,api:1};
+  function pvPubEl(id){return document.getElementById(id);}
+  function pvPubLT(en,ar){return (typeof currentLanguage!=='undefined'&&currentLanguage==='ar')?ar:en;}
+  function pvPubValidSlug(s){return typeof s==='string'&&/^[a-z0-9](?:[a-z0-9-]{1,28}[a-z0-9])?$/.test(s)&&!PV_PUB_RESERVED[s];}
+  function pvPubSlugify(name){
+    var s=String(name||'').toLowerCase();
+    try{s=s.normalize('NFD').replace(/[\u0300-\u036f]/g,'');}catch(e){}
+    s=s.replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,30).replace(/-+$/,'');
+    if(s.length<3||PV_PUB_RESERVED[s]){
+      s='trader'+((typeof sbUser!=='undefined'&&sbUser&&sbUser.id)?('-'+String(sbUser.id).replace(/[^a-z0-9]/g,'').slice(0,6)):'');
+    }
+    return s;
+  }
+  function pvPubMissingTable(err){
+    if(!err)return false;
+    var code=String(err.code||'');
+    if(code==='42P01'||code==='PGRST205')return true;
+    var msg=String(err.message||err.details||'');
+    return /public_profiles/i.test(msg)&&/(does not exist|schema cache|could not find|not found)/i.test(msg);
+  }
+  function pvPubSnapshot(){
+    var name='';
+    try{name=(typeof profileSession!=='undefined'&&profileSession&&profileSession.name)||'';}catch(e){}
+    if(!name){try{name=(sbUser&&sbUser.user_metadata&&sbUser.user_metadata.display_name)||'';}catch(e){}}
+    if(!name)name='Trader';
+    var memberSince='';
+    try{
+      if(sbUser&&sbUser.created_at){
+        var d=new Date(sbUser.created_at);
+        var months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+        if(isFinite(d.getTime()))memberSince=months[d.getMonth()]+' '+d.getFullYear();
+      }
+    }catch(e){}
+    var scene='ninja';
+    try{var sc=(typeof pvBgEffectiveScene==='function')?pvBgEffectiveScene():'';if(sc&&sc!=='classic')scene=sc;}catch(e){}
+    var trades=0;
+    try{trades=(typeof pvBgTradeCount==='function')?pvBgTradeCount():0;}catch(e){}
+    /* Closed trades + win rate + profit factor: the same definitions
+       pvShareStats() and the journal KPIs use. */
+    var closed=[];
+    try{
+      var list=(typeof sessionJournalEntries!=='undefined'&&Array.isArray(sessionJournalEntries))?sessionJournalEntries:[];
+      closed=list.filter(function(e){return e&&e.type==='trade'&&e.pnl!=null&&isFinite(Number(e.pnl));});
+    }catch(e){}
+    var wins=0,gp=0,gl=0;
+    closed.forEach(function(e){var p=Number(e.pnl);if(p>0){wins++;gp+=p;}else if(p<0){gl+=Math.abs(p);}});
+    var winRate=closed.length?Math.round(wins/closed.length*100):null;
+    var pf=null;
+    if(closed.length)pf=gl>0?Math.round((gp/gl)*100)/100:(gp>0?null:0);
+    var streak=0;
+    try{streak=(typeof pvBgStreakValue==='function')?pvBgStreakValue():0;}catch(e){}
+    var certs=[];
+    try{
+      if(typeof profileSession!=='undefined'&&profileSession&&Array.isArray(profileSession.certificates)){
+        certs=profileSession.certificates.filter(function(c){return typeof c==='string'&&!!c;}).slice(0,12);
+      }
+    }catch(e){}
+    return {v:1,name:name,memberSince:memberSince,scene:scene,trades:trades,closedTrades:closed.length,winRate:winRate,profitFactor:pf,streak:streak,certificates:certs,updatedAt:new Date().toISOString()};
+  }
+  function pvPubLink(){return PV_PUB_URL+encodeURIComponent(pvPub.savedSlug||pvPub.slug||'');}
+  function pvPubFeedback(en,ar,isErr){pvPub.feedback={en:en,ar:ar,err:!!isErr};pvPubRenderFeedback();}
+  function pvPubRenderFeedback(){
+    var f=pvPubEl('pvPubFeedback');if(!f)return;
+    if(!pvPub.feedback){f.textContent='';f.classList.remove('is-error');return;}
+    f.textContent=pvPubLT(pvPub.feedback.en,pvPub.feedback.ar);
+    f.classList.toggle('is-error',!!pvPub.feedback.err);
+  }
+  function pvPubRender(){
+    var t=pvPubEl('pvPubToggle');if(!t)return;
+    var body=pvPubEl('pvPubBody'),na=pvPubEl('pvPubNA'),st=pvPubEl('pvPubState');
+    t.setAttribute('aria-checked',pvPub.on?'true':'false');
+    if(pvPub.unavailable){
+      t.disabled=true;
+      if(na)na.hidden=false;
+      if(body)body.hidden=true;
+      if(st)st.textContent=pvPubLT('Not available yet.','غير متاح بعد.');
+      pvPubRenderFeedback();
+      return;
+    }
+    t.disabled=!!pvPub.busy;
+    if(na)na.hidden=true;
+    if(st)st.textContent=pvPub.on
+      ? pvPubLT('Public — anyone with the link can view it.','عام — أي شخص لديه الرابط يمكنه المشاهدة.')
+      : pvPubLT('Private — only you can see your stats.','خاص — أنت فقط من يرى إحصائياتك.');
+    if(body)body.hidden=!pvPub.on;
+    if(pvPub.on){
+      var input=pvPubEl('pvPubSlug');
+      if(input&&document.activeElement!==input)input.value=pvPub.slug;
+      var link=pvPubEl('pvPubLink');if(link)link.textContent=pvPubLink();
+      var upd=pvPubEl('pvPubUpdate');
+      if(upd)upd.hidden=!(input&&input.value.trim()!==pvPub.savedSlug);
+    }
+    pvPubRenderFeedback();
+  }
+  function pvPubPublish(slug){
+    if(typeof sb==='undefined'||!sb||typeof sbUser==='undefined'||!sbUser)return Promise.resolve({ok:false,reason:'auth'});
+    var row={slug:slug,user_id:sbUser.id,display:pvPubSnapshot(),updated_at:new Date().toISOString()};
+    var q;
+    try{q=sb.from('public_profiles').upsert(row,{onConflict:'user_id'});}catch(e){return Promise.resolve({ok:false,reason:'error'});}
+    return Promise.resolve(q).then(function(r){
+      if(r&&r.error){
+        if(pvPubMissingTable(r.error)){pvPub.unavailable=true;pvPubRender();return {ok:false,reason:'missing'};}
+        if(String(r.error.code||'')==='23505')return {ok:false,reason:'taken'};
+        return {ok:false,reason:'error'};
+      }
+      return {ok:true};
+    }).catch(function(){return {ok:false,reason:'error'};});
+  }
+  function pvPubLoad(){
+    if(typeof sb==='undefined'||!sb||typeof sbUser==='undefined'||!sbUser||pvPub.busy||pvPub.unavailable){pvPubRender();return;}
+    var q;
+    try{q=sb.from('public_profiles').select('slug').eq('user_id',sbUser.id).maybeSingle();}catch(e){return;}
+    Promise.resolve(q).then(function(r){
+      if(r&&r.error){
+        if(pvPubMissingTable(r.error))pvPub.unavailable=true;
+        pvPubRender();
+        return;
+      }
+      pvPub.known=true;
+      if(r&&r.data&&r.data.slug){
+        pvPub.on=true;pvPub.slug=r.data.slug;pvPub.savedSlug=r.data.slug;
+        pvPubRender();
+        /* Cheap freshness: while public, re-publish the snapshot on open. */
+        pvPubPublish(pvPub.savedSlug);
+      }else{
+        pvPub.on=false;pvPub.slug='';pvPub.savedSlug='';
+        pvPubRender();
+      }
+    }).catch(function(){ /* silent: the card keeps its last known state */ });
+  }
+  function pvPubOnProfileOpen(){
+    if(!pvPubEl('pvPubCard'))return;
+    pvPubLoad();
+  }
+  function pvPubRefreshIfOn(){
+    if(pvPub.on&&pvPub.savedSlug&&!pvPub.unavailable)pvPubPublish(pvPub.savedSlug);
+  }
+  function pvPubFailFeedback(reason){
+    if(reason==='taken')pvPubFeedback('That link is taken — try another.','هذا الرابط محجوز — جرّب آخر.',true);
+    else if(reason!=='missing')pvPubFeedback('Could not update. Try again.','تعذر التحديث. حاول مرة أخرى.',true);
+  }
+  function pvPubToggleClick(){
+    if(pvPub.busy||pvPub.unavailable)return;
+    if(typeof sb==='undefined'||!sb||typeof sbUser==='undefined'||!sbUser){
+      if(typeof showToast==='function')showToast(pvPubLT('Sign in to get a public profile link.','سجّل الدخول للحصول على رابط ملف عام.'));
+      return;
+    }
+    pvPub.busy=true;pvPubRender();
+    if(!pvPub.on){
+      var input=pvPubEl('pvPubSlug');
+      var typed=input?input.value.trim().toLowerCase():'';
+      var edited=!!(typed&&typed!==pvPub.savedSlug);
+      var slug=edited?typed:pvPubSlugify((typeof profileSession!=='undefined'&&profileSession)?profileSession.name:'');
+      if(!pvPubValidSlug(slug)){
+        pvPub.busy=false;
+        pvPubFeedback('Links use lowercase letters, numbers and dashes (3–30 characters).','الروابط تستخدم حروفاً صغيرة وأرقاماً وشرطات (3–30 حرفاً).',true);
+        pvPubRender();
+        return;
+      }
+      var attempt=function(s,allowSuffix){
+        return pvPubPublish(s).then(function(r){
+          if(r.ok){
+            pvPub.on=true;pvPub.slug=s;pvPub.savedSlug=s;pvPub.known=true;pvPub.busy=false;
+            pvPubFeedback('Your public profile is live.','ملفك العام مباشر الآن.',false);
+            pvPubRender();
+            return;
+          }
+          if(r.reason==='taken'&&allowSuffix){
+            var s2=(s+'-'+String(sbUser.id).replace(/[^a-z0-9]/g,'').slice(0,4)).slice(0,30).replace(/-+$/,'');
+            if(pvPubValidSlug(s2)&&s2!==s)return attempt(s2,false);
+          }
+          pvPub.busy=false;
+          pvPubFailFeedback(r.reason);
+          pvPubRender();
+        });
+      };
+      attempt(slug,!edited);
+    }else{
+      var q=null;
+      try{q=sb.from('public_profiles').delete().eq('user_id',sbUser.id);}catch(e){}
+      Promise.resolve(q).then(function(r){
+        pvPub.busy=false;
+        if(r&&r.error&&!pvPubMissingTable(r.error)){
+          pvPubFailFeedback('error');
+          pvPubRender();
+          return;
+        }
+        if(r&&r.error&&pvPubMissingTable(r.error))pvPub.unavailable=true;
+        pvPub.on=false;pvPub.slug='';pvPub.savedSlug='';
+        pvPub.feedback=null;
+        if(!pvPub.unavailable)pvPubFeedback('Your profile is private again.','ملفك خاص من جديد.',false);
+        pvPubRender();
+      }).catch(function(){
+        pvPub.busy=false;
+        pvPubFailFeedback('error');
+        pvPubRender();
+      });
+    }
+  }
+  function pvPubUpdateSlug(){
+    if(pvPub.busy||!pvPub.on||pvPub.unavailable)return;
+    var input=pvPubEl('pvPubSlug');if(!input)return;
+    var s=input.value.trim().toLowerCase();
+    if(s===pvPub.savedSlug)return;
+    if(!pvPubValidSlug(s)){
+      pvPubFeedback('Links use lowercase letters, numbers and dashes (3–30 characters).','الروابط تستخدم حروفاً صغيرة وأرقاماً وشرطات (3–30 حرفاً).',true);
+      pvPubRender();
+      return;
+    }
+    pvPub.busy=true;pvPubRender();
+    pvPubPublish(s).then(function(r){
+      pvPub.busy=false;
+      if(r.ok){
+        pvPub.slug=s;pvPub.savedSlug=s;
+        pvPubFeedback('Link updated.','تم تحديث الرابط.',false);
+      }else{
+        pvPubFailFeedback(r.reason);
+      }
+      pvPubRender();
+    });
+  }
+  function pvPubFallbackCopy(text,done){
+    try{
+      var ta=document.createElement('textarea');
+      ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
+      document.body.appendChild(ta);ta.select();
+      document.execCommand('copy');document.body.removeChild(ta);done();
+    }catch(e){
+      pvPubFeedback('Copy failed — long-press the link to copy it.','فشل النسخ — اضغط مطولاً على الرابط لنسخه.',true);
+      pvPubRender();
+    }
+  }
+  function pvPubCopyLink(){
+    var url=pvPubLink();
+    var done=function(){pvPubFeedback('Link copied.','تم نسخ الرابط.',false);pvPubRender();};
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(url).then(done).catch(function(){pvPubFallbackCopy(url,done);});
+    }else{
+      pvPubFallbackCopy(url,done);
+    }
+  }
+  (function(){
+    var t=pvPubEl('pvPubToggle');if(t)t.addEventListener('click',pvPubToggleClick);
+    var c=pvPubEl('pvPubCopy');if(c)c.addEventListener('click',pvPubCopyLink);
+    var u=pvPubEl('pvPubUpdate');if(u)u.addEventListener('click',pvPubUpdateSlug);
+    var i=pvPubEl('pvPubSlug');
+    if(i){
+      i.addEventListener('input',function(){
+        var upd=pvPubEl('pvPubUpdate');
+        if(upd)upd.hidden=i.value.trim().toLowerCase()===pvPub.savedSlug;
+      });
+      i.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();pvPubUpdateSlug();}});
+    }
+    pvPubRender();
+  })();
+  window.pvPubOnProfileOpen=pvPubOnProfileOpen;
+  window.pvPubRefreshIfOn=pvPubRefreshIfOn;
+  window.pvPubRender=pvPubRender;
   document.addEventListener('click',function(ev){var b=ev.target&&ev.target.closest?ev.target.closest('[data-language-choice]'):null;if(b)setTimeout(function(){pvBgSyncLocks();},0);});
   var pvBgPickerEl=document.querySelector('.bgs-picker');
   if(pvBgPickerEl){
@@ -9159,6 +9473,7 @@ html[dir="rtl"] .jump-row{text-align:right}
   function pvForwardOnScreen(id){
     pvBgSyncCalm();
     if(id==='journal'||id==='profile'||id==='backgrounds')pvBgCheckUnlocks();
+    if(id==='profile'&&typeof pvPubOnProfileOpen==='function')pvPubOnProfileOpen();
     if(id==='journal')pvCelebMaybeJournal();
     if(id==='landing'&&typeof pvSotdRender==='function')pvSotdRender();
   }
@@ -9628,7 +9943,7 @@ html[dir="rtl"] .jump-row{text-align:right}
   document.getElementById('profileEditorCancel').addEventListener('click',closeProfileEditor);
   profileEditor.addEventListener('click',function(event){if(event.target===profileEditor)closeProfileEditor();});
   profileBioInput.addEventListener('input',updateProfileBioCount);
-  profileEditorForm.addEventListener('submit',function(event){event.preventDefault();var submitter=event.submitter;var nn=profileNameInput.value,bio=profileBioInput.value;updateProfileIdentity(nn,bio);Promise.resolve(sbSaveProfile(nn,bio)).then(function(ok){if(ok===false){showToast(currentLanguage==='ar'?'فشل الحفظ. حاول مرة أخرى.':'Save failed. Try again.');}else{showToast(currentLanguage==='ar'?'تم تحديث الملف.':'Profile updated.');}closeProfileEditor();}).catch(function(){showToast(currentLanguage==='ar'?'فشل الحفظ.':'Save failed.');closeProfileEditor();});});
+  profileEditorForm.addEventListener('submit',function(event){event.preventDefault();var submitter=event.submitter;var nn=profileNameInput.value,bio=profileBioInput.value;updateProfileIdentity(nn,bio);Promise.resolve(sbSaveProfile(nn,bio)).then(function(ok){if(ok===false){showToast(currentLanguage==='ar'?'فشل الحفظ. حاول مرة أخرى.':'Save failed. Try again.');}else{showToast(currentLanguage==='ar'?'تم تحديث الملف.':'Profile updated.');}try{if(typeof pvPubRefreshIfOn==='function')pvPubRefreshIfOn();}catch(e){}closeProfileEditor();}).catch(function(){showToast(currentLanguage==='ar'?'فشل الحفظ.':'Save failed.');closeProfileEditor();});});
   document.addEventListener('keydown',function(event){if(event.key==='Escape'&&!profileEditor.hidden)closeProfileEditor();});
   document.getElementById('profileAvatarEdit').addEventListener('click',function(){profileAvatarInput.click();});
   profileAvatarInput.addEventListener('change',function(){
