@@ -3692,11 +3692,11 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
 
       <section class="mistake-card" aria-labelledby="mistake-cost-title"><div class="journal-card-head"><div><h3 id="mistake-cost-title">Cost of mistakes</h3><p>Closed trades only — grouped by tag</p></div><span class="tiny">BY TAG</span></div><div class="mistake-body" id="mistakeCostBody"><p class="mistake-empty">Tag trades with the mistake chips to see what they cost you</p></div></section>
 
-      <section class="breakdown-card" aria-labelledby="breakdown-title"><div class="journal-card-head"><div><h3 id="breakdown-title">Breakdowns</h3><p id="breakdown-sub">Closed trades only — where the edge is</p></div><span class="tiny" id="breakdownMode">NET P&amp;L</span></div><div class="breakdown-tabs" role="group" aria-label="Breakdown view"><button type="button" data-breakdown-view="setup" aria-pressed="true">By setup</button><button type="button" data-breakdown-view="symbol" aria-pressed="false">By symbol</button><button type="button" data-breakdown-view="dow" aria-pressed="false">By day</button></div><div class="breakdown-body" id="breakdownBody"><p class="mistake-empty">Log closed trades to see performance by setup, symbol, and day.</p></div></section>
+      <section class="breakdown-card" aria-labelledby="breakdown-title"><div class="journal-card-head"><div><h3 id="breakdown-title">Breakdowns</h3><p id="breakdown-sub">Closed trades only — where the edge is</p></div><span class="tiny" id="breakdownMode">NET P&amp;L</span></div><div class="breakdown-tabs" role="group" aria-label="Breakdown view"><button type="button" data-breakdown-view="setup" aria-pressed="true">By setup</button><button type="button" data-breakdown-view="symbol" aria-pressed="false">By symbol</button><button type="button" data-breakdown-view="dow" aria-pressed="false">By day</button><button type="button" data-breakdown-view="session" aria-pressed="false">By session</button></div><div class="breakdown-body" id="breakdownBody"><p class="mistake-empty">Log closed trades to see performance by setup, symbol, day, and session.</p></div></section>
 
       <section class="calendar-card" aria-labelledby="calendar-title"><div class="journal-card-head"><div><h3 id="calendar-title">P&amp;L Calendar</h3><p id="jcalHeadNote">Month — · Select a day to filter trades</p></div><span class="tiny" id="jcalMonthLabel">MONTH —</span><div class="jcal-controls"><button class="jcal-btn" id="jcalPrev" type="button" aria-label="Previous month">‹</button><button class="jcal-btn" id="jcalNext" type="button" aria-label="Next month">›</button><button class="jcal-btn" id="jcalModeMoney" type="button" aria-pressed="true">$</button><button class="jcal-btn" id="jcalModeR" type="button" aria-pressed="false">R</button><button class="jcal-btn" id="jcalHide" type="button" aria-pressed="false">Hide amounts</button></div></div><div class="calendar-layout"><div class="calendar-main"><div class="calendar-weekdays" aria-hidden="true"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div><div class="calendar-grid" id="jcalGrid"><span class="day-cell" aria-hidden="true" style="opacity:.34"></span><span class="day-cell" aria-hidden="true" style="opacity:.34"></span><span class="day-cell" aria-hidden="true" style="opacity:.34"></span><button class="day-cell" type="button" data-journal-day="1" aria-label="Filter trades by day 1"><span class="day-date">1</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10"><use href="#pv-i-note"/></svg></button><button class="day-cell" type="button" data-journal-day="2" aria-label="Filter trades by day 2"><span class="day-date">2</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10"><use href="#pv-i-note"/></svg></button><button class="day-cell" type="button" data-journal-day="3" aria-label="Filter trades by day 3"><span class="day-date">3</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10"><use href="#pv-i-note"/></svg></button><button class="day-cell" type="button" data-journal-day="4" aria-label="Filter trades by day 4"><span class="day-date">4</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10"><use href="#pv-i-note"/></svg></button><button class="day-cell" type="button" data-journal-day="5" aria-label="Filter trades by day 5"><span class="day-date">5</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10"><use href="#pv-i-note"/></svg></button><button class="day-cell" type="button" data-journal-day="6" aria-label="Filter trades by day 6"><span class="day-date">6</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10"><use href="#pv-i-note"/></svg></button><button class="day-cell" type="button" data-journal-day="7" aria-label="Filter trades by day 7"><span class="day-date">7</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10"><use href="#pv-i-note"/></svg></button><button class="day-cell" type="button" data-journal-day="8" aria-label="Filter trades by day 8"><span class="day-date">8</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10"><use href="#pv-i-note"/></svg></button><button class="day-cell" type="button" data-journal-day="9" aria-label="Filter trades by day 9"><span class="day-date">9</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10"><use href="#pv-i-note"/></svg></button><button class="day-cell" type="button" data-journal-day="10" aria-label="Filter trades by day 10"><span class="day-date">10</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10"><use href="#pv-i-note"/></svg></button><button class="day-cell" type="button" data-journal-day="11" aria-label="Filter trades by day 11"><span class="day-date">11</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10"><use href="#pv-i-note"/></svg></button><button class="day-cell" type="button" data-journal-day="12" aria-label="Filter trades by day 12"><span class="day-date">12</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10"><use href="#pv-i-note"/></svg></button><button class="day-cell" type="button" data-journal-day="13" aria-label="Filter trades by day 13"><span class="day-date">13</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10"><use href="#pv-i-note"/></svg></button><button class="day-cell" type="button" data-journal-day="14" aria-label="Filter trades by day 14"><span class="day-date">14</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10"><use href="#pv-i-note"/></svg></button><button class="day-cell" type="button" data-journal-day="15" aria-label="Filter trades by day 15"><span class="day-date">15</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10"><use href="#pv-i-note"/></svg></button><button class="day-cell" type="button" data-journal-day="16" aria-label="Filter trades by day 16"><span class="day-date">16</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10"><use href="#pv-i-note"/></svg></button><button class="day-cell" type="button" data-journal-day="17" aria-label="Filter trades by day 17"><span class="day-date">17</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10"><use href="#pv-i-note"/></svg></button><button class="day-cell" type="button" data-journal-day="18" aria-label="Filter trades by day 18"><span class="day-date">18</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10"><use href="#pv-i-note"/></svg></button><button class="day-cell" type="button" data-journal-day="19" aria-label="Filter trades by day 19"><span class="day-date">19</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10"><use href="#pv-i-note"/></svg></button><button class="day-cell" type="button" data-journal-day="20" aria-label="Filter trades by day 20"><span class="day-date">20</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10"><use href="#pv-i-note"/></svg></button><button class="day-cell" type="button" data-journal-day="21" aria-label="Filter trades by day 21"><span class="day-date">21</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10"><use href="#pv-i-note"/></svg></button><button class="day-cell" type="button" data-journal-day="22" aria-label="Filter trades by day 22"><span class="day-date">22</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10"><use href="#pv-i-note"/></svg></button><button class="day-cell" type="button" data-journal-day="23" aria-label="Filter trades by day 23"><span class="day-date">23</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10"><use href="#pv-i-note"/></svg></button><button class="day-cell" type="button" data-journal-day="24" aria-label="Filter trades by day 24"><span class="day-date">24</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10"><use href="#pv-i-note"/></svg></button><button class="day-cell" type="button" data-journal-day="25" aria-label="Filter trades by day 25"><span class="day-date">25</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10"><use href="#pv-i-note"/></svg></button><button class="day-cell" type="button" data-journal-day="26" aria-label="Filter trades by day 26"><span class="day-date">26</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10"><use href="#pv-i-note"/></svg></button><button class="day-cell" type="button" data-journal-day="27" aria-label="Filter trades by day 27"><span class="day-date">27</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10"><use href="#pv-i-note"/></svg></button><button class="day-cell" type="button" data-journal-day="28" aria-label="Filter trades by day 28"><span class="day-date">28</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10"><use href="#pv-i-note"/></svg></button><button class="day-cell" type="button" data-journal-day="29" aria-label="Filter trades by day 29"><span class="day-date">29</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10"><use href="#pv-i-note"/></svg></button><button class="day-cell" type="button" data-journal-day="30" aria-label="Filter trades by day 30"><span class="day-date">30</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10"><use href="#pv-i-note"/></svg></button><button class="day-cell" type="button" data-journal-day="31" aria-label="Filter trades by day 31"><span class="day-date">31</span><small>— P&amp;L</small><small>— trades · — win%</small><svg class="day-note" width="10"><use href="#pv-i-note"/></svg></button><span class="day-cell" aria-hidden="true" style="opacity:.34"></span></div></div><aside class="week-rail" id="jcalWeekRail" aria-label="Weekly totals"><div class="week-total"><span>Week 1</span><strong>—</strong></div><div class="week-total"><span>Week 2</span><strong>—</strong></div><div class="week-total"><span>Week 3</span><strong>—</strong></div><div class="week-total"><span>Week 4</span><strong>—</strong></div><div class="week-total"><span>Week 5</span><strong>—</strong></div></aside></div><div class="jcal-day-panel" id="jcalDayPanel" hidden></div><p class="jcal-empty" id="jcalEmpty" hidden></p></section>
 
-      <div class="journal-filter" aria-label="Trade filters"><div class="journal-filter-row"><button class="filter-action" id="journalFilterButton" type="button" aria-expanded="false"><svg width="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 6h16M7 12h10m-7 6h4"/></svg>Filters</button><div class="active-filter-slot"><span class="active-filter-chip" id="dayFilterChip">Day —</span><span class="active-filter-chip" id="facetFilterChip">All symbols · All sides</span></div></div><div class="facet-panel" id="facetPanel"><div class="facet-group" id="facetSymbol"><strong>Symbol</strong></div><div class="facet-group" id="facetSide"><strong>Side</strong></div><div class="facet-group" id="facetSetup"><strong>Setup</strong></div><div class="facet-group" id="facetTag"><strong>Tag</strong></div></div></div>
+      <div class="journal-filter" aria-label="Trade filters"><div class="journal-filter-row"><button class="filter-action" id="journalFilterButton" type="button" aria-expanded="false"><svg width="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 6h16M7 12h10m-7 6h4"/></svg>Filters</button><div class="active-filter-slot"><span class="active-filter-chip" id="dayFilterChip">Day —</span><span class="active-filter-chip" id="facetFilterChip">All symbols · All sides</span></div></div><div class="facet-panel" id="facetPanel"><div class="facet-group" id="facetSymbol"><strong>Symbol</strong></div><div class="facet-group" id="facetSide"><strong>Side</strong></div><div class="facet-group" id="facetSetup"><strong>Setup</strong></div><div class="facet-group" id="facetTag"><strong>Tag</strong></div><div class="facet-group" id="facetReview"><strong>Review</strong></div></div></div>
 
       <section class="trades-card" aria-labelledby="trade-list-title"><div class="journal-card-head"><div><h3 id="trade-list-title">Trade Log</h3><p>Execution records and review context</p></div><span class="tiny" id="journalEntryCount">0 TRADES</span><button type="button" id="exportTradesCsv" class="btn secondary" style="min-height:44px;padding:0 12px;font-size:11px;">Export CSV</button></div><div class="trade-toolbar"><div class="trade-toolbar-top"><input class="trade-search" type="search" placeholder="Search symbol or note" aria-label="Search trades"><div class="trade-view" role="group" aria-label="Trade view"><button type="button" aria-pressed="true" data-view-mode="table">Table</button><button type="button" aria-pressed="false" data-view-mode="chart">Chart</button><button type="button" aria-pressed="false" data-view-mode="unified">Unified</button></div></div><div class="group-tabs" role="group" aria-label="Group trades"><button type="button" aria-pressed="true" data-group-by="all">All</button><button type="button" aria-pressed="false" data-group-by="symbol">By Symbol</button><button type="button" aria-pressed="false" data-group-by="day">By Day</button><button type="button" aria-pressed="false" data-group-by="tag">By Tag</button></div></div><div class="trade-columns" aria-hidden="true"><span>Date / time</span><span>Symbol</span><span>Side</span><span>Setup</span><span>Entry / exit</span><span>Qty</span><span>Net P&amp;L</span><span>R multiple</span><span>Rating</span><span>Notes</span><span></span></div><div class="journal-entry-list" id="journalEntryList" hidden></div><div class="journal-chart-view" id="journalChartView" hidden style="padding:16px"></div><div class="trade-list-empty" id="journalEntryEmpty"><div><div class="empty-glyph" aria-hidden="true"><svg width="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6M9 11h6M9 15h3"/></svg></div><h3>No trades recorded</h3><p>Record the first trade to populate P&amp;L, MAE/MFE, tags, ratings, and linked notes from actual entries.</p>
       <!-- E1-empty fix: CTA button (was missing). -->
@@ -4584,6 +4584,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
         <div class="pv-ob-field"><label for="pvObEntry">Entry price</label><input id="pvObEntry" type="number" inputmode="decimal" step="any" placeholder="0.00"></div>
         <div class="pv-ob-field"><label for="pvObExit">Exit price</label><input id="pvObExit" type="number" inputmode="decimal" step="any" placeholder="0.00"></div>
         <div class="pv-ob-field full"><label for="pvObSize">Size (lots)</label><input id="pvObSize" type="number" inputmode="decimal" step="any" min="0" placeholder="0.10"></div>
+        <div class="pv-ob-field full" id="pvObPnlRow" hidden><label for="pvObPnl">Realized P&L</label><input id="pvObPnl" type="number" inputmode="decimal" step="any" placeholder="e.g. 250.00 or -80.00"></div>
       </div>
     </div>
     <div class="pv-ob-step" data-pv-ob-step="3" hidden>
@@ -4639,9 +4640,14 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
         <div><label for="tradePnl">Realized P&L (optional)</label><input id="tradePnl" name="pnl" type="number" step="any" inputmode="decimal" placeholder=""></div>
         <div><label for="tradeSetup">Setup</label><input id="tradeSetup" name="setup" type="text" placeholder="e.g. Breakout, Pullback" autocomplete="off"></div>
         <div><label for="tradeTag">Tag</label><input id="tradeTag" name="tag" type="text" placeholder="e.g. A+, FOMC" autocomplete="off"></div>
+        <div><label for="tradeSession">Session</label><select id="tradeSession"><option value="">—</option><option>Asia</option><option>London</option><option>New York</option><option>London–NY overlap</option></select></div>
+        <div><label for="tradeCondition">Market condition</label><select id="tradeCondition"><option value="">—</option><option>Trend</option><option>Range</option><option>News day</option></select></div>
+        <div><label for="tradePlan">Followed my plan</label><select id="tradePlan"><option value="">—</option><option value="yes">Yes</option><option value="no">No</option></select></div>
         <div class="span-2"><label>Mistake (optional)</label><div class="mistake-chips" id="mistakeChips" role="group" aria-label="Mistake quick tags"><button class="mistake-chip" type="button" data-mistake="FOMO" aria-pressed="false">FOMO</button><button class="mistake-chip" type="button" data-mistake="Revenge trade" aria-pressed="false">Revenge trade</button><button class="mistake-chip" type="button" data-mistake="Early exit" aria-pressed="false">Early exit</button><button class="mistake-chip" type="button" data-mistake="Late entry" aria-pressed="false">Late entry</button><button class="mistake-chip" type="button" data-mistake="Oversized position" aria-pressed="false">Oversized position</button><button class="mistake-chip" type="button" data-mistake="Against plan" aria-pressed="false">Against plan</button></div></div>
         <div><label for="tradeRating">Rating (1-5)</label><select id="tradeRating"><option value="">—</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></div>
         <div><label for="tradeDate">Date</label><input id="tradeDate" name="date" type="datetime-local"></div>
+        <div><label for="tradeFees">Fees / commission (optional)</label><input id="tradeFees" type="number" step="any" min="0" inputmode="decimal" placeholder=""></div>
+        <div><label for="tradeChart">Chart link (optional)</label><input id="tradeChart" type="url" inputmode="url" autocomplete="off" placeholder="https://"></div>
         <div class="span-2"><label for="tradeNotes">Notes</label><textarea id="tradeNotes" name="notes" placeholder=""></textarea></div>
       </div>
       <p class="session-feedback" id="tradeFormFeedback" aria-live="polite"></p>
@@ -8068,16 +8074,29 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       }).catch(function(){var loader=document.getElementById('authLoading');if(loader)loader.style.display='none';document.body.classList.remove('auth-checking');});
   }
   
-  // Persist extra trade fields (setup/tag/rating) in localStorage since DB lacks columns
+  // Persist extra trade fields in localStorage since DB lacks columns.
+  // Phase 2 (2026-10-22): the same mechanism now also carries the journal
+  // enrichment fields (session/condition/plan/chartUrl/fees/reviewed) —
+  // real columns are proposed in work/journal-save-bug/trades-fields-migration.sql.
   function saveTradeExtras(entry){
     try{
       if(!entry)return;
       var id=entry._dbId||entry._id||entry.timestamp;
       if(!id)return;
-      var extras={setup:entry.setup||'',tag:entry.tag||'',rating:entry.rating||''};
-      if(!extras.setup&&!extras.tag&&!extras.rating)return;
+      var extras={setup:entry.setup||'',tag:entry.tag||'',rating:entry.rating||'',
+        session:entry.session||'',condition:entry.condition||'',plan:entry.plan||'',
+        chartUrl:entry.chartUrl||'',
+        fees:(entry.fees!=null&&isFinite(Number(entry.fees)))?Number(entry.fees):null,
+        reviewed:entry.reviewed?true:false};
+      var _hasX=extras.setup||extras.tag||extras.rating||extras.session||extras.condition||extras.plan||extras.chartUrl||extras.fees!=null||extras.reviewed;
       var all={};
       try{all=JSON.parse(localStorage.getItem('pipvant_trade_extras')||'{}');}catch(e){}
+      if(!_hasX){
+        // Nothing to store — but if a record exists, the user just cleared
+        // every extras field: drop it so the clear sticks after reload.
+        if(all[String(id)]){delete all[String(id)];try{localStorage.setItem('pipvant_trade_extras',JSON.stringify(all));}catch(e){}if(typeof sbSyncUserPref==='function')sbSyncUserPref('trade_extras',all);}
+        return;
+      }
       all[String(id)]=extras;
       localStorage.setItem('pipvant_trade_extras',JSON.stringify(all));
       if(typeof sbSyncUserPref==='function')sbSyncUserPref('trade_extras',all);
@@ -8199,7 +8218,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
             if(nid){
               okIds[t._localId]=1;
               try{removeLocalTrade(t._localId);}catch(e){}
-              for(var j=0;j<sessionJournalEntries.length;j++){var e=sessionJournalEntries[j];if(e._localId===t._localId){e._db=true;e._dbId=nid;e._id=nid;e._localOnly=false;break;}}
+              for(var j=0;j<sessionJournalEntries.length;j++){var e=sessionJournalEntries[j];if(e._localId===t._localId){e._db=true;e._dbId=nid;e._id=nid;e._localOnly=false;try{if(typeof saveTradeExtras==='function')saveTradeExtras(e);}catch(_x){}break;}}
             }
           }
         }
@@ -8249,6 +8268,12 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
           if(ex.setup)e.setup=ex.setup;
           if(ex.tag)e.tag=ex.tag;
           if(ex.rating)e.rating=ex.rating;
+          if(ex.session!=null)e.session=ex.session;
+          if(ex.condition!=null)e.condition=ex.condition;
+          if(ex.plan!=null)e.plan=ex.plan;
+          if(ex.chartUrl!=null)e.chartUrl=ex.chartUrl;
+          if(ex.fees!=null)e.fees=Number(ex.fees);
+          if(ex.reviewed)e.reviewed=true;
         }
       });
     }catch(e){}
@@ -13455,7 +13480,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
   }catch(e){ window.sessionJournalEntries=sessionJournalEntries; }
   function journalCell(label,value,className){var cell=document.createElement('span');cell.className='journal-entry-cell'+(className?' '+className:'');var small=document.createElement('small');var strong=document.createElement('strong');small.textContent=label;strong.textContent=value;cell.appendChild(small);cell.appendChild(strong);return cell;}
   function journalDate(timestamp){return new Date(timestamp).toLocaleString(currentLanguage==='ar'?'ar-MA':'en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});}
-  var journalSearchQuery=''; window.journalFacets={symbol:null,side:null,setup:null,tag:null};
+  var journalSearchQuery=''; window.journalFacets={symbol:null,side:null,setup:null,tag:null,review:null};
   /* ---- Edit / Delete trade ---- */
   window.editingTradeId=null;
   function startEditTrade(entry){
@@ -13482,6 +13507,11 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     document.getElementById('tradeResult').value=entry.result||'';
     document.getElementById('tradeSetup').value=entry.setup||'';
     document.getElementById('tradeTag').value=entry.tag||'';
+    var _tsEl=document.getElementById('tradeSession');if(_tsEl)_tsEl.value=entry.session||'';
+    var _tcEl=document.getElementById('tradeCondition');if(_tcEl)_tcEl.value=entry.condition||'';
+    var _tplEl=document.getElementById('tradePlan');if(_tplEl)_tplEl.value=entry.plan||'';
+    var _tfEl=document.getElementById('tradeFees');if(_tfEl)_tfEl.value=(entry.fees!=null&&isFinite(Number(entry.fees)))?String(entry.fees):'';
+    var _tchEl=document.getElementById('tradeChart');if(_tchEl)_tchEl.value=entry.chartUrl||'';
     if(typeof window.syncMistakeChips==='function')window.syncMistakeChips();
     document.getElementById('tradeRating').value=entry.rating||'';
     if(entry.timestamp){var d=new Date(entry.timestamp);var pad=function(n){return String(n).padStart(2,'0');};document.getElementById('tradeDate').value=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'T'+pad(d.getHours())+':'+pad(d.getMinutes());}
@@ -13576,10 +13606,10 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
   // jcalClosedTrades and the profile balance use the identical rule.
   function getFilteredJournalEntries(){
     var q=(typeof journalSearchQuery==='string'?journalSearchQuery:'').trim().toLowerCase();
-    var dateCutoff=window.journalDateCutoff||0;var dateEnd=window.journalDateEnd||0;var dayFilter=window.journalDayFilter||null;var facets=window.journalFacets||{symbol:null,side:null,setup:null,tag:null};
+    var dateCutoff=window.journalDateCutoff||0;var dateEnd=window.journalDateEnd||0;var dayFilter=window.journalDayFilter||null;var facets=window.journalFacets||{symbol:null,side:null,setup:null,tag:null,review:null};
     var acctFilter=(typeof selectedAccountId!=='undefined'&&selectedAccountId&&selectedAccountId!=='all')?String(selectedAccountId):null;
     return (window.sessionJournalEntries||[]).filter(function(entry){
-      var matchQ=true,matchD=true,matchDay=true,matchSym=true,matchSide=true,matchSetup=true,matchTag=true,matchAcct=true;
+      var matchQ=true,matchD=true,matchDay=true,matchSym=true,matchSide=true,matchSetup=true,matchTag=true,matchAcct=true,matchReview=true;
       if(q){
         var _acctName='';
         try{
@@ -13598,8 +13628,9 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       if(facets.side&&entry.type==='trade'){matchSide=String(entry.direction||'').toLowerCase()===facets.side;}
       if(facets.setup&&entry.type==='trade'){matchSetup=String(entry.setup||'').toLowerCase()===facets.setup;}
       if(facets.tag&&entry.type==='trade'){matchTag=String(entry.tag||'').trim().replace(/^#+/,'').toLowerCase()===facets.tag;}
+      if(facets.review&&entry.type==='trade'){matchReview=facets.review==='reviewed'?!!entry.reviewed:!entry.reviewed;}
       if(acctFilter&&entry.type==='trade'){matchAcct=!entry.account_id||String(entry.account_id)===acctFilter;}
-      return matchQ&&matchD&&matchDay&&matchSym&&matchSide&&matchSetup&&matchTag&&matchAcct;
+      return matchQ&&matchD&&matchDay&&matchSym&&matchSide&&matchSetup&&matchTag&&matchAcct&&matchReview;
     });
   }
   function renderJournalEntries(){
@@ -13646,7 +13677,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
           var pnlNum=Number(entry.pnl);
           pnlDisplay=(pnlNum>0?'+':'')+pnlNum.toFixed(2);
         }
-        values=[journalDate(entry.timestamp),entry.pair,side,(entry.setup||'—')+(entry.tag?' #'+entry.tag:''),'E '+entry.entry+' · S '+entry.stop+' · T '+entry.target+(entry.closed&&entry.exitPrice?' · X '+entry.exitPrice:''),entry.size,pnlDisplay,entry.rMultiple,entry.rating||'—',entry.notes||'—',''];
+        values=[journalDate(entry.timestamp),entry.pair,side,(entry.setup||'—')+(entry.tag?' #'+entry.tag:'')+(entry.session?' · '+entry.session:'')+(entry.condition?' · '+entry.condition:'')+(entry.plan==='yes'?' · On plan':entry.plan==='no'?' · Off plan':''),'E '+entry.entry+' · S '+entry.stop+' · T '+entry.target+(entry.closed&&entry.exitPrice?' · X '+entry.exitPrice:''),entry.size,pnlDisplay,entry.rMultiple,entry.rating||'—',entry.notes||'—',''];
       }else{
         values=[journalDate(entry.timestamp),entry.pair,currentLanguage==='ar'?'ملاحظة مخاطرة':'Risk note',currentLanguage==='ar'?'حساب':'Calculation','SL '+entry.stop+' '+(currentLanguage==='ar'?'نقطة':'pips'),entry.size,'—','1R','—',(currentLanguage==='ar'?'مخاطرة ':'Risk ')+entry.riskLabel+' · '+entry.riskPercent+'% '+(currentLanguage==='ar'?'من ':'of ')+entry.accountLabel,''];
       }
@@ -13668,6 +13699,18 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
             btn.setAttribute('data-close-trade', entry._id || entry.timestamp);
             cell.appendChild(btn);
           }
+          if(entry.chartUrl&&/^https?:\/\//i.test(entry.chartUrl)){
+            var chartLink=document.createElement('a');chartLink.className='btn secondary';chartLink.style.cssText='min-height:40px;padding:4px 10px;font-size:10px;display:inline-flex;align-items:center;text-decoration:none;';
+            chartLink.href=entry.chartUrl;chartLink.target='_blank';chartLink.rel='noopener noreferrer';chartLink.textContent=currentLanguage==='ar'?'الرسم ↗':'Chart ↗';
+            chartLink.addEventListener('click',function(e){e.stopPropagation();});
+            cell.appendChild(chartLink);
+          }
+          cell.appendChild(mkSmallBtn(entry.reviewed?(currentLanguage==='ar'?'تمت المراجعة ✓':'Reviewed ✓'):(currentLanguage==='ar'?'مراجعة':'Review'),function(){
+            entry.reviewed=!entry.reviewed;
+            if(!entry._dbId&&typeof persistLocalTrade==='function')persistLocalTrade(entry);
+            if(typeof saveTradeExtras==='function')saveTradeExtras(entry);
+            if(typeof refreshAllTradeUI==='function')refreshAllTradeUI();else renderJournalEntries();
+          }));
           row.appendChild(cell);
         }else{
           row.appendChild(journalCell(labels[index],value,index===1?'primary':index===9?'note':(index===6&&entry.type==='trade'&&entry.closed&&Number(entry.pnl)>0?'pnl-win':(index===6&&entry.type==='trade'&&entry.closed&&Number(entry.pnl)<0?'pnl-loss':''))));
@@ -13780,14 +13823,15 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
   /* ---- Facet filters: real options with counts from trade data ---- */
   function renderFacetOptions(){
     try{
-      var facets=window.journalFacets||{symbol:null,side:null,setup:null,tag:null};
-      var symCounts={},sideCounts={long:0,short:0},setupCounts={},tagCounts={};
+      var facets=window.journalFacets||{symbol:null,side:null,setup:null,tag:null,review:null};
+      var symCounts={},sideCounts={long:0,short:0},setupCounts={},tagCounts={},revCounts={Reviewed:0,'Not reviewed':0};
       sessionJournalEntries.forEach(function(e){
         if(e.type!=='trade')return;
         var s=String(e.pair||'—').toUpperCase();symCounts[s]=(symCounts[s]||0)+1;
         var d=String(e.direction||'').toLowerCase();if(d==='long'||d==='short')sideCounts[d]++;
         var st=String(e.setup||'').trim();if(st)setupCounts[st]=(setupCounts[st]||0)+1;
         var tg=String(e.tag||'').trim().replace(/^#+/,'');if(tg)tagCounts[tg]=(tagCounts[tg]||0)+1;
+        if(e.reviewed)revCounts.Reviewed++;else revCounts['Not reviewed']++;
       });
       var buildGroup=function(groupId,counts,currentKey,allLabel,isSymbol){
         var group=document.getElementById(groupId);if(!group)return;
@@ -13815,19 +13859,21 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       buildGroup('facetSide',{Long:sideCounts.long,Short:sideCounts.short},'side',currentLanguage==='ar'?'الكل':'All',false);
       buildGroup('facetSetup',setupCounts,'setup',currentLanguage==='ar'?'الكل':'All',false);
       buildGroup('facetTag',tagCounts,'tag',currentLanguage==='ar'?'الكل':'All',false);
+      buildGroup('facetReview',revCounts,'review',currentLanguage==='ar'?'الكل':'All',false);
     }catch(e){}
   }
   function updateFacetChip(){
     try{
       var chip=document.getElementById('facetFilterChip');if(!chip)return;
-      var f=window.journalFacets||{symbol:null,side:null,setup:null,tag:null};
+      var f=window.journalFacets||{symbol:null,side:null,setup:null,tag:null,review:null};
       var s=f.symbol?String(f.symbol).toUpperCase():(currentLanguage==='ar'?'كل الرموز':'All symbols');
       var d=f.side?(f.side==='long'?'Long':'Short'):(currentLanguage==='ar'?'كل الاتجاهات':'All sides');
       var parts=[s,d];
       if(f.setup)parts.push(String(f.setup));
       if(f.tag)parts.push('#'+String(f.tag));
+      if(f.review)parts.push(f.review==='reviewed'?(currentLanguage==='ar'?'تمت المراجعة':'Reviewed'):(currentLanguage==='ar'?'غير مراجعة':'Not reviewed'));
       chip.textContent=parts.join(' · ');
-      chip.classList.toggle('show',!!(f.symbol||f.side||f.setup||f.tag));
+      chip.classList.toggle('show',!!(f.symbol||f.side||f.setup||f.tag||f.review));
     }catch(e){}
   }
   /* ---- Journal KPI cards: computed from real closed-trade P&L ---- */
@@ -14295,7 +14341,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       document.querySelectorAll('[data-breakdown-view]').forEach(function(b){
         var v=b.getAttribute('data-breakdown-view');
         b.setAttribute('aria-pressed',String(v===breakdownView));
-        b.textContent=v==='setup'?(arL?'حسب الإعداد':'By setup'):v==='symbol'?(arL?'حسب الرمز':'By symbol'):(arL?'حسب اليوم':'By day');
+        b.textContent=v==='setup'?(arL?'حسب الإعداد':'By setup'):v==='symbol'?(arL?'حسب الرمز':'By symbol'):v==='session'?(arL?'حسب الجلسة':'By session'):(arL?'حسب اليوم':'By day');
       });
       var hideR=false;try{hideR=!!(typeof jcalState!=='undefined'&&jcalState.hide);}catch(e){}
       var modeEl=document.getElementById('breakdownMode');if(modeEl)modeEl.textContent=hideR?(arL?'صافي R':'NET R'):(arL?'صافي الربح والخسارة':'NET P&L');
@@ -14303,7 +14349,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       body.replaceChildren();
       if(!closed.length){
         var p=document.createElement('p');p.className='mistake-empty';
-        p.textContent=arL?'سجّل صفقات مغلقة لعرض الأداء حسب الإعداد والرمز واليوم.':'Log closed trades to see performance by setup, symbol, and day.';
+        p.textContent=arL?'سجّل صفقات مغلقة لعرض الأداء حسب الإعداد والرمز واليوم والجلسة.':'Log closed trades to see performance by setup, symbol, day, and session.';
         body.appendChild(p);return;
       }
       var sym=(typeof currencyMeta!=='undefined'&&currencyMeta[currentCurrency]&&currencyMeta[currentCurrency].symbol)||'$';
@@ -14316,7 +14362,8 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
         var r=(typeof jcalParseR==='function')?jcalParseR(e):null;if(r!==null){g.rSum+=r;g.rN++;}
       };
       closed.forEach(function(e){
-        if(breakdownView==='symbol'){var s=String(e.pair||'—').trim().toUpperCase()||'—';add('s:'+s,s,e);}
+        if(breakdownView==='session'){var ss=String(e.session||'').trim();add('n:'+(ss||'~none'),ss||(arL?'بدون جلسة':'No session'),e);}
+        else if(breakdownView==='symbol'){var s=String(e.pair||'—').trim().toUpperCase()||'—';add('s:'+s,s,e);}
         else if(breakdownView==='dow'){
           var di=(new Date(e.timestamp||0).getDay()+6)%7;
           add('d:'+di,arL?['الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت','الأحد'][di]:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][di],e);
@@ -14337,7 +14384,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       var maxAbs=0;rows.forEach(function(g){var v=valOf(g);if(v!==null&&Math.abs(v)>maxAbs)maxAbs=Math.abs(v);});
       var table=document.createElement('table');table.className='breakdown-table';
       var thead=document.createElement('thead');var htr=document.createElement('tr');
-      [(breakdownView==='setup'?(arL?'الإعداد':'Setup'):breakdownView==='symbol'?(arL?'الرمز':'Symbol'):(arL?'اليوم':'Day')),(arL?'الصفقات':'Trades'),(arL?'نسبة الفوز':'Win rate'),(hideR?(arL?'صافي R':'Net R'):(arL?'صافي الربح والخسارة':'Net P&L'))].forEach(function(t){var th=document.createElement('th');th.textContent=t;htr.appendChild(th);});
+      [(breakdownView==='setup'?(arL?'الإعداد':'Setup'):breakdownView==='symbol'?(arL?'الرمز':'Symbol'):breakdownView==='session'?(arL?'الجلسة':'Session'):(arL?'اليوم':'Day')),(arL?'الصفقات':'Trades'),(arL?'نسبة الفوز':'Win rate'),(hideR?(arL?'صافي R':'Net R'):(arL?'صافي الربح والخسارة':'Net P&L'))].forEach(function(t){var th=document.createElement('th');th.textContent=t;htr.appendChild(th);});
       thead.appendChild(htr);table.appendChild(thead);
       var tbody=document.createElement('tbody');
       rows.forEach(function(g){
@@ -14714,6 +14761,21 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     }
     var tradeDateInput=document.getElementById('tradeDate');var tradeTs=tradeDateInput&&tradeDateInput.value?new Date(tradeDateInput.value).getTime():Date.now();
     var tradeEntry={type:'trade',timestamp:tradeTs,account_id:(typeof isAccountUuid==='function'&&isAccountUuid(typeof selectedAccountId!=='undefined'?selectedAccountId:''))?selectedAccountId:null,pair:document.getElementById('tradePair').value.trim().toUpperCase(),direction:directionButton.getAttribute('data-direction'),entry:document.getElementById('tradeEntry').value,stop:document.getElementById('tradeStop').value,target:document.getElementById('tradeTarget').value,size:document.getElementById('tradeSize').value,rMultiple:(function(){if(isClosed&&isFinite(exitPrice)&&riskDistance>0){var dirL=directionButton.getAttribute('data-direction').toLowerCase();var realized=dirL==='long'?(exitPrice-entryValue):(entryValue-exitPrice);return units(realized/riskDistance)+'R';}return riskDistance>0?units(rewardDistance/riskDistance)+'R':'—';})(),setup:document.getElementById('tradeSetup').value.trim(),tag:document.getElementById('tradeTag').value.trim(),rating:document.getElementById('tradeRating').value,notes:document.getElementById('tradeNotes').value.trim(),closed:isClosed,exitPrice:isFinite(exitPrice)?exitVal:null,pnl:pnl,result:resultVal||null};
+    /* Phase 2 (2026-10-22): journal enrichment fields, read from the same
+       form. Fees are an optional COST: on a NEW closed trade they adjust
+       the stored NET P&L (the P&L resolved above is the pre-fee figure);
+       on EDIT only the fee DELTA adjusts the net (edit branch below), so a
+       no-change edit round-trips exactly. The fee amount stays on the
+       entry (trade_extras) so Edit can show it again; session/condition/
+       plan/chart ride the same extras path — see saveTradeExtras. */
+    tradeEntry.session=(document.getElementById('tradeSession')||{}).value||'';
+    tradeEntry.condition=(document.getElementById('tradeCondition')||{}).value||'';
+    tradeEntry.plan=(document.getElementById('tradePlan')||{}).value||'';
+    var _chartRaw=((document.getElementById('tradeChart')||{}).value||'').trim();
+    tradeEntry.chartUrl=/^https?:\/\/\S+$/i.test(_chartRaw)?_chartRaw:'';
+    var _feesVal=parseFloat((document.getElementById('tradeFees')||{}).value);
+    tradeEntry.fees=(isClosed&&isFinite(_feesVal)&&_feesVal>0)?Math.round(_feesVal*100)/100:null;
+    if(!window.editingTradeId&&tradeEntry.fees!=null&&tradeEntry.pnl!=null&&isFinite(tradeEntry.pnl))tradeEntry.pnl=Math.round((tradeEntry.pnl-tradeEntry.fees)*100)/100;
     var editingId=window.editingTradeId;
     runSuccessMorph(e.submitter,function(){
       if(editingId){
@@ -14729,7 +14791,14 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
               if(tradeEntry.result==null)tradeEntry.result=en.result;
               if(tradeEntry.closed!==true&&en.closed)tradeEntry.closed=true;
             }
+            // Phase 2: on edit, only the fee DELTA moves the net — the P&L
+            // field shows the stored NET, so an unchanged edit adjusts by 0.
+            if(tradeEntry.closed&&tradeEntry.pnl!=null&&isFinite(Number(tradeEntry.pnl))){
+              var _nf=tradeEntry.fees!=null?tradeEntry.fees:0,_of=(en.fees!=null&&isFinite(Number(en.fees)))?Number(en.fees):0;
+              if(_nf!==_of)tradeEntry.pnl=Math.round((Number(tradeEntry.pnl)-(_nf-_of))*100)/100;
+            }
             en.pair=tradeEntry.pair;en.direction=tradeEntry.direction;en.entry=tradeEntry.entry;en.stop=tradeEntry.stop;en.target=tradeEntry.target;en.size=tradeEntry.size;en.rMultiple=tradeEntry.rMultiple;en.setup=tradeEntry.setup;en.tag=tradeEntry.tag;en.rating=tradeEntry.rating;en.timestamp=tradeEntry.timestamp;en.notes=tradeEntry.notes;en.closed=tradeEntry.closed;en.exitPrice=tradeEntry.exitPrice;en.pnl=tradeEntry.pnl;en.result=tradeEntry.result;
+            en.session=tradeEntry.session;en.condition=tradeEntry.condition;en.plan=tradeEntry.plan;en.chartUrl=tradeEntry.chartUrl;en.fees=tradeEntry.fees;
             // E8 fix: allow changing the account.
             if(typeof tradeEntry.account_id!=='undefined')en.account_id=tradeEntry.account_id;
             updated=true;
@@ -14804,6 +14873,8 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     var enL=document.querySelector('label[for="pvObEntry"]');if(enL)enL.textContent=pvLT('Entry price','سعر الدخول');
     var exL=document.querySelector('label[for="pvObExit"]');if(exL)exL.textContent=pvLT('Exit price','سعر الخروج');
     var szL=document.querySelector('label[for="pvObSize"]');if(szL)szL.textContent=pvLT('Size (lots)','الحجم (لوت)');
+    var pnL=document.querySelector('label[for="pvObPnl"]');if(pnL)pnL.textContent=pvLT('Realized P&L','الربح / الخسارة المحققة');
+    try{pvObSyncPnlField();}catch(e){}
     var rkL=document.querySelector('label[for="pvObRisk"]');if(rkL)rkL.textContent=pvLT('Risk per trade (%)','المخاطرة لكل صفقة (%)');
     var hint=pvEl('pvObRiskHint');if(hint)hint.textContent=pvLT('This becomes the default in your risk calculator. You can change it any time in Settings.','تصبح هذه القيمة هي الافتراضية في حاسبة المخاطرة، ويمكنك تغييرها في أي وقت من الإعدادات.');
     var skip=pvEl('pvObSkip');if(skip)skip.textContent=pvLT('Skip for now','تخطَّ الآن');
@@ -14823,6 +14894,22 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     try{localStorage.setItem('pv_journal_onboarded','1');}catch(e){}
     if(pvObTradeDone){var note=pvEl('pvFirstEntryNote');var txt=pvEl('pvFirstEntryText');if(note&&txt){txt.textContent=pvLT('Your first entry is in — the next one is the habit.','تم تسجيل أول صفقة لك — الصفقة التالية هي العادة.');note.hidden=false;setTimeout(function(){note.hidden=true;},9000);}}
   }
+  /* The realized-P&L field on step 2 appears exactly when the entered
+     trade has no computable estimate (index symbols, or no size) and is
+     not a breakeven — the same condition the save guard enforces. */
+  function pvObNeedsManualPnl(){
+    try{
+      var pair=((pvEl('pvObPair')||{}).value||'').trim().toUpperCase();
+      var entryVal=parseFloat((pvEl('pvObEntry')||{}).value),exitVal=parseFloat((pvEl('pvObExit')||{}).value),sizeVal=parseFloat((pvEl('pvObSize')||{}).value);
+      if(!pair||!isFinite(entryVal)||!isFinite(exitVal)||exitVal===entryVal)return false;
+      var est=null;try{if(typeof estimatePnl==='function')est=estimatePnl(pair,pvObDir.toLowerCase(),entryVal,exitVal,isFinite(sizeVal)?sizeVal:NaN);}catch(e){}
+      return est==null||!isFinite(est);
+    }catch(e){return false;}
+  }
+  function pvObSyncPnlField(){
+    var row=pvEl('pvObPnlRow');if(!row)return;
+    row.hidden=!pvObNeedsManualPnl();
+  }
   function pvObCreateFirstTrade(){
     var fb=pvEl('pvObFeedback');
     var pair=((pvEl('pvObPair')||{}).value||'').trim().toUpperCase();
@@ -14836,13 +14923,32 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     if(est!=null&&isFinite(est))pnl=Math.round(est*100)/100;
     if(exitVal===entryVal){result='breakeven';pnl=0;}
     else if(pnl!=null)result=pnl>0?'win':(pnl<0?'loss':'breakeven');
-    else result=((dirLow==='long'&&exitVal>entryVal)||(dirLow==='short'&&exitVal<entryVal))?'win':'loss';
+    else{
+      /* Root-cause fix (founder's friend, 2026-10-22): the trade form and
+         the close modal both refuse a closed trade whose P&L cannot be
+         estimated (indices like US100) until the user types it — this
+         onboarding path was the one creation path that stored pnl:null
+         anyway. A closed trade with pnl:null is invisible to EVERY stat
+         surface (KPIs, profile, calendar, breakdowns all filter pnl!=null),
+         so the user's trade "saved" but its numbers appeared nowhere.
+         Mirror the same guard + the same message here. */
+      var _mp=parseFloat((pvEl('pvObPnl')||{}).value);
+      if(isFinite(_mp)){
+        pnl=Math.round(_mp*100)/100;
+        result=pnl>0?'win':(pnl<0?'loss':'breakeven');
+      }else{
+        if(fb)fb.textContent=pvLT('Enter the realized P&L manually for this symbol.','أدخل الربح/الخسارة المحققة يدوياً لهذا الرمز.');
+        try{pvObSyncPnlField();}catch(e){}
+        var _pi=pvEl('pvObPnl');if(_pi)_pi.focus();
+        return false;
+      }
+    }
     var acctId=null;try{if(typeof selectedAccountId!=='undefined'&&typeof isAccountUuid==='function'&&isAccountUuid(selectedAccountId))acctId=selectedAccountId;}catch(e){}
     var tradeEntry={type:'trade',timestamp:Date.now(),account_id:acctId,pair:pair,direction:pvObDir,entry:String(entryVal),stop:'',target:'',size:(isFinite(sizeVal)&&sizeVal>0)?String(sizeVal):'',rMultiple:'—',setup:'',tag:'',rating:'',notes:'',closed:true,exitPrice:String(exitVal),pnl:pnl,result:result};
     try{
       if(typeof persistLocalTrade==='function')persistLocalTrade(tradeEntry);
       sessionJournalEntries.unshift(tradeEntry);
-      if(typeof addPersonalNotif==='function'){try{addPersonalNotif('trade',pvLT('New trade logged','تم تسجيل صفقة جديدة'),pair+' · '+pvObDir);}catch(_n){}}
+      if(typeof addPersonalNotif==='function'){try{addPersonalNotif(pvLT('New trade logged','تم تسجيل صفقة جديدة'),pair+' · '+pvObDir,'trade',{tradeId:tradeEntry._localId||tradeEntry._dbId||tradeEntry._id,pair:tradeEntry.pair,direction:tradeEntry.direction,entry:tradeEntry.entry,size:tradeEntry.size});}catch(_n){}}
       if(typeof sb!=='undefined'&&sb&&typeof sbUser!=='undefined'&&sbUser&&typeof sbSaveTrade==='function')sbSaveTrade(tradeEntry);
       if(typeof refreshAllTradeUI==='function')refreshAllTradeUI();else if(typeof renderJournalEntries==='function')renderJournalEntries();
     }catch(err){if(fb)fb.textContent=pvLT('Could not save that trade — please try again from the journal.','تعذّر حفظ هذه الصفقة — حاول مرة أخرى من السجل.');return false;}
@@ -14885,6 +14991,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     var next=pvEl('pvObNext');if(next)next.addEventListener('click',pvObAdvance);
     var skip=pvEl('pvObSkip');if(skip)skip.addEventListener('click',function(){pvCloseOnboarding();});
     ov.addEventListener('click',function(e){if(e.target===ov)pvCloseOnboarding();});
+    ov.addEventListener('input',function(){try{pvObSyncPnlField();}catch(e){}});
     var fc=pvEl('pvFirstEntryClose');if(fc)fc.addEventListener('click',function(){var n=pvEl('pvFirstEntryNote');if(n)n.hidden=true;});
   })();
 
@@ -16257,7 +16364,12 @@ var FIELDS=[
   {key:'profit',req:1,en:'Profit',ar:'الربح',names:['net profit','net pnl','net','profit','pnl','p&l','pl','result']},
   {key:'commission',req:0,en:'Commission',ar:'العمولة',names:['commission','commissions','comm','fees','fee']},
   {key:'swap',req:0,en:'Swap',ar:'السواب',names:['swap','swaps','rollover']},
-  {key:'ticket',req:0,en:'Ticket / ID',ar:'رقم التذكرة',names:['ticket','order','order id','deal','deal id','position','position id','trade id','id']}
+  {key:'ticket',req:0,en:'Ticket / ID',ar:'رقم التذكرة',names:['ticket','order','order id','deal','deal id','position','position id','trade id','id']},
+  {key:'session',req:0,en:'Session',ar:'الجلسة',names:['session','trading session']},
+  {key:'condition',req:0,en:'Market condition',ar:'حالة السوق',names:['market condition','condition','market state']},
+  {key:'plan',req:0,en:'Followed plan',ar:'اتباع الخطة',names:['followed plan','plan followed','followed my plan','plan']},
+  {key:'chart',req:0,en:'Chart link',ar:'رابط الرسم',names:['chart link','chart url','chart','screenshot','image url']},
+  {key:'reviewed',req:0,en:'Reviewed',ar:'تمت المراجعة',names:['reviewed','review']}
 ];
 function normH(h){ return String(h||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim(); }
 function fpLoad(){ try{ var a=JSON.parse(localStorage.getItem(FP_KEY)||'[]'); return Array.isArray(a)?a:[]; }catch(e){ return []; } }
@@ -16433,13 +16545,28 @@ function buildCandidates(){
     if(map.size!=null&&cellOf(row,map.size)!==''&&(!isFinite(size)||size<=0)){ invalid++; return; }
     if(pnl!=null&&(!isFinite(pnl)||Math.abs(pnl)>1000000)){ invalid++; return; }
     var ticket=cellOf(row,map.ticket);
+    /* Phase 2: journal enrichment columns, normalised to the form's values. */
+    var sesRaw=cellOf(row,map.session),ses='';
+    if(sesRaw){var sl=sesRaw.toLowerCase();if(sl.indexOf('overlap')!==-1||sl.indexOf('london-ny')!==-1||sl.indexOf('london–ny')!==-1)ses='London–NY overlap';else if(sl.indexOf('new york')!==-1||sl==='ny'||sl==='nyc')ses='New York';else if(sl.indexOf('london')!==-1)ses='London';else if(sl.indexOf('asia')!==-1)ses='Asia';}
+    var cndRaw=cellOf(row,map.condition),cnd='';
+    if(cndRaw){var cl=cndRaw.toLowerCase();if(cl.indexOf('news')!==-1)cnd='News day';else if(cl.indexOf('trend')!==-1)cnd='Trend';else if(cl.indexOf('range')!==-1||cl.indexOf('chop')!==-1)cnd='Range';}
+    var plRaw=cellOf(row,map.plan),pln='';
+    if(plRaw){var pv2=plRaw.toLowerCase();if(pv2==='yes'||pv2==='y'||pv2==='true'||pv2==='1'||pv2.indexOf('on plan')!==-1||pv2.indexOf('on-plan')!==-1)pln='yes';else if(pv2==='no'||pv2==='n'||pv2==='false'||pv2==='0'||pv2.indexOf('off plan')!==-1||pv2.indexOf('off-plan')!==-1)pln='no';}
+    var chRaw=cellOf(row,map.chart);var chUrl=/^https?:\/\/\S+$/i.test(chRaw)?chRaw:'';
+    var rvRaw=cellOf(row,map.reviewed).toLowerCase();var rvd=(rvRaw==='yes'||rvRaw==='y'||rvRaw==='true'||rvRaw==='1'||rvRaw==='reviewed');
+    /* Record the folded commission as the trade's fees ONLY when it was
+       actually folded (plain/gross profit column, negative commission) —
+       with a net-profit column the fee is already inside pnl, and storing
+       it would double-count on a later edit. */
+    var feesCsv=(typeof comm!=='undefined'&&isFinite(comm)&&comm<0&&csv.profitIsPlain)?Math.round(-comm*100)/100:null;
     var isClosed=isFinite(closeTs)||isFinite(closeP)||pnl!=null;
     var fp=ticket?('t:'+ticket):('c:'+fpHash(symbol+'|'+openTs+'|'+(pnl==null?'':pnl)+'|'+dir));
     var dup=!!stored[fp]||(ticket&&!!liveTickets[ticket])||!!seenFp[fp];
     seenFp[fp]=1;
     out.push({pair:symbol,timestamp:openTs,direction:dir,size:isFinite(size)?size:null,
       entry:isFinite(openP)?openP:null,exit:isFinite(closeP)?closeP:null,pnl:pnl,
-      ticket:ticket||null,fp:fp,dup:dup,closed:isClosed});
+      ticket:ticket||null,fp:fp,dup:dup,closed:isClosed,
+      session:ses,condition:cnd,plan:pln,chartUrl:chUrl,reviewed:rvd,fees:feesCsv});
   });
   csv.candidates=out;
   csv.invalidCount=invalid;
@@ -16598,6 +16725,7 @@ function doImport(){
       entry:c.entry!=null?String(c.entry):'',stop:'',target:'',size:c.size!=null?String(c.size):'',
       rMultiple:'—',setup:'',tag:'',rating:'',notes:L('Imported from CSV','مستوردة من CSV'),
       closed:!!c.closed,exitPrice:c.exit!=null?String(c.exit):null,pnl:c.pnl,result:result,
+      session:c.session||'',condition:c.condition||'',plan:c.plan||'',chartUrl:c.chartUrl||'',fees:(c.fees!=null?c.fees:null),reviewed:!!c.reviewed,
       _csvFp:c.fp,_csvTicket:c.ticket||null,_importBatch:batch});
     fps.push(c.fp);
   });
