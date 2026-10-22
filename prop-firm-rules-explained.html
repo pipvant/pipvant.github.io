@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Prop Firm Rules Explained — Drawdown, Consistency, Payouts | PIPVANT</title>
+  <meta name="description" content="Trailing vs static drawdown, consistency rules, daily loss limits, minimum trading days, profit targets and payout frequency — explained plainly, with every firm&#x27;s real verified values.">
+  <link rel="canonical" href="https://pipvant.github.io/prop-firm-rules-explained.html">
+  <meta property="og:title" content="Prop Firm Rules Explained — Drawdown, Consistency, Payouts | PIPVANT">
+  <meta property="og:description" content="Trailing vs static drawdown, consistency rules, daily loss limits, minimum trading days, profit targets and payout frequency — explained plainly, with every firm&#x27;s real verified values.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pipvant.github.io/prop-firm-rules-explained.html">
+  <meta property="og:image" content="https://pipvant.github.io/assets/pipvanta-logo.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Prop Firm Rules Explained — Drawdown, Consistency, Payouts | PIPVANT">
+  <meta name="twitter:description" content="Trailing vs static drawdown, consistency rules, daily loss limits, minimum trading days, profit targets and payout frequency — explained plainly, with every firm&#x27;s real verified values.">
+  <link rel="icon" type="image/png" href="assets/pipvanta-logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0A1628;--surface:#0F1D33;--raised:#14253F;--line:#1C2F4D;--line-strong:#2B4266;--text:#F4F6F8;--secondary:#A9B6C6;--muted:#8B9AB0;--accent:#5B8DEF;--accent-strong:#3A6FDE;--gold:#D4AF37}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+    h1,h2,h3{font-family:"Space Grotesk",sans-serif;letter-spacing:-.02em}
+    .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+    header.top{position:sticky;top:0;z-index:10;background:rgba(10,22,40,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+    header.top .wrap{display:flex;align-items:center;justify-content:space-between;padding:14px 20px}
+    .brand{display:flex;align-items:center;gap:10px;font-family:"Space Grotesk";font-weight:700;font-size:18px;text-decoration:none;color:var(--text)}
+    .brand img{width:30px;height:30px;border-radius:8px}
+    .cta-btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 20px;border-radius:10px;background:var(--accent-strong);color:#fff;font-weight:700;text-decoration:none;border:1px solid var(--accent-strong)}
+    .cta-btn.gold{background:linear-gradient(135deg,#F5D67B,#D4AF37);border-color:#D4AF37;color:#0A1628}
+    .cta-btn.ghost{background:transparent;border-color:var(--line-strong);color:var(--text)}
+    .hero{padding:56px 0 36px;text-align:center}
+    .eyebrow{color:var(--accent);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}
+    h1{font-size:clamp(2.2rem,6vw,3.6rem);line-height:1.05;margin:0 0 16px}
+    h1 .gold{background:linear-gradient(135deg,#F5D67B,#D4AF37);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .lede{color:var(--secondary);font-size:17px;line-height:1.7;max-width:680px;margin:0 auto 28px}
+    .section{padding:40px 0}
+    h2{font-size:clamp(1.6rem,4vw,2.4rem);margin:0 0 14px}
+    .section p.body{color:var(--secondary);line-height:1.75;max-width:760px}
+    .card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px}
+    .firm-logo{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:10px;background:var(--raised);border:1px solid var(--line-strong);color:var(--gold);font-family:"Space Grotesk";font-weight:700;font-size:19px;overflow:hidden;flex:none;vertical-align:middle}
+    .firm-logo.lg{width:76px;height:76px;border-radius:16px;font-size:32px}
+    .hero-logo{display:flex;justify-content:center;margin-bottom:18px}
+    .meta-line{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:0 0 24px}
+    .meta-chip{display:inline-flex;align-items:center;min-height:32px;padding:0 14px;border-radius:999px;background:var(--surface);border:1px solid var(--line-strong);color:var(--secondary);font-size:13px;font-weight:600}
+    .meta-chip b{color:var(--text);font-weight:700}
+    .meta-chip a{color:var(--accent);text-decoration:none}
+    .score-card{display:flex;gap:26px;flex-wrap:wrap;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:26px;margin:6px 0 8px}
+    .score-big{font-family:"Space Grotesk";font-size:64px;font-weight:700;line-height:1;color:var(--gold)}
+    .score-big small{font-size:20px;color:var(--muted)}
+    .score-side{flex:1;min-width:260px}
+    .score-rationale{color:var(--secondary);line-height:1.65;margin:8px 0 0}
+    .comp-table{width:100%;border-collapse:collapse;margin-top:14px}
+    .comp-table td,.comp-table th{padding:10px 8px;border-bottom:1px solid var(--line);font-size:14px;text-align:start}
+    .comp-table th{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+    .comp-table .pts{font-variant-numeric:tabular-nums;font-weight:700;white-space:nowrap}
+    .comp-table .driver{color:var(--secondary)}
+    .bar{height:8px;border-radius:99px;background:var(--raised);overflow:hidden;min-width:90px}
+    .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--gold));border-radius:99px}
+    .table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:16px;background:var(--surface)}
+    table.plans{width:100%;border-collapse:collapse;min-width:860px}
+    table.plans th,table.plans td{padding:11px 12px;border-bottom:1px solid var(--line);font-size:13.5px;text-align:start;white-space:nowrap;font-variant-numeric:tabular-nums}
+    table.plans th{color:var(--muted);font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;background:var(--raised)}
+    table.plans td.promo-price{color:var(--gold);font-weight:700}
+    table.plans td .off{color:var(--muted);font-weight:600;font-size:12px}
+    .promo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+    .promo-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+    .promo-card .disc{font-family:"Space Grotesk";font-weight:700;font-size:17px;color:var(--gold);margin-bottom:6px}
+    .promo-card .exp{color:var(--muted);font-size:13px;margin-top:8px}
+    .promo-card .applies{color:var(--secondary);font-size:13px}
+    .copy-btn{margin-top:12px;display:inline-flex;align-items:center;min-height:40px;padding:0 16px;border-radius:9px;background:var(--raised);border:1px solid var(--gold);color:var(--gold);font-weight:700;font-size:13.5px;cursor:pointer;font-family:inherit}
+    .empty{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:32px 28px;text-align:center;color:var(--secondary);line-height:1.7}
+    .rules-list{margin:0;padding-inline-start:20px;color:var(--secondary);line-height:1.8}
+    .rules-list b{color:var(--text)}
+    .link-chips{display:flex;gap:8px;flex-wrap:wrap}
+    .link-chip{display:inline-flex;align-items:center;min-height:38px;padding:0 16px;border-radius:999px;background:var(--surface);border:1px solid var(--line-strong);color:var(--text);font-size:13.5px;font-weight:600;text-decoration:none}
+    .link-chip:hover{border-color:var(--gold);color:var(--gold)}
+    .cta-row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+    .final{text-align:center;padding:52px 0 68px}
+    .faq{max-width:760px}
+    .faq details{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin-bottom:10px}
+    .faq summary{font-weight:600;cursor:pointer;font-size:15px}
+    .faq p{color:var(--secondary);line-height:1.7;font-size:14px;margin:10px 0 0}
+    footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted);font-size:13px}
+    footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    footer a{color:var(--muted);text-decoration:none;margin-inline-start:16px}
+    .top-actions{display:flex;align-items:center;gap:10px}
+    .lang-btn{background:transparent;border:1px solid var(--line-strong);color:var(--secondary);border-radius:10px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;min-height:44px}
+    .lang-btn:hover{border-color:var(--gold);color:var(--text)}
+    .comm-big{font-family:"Space Grotesk";font-size:40px;font-weight:700;color:var(--gold)}
+    @media (max-width:640px){.score-big{font-size:48px}.comp-table .driver{display:none}}
+
+  </style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="/"><img src="assets/pipvanta-logo.png" alt="PIPVANT logo">PIPVANT</a>
+  <div class="top-actions">
+    <button class="lang-btn" id="langToggle" type="button" aria-label="Switch language">العربية</button>
+    <a class="cta-btn" href="/" data-i18n="nav_toolkit">Open free toolkit</a>
+  </div>
+</div></header>
+
+<div class="wrap">
+
+  <style>
+    .concept-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+    .concept-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:10px}
+    .concept-card h3{margin:0;font-size:20px}
+    .concept-card p{color:var(--secondary);line-height:1.65;margin:0;font-size:14.5px;flex:1}
+    .concept-card .count{color:var(--gold);font-weight:700;font-size:13.5px}
+    .concept-card a{color:var(--accent);font-weight:700;text-decoration:none;font-size:14.5px}
+    .explainer p{color:var(--secondary);line-height:1.8;max-width:760px;font-size:16px}
+    .explainer b{color:var(--text)}
+    .bite{background:rgba(212,175,55,.07);border:1px solid var(--gold);border-radius:14px;padding:20px 24px;max-width:760px}
+    .bite p{color:var(--secondary);line-height:1.75;margin:0}
+    table.plans td a:hover{color:var(--gold)}
+  </style>
+
+<section class="hero">
+  <div class="eyebrow" data-i18n="eyebrow_hub">Guides · Verified data</div>
+  <h1><span data-i18n="hub_h1a">Prop firm rules, </span><span class="gold" data-i18n="hub_h1gold">explained plainly</span></h1>
+  <p class="lede" data-i18n="hub_lede">Every rule that ends challenges, in plain English — what it is, why firms use it, and how it bites — followed by the real values from PIPVANT's verified plan data for all 22 firms.</p>
+</section>
+<section class="section">
+  <h2 data-i18n="hub_concepts_h">The concepts</h2>
+  <div class="concept-grid"><div class="concept-card"><h3>Trailing vs Static Drawdown</h3><p>The floor under your account: fixed at the start, or chasing your highest balance upward.</p><span class="count">22 <span data-i18n="firms_word">of 22 firms state this in verified plan data</span></span><a href="rules/trailing-vs-static-drawdown.html" data-i18n="read_guide">Read the guide →</a></div>
+    <div class="concept-card"><h3>The Consistency Rule</h3><p>No single day may make up too large a share of your total profit — steady beats spectacular.</p><span class="count">3 <span data-i18n="firms_word">of 22 firms state this in verified plan data</span></span><a href="rules/consistency-rule.html" data-i18n="read_guide">Read the guide →</a></div>
+    <div class="concept-card"><h3>Daily Loss Limit</h3><p>A hard cap on what you may lose in one day — breach it once and the account is gone.</p><span class="count">16 <span data-i18n="firms_word">of 22 firms state this in verified plan data</span></span><a href="rules/daily-loss-limit.html" data-i18n="read_guide">Read the guide →</a></div>
+    <div class="concept-card"><h3>Minimum Trading Days</h3><p>You cannot pass in a day: the target only counts after a set number of trading days.</p><span class="count">7 <span data-i18n="firms_word">of 22 firms state this in verified plan data</span></span><a href="rules/minimum-trading-days.html" data-i18n="read_guide">Read the guide →</a></div>
+    <div class="concept-card"><h3>Profit Targets</h3><p>The gain each phase demands — one-step, two-step and three-step, in percentages or dollars.</p><span class="count">22 <span data-i18n="firms_word">of 22 firms state this in verified plan data</span></span><a href="rules/profit-targets.html" data-i18n="read_guide">Read the guide →</a></div>
+    <div class="concept-card"><h3>Payout Frequency</h3><p>How often a funded trader can actually withdraw — on-demand, daily, weekly or bi-weekly.</p><span class="count">11 <span data-i18n="firms_word">of 22 firms state this in verified plan data</span></span><a href="rules/payout-frequency.html" data-i18n="read_guide">Read the guide →</a></div></div>
+</section>
+<section class="section">
+  <h2 data-i18n="tools_h">Put it to work</h2>
+  <div class="link-chips">
+    <a class="link-chip" href="challenge-pass-simulator.html" data-i18n="sim_link">Challenge pass simulator — Monte Carlo odds for any real plan</a>
+    <a class="link-chip" href="drawdown-simulator.html">Drawdown simulator</a>
+    <a class="link-chip" href="consistency-rule-checker.html">Consistency rule checker</a>
+    <a class="link-chip" href="profit-split-calculator.html">Profit split calculator</a>
+    <a class="link-chip" href="prop-firm-deals.html" data-i18n="cta_deals">See active deals</a>
+    <a class="link-chip" href="data-ledger.html" data-i18n="cta_ledger">Data ledger</a>
+  </div>
+</section>
+<section class="final">
+  <h2 data-i18n="final_h">Rules are only scary when they're vague.</h2>
+  <p class="lede" data-i18n="final_b">Open the free PIPVANT toolkit — matcher, journal and calculators, all running on the same verified data as these tables.</p>
+  <div class="cta-row"><a class="cta-btn gold" href="/" data-i18n="cta_app">Open the free toolkit</a></div>
+</section>
+
+</div>
+
+<footer><div class="wrap">
+  <span data-i18n="foot">© 2026 PIPVANT by Orovanta — Trade with a process, not a prediction.</span>
+  <span><a href="/" data-i18n="foot_toolkit">Toolkit</a><a href="prop-firm-comparison.html" data-i18n="foot_comp">Comparison</a><a href="prop-firm-deals.html" data-i18n="foot_deals">Deals</a><a href="data-ledger.html" data-i18n="foot_ledger">Data Ledger</a></span>
+</div></footer>
+<script src="assets/pipv-os.js" defer></script>
+<script>
+(function(){
+  var I18N={"ar": {"back_hub": "← كل القواعد المفسرة", "bite_h": "كيف تؤلم", "cta_app": "افتح المجموعة المجانية", "cta_compare": "قارن الشركات", "cta_deals": "عرض العروض النشطة", "cta_ledger": "سجل البيانات", "dir": "rtl", "eyebrow_hub": "أدلة · بيانات موثقة", "final_b": "افتح مجموعة PIPVANT المجانية — مطابق وسجل وحاسبات، كلها تعمل على البيانات الموثقة نفسها التي في هذه الجداول.", "final_h": "القواعد مخيفة فقط عندما تكون غامضة.", "firms_word": "من 22 شركة تذكر هذا في بيانات خططها الموثقة", "foot": "© 2026 PIPVANT من Orovanta — تداول بمنهجية، لا بتوقع.", "foot_comp": "المقارنة", "foot_deals": "العروض", "foot_ledger": "سجل البيانات", "foot_toolkit": "المجموعة", "hub_concepts_h": "المفاهيم", "hub_h1a": "قواعد شركات التمويل، ", "hub_h1gold": "مفسرة ببساطة", "hub_lede": "كل قاعدة تُنهي التحديات، بلغة بسيطة — ما هي ولماذا تستعملها الشركات وكيف تؤلم — متبوعة بالقيم الحقيقية من بيانات خطط PIPVANT الموثقة للشركات الـ22 كلها.", "meta_title": "شرح قواعد شركات التمويل — التراجع والاتساق والدفعات | PIPVANT", "nav_toolkit": "افتح المجموعة الكاملة", "read_guide": "اقرأ الدليل ←", "sim_link": "محاكي اجتياز التحدي — احتمالات مونت كارلو لأي خطة حقيقية", "table_h": "القاعدة، شركة بشركة", "toggle": "English", "tools_h": "طبّقها عملياً"}, "en": {"back_hub": "← All rules explained", "bite_h": "How it bites", "cta_app": "Open the free toolkit", "cta_compare": "Compare firms", "cta_deals": "See active deals", "cta_ledger": "Data ledger", "dir": "ltr", "eyebrow_hub": "Guides · Verified data", "final_b": "Open the free PIPVANT toolkit — matcher, journal and calculators, all running on the same verified data as these tables.", "final_h": "Rules are only scary when they're vague.", "firms_word": "of 22 firms state this in verified plan data", "foot": "© 2026 PIPVANT by Orovanta — Trade with a process, not a prediction.", "foot_comp": "Comparison", "foot_deals": "Deals", "foot_ledger": "Data Ledger", "foot_toolkit": "Toolkit", "hub_concepts_h": "The concepts", "hub_h1a": "Prop firm rules, ", "hub_h1gold": "explained plainly", "hub_lede": "Every rule that ends challenges, in plain English — what it is, why firms use it, and how it bites — followed by the real values from PIPVANT's verified plan data for all 22 firms.", "meta_title": "Prop Firm Rules Explained — Drawdown, Consistency, Payouts | PIPVANT", "nav_toolkit": "Open free toolkit", "read_guide": "Read the guide →", "sim_link": "Challenge pass simulator — Monte Carlo odds for any real plan", "table_h": "The rule, firm by firm", "toggle": "العربية", "tools_h": "Put it to work"}};
+
+  var lang='en';
+  try{var _s=JSON.parse(localStorage.getItem('pipvant_settings')||'{}');if(_s&&(_s.language==='ar'||_s.language==='en'))lang=_s.language;}catch(e){}
+  function t(k){var v=I18N[lang][k];return v!==undefined?v:I18N.en[k];}
+  function applyStatic(){
+    document.documentElement.lang=lang;
+    document.documentElement.dir=t('dir');
+    document.title=t('meta_title');
+    document.querySelectorAll('[data-i18n]').forEach(function(el){var v=t(el.getAttribute('data-i18n'));if(typeof v==='string')el.textContent=v;});
+    var tg=document.getElementById('langToggle');if(tg)tg.textContent=t('toggle');
+  }
+  applyStatic();
+  var tgEl=document.getElementById('langToggle');
+  if(tgEl)tgEl.addEventListener('click',function(){
+    lang=lang==='en'?'ar':'en';
+    try{var s=JSON.parse(localStorage.getItem('pipvant_settings')||'{}');s.language=lang;localStorage.setItem('pipvant_settings',JSON.stringify(s));}catch(e){}
+    applyStatic();
+  });
+
+})();
+</script>
+</body>
+</html>

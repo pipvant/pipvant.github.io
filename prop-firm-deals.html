@@ -51,6 +51,9 @@
     .card:hover{transform:translateY(-2px);border-color:var(--line-strong)}
     .card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.55}
     .card h3{margin:0 0 4px;font-size:19px}
+    .card .firm-head{display:flex;align-items:center;gap:12px;margin:0 0 4px}
+    .card .firm-head h3{margin:0}
+    .firm-logo{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:10px;background:var(--raised);border:1px solid var(--line-strong);color:var(--gold);font-family:"Space Grotesk";font-weight:700;font-size:17px;overflow:hidden;flex:none}
     .card .plan-line{color:var(--muted);font-size:13px;margin-bottom:10px}
     .card .verified-stamp{color:var(--muted);font-size:12px;margin:0 0 12px}
     .price-row{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:0 0 14px}
@@ -180,6 +183,31 @@
     if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(code).then(done).catch(function(){fallback();});}else{fallback();}
     function fallback(){var ta=document.createElement('textarea');ta.value=code;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done();}catch(e){}document.body.removeChild(ta);}
   }
+  /* Firm logos — same logoInto() helper + overrides as the cheapest page and
+     index.html (Google favicon 128px from the firm's own domain, letter
+     fallback; Blue Guardian is letter-only). Added 2026-10-22: logos belong
+     on every firm surface, deal cards included. */
+  var LOGO_OVERRIDES={
+    'takeprofittrader.com':'https://takeprofittrader.com/assets/mobile-logo.svg',
+    'apextraderfunding.com':'https://apextraderfunding.com/cdn-cgi/image/width=512,height=512,fit=cover,gravity=auto,format=auto//app/uploads/cropped-APEX_FAV-192x192.png'
+  };
+  var LETTER_ONLY_DOMAINS=['blueguardian.com'];
+  function logoInto(el,firm){
+    if(!el||!firm)return;
+    var letter=(firm.name||'?').charAt(0).toUpperCase();
+    el.setAttribute('aria-label',firm.name||'Firm');
+    var domain='';
+    try{domain=String(new URL(firm.website||'').hostname).replace(/^www\./,'');}catch(e){domain='';}
+    if(!domain){el.textContent=letter;return;}
+    el.textContent='';
+    if(LETTER_ONLY_DOMAINS.indexOf(domain)!==-1){el.textContent=letter;return;}
+    var img=document.createElement('img');
+    img.alt=firm.name||'';img.loading='lazy';
+    img.style.cssText='width:100%;height:100%;object-fit:contain;border-radius:6px;';
+    img.onerror=function(){img.remove();el.textContent=letter;};
+    img.src=LOGO_OVERRIDES[domain]||('https://www.google.com/s2/favicons?domain='+domain+'&sz=128');
+    el.appendChild(img);
+  }
   Promise.all([
     get('firms?select=id,name,website,last_verified_at,updated_at&order=name.asc'),
     get('firm_plans?select=firm_id,account_size,price,currency,rules')
@@ -217,7 +245,10 @@
     grid.innerHTML='';
     deals.forEach(function(d){
       var card=document.createElement('div');card.className='card';
-      var h=document.createElement('h3');h.textContent=d.firm.name||'';card.appendChild(h);
+      var head=document.createElement('div');head.className='firm-head';
+      var logo=document.createElement('span');logo.className='firm-logo';logoInto(logo,d.firm);head.appendChild(logo);
+      var h=document.createElement('h3');h.textContent=d.firm.name||'';head.appendChild(h);
+      card.appendChild(head);
       var prog=(d.plan.rules&&d.plan.rules.program)?String(d.plan.rules.program):'';
       var size=fmtSize(d.plan.account_size);
       var planLine=document.createElement('div');planLine.className='plan-line';
