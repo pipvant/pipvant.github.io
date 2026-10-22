@@ -8,6 +8,7 @@
   <link rel="icon" type="image/png" href="assets/pipvanta-logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://acpkzavmifjwnskiaret.supabase.co">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
@@ -267,8 +268,9 @@
   var SB_URL='https://acpkzavmifjwnskiaret.supabase.co';
   var FOUNDER='bniaichsifdin110@gmail.com';
   var TEST='/__system_test__';
-  var sb=window.supabase.createClient(SB_URL,
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFjcGt6YXZtaWZqd25za2lhcmV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyMDk1ODcsImV4cCI6MjEwNjc4NTU4N30.9-k-DoB6467EXTPKrvWUi-LRDPbSSC30f6BgrZezo2A');
+  var sb=null;
+  try{ sb=window.supabase.createClient(SB_URL,
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFjcGt6YXZtaWZqd25za2lhcmV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyMDk1ODcsImV4cCI6MjEwNjc4NTU4N30.9-k-DoB6467EXTPKrvWUi-LRDPbSSC30f6BgrZezo2A'); }catch(e){ sb=null; }
 
   var gate=document.getElementById('gate'), dash=document.getElementById('dash');
   var msg=document.getElementById('gateMsg'), btn=document.getElementById('loginBtn');
@@ -298,6 +300,7 @@
   btn.addEventListener('click',function(){
     var em=document.getElementById('em').value.trim().toLowerCase();
     var pw=document.getElementById('pw').value;
+    if(!sb){ deny('Sign-in library failed to load — check your connection and reload the page.'); return; }
     if(!em||!pw){ deny('Enter your email and password.'); return; }
     btn.disabled=true; msg.textContent='';
     sb.auth.signInWithPassword({email:em,password:pw}).then(function(r){
@@ -497,7 +500,7 @@
     });
   }
 
-  boot();
+  if(sb)boot(); else deny('Sign-in library failed to load — check your connection and reload the page.');
 })();
 </script>
 </body>

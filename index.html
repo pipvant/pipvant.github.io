@@ -20,6 +20,8 @@
   <link rel="icon" type="image/png" href="assets/pipvanta-logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://acpkzavmifjwnskiaret.supabase.co">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet">
   <title>PIPVANT by Orovanta — Trading Decision Tools</title>
   <meta name="description" content="PIPVANT is a free toolkit for serious traders: prop firm matcher with verified firms, smart journal, risk calculator, and economic calendar.">
@@ -1607,6 +1609,42 @@
     .sotd-try:hover{background:rgba(212,175,55,.18);border-color:#D4AF37}
     .sotd-now{flex:none;margin-inline-start:auto;font:600 11px/1 "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:#D4AF37}
     .sotd-now[hidden]{display:none}
+    .today-brief{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.8fr) auto;gap:20px;align-items:center;margin-top:16px;padding:16px 18px;border:1px solid var(--line);border-radius:16px;background:rgba(15,29,51,.76);box-shadow:inset 0 1px 0 rgba(255,255,255,.025)}
+    .today-brief[hidden]{display:none}
+    .tb-head .eyebrow{margin:0 0 5px}
+    .tb-date{font-size:16.5px;font-weight:700;color:var(--text);margin:0;line-height:1.25}
+    .tb-label{display:block;font:600 9.5px/1 "IBM Plex Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+    .tb-list{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+    .tb-list[hidden]{display:none}
+    .tb-list li{display:flex;gap:9px;align-items:baseline;font-size:13px;color:var(--secondary);min-width:0}
+    .tb-list li strong{font:600 12px/1 "IBM Plex Mono",monospace;color:var(--text);flex:none}
+    .tb-list .tb-cur{color:#D4AF37;font-weight:700;flex:none}
+    .tb-list .tb-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .tb-none{font-size:13px;color:var(--secondary);margin:0}
+    .tb-none[hidden]{display:none}
+    .tb-side{display:flex;align-items:center;gap:20px}
+    .tb-streak{text-align:center}
+    .tb-streak .tb-label{margin-bottom:5px}
+    .tb-streak strong{display:block;font-size:23px;line-height:1;color:var(--text)}
+    .tb-unit{font-size:10.5px;color:var(--muted)}
+    .tb-cta{white-space:nowrap}
+    @media (max-width:760px){.today-brief{grid-template-columns:1fr;gap:13px}.tb-side{justify-content:space-between}}
+    .event-gcal{display:flex;justify-content:center;margin:0 0 22px;text-decoration:none}
+    .event-gcal[hidden]{display:none}
+    .scenario-block{margin-top:16px;border-top:1px solid var(--line);padding-top:14px}
+    .scenario-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .scenario-label{font:600 9.5px/1 "IBM Plex Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+    .scenario-form{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+    .scenario-form[hidden]{display:none}
+    .scenario-form input{flex:1;min-width:140px;min-height:42px;padding:0 13px;border:1px solid var(--line);border-radius:10px;background:var(--sunken);color:var(--text);font:500 15px/1 Inter,sans-serif}
+    .scenario-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+    .scenario-list[hidden]{display:none}
+    .scenario-chip{display:inline-flex;align-items:center;gap:2px;border:1px solid var(--line-strong);border-radius:999px;background:rgba(15,29,51,.6);padding:3px 4px}
+    .scenario-load{background:none;border:0;color:var(--text);font:600 12.5px/1 Inter,sans-serif;cursor:pointer;padding:7px 8px}
+    .scenario-del{width:24px;height:24px;border:0;border-radius:50%;background:transparent;color:var(--muted);font-size:15px;line-height:1;cursor:pointer;display:grid;place-items:center}
+    .scenario-del:hover{color:var(--text);background:rgba(255,255,255,.07)}
+    .scenario-empty{font-size:12.5px;color:var(--muted);margin:10px 0 0}
+    .scenario-empty[hidden]{display:none}
     .sotd-dismiss{position:absolute;top:6px;inset-inline-end:6px;width:26px;height:26px;border:0;border-radius:50%;background:transparent;color:var(--muted);font-size:16px;line-height:1;cursor:pointer;display:grid;place-items:center}
     .sotd-dismiss:hover{color:var(--text);background:rgba(255,255,255,.06)}
     @media (max-width:640px){.sotd-thumb{width:76px}.sotd-name{font-size:13.5px;white-space:normal;line-height:1.25}}
@@ -2827,7 +2865,7 @@ html[dir="rtl"] .jump-row{text-align:right}
 
   <header class="lp-nav">
     <div class="lp-nav-inner">
-      <a class="lp-brand" href="#lpTop" data-lp-scroll><img src="assets/pipvanta-logo.png" alt="PIPVANT logo">PIPVANT</a>
+      <a class="lp-brand" href="#lpTop" data-lp-scroll><img src="assets/pipvanta-logo.png" alt="PIPVANT logo" decoding="async">PIPVANT</a>
       <nav class="lp-links" aria-label="Landing sections">
         <a href="#lpTools" data-lp-scroll>Tools</a>
         <a href="#lpHow" data-lp-scroll>How it works</a>
@@ -2942,7 +2980,7 @@ html[dir="rtl"] .jump-row{text-align:right}
 
   <footer class="lp-footer">
     <div class="lp-footer-inner">
-      <a class="lp-brand" href="#lpTop" data-lp-scroll style="font-size:12px"><img src="assets/pipvanta-logo.png" alt="PIPVANT logo" style="width:24px;height:24px">PIPVANT</a>
+      <a class="lp-brand" href="#lpTop" data-lp-scroll style="font-size:12px"><img src="assets/pipvanta-logo.png" alt="PIPVANT logo" style="width:24px;height:24px" decoding="async">PIPVANT</a>
       <nav aria-label="Footer">
         <button type="button" data-landing-nav="about">About</button>
         <button type="button" data-landing-nav="methodology">Methodology</button>
@@ -2953,12 +2991,12 @@ html[dir="rtl"] .jump-row{text-align:right}
     </div>
   </footer>
 </div>
- <div id="authLoading" style="position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:var(--bg,#0a0f1a);"><div style="text-align:center;"><img src="assets/pipvanta-logo.png" alt="PIPVANT" style="width:64px;height:64px;opacity:.9;"><div style="margin-top:12px;color:var(--muted,#888);font-size:12px;">Loading…</div></div></div>
+ <div id="authLoading" style="position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:var(--bg,#0a0f1a);"><div style="text-align:center;"><img src="assets/pipvanta-logo.png" alt="PIPVANT" style="width:64px;height:64px;opacity:.9;" decoding="async"><div style="margin-top:12px;color:var(--muted,#888);font-size:12px;">Loading…</div></div></div>
   
 <section class="auth-shell" id="authShell" aria-label="Account setup">
   <div class="auth-stage auth-welcome active" id="authWelcome" data-auth-stage="welcome">
     <div class="auth-welcome-inner">
-      <img class="pv-mark" src="assets/pipvanta-logo.png" alt="PIPVANT logo">
+      <img class="pv-mark" src="assets/pipvanta-logo.png" alt="PIPVANT logo" decoding="async">
       <p class="eyebrow">PIPVANT by Orovanta</p>
       <h1>Trade with PIPVANT.</h1>
       <p class="auth-lede">A focused toolkit for comparing rules, sizing risk, reviewing trades, and protecting your process.</p>
@@ -3083,7 +3121,7 @@ html[dir="rtl"] .jump-row{text-align:right}
   </div>
   <div class="drawer-backdrop" id="drawerBackdrop" aria-hidden="true"></div>
   <aside class="desktop-rail" id="appRail" aria-label="Primary navigation">
-    <div class="rail-top"><div class="rail-brand-lockup"><img class="rail-brand-logo" src="assets/pipvanta-logo.png" alt="PIPVANT logo"><strong>PIPVANT</strong></div><button class="rail-close" id="railClose" type="button" aria-label="Close menu"><svg width="19"><use href="#pv-i-x"/></svg></button></div>
+    <div class="rail-top"><div class="rail-brand-lockup"><img class="rail-brand-logo" src="assets/pipvanta-logo.png" alt="PIPVANT logo" decoding="async"><strong>PIPVANT</strong></div><button class="rail-close" id="railClose" type="button" aria-label="Close menu"><svg width="19"><use href="#pv-i-x"/></svg></button></div>
     <button class="rail-profile" data-screen="profile" type="button" title="Profile"><span class="rail-avatar" data-rail-avatar>—</span><span><strong data-rail-name>—</strong><small>View profile</small></span><svg width="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m9 6 6 6-6 6"/></svg></button>
     <nav class="rail-nav">
       <button class="rail-btn active" data-screen="matcher" type="button" title="Matcher"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 7h16M7 12h10m-7 5h4"/></svg><span>Matcher</span></button>
@@ -3175,6 +3213,11 @@ html[dir="rtl"] .jump-row{text-align:right}
           </div>
         </div>
       </div>
+      <article class="today-brief" id="todayBrief" hidden aria-label="Today's brief">
+        <div class="tb-head"><p class="eyebrow">Today</p><h2 class="tb-date" id="tbDate">—</h2></div>
+        <div class="tb-events"><span class="tb-label">High-impact events</span><ul class="tb-list" id="tbList"></ul><p class="tb-none" id="tbNone" hidden>No high-impact events today</p></div>
+        <div class="tb-side"><div class="tb-streak"><span class="tb-label">Day streak</span><strong id="tbStreak">0</strong><span class="tb-unit">trading days</span></div><button class="btn secondary tb-cta" data-screen="calendar" type="button">Open calendar</button></div>
+      </article>
       <div class="rule"></div>
       <section class="landing-section" aria-labelledby="problem-title">
         <div class="section-head"><div><p class="eyebrow">The problem</p><h2 id="problem-title">Trading tools are fragmented.</h2></div><p>Core decisions are often split across promotional lists, disconnected calculators, and notes with no shared process.</p></div>
@@ -3605,6 +3648,16 @@ html[dir="rtl"] .jump-row{text-align:right}
             <p class="risk-method">Method: account size × risk % ÷ (stop-loss pips × $10 pip value). Verify contract details with your broker.</p>
             <div class="risk-footer-actions"><button class="btn secondary" id="saveRiskToJournal" type="button">Save to journal</button></div>
             <p class="session-feedback" id="riskSaveFeedback" aria-live="polite"></p>
+            <div class="scenario-block">
+              <div class="scenario-head"><span class="scenario-label">Saved scenarios</span><button class="btn secondary" id="scenarioSaveOpen" type="button">Save scenario</button></div>
+              <div class="scenario-form" id="scenarioForm" hidden>
+                <input id="scenarioName" type="text" maxlength="40" placeholder="Scenario name" aria-label="Scenario name">
+                <button class="btn primary" id="scenarioSaveConfirm" type="button">Save</button>
+                <button class="btn secondary" id="scenarioSaveCancel" type="button">Cancel</button>
+              </div>
+              <p class="scenario-empty" id="scenarioEmpty">No saved scenarios yet</p>
+              <div class="scenario-list" id="scenarioList" hidden></div>
+            </div>
           </section>
         </div>
       </div>
@@ -3801,7 +3854,7 @@ html[dir="rtl"] .jump-row{text-align:right}
       <div class="profile-wrap">
         <header class="profile-head">
           <div class="profile-avatar-shell">
-            <div class="profile-avatar" id="profileAvatar" aria-hidden="true"><img id="profileAvatarImage" alt="" hidden><span id="profileAvatarInitials">—</span></div>
+            <div class="profile-avatar" id="profileAvatar" aria-hidden="true"><img id="profileAvatarImage" alt="" hidden decoding="async"><span id="profileAvatarInitials">—</span></div>
             <button class="avatar-edit-button" id="profileAvatarEdit" type="button" aria-label="Change profile photo" title="Change profile photo"><svg width="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><path d="M5 8h3l1.3-2h5.4L16 8h3v10H5z"/><circle cx="12" cy="13" r="3.2"/></svg></button>
             <input class="visually-hidden" id="profileAvatarInput" type="file" accept="image/png,image/jpeg,image/webp" tabindex="-1">
           </div>
@@ -4121,7 +4174,7 @@ html[dir="rtl"] .jump-row{text-align:right}
                         <p class="bgs-group-label">Simple</p>
                         <div class="bgs-grid">
                           <button class="bgs-card" type="button" data-bgscene-choice="cinematic" aria-pressed="false"><span class="bgs-thumb"><img src="assets/bgs/thumbs/cinematic.webp" alt="" loading="lazy" decoding="async"></span><span class="bgs-name">Cinematic</span><span class="bgs-star" data-bgs-fav="cinematic" role="button" aria-label="Toggle favourite" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.5 5.3 5.8.7-4.3 4 1.1 5.7L12 16.5l-5.1 2.8L8 13.6 3.7 9.6l5.8-.7z"/></svg></span><span class="bgs-expand" data-bgs-expand="cinematic" role="button" aria-label="Preview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></span><span class="bgs-check" aria-hidden="true"><svg width="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="m5 13 4 4L19 7"/></svg></span></button>
-                          <button class="bgs-card bgs-custom-card" type="button" data-bgscene-choice="custom" aria-pressed="false"><span class="bgs-thumb bgs-custom-thumb"><img id="bgsCustomImg" alt="" hidden><span class="bgs-custom-empty" id="bgsCustomEmpty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V6"/><path d="m7 10 5-5 5 5"/><path d="M4 20h16"/></svg><span>Add your photo</span></span></span><span class="bgs-name">Your Photo</span><span class="bgs-custom-actions" id="bgsCustomActions" hidden><span class="bgs-mini-btn" data-bgs-custom="replace" role="button">Replace</span><span class="bgs-mini-btn" data-bgs-custom="remove" role="button">Remove</span></span><span class="bgs-expand" data-bgs-expand="custom" role="button" aria-label="Preview" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></span><span class="bgs-check" aria-hidden="true"><svg width="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="m5 13 4 4L19 7"/></svg></span></button>
+                          <button class="bgs-card bgs-custom-card" type="button" data-bgscene-choice="custom" aria-pressed="false"><span class="bgs-thumb bgs-custom-thumb"><img id="bgsCustomImg" alt="" hidden decoding="async"><span class="bgs-custom-empty" id="bgsCustomEmpty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V6"/><path d="m7 10 5-5 5 5"/><path d="M4 20h16"/></svg><span>Add your photo</span></span></span><span class="bgs-name">Your Photo</span><span class="bgs-custom-actions" id="bgsCustomActions" hidden><span class="bgs-mini-btn" data-bgs-custom="replace" role="button">Replace</span><span class="bgs-mini-btn" data-bgs-custom="remove" role="button">Remove</span></span><span class="bgs-expand" data-bgs-expand="custom" role="button" aria-label="Preview" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></span><span class="bgs-check" aria-hidden="true"><svg width="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="m5 13 4 4L19 7"/></svg></span></button>
                           <button class="bgs-card" type="button" data-bgscene-choice="classic" aria-pressed="false"><span class="bgs-thumb bgs-thumb-classic"></span><span class="bgs-name">Classic</span><span class="bgs-star" data-bgs-fav="classic" role="button" aria-label="Toggle favourite" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.5 5.3 5.8.7-4.3 4 1.1 5.7L12 16.5l-5.1 2.8L8 13.6 3.7 9.6l5.8-.7z"/></svg></span><span class="bgs-check" aria-hidden="true"><svg width="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="m5 13 4 4L19 7"/></svg></span></button>
                         </div>
                       </div>
@@ -4145,7 +4198,7 @@ html[dir="rtl"] .jump-row{text-align:right}
           <article class="earned-certificate" id="earnedCertificate">
             <div class="certificate-document" aria-label="Marathon certificate template preview">
               <div class="certificate-header">
-                <div class="certificate-brand"><img class="certificate-logo" src="assets/pipvanta-logo.png" alt="PIPVANT logo"><span class="certificate-wordmark"><strong>PIPVANT</strong><small>by Orovanta</small></span></div>
+                <div class="certificate-brand"><img class="certificate-logo" src="assets/pipvanta-logo.png" alt="PIPVANT logo" decoding="async" loading="lazy"><span class="certificate-wordmark"><strong>PIPVANT</strong><small>by Orovanta</small></span></div>
                 <span class="certificate-kicker">Verified<br>achievement</span>
               </div>
               <div class="certificate-body">
@@ -4158,11 +4211,11 @@ html[dir="rtl"] .jump-row{text-align:right}
               <div class="certificate-meta">
                 <div class="certificate-verification-row">
                   <div class="verification-block"><span class="certificate-meta-label">Verification ID</span><strong>—</strong></div>
-                  <div class="certificate-verification-qr"><div class="certificate-qr-box"><img class="certificate-qr-image" src="cert-qr.png" alt="Certificate verification QR code"></div><span class="certificate-qr-caption">Scan to verify</span></div>
+                  <div class="certificate-verification-qr"><div class="certificate-qr-box"><img class="certificate-qr-image" src="cert-qr.png" alt="Certificate verification QR code" decoding="async" loading="lazy"></div><span class="certificate-qr-caption">Scan to verify</span></div>
                 </div>
                 <div class="certificate-classic-footer">
                   <div class="certificate-date"><strong>—</strong><span class="certificate-meta-label">Date</span></div>
-                  <div class="certificate-signature"><div class="signature-reserved"><img class="certificate-signature-image" src="ceo-signature.png" alt="Sifeddine Beniaich signature"></div><span class="certificate-meta-label">Chief Executive Officer</span></div>
+                  <div class="certificate-signature"><div class="signature-reserved"><img class="certificate-signature-image" src="ceo-signature.png" alt="Sifeddine Beniaich signature" decoding="async" loading="lazy"></div><span class="certificate-meta-label">Chief Executive Officer</span></div>
                 </div>
               </div>
             </div>
@@ -4244,7 +4297,7 @@ html[dir="rtl"] .jump-row{text-align:right}
     <section class="screen" id="about" aria-label="About PIPVANT">
       <div class="module-wrap">
         <header class="module-head"><h2>About</h2><p>A disciplined suite of tools for clearer trading decisions, structured risk management, and accountable review.</p></header>
-        <div class="about-lockup"><img class="pv-mark about-mark" src="assets/pipvanta-logo.png" alt="PIPVANT logo"><div><h3>PIPVANT by Orovanta</h3><p>TRADING DECISION TOOLS</p></div></div>
+        <div class="about-lockup"><img class="pv-mark about-mark" src="assets/pipvanta-logo.png" alt="PIPVANT logo" decoding="async" loading="lazy"><div><h3>PIPVANT by Orovanta</h3><p>TRADING DECISION TOOLS</p></div></div>
         <p class="about-company-line">PIPVANT is built by Orovanta — an independent startup crafting focused trading tools.</p>
         <div class="about-tagline">Trade with PIPVANT.</div>
         <div class="about-grid">
@@ -4303,6 +4356,7 @@ html[dir="rtl"] .jump-row{text-align:right}
     <div class="sheet-title-row"><div><p class="eyebrow">Economic event</p><h3 id="calendarEventTitle">—</h3><p id="calendarEventTime">—</p></div><button class="sheet-close" id="closeCalendarEvent" type="button" aria-label="Close event details"><svg width="18"><use href="#pv-i-x"/></svg></button></div>
     <div class="event-detail-meta"><div><span>Currency</span><strong id="calendarEventCurrency">—</strong></div><div><span>Impact</span><strong id="calendarEventImpact">—</strong></div><div><span>Timezone</span><strong id="calendarEventTimezone">—</strong></div></div>
     <div class="event-detail-values"><span class="econ-value"><span>Actual</span><strong id="calendarEventActual">—</strong></span><span class="econ-value"><span>Forecast</span><strong id="calendarEventForecast">—</strong></span><span class="econ-value"><span>Previous</span><strong id="calendarEventPrevious">—</strong></span></div>
+    <a class="btn secondary event-gcal" id="calendarEventGcal" href="#" target="_blank" rel="noopener" hidden>Add to Google Calendar</a>
     <div class="event-history-head"><span>Recent history</span><span>—</span></div><div class="event-history" id="calendarEventHistory">No history available.</div>
   </div>
 </div>
@@ -4447,11 +4501,11 @@ html[dir="rtl"] .jump-row{text-align:right}
     </div>
     <div class="pv-ob-step" data-pv-ob-step="4" hidden>
       <div class="pv-ob-scenes" role="group" aria-label="Atmosphere">
-        <button type="button" class="pv-ob-scene" data-pv-ob-scene="ninja" aria-pressed="false"><span class="pv-ob-scene-art"><img src="assets/bgs/thumbs/ninja.webp" alt="" loading="lazy"></span><span class="pv-ob-scene-name">Ninja Night</span></button>
-        <button type="button" class="pv-ob-scene" data-pv-ob-scene="torii" aria-pressed="false"><span class="pv-ob-scene-art"><img src="assets/bgs/thumbs/torii.webp" alt="" loading="lazy"></span><span class="pv-ob-scene-name">Torii Gate</span></button>
-        <button type="button" class="pv-ob-scene" data-pv-ob-scene="sakura" aria-pressed="false"><span class="pv-ob-scene-art"><img src="assets/bgs/thumbs/sakura.webp" alt="" loading="lazy"></span><span class="pv-ob-scene-name">Sakura Swordsman</span></button>
-        <button type="button" class="pv-ob-scene" data-pv-ob-scene="rain" aria-pressed="false"><span class="pv-ob-scene-art"><img src="assets/bgs/thumbs/rain.webp" alt="" loading="lazy"></span><span class="pv-ob-scene-name">Midnight Rain</span></button>
-        <button type="button" class="pv-ob-scene" data-pv-ob-scene="desert" aria-pressed="false"><span class="pv-ob-scene-art"><img src="assets/bgs/thumbs/desert.webp" alt="" loading="lazy"></span><span class="pv-ob-scene-name">Desert Moon</span></button>
+        <button type="button" class="pv-ob-scene" data-pv-ob-scene="ninja" aria-pressed="false"><span class="pv-ob-scene-art"><img src="assets/bgs/thumbs/ninja.webp" alt="" loading="lazy" decoding="async"></span><span class="pv-ob-scene-name">Ninja Night</span></button>
+        <button type="button" class="pv-ob-scene" data-pv-ob-scene="torii" aria-pressed="false"><span class="pv-ob-scene-art"><img src="assets/bgs/thumbs/torii.webp" alt="" loading="lazy" decoding="async"></span><span class="pv-ob-scene-name">Torii Gate</span></button>
+        <button type="button" class="pv-ob-scene" data-pv-ob-scene="sakura" aria-pressed="false"><span class="pv-ob-scene-art"><img src="assets/bgs/thumbs/sakura.webp" alt="" loading="lazy" decoding="async"></span><span class="pv-ob-scene-name">Sakura Swordsman</span></button>
+        <button type="button" class="pv-ob-scene" data-pv-ob-scene="rain" aria-pressed="false"><span class="pv-ob-scene-art"><img src="assets/bgs/thumbs/rain.webp" alt="" loading="lazy" decoding="async"></span><span class="pv-ob-scene-name">Midnight Rain</span></button>
+        <button type="button" class="pv-ob-scene" data-pv-ob-scene="desert" aria-pressed="false"><span class="pv-ob-scene-art"><img src="assets/bgs/thumbs/desert.webp" alt="" loading="lazy" decoding="async"></span><span class="pv-ob-scene-name">Desert Moon</span></button>
         <button type="button" class="pv-ob-scene" data-pv-ob-scene="classic" aria-pressed="false"><span class="pv-ob-scene-art pv-ob-scene-classic"></span><span class="pv-ob-scene-name">Classic</span></button>
       </div>
       <p class="pv-ob-hint" id="pvObSceneHint">Your backdrop, everywhere in the app. Change it any time in Settings → Backgrounds.</p>
@@ -8200,9 +8254,14 @@ html[dir="rtl"] .jump-row{text-align:right}
     'Also free:':'مجاني أيضاً:','Profit Split Calculator':'حاسبة تقسيم الأرباح','Drawdown Simulator':'محاكي التراجع','Consistency Rule Checker':'فاحص الاتساق','Forex Risk Calculator':'حاسبة مخاطر الفوركس','Advanced filters':'المرشحات المتقدمة','Reset filters':'إعادة تعيين المرشحات','Min price':'الحد الأدنى للسعر','Max price':'الحد الأقصى للسعر','Min profit split':'الحد الأدنى لتقسيم الأرباح','Min max drawdown':'الحد الأدنى لأقصى تراجع',
     "Firms with published, verifiable rules. Every card shows the firm's headquarters country, and every plan shows real prices and conditions — never invented ratings or guessed numbers.":'الشركات ذات القواعد المنشورة والقابلة للتحقق. كل بطاقة تعرض دولة مقر الشركة، وكل خطة تعرض أسعاراً وشروطاً حقيقية — أبداً تقييمات مخترعة أو أرقام مُخمَّنة.',
     'Public profile':'الملف العام','Public profile page':'صفحة الملف العام','Share a public page with your summary stats — never your trades, email or balance.':'شارك صفحة عامة بإحصائياتك الموجزة — أبداً صفقاتك أو بريدك أو رصيدك.','Your link':'رابطك','Copy link':'نسخ الرابط','Update link':'تحديث الرابط','Not available yet':'غير متاح بعد',
+    'Share stats':'مشاركة الإحصائيات','Export .ics':'تصدير .ics','Add to Google Calendar':'إضافة إلى تقويم Google',
+    'Enter the correct point value for your broker and pair below.':'أدخل قيمة النقطة الصحيحة لدى وسيطك ولزوجك أدناه.','Default $10 fits USD-quoted forex pairs (e.g. EUR/USD). Adjust for JPY pairs, gold, indices — verify with your broker.':'القيمة الافتراضية 10 دولارات تناسب أزواج الفوركس المقوّمة بالدولار (مثل EUR/USD). عدّلها لأزواج الين والذهب والمؤشرات — وتأكد لدى وسيطك.',
+    'Discipline feature coming soon.':'ميزة الانضباط قادمة قريباً.','Use my journal stats':'استخدام إحصائيات سجلي','Simulate plans at this size':'محاكاة الخطط بهذا الحجم','Estimate from your win rate and average R — not a guarantee.':'تقدير من نسبة فوزك ومتوسط R — وليس ضماناً.','We show verification age, not claimed changes. A red row means our data is older than 60 days — treat its rules with caution until re-verified.':'نعرض عمر التحقق، لا التغييرات المدّعاة. الصف الأحمر يعني أن بياناتنا أقدم من 60 يوماً — تعامل مع قواعده بحذر حتى إعادة التحقق.',
+    'High-impact events':'أحداث عالية التأثير','No high-impact events today':'لا أحداث عالية التأثير اليوم','Day streak':'سلسلة الأيام','Open calendar':'فتح التقويم',
+    'Saved scenarios':'السيناريوهات المحفوظة','Save scenario':'حفظ سيناريو','Scenario name':'اسم السيناريو','No saved scenarios yet':'لا سيناريوهات محفوظة بعد','Save':'حفظ'
   };
   var attrAr={'Account setup':'إعداد الحساب','Back to welcome':'العودة للترحيب','Back to log in':'العودة لتسجيل الدخول','Back to account details':'العودة لتفاصيل الحساب','Profile initial':'حرف الملف الشخصي','Primary navigation':'التنقل الرئيسي','Close menu':'إغلاق القائمة','Account overview':'نظرة عامة على الحساب','Open navigation':'فتح التنقل','Notifications':'الإشعارات','Open profile':'فتح الملف الشخصي','Product data indicators':'مؤشرات بيانات المنتج','Quick risk calculator':'حاسبة مخاطر سريعة','Prop firm matcher':'مطابق شركات التداول','Market type':'نوع السوق','Maximum price':'السعر الأقصى','Matcher display controls':'أدوات عرض المطابق','Display currency':'عملة العرض','Result density':'كثافة النتائج','Result view':'عرض النتائج','Result row structure':'بنية صف النتيجة','Firm logo unavailable':'شعار الشركة غير متاح','Rating unavailable':'التقييم غير متاح','Discount unavailable':'الخصم غير متاح','Promotional offer unavailable':'العرض الترويجي غير متاح','Matcher trust indicators':'مؤشرات ثقة المطابق','Methodology statistics':'إحصاءات المنهجية','Trust and review information':'معلومات الثقة والمراجعة','Optional data consent':'موافقة البيانات الاختيارية','Trading journal':'سجل التداول','Journal controls':'أدوات السجل','Date range':'نطاق التاريخ','Performance metrics':'مقاييس الأداء','No Net P&L history':'لا يوجد سجل صافي ربح وخسارة','No cumulative R history':'لا يوجد سجل R تراكمي','Performance charts':'رسوم الأداء','Chart metric':'مقياس الرسم','Empty drawdown strip':'شريط تراجع فارغ','Weekly totals':'الإجماليات الأسبوعية','Trade filters':'مرشحات الصفقات','Search journal':'بحث في السجل','Search journal records':'بحث في سجلات الصفقات','Search symbol or note':'ابحث عن رمز أو ملاحظة','Search trades':'بحث في الصفقات','Trade view':'عرض الصفقات','Group trades':'تجميع الصفقات','Risk calculator':'حاسبة المخاطر','Account size':'حجم الحساب','Decrease risk percentage':'خفض نسبة المخاطرة','Risk percentage':'نسبة المخاطرة','Increase risk percentage':'رفع نسبة المخاطرة','Risk presets':'قيم المخاطرة الجاهزة','Discipline':'الانضباط','Discipline streak':'سلسلة الانضباط','Seven day completion strip':'شريط إكمال سبعة أيام','Weekly statistics':'الإحصاءات الأسبوعية','Notification views':'طرق عرض الإشعارات','Search notifications':'بحث في الإشعارات','Notification filters':'مرشحات الإشعارات','Notification detail':'تفاصيل الإشعار','Keyboard shortcuts':'اختصارات لوحة المفاتيح','Profile':'الملف الشخصي','Change profile photo':'تغيير صورة الملف الشخصي','Edit display name':'تعديل الاسم المعروض','Edit bio':'تعديل النبذة','Close profile editor':'إغلاق محرر الملف الشخصي','Earned certificates':'الشهادات المكتسبة','No equity data yet':'لا توجد بيانات رصيد بعد','Trading statistics':'إحصاءات التداول','Appearance':'المظهر','Language':'اللغة','Settings':'الإعدادات','Trading currency':'عملة التداول','Default risk percentage':'نسبة المخاطرة الافتراضية','Decrease default risk':'خفض المخاطرة الافتراضية','Increase default risk':'رفع المخاطرة الافتراضية','Close password form':'إغلاق نموذج كلمة المرور','Close email form':'إغلاق نموذج البريد','Close delete account form':'إغلاق نموذج حذف الحساب','Close trade form':'إغلاق نموذج الصفقة','Trade direction':'اتجاه الصفقة','Certificates':'الشهادات','About PIPVANT':'حول PIPVANT','Contact':'تواصل','Contact form':'نموذج التواصل','All prop firms':'جميع شركات التداول','Search firms':'البحث عن الشركات','Sort firms':'ترتيب الشركات','Firm directory views':'طرق عرض دليل الشركات','Close firm filters':'إغلاق مرشحات الشركات','Firm rule table':'جدول قواعد الشركة','Close firm details':'إغلاق تفاصيل الشركة','Save firm':'حفظ الشركة','Methodology':'المنهجية','Support':'الدعم','Close account switcher':'إغلاق مبدل الحساب','Trading accounts':'حسابات التداول','Close account form':'إغلاق نموذج الحساب','Economic Calendar':'التقويم الاقتصادي','Countdown to next high-impact event':'العد التنازلي للحدث القوي القادم','Economic events':'الأحداث الاقتصادية','Close calendar filters':'إغلاق مرشحات التقويم','Close event details':'إغلاق تفاصيل الحدث',
-    'Dismiss':'إغلاق','Jump to':'اذهب إلى','Equity curve from connected Journal data':'منحنى الرصيد من بيانات السجل المتصلة',
+    'Dismiss':'إغلاق','Jump to':'اذهب إلى','Equity curve from connected Journal data':'منحنى الرصيد من بيانات السجل المتصلة','Today\'s brief':'موجز اليوم','Saved scenarios':'السيناريوهات المحفوظة','Scenario name':'اسم السيناريو',
     'Promotion available':'عرض ترويجي متاح','Rationale available':'المبرر متاح','Status messages':'رسائل الحالة','Export .ics':'تصدير .ics','Jump to…':'اذهب إلى…','News alerts':'تنبيهات الأخبار','Browser alerts':'تنبيهات المتصفح','A browser notification 15 minutes before high-impact events, for your selected currencies.':'إشعار من المتصفح قبل 15 دقيقة من الأحداث عالية التأثير، لعملاتك المختارة.','Works while PIPVANT is open in your browser.':'يعمل أثناء فتح PIPVANT في متصفحك.','Your week in numbers':'أسبوعك بالأرقام','This week · Monday to Sunday':'هذا الأسبوع · الاثنين إلى الأحد','Background scene':'مشهد الخلفية','Public profile link name':'اسم رابط الملف العام'};
   var translatableNodes=[];
   function captureTranslations(){
@@ -8237,6 +8296,12 @@ html[dir="rtl"] .jump-row{text-align:right}
     if(typeof updateProfileIdentity==='function'&&profileSession)updateProfileIdentity(profileSession.name,profileSession.bio);
     if(typeof renderProfileCertificates==='function'&&profileSession)renderProfileCertificates(profileSession.certificates);
     if(typeof pvPubRender==='function')pvPubRender();
+    // Overhaul i18n hooks: surfaces that render their own copy outside the
+    // static dict must re-render on language switch.
+    if(typeof pvRenderBrowserNewsToggle==='function')pvRenderBrowserNewsToggle();
+    if(typeof sbUpdateCatButtons==='function')sbUpdateCatButtons();
+    if(typeof pvTodayBriefRender==='function')pvTodayBriefRender();
+    if(typeof pvScenRender==='function')pvScenRender();
   }
   /* ===== Background scenes (founder feature) =====
      pvBgApply(key) switches the painted anime scene behind the app shell.
@@ -9671,6 +9736,7 @@ html[dir="rtl"] .jump-row{text-align:right}
     if(id==='profile'&&typeof pvPubOnProfileOpen==='function')pvPubOnProfileOpen();
     if(id==='journal')pvCelebMaybeJournal();
     if(id==='landing'&&typeof pvSotdRender==='function')pvSotdRender();
+    if(id==='landing'&&typeof pvTodayBriefRender==='function')pvTodayBriefRender();
   }
 
   /* ===== Forward pack: victory celebration =====
@@ -9879,7 +9945,7 @@ html[dir="rtl"] .jump-row{text-align:right}
     if(score!=null&&isFinite(Number(score)))window._cachedTraderScore=Number(score);
     var numeric=Number(score),card=document.getElementById('traderScoreCard'),ring=document.getElementById('traderScoreRing'),value=document.getElementById('traderScoreValue'),state=document.getElementById('traderScoreState'),caption=document.getElementById('traderScoreCaption'),gauge=card&&card.querySelector('.trader-score-gauge');
     if(!card||!ring||!value||score===null||score===''||typeof score==='boolean'||!Number.isFinite(numeric)||numeric<0||numeric>100)return false;
-    var rounded=Math.round(numeric);card.classList.add('has-score');ring.style.setProperty('--score-offset',String(1-rounded/100));value.textContent=String(rounded);state.textContent=(hasActivity===false)?(currentLanguage==='ar'?'الملف فقط':'Profile only'):'Verified';caption.textContent='Calculated from connected Journal performance.';if(gauge)gauge.setAttribute('aria-label','Trader score '+rounded+' out of 100');
+    var rounded=Math.round(numeric);card.classList.add('has-score');ring.style.setProperty('--score-offset',String(1-rounded/100));value.textContent=String(rounded);state.textContent=(hasActivity===false)?(currentLanguage==='ar'?'الملف فقط':'Profile only'):'Verified';caption.textContent=(currentLanguage==='ar'?'محسوب من أداء السجل المتصل.':'Calculated from connected Journal performance.');if(gauge)gauge.setAttribute('aria-label','Trader score '+rounded+' out of 100');
     var railScore=document.getElementById('railTradingScore');if(railScore)railScore.textContent=String(rounded);
     if(reduceMotion.matches){ring.style.strokeDashoffset=String(1-rounded/100);}else if(!ring.dataset.drawn){ring.dataset.drawn='true';ring.classList.add('is-drawing');setTimeout(function(){ring.classList.remove('is-drawing');},300);}
     return true;
@@ -10253,6 +10319,19 @@ html[dir="rtl"] .jump-row{text-align:right}
     document.getElementById('calendarEventForecast').textContent=event.forecast||'—';
     document.getElementById('calendarEventPrevious').textContent=event.previous||'—';
     var _hist=event.history&&event.history.length?event.history.join(' · '):'';document.getElementById('calendarEventHistory').textContent=_hist;document.getElementById('calendarEventHistory').style.display=_hist?'':'none';var _hh=document.querySelector('.event-history-head');if(_hh)_hh.style.display=_hist?'':'none';
+    // Overhaul addition: "Add to Google Calendar" for high-impact events.
+    // Built only from the event's stored instant (ev._ts, parsed from the
+    // feed's ISO event_time): UTC basic format for start, +30 min end —
+    // the same duration convention as this app's own .ics export.
+    var _gcal=document.getElementById('calendarEventGcal');
+    if(_gcal){
+      if(event.impact==='high'&&event._ts&&isFinite(event._ts)){
+        var _gf=function(ts){var d=new Date(ts),p=function(n){return String(n).padStart(2,'0');};return d.getUTCFullYear()+p(d.getUTCMonth()+1)+p(d.getUTCDate())+'T'+p(d.getUTCHours())+p(d.getUTCMinutes())+p(d.getUTCSeconds())+'Z';};
+        var _det=[];if(event.forecast&&event.forecast!=='—')_det.push('Forecast: '+event.forecast);if(event.previous&&event.previous!=='—')_det.push('Previous: '+event.previous);_det.push('Source: PIPVANT Economic Calendar');
+        _gcal.href='https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent((event.name||'Economic event')+(event.currency?' ('+event.currency+')':''))+'&dates='+_gf(event._ts)+'/'+_gf(event._ts+30*60000)+'&details='+encodeURIComponent(_det.join(' · '));
+        _gcal.hidden=false;
+      }else{_gcal.hidden=true;_gcal.removeAttribute('href');}
+    }
     refreshCalendarTimezone();calendarEventSheet.classList.add('open');document.getElementById('closeCalendarEvent').focus();
   }
   function renderCalendar(){
@@ -12081,7 +12160,7 @@ html[dir="rtl"] .jump-row{text-align:right}
     try{
       // H1-storage fix: removed 'pipvant_news_alerted' from keep-list (was
       // suppressing news alerts for the next user on the same device).
-      var keep={'pipvant_landing_seen':1,'pipvant_seen_landing':1,'pipvantConsent':1,'pipvant_rates':1,'pipvant_last_screen':1,'pipvant_shortlist':1,'pipvant_bgscene':1,'pipvant_bgfavs':1,'pipvant_bgintensity':1,'pipvant_bgparallax':1,'pipvant_bgtilt':1,'pipvant_bgsaver':1,'pipvant_bgcalm':1,'pipvant_bgperdevice':1,'pipvant_bgscene_m':1,'pipvant_bgscene_d':1,'pipvant_sotd_hide':1,'pipvant_cert_count':1,'pipvant_cert_positive_seen':1,'pipvant_bgunlocked':1,'pipvant_csv_imported':1};
+      var keep={'pipvant_landing_seen':1,'pipvant_seen_landing':1,'pipvantConsent':1,'pipvant_rates':1,'pipvant_last_screen':1,'pipvant_shortlist':1,'pipvant_bgscene':1,'pipvant_bgfavs':1,'pipvant_bgintensity':1,'pipvant_bgparallax':1,'pipvant_bgtilt':1,'pipvant_bgsaver':1,'pipvant_bgcalm':1,'pipvant_bgperdevice':1,'pipvant_bgscene_m':1,'pipvant_bgscene_d':1,'pipvant_sotd_hide':1,'pipvant_cert_count':1,'pipvant_cert_positive_seen':1,'pipvant_bgunlocked':1,'pipvant_csv_imported':1,'pipvant_risk_scenarios':1};
       var drop=[];
       for(var i=0;i<localStorage.length;i++){
         var k=localStorage.key(i);
@@ -12830,7 +12909,7 @@ html[dir="rtl"] .jump-row{text-align:right}
       if(!n){
         set('kpiNetPnl','—');set('kpiWinRate','—');set('kpiWinDonutVal','—');set('kpiWinNote','—W · —L · —BE');
         set('kpiProfitFactor','—');set('kpiPfNote',currentLanguage==='ar'?'لا توجد صفقات مغلقة':'No closed trades');
-        set('kpiAvgWL','—');set('kpiAvgWLLabel','RATIO —');set('kpiAvgWinLbl','Avg win —');set('kpiAvgLossLbl','Avg loss —');
+        set('kpiAvgWL','—');set('kpiAvgWLLabel',currentLanguage==='ar'?'النسبة —':'RATIO —');set('kpiAvgWinLbl',currentLanguage==='ar'?'متوسط الربح —':'Avg win —');set('kpiAvgLossLbl',currentLanguage==='ar'?'متوسط الخسارة —':'Avg loss —');
         set('kpiExpectancy','+—R');set('kpiExpectancyNote',currentLanguage==='ar'?'لا توجد صفقات مغلقة':'No closed trades');
         var donut=document.getElementById('kpiWinDonut');if(donut)donut.style.background='conic-gradient(var(--line-strong) 0 100%)';
         return;
@@ -12861,8 +12940,8 @@ html[dir="rtl"] .jump-row{text-align:right}
       set('kpiAvgWL',ratio);
       set('kpiAvgWLLabel','RATIO');
       var aSym=currentCurrency==='MAD'?'':'$';
-      set('kpiAvgWinLbl','Avg win '+(currentCurrency==='MAD'?avgWin.toFixed(2)+' MAD':aSym+avgWin.toFixed(2)));
-      set('kpiAvgLossLbl','Avg loss '+(currentCurrency==='MAD'?avgLoss.toFixed(2)+' MAD':aSym+avgLoss.toFixed(2)));
+      set('kpiAvgWinLbl',(currentLanguage==='ar'?'متوسط الربح ':'Avg win ')+(currentCurrency==='MAD'?avgWin.toFixed(2)+' MAD':aSym+avgWin.toFixed(2)));
+      set('kpiAvgLossLbl',(currentLanguage==='ar'?'متوسط الخسارة ':'Avg loss ')+(currentCurrency==='MAD'?avgLoss.toFixed(2)+' MAD':aSym+avgLoss.toFixed(2)));
       var wb=document.getElementById('kpiAvgWinBar'),lb=document.getElementById('kpiAvgLossBar');
       if(wb&&lb){var tot=avgWin+avgLoss;if(tot>0){wb.style.width=(avgWin/tot*100)+'%';lb.style.width=(avgLoss/tot*100)+'%';wb.style.background='var(--accent)';lb.style.background='var(--silver)';}}
       var expSign=expectancy>=0?'+':'−';
@@ -13557,23 +13636,24 @@ html[dir="rtl"] .jump-row{text-align:right}
     }
     if(result==='breakeven')pnl=0;
     var closeDone=function(){
-      currentCloseEntry.closed=true;currentCloseEntry.exitPrice=exitPrice;currentCloseEntry.pnl=pnl;currentCloseEntry.result=result;
-      if(typeof persistLocalTrade==='function')persistLocalTrade(currentCloseEntry);
+      var _entry=currentCloseEntry;if(!_entry)return;
+      _entry.closed=true;_entry.exitPrice=exitPrice;_entry.pnl=pnl;_entry.result=result;
+      if(typeof persistLocalTrade==='function')persistLocalTrade(_entry);
       hideCloseTradeModal();
       if(typeof refreshAllTradeUI==='function')refreshAllTradeUI();else renderJournalEntries();
       showToast(currentLanguage==='ar'?'تم إغلاق الصفقة.':'Trade closed.');
       if(typeof addPersonalNotif==='function'){
-        var _cp=currentCloseEntry.pair||'Trade';
-        var _pnl=parseFloat(currentCloseEntry.pnl);
+        var _cp=_entry.pair||'Trade';
+        var _pnl=parseFloat(_entry.pnl);
         var _pl=isFinite(_pnl)?((_pnl>=0?'+$':'-$')+Math.abs(_pnl).toFixed(2)):'';
         addPersonalNotif(
           currentLanguage==='ar'?'صفقة مغلقة':'Trade closed',
           _cp+' '+_pl,
           _pnl>0?'win':(_pnl<0?'loss':'be'),
-          {tradeId:currentCloseEntry._localId||currentCloseEntry._dbId||currentCloseEntry._id,
-           pair:currentCloseEntry.pair,direction:currentCloseEntry.direction,
-           entry:currentCloseEntry.entry,stop:currentCloseEntry.stop,target:currentCloseEntry.target,
-           size:currentCloseEntry.size,pnl:currentCloseEntry.pnl,exitPrice:currentCloseEntry.exitPrice}
+          {tradeId:_entry._localId||_entry._dbId||_entry._id,
+           pair:_entry.pair,direction:_entry.direction,
+           entry:_entry.entry,stop:_entry.stop,target:_entry.target,
+           size:_entry.size,pnl:_entry.pnl,exitPrice:_entry.exitPrice}
         );
       }
     };
@@ -13824,7 +13904,7 @@ html[dir="rtl"] .jump-row{text-align:right}
     var build=function(withLogo){
       var card=document.createElement('div');
       card.style.cssText='position:absolute;left:-12000px;top:0;width:1080px;height:1080px;background:linear-gradient(160deg,#0d1d33 0%,#0A1628 55%,#081222 100%);color:#EAF1FB;font-family:"Space Grotesk",Arial,sans-serif;padding:84px;box-sizing:border-box;';
-      var logoHtml=withLogo?'<img src="assets/pipvanta-logo.png" alt="PV" style="width:104px;height:104px;border-radius:24px;object-fit:contain;">':'<div style="width:104px;height:104px;border-radius:24px;background:linear-gradient(135deg,#e8c455,#D4AF37);color:#0A1628;font-weight:800;font-size:42px;display:grid;place-items:center;">PV</div>';
+      var logoHtml=withLogo?'<img src="assets/pipvanta-logo.png" alt="PV" style="width:104px;height:104px;border-radius:24px;object-fit:contain;" decoding="async">':'<div style="width:104px;height:104px;border-radius:24px;background:linear-gradient(135deg,#e8c455,#D4AF37);color:#0A1628;font-weight:800;font-size:42px;display:grid;place-items:center;">PV</div>';
       var cells=stats.map(function(s){return '<div style="background:rgba(91,141,239,.06);border:1px solid rgba(234,241,251,.1);border-radius:24px;padding:34px 36px;"><div style="font-size:23px;font-weight:700;letter-spacing:.13em;color:#8FA6C8;text-transform:uppercase;">'+pvEsc(s[0])+'</div><div style="font-size:54px;font-weight:800;margin-top:12px;font-variant-numeric:tabular-nums;">'+pvEsc(s[1])+'</div></div>';}).join('');
       card.innerHTML='<div style="display:flex;align-items:center;gap:28px;">'+logoHtml+'<div><div style="font-size:44px;font-weight:800;letter-spacing:.06em;">PIPVANT</div><div style="font-size:23px;color:#D4AF37;font-weight:700;letter-spacing:.18em;margin-top:4px;">'+pvEsc(pvLT('TRADING JOURNAL','سجل التداول'))+'</div></div></div><div style="height:3px;background:linear-gradient(90deg,#D4AF37,rgba(212,175,55,0));margin:54px 0 46px;border-radius:2px;"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:22px;">'+cells+'</div><div style="position:absolute;left:84px;right:84px;bottom:62px;display:flex;justify-content:space-between;align-items:center;color:#8FA6C8;font-size:24px;font-weight:600;"><span>PIPVANT · pipvant.github.io</span><span>'+pvEsc(monthLbl)+'</span></div>';
       document.body.appendChild(card);
@@ -13900,7 +13980,7 @@ html[dir="rtl"] .jump-row{text-align:right}
     var build=function(withLogo){
       var card=document.createElement('div');
       card.style.cssText='position:absolute;left:-12000px;top:0;width:1080px;height:1080px;background:linear-gradient(160deg,#0d1d33 0%,#0A1628 55%,#081222 100%);color:#EAF1FB;font-family:"Space Grotesk",Arial,sans-serif;padding:84px;box-sizing:border-box;';
-      var logoHtml=withLogo?'<img src="assets/pipvanta-logo.png" alt="PV" style="width:104px;height:104px;border-radius:24px;object-fit:contain;">':'<div style="width:104px;height:104px;border-radius:24px;background:linear-gradient(135deg,#e8c455,#D4AF37);color:#0A1628;font-weight:800;font-size:42px;display:grid;place-items:center;">PV</div>';
+      var logoHtml=withLogo?'<img src="assets/pipvanta-logo.png" alt="PV" style="width:104px;height:104px;border-radius:24px;object-fit:contain;" decoding="async">':'<div style="width:104px;height:104px;border-radius:24px;background:linear-gradient(135deg,#e8c455,#D4AF37);color:#0A1628;font-weight:800;font-size:42px;display:grid;place-items:center;">PV</div>';
       var bioHtml=data.bio?'<div style="font-size:27px;color:#D4AF37;font-weight:600;margin-top:14px;">'+pvEsc(data.bio)+'</div>':'';
       var scoreHtml='';
       if(data.score!==null){
@@ -14246,6 +14326,7 @@ html[dir="rtl"] .jump-row{text-align:right}
         });
         calendarFeedConnected=true;
         renderCalendar();
+        try{if(typeof pvTodayBriefRender==='function')pvTodayBriefRender();}catch(_tb){}
         sbUpdateCalendarStatus();
         // Personal notification: high-impact news within 60 min
         try{
@@ -14481,6 +14562,102 @@ html[dir="rtl"] .jump-row{text-align:right}
     });
     /* Economic calendar hero: tick the countdown every second */
     setInterval(function(){try{sbUpdateCalendarStatus();}catch(e){}},1000);
+
+    /* ===== Overhaul additions (launch QA) =====
+       1) Toolkit "Today brief": today's date, today's high-impact events
+          for the user's news-alert currencies from the calendar's OWN
+          loaded feed (calendarEvents/calendarFeedConnected — the card
+          stays hidden until the feed has connected; nothing is invented),
+          and the journal streak read from the rail's own computation.
+       2) Named risk-calculator scenarios in device-local storage. */
+    function pvTodayBriefRender(){
+      try{
+        var card=document.getElementById('todayBrief');if(!card)return;
+        if(typeof calendarFeedConnected==='undefined'||!calendarFeedConnected||typeof calendarEvents==='undefined'||!Array.isArray(calendarEvents)){card.hidden=true;return;}
+        var arL=currentLanguage==='ar';
+        var now=new Date();
+        var dateEl=document.getElementById('tbDate');
+        if(dateEl){
+          var dateStr='';
+          try{dateStr=now.toLocaleDateString(arL?'ar-MA':'en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}
+          catch(_de){dateStr=now.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}
+          dateEl.textContent=dateStr;
+        }
+        var prefs=(typeof getNotifCurrPrefs==='function')?getNotifCurrPrefs():['USD','GBP'];
+        var todays=calendarEvents.filter(function(ev){
+          if(!ev||ev.impact!=='high'||!ev._ts||!isFinite(ev._ts))return false;
+          if(prefs.indexOf(ev.currency)<0)return false;
+          var d=new Date(ev._ts);
+          return d.getFullYear()===now.getFullYear()&&d.getMonth()===now.getMonth()&&d.getDate()===now.getDate();
+        }).sort(function(a,b){return a._ts-b._ts;});
+        var list=document.getElementById('tbList'),none=document.getElementById('tbNone');
+        if(list){
+          list.replaceChildren();
+          todays.slice(0,4).forEach(function(ev){
+            var li=document.createElement('li');
+            var t=document.createElement('strong');t.textContent=ev.time||'—';
+            var c=document.createElement('span');c.className='tb-cur';c.textContent=ev.currency||'';
+            var n=document.createElement('span');n.className='tb-name';n.textContent=ev.name||'';
+            li.appendChild(t);li.appendChild(c);li.appendChild(n);
+            list.appendChild(li);
+          });
+          list.hidden=!todays.length;
+        }
+        if(none)none.hidden=!!todays.length;
+        try{if(typeof updateRailTradingStreak==='function')updateRailTradingStreak();}catch(_se){}
+        var streakEl=document.getElementById('tbStreak'),rail=document.getElementById('railStreak');
+        if(streakEl)streakEl.textContent=rail?(rail.textContent||'0'):'0';
+        card.hidden=false;
+      }catch(e){}
+    }
+    window.pvTodayBriefRender=pvTodayBriefRender;
+
+    var PV_SCEN_KEY='pipvant_risk_scenarios';
+    function pvScenLoad(){try{var v=JSON.parse(localStorage.getItem(PV_SCEN_KEY)||'[]');return Array.isArray(v)?v.filter(function(x){return x&&x.name;}):[];}catch(e){return[];}}
+    function pvScenStore(list){try{localStorage.setItem(PV_SCEN_KEY,JSON.stringify(list.slice(0,10)));}catch(e){}}
+    function pvScenRender(){
+      var wrap=document.getElementById('scenarioList'),empty=document.getElementById('scenarioEmpty');
+      if(!wrap)return;
+      var list=pvScenLoad();
+      wrap.replaceChildren();
+      list.forEach(function(sc){
+        var chip=document.createElement('span');chip.className='scenario-chip';
+        var load=document.createElement('button');load.type='button';load.className='scenario-load';load.textContent=sc.name;
+        load.addEventListener('click',function(){pvScenApply(sc);});
+        var del=document.createElement('button');del.type='button';del.className='scenario-del';del.textContent='×';del.setAttribute('aria-label',(currentLanguage==='ar'?'حذف ':'Delete ')+sc.name);
+        del.addEventListener('click',function(){pvScenStore(pvScenLoad().filter(function(x){return x.name!==sc.name;}));pvScenRender();});
+        chip.appendChild(load);chip.appendChild(del);wrap.appendChild(chip);
+      });
+      wrap.hidden=!list.length;
+      if(empty)empty.hidden=list.length>0;
+    }
+    function pvScenApply(sc){
+      function set(id,val){var el=document.getElementById(id);if(!el)return;el.value=val==null?'':val;el.dispatchEvent(new Event('input',{bubbles:true}));el.dispatchEvent(new Event('change',{bubbles:true}));}
+      set('riskSymbol',sc.riskSymbol);
+      set('balance',sc.balance);set('riskPercent',sc.riskPercent);set('stopDistance',sc.stopDistance);set('riskPipValue',sc.riskPipValue);
+      if(typeof calculateFull==='function')calculateFull();
+      if(typeof showToast==='function')showToast(currentLanguage==='ar'?('تم تحميل السيناريو: '+sc.name):('Scenario loaded: '+sc.name));
+    }
+    (function pvScenWire(){
+      var open=document.getElementById('scenarioSaveOpen'),form=document.getElementById('scenarioForm'),
+          nameEl=document.getElementById('scenarioName'),confirm=document.getElementById('scenarioSaveConfirm'),
+          cancel=document.getElementById('scenarioSaveCancel');
+      if(!open||!form)return;
+      open.addEventListener('click',function(){form.hidden=false;if(nameEl){nameEl.value='';try{nameEl.focus();}catch(e){}}});
+      if(cancel)cancel.addEventListener('click',function(){form.hidden=true;});
+      if(nameEl)nameEl.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();if(confirm)confirm.click();}});
+      if(confirm)confirm.addEventListener('click',function(){
+        var name=(nameEl?nameEl.value:'').trim();
+        if(!name){if(nameEl)nameEl.focus();return;}
+        var list=pvScenLoad().filter(function(x){return x.name!==name;});
+        if(list.length>=10){if(typeof showToast==='function')showToast(currentLanguage==='ar'?'يمكنك حفظ 10 سيناريوهات كحد أقصى — احذف واحداً أولاً':'You can save up to 10 scenarios — delete one first');return;}
+        function v(id){var el=document.getElementById(id);return el?el.value:'';}
+        list.unshift({name:name,balance:v('balance'),riskPercent:v('riskPercent'),stopDistance:v('stopDistance'),riskSymbol:v('riskSymbol'),riskPipValue:v('riskPipValue'),ts:Date.now()});
+        pvScenStore(list);pvScenRender();form.hidden=true;
+        if(typeof showToast==='function')showToast(currentLanguage==='ar'?('تم حفظ السيناريو: '+name):('Scenario saved: '+name));
+      });
+      pvScenRender();
+    })();
   })();
 })();
 </script>
