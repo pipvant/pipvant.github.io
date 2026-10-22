@@ -1560,26 +1560,28 @@
     /* Forward pack — Calm in Journal: CSS-only softening of the backdrop
        while the journal screen is active (stored intensity untouched). */
     body.bgs-calm #bgSceneLayer .bgs-photo{opacity:.55}
-    /* Portrait fit (phones): the COMPLETE painting, never cover-cropped.
-       body.bgs-fit is toggled by pvBgFitSync() from a (max-aspect-ratio:
-       3/4) matchMedia, so wider viewports never match and keep the
-       original cover full-bleed untouched. Two layers per buffer, swapped
-       together by the existing crossfade: .bgs-fill is the same painting
-       cover-scaled, heavily blurred and darkened, bleeding past the
-       layer edges so the whole screen carries the scene's own colours;
-       .bgs-photo becomes the sharp full painting (contain, natural
-       aspect via --bgs-ar set by pvBgShow from the loaded image),
-       anchored in the upper screen, its top/bottom edges feathered into
-       the fill by a mask — no hard letterbox lines. The scrim keeps the
-       per-scene calibration on top and deepens to app navy over the
-       lower ~45% so cards and text stay readable. */
+    /* Portrait pan (phones) — founder direction 2026-10-22: FULL-BLEED
+       cover again (no framed painting, no blur bands); the painting is
+       COMPLETE OVER TIME — a slow cinematic pan traverses its whole
+       width (WAAPI driven by pvBgPanApply: starts framed on the scene's
+       subject, dwells at each extreme, 55–70s per leg, alternate), so
+       nothing stays permanently hidden. .bgs-fill is retired (stays
+       display:none; pvBgShow still sets its image harmlessly). .bgs-amb
+       adds living ambient motion over the pan: two drifting mist bands
+       (every scene) + a twinkling star field on night scenes.
+       Transform/opacity only. The per-scene scrim keeps text legible;
+       calm mode freezes the pan (pvBgPanState) and pauses the ambience;
+       reduced-motion gets a static, subject-framed full-bleed still. */
     .bgs-fill{position:absolute;inset:-56px;display:none;background-size:cover;background-position:center;will-change:transform;animation:bgsKB 60s ease-in-out infinite alternate}
-    body.bgs-fit .bgs-fill{display:block;filter:blur(28px) saturate(1.05) brightness(.8)}
-    html[data-bgintensity="vivid"] body.bgs-fit .bgs-fill{filter:blur(28px) saturate(1.18) brightness(.85)}
-    html[data-bgintensity="subtle"] body.bgs-fit .bgs-fill{opacity:.7}
-    body.bgs-fit .bgs-photo{top:9%;left:7%;right:7%;bottom:auto;height:auto;aspect-ratio:var(--bgs-ar,1.7778);background-size:contain;background-repeat:no-repeat;transform-origin:50% 50%;border-radius:16px;animation-name:bgsKBfit;-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 8%,#000 82%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 8%,#000 82%,transparent 100%)}
-    @keyframes bgsKBfit{from{transform:scale(1)}to{transform:scale(1.04)}}
-    body.bgs-fit .bgs-scrim{background:linear-gradient(180deg,rgba(10,22,40,var(--bgs-st,.58)),rgba(10,22,40,var(--bgs-sb,.38)) 30%,rgba(10,22,40,.86) 58%,rgba(10,22,40,.97))}
+    body.bgs-pan .bgs-photo{inset:auto;left:0;top:calc((100% - var(--bgs-panh,100%)) / 2);width:var(--bgs-panw,100%);height:var(--bgs-panh,100%);background-size:cover;animation:none;will-change:transform}
+    .bgs-amb{position:absolute;inset:-6%;display:none;pointer-events:none;background:radial-gradient(115% 40% at 16% 30%,rgba(186,204,238,.10),rgba(186,204,238,0) 62%),radial-gradient(105% 36% at 84% 64%,rgba(186,204,238,.08),rgba(186,204,238,0) 60%);will-change:transform;animation:bgsKAmbDrift 52s ease-in-out infinite alternate}
+    body.bgs-pan .bgs-amb{display:block}
+    @keyframes bgsKAmbDrift{from{transform:translateX(-2.6%)}to{transform:translateX(2.6%)}}
+    .bgs-amb:before{content:"";position:absolute;inset:0;opacity:0}
+    html[data-bgscene="ninja"] .bgs-amb:before,html[data-bgscene="ronin"] .bgs-amb:before,html[data-bgscene="torii"] .bgs-amb:before,html[data-bgscene="dragon"] .bgs-amb:before,html[data-bgscene="kitsune"] .bgs-amb:before,html[data-bgscene="cranes"] .bgs-amb:before,html[data-bgscene="lanterns"] .bgs-amb:before,html[data-bgscene="aurora"] .bgs-amb:before,html[data-bgscene="ocean"] .bgs-amb:before,html[data-bgscene="desert"] .bgs-amb:before,html[data-bgscene="wolf"] .bgs-amb:before,html[data-bgscene="orbit"] .bgs-amb:before,html[data-bgscene="rain"] .bgs-amb:before,html[data-bgscene="cinematic"] .bgs-amb:before,html[data-bgscene="trader"] .bgs-amb:before,html[data-bgscene="neo-ronin"] .bgs-amb:before,html[data-bgscene="miko"] .bgs-amb:before,html[data-bgscene="pirate"] .bgs-amb:before,html[data-bgscene="astronaut"] .bgs-amb:before,html[data-bgscene="ramadan"] .bgs-amb:before{background-image:radial-gradient(1.6px 1.6px at 12% 20%,rgba(255,255,255,.85),rgba(255,255,255,0) 62%),radial-gradient(1.2px 1.2px at 32% 64%,rgba(255,255,255,.7),rgba(255,255,255,0) 62%),radial-gradient(1.8px 1.8px at 55% 14%,rgba(255,255,255,.9),rgba(255,255,255,0) 62%),radial-gradient(1.1px 1.1px at 71% 42%,rgba(255,255,255,.65),rgba(255,255,255,0) 62%),radial-gradient(1.5px 1.5px at 86% 18%,rgba(255,255,255,.8),rgba(255,255,255,0) 62%),radial-gradient(1.2px 1.2px at 44% 82%,rgba(255,255,255,.6),rgba(255,255,255,0) 62%),radial-gradient(1.4px 1.4px at 8% 76%,rgba(255,255,255,.7),rgba(255,255,255,0) 62%),radial-gradient(1.1px 1.1px at 93% 66%,rgba(255,255,255,.6),rgba(255,255,255,0) 62%);background-size:270px 270px;animation:bgsKAmbTwinkle 5.6s ease-in-out infinite alternate}
+    @keyframes bgsKAmbTwinkle{from{opacity:.16}to{opacity:.5}}
+    html[data-bgintensity="subtle"] .bgs-amb{opacity:.55}
+    body.bgs-calm .bgs-amb,body.bgs-calm .bgs-amb:before{animation-play-state:paused}
     /* Forward pack — victory celebration overlay (transient, inside the
        scene layer, above the buffers; pointer-events none). */
     .bgs-celebrate{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:3}
@@ -1804,7 +1806,7 @@
 
 <!-- Mega-audit a11y: skip link (was missing). -->
 <a href="#app" class="skip-link" data-i18n="Skip to main content">Skip to main content</a>
-<style>.skip-link{position:absolute;left:-9999px;top:0;z-index:9999;background:var(--accent,#5B8DEF);color:#fff;padding:10px 16px;border-radius:0 0 8px 0;font-weight:700;}.skip-link:focus{left:0;}</style>
+<style>.skip-link{position:absolute;left:0;top:0;z-index:9999;background:var(--accent,#5B8DEF);color:#fff;padding:10px 16px;border-radius:0 0 8px 0;font-weight:700;transform:translateY(-300%);transition:transform .18s ease}.skip-link:focus{transform:translateY(0)}</style>
 <style>
 /* WAVE 2 — Challenges table (per-plan) */
 .challenges-scroll{display:none;overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
@@ -2757,6 +2759,68 @@ html[dir="rtl"] .jump-row{text-align:right}
 .weekly-cell .wc-sub{display:block;margin-top:3px;color:var(--muted);font-size:11px;line-height:1.45}
 .weekly-vs{margin:14px 0 0;padding-top:12px;border-top:1px solid var(--line);font-size:12px;font-weight:600}
 @media(max-width:720px){.weekly-grid{grid-template-columns:repeat(2,1fr)}}
+/* ===== MOBILE COMFORT PASS (<=640px) — audit-driven (work/mobile-comfort):
+   touch targets >=40px, form controls >=16px (kills iOS focus zoom),
+   functional micro-type lifted, tap smoothness, sheet overscroll
+   containment, anchor clearance above the floating nav. Scoped to
+   small screens only — desktop rendering is untouched. ===== */
+@media (max-width:640px){
+  html{overflow-x:clip;scroll-padding-bottom:104px}
+  a,button,input,select,textarea,label,[role="button"]{-webkit-tap-highlight-color:transparent}
+  button,a,[role="button"]{touch-action:manipulation}
+  input:not([type="range"]):not([type="checkbox"]):not([type="radio"]),select,textarea{font-size:16px}
+  .btn{min-height:44px}
+  .tool-link{min-height:44px;display:inline-flex;align-items:center;padding:8px 4px;margin-top:12px}
+  .toolkit-extras a{display:inline-block;padding:11px 2px}
+  .trust-fact a{display:inline-block;padding:10px 0}
+  .auth-link{min-height:40px;display:inline-flex;align-items:center;padding:9px 6px}
+  .directory-meta button{min-height:40px;display:inline-flex;align-items:center;padding:10px 8px}
+  .jcal-btn{min-width:40px;min-height:40px;padding:0 12px;font-size:11.5px}
+  .range-btn{height:40px;font-size:11.5px}
+  .group-tabs button,.trade-view button,.chart-toggle{min-height:40px}
+  .mistake-chip{min-height:40px}
+  .trade-search{min-height:44px}
+  .dna-opt{min-height:44px}
+  .slot-cta{min-height:42px;padding:0 16px;font-size:12px}
+  .view-button{min-height:40px}
+  .sort-button{min-height:44px}
+  .bgs-star,.bgs-expand{width:40px;height:40px}
+  #bgsHeroShare{width:44px;height:44px}
+  .sheet-close{width:44px;height:44px}
+  .rail-close{width:44px;height:44px}
+  .settings-dialog-close{width:44px;height:44px}
+  .profile-bio-button{min-width:44px;min-height:44px}
+  input[type="range"]{height:40px}
+  input[type="range"]::-moz-range-thumb{width:24px;height:24px}
+  input[type="range"]::-webkit-slider-thumb{width:24px;height:24px}
+  .kpi-label{font-size:12px}
+  .kpi-note{font-size:11.5px}
+  .donut-legend,.split-labels{font-size:11px}
+  .day-date{font-size:11.5px}
+  .day-cell small{font-size:10.5px;line-height:1.35}
+  .calendar-weekdays span{font-size:10px}
+  .week-total span{font-size:11px}
+  .cat-count{font-size:11.5px}
+  .econ-chip,.directory-chip{font-size:11.5px}
+  #lab label{font-size:11.5px}
+  .profile-card-label{font-size:12px}
+  .rail-widget span{font-size:10.5px}
+  .weekly-cell .wc-label{font-size:11px}
+  .sheet-title-row p,.account-sheet-head p{font-size:11.5px}
+  .account-row-firm{font-size:10.5px}
+  .account-row-stats span{font-size:11px}
+  .account-row-stats strong{font-size:11px}
+  .sheet,.account-panel,.calendar-sheet-panel,.compare-panel,.filter-sheet-panel,.firm-detail-panel,.jump-panel,.notification-panel,.settings-dialog{overscroll-behavior:contain}
+  /* Pass 2 — specificity rematches against scoped rules found by the audit */
+  #matcher .slot-cta{min-height:42px!important;font-size:12px!important}
+  .breakdown-tabs button{min-height:40px}
+  .directory-filter-list input[type="range"],.adv-filter-list input[type="range"]{height:40px}
+  #shareTraderCardBtn{min-height:44px}
+  #lab .lab-inputs input,#lab .lab-inputs select{font-size:16px!important}
+  .sotd-try{min-height:40px}
+  .sotd-dismiss{width:40px;height:40px;top:2px;inset-inline-end:2px}
+  .trust-fact a{padding:12px 0}
+}
 </style>
 <div id="siteLanding" aria-label="PIPVANT landing page">
   <div class="lp-grain" aria-hidden="true"></div>
@@ -2999,7 +3063,7 @@ html[dir="rtl"] .jump-row{text-align:right}
 
 <div class="app">
 
-  <div id="bgSceneLayer" aria-hidden="true"><div class="bgs-buffer" id="bgsBufA"><div class="bgs-fill"></div><div class="bgs-photo"></div><div class="bgs-scrim"></div><div class="bgs-fxwrap"></div></div><div class="bgs-buffer" id="bgsBufB"><div class="bgs-fill"></div><div class="bgs-photo"></div><div class="bgs-scrim"></div><div class="bgs-fxwrap"></div></div></div>
+  <div id="bgSceneLayer" aria-hidden="true"><div class="bgs-buffer" id="bgsBufA"><div class="bgs-fill"></div><div class="bgs-photo"></div><div class="bgs-scrim"></div><div class="bgs-amb"></div><div class="bgs-fxwrap"></div></div><div class="bgs-buffer" id="bgsBufB"><div class="bgs-fill"></div><div class="bgs-photo"></div><div class="bgs-scrim"></div><div class="bgs-amb"></div><div class="bgs-fxwrap"></div></div></div>
   <div class="bgsfs" id="bgsFs" hidden role="dialog" aria-modal="true" aria-label="Scene preview" tabindex="-1">
     <div class="bgsfs-photo" id="bgsFsPhoto"></div>
     <div class="bgsfs-fxwrap" id="bgsFsFx" aria-hidden="true"></div>
@@ -8283,7 +8347,7 @@ html[dir="rtl"] .jump-row{text-align:right}
     if(!pvBgRemoteActive())pvBgViewChoice=key;
     pvBgSyncPicker();
     pvBgSyncShowcase();
-    if(typeof pvBgFitSync==='function')pvBgFitSync();
+    if(typeof pvBgPanSync==='function')pvBgPanSync();
     pvBgShow(pvBgScene);
     pvBgParallaxKick();
     if(typeof pvBgSyncCalm==='function')pvBgSyncCalm();
@@ -8325,32 +8389,116 @@ html[dir="rtl"] .jump-row{text-align:right}
       back.classList.add('is-on');
       bufs.forEach(function(b){if(b!==back)b.classList.remove('is-on');});
       pvBgFront=bufs.indexOf(back);
+      pvBgPanSetup(back,key,img.naturalWidth,img.naturalHeight);
     };
     img.onerror=function(){};
     img.src=url;
   }
-  /* --- Portrait fit sync ---
+  /* --- Portrait pan sync (replaces the rejected framed-fit) ---
      On narrow portrait viewports (max-aspect-ratio 3/4) the backdrop
-     switches to the complete-painting treatment (see the bgs-fit CSS:
-     blurred fill + sharp contain painting). The class lives on <body>
-     and is re-evaluated on every apply and on aspect flips
-     (rotation/resize), so it can never get stuck. Wider viewports
-     never carry the class and render exactly as before. */
-  var pvBgFitMQ=null;
-  try{pvBgFitMQ=window.matchMedia('(max-aspect-ratio: 3/4)');}catch(e){}
-  function pvBgFitSync(){
+     is full-bleed cover again, and the painting becomes COMPLETE OVER
+     TIME: each buffer's photo is sized to its cover box (+5% bleed)
+     and a WAAPI pan (pvBgPanApply) traverses the full width — start
+     framed on the scene's subject (PV_BG_FOCAL mirrors the per-scene
+     Ken Burns transform-origins), a dwell at each extreme, one leg
+     per PV_BG_PANDUR (55–70s, mirroring the KB durations), alternate.
+     The class lives on <body> and is re-evaluated on every apply and
+     on aspect flips, so it can never get stuck. Wider viewports never
+     carry the class: no WAAPI pan is created and the CSS Ken Burns
+     renders exactly as before. Calm mode / hidden tab / off buffers
+     freeze via pvBgPanState; reduced-motion gets a static
+     subject-framed still (inline transform, no animation). */
+  var pvBgPanMQ=null;
+  try{pvBgPanMQ=window.matchMedia('(max-aspect-ratio: 3/4)');}catch(e){}
+  var PV_BG_FOCAL={ninja:.70,ronin:.58,torii:.50,dragon:.55,kitsune:.55,koi:.50,cranes:.45,sakura:.58,lanterns:.50,aurora:.50,ocean:.50,desert:.60,wolf:.62,eagle:.50,orbit:.72,rain:.58,cinematic:.50,trader:.62,'neo-ronin':.36,miko:.32,pirate:.66,astronaut:.56,ramadan:.62,custom:.50};
+  var PV_BG_PANDUR={torii:55,koi:55,eagle:55,ronin:65,lanterns:65,orbit:65,'neo-ronin':60,miko:65,trader:65,dragon:70,cranes:70,aurora:70,desert:70,pirate:70,cinematic:70,astronaut:70,custom:65};
+  function pvBgPanSetup(buf,key,iw,ih){
     try{
-      if(!document.body)return;
-      document.body.classList.toggle('bgs-fit',!!(pvBgFitMQ&&pvBgFitMQ.matches));
+      if(!buf||!iw||!ih)return;
+      buf._panKey=key;buf._panIW=iw;buf._panIH=ih;buf._panFresh=true;buf._panGeoRetry=0;
+      pvBgPanApply(buf);
     }catch(e){}
   }
-  if(pvBgFitMQ){
-    if(pvBgFitMQ.addEventListener)pvBgFitMQ.addEventListener('change',pvBgFitSync);
-    else if(pvBgFitMQ.addListener)pvBgFitMQ.addListener(pvBgFitSync);
+  function pvBgPanApply(buf){
+    try{
+      var photo=buf.querySelector('.bgs-photo');if(!photo)return;
+      var old=buf._panAnim||null;
+      if(old){try{old.cancel();}catch(e){}buf._panAnim=null;}
+      photo.style.transform='';
+      var key=buf._panKey,iw=buf._panIW,ih=buf._panIH;
+      if(!key||!iw||!ih)return;
+      var lw=buf.clientWidth,lh=buf.clientHeight;
+      if(!lw||!lh){
+        /* The layer sits inside .app, which is display:none until the
+           app is entered — at boot-time setup the buffer measures 0.
+           The layer is fixed inset:-14, so its box is deterministic:
+           fall back to viewport+28 and self-heal once it is laid out. */
+        lw=window.innerWidth+28;lh=window.innerHeight+28;
+        if(!buf._panGeoRetry||buf._panGeoRetry<8){
+          buf._panGeoRetry=(buf._panGeoRetry||0)+1;
+          setTimeout(function(){pvBgPanApply(buf);},800);
+        }
+      }
+      var s=Math.max(lw/iw,lh/ih)*1.05,w=Math.round(iw*s),h=Math.round(ih*s);
+      buf.style.setProperty('--bgs-panw',w+'px');
+      buf.style.setProperty('--bgs-panh',h+'px');
+      if(!document.body||!document.body.classList.contains('bgs-pan'))return;
+      var over=w-lw;
+      var focal=(key in PV_BG_FOCAL)?PV_BG_FOCAL[key]:.5;
+      var a=-(focal*w-lw*.52);
+      a=Math.max(-over,Math.min(0,a));
+      if(over<=4){photo.style.transform='translateX(0px)';return;}
+      if(pvBgRM&&pvBgRM.matches){photo.style.transform='translateX('+a+'px)';return;}
+      var b,c;
+      if(focal>.5){b=0;c=-over;}else{b=-over;c=0;}
+      var dur=(PV_BG_PANDUR[key]||60)*1000;
+      var anim=photo.animate([
+        {transform:'translateX('+a+'px)',offset:0,easing:'ease-in-out'},
+        {transform:'translateX('+b+'px)',offset:.38,easing:'ease-in-out'},
+        {transform:'translateX('+b+'px)',offset:.52,easing:'ease-in-out'},
+        {transform:'translateX('+c+'px)',offset:.90,easing:'ease-in-out'},
+        {transform:'translateX('+c+'px)',offset:1}
+      ],{duration:dur,iterations:Infinity,direction:'alternate',fill:'both'});
+      buf._panAnim=anim;
+      if(old&&!buf._panFresh){
+        try{
+          var ot=old.currentTime||0,od=(PV_BG_PANDUR[key]||60)*1000;
+          anim.currentTime=(ot%(od*2))*(dur/od);
+        }catch(e){}
+      }
+      buf._panFresh=false;
+      pvBgPanState();
+    }catch(e){}
   }
-  window.addEventListener('orientationchange',pvBgFitSync);
-  window.addEventListener('resize',pvBgFitSync);
-  pvBgFitSync();
+  function pvBgPanState(){
+    try{
+      var calm=document.body.classList.contains('bgs-calm');
+      var paused=document.body.classList.contains('bgs-paused');
+      pvBgBufEls().forEach(function(buf){
+        var an=buf._panAnim;if(!an)return;
+        try{
+          if(!buf.classList.contains('is-on')||calm||paused||document.hidden)an.pause();
+          else an.play();
+        }catch(e){}
+      });
+    }catch(e){}
+  }
+  function pvBgPanSync(){
+    try{
+      if(!document.body)return;
+      document.body.classList.toggle('bgs-pan',!!(pvBgPanMQ&&pvBgPanMQ.matches));
+      pvBgBufEls().forEach(function(buf){pvBgPanApply(buf);});
+    }catch(e){}
+  }
+  if(pvBgPanMQ){
+    if(pvBgPanMQ.addEventListener)pvBgPanMQ.addEventListener('change',pvBgPanSync);
+    else if(pvBgPanMQ.addListener)pvBgPanMQ.addListener(pvBgPanSync);
+  }
+  if(pvBgRM&&pvBgRM.addEventListener)pvBgRM.addEventListener('change',function(){pvBgBufEls().forEach(function(buf){pvBgPanApply(buf);});});
+  var pvBgPanResizeT=null;
+  window.addEventListener('orientationchange',pvBgPanSync);
+  window.addEventListener('resize',function(){if(pvBgPanResizeT)clearTimeout(pvBgPanResizeT);pvBgPanResizeT=setTimeout(pvBgPanSync,350);});
+  pvBgPanSync();
   document.querySelectorAll('[data-bgscene-choice]').forEach(function(btn){
     btn.addEventListener('click',function(){
       var k=btn.getAttribute('data-bgscene-choice');
@@ -8911,6 +9059,7 @@ html[dir="rtl"] .jump-row{text-align:right}
   }
   document.addEventListener('visibilitychange',function(){
     if(document.body)document.body.classList.toggle('bgs-paused',document.hidden);
+    if(typeof pvBgPanState==='function')pvBgPanState();
     if(!document.hidden){
       if((pvBgChoice==='auto'||pvBgChoice==='moods')&&pvBgEffectiveScene()!==pvBgScene)pvBgApply(pvBgChoice,false);
       pvBgParallaxKick();
@@ -9513,6 +9662,7 @@ html[dir="rtl"] .jump-row{text-align:right}
       var journal=document.getElementById('journal');
       var on=!!(pvBgCalmOn&&journal&&journal.classList.contains('active')&&pvBgScene!=='classic');
       document.body.classList.toggle('bgs-calm',on);
+      if(typeof pvBgPanState==='function')pvBgPanState();
     }catch(e){}
   }
   function pvForwardOnScreen(id){
