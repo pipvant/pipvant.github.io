@@ -1609,7 +1609,12 @@
        re-checks the app's own gate (max-aspect-ratio: 3/4), so the
        painting can never appear on a desktop viewport. Desktop renders
        exactly as before — the 23-scene system above is untouched. */
-    #pvPhoneBg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;display:none}
+    /* Size comes from the module's snapshot (inline width/height),
+       never from the live viewport: inset:0 would make the layer (and
+       the cover-fitted painting) rescale every time the mobile URL bar
+       shows or hides mid-scroll. top/left anchor it; the snapshot
+       height is the large-viewport height, so no navy gap can open. */
+    #pvPhoneBg{position:fixed;top:0;left:0;z-index:0;pointer-events:none;overflow:hidden;display:none}
     body.pb-on #pvPhoneBg{display:block}
     .pb-still,.pb-canvas,.pb-petals{position:absolute;inset:0;width:100%;height:100%}
     .pb-still{object-fit:cover;opacity:0;transition:opacity .9s ease}
@@ -14784,25 +14789,49 @@ html[dir="rtl"] .jump-row{text-align:right}
           setting is on) the engine stills and .pb-calmveil deepens
           the navy further.
        4) SMOOTHNESS CONTRACT: delta-clamped rAF; render scale starts
-          at min(devicePixelRatio, 1.5) and an FPS governor steps it
-          DOWN (1.5 → 1.25 → 1.0 → 0.75) when the rolling 50-frame
-          average exceeds ~19 ms, stepping back up only after five
-          consecutive windows under 11 ms. Rendering pauses when the
+          at min(devicePixelRatio, 2) for full sharpness and an FPS
+          governor steps it DOWN in 0.25 decrements (floor 0.75) only
+          on SUSTAINED slowness — three consecutive 50-frame windows
+          averaging over 22 ms — stepping back up after four
+          consecutive windows under 12 ms. Rendering pauses when the
           document is hidden or the journal calm engages.
           prefers-reduced-motion → the still painting, no motion at
           all. Any WebGL failure → the still painting.
        5) LOADING: first paint is always the classic navy — the asset
           is fetched only when the gate matches and the backdrop is
           enabled, and fades in over the navy once decoded.
+       6) SIZE LOCK (founder fix 2026-10-22): the layer and both
+          canvases are sized from a snapshot taken when the backdrop
+          activates and re-taken ONLY on a width change (>= 2 px) or
+          an orientation change — never on a height-only change. The
+          snapshot height is the LARGE viewport height (100vh/100lvh
+          probe vs innerHeight, whichever is bigger), so when the
+          mobile URL bar hides mid-scroll the painting's framing is
+          pixel-stable and no navy gap can appear; when the bar shows,
+          the layer simply extends beneath it. No resize handler may
+          react to height-only deltas.
        Settings (Backgrounds screen, phones only): 'pipvant_pb' and
        'pipvant_pb_motion' localStorage keys (device preferences, in
        the clearUserState keep-list), default on/on. Off → the layer
        hides and the phone is back to the classic navy, exactly as
        before this feature existed. */
     var PB_ASSET='assets/bgs-portrait/ninja-night.webp';
-    var PB_SCALES=[1.5,1.25,1.0,0.75];
+    /* Render-scale ladder: starts at min(devicePixelRatio, 2) — the
+       full sharpness the panel can use — and descends in 0.25 steps
+       to the 0.75 floor that protects weak devices. Built in quarter
+       units to avoid float dust. scaleIdx 0 is always the start. */
+    var PB_FLOOR_Q=3; /* 0.75 in quarter units */
+    var PB_SCALES=(function(){
+      var startQ=Math.round(Math.min(window.devicePixelRatio||1,2)*4);
+      if(startQ<PB_FLOOR_Q)startQ=PB_FLOOR_Q;
+      if(startQ>8)startQ=8;
+      var out=[];
+      for(var q=startQ;q>PB_FLOOR_Q;q--)out.push(q/4);
+      out.push(PB_FLOOR_Q/4);
+      return out;
+    })();
     var PB_AMP=0.5;
-    var pbState={active:false,motion:false,calm:false,raf:0,lastT:0,lastDt:16.7,acc:0,n:0,lastAvg:0,goodWin:0,scaleIdx:0,img:null,imgReady:false,gl:null,uTime:null,uGust:null,uCover:null,petalCtx:null,petals:[],frames:[],gust:0.8};
+    var pbState={active:false,motion:false,calm:false,raf:0,lastT:0,lastDt:16.7,acc:0,n:0,lastAvg:0,goodWin:0,slowWin:0,scaleIdx:0,snapW:0,snapH:0,img:null,imgReady:false,gl:null,uTime:null,uGust:null,uCover:null,petalCtx:null,petals:[],frames:[],gust:0.8};
     var pbOn=true,pbMotionOn=true;
     try{pbOn=localStorage.getItem('pipvant_pb')!=='0';}catch(e){}
     try{pbMotionOn=localStorage.getItem('pipvant_pb_motion')!=='0';}catch(e){}
@@ -14814,6 +14843,43 @@ html[dir="rtl"] .jump-row{text-align:right}
         var j=document.getElementById('journal');
         return !!(j&&j.classList.contains('active'));
       }catch(e){return false;}
+    }
+    /* --- Size snapshot (defect fix: no rescale while scrolling) ---
+       The layer gets explicit pixel width/height from pbState.snapW/
+       snapH. The snapshot is taken when the backdrop activates and
+       re-taken only on a width change or an orientation change (see
+       pbOnResize). Height-only viewport deltas — the mobile URL bar
+       showing/hiding mid-scroll — never touch it, so the painting's
+       cover framing, the canvas backing store and the veil gradient
+       are all pixel-stable through any scroll sequence. */
+    function pbProbeLargeHeight(){
+      /* Largest viewport height for the current width: a 100vh probe
+         (100vh is the large-viewport height on modern mobile Chrome
+         and Safari; 100lvh where supported), vs the live innerHeight
+         (which is the large height whenever the bar is hidden). */
+      var best=window.innerHeight||0;
+      try{
+        var probe=document.createElement('div');
+        probe.setAttribute('aria-hidden','true');
+        probe.style.cssText='position:fixed;top:0;left:0;width:1px;visibility:hidden;pointer-events:none;z-index:-1';
+        probe.style.height='100vh';
+        document.body.appendChild(probe);
+        var h1=probe.offsetHeight||0;
+        probe.style.height='100lvh';
+        var h2=probe.offsetHeight||0;
+        if(probe.parentNode)probe.parentNode.removeChild(probe);
+        if(h1>best)best=h1;
+        if(h2>best)best=h2;
+      }catch(e){}
+      return best;
+    }
+    function pbTakeSnapshot(){
+      var w=window.innerWidth||document.documentElement.clientWidth||0;
+      var h=pbProbeLargeHeight();
+      if(!w||!h)return;
+      pbState.snapW=w;pbState.snapH=h;
+      var layer=document.getElementById('pvPhoneBg');
+      if(layer){layer.style.width=w+'px';layer.style.height=h+'px';}
     }
     /* --- WebGL wind shader (ambient amplitude via uAmp) --- */
     function pbShader(gl,type,src){
@@ -14886,7 +14952,12 @@ html[dir="rtl"] .jump-row{text-align:right}
     function pbResize(){
       var cv=document.getElementById('pbCanvas'),pc=document.getElementById('pbPetals');
       if(!cv)return;
-      var w=cv.clientWidth||window.innerWidth,h=cv.clientHeight||window.innerHeight;
+      /* Backing store derives from the size snapshot, NEVER from the
+         live element/viewport size — a height-only viewport change
+         (URL bar) must not rescale the painting. The fallback exists
+         only for calls that race the first snapshot. */
+      var w=pbState.snapW,h=pbState.snapH;
+      if(!w||!h){w=cv.clientWidth||window.innerWidth;h=cv.clientHeight||window.innerHeight;}
       var eff=Math.min(window.devicePixelRatio||1,PB_SCALES[pbState.scaleIdx]);
       var bw=Math.max(1,Math.round(w*eff)),bh=Math.max(1,Math.round(h*eff));
       if(cv.width!==bw||cv.height!==bh){cv.width=bw;cv.height=bh;}
@@ -14911,7 +14982,8 @@ html[dir="rtl"] .jump-row{text-align:right}
       var pc=document.getElementById('pbPetals');if(!pc)return;
       var w=pc.width,h=pc.height,dtS=Math.min(0.05,pbState.lastDt/1000);
       ctx.clearRect(0,0,w,h);
-      var maxN=pbState.scaleIdx>=3?8:(pbState.scaleIdx===2?11:14);
+      var curScale=PB_SCALES[pbState.scaleIdx];
+      var maxN=curScale<=0.75?8:(curScale<=1.0?11:14);
       for(var i=0;i<pbState.petals.length&&i<maxN;i++){
         var p=pbState.petals[i];
         p.ny+=p.fall*dtS;
@@ -14926,10 +14998,23 @@ html[dir="rtl"] .jump-row{text-align:right}
       }
     }
     function pbGovern(avg){
+      /* Quality-first policy: the ladder starts at full sharpness and
+         gives it up slowly. A step DOWN needs sustained slowness —
+         three consecutive 50-frame windows averaging over 22 ms —
+         and each step is a small 0.25 decrement. A step UP needs
+         persistent headroom — four consecutive windows under 12 ms.
+         The 12–22 ms band resets both counters (hysteresis), so the
+         scale never oscillates around a threshold. */
       pbState.lastAvg=avg;
-      if(avg>19&&pbState.scaleIdx<PB_SCALES.length-1){pbState.scaleIdx++;pbState.goodWin=0;pbResize();}
-      else if(avg<11){if(++pbState.goodWin>=5&&pbState.scaleIdx>0){pbState.scaleIdx--;pbState.goodWin=0;pbResize();}}
-      else pbState.goodWin=0;
+      if(avg>22){
+        pbState.goodWin=0;
+        if(++pbState.slowWin>=3&&pbState.scaleIdx<PB_SCALES.length-1){pbState.scaleIdx++;pbState.slowWin=0;pbResize();}
+      }
+      else if(avg<12){
+        pbState.slowWin=0;
+        if(++pbState.goodWin>=4&&pbState.scaleIdx>0){pbState.scaleIdx--;pbState.goodWin=0;pbResize();}
+      }
+      else{pbState.slowWin=0;pbState.goodWin=0;}
     }
     function pbLoop(ts){
       if(!pbState.active||!pbState.motion||pbState.calm){pbState.raf=0;return;}
@@ -15007,6 +15092,7 @@ html[dir="rtl"] .jump-row{text-align:right}
       if(!(pbOn&&pbGate())){pbTeardown();return;}
       document.body.classList.add('pb-on');
       pbState.active=true;
+      pbTakeSnapshot();
       pbEnsureArt();
       pbSyncCalm();
     }
@@ -15027,7 +15113,7 @@ html[dir="rtl"] .jump-row{text-align:right}
     window.__pbStats=function(){
       var f=pbState.frames.slice(-300),avg=0;
       for(var i=0;i<f.length;i++)avg+=f[i];
-      return{active:pbState.active,motion:pbState.motion,calm:pbState.calm,gl:!!pbState.gl,rafRunning:!!pbState.raf,scaleIdx:pbState.scaleIdx,scale:PB_SCALES[pbState.scaleIdx],frames:f.length,avgMs:f.length?Math.round((avg/f.length)*100)/100:0,lastWindowAvg:Math.round(pbState.lastAvg*100)/100,petals:pbState.petals.length,on:pbOn,motionOn:pbMotionOn};
+      return{active:pbState.active,motion:pbState.motion,calm:pbState.calm,gl:!!pbState.gl,rafRunning:!!pbState.raf,scaleIdx:pbState.scaleIdx,scale:PB_SCALES[pbState.scaleIdx],startScale:PB_SCALES[0],ladder:PB_SCALES.slice(),slowWin:pbState.slowWin,snapW:pbState.snapW,snapH:pbState.snapH,frames:f.length,avgMs:f.length?Math.round((avg/f.length)*100)/100:0,lastWindowAvg:Math.round(pbState.lastAvg*100)/100,petals:pbState.petals.length,on:pbOn,motionOn:pbMotionOn};
     };
     (function(){
       var a=document.getElementById('pbOnToggle');
@@ -15040,7 +15126,23 @@ html[dir="rtl"] .jump-row{text-align:right}
         var onMq=function(){pbApply();};
         if(mq.addEventListener)mq.addEventListener('change',onMq);else if(mq.addListener)mq.addListener(onMq);
       }catch(e){}
-      window.addEventListener('resize',function(){if(pbState.active&&pbState.motion)pbResize();});
+      /* Resize discipline: react ONLY to width changes (>= 2 px) —
+         rotation, foldables, split-screen. Height-only deltas are
+         the mobile URL bar showing/hiding during scroll and are
+         ignored completely: no snapshot, no canvas resize, no
+         repaint of the framing. */
+      window.addEventListener('resize',function(){
+        if(!pbState.active)return;
+        var w=window.innerWidth||0;
+        if(pbState.snapW&&Math.abs(w-pbState.snapW)>=2){pbTakeSnapshot();pbResize();}
+      });
+      window.addEventListener('orientationchange',function(){
+        /* innerWidth settles asynchronously after rotation; re-take
+           the snapshot once it has (the width-gated resize handler
+           usually beats these timers to it — same result). */
+        setTimeout(function(){if(pbState.active){pbTakeSnapshot();pbResize();}},80);
+        setTimeout(function(){if(pbState.active){pbTakeSnapshot();pbResize();}},400);
+      });
       /* Journal calm: screen activation flips .active classes; watch
          them (cheap, a handful of elements) and re-evaluate calm. */
       try{
