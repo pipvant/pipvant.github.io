@@ -244,18 +244,18 @@
     .fd-compare:active{transform:scale(.85)}
     .fd-compare.on{color:#D4AF37}
     /* Community ratings + likes */
-    .fd-community{display:flex;flex-direction:column;gap:10px;padding:12px 14px;margin-bottom:16px;border:1px solid var(--line);border-radius:14px;background:var(--sunken)}
-    .fd-meta-row{display:flex;align-items:center;justify-content:space-between;gap:12px;min-width:0}
-    .fd-stars{display:flex;gap:4px}
-    .fd-stars button{background:none;border:0;font-size:26px;line-height:1;padding:0;min-width:36px;min-height:36px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--line-strong);transition:transform .12s}
+    .fd-community{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 10px;margin-bottom:16px;border:1px solid var(--line);border-radius:14px;background:var(--sunken)}
+    .fd-rate{display:flex;align-items:center;gap:5px;flex:none}
+    .fd-stars{display:flex;gap:2px;flex:none}
+    .fd-stars button{background:none;border:0;font-size:20px;line-height:1;padding:4px 2px;cursor:pointer;color:var(--line-strong);transition:transform .12s}
     .fd-stars button.lit{color:#D4AF37}
     .fd-stars button:active{transform:scale(1.25)}
-    .fd-stars span{font-size:26px;line-height:1;padding:0;min-width:36px;min-height:36px;display:inline-flex;align-items:center;justify-content:center;color:var(--line-strong);cursor:default;pointer-events:none;user-select:none}
+    .fd-stars span{font-size:20px;line-height:1;padding:4px 2px;color:var(--line-strong);cursor:default;pointer-events:none;user-select:none}
     .fd-stars span.lit{color:#D4AF37}
-    .fd-rate-meta{display:flex;align-items:baseline;gap:6px;min-width:0}
-    .fd-rate-meta span{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--text);white-space:nowrap}
-    .fd-like{display:flex;align-items:center;gap:8px;flex:none;white-space:nowrap;border:1px solid var(--line-strong);border-radius:999px;background:var(--surface);padding:8px 14px;cursor:pointer;font-family:inherit}
-    .fd-like-ico{font-size:17px;filter:grayscale(1);opacity:.55;transition:all .15s}
+    .fd-rate-meta{display:flex;align-items:center;flex:none}
+    .fd-rate-meta span{font-size:13.5px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--text);white-space:nowrap}
+    .fd-like{display:flex;align-items:center;gap:6px;flex:none;white-space:nowrap;border:1px solid var(--line-strong);border-radius:999px;background:var(--surface);padding:7px 10px;cursor:pointer;font-family:inherit}
+    .fd-like-ico{font-size:16px;filter:grayscale(1);opacity:.55;transition:all .15s}
     .fd-like b{font-size:14px;font-variant-numeric:tabular-nums}
     .fd-like[aria-pressed="true"]{border-color:rgba(212,175,55,.55);background:rgba(212,175,55,.1)}
     .fd-like[aria-pressed="true"] .fd-like-ico{filter:none;opacity:1}
@@ -2875,7 +2875,7 @@ html[dir="rtl"] .jump-row{text-align:right}
   .topbar-title strong{font-size:15px}
   .menu-button,.header-icon,.header-avatar{width:40px;height:40px}
   html[dir="rtl"] .topbar-title strong{font-size:13.5px}
-  .fd-stars button{min-width:36px;min-height:36px;padding:0}
+  .fd-stars button{min-width:0;min-height:0;padding:4px 2px}
   .fd-back{min-height:40px}
   .fd-like{min-height:40px}
   .bookmark-button{width:40px;height:40px}
@@ -3633,11 +3633,11 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
         </div>
         <!-- Community ratings + likes (real user data) -->
         <div class="fd-community" id="fdCommunity">
-          <div class="fd-stars" id="fdStars" role="img" aria-label="Average rating"></div>
-          <div class="fd-meta-row">
+          <div class="fd-rate">
+            <div class="fd-stars" id="fdStars" role="img" aria-label="Average rating"></div>
             <div class="fd-rate-meta"><span id="fdRateCompact">—</span></div>
-            <button class="fd-like" id="fdLike" type="button" aria-pressed="false"><span class="fd-like-ico">👍</span><b id="fdLikeCount">0</b></button>
           </div>
+          <button class="fd-like" id="fdLike" type="button" aria-pressed="false"><span class="fd-like-ico">👍</span><b id="fdLikeCount">0</b></button>
         </div>
         <div class="fd-tabs" role="tablist" aria-label="Firm detail sections">
           <button class="fd-tab active" type="button" role="tab" aria-selected="true" data-fd-tab="overview" data-fd-lbl="tOverview">Overview</button>
@@ -7465,7 +7465,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       // Stars show the USER's own rating (empty if not rated); clickable for rating when logged in.
       // The aggregate average is shown separately via sbRatingCompact.
       sbRenderStars(starsEl,myRating||0,canRate,function(n){sbSubmitRating(firmId,n);});
-      if(compactEl)compactEl.textContent=count?('★ '+Number(avg).toFixed(1)+' · '+(ar?sbRatingCountAr(count).replace(/[()]/g,''):count+(count===1?' rating':' ratings'))):sbRatingCompact(avg,count,ar);
+      if(compactEl)compactEl.textContent=sbRatingCompact(avg,count,ar);
       try{
         starsEl.setAttribute('role',canRate?'radiogroup':'img');
         starsEl.setAttribute('aria-label',count?
