@@ -6647,8 +6647,44 @@ html[dir="rtl"] .jump-row{text-align:right}
         if(typeof showToast==='function')showToast(n?((ar?'تحفظات ':'Saved ')+fname):((ar?'تحيدات ':'Removed ')+fname));
       }catch(_h){}
     }
-    el.addEventListener('touchend',fire,{passive:false});
-    el.addEventListener('click',fire);
+    // Tap-only activation: a touch stays targeted at the element it started
+    // on, so a scroll or drag that begins on the heart would otherwise
+    // deliver its touchend here and toggle it. Track the press: record the
+    // start point, flag the gesture if the finger moves >10px or the page
+    // scrolls mid-press, and only then treat touchend as a tap. A rejected
+    // gesture also swallows the compatibility click the browser fires
+    // after it. Mouse clicks and keyboard Enter/Space (clicks with no
+    // preceding touch press) go straight through, exactly as before.
+    var pressX=0,pressY=0,pressActive=false,pressBad=false,swallowClickUntil=0;
+    function heartScrollWatch(){if(pressActive)pressBad=true;}
+    el.addEventListener('touchstart',function(ev){
+      var t=ev.changedTouches&&ev.changedTouches[0];if(!t)return;
+      pressX=t.clientX;pressY=t.clientY;pressActive=true;pressBad=false;
+      document.addEventListener('scroll',heartScrollWatch,true);
+    },{passive:true});
+    el.addEventListener('touchmove',function(ev){
+      if(!pressActive)return;
+      var t=ev.changedTouches&&ev.changedTouches[0];if(!t)return;
+      if(Math.abs(t.clientX-pressX)>10||Math.abs(t.clientY-pressY)>10)pressBad=true;
+    },{passive:true});
+    el.addEventListener('touchend',function(ev){
+      var wasActive=pressActive,bad=pressBad;
+      pressActive=false;document.removeEventListener('scroll',heartScrollWatch,true);
+      if(wasActive){
+        var t=ev.changedTouches&&ev.changedTouches[0];
+        if(t&&(Math.abs(t.clientX-pressX)>10||Math.abs(t.clientY-pressY)>10))bad=true;
+        if(bad){swallowClickUntil=Date.now()+700;ev.stopPropagation();return;}
+      }
+      fire(ev);
+    },{passive:false});
+    el.addEventListener('touchcancel',function(){
+      pressActive=false;document.removeEventListener('scroll',heartScrollWatch,true);
+      swallowClickUntil=Date.now()+700;
+    });
+    el.addEventListener('click',function(ev){
+      if(Date.now()<swallowClickUntil){ev.stopPropagation();return;}
+      fire(ev);
+    });
   }
   function sbFillDirectoryCard(node,firm,plans){
     node.setAttribute('data-firm-id',firm.id);
