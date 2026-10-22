@@ -2,10 +2,13 @@
    Rules:
    - Non-GET requests and cross-origin API calls (Supabase, FX rates, …)
      are NEVER intercepted: they go straight to the network.
-   - Navigations / HTML: network-first, fall back to the cached shell.
+   - Navigations / HTML: network-first. Only the app document (scope
+     root / index.html) is stored under the './index.html' shell key and
+     used as the offline fallback; other HTML pages cache under their
+     own URL and can never overwrite the shell.
    - Same-origin static assets: stale-while-revalidate.
    No push handlers (future work). */
-var PV_CACHE = 'pipvant-shell-v1';
+var PV_CACHE = 'pipvant-shell-v2';
 var PV_PRECACHE = [
   './',
   './index.html',
@@ -64,28 +67,52 @@ self.addEventListener('fetch', function (event) {
     return;
   }
 
-  /* Navigations / HTML documents: network-first, cached shell fallback. */
+  /* Navigations / HTML documents: network-first. Only the app shell
+     document itself (the scope root or index.html) may be stored under
+     the './index.html' key and served as the offline fallback — other
+     HTML pages (p.html, data-ledger.html, orovanta-ops.html,
+     cheapest-*.html, …) are cached under their OWN URL and fall back
+     only to their own copy, so visiting one can never poison the shell
+     the installed app boots from. */
   var isNav = req.mode === 'navigate' ||
     (req.headers && req.headers.get('accept') &&
      req.headers.get('accept').indexOf('text/html') !== -1);
   if (isNav) {
-    event.respondWith(
-      fetch(req).then(function (res) {
-        if (res && res.ok) {
-          var copy = res.clone();
-          caches.open(PV_CACHE).then(function (cache) {
-            cache.put('./index.html', copy);
-          }).catch(function () {});
-        }
-        return res;
-      }).catch(function () {
-        return caches.match('./index.html').then(function (hit) {
-          return hit || caches.match('./');
-        }).then(function (hit) {
-          return hit || new Response('', { status: 504 });
-        });
-      })
-    );
+    if (pvIsAppDocument(url)) {
+      event.respondWith(
+        fetch(req).then(function (res) {
+          if (res && res.ok) {
+            var copy = res.clone();
+            caches.open(PV_CACHE).then(function (cache) {
+              cache.put('./index.html', copy);
+            }).catch(function () {});
+          }
+          return res;
+        }).catch(function () {
+          return caches.match('./index.html').then(function (hit) {
+            return hit || caches.match('./');
+          }).then(function (hit) {
+            return hit || new Response('', { status: 504 });
+          });
+        })
+      );
+    } else {
+      event.respondWith(
+        fetch(req).then(function (res) {
+          if (res && res.ok) {
+            var copy = res.clone();
+            caches.open(PV_CACHE).then(function (cache) {
+              cache.put(req, copy);
+            }).catch(function () {});
+          }
+          return res;
+        }).catch(function () {
+          return caches.match(req).then(function (hit) {
+            return hit || new Response('', { status: 504 });
+          });
+        })
+      );
+    }
     return;
   }
 
@@ -93,6 +120,25 @@ self.addEventListener('fetch', function (event) {
      stale-while-revalidate. */
   event.respondWith(pvStaleWhileRevalidate(req));
 });
+
+/* True only for the app shell document: the scope root ('/', './') or
+   'index.html' inside the scope. Query strings are ignored (pathname),
+   so '/?v=…' and '/index.html?…' count, while '/p.html?u=…' and every
+   other page do not. */
+function pvIsAppDocument(url) {
+  var scopePath;
+  try {
+    scopePath = new URL(self.registration.scope).pathname;
+  } catch (e) {
+    scopePath = '/';
+  }
+  if (url.pathname === scopePath) return true;
+  if (url.pathname.indexOf(scopePath) === 0) {
+    var rel = url.pathname.slice(scopePath.length);
+    return rel === '' || rel === 'index.html';
+  }
+  return false;
+}
 
 function pvStaleWhileRevalidate(req, makeFallback) {
   return caches.open(PV_CACHE).then(function (cache) {
