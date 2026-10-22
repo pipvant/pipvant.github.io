@@ -8,6 +8,9 @@
      own URL and can never overwrite the shell.
    - Same-origin static assets: stale-while-revalidate.
    No push handlers (future work). */
+/* Bump PV_CACHE whenever the shell format changes — the activate handler
+   evicts every other pipvant-* cache, so a bump force-refreshes the
+   installed app shell for existing users. */
 var PV_CACHE = 'pipvant-shell-v2';
 var PV_PRECACHE = [
   './',

@@ -266,7 +266,25 @@
 <script>
 (function(){
   var SB_URL='https://acpkzavmifjwnskiaret.supabase.co';
-  var FOUNDER='bniaichsifdin110@gmail.com';
+  /* AUD-m44: the founder account is identified only by the SHA-256 hash of
+     its (lower-cased) email — the address itself is never in this source. */
+  var FOUNDER_HASH='f068e4f233d1815fd039d1530e6ebfdf3826752b4b0205dc06e3008fa3d2dc1a';
+  function sha256Hex(str){
+    if(!window.crypto||!crypto.subtle||!crypto.subtle.digest){
+      return Promise.reject(new Error('crypto unavailable'));
+    }
+    return crypto.subtle.digest('SHA-256',new TextEncoder().encode(str)).then(function(buf){
+      return Array.prototype.map.call(new Uint8Array(buf),function(b){
+        return ('0'+b.toString(16)).slice(-2);
+      }).join('');
+    });
+  }
+  function isFounderEmail(em){
+    if(!em) return Promise.resolve(false);
+    return sha256Hex(String(em).trim().toLowerCase()).then(function(h){
+      return h===FOUNDER_HASH;
+    }).catch(function(){ return false; });
+  }
   var TEST='/__system_test__';
   var sb=null;
   try{ sb=window.supabase.createClient(SB_URL,
@@ -318,8 +336,10 @@
     sb.auth.getUser().then(function(r){
       var em=r.data&&r.data.user&&r.data.user.email;
       if(em){
-        if(em.toLowerCase()===FOUNDER){ showDash(); }
-        else{ sb.auth.signOut(); deny(); }
+        isFounderEmail(em).then(function(ok){
+          if(ok){ showDash(); }
+          else{ sb.auth.signOut(); deny(); }
+        });
       }
     });
   }

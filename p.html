@@ -14,6 +14,7 @@
   <meta name="twitter:title" content="PIPVANT Trader on PIPVANT">
   <meta name="twitter:description" content="A public trading track record shared from PIPVANT — free journal, risk tools and prop-firm matcher.">
   <meta name="theme-color" content="#0A1628">
+  <link rel="canonical" href="https://pipvant.github.io/p.html">
   <link rel="preconnect" href="https://acpkzavmifjwnskiaret.supabase.co">
   <link rel="icon" type="image/png" href="assets/pipvanta-logo.png">
   <style>
@@ -29,7 +30,7 @@
     .banner{position:relative;height:190px;background:var(--sunken)}
     .banner img{width:100%;height:100%;object-fit:cover;display:block}
     .banner:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,22,40,.18) 0%,rgba(10,22,40,.55) 62%,#0F1D33 100%)}
-    .identity{position:relative;padding:0 22px 22px;margin-top:-44px;text-align:left}
+    .identity{position:relative;padding:0 22px 22px;margin-top:-44px;text-align:start}
     .avatar{width:88px;height:88px;border-radius:50%;border:2px solid var(--gold);background:linear-gradient(150deg,var(--raised),var(--sunken));display:grid;place-items:center;font-size:36px;font-weight:700;color:var(--gold);position:relative;z-index:1}
     h1{margin:14px 0 0;font-size:27px;line-height:1.15;overflow-wrap:anywhere}
     .role{margin:6px 0 0;color:var(--gold);font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
@@ -44,14 +45,16 @@
     .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:11px}
     .chip{border:1px solid color-mix(in srgb,var(--gold) 55%,var(--line));color:var(--gold);border-radius:999px;padding:6px 12px;font-size:12px;font-weight:600;background:rgba(212,175,55,.07)}
     .updated{margin:12px 2px 0;color:var(--muted);font-size:11px}
-    .cta{margin-top:14px;border:1px solid color-mix(in srgb,var(--gold) 45%,var(--line));border-radius:14px;background:linear-gradient(160deg,rgba(212,175,55,.10),rgba(91,141,239,.05));padding:20px;text-align:left}
+    .cta{margin-top:14px;border:1px solid color-mix(in srgb,var(--gold) 45%,var(--line));border-radius:14px;background:linear-gradient(160deg,rgba(212,175,55,.10),rgba(91,141,239,.05));padding:20px;text-align:start}
     .cta h2{margin:0;font-size:19px}
     .cta p{margin:7px 0 0;color:var(--secondary);font-size:13px;line-height:1.55}
     .cta a{display:inline-block;margin-top:14px;background:var(--gold);color:#0A1628;font-weight:700;font-size:14px;text-decoration:none;border-radius:10px;padding:12px 20px}
     .state{margin-top:14px;border:1px solid var(--line);border-radius:18px;background:var(--surface);padding:34px 22px;text-align:center}
     .state h2{margin:0;font-size:20px}
     .state p{margin:9px auto 0;color:var(--secondary);font-size:13.5px;line-height:1.6;max-width:420px}
-    .state .cta{margin-top:18px;text-align:left}
+    .state .cta{margin-top:18px;text-align:start}
+    .lang-btn{margin-inline-start:auto;background:transparent;border:1px solid var(--line-strong);color:var(--secondary);border-radius:999px;padding:7px 14px;font:600 12.5px inherit;cursor:pointer}
+    .lang-btn:hover{border-color:var(--gold);color:var(--text)}
     .retry{margin-top:16px;background:transparent;border:1px solid var(--line-strong);color:var(--text);border-radius:10px;padding:11px 18px;font:600 13.5px inherit;cursor:pointer}
     footer{margin-top:22px;text-align:center;color:var(--muted);font-size:11.5px}
     footer b{color:var(--secondary)}
@@ -74,6 +77,7 @@
     <header class="top">
       <img src="assets/pipvanta-logo.png" alt="">
       <div class="brand">PIP<span>VANT</span></div>
+      <button class="lang-btn" id="langToggle" type="button" aria-label="Switch language">العربية</button>
     </header>
 
     <!-- Loading -->
@@ -94,51 +98,51 @@
         <div class="identity">
           <div class="avatar" id="pAvatar">—</div>
           <h1 id="pName">Trader</h1>
-          <p class="role">PIPVANT Trader</p>
+          <p class="role" data-i18n="role">PIPVANT Trader</p>
           <p class="since" id="pSince"></p>
         </div>
       </section>
 
-      <section class="stats" aria-label="Trading statistics">
-        <div class="stat"><div class="lbl">Win rate</div><div class="val" id="pWinRate">—</div><div class="sub" id="pWinSub"></div></div>
-        <div class="stat"><div class="lbl">Profit factor</div><div class="val" id="pPf">—</div><div class="sub" id="pPfSub"></div></div>
-        <div class="stat"><div class="lbl">Trades</div><div class="val" id="pTrades">—</div><div class="sub">logged in the journal</div></div>
-        <div class="stat"><div class="lbl">Day streak</div><div class="val" id="pStreak">—</div><div class="sub">trading days in a row</div></div>
+      <section class="stats" id="pStats" aria-label="Trading statistics">
+        <div class="stat"><div class="lbl" data-i18n="win_rate">Win rate</div><div class="val" id="pWinRate">—</div><div class="sub" id="pWinSub"></div></div>
+        <div class="stat"><div class="lbl" data-i18n="profit_factor">Profit factor</div><div class="val" id="pPf">—</div><div class="sub" id="pPfSub"></div></div>
+        <div class="stat"><div class="lbl" data-i18n="trades">Trades</div><div class="val" id="pTrades">—</div><div class="sub" data-i18n="trades_sub">logged in the journal</div></div>
+        <div class="stat"><div class="lbl" data-i18n="streak">Day streak</div><div class="val" id="pStreak">—</div><div class="sub" data-i18n="streak_sub">trading days in a row</div></div>
       </section>
 
       <section class="certs" id="pCerts" hidden>
-        <div class="lbl">Certificates earned</div>
+        <div class="lbl" data-i18n="certs">Certificates earned</div>
         <div class="chips" id="pCertChips"></div>
       </section>
 
       <p class="updated" id="pUpdated"></p>
 
       <section class="cta">
-        <h2>Track your own trades with PIPVANT</h2>
-        <p>Free trading journal, risk calculators, economic calendar and a verified prop-firm matcher — your own public track record included.</p>
-        <a href="./index.html">Start free</a>
+        <h2 data-i18n="cta_h">Track your own trades with PIPVANT</h2>
+        <p data-i18n="cta_p_profile">Free trading journal, risk calculators, economic calendar and a verified prop-firm matcher — your own public track record included.</p>
+        <a href="./index.html" data-i18n="cta_btn">Start free</a>
       </section>
     </main>
 
     <!-- Not found / private -->
     <div class="state" id="stateNotFound" hidden>
-      <h2>Profile not available</h2>
-      <p>This profile is private or doesn't exist. The trader may have turned off their public profile.</p>
+      <h2 data-i18n="nf_h">Profile not available</h2>
+      <p data-i18n="nf_p">This profile is private or doesn't exist. The trader may have turned off their public profile.</p>
       <section class="cta">
-        <h2>Track your own trades with PIPVANT</h2>
-        <p>Free trading journal, risk calculators, economic calendar and a verified prop-firm matcher.</p>
-        <a href="./index.html">Start free</a>
+        <h2 data-i18n="cta_h">Track your own trades with PIPVANT</h2>
+        <p data-i18n="cta_p_short">Free trading journal, risk calculators, economic calendar and a verified prop-firm matcher.</p>
+        <a href="./index.html" data-i18n="cta_btn">Start free</a>
       </section>
     </div>
 
     <!-- Error -->
     <div class="state" id="stateError" hidden>
-      <h2>Something went wrong</h2>
-      <p>We couldn't load this profile. Check your connection and try again.</p>
-      <button class="retry" id="pRetry" type="button">Try again</button>
+      <h2 data-i18n="err_h">Something went wrong</h2>
+      <p data-i18n="err_p">We couldn't load this profile. Check your connection and try again.</p>
+      <button class="retry" id="pRetry" type="button" data-i18n="retry">Try again</button>
     </div>
 
-    <footer><b>PIPVANT</b> by Orovanta — Trade with discipline.</footer>
+    <footer><b>PIPVANT</b><span data-i18n="foot"> by Orovanta — Trade with discipline.</span></footer>
   </div>
 
   <script>
@@ -150,45 +154,73 @@
     var BASE='https://acpkzavmifjwnskiaret.supabase.co/rest/v1/';
     var SCENES={ninja:1,ronin:1,torii:1,dragon:1,kitsune:1,koi:1,cranes:1,sakura:1,lanterns:1,aurora:1,ocean:1,desert:1,wolf:1,eagle:1,orbit:1,rain:1,cinematic:1,trader:1,'neo-ronin':1,miko:1,pirate:1,astronaut:1,ramadan:1};
     var $=function(id){return document.getElementById(id);};
+    /* Language: same pipvant_settings.language the main app + calculator
+       pages use ('ar' | 'en'); default EN. AR renders RTL with the page's
+       own UI strings translated (clean MSA); profile data stays as shared. */
+    var I18N={
+      en:{dir:'ltr',toggle:'العربية',stats_label:'Trading statistics',role:'PIPVANT Trader',win_rate:'Win rate',profit_factor:'Profit factor',trades:'Trades',trades_sub:'logged in the journal',streak:'Day streak',streak_sub:'trading days in a row',certs:'Certificates earned',cta_h:'Track your own trades with PIPVANT',cta_p_profile:'Free trading journal, risk calculators, economic calendar and a verified prop-firm matcher — your own public track record included.',cta_p_short:'Free trading journal, risk calculators, economic calendar and a verified prop-firm matcher.',cta_btn:'Start free',nf_h:'Profile not available',nf_p:"This profile is private or doesn't exist. The trader may have turned off their public profile.",err_h:'Something went wrong',err_p:"We couldn't load this profile. Check your connection and try again.",retry:'Try again',foot:' by Orovanta — Trade with discipline.',trader:'Trader',on_pipv:' on PIPVANT',member_since:'Member since ',no_closed:'no closed trades yet',no_losing:'no losing trades yet',pf_sub:'gross profit ÷ gross loss',updated_prefix:'Track record updated ',from_closed:function(n){return 'from '+n+' closed trade'+(n===1?'':'s');}},
+      ar:{dir:'rtl',toggle:'English',stats_label:'إحصاءات التداول',role:'متداول PIPVANT',win_rate:'نسبة الفوز',profit_factor:'عامل الربح',trades:'الصفقات',trades_sub:'مسجلة في السجل',streak:'سلسلة الأيام',streak_sub:'أيام تداول متتالية',certs:'الشهادات المكتسبة',cta_h:'تتبّع صفقاتك الخاصة مع PIPVANT',cta_p_profile:'سجل تداول مجاني، وحاسبات مخاطر، وتقويم اقتصادي، ومطابق شركات تمويل موثّق — بما في ذلك سجل أدائك العلني الخاص.',cta_p_short:'سجل تداول مجاني، وحاسبات مخاطر، وتقويم اقتصادي، ومطابق شركات تمويل موثّق.',cta_btn:'ابدأ مجاناً',nf_h:'الملف غير متاح',nf_p:'هذا الملف خاص أو غير موجود. ربما أوقف المتداول ملفه العلني.',err_h:'حدث خطأ ما',err_p:'تعذّر تحميل هذا الملف. تحقق من اتصالك وحاول مرة أخرى.',retry:'حاول مرة أخرى',foot:' من Orovanta — تداول بانضباط.',trader:'متداول',on_pipv:' على PIPVANT',member_since:'عضو منذ ',no_closed:'لا توجد صفقات مغلقة بعد',no_losing:'لا توجد صفقات خاسرة بعد',pf_sub:'إجمالي الربح ÷ إجمالي الخسارة',updated_prefix:'تم تحديث سجل الأداء في ',from_closed:function(n){return 'من '+n+' صفقة مغلقة';}}
+    };
+    var lang='en';
+    try{var _s=JSON.parse(localStorage.getItem('pipvant_settings')||'{}');if(_s&&(_s.language==='ar'||_s.language==='en'))lang=_s.language;}catch(e){}
+    function t(k){var v=I18N[lang][k];return v!==undefined?v:I18N.en[k];}
+    var currentSlug='',lastData=null,lastUpdatedAt=null;
+    function applyStatic(){
+      document.documentElement.lang=lang;
+      document.documentElement.dir=t('dir');
+      document.querySelectorAll('[data-i18n]').forEach(function(el){var v=t(el.getAttribute('data-i18n'));if(typeof v==='string')el.textContent=v;});
+      var st=$('pStats');if(st)st.setAttribute('aria-label',t('stats_label'));
+      var tg=$('langToggle');if(tg)tg.textContent=t('toggle');
+      if(!lastData)document.title=(lang==='ar'?'متداول على PIPVANT':'PIPVANT Trader on PIPVANT');
+    }
     function show(id){
       ['stateLoading','stateProfile','stateNotFound','stateError'].forEach(function(s){$(s).hidden=s!==id;});
     }
     function fmtInt(n){return isFinite(n)?String(Math.round(n)):'—';}
     function render(d,updatedAt){
+      lastData=d;lastUpdatedAt=updatedAt;
       var scene=(d&&SCENES[d.scene])?d.scene:'ninja';
       var banner=$('pBanner');
       banner.onerror=function(){if(banner.getAttribute('src')!=='assets/bgs/ninja.webp')banner.setAttribute('src','assets/bgs/ninja.webp');};
       banner.setAttribute('src','assets/bgs/'+scene+'.webp');
-      var name=(d&&typeof d.name==='string'&&d.name.trim())?d.name.trim():'Trader';
+      var name=(d&&typeof d.name==='string'&&d.name.trim())?d.name.trim():t('trader');
       $('pName').textContent=name;
       $('pAvatar').textContent=name.charAt(0).toUpperCase()||'—';
-      document.title=name+' on PIPVANT';
-      var ogT=document.querySelector('meta[property="og:title"]');if(ogT)ogT.setAttribute('content',name+' on PIPVANT');
+      document.title=name+t('on_pipv');
+      var ogT=document.querySelector('meta[property="og:title"]');if(ogT)ogT.setAttribute('content',name+t('on_pipv'));
       var ogI=document.querySelector('meta[property="og:image"]');if(ogI)ogI.setAttribute('content','https://pipvant.github.io/assets/bgs/'+scene+'.webp');
-      $('pSince').textContent=(d&&d.memberSince)?('Member since '+d.memberSince):'';
+      /* AUD-m48: canonical + og:url follow the shared profile URL once
+         the profile is known; the static defaults stay the bare page. */
+      if(currentSlug){
+        var profileUrl='https://pipvant.github.io/p.html?u='+encodeURIComponent(currentSlug);
+        var canon=document.querySelector('link[rel="canonical"]');if(canon)canon.setAttribute('href',profileUrl);
+        var ogU=document.querySelector('meta[property="og:url"]');if(ogU)ogU.setAttribute('content',profileUrl);
+      }
+      $('pSince').textContent=(d&&d.memberSince)?(t('member_since')+d.memberSince):'';
       var closed=(d&&isFinite(Number(d.closedTrades)))?Number(d.closedTrades):0;
       var wr=(d&&d.winRate!=null&&isFinite(Number(d.winRate)))?Number(d.winRate):null;
       $('pWinRate').textContent=wr!=null?wr+'%':'—';
-      $('pWinSub').textContent=closed>0?('from '+closed+' closed trade'+(closed===1?'':'s')):'no closed trades yet';
+      $('pWinSub').textContent=closed>0?t('from_closed')(closed):t('no_closed');
       var pf=(d&&d.profitFactor!==undefined)?d.profitFactor:null;
       if(closed>0){
-        if(pf===null){$('pPf').textContent='∞';$('pPfSub').textContent='no losing trades yet';}
-        else if(isFinite(Number(pf))){$('pPf').textContent=Number(pf).toFixed(2);$('pPfSub').textContent='gross profit ÷ gross loss';}
+        if(pf===null){$('pPf').textContent='∞';$('pPfSub').textContent=t('no_losing');}
+        else if(isFinite(Number(pf))){$('pPf').textContent=Number(pf).toFixed(2);$('pPfSub').textContent=t('pf_sub');}
         else{$('pPf').textContent='—';$('pPfSub').textContent='';}
-      }else{$('pPf').textContent='—';$('pPfSub').textContent='no closed trades yet';}
+      }else{$('pPf').textContent='—';$('pPfSub').textContent=t('no_closed');}
       $('pTrades').textContent=fmtInt(d?Number(d.trades):NaN);
       $('pStreak').textContent=fmtInt(d?Number(d.streak):NaN);
       var certs=(d&&Array.isArray(d.certificates))?d.certificates.filter(function(c){return typeof c==='string'&&c;}):[];
+      var box=$('pCertChips');box.innerHTML='';
       if(certs.length){
-        var box=$('pCertChips');
         certs.forEach(function(c){var s=document.createElement('span');s.className='chip';s.textContent=c;box.appendChild(s);});
         $('pCerts').hidden=false;
-      }
+      }else{$('pCerts').hidden=true;}
       var upd=(d&&d.updatedAt)||updatedAt;
+      $('pUpdated').textContent='';
       if(upd){
         var dt=new Date(upd);
         if(isFinite(dt.getTime())){
-          $('pUpdated').textContent='Track record updated '+dt.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})+'.';
+          $('pUpdated').textContent=t('updated_prefix')+dt.toLocaleDateString(lang==='ar'?'ar-u-nu-latn':'en-GB',{day:'numeric',month:'short',year:'numeric'})+'.';
         }
       }
       show('stateProfile');
@@ -197,7 +229,8 @@
       show('stateLoading');
       var slug='';
       try{slug=new URLSearchParams(window.location.search).get('u')||'';}catch(e){}
-      if(!/^[a-z0-9](?:[a-z0-9-]{1,28}[a-z0-9])?$/.test(slug)){show('stateNotFound');return;}
+      if(!/^[a-z0-9](?:[a-z0-9-]{1,28}[a-z0-9])?$/.test(slug)){currentSlug='';show('stateNotFound');return;}
+      currentSlug=slug;
       var url=BASE+'public_profiles?select=slug,display,updated_at&slug=eq.'+encodeURIComponent(slug);
       fetch(url,{headers:{'apikey':KEY,'Authorization':'Bearer '+KEY}})
         .then(function(r){if(!r.ok)throw new Error('http '+r.status);return r.json();})
@@ -209,6 +242,14 @@
         .catch(function(){show('stateError');});
     }
     $('pRetry').addEventListener('click',load);
+    var tgEl=$('langToggle');
+    if(tgEl)tgEl.addEventListener('click',function(){
+      lang=lang==='en'?'ar':'en';
+      try{var s=JSON.parse(localStorage.getItem('pipvant_settings')||'{}');s.language=lang;localStorage.setItem('pipvant_settings',JSON.stringify(s));}catch(e){}
+      applyStatic();
+      if(lastData)render(lastData,lastUpdatedAt);
+    });
+    applyStatic();
     load();
   })();
   </script>

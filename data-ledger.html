@@ -74,21 +74,28 @@
     .final{text-align:center;padding:56px 0 72px}
     footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted);font-size:13px}
     footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
-    footer a{color:var(--muted);text-decoration:none;margin-left:16px}
+    footer a{color:var(--muted);text-decoration:none;margin-inline-start:16px}
+    .top-actions{display:flex;align-items:center;gap:10px}
+    .lang-btn{background:transparent;border:1px solid var(--line-strong);color:var(--secondary);border-radius:10px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;min-height:44px}
+    .lang-btn:hover{border-color:var(--gold);color:var(--text)}
+    .row-card span.src{color:var(--muted);font-weight:600;font-size:13px;white-space:nowrap}
   </style>
 </head>
 <body>
 <header class="top"><div class="wrap">
   <a class="brand" href="/"><img src="assets/pipvanta-logo.png" alt="PIPVANT logo">PIPVANT</a>
-  <a class="cta-btn" href="/">Open free toolkit</a>
+  <div class="top-actions">
+    <button class="lang-btn" id="langToggle" type="button" aria-label="Switch language">العربية</button>
+    <a class="cta-btn" href="/" data-i18n="nav_toolkit">Open free toolkit</a>
+  </div>
 </div></header>
 
 <div class="wrap">
   <section class="hero">
-    <div class="eyebrow">Data ledger · Verified changes</div>
-    <h1>What changed. <span class="gold">When. Where we checked.</span></h1>
-    <p class="lede"><span id="ledgerCounts">Loading the verified change log…</span> Every row is one change found while verifying firm data against official firm pages — old value, new value, and the source it was checked on.</p>
-    <a class="cta-btn" href="prop-firm-deals.html">See active deals →</a>
+    <div class="eyebrow" data-i18n="eyebrow">Data ledger · Verified changes</div>
+    <h1><span data-i18n="h1a">What changed.</span> <span class="gold" data-i18n="h1b">When. Where we checked.</span></h1>
+    <p class="lede"><span id="ledgerCounts">Loading the verified change log…</span><span data-i18n="lede_tail"> Every row is one change found while verifying firm data against official firm pages — old value, new value, and the source it was checked on.</span></p>
+    <a class="cta-btn" href="prop-firm-deals.html" data-i18n="deals_cta">See active deals →</a>
   </section>
 
   <div class="chips" id="firmChips" role="group" aria-label="Filter changes by firm" hidden></div>
@@ -100,28 +107,28 @@
   <p class="live-note" id="ledgerNote"></p>
 
   <section class="section">
-    <h2>Why publish a change log?</h2>
-    <p class="body">Prop firms change prices, drawdown rules and promotions quietly — and a comparison built on stale data quietly misleads. PIPVANT re-checks its firm data against official firm websites on a regular schedule, and this ledger is the receipt: instead of asking you to trust a "verified" badge, it shows exactly what changed, when it changed, and the official page it was verified on. If nothing changed at a check, nothing is written here.</p>
+    <h2 data-i18n="why_h">Why publish a change log?</h2>
+    <p class="body" data-i18n="why_p">Prop firms change prices, drawdown rules and promotions quietly — and a comparison built on stale data quietly misleads. PIPVANT re-checks its firm data against official firm websites on a regular schedule, and this ledger is the receipt: instead of asking you to trust a "verified" badge, it shows exactly what changed, when it changed, and the official page it was verified on. If nothing changed at a check, nothing is written here.</p>
   </section>
 
   <section class="section faq">
-    <h2>Ledger FAQs</h2>
-    <details><summary>What is the PIPVANT data ledger?</summary><p>It is the public change log behind PIPVANT's verified prop firm data. Every row records one verified change — a price, a rule or a promotion — with the date it was found, the old and new values, and a link to the official firm page it was verified on.</p></details>
-    <details><summary>How does a change get into the ledger?</summary><p>PIPVANT re-checks firm data against official firm websites on a regular schedule. When a check finds a value that differs from the verified database, the change is recorded here with its source. Unverified or ambiguous findings are never published as changes.</p></details>
-    <details><summary>Why is a firm or a date missing from the ledger?</summary><p>The ledger only lists changes. If a firm's prices and rules matched the verified data at the last check, there is nothing to record — no news is good news, and it is not dressed up as an entry.</p></details>
+    <h2 data-i18n="faq_h">Ledger FAQs</h2>
+    <details><summary data-i18n="q1">What is the PIPVANT data ledger?</summary><p data-i18n="a1">It is the public change log behind PIPVANT's verified prop firm data. Every row records one verified change — a price, a rule or a promotion — with the date it was found, the old and new values, and a link to the official firm page it was verified on.</p></details>
+    <details><summary data-i18n="q2">How does a change get into the ledger?</summary><p data-i18n="a2">PIPVANT re-checks firm data against official firm websites on a regular schedule. When a check finds a value that differs from the verified database, the change is recorded here with its source. Unverified or ambiguous findings are never published as changes.</p></details>
+    <details><summary data-i18n="q3">Why is a firm or a date missing from the ledger?</summary><p data-i18n="a3">The ledger only lists changes. If a firm's prices and rules matched the verified data at the last check, there is nothing to record — no news is good news, and it is not dressed up as an entry.</p></details>
   </section>
 
   <section class="final">
-    <h2>Data you can audit.</h2>
-    <p class="body" style="text-align:center;margin:0 auto 24px;max-width:560px;color:var(--secondary);line-height:1.7">The same verified data powers the matcher, the challenges table and the deals page — this ledger is how you check our work.</p>
-    <a class="cta-btn" href="prop-firm-comparison.html">Compare firms with verified data — free →</a>
-    <p style="margin-top:28px;color:var(--muted);font-size:13px">Also free: <a href="prop-firm-deals.html" style="color:var(--accent)">prop firm deals</a> · <a href="free-trading-journal.html" style="color:var(--accent)">trading journal</a> · <a href="forex-risk-calculator.html" style="color:var(--accent)">risk calculator</a></p>
+    <h2 data-i18n="final_h">Data you can audit.</h2>
+    <p class="body" data-i18n="final_b" style="text-align:center;margin:0 auto 24px;max-width:560px;color:var(--secondary);line-height:1.7">The same verified data powers the matcher, the challenges table and the deals page — this ledger is how you check our work.</p>
+    <a class="cta-btn" href="prop-firm-comparison.html" data-i18n="final_cta">Compare firms with verified data — free →</a>
+    <p style="margin-top:28px;color:var(--muted);font-size:13px"><span data-i18n="also_free">Also free:</span> <a href="prop-firm-deals.html" style="color:var(--accent)" data-i18n="link_deals">prop firm deals</a> · <a href="free-trading-journal.html" style="color:var(--accent)" data-i18n="link_journal">trading journal</a> · <a href="forex-risk-calculator.html" style="color:var(--accent)" data-i18n="link_risk">risk calculator</a></p>
   </section>
 </div>
 
 <footer><div class="wrap">
-  <span>© 2026 PIPVANT by Orovanta — Trade with a process, not a prediction.</span>
-  <span><a href="/">Toolkit</a><a href="prop-firm-comparison.html">Comparison</a><a href="prop-firm-deals.html">Deals</a></span>
+  <span data-i18n="foot">© 2026 PIPVANT by Orovanta — Trade with a process, not a prediction.</span>
+  <span><a href="/" data-i18n="foot_toolkit">Toolkit</a><a href="prop-firm-comparison.html" data-i18n="foot_comp">Comparison</a><a href="prop-firm-deals.html" data-i18n="foot_deals">Deals</a></span>
 </div></footer>
 <script src="assets/pipv-os.js" defer></script>
 <script>
@@ -133,8 +140,39 @@
   var list=document.getElementById('ledgerList'),empty=document.getElementById('ledgerEmpty'),
       chips=document.getElementById('firmChips'),counts=document.getElementById('ledgerCounts'),
       note=document.getElementById('ledgerNote');
-  var allChanges=[],activeFirm='';
+  var allChanges=[],activeFirm='',loadedData=null,emptyKind=null;
+  /* Language: same pipvant_settings.language the main app + calculator
+     pages use ('ar' | 'en'); default EN. AR renders RTL with the page's
+     own UI strings translated (clean MSA); ledger data stays as recorded. */
+  var I18N={
+    en:{dir:'ltr',toggle:'العربية',meta_title:'Data Ledger — Every Verified Prop Firm Change | PIPVANT',nav_toolkit:'Open free toolkit',eyebrow:'Data ledger · Verified changes',h1a:'What changed.',h1b:'When. Where we checked.',lede_tail:' Every row is one change found while verifying firm data against official firm pages — old value, new value, and the source it was checked on.',deals_cta:'See active deals →',loading:'Loading the verified change log…',counts_none:'No verified changes to show.',all_firms:'All firms',filter_label:'Filter changes by firm',today:'Today',yesterday:'Yesterday',source:'Source ↗',source_plain:'Source',kind_price:'price',kind_rule:'rule',kind_promo:'promo',kind_change:'change',field_fallback:'Change',why_h:'Why publish a change log?',why_p:'Prop firms change prices, drawdown rules and promotions quietly — and a comparison built on stale data quietly misleads. PIPVANT re-checks its firm data against official firm websites on a regular schedule, and this ledger is the receipt: instead of asking you to trust a "verified" badge, it shows exactly what changed, when it changed, and the official page it was verified on. If nothing changed at a check, nothing is written here.',faq_h:'Ledger FAQs',q1:'What is the PIPVANT data ledger?',a1:'It is the public change log behind PIPVANT\'s verified prop firm data. Every row records one verified change — a price, a rule or a promotion — with the date it was found, the old and new values, and a link to the official firm page it was verified on.',q2:'How does a change get into the ledger?',a2:'PIPVANT re-checks firm data against official firm websites on a regular schedule. When a check finds a value that differs from the verified database, the change is recorded here with its source. Unverified or ambiguous findings are never published as changes.',q3:'Why is a firm or a date missing from the ledger?',a3:'The ledger only lists changes. If a firm\'s prices and rules matched the verified data at the last check, there is nothing to record — no news is good news, and it is not dressed up as an entry.',final_h:'Data you can audit.',final_b:'The same verified data powers the matcher, the challenges table and the deals page — this ledger is how you check our work.',final_cta:'Compare firms with verified data — free →',also_free:'Also free:',link_deals:'prop firm deals',link_journal:'trading journal',link_risk:'risk calculator',foot:'© 2026 PIPVANT by Orovanta — Trade with a process, not a prediction.',foot_toolkit:'Toolkit',foot_comp:'Comparison',foot_deals:'Deals',empty_default:'<strong style="color:var(--text)">No verified changes recorded yet.</strong><br>The ledger lists only changes that were actually found and verified against an official firm page. When the next verification pass finds a price, rule or promotion change, it will appear here.',empty_filtered:'<strong style="color:var(--text)">No changes recorded for this firm yet.</strong><br>Only verified changes are listed — try another firm, or view the full ledger.',empty_error:'<strong style="color:var(--text)">The ledger could not be loaded.</strong><br>The verified change log is unavailable right now. Nothing is shown rather than guessed — please try again shortly.',counts:function(n,fc){return n+' verified change'+(n===1?'':'s')+' across '+fc+' firm'+(fc===1?'':'s')+'.';},note:function(dateStr){return dateStr?('Ledger last updated '+dateStr+'. Entries are recorded only from verified checks against official firm pages.'):'Entries are recorded only from verified checks against official firm pages.';}},
+    ar:{dir:'rtl',toggle:'English',meta_title:'سجل البيانات — كل تغيير موثق في شركات التمويل | PIPVANT',nav_toolkit:'افتح المجموعة الكاملة',eyebrow:'سجل البيانات · تغييرات موثقة',h1a:'ما الذي تغيّر.',h1b:'متى. وأين تحققنا.',lede_tail:' كل صف هو تغيير واحد وُجد أثناء التحقق من بيانات الشركات مقابل الصفحات الرسمية للشركات — القيمة القديمة والقيمة الجديدة والمصدر الذي تم التحقق منه.',deals_cta:'← عرض العروض النشطة',loading:'جارٍ تحميل سجل التغييرات الموثقة…',counts_none:'لا توجد تغييرات موثقة لعرضها.',all_firms:'كل الشركات',filter_label:'تصفية التغييرات حسب الشركة',today:'اليوم',yesterday:'أمس',source:'المصدر ↗',source_plain:'المصدر',kind_price:'سعر',kind_rule:'قاعدة',kind_promo:'عرض ترويجي',kind_change:'تغيير',field_fallback:'تغيير',why_h:'لماذا ننشر سجل تغييرات؟',why_p:'تغيّر شركات التمويل الأسعار وقواعد التراجع والعروض الترويجية بهدوء — والمقارنة المبنية على بيانات قديمة تضلّل بهدوء أيضاً. تعيد PIPVANT التحقق من بيانات شركاتها مقابل المواقع الرسمية للشركات وفق جدول منتظم، وهذا السجل هو الإيصال: بدلاً من مطالبتك بالثقة في شارة «موثّق»، يعرض بالضبط ما تغيّر ومتى تغيّر والصفحة الرسمية التي تم التحقق منه عليها. إذا لم يتغير أي شيء في عملية تحقق، لا يُكتب أي شيء هنا.',faq_h:'الأسئلة الشائعة حول السجل',q1:'ما هو سجل بيانات PIPVANT؟',a1:'هو سجل التغييرات العلني الذي يقف خلف بيانات شركات التمويل الموثقة في PIPVANT. يسجل كل صف تغييراً موثقاً واحداً — سعراً أو قاعدة أو عرضاً ترويجياً — مع تاريخ اكتشافه والقيمتين القديمة والجديدة ورابط إلى الصفحة الرسمية للشركة التي تم التحقق منه عليها.',q2:'كيف يصل أي تغيير إلى السجل؟',a2:'تعيد PIPVANT التحقق من بيانات الشركات مقابل المواقع الرسمية للشركات وفق جدول منتظم. عندما تجد عملية تحقق قيمة تختلف عن قاعدة البيانات الموثقة، يُسجل التغيير هنا مع مصدره. لا تُنشر النتائج غير الموثقة أو الغامضة أبداً بوصفها تغييرات.',q3:'لماذا تغيب شركة أو تاريخ عن السجل؟',a3:'يسرد السجل التغييرات فقط. إذا تطابقت أسعار الشركة وقواعدها مع البيانات الموثقة في آخر عملية تحقق، فلا يوجد ما يُسجل — غياب الأخبار خبر جيد، ولا يُقدَّم بوصفه إدخالاً.',final_h:'بيانات يمكنك تدقيقها.',final_b:'البيانات الموثقة نفسها تشغّل المطابق وجدول التحديات وصفحة العروض — وهذا السجل هو وسيلتك للتحقق من عملنا.',final_cta:'← قارن الشركات ببيانات موثقة — مجاناً',also_free:'مجاني أيضاً:',link_deals:'عروض شركات التمويل',link_journal:'سجل التداول',link_risk:'حاسبة المخاطر',foot:'© 2026 PIPVANT من Orovanta — تداول بمنهجية، لا بتوقع.',foot_toolkit:'المجموعة',foot_comp:'المقارنة',foot_deals:'العروض',empty_default:'<strong style="color:var(--text)">لا توجد تغييرات موثقة مسجلة بعد.</strong><br>يسرد السجل فقط التغييرات التي وُجدت فعلاً وتم التحقق منها مقابل صفحة رسمية لشركة. عندما تجد عملية التحقق التالية تغييراً في سعر أو قاعدة أو عرض ترويجي، سيظهر هنا.',empty_filtered:'<strong style="color:var(--text)">لا توجد تغييرات مسجلة لهذه الشركة بعد.</strong><br>تُدرج التغييرات الموثقة فقط — جرّب شركة أخرى أو اعرض السجل الكامل.',empty_error:'<strong style="color:var(--text)">تعذّر تحميل السجل.</strong><br>سجل التغييرات الموثقة غير متاح حالياً. لا يُعرض أي شيء بدلاً من التخمين — يرجى المحاولة مرة أخرى بعد قليل.',counts:function(n,fc){return n+' من التغييرات الموثقة عبر '+fc+' من الشركات.';},note:function(dateStr){return dateStr?('آخر تحديث للسجل في '+dateStr+'. تُسجل الإدخالات فقط من عمليات تحقق موثقة مقابل الصفحات الرسمية للشركات.'):'تُسجل الإدخالات فقط من عمليات تحقق موثقة مقابل الصفحات الرسمية للشركات.';}}
+  };
+  var lang='en';
+  try{var _s=JSON.parse(localStorage.getItem('pipvant_settings')||'{}');if(_s&&(_s.language==='ar'||_s.language==='en'))lang=_s.language;}catch(e){}
+  function t(k){var v=I18N[lang][k];return v!==undefined?v:I18N.en[k];}
+  function locale(){return lang==='ar'?'ar-u-nu-latn':'en-US';}
+  function applyStatic(){
+    document.documentElement.lang=lang;
+    document.documentElement.dir=t('dir');
+    document.title=t('meta_title');
+    document.querySelectorAll('[data-i18n]').forEach(function(el){var v=t(el.getAttribute('data-i18n'));if(typeof v==='string')el.textContent=v;});
+    if(chips)chips.setAttribute('aria-label',t('filter_label'));
+    var tg=document.getElementById('langToggle');if(tg)tg.textContent=t('toggle');
+  }
   function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+  /* AUD-m46: Source URLs come from the verification pipeline — only
+     http:/https: (and relative) hrefs may become links. Anything else
+     (javascript:, data:, …) renders as plain text, never an href. */
+  function safeSourceHref(raw){
+    var s=String(raw==null?'':raw).trim();
+    if(!s)return null;
+    try{
+      var u=new URL(s,window.location.href);
+      if(u.protocol==='http:'||u.protocol==='https:')return u.href;
+      return null;
+    }catch(e){return null;}
+  }
   function dayKey(iso){return String(iso||'').slice(0,10);}
   function todayKey(off){
     var d=new Date();d.setDate(d.getDate()-(off||0));
@@ -142,30 +180,32 @@
     return d.getFullYear()+'-'+m+'-'+dd;
   }
   function pillLabel(key){
-    if(key===todayKey(0))return 'Today';
-    if(key===todayKey(1))return 'Yesterday';
+    if(key===todayKey(0))return t('today');
+    if(key===todayKey(1))return t('yesterday');
     var d=new Date(key+'T00:00:00');
-    if(isFinite(d.getTime()))return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    if(isFinite(d.getTime()))return d.toLocaleDateString(locale(),{month:'short',day:'numeric',year:'numeric'});
     return key;
   }
   function fmtDate(key){
     var d=new Date(key+'T00:00:00');
-    if(isFinite(d.getTime()))return d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+    if(isFinite(d.getTime()))return d.toLocaleDateString(locale(),{weekday:'short',month:'short',day:'numeric',year:'numeric'});
     return key;
   }
-  function showEmpty(msg){
-    if(counts)counts.textContent='No verified changes to show.';
-    if(msg)empty.innerHTML=msg;
+  function showEmpty(kind){
+    emptyKind=kind||'default';
+    if(counts)counts.textContent=t('counts_none');
+    empty.innerHTML=t(emptyKind==='error'?'empty_error':'empty_default');
     empty.hidden=false;list.innerHTML='';chips.hidden=true;note.textContent='';
   }
   function render(){
     var rows=allChanges.filter(function(c){return !activeFirm||c.firm===activeFirm;});
     list.innerHTML='';
     if(!rows.length){
-      empty.innerHTML='<strong style="color:var(--text)">No changes recorded for this firm yet.</strong><br>Only verified changes are listed — try another firm, or view the full ledger.';
+      emptyKind='filtered';
+      empty.innerHTML=t('empty_filtered');
       empty.hidden=false;return;
     }
-    empty.hidden=true;
+    empty.hidden=true;emptyKind=null;
     var groups={},order=[];
     rows.forEach(function(c){
       var k=dayKey(c.date);
@@ -182,17 +222,22 @@
         var row=document.createElement('div');row.className='row-card';
         var f=document.createElement('div');f.className='firm';f.textContent=c.firm||'';row.appendChild(f);
         var ch=document.createElement('div');ch.className='change';
-        var fld=document.createElement('span');fld.className='field';fld.textContent=(c.field||'Change')+': ';ch.appendChild(fld);
+        var fld=document.createElement('span');fld.className='field';fld.textContent=(c.field||t('field_fallback'))+': ';ch.appendChild(fld);
         var o=document.createElement('span');o.className='old';o.textContent=c.old==null?'':String(c.old);ch.appendChild(o);
         var ar=document.createElement('span');ar.className='arrow';ar.textContent='→';ch.appendChild(ar);
         var n=document.createElement('span');n.className='new';n.textContent=c.new==null?'':String(c.new);ch.appendChild(n);
         row.appendChild(ch);
         var kind=document.createElement('span');kind.className='kind';
-        kind.textContent=(c.kind==='price'||c.kind==='rule'||c.kind==='promo')?c.kind:'change';
+        kind.textContent=(c.kind==='price')?t('kind_price'):((c.kind==='rule')?t('kind_rule'):((c.kind==='promo')?t('kind_promo'):t('kind_change')));
         row.appendChild(kind);
         if(c.source){
-          var a=document.createElement('a');a.className='src';a.href=String(c.source);
-          a.target='_blank';a.rel='noopener';a.textContent='Source ↗';row.appendChild(a);
+          var safe=safeSourceHref(c.source);
+          if(safe){
+            var a=document.createElement('a');a.className='src';a.href=safe;
+            a.target='_blank';a.rel='noopener';a.textContent=t('source');row.appendChild(a);
+          }else{
+            var sp=document.createElement('span');sp.className='src';sp.textContent=t('source_plain');row.appendChild(sp);
+          }
         }
         g.appendChild(row);
       });
@@ -206,7 +251,7 @@
     if(firms.length<2){chips.hidden=true;return;}
     chips.innerHTML='';
     var all=document.createElement('button');all.type='button';all.className='chip'+(activeFirm===''?' active':'');
-    all.textContent='All firms';
+    all.textContent=t('all_firms');
     all.addEventListener('click',function(){activeFirm='';renderChips();render();});
     chips.appendChild(all);
     firms.forEach(function(name){
@@ -217,25 +262,41 @@
     });
     chips.hidden=false;
   }
+  function renderCountsAndNote(){
+    if(!loadedData||!allChanges.length)return;
+    var firmSet={};allChanges.forEach(function(c){firmSet[c.firm]=1;});
+    var fc=Object.keys(firmSet).length;
+    if(counts)counts.textContent=t('counts')(allChanges.length,fc);
+    if(note){
+      var upd=loadedData&&loadedData.updated?new Date(loadedData.updated):null;
+      var ds=(upd&&isFinite(upd.getTime()))?upd.toLocaleDateString(locale(),{year:'numeric',month:'short',day:'numeric'}):'';
+      note.textContent=t('note')(ds);
+    }
+  }
+  applyStatic();
+  if(counts)counts.textContent=t('loading');
+  var tgEl=document.getElementById('langToggle');
+  if(tgEl)tgEl.addEventListener('click',function(){
+    lang=lang==='en'?'ar':'en';
+    try{var s=JSON.parse(localStorage.getItem('pipvant_settings')||'{}');s.language=lang;localStorage.setItem('pipvant_settings',JSON.stringify(s));}catch(e){}
+    applyStatic();
+    if(allChanges.length){renderCountsAndNote();renderChips();render();}
+    else if(emptyKind){showEmpty(emptyKind==='error'?'error':'default');}
+    else if(counts)counts.textContent=t('loading');
+  });
   fetch('data-changes.json',{cache:'no-store'})
     .then(function(r){if(!r.ok)throw new Error('data-changes.json '+r.status);return r.json();})
     .then(function(data){
+      loadedData=data;
       var changes=(data&&Array.isArray(data.changes))?data.changes:[];
       allChanges=changes.filter(function(c){return c&&c.date&&c.firm;});
       allChanges.sort(function(a,b){return String(b.date).localeCompare(String(a.date));});
-      if(!allChanges.length){showEmpty();return;}
-      var firmSet={};allChanges.forEach(function(c){firmSet[c.firm]=1;});
-      var fc=Object.keys(firmSet).length;
-      if(counts)counts.textContent=allChanges.length+' verified change'+(allChanges.length===1?'':'s')+' across '+fc+' firm'+(fc===1?'':'s')+'.';
+      if(!allChanges.length){showEmpty('default');return;}
+      renderCountsAndNote();
       renderChips();render();
-      if(note){
-        var upd=data&&data.updated?new Date(data.updated):null;
-        note.textContent='Ledger last updated '+(upd&&isFinite(upd.getTime())?upd.toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'}):'')+'. Entries are recorded only from verified checks against official firm pages.';
-        if(!upd||!isFinite(upd.getTime()))note.textContent='Entries are recorded only from verified checks against official firm pages.';
-      }
     })
     .catch(function(){
-      showEmpty('<strong style="color:var(--text)">The ledger could not be loaded.</strong><br>The verified change log is unavailable right now. Nothing is shown rather than guessed — please try again shortly.');
+      showEmpty('error');
     });
 })();
 </script>

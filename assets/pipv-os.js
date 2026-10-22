@@ -26,17 +26,41 @@
      1) If a Supabase session for one of the founder's emails is stored, skip.
      2) Manual opt-out: opening any page with ?notrack=1 sets a permanent
         localStorage flag on that browser (for logged-out visits). */
+  /* AUD-m44: founder accounts are identified only by SHA-256 hashes of
+     their (lower-cased) emails — no founder address is in this source.
+     The plus-variant is matched by hashing the part up to and including
+     the first '+' (the original prefix check, in hash form). */
+  var FOUNDER_HASHES = [
+    'f068e4f233d1815fd039d1530e6ebfdf3826752b4b0205dc06e3008fa3d2dc1a',
+    '5c043d398d080ff8c57d25e488e45bc4736449d3f9665f87b14a131a24d9420f'
+  ];
+  var FOUNDER_PLUS_HASH = '5744ef4b99aa9a64360678b329bb2f2a1b9f3a35d33fb95f10c0b9d39f40dec5';
+  function sha256Hex(str) {
+    if (!window.crypto || !crypto.subtle || !crypto.subtle.digest) {
+      return Promise.reject(new Error('crypto unavailable'));
+    }
+    return crypto.subtle.digest('SHA-256', new TextEncoder().encode(str)).then(function (buf) {
+      return Array.prototype.map.call(new Uint8Array(buf), function (b) {
+        return ('0' + b.toString(16)).slice(-2);
+      }).join('');
+    });
+  }
   function isFounderSession() {
     try {
       var raw = localStorage.getItem('sb-acpkzavmifjwnskiaret-auth-token');
-      if (!raw) return false;
+      if (!raw) return Promise.resolve(false);
       var sess = JSON.parse(raw);
       var email = String((sess && sess.user && sess.user.email) || '').toLowerCase();
-      if (!email) return false;
-      return email === 'bniaichsifdin110@gmail.com'
-          || email === 'beniaichsifeddine@gmail.com'
-          || email.indexOf('beniaichsifeddine+') === 0;
-    } catch (e) { return false; }
+      if (!email) return Promise.resolve(false);
+      return sha256Hex(email).then(function (h) {
+        if (FOUNDER_HASHES.indexOf(h) >= 0) return true;
+        var plusIdx = email.indexOf('+');
+        if (plusIdx < 0) return false;
+        return sha256Hex(email.slice(0, plusIdx + 1)).then(function (ph) {
+          return ph === FOUNDER_PLUS_HASH;
+        });
+      }).catch(function () { return false; });
+    } catch (e) { return Promise.resolve(false); }
   }
   try {
     if (/(?:\?|&)notrack=1(?:&|$)/.test(location.search)) {
@@ -62,12 +86,15 @@
   try {
     if (!window.__pipvTracked) {
       window.__pipvTracked = true;
-      if (!isDnt() && !isFounderSession()) {
-        var row = { page: location.pathname, referrer: document.referrer || null };
-        var vid = getVisitorId();
-        if (vid) row.visitor_id = vid;
-        post('page_views', row)
-          .catch(function () { /* silent: analytics never breaks the app */ });
+      if (!isDnt()) {
+        isFounderSession().then(function (founder) {
+          if (founder) return;
+          var row = { page: location.pathname, referrer: document.referrer || null };
+          var vid = getVisitorId();
+          if (vid) row.visitor_id = vid;
+          post('page_views', row)
+            .catch(function () { /* silent: analytics never breaks the app */ });
+        }).catch(function () { /* silent: analytics never breaks the app */ });
       }
     }
   } catch (e) {}

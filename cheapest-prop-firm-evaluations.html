@@ -63,6 +63,9 @@
     .exp{color:var(--gold);font-weight:700;font-size:13px}
     .table-scroll{overflow-x:auto}
     table td,table th{font-variant-numeric:tabular-nums}
+    .firm-cell{display:flex;align-items:center;gap:10px}
+    .firm-logo{width:32px;height:32px;flex:0 0 auto;border-radius:8px;background:linear-gradient(145deg,#FFFFFF,#E7ECF3);border:1px solid var(--line-strong);color:#0A1628;display:grid;place-items:center;font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:13px;padding:4px;overflow:hidden}
+    .firm-logo img{width:100%;height:100%;object-fit:contain;border-radius:6px;display:block}
     .price-cell strong{color:var(--text)}
     .price-cell .promo-price{color:var(--gold);font-weight:700}
     .price-cell .strike{color:var(--muted);text-decoration:line-through;font-weight:500;margin-right:6px}
@@ -81,7 +84,7 @@
     footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted);font-size:13px}
     footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
     footer a{color:var(--muted);text-decoration:none;margin-left:16px}
-    @media(max-width:640px){table{font-size:12px}th,td{padding:10px 10px}}
+    @media(max-width:640px){table{font-size:12px}th,td{padding:10px 10px}.firm-logo{width:28px;height:28px}}
   </style>
 </head>
 <body>
@@ -110,16 +113,16 @@
     </div>
     <div class="table-scroll"><table id="staticCheapestTable">
       <tr><th>Firm</th><th>Cheapest entry</th><th>Price</th><th>Pricing model</th></tr>
-      <tr><td><a href="https://en.the5ers.com" target="_blank" rel="noopener" style="color:var(--accent)">The5ers ↗</a></td><td>$2.5K account</td><td><strong style="color:var(--text)">$22</strong> <span class="fast">CHEAPEST</span></td><td>One-time</td></tr>
-      <tr><td><a href="https://fundingpips.com" target="_blank" rel="noopener" style="color:var(--accent)">Funding Pips ↗</a></td><td>$5K account</td><td><strong style="color:var(--text)">$36</strong></td><td>One-time</td></tr>
-      <tr><td><a href="https://alphacapitalgroup.uk" target="_blank" rel="noopener" style="color:var(--accent)">Alpha Capital Group ↗</a></td><td>$5K account</td><td><strong style="color:var(--text)">$37</strong></td><td>One-time</td></tr>
-      <tr><td><a href="https://www.topstep.com" target="_blank" rel="noopener" style="color:var(--accent)">Topstep ↗</a></td><td>$50K account</td><td><strong style="color:var(--text)">$49</strong>/mo</td><td>Monthly subscription</td></tr>
-      <tr><td><a href="https://fundednext.com" target="_blank" rel="noopener" style="color:var(--accent)">FundedNext ↗</a></td><td>$6K account</td><td><strong style="color:var(--text)">$59.99</strong></td><td>One-time</td></tr>
-      <tr><td><a href="https://ftmo.com" target="_blank" rel="noopener" style="color:var(--accent)">FTMO ↗</a></td><td>$10K account</td><td><strong style="color:var(--text)">$99</strong></td><td>One-time</td></tr>
-      <tr><td><a href="https://takeprofittrader.com" target="_blank" rel="noopener" style="color:var(--accent)">TakeProfitTrader ↗</a></td><td>$25K account</td><td><strong style="color:var(--text)">$150</strong>/mo</td><td>Monthly subscription</td></tr>
-      <tr><td><a href="https://myfundedfutures.com" target="_blank" rel="noopener" style="color:var(--accent)">MyFundedFutures ↗</a></td><td>$50K account</td><td><strong style="color:var(--text)">$153</strong></td><td>One-time</td></tr>
-      <tr><td><a href="https://apextraderfunding.com" target="_blank" rel="noopener" style="color:var(--accent)">Apex Trader Funding ↗</a></td><td>$25K account</td><td><strong style="color:var(--text)">$167</strong></td><td>One-time</td></tr>
-      <tr><td><a href="https://e8markets.com" target="_blank" rel="noopener" style="color:var(--accent)">E8 Markets ↗</a></td><td>$100K account</td><td><strong style="color:var(--text)">$488</strong></td><td>One-time</td></tr>
+      <tr><td><span class="firm-cell"><span class="firm-logo" data-firm-logo data-name="The5ers" data-website="https://the5ers.com">T</span><a href="https://en.the5ers.com" target="_blank" rel="noopener" style="color:var(--accent)">The5ers ↗</a></span></td><td>$2.5K account</td><td><strong style="color:var(--text)">$22</strong> <span class="fast">CHEAPEST</span></td><td>One-time</td></tr>
+      <tr><td><span class="firm-cell"><span class="firm-logo" data-firm-logo data-name="Funding Pips" data-website="https://fundingpips.com">F</span><a href="https://fundingpips.com" target="_blank" rel="noopener" style="color:var(--accent)">Funding Pips ↗</a></span></td><td>$5K account</td><td><strong style="color:var(--text)">$36</strong></td><td>One-time</td></tr>
+      <tr><td><span class="firm-cell"><span class="firm-logo" data-firm-logo data-name="Alpha Capital Group" data-website="https://alphacapitalgroup.uk">A</span><a href="https://alphacapitalgroup.uk" target="_blank" rel="noopener" style="color:var(--accent)">Alpha Capital Group ↗</a></span></td><td>$5K account</td><td><strong style="color:var(--text)">$37</strong></td><td>One-time</td></tr>
+      <tr><td><span class="firm-cell"><span class="firm-logo" data-firm-logo data-name="Topstep" data-website="https://www.topstep.com">T</span><a href="https://www.topstep.com" target="_blank" rel="noopener" style="color:var(--accent)">Topstep ↗</a></span></td><td>$50K account</td><td><strong style="color:var(--text)">$49</strong>/mo</td><td>Monthly subscription</td></tr>
+      <tr><td><span class="firm-cell"><span class="firm-logo" data-firm-logo data-name="FundedNext" data-website="https://fundednext.com">F</span><a href="https://fundednext.com" target="_blank" rel="noopener" style="color:var(--accent)">FundedNext ↗</a></span></td><td>$6K account</td><td><strong style="color:var(--text)">$59.99</strong></td><td>One-time</td></tr>
+      <tr><td><span class="firm-cell"><span class="firm-logo" data-firm-logo data-name="FTMO" data-website="https://ftmo.com">F</span><a href="https://ftmo.com" target="_blank" rel="noopener" style="color:var(--accent)">FTMO ↗</a></span></td><td>$10K account</td><td><strong style="color:var(--text)">$99</strong></td><td>One-time</td></tr>
+      <tr><td><span class="firm-cell"><span class="firm-logo" data-firm-logo data-name="TakeProfitTrader" data-website="https://takeprofittrader.com">T</span><a href="https://takeprofittrader.com" target="_blank" rel="noopener" style="color:var(--accent)">TakeProfitTrader ↗</a></span></td><td>$25K account</td><td><strong style="color:var(--text)">$150</strong>/mo</td><td>Monthly subscription</td></tr>
+      <tr><td><span class="firm-cell"><span class="firm-logo" data-firm-logo data-name="MyFundedFutures" data-website="https://myfundedfutures.com">M</span><a href="https://myfundedfutures.com" target="_blank" rel="noopener" style="color:var(--accent)">MyFundedFutures ↗</a></span></td><td>$50K account</td><td><strong style="color:var(--text)">$153</strong></td><td>One-time</td></tr>
+      <tr><td><span class="firm-cell"><span class="firm-logo" data-firm-logo data-name="Apex Trader Funding" data-website="https://apextraderfunding.com">A</span><a href="https://apextraderfunding.com" target="_blank" rel="noopener" style="color:var(--accent)">Apex Trader Funding ↗</a></span></td><td>$25K account</td><td><strong style="color:var(--text)">$167</strong></td><td>One-time</td></tr>
+      <tr><td><span class="firm-cell"><span class="firm-logo" data-firm-logo data-name="E8 Markets" data-website="https://e8markets.com">E</span><a href="https://e8markets.com" target="_blank" rel="noopener" style="color:var(--accent)">E8 Markets ↗</a></span></td><td>$100K account</td><td><strong style="color:var(--text)">$488</strong></td><td>One-time</td></tr>
     </table></div>
     <p class="note" id="staticCheapestNote">Fees reflect data reviewed 2026-10-07. Apex's $167 is the intraday-trailing evaluation; EOD-trailing starts higher. MyFundedFutures lists several $50K plans — confirm which applies on their official site. Order is by fee, cheapest first — not a quality ranking. Promos change; verify at checkout.</p>
   </section>
@@ -220,6 +223,38 @@
     function fallback(){var ta=document.createElement('textarea');ta.value=code;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done();}catch(e){}document.body.removeChild(ta);}
     if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(code).then(done).catch(fallback);}else{fallback();}
   }
+  /* Firm logos — mirrors sbLogoInto()/sbFirmLogo() from index.html exactly:
+     Google favicon 128px from the firm's own domain, the same curated
+     overrides, and the same letter fallback (Blue Guardian is letter-only —
+     no hi-res logo exists). One helper serves BOTH tables on this page: the
+     live rows rendered below, and the static fallback rows, which are
+     hydrated from their data-name/data-website attributes so the fallback
+     carries the same logos even when the live fetch fails. */
+  var LOGO_OVERRIDES={
+    'takeprofittrader.com':'https://takeprofittrader.com/assets/mobile-logo.svg',
+    'apextraderfunding.com':'https://apextraderfunding.com/cdn-cgi/image/width=512,height=512,fit=cover,gravity=auto,format=auto//app/uploads/cropped-APEX_FAV-192x192.png'
+  };
+  var LETTER_ONLY_DOMAINS=['blueguardian.com'];
+  function logoInto(el,firm){
+    if(!el||!firm)return;
+    var letter=(firm.name||'?').charAt(0).toUpperCase();
+    el.setAttribute('aria-label',firm.name||'Firm');
+    var domain='';
+    try{domain=String(new URL(firm.website||'').hostname).replace(/^www\./,'');}catch(e){domain='';}
+    if(!domain){el.textContent=letter;return;}
+    el.textContent='';
+    if(LETTER_ONLY_DOMAINS.indexOf(domain)!==-1){el.textContent=letter;return;}
+    var img=document.createElement('img');
+    img.alt=firm.name||'';img.loading='lazy';
+    img.style.cssText='width:100%;height:100%;object-fit:contain;border-radius:6px;';
+    img.onerror=function(){img.remove();el.textContent=letter;};
+    img.src=LOGO_OVERRIDES[domain]||('https://www.google.com/s2/favicons?domain='+domain+'&sz=128');
+    el.appendChild(img);
+  }
+  var staticLogos=document.querySelectorAll('[data-firm-logo]');
+  for(var li=0;li<staticLogos.length;li++){
+    logoInto(staticLogos[li],{name:staticLogos[li].getAttribute('data-name')||'',website:staticLogos[li].getAttribute('data-website')||''});
+  }
   Promise.all([
     get('firms?select=id,name,website,last_verified_at,updated_at'),
     get('firm_plans?select=firm_id,account_size,price,currency,rules')
@@ -246,8 +281,12 @@
       var cur=plan.currency||'USD',s=sym(cur);
       var tr=document.createElement('tr');
       var tdFirm=document.createElement('td');
-      if(firm.website){var a=document.createElement('a');a.href=firm.website;a.target='_blank';a.rel='noopener';a.style.color='var(--accent)';a.textContent=(firm.name||'')+' ↗';tdFirm.appendChild(a);}
-      else tdFirm.textContent=firm.name||'';
+      var firmCell=document.createElement('span');firmCell.className='firm-cell';
+      var firmLogo=document.createElement('span');firmLogo.className='firm-logo';firmCell.appendChild(firmLogo);
+      logoInto(firmLogo,firm);
+      if(firm.website){var a=document.createElement('a');a.href=firm.website;a.target='_blank';a.rel='noopener';a.style.color='var(--accent)';a.textContent=(firm.name||'')+' ↗';firmCell.appendChild(a);}
+      else{var firmName=document.createElement('span');firmName.textContent=firm.name||'';firmCell.appendChild(firmName);}
+      tdFirm.appendChild(firmCell);
       tr.appendChild(tdFirm);
       var tdEntry=document.createElement('td');tdEntry.textContent=fmtSize(plan.account_size);tr.appendChild(tdEntry);
       var tdPrice=document.createElement('td');tdPrice.className='price-cell';
