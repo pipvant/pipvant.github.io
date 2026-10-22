@@ -1640,6 +1640,51 @@
     .tb-unit{font-size:10.5px;color:var(--muted)}
     .tb-cta{white-space:nowrap}
     @media (max-width:760px){.today-brief{grid-template-columns:1fr;gap:13px}.tb-side{justify-content:space-between}}
+    /* Focus Room — phone-only living-painting pre-session screen.
+       The entry card is display:none everywhere except under the app's
+       own phone gate (max-aspect-ratio: 3/4), so the desktop toolkit is
+       untouched; the room is a fixed overlay in the #bgsFs pattern and
+       never joins the .screen navigation system. */
+    .focus-card{display:none}
+    @media (max-aspect-ratio:3/4){
+      .focus-card{position:relative;display:flex;align-items:center;gap:14px;margin-top:14px;max-width:610px;padding:11px 12px;border:1px solid rgba(212,175,55,.38);border-radius:14px;background:linear-gradient(120deg,rgba(212,175,55,.10),rgba(15,29,51,.76) 58%);box-shadow:inset 0 1px 0 rgba(255,255,255,.025)}
+    }
+    .focus-card-icon{width:44px;height:44px;flex:none;display:grid;place-items:center;border-radius:10px;border:1px solid rgba(255,255,255,.06);background:#0A1628;color:#D4AF37}
+    .focus-card-copy{display:grid;gap:3px;min-width:0}
+    .focus-card .sotd-try{flex:none;margin-inline-start:auto}
+    .focus-room{position:fixed;inset:0;z-index:1260;background:#0A1628;overflow:hidden;animation:frIn .35s ease}
+    .focus-room[hidden]{display:none}
+    @keyframes frIn{from{opacity:0}to{opacity:1}}
+    .fr-still,.fr-canvas,.fr-petals{position:absolute;inset:0;width:100%;height:100%}
+    .fr-still{object-fit:cover}
+    .fr-still[hidden]{display:none}
+    .fr-canvas{opacity:0;transition:opacity .6s ease}
+    .fr-canvas.on{opacity:1}
+    .fr-petals{pointer-events:none}
+    .fr-veil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,22,40,.40),transparent 26%,transparent 44%,rgba(10,22,40,.60) 74%,rgba(10,22,40,.94));pointer-events:none}
+    body.fr-open{overflow:hidden}
+    .fr-ui{position:absolute;inset:0;display:flex;flex-direction:column;padding:20px 20px calc(22px + env(safe-area-inset-bottom,0px))}
+    .fr-top{display:flex;align-items:center;justify-content:space-between}
+    .fr-brand{font:700 11px/1 "IBM Plex Mono",monospace;letter-spacing:.22em;color:#F2D492}
+    .fr-close{width:44px;height:44px;flex:none;border-radius:50%;border:1px solid rgba(255,255,255,.35);background:rgba(10,22,40,.35);color:#fff;display:grid;place-items:center;cursor:pointer}
+    .fr-panel{margin-top:auto;text-align:center}
+    .fr-eyebrow{margin:0 0 10px;font:700 11px/1 "IBM Plex Mono",monospace;letter-spacing:.26em;color:#9DB9E8}
+    .fr-count{font:800 clamp(40px,11.5vw,54px)/1.05 "Space Grotesk",Inter,sans-serif;color:#fff;letter-spacing:.01em;text-shadow:0 6px 30px rgba(0,0,0,.45);font-variant-numeric:tabular-nums}
+    .fr-count.live{font-size:clamp(29px,8.4vw,40px);color:#F2D492;letter-spacing:.05em}
+    .fr-sub{margin:9px 0 0;font:600 11.5px/1.4 "IBM Plex Mono",monospace;letter-spacing:.13em;color:#C7D5EA}
+    .fr-events{margin-top:16px;display:grid;gap:8px;justify-items:center}
+    .fr-events:empty{margin-top:0}
+    .fr-event{display:inline-flex;align-items:center;gap:9px;max-width:100%;padding:10px 15px;border-radius:999px;border:1px solid rgba(255,255,255,.16);background:rgba(8,16,30,.55);color:#EAF1FB;font-size:13px}
+    .fr-event .dot{width:7px;height:7px;flex:none;border-radius:50%;background:#E5484D;box-shadow:0 0 10px rgba(229,72,77,.9)}
+    .fr-event strong{color:#F2D492;font-family:"IBM Plex Mono",monospace;font-weight:600;flex:none}
+    .fr-event .nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .fr-chips{margin-top:10px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+    .fr-chip{display:inline-flex;align-items:center;gap:6px;padding:9px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.16);background:rgba(8,16,30,.55);color:#EAF1FB;font-size:13px}
+    .fr-chip strong{color:#F2D492}
+    .fr-start{margin-top:22px;width:100%;min-height:56px;border:0;border-radius:999px;background:linear-gradient(180deg,#E9C767,#D4AF37);color:#231A04;font:800 17px/1 Inter,sans-serif;cursor:pointer;box-shadow:0 14px 34px rgba(212,175,55,.35)}
+    .fr-start:active{transform:scale(.99)}
+    .fr-quiet{margin-top:4px;padding:12px 18px;border:0;background:none;color:#B9CBE6;font:600 14px/1 Inter,sans-serif;cursor:pointer}
+    @media (prefers-reduced-motion:reduce){.focus-room{animation:none}.fr-canvas{transition:none}}
     .event-gcal{display:flex;justify-content:center;margin:0 0 22px;text-decoration:none}
     .event-gcal[hidden]{display:none}
     .scenario-block{margin-top:16px;border-top:1px solid var(--line);padding-top:14px}
@@ -3131,6 +3176,24 @@ html[dir="rtl"] .jump-row{text-align:right}
     <div class="bgsfs-hint" id="bgsFsHint" hidden>Screensaver starts after a minute idle</div>
     <div class="bgsfs-clock" id="bgsFsClock" aria-hidden="true"><div class="bgsfs-clock-time" id="bgsFsClockTime">--:--</div><div class="bgsfs-clock-date" id="bgsFsClockDate"></div></div>
   </div>
+  <div class="focus-room" id="focusRoom" hidden role="dialog" aria-modal="true" aria-label="Focus Room" tabindex="-1">
+    <img class="fr-still" id="frStill" alt="" decoding="async" hidden>
+    <canvas class="fr-canvas" id="frCanvas" aria-hidden="true"></canvas>
+    <canvas class="fr-petals" id="frPetals" aria-hidden="true"></canvas>
+    <div class="fr-veil" aria-hidden="true"></div>
+    <div class="fr-ui">
+      <div class="fr-top"><span class="fr-brand">PIPVANT · FOCUS ROOM</span><button class="fr-close" id="frClose" type="button" aria-label="Close focus room"><svg width="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg></button></div>
+      <div class="fr-panel">
+        <p class="fr-eyebrow">NEW YORK SESSION</p>
+        <div class="fr-count" id="frCount">-- : -- : --</div>
+        <p class="fr-sub" id="frSub">UNTIL THE OPEN · 13:30 YOUR TIME</p>
+        <div class="fr-events" id="frEvents"></div>
+        <div class="fr-chips"><span class="fr-chip">🔥 <strong id="frStreak">0</strong> day streak</span><span class="fr-chip">Scene · <strong>Ninja Night</strong></span></div>
+        <button class="fr-start" id="frStart" type="button">Start session →</button>
+        <button class="fr-quiet" id="frQuiet" type="button">Enter quietly</button>
+      </div>
+    </div>
+  </div>
   <div class="drawer-backdrop" id="drawerBackdrop" aria-hidden="true"></div>
   <aside class="desktop-rail" id="appRail" aria-label="Primary navigation">
     <div class="rail-top"><div class="rail-brand-lockup"><img class="rail-brand-logo" src="assets/pipvanta-logo.png" alt="PIPVANT logo" decoding="async"><strong>PIPVANT</strong></div><button class="rail-close" id="railClose" type="button" aria-label="Close menu"><svg width="19"><use href="#pv-i-x"/></svg></button></div>
@@ -3208,6 +3271,11 @@ html[dir="rtl"] .jump-row{text-align:right}
             <button class="sotd-try" id="sotdTry" type="button">Try it</button>
             <span class="sotd-now" id="sotdNow" hidden>Now showing</span>
             <button class="sotd-dismiss" id="sotdDismiss" type="button" aria-label="Dismiss">&times;</button>
+          </article>
+          <article class="focus-card" id="focusCard">
+            <div class="focus-card-icon" aria-hidden="true"><svg width="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.5 8.5 0 1 1 10.8 4 6.8 6.8 0 0 0 20 13.2Z"/></svg></div>
+            <div class="focus-card-copy"><span class="sotd-eyebrow">Focus Room</span><strong class="sotd-name">Your pre-session screen</strong></div>
+            <button class="sotd-try" id="focusOpen" type="button">Enter</button>
           </article>
         </div>
         <div class="calc-card" aria-label="Quick risk calculator">
@@ -14715,6 +14783,313 @@ html[dir="rtl"] .jump-row{text-align:right}
       }catch(e){}
     }
     window.pvTodayBriefRender=pvTodayBriefRender;
+
+    /* ===== Focus Room — phone-only living-painting pre-session screen =====
+       Founder's locked conditions:
+       1) STRICT device separation: the room and its portrait painting
+          exist ONLY under the app's phone gate (max-aspect-ratio: 3/4 —
+          the same gate pvBgPhoneMode uses). The entry card is CSS-gated
+          (display:none outside the gate) and pvFocusOpen re-checks the
+          gate, so on desktop there is no entry point, no room, and the
+          portrait asset is never requested. Desktop backdrop scenes are
+          not touched in any way.
+       2) The painting is ALIVE via a real-time WebGL wind shader over
+          the painting texture (no video): zone-weighted displacement —
+          clouds drift in the sky band, the cloak ripples in gusts
+          around the figure, mist rolls over the rooftops — plus a
+          breathing moon glow and a DOM/canvas petal layer whose petals
+          swirl sideways on the same gust signal instead of just falling.
+       3) SMOOTHNESS CONTRACT: delta-clamped rAF; render scale starts
+          at min(devicePixelRatio, 1.5) and an FPS governor steps it
+          DOWN (1.5 → 1.25 → 1.0 → 0.75) when the rolling 50-frame
+          average exceeds ~19 ms, stepping back up only after five
+          consecutive windows under 11 ms. Rendering pauses when the
+          room is closed or the document is hidden. prefers-reduced-
+          motion or any WebGL failure → the still painting, no motion
+          at all; the data, countdown and actions keep working.
+       Data is REAL only, mirroring pvTodayBriefRender: today's
+       high-impact events come from the calendar's own loaded feed
+       (calendarEvents / calendarFeedConnected) filtered by the user's
+       news-alert currencies (getNotifCurrPrefs); the streak is read
+       back from #railStreak, the rail's own computation. The room is a
+       fixed overlay (the #bgsFs pattern), NOT a .screen: opening and
+       closing never changes the active screen, so closing returns to
+       exactly the screen the user was on. The screensaver is scoped
+       to the scene preview (pvFs) and the celebration layer is left
+       untouched — the room interferes with neither. */
+    var FR_ASSET='assets/bgs-portrait/ninja-night.webp';
+    var FR_SCALES=[1.5,1.25,1.0,0.75];
+    var frState={open:false,motion:false,raf:0,tick:0,lastT:0,lastDt:16.7,acc:0,n:0,lastAvg:0,goodWin:0,scaleIdx:0,img:null,imgReady:false,gl:null,uTime:null,uGust:null,uCover:null,petalCtx:null,petals:[],frames:[],gust:0.8};
+    function frPhoneGate(){try{return window.matchMedia('(max-aspect-ratio: 3/4)').matches;}catch(e){return false;}}
+    function frReducedMotion(){try{return window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){return false;}}
+    function frPad2(n){return String(n).padStart(2,'0');}
+    /* NY session in the device's own local time: open 13:30, close
+       20:00, weekdays only. Recomputed from the passed Date on every
+       tick — no accumulated drift. */
+    function frSessionTarget(now){
+      function at(base,h,m){var t=new Date(base.getTime());t.setHours(h,m,0,0);return t;}
+      var day=now.getDay(),open=at(now,13,30),close=at(now,20,0);
+      if(day>=1&&day<=5){
+        if(now<open)return{live:false,target:open};
+        if(now<close)return{live:true,target:close};
+      }
+      var next=new Date(now.getTime());
+      do{next.setDate(next.getDate()+1);}while(next.getDay()===0||next.getDay()===6);
+      return{live:false,target:at(next,13,30)};
+    }
+    function frTick(){
+      var count=document.getElementById('frCount'),sub=document.getElementById('frSub');
+      if(!count||!sub)return;
+      var now=new Date(),s=frSessionTarget(now);
+      var secs=Math.max(0,Math.round((s.target.getTime()-now.getTime())/1000));
+      var txt=frPad2(Math.floor(secs/3600))+' : '+frPad2(Math.floor(secs%3600/60))+' : '+frPad2(secs%60);
+      if(s.live){count.textContent='SESSION LIVE';count.classList.add('live');sub.textContent='CLOSES IN '+txt+' · 20:00 YOUR TIME';}
+      else{count.textContent=txt;count.classList.remove('live');sub.textContent='UNTIL THE OPEN · 13:30 YOUR TIME';}
+    }
+    function frRenderEvents(){
+      var wrap=document.getElementById('frEvents');if(!wrap)return;
+      wrap.replaceChildren();
+      /* Feed not connected yet: show nothing rather than invent a
+         state (the Today brief hides itself the same way). */
+      if(typeof calendarFeedConnected==='undefined'||!calendarFeedConnected||typeof calendarEvents==='undefined'||!Array.isArray(calendarEvents))return;
+      var prefs=(typeof getNotifCurrPrefs==='function')?getNotifCurrPrefs():['USD','GBP'];
+      var now=new Date();
+      var todays=calendarEvents.filter(function(ev){
+        if(!ev||ev.impact!=='high'||!ev._ts||!isFinite(ev._ts))return false;
+        if(prefs.indexOf(ev.currency)<0)return false;
+        var d=new Date(ev._ts);
+        return d.getFullYear()===now.getFullYear()&&d.getMonth()===now.getMonth()&&d.getDate()===now.getDate();
+      }).sort(function(a,b){return a._ts-b._ts;}).slice(0,2);
+      if(!todays.length){
+        var p=document.createElement('div');p.className='fr-event';
+        var s=document.createElement('span');s.textContent='No high-impact events today';p.appendChild(s);
+        wrap.appendChild(p);return;
+      }
+      todays.forEach(function(ev){
+        var p=document.createElement('div');p.className='fr-event';
+        var dot=document.createElement('span');dot.className='dot';p.appendChild(dot);
+        var t=document.createElement('strong');t.textContent=ev.time||'—';p.appendChild(t);
+        var nm=document.createElement('span');nm.className='nm';nm.textContent=(ev.currency||'')+' — '+(ev.name||'')+' · High impact';p.appendChild(nm);
+        wrap.appendChild(p);
+      });
+    }
+    function frRenderStreak(){
+      try{if(typeof updateRailTradingStreak==='function')updateRailTradingStreak();}catch(e){}
+      var rail=document.getElementById('railStreak'),el=document.getElementById('frStreak');
+      if(el)el.textContent=rail?(rail.textContent||'0'):'0';
+    }
+    /* --- WebGL wind shader --- */
+    function frShader(gl,type,src){
+      var sh=gl.createShader(type);gl.shaderSource(sh,src);gl.compileShader(sh);
+      if(!gl.getShaderParameter(sh,gl.COMPILE_STATUS)){gl.deleteShader(sh);return null;}
+      return sh;
+    }
+    function frInitGL(){
+      var cv=document.getElementById('frCanvas');if(!cv)return false;
+      var gl=null;
+      try{gl=cv.getContext('webgl',{antialias:false,alpha:false,depth:false,stencil:false,powerPreference:'low-power'})||cv.getContext('experimental-webgl',{antialias:false,alpha:false});}catch(e){}
+      if(!gl)return false;
+      var vs=frShader(gl,gl.VERTEX_SHADER,'attribute vec2 aPos;varying vec2 vUv;void main(){vUv=aPos*0.5+0.5;gl_Position=vec4(aPos,0.0,1.0);}');
+      var fs=frShader(gl,gl.FRAGMENT_SHADER,[
+        'precision mediump float;',
+        'varying vec2 vUv;',
+        'uniform sampler2D uTex;',
+        'uniform float uTime;',
+        'uniform float uGust;',
+        'uniform vec4 uCover;',
+        'float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}',
+        'float noise(vec2 p){vec2 i=floor(p);vec2 f=fract(p);f=f*f*(3.0-2.0*f);',
+        ' return mix(mix(hash(i),hash(i+vec2(1.0,0.0)),f.x),mix(hash(i+vec2(0.0,1.0)),hash(i+vec2(1.0,1.0)),f.x),f.y);}',
+        'void main(){',
+        ' vec2 uv=vUv*uCover.xy+uCover.zw;',
+        ' float t=uTime;',
+        ' float skyW=smoothstep(0.58,0.85,uv.y);',
+        ' float mistW=smoothstep(0.30,0.05,uv.y);',
+        ' float clothD=distance(vec2((uv.x-0.50)*0.85,(uv.y-0.36)*1.25),vec2(0.0));',
+        ' float clothW=smoothstep(0.42,0.10,clothD);',
+        ' vec2 off=vec2(0.0);',
+        ' off.x+=(noise(vec2(uv.x*3.0-t*0.020,uv.y*2.0))-0.5)*0.020*skyW;',
+        ' off.y+=(noise(vec2(uv.x*2.0,uv.y*3.0-t*0.010))-0.5)*0.006*skyW;',
+        ' float rip=sin(uv.y*34.0-t*2.4+sin(uv.x*16.0+t*1.4)*1.6);',
+        ' float rip2=sin(uv.y*57.0-t*3.7+uv.x*22.0);',
+        ' off.x+=(rip*0.0060+rip2*0.0022)*clothW*uGust;',
+        ' off.y+=sin(uv.x*26.0+t*1.9)*0.0022*clothW*uGust;',
+        ' off.x+=(noise(vec2(uv.x*2.4-t*0.045,uv.y*6.0))-0.5)*0.030*mistW;',
+        ' off.y+=(noise(vec2(uv.x*3.0+t*0.015,uv.y*4.0))-0.5)*0.006*mistW;',
+        ' vec3 col=texture2D(uTex,uv+off).rgb;',
+        ' float md=distance(vec2((uv.x-0.515)*0.9,uv.y-0.865),vec2(0.0));',
+        ' float glow=smoothstep(0.36,0.0,md)*(0.075+0.030*sin(t*0.45));',
+        ' col+=vec3(1.0,0.76,0.34)*glow;',
+        ' gl_FragColor=vec4(col,1.0);',
+        '}'
+      ].join('\n'));
+      if(!vs||!fs)return false;
+      var prog=gl.createProgram();gl.attachShader(prog,vs);gl.attachShader(prog,fs);gl.linkProgram(prog);
+      if(!gl.getProgramParameter(prog,gl.LINK_STATUS))return false;
+      gl.useProgram(prog);
+      var buf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+      gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+      var loc=gl.getAttribLocation(prog,'aPos');gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+      var tex=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,tex);
+      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,true);
+      gl.texImage2D(gl.TEXTURE_2D,0,gl.RGB,gl.RGB,gl.UNSIGNED_BYTE,frState.img);
+      gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+      gl.uniform1i(gl.getUniformLocation(prog,'uTex'),0);
+      frState.uTime=gl.getUniformLocation(prog,'uTime');
+      frState.uGust=gl.getUniformLocation(prog,'uGust');
+      frState.uCover=gl.getUniformLocation(prog,'uCover');
+      frState.gl=gl;
+      return true;
+    }
+    function frResize(){
+      var cv=document.getElementById('frCanvas'),pc=document.getElementById('frPetals');
+      if(!cv)return;
+      var w=cv.clientWidth||window.innerWidth,h=cv.clientHeight||window.innerHeight;
+      var eff=Math.min(window.devicePixelRatio||1,FR_SCALES[frState.scaleIdx]);
+      var bw=Math.max(1,Math.round(w*eff)),bh=Math.max(1,Math.round(h*eff));
+      if(cv.width!==bw||cv.height!==bh){cv.width=bw;cv.height=bh;}
+      if(pc&&(pc.width!==bw||pc.height!==bh)){pc.width=bw;pc.height=bh;}
+      var gl=frState.gl;
+      if(gl&&frState.imgReady){
+        gl.viewport(0,0,bw,bh);
+        var ia=frState.img.naturalWidth/frState.img.naturalHeight,ca=bw/bh;
+        var sx=1,sy=1;
+        if(ca>ia)sy=ia/ca;else sx=ca/ia;
+        gl.uniform4f(frState.uCover,sx,sy,(1-sx)/2,(1-sy)/2);
+      }
+    }
+    function frPetalsInit(){
+      if(frState.petals.length)return;
+      for(var i=0;i<24;i++){
+        frState.petals.push({nx:Math.random(),ny:Math.random(),fall:0.020+Math.random()*0.026,gw:0.4+Math.random()*0.9,sw:0.7+Math.random()*1.1,ph:Math.random()*6.28,rot:Math.random()*6.28,rs:(Math.random()-0.5)*2.4,size:2.6+Math.random()*3.4,alpha:0.35+Math.random()*0.4});
+      }
+    }
+    function frDrawPetals(t){
+      var ctx=frState.petalCtx;if(!ctx)return;
+      var pc=document.getElementById('frPetals');if(!pc)return;
+      var w=pc.width,h=pc.height,dtS=Math.min(0.05,frState.lastDt/1000);
+      ctx.clearRect(0,0,w,h);
+      var maxN=frState.scaleIdx>=3?12:(frState.scaleIdx===2?16:24);
+      for(var i=0;i<frState.petals.length&&i<maxN;i++){
+        var p=frState.petals[i];
+        p.ny+=p.fall*dtS;
+        p.nx+=(0.004+frState.gust*0.016*p.gw+Math.sin(t*p.sw+p.ph)*0.010)*dtS;
+        p.rot+=p.rs*dtS;
+        if(p.ny>1.04){p.ny=-0.03;p.nx=Math.random();}
+        if(p.nx>1.05)p.nx-=1.10;if(p.nx<-0.05)p.nx+=1.10;
+        var s=p.size*(w/390);
+        ctx.save();ctx.translate(p.nx*w,p.ny*h);ctx.rotate(p.rot);
+        ctx.beginPath();ctx.ellipse(0,0,s,s*0.55,0,0,6.2832);
+        ctx.fillStyle='rgba(232,162,180,'+p.alpha.toFixed(3)+')';ctx.fill();ctx.restore();
+      }
+    }
+    function frGovern(avg){
+      frState.lastAvg=avg;
+      if(avg>19&&frState.scaleIdx<FR_SCALES.length-1){frState.scaleIdx++;frState.goodWin=0;frResize();}
+      else if(avg<11){if(++frState.goodWin>=5&&frState.scaleIdx>0){frState.scaleIdx--;frState.goodWin=0;frResize();}}
+      else frState.goodWin=0;
+    }
+    function frLoop(ts){
+      if(!frState.open||!frState.motion){frState.raf=0;return;}
+      frState.raf=requestAnimationFrame(frLoop);
+      var dt=frState.lastT?Math.min(50,ts-frState.lastT):16.7;
+      frState.lastT=ts;frState.lastDt=dt;
+      frState.frames.push(dt);if(frState.frames.length>900)frState.frames.shift();
+      frState.acc+=dt;frState.n++;
+      if(frState.n>=50){frGovern(frState.acc/frState.n);frState.acc=0;frState.n=0;}
+      var gl=frState.gl;if(!gl)return;
+      var t=ts/1000;
+      frState.gust=0.65+0.35*Math.sin(t*0.23)*Math.sin(t*0.11+1.7)+0.45*Math.pow(0.5+0.5*Math.sin(t*0.55+0.8),3.0);
+      gl.uniform1f(frState.uTime,t);
+      gl.uniform1f(frState.uGust,frState.gust);
+      gl.drawArrays(gl.TRIANGLES,0,3);
+      frDrawPetals(t);
+    }
+    function frStartMotion(){
+      if(!frState.open||frReducedMotion()){frState.motion=false;return;}
+      if(!frState.gl&&!frInitGL()){frState.motion=false;return;}
+      if(!frState.petalCtx){var pc=document.getElementById('frPetals');if(pc)frState.petalCtx=pc.getContext('2d');}
+      frPetalsInit();
+      frState.motion=true;
+      frResize();
+      var cv=document.getElementById('frCanvas');if(cv)cv.classList.add('on');
+      frState.lastT=0;frState.acc=0;frState.n=0;
+      if(!frState.raf)frState.raf=requestAnimationFrame(frLoop);
+    }
+    function frEnsureArt(){
+      var still=document.getElementById('frStill');
+      if(frState.imgReady){
+        if(still&&still.hidden){still.src=frState.img.src;still.hidden=false;}
+        frStartMotion();
+        return;
+      }
+      if(frState.img)return; /* load already in flight */
+      var img=new Image();
+      img.onload=function(){
+        frState.imgReady=true;
+        if(still){still.src=img.src;still.hidden=false;}
+        if(frState.open)frStartMotion();
+      };
+      img.onerror=function(){frState.img=null;};
+      frState.img=img;
+      img.src=FR_ASSET;
+    }
+    function frVisChange(){
+      if(document.hidden){
+        if(frState.raf){cancelAnimationFrame(frState.raf);frState.raf=0;}
+      }else if(frState.open&&frState.motion&&!frState.raf){
+        frState.lastT=0;frState.raf=requestAnimationFrame(frLoop);
+      }
+    }
+    function pvFocusOpen(){
+      if(!frPhoneGate())return;
+      var room=document.getElementById('focusRoom');
+      if(!room||frState.open)return;
+      frState.open=true;
+      room.hidden=false;
+      document.body.classList.add('fr-open');
+      frRenderEvents();frRenderStreak();frTick();
+      if(frState.tick)clearInterval(frState.tick);
+      frState.tick=setInterval(frTick,1000);
+      document.addEventListener('visibilitychange',frVisChange);
+      frEnsureArt();
+      var c=document.getElementById('frClose');if(c)c.focus({preventScroll:true});
+    }
+    function pvFocusClose(){
+      if(!frState.open)return;
+      frState.open=false;
+      var room=document.getElementById('focusRoom');if(room)room.hidden=true;
+      document.body.classList.remove('fr-open');
+      if(frState.raf){cancelAnimationFrame(frState.raf);frState.raf=0;}
+      if(frState.tick){clearInterval(frState.tick);frState.tick=0;}
+      document.removeEventListener('visibilitychange',frVisChange);
+      var b=document.getElementById('focusOpen');if(b&&frPhoneGate())b.focus({preventScroll:true});
+    }
+    window.pvFocusOpen=pvFocusOpen;
+    window.pvFocusClose=pvFocusClose;
+    /* Validation hook: frame-time evidence for the smoothness contract. */
+    window.__frStats=function(){
+      var f=frState.frames.slice(-300),avg=0;
+      for(var i=0;i<f.length;i++)avg+=f[i];
+      return{open:frState.open,motion:frState.motion,gl:!!frState.gl,rafRunning:!!frState.raf,scaleIdx:frState.scaleIdx,scale:FR_SCALES[frState.scaleIdx],frames:f.length,avgMs:f.length?Math.round((avg/f.length)*100)/100:0,lastWindowAvg:Math.round(frState.lastAvg*100)/100,petals:frState.petals.length};
+    };
+    (function(){
+      var open=document.getElementById('focusOpen');if(open)open.addEventListener('click',pvFocusOpen);
+      var close=document.getElementById('frClose');if(close)close.addEventListener('click',pvFocusClose);
+      var quiet=document.getElementById('frQuiet');if(quiet)quiet.addEventListener('click',pvFocusClose);
+      var start=document.getElementById('frStart');if(start)start.addEventListener('click',function(){pvFocusClose();if(typeof showScreen==='function')showScreen('journal');});
+      document.addEventListener('keydown',function(ev){if(frState.open&&ev.key==='Escape'){ev.preventDefault();pvFocusClose();}});
+      try{
+        var mq=window.matchMedia('(max-aspect-ratio: 3/4)');
+        var onMq=function(){if(frState.open&&!mq.matches)pvFocusClose();};
+        if(mq.addEventListener)mq.addEventListener('change',onMq);else if(mq.addListener)mq.addListener(onMq);
+      }catch(e){}
+      window.addEventListener('resize',function(){if(frState.open&&frState.motion)frResize();});
+    })();
+
 
     var PV_SCEN_KEY='pipvant_risk_scenarios';
     function pvScenLoad(){try{var v=JSON.parse(localStorage.getItem(PV_SCEN_KEY)||'[]');return Array.isArray(v)?v.filter(function(x){return x&&x.name;}):[];}catch(e){return[];}}
