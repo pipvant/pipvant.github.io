@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-22T09:20:42.426681+00:00",
+  "updated": "2026-10-22T09:44:44.478992+00:00",
   "changes": [
     {
       "date": "2026-10-22",
@@ -8,6 +8,15 @@
       "old": "{\"code\": \"SAVENOW\", \"discount\": \"90% OFF ALL EVALS!\", \"expiry\": \"Ends in 1d 02h 29m 19s\"}",
       "new": "{\"code\": \"SAVENOW\", \"discount\": \"90% OFF ALL EVALS!\", \"expiry\": \"Ends in 1d 01h 29m 45s\"}",
       "source": "https://apextraderfunding.com/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-22",
+      "firm": "FXIFY",
+      "field": "promotion",
+      "old": "{\"code\": \"REWARD25\", \"discount\": \"25% off\", \"expiry\": \"2026-11-01\"}",
+      "new": "{\"code\": \"AGHHH35\", \"discount\": \"\", \"expiry\": null}",
+      "source": "https://fxify.com/programs/one-phase/",
       "kind": "promo"
     },
     {
