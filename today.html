@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Today on PIPVANT — News Countdown, Verified Payouts, Live Deals</title>
+  <meta name="description" content="Today on PIPVANT: the next high-impact event with a live countdown, today’s high-impact calendar in your timezone, the latest blockchain-verified prop firm payouts, live deals and the top scored firms — all from the verified database.">
+  <link rel="canonical" href="https://pipvant.github.io/today.html">
+  <meta property="og:title" content="Today on PIPVANT — News Countdown, Verified Payouts, Live Deals">
+  <meta property="og:description" content="Today on PIPVANT: the next high-impact event with a live countdown, today’s high-impact calendar in your timezone, the latest blockchain-verified prop firm payouts, live deals and the top scored firms — all from the verified database.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pipvant.github.io/today.html">
+  <meta property="og:image" content="https://pipvant.github.io/assets/pipvanta-logo.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Today on PIPVANT — News Countdown, Verified Payouts, Live Deals">
+  <meta name="twitter:description" content="Today on PIPVANT: the next high-impact event with a live countdown, today’s high-impact calendar in your timezone, the latest blockchain-verified prop firm payouts, live deals and the top scored firms — all from the verified database.">
+  <link rel="icon" type="image/png" href="assets/pipvanta-logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0A1628;--surface:#0F1D33;--raised:#14253F;--line:#1C2F4D;--line-strong:#2B4266;--text:#F4F6F8;--secondary:#A9B6C6;--muted:#8B9AB0;--accent:#5B8DEF;--accent-strong:#3A6FDE;--gold:#D4AF37}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+    h1,h2,h3{font-family:"Space Grotesk",sans-serif;letter-spacing:-.02em}
+    .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+    header.top{position:sticky;top:0;z-index:10;background:rgba(10,22,40,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+    header.top .wrap{display:flex;align-items:center;justify-content:space-between;padding:14px 20px}
+    .brand{display:flex;align-items:center;gap:10px;font-family:"Space Grotesk";font-weight:700;font-size:18px;text-decoration:none;color:var(--text)}
+    .brand img{width:30px;height:30px;border-radius:8px}
+    .cta-btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 20px;border-radius:10px;background:var(--accent-strong);color:#fff;font-weight:700;text-decoration:none;border:1px solid var(--accent-strong)}
+    .cta-btn.gold{background:linear-gradient(135deg,#F5D67B,#D4AF37);border-color:#D4AF37;color:#0A1628}
+    .cta-btn.ghost{background:transparent;border-color:var(--line-strong);color:var(--text)}
+    .hero{padding:56px 0 36px;text-align:center}
+    .eyebrow{color:var(--accent);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}
+    h1{font-size:clamp(2.2rem,6vw,3.6rem);line-height:1.05;margin:0 0 16px}
+    h1 .gold{background:linear-gradient(135deg,#F5D67B,#D4AF37);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .lede{color:var(--secondary);font-size:17px;line-height:1.7;max-width:680px;margin:0 auto 28px}
+    .section{padding:40px 0}
+    h2{font-size:clamp(1.6rem,4vw,2.4rem);margin:0 0 14px}
+    .section p.body{color:var(--secondary);line-height:1.75;max-width:760px}
+    .card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px}
+    .firm-logo{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:10px;background:var(--raised);border:1px solid var(--line-strong);color:var(--gold);font-family:"Space Grotesk";font-weight:700;font-size:19px;overflow:hidden;flex:none;vertical-align:middle}
+    .firm-logo.lg{width:76px;height:76px;border-radius:16px;font-size:32px}
+    .hero-logo{display:flex;justify-content:center;margin-bottom:18px}
+    .meta-line{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:0 0 24px}
+    .meta-chip{display:inline-flex;align-items:center;min-height:32px;padding:0 14px;border-radius:999px;background:var(--surface);border:1px solid var(--line-strong);color:var(--secondary);font-size:13px;font-weight:600}
+    .meta-chip b{color:var(--text);font-weight:700}
+    .meta-chip a{color:var(--accent);text-decoration:none}
+    .score-card{display:flex;gap:26px;flex-wrap:wrap;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:26px;margin:6px 0 8px}
+    .score-big{font-family:"Space Grotesk";font-size:64px;font-weight:700;line-height:1;color:var(--gold)}
+    .score-big small{font-size:20px;color:var(--muted)}
+    .score-side{flex:1;min-width:260px}
+    .score-rationale{color:var(--secondary);line-height:1.65;margin:8px 0 0}
+    .comp-table{width:100%;border-collapse:collapse;margin-top:14px}
+    .comp-table td,.comp-table th{padding:10px 8px;border-bottom:1px solid var(--line);font-size:14px;text-align:start}
+    .comp-table th{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+    .comp-table .pts{font-variant-numeric:tabular-nums;font-weight:700;white-space:nowrap}
+    .comp-table .driver{color:var(--secondary)}
+    .bar{height:8px;border-radius:99px;background:var(--raised);overflow:hidden;min-width:90px}
+    .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--gold));border-radius:99px}
+    .table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:16px;background:var(--surface)}
+    table.plans{width:100%;border-collapse:collapse;min-width:860px}
+    table.plans th,table.plans td{padding:11px 12px;border-bottom:1px solid var(--line);font-size:13.5px;text-align:start;white-space:nowrap;font-variant-numeric:tabular-nums}
+    table.plans th{color:var(--muted);font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;background:var(--raised)}
+    table.plans td.promo-price{color:var(--gold);font-weight:700}
+    table.plans td .off{color:var(--muted);font-weight:600;font-size:12px}
+    .promo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+    .promo-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+    .promo-card .disc{font-family:"Space Grotesk";font-weight:700;font-size:17px;color:var(--gold);margin-bottom:6px}
+    .promo-card .exp{color:var(--muted);font-size:13px;margin-top:8px}
+    .promo-card .applies{color:var(--secondary);font-size:13px}
+    .copy-btn{margin-top:12px;display:inline-flex;align-items:center;min-height:40px;padding:0 16px;border-radius:9px;background:var(--raised);border:1px solid var(--gold);color:var(--gold);font-weight:700;font-size:13.5px;cursor:pointer;font-family:inherit}
+    .empty{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:32px 28px;text-align:center;color:var(--secondary);line-height:1.7}
+    .rules-list{margin:0;padding-inline-start:20px;color:var(--secondary);line-height:1.8}
+    .rules-list b{color:var(--text)}
+    .link-chips{display:flex;gap:8px;flex-wrap:wrap}
+    .link-chip{display:inline-flex;align-items:center;min-height:38px;padding:0 16px;border-radius:999px;background:var(--surface);border:1px solid var(--line-strong);color:var(--text);font-size:13.5px;font-weight:600;text-decoration:none}
+    .link-chip:hover{border-color:var(--gold);color:var(--gold)}
+    .cta-row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+    .final{text-align:center;padding:52px 0 68px}
+    .faq{max-width:760px}
+    .faq details{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin-bottom:10px}
+    .faq summary{font-weight:600;cursor:pointer;font-size:15px}
+    .faq p{color:var(--secondary);line-height:1.7;font-size:14px;margin:10px 0 0}
+    footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted);font-size:13px}
+    footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    footer a{color:var(--muted);text-decoration:none;margin-inline-start:16px}
+    .top-actions{display:flex;align-items:center;gap:10px}
+    .lang-btn{background:transparent;border:1px solid var(--line-strong);color:var(--secondary);border-radius:10px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;min-height:44px}
+    .lang-btn:hover{border-color:var(--gold);color:var(--text)}
+    .comm-big{font-family:"Space Grotesk";font-size:40px;font-weight:700;color:var(--gold)}
+    @media (max-width:640px){.score-big{font-size:48px}.comp-table .driver{display:none}}
+
+  </style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="/"><img src="assets/pipvanta-logo.png" alt="PIPVANT logo">PIPVANT</a>
+  <div class="top-actions">
+    <button class="lang-btn" id="langToggle" type="button" aria-label="Switch language">العربية</button>
+    <a class="cta-btn" href="/" data-i18n="nav_toolkit">Open free toolkit</a>
+  </div>
+</div></header>
+
+<div class="wrap">
+
+  <style>
+    .derive{background:var(--surface);border:1px solid var(--gold);border-radius:16px;padding:24px 26px}
+    .list-row{display:flex;gap:16px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 20px;margin-bottom:12px;flex-wrap:wrap}
+    .list-row .main{flex:1;min-width:230px}
+    .list-row .fname{font-family:"Space Grotesk";font-weight:700;font-size:18px;color:var(--text);text-decoration:none}
+    .list-row .sub{color:var(--secondary);font-size:14px;margin-top:4px;line-height:1.6}
+    .list-row .sub a{color:var(--accent);text-decoration:none}
+    .list-row .amount{font-family:"Space Grotesk";font-weight:700;color:var(--gold);font-size:19px;white-space:nowrap}
+    .list-row .when{font-family:"Space Grotesk";font-weight:700;color:var(--text);white-space:nowrap}
+    .big-stat{font-family:"Space Grotesk";font-weight:700;color:var(--gold)}
+  </style>
+
+  <section class="hero">
+    <div class="eyebrow" data-i18n="eyebrow">Live today</div>
+    <h1>The trading day, <span class="gold">live</span>.</h1>
+    <p class="lede" data-i18n="lede">The trading day on one page — the next high-impact event with a live countdown, today’s high-impact calendar in your timezone, the latest verified payouts and the deals and firms that lead the verified database right now.</p>
+    <div class="meta-line">
+      <span class="meta-chip"><b id="todayDate">Friday, 23 October 2026</b></span>
+      <span class="meta-chip"><b>22</b>&nbsp;<span data-i18n="chip_firms">verified firms tracked</span></span>
+      <span class="meta-chip"><span data-i18n="chip_verified">Data last verified</span>:&nbsp;<b>Oct 22, 2026</b></span>
+    </div>
+  </section>
+  <section class="section" style="padding-top:6px">
+    <h2 data-i18n="next_h">Next high-impact event</h2>
+    <div class="derive" style="text-align:center;padding:26px 18px">
+      <div id="cdName" style="font-size:20px;font-weight:700">Loading…</div>
+      <div id="cdMeta" style="opacity:.75;margin-top:4px"></div>
+      <div id="cdTimer" class="big-stat" style="font-size:44px;margin-top:10px">--:--:--</div>
+    </div>
+  </section>
+  <section class="section">
+    <h2 data-i18n="cal_h">Today’s high-impact calendar</h2>
+    <div id="todayEvents"><p class="lede">Loading…</p></div>
+    <p class="lede" data-i18n="cal_note" style="margin-top:10px">Times are shown in your device’s timezone. Forecast and previous values come from the same verified feed as the PIPVANT calendar.</p>
+    <div class="link-chips">
+      <a class="link-chip" href="/" data-i18n="cal_link">Open the full calendar</a>
+    </div>
+  </section>
+  <section class="section">
+    <h2 data-i18n="pay_h">Latest verified payouts</h2>
+    <div id="todayPayouts"><p class="lede">Loading…</p></div>
+    <p class="lede" data-i18n="pay_note" style="margin-top:10px">Settled on a public blockchain and tracked by Payout Junction — the newest records in PIPVANT’s verified payout database.</p>
+    <div class="link-chips">
+      <a class="link-chip" href="verified-payouts.html" data-i18n="pay_link">All verified payouts</a>
+    </div>
+  </section>
+  <section class="section">
+    <h2 data-i18n="deals_h">Live deals right now</h2>
+    <div><div class="list-row"><div class="main"><span class="fname"><span class="firm-logo" data-firm-logo data-name="Apex Trader Funding" data-website="https://apextraderfunding.com" aria-hidden="true"></span> Apex Trader Funding</span><div class="sub">with code <b>SAVENOW</b></div></div><span class="amount">−90%</span></div><div class="list-row"><div class="main"><span class="fname"><span class="firm-logo" data-firm-logo data-name="E8 Markets" data-website="https://e8markets.com" aria-hidden="true"></span> E8 Markets</span><div class="sub">with code <b>E8ARC</b></div></div><span class="amount">−50%</span></div><div class="list-row"><div class="main"><span class="fname"><span class="firm-logo" data-firm-logo data-name="Topstep" data-website="https://www.topstep.com" aria-hidden="true"></span> Topstep</span><div class="sub">48% OFF</div></div><span class="amount">−48%</span></div></div>
+    <div class="link-chips">
+      <a class="link-chip" href="prop-firm-deals.html" data-i18n="deals_link">All active deals</a>
+    </div>
+  </section>
+  <section class="section">
+    <h2 data-i18n="top_h">Top scored firms</h2>
+    <div><div class="list-row"><div class="main"><span class="fname"><span class="firm-logo" data-firm-logo data-name="Funding Pips" data-website="https://fundingpips.com" aria-hidden="true"></span> Funding Pips</span><div class="sub"><a href="firms/funding-pips.html">Full profile</a></div></div><span class="amount">80</span></div><div class="list-row"><div class="main"><span class="fname"><span class="firm-logo" data-firm-logo data-name="Lucid Trading" data-website="https://lucidtrading.com/" aria-hidden="true"></span> Lucid Trading</span><div class="sub"><a href="firms/lucid-trading.html">Full profile</a></div></div><span class="amount">72</span></div><div class="list-row"><div class="main"><span class="fname"><span class="firm-logo" data-firm-logo data-name="FTMO" data-website="https://ftmo.com" aria-hidden="true"></span> FTMO</span><div class="sub"><a href="firms/ftmo.html">Full profile</a></div></div><span class="amount">71</span></div></div>
+    <p class="lede" data-i18n="top_note" style="margin-top:10px">The PIPVANT Score — one formula for every firm, built only from verified data.</p>
+  </section>
+  <section class="section">
+    <h2 data-i18n="more_h">Keep exploring</h2>
+    <div class="link-chips">
+      <a class="link-chip" href="verified-payouts.html" data-i18n="more_payouts">Verified payouts</a>
+      <a class="link-chip" href="prop-firm-comparison.html" data-i18n="foot_comp">Comparison</a>
+      <a class="link-chip" href="data-ledger.html" data-i18n="more_ledger">Data ledger</a>
+    </div>
+  </section>
+  <section class="final">
+    <h2 data-i18n="final_h">Rank them your way.</h2>
+    <p data-i18n="final_b">Open the free PIPVANT matcher to filter every verified firm by price, size, split and score — and open any firm’s full profile from there.</p>
+    <div class="cta-row">
+      <a class="cta-btn gold" href="/" data-i18n="cta_matcher">Open the matcher</a>
+      <a class="cta-btn ghost" href="prop-firm-comparison.html" data-i18n="cta_compare">Compare firms</a>
+    </div>
+  </section>
+</div>
+
+<footer><div class="wrap">
+  <span data-i18n="foot">© 2026 PIPVANT by Orovanta — Trade with a process, not a prediction.</span>
+  <span><a href="/" data-i18n="foot_toolkit">Toolkit</a><a href="prop-firm-comparison.html" data-i18n="foot_comp">Comparison</a><a href="prop-firm-deals.html" data-i18n="foot_deals">Deals</a><a href="data-ledger.html" data-i18n="foot_ledger">Data Ledger</a></span>
+</div></footer>
+<script src="assets/pipv-os.js" defer></script>
+<script>
+(function(){
+  var I18N={"ar": {"cal_h": "تقويم اليوم عالي التأثير", "cal_link": "افتح التقويم الكامل", "cal_note": "الأوقات معروضة بتوقيت جهازك. قيم التوقع والسابق من نفس المصدر الموثق الذي يغذي تقويم PIPVANT.", "chip_firms": "شركة موثقة نتتبعها", "chip_verified": "آخر تحقق من البيانات", "code_word": "بالكود", "cta_compare": "قارن الشركات", "cta_matcher": "افتح المطابق", "deals_h": "عروض حية الآن", "deals_link": "كل العروض النشطة", "dir": "rtl", "eyebrow": "اليوم مباشرة", "final_b": "افتح مطابق PIPVANT المجاني لتصفية كل شركة موثقة حسب السعر والحجم والتقسيم والنتيجة — وافتح الملف الكامل لأي شركة من هناك.", "final_h": "رتّبهم على طريقتك.", "foot": "© 2026 PIPVANT من Orovanta — تداول بعملية، لا بتوقع.", "foot_comp": "المقارنة", "foot_deals": "العروض", "foot_ledger": "سجل البيانات", "foot_toolkit": "الأدوات", "lede": "يوم التداول في صفحة واحدة — الحدث عالي التأثير القادم مع عدّاد حي، وتقويم اليوم عالي التأثير بتوقيتك، وأحدث السحوبات الموثقة والعروض والشركات التي تتصدر قاعدة البيانات الموثقة الآن.", "meta_title": "اليوم على PIPVANT — عدّاد الأخبار والسحوبات الموثقة والعروض", "more_h": "تابع الاستكشاف", "more_ledger": "سجل البيانات", "more_payouts": "السحوبات الموثقة", "nav_toolkit": "افتح الأدوات المجانية", "next_h": "الحدث عالي التأثير القادم", "off_word": "خصم", "pay_h": "أحدث السحوبات الموثقة", "pay_link": "كل السحوبات الموثقة", "pay_note": "سُوّيت على بلوكتشين عمومية ويتتبعها Payout Junction — أحدث السجلات في قاعدة سحوبات PIPVANT الموثقة.", "toggle": "English", "top_h": "الشركات الأعلى تقييماً", "top_link": "الملف الكامل", "top_note": "نتيجة PIPVANT — صيغة واحدة لكل شركة، مبنية فقط من بيانات موثقة."}, "en": {"cal_h": "Today’s high-impact calendar", "cal_link": "Open the full calendar", "cal_note": "Times are shown in your device’s timezone. Forecast and previous values come from the same verified feed as the PIPVANT calendar.", "chip_firms": "verified firms tracked", "chip_verified": "Data last verified", "code_word": "with code", "cta_compare": "Compare firms", "cta_matcher": "Open the matcher", "deals_h": "Live deals right now", "deals_link": "All active deals", "dir": "ltr", "eyebrow": "Live today", "final_b": "Open the free PIPVANT matcher to filter every verified firm by price, size, split and score — and open any firm’s full profile from there.", "final_h": "Rank them your way.", "foot": "© 2026 PIPVANT by Orovanta — Trade with a process, not a prediction.", "foot_comp": "Comparison", "foot_deals": "Deals", "foot_ledger": "Data Ledger", "foot_toolkit": "Toolkit", "lede": "The trading day on one page — the next high-impact event with a live countdown, today’s high-impact calendar in your timezone, the latest verified payouts and the deals and firms that lead the verified database right now.", "meta_title": "Today on PIPVANT — News Countdown, Verified Payouts, Live Deals", "more_h": "Keep exploring", "more_ledger": "Data ledger", "more_payouts": "Verified payouts", "nav_toolkit": "Open free toolkit", "next_h": "Next high-impact event", "off_word": "off", "pay_h": "Latest verified payouts", "pay_link": "All verified payouts", "pay_note": "Settled on a public blockchain and tracked by Payout Junction — the newest records in PIPVANT’s verified payout database.", "toggle": "العربية", "top_h": "Top scored firms", "top_link": "Full profile", "top_note": "The PIPVANT Score — one formula for every firm, built only from verified data."}};
+
+  var lang='en';
+  try{var _s=JSON.parse(localStorage.getItem('pipvant_settings')||'{}');if(_s&&(_s.language==='ar'||_s.language==='en'))lang=_s.language;}catch(e){}
+  function t(k){var v=I18N[lang][k];return v!==undefined?v:I18N.en[k];}
+  function applyStatic(){
+    document.documentElement.lang=lang;
+    document.documentElement.dir=t('dir');
+    document.title=t('meta_title');
+    document.querySelectorAll('[data-i18n]').forEach(function(el){var v=t(el.getAttribute('data-i18n'));if(typeof v==='string')el.textContent=v;});
+    var tg=document.getElementById('langToggle');if(tg)tg.textContent=t('toggle');
+  }
+  applyStatic();
+  var tgEl=document.getElementById('langToggle');
+  if(tgEl)tgEl.addEventListener('click',function(){
+    lang=lang==='en'?'ar':'en';
+    try{var s=JSON.parse(localStorage.getItem('pipvant_settings')||'{}');s.language=lang;localStorage.setItem('pipvant_settings',JSON.stringify(s));}catch(e){}
+    applyStatic();
+  });
+
+  var LOGO_OVERRIDES={
+    'takeprofittrader.com':'https://takeprofittrader.com/assets/mobile-logo.svg',
+    'apextraderfunding.com':'https://apextraderfunding.com/cdn-cgi/image/width=512,height=512,fit=cover,gravity=auto,format=auto//app/uploads/cropped-APEX_FAV-192x192.png'
+  };
+  var LETTER_ONLY_DOMAINS=['blueguardian.com'];
+  function logoInto(el,firm){
+    if(!el||!firm)return;
+    var letter=(firm.name||'?').charAt(0).toUpperCase();
+    el.setAttribute('aria-label',firm.name||'Firm');
+    var domain='';
+    try{domain=String(new URL(firm.website||'').hostname).replace(/^www\./,'');}catch(e){domain='';}
+    if(!domain){el.textContent=letter;return;}
+    el.textContent='';
+    if(LETTER_ONLY_DOMAINS.indexOf(domain)!==-1){el.textContent=letter;return;}
+    var img=document.createElement('img');
+    img.alt=firm.name||'';img.loading='lazy';
+    img.style.cssText='width:100%;height:100%;object-fit:contain;border-radius:6px;';
+    img.onerror=function(){img.remove();el.textContent=letter;};
+    img.src=LOGO_OVERRIDES[domain]||('https://www.google.com/s2/favicons?domain='+domain+'&sz=128');
+    el.appendChild(img);
+  }
+  var staticLogos=document.querySelectorAll('[data-firm-logo]');
+  for(var li=0;li<staticLogos.length;li++){
+    logoInto(staticLogos[li],{name:staticLogos[li].getAttribute('data-name')||'',website:staticLogos[li].getAttribute('data-website')||''});
+  }
+
+/* ---- Today page: live day data (anon REST, same pattern as deals) ---- */
+(function(){
+  var KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFjcGt6YXZtaWZqd25za2lhcmV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyMDk1ODcsImV4cCI6MjEwNjc4NTU4N30.9-k-DoB6467EXTPKrvWUi-LRDPbSSC30f6BgrZezo2A';
+  var BASE='https://acpkzavmifjwnskiaret.supabase.co/rest/v1/';
+  var H={'apikey':KEY,'Authorization':'Bearer '+KEY};
+  function lang(){try{var s=JSON.parse(localStorage.getItem('pipvant_settings')||'{}');if(s&&(s.language==='ar'||s.language==='en'))return s.language;}catch(e){}return 'en';}
+  var AR=lang()==='ar';
+  var S={
+    loading:AR?'جارٍ التحميل…':'Loading…',
+    err:AR?'تعذّر التحميل — تحقق من اتصالك ثم حدّث الصفحة.':'Couldn\u2019t load — check your connection and refresh.',
+    noneToday:AR?'لا أحداث عالية التأثير متبقية اليوم.':'No high-impact events left today.',
+    none48:AR?'لا أحداث عالية التأثير في الـ48 ساعة القادمة.':'No high-impact events in the next 48 hours.',
+    passed:AR?'صدر':'Released',
+    inWord:AR?'بعد':'in',
+    forecast:AR?'التوقع':'Forecast',
+    previous:AR?'السابق':'Previous',
+    combined:AR?'المجموع المدرج':'combined listed value',
+    records:AR?'سجل موثق':'verified records',
+    source:AR?'المصدر':'Source'
+  };
+  function $(id){return document.getElementById(id);}
+  function esc(t){var d=document.createElement('div');d.textContent=t==null?'':String(t);return d.innerHTML;}
+  function fmtTime(ts){return new Date(ts).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});}
+  function fmtDay(ts){return new Date(ts).toLocaleDateString(AR?'ar':'en-GB',{weekday:'short',day:'2-digit',month:'short'});}
+  function money(v){return '$'+Number(v||0).toLocaleString('en-US');}
+  /* date chip + hero date in the visitor's timezone */
+  var nowD=new Date();
+  var dateStr=nowD.toLocaleDateString(AR?'ar':'en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  if($('todayDate'))$('todayDate').textContent=dateStr;
+  /* ---- events: today 00:00 local -> +48h ---- */
+  var start=new Date();start.setHours(0,0,0,0);
+  var end=new Date(start.getTime()+48*3600*1000);
+  var nextEv=null,timer=null;
+  function pad(n){return ('0'+n).slice(-2);}
+  function tick(){
+    if(!nextEv)return;
+    var diff=nextEv.ts-Date.now();
+    if(diff<=0){if($('cdTimer'))$('cdTimer').textContent='00:00:00';return;}
+    var s=Math.floor(diff/1000),h=Math.floor(s/3600),m=Math.floor((s%3600)/60),ss=s%60;
+    var d=Math.floor(h/24);h=h%24;
+    if($('cdTimer'))$('cdTimer').textContent=(d>0?(d+'d '):'')+pad(h)+':'+pad(m)+':'+pad(ss);
+  }
+  function renderEvents(rows){
+    var highs=rows.filter(function(r){return String(r.impact||'').toLowerCase()==='high';})
+      .map(function(r){return {ts:new Date(r.event_time).getTime(),cur:r.currency||'',name:r.title||'',fc:r.forecast,prev:r.previous};})
+      .filter(function(e){return isFinite(e.ts);})
+      .sort(function(a,b){return a.ts-b.ts;});
+    var todayKey=new Date().toDateString();
+    var todays=highs.filter(function(e){return new Date(e.ts).toDateString()===todayKey;});
+    var up=highs.filter(function(e){return e.ts>Date.now();});
+    /* countdown card */
+    if(up.length){
+      nextEv=up[0];
+      if($('cdName'))$('cdName').textContent=nextEv.cur+' · '+nextEv.name;
+      if($('cdMeta'))$('cdMeta').textContent=fmtDay(nextEv.ts)+' · '+fmtTime(nextEv.ts);
+      if(timer)clearInterval(timer);
+      tick();timer=setInterval(tick,1000);
+    }else{
+      if($('cdName'))$('cdName').textContent=S.none48;
+      if($('cdMeta'))$('cdMeta').textContent='';
+      if($('cdTimer'))$('cdTimer').textContent='—';
+    }
+    /* today's list */
+    var box=$('todayEvents');
+    if(!box)return;
+    if(!todays.length){box.innerHTML='<p class="lede">'+esc(S.noneToday)+'</p>';return;}
+    box.innerHTML=todays.map(function(e){
+      var past=e.ts<Date.now();
+      var extra='';
+      if(e.fc)extra+=' · '+esc(S.forecast)+': '+esc(e.fc);
+      if(e.prev)extra+=' · '+esc(S.previous)+': '+esc(e.prev);
+      var rel='';
+      if(past){rel=S.passed;}
+      else{
+        var mins=Math.max(1,Math.round((e.ts-Date.now())/60000));
+        rel=S.inWord+' '+(mins>=60?(Math.floor(mins/60)+'h '+(mins%60)+'m'):mins+'m');
+      }
+      return '<div class="list-row"'+(past?' style="opacity:.55"':'')+'>'
+        +'<span class="when">'+esc(fmtTime(e.ts))+'</span>'
+        +'<div class="main"><span class="fname"><b>'+esc(e.cur)+'</b> '+esc(e.name)+'</span>'
+        +'<div class="sub">'+esc(rel)+esc(extra)+'</div></div></div>';
+    }).join('');
+  }
+  fetch(BASE+'economic_events?select=event_time,currency,impact,title,forecast,previous'
+      +'&event_time=gte.'+encodeURIComponent(start.toISOString())
+      +'&event_time=lt.'+encodeURIComponent(end.toISOString())
+      +'&order=event_time.asc&limit=200',{headers:H})
+    .then(function(r){return r.json();})
+    .then(function(rows){renderEvents(Array.isArray(rows)?rows:[]);})
+    .catch(function(){
+      if($('cdName'))$('cdName').textContent=S.err;
+      var box=$('todayEvents');if(box)box.innerHTML='<p class="lede">'+esc(S.err)+'</p>';
+    });
+  /* ---- latest verified payouts ---- */
+  fetch(BASE+'firm_payout_records?select=amount,currency,payout_date,source_url,firms(name,website)'
+      +'&order=payout_date.desc&limit=100',{headers:H})
+    .then(function(r){return r.json();})
+    .then(function(rows){
+      var box=$('todayPayouts');if(!box)return;
+      rows=Array.isArray(rows)?rows:[];
+      if(!rows.length){box.innerHTML='<p class="lede">'+esc(S.err)+'</p>';return;}
+      var total=rows.reduce(function(a,r){return a+(Number(r.amount)||0);},0);
+      var top=rows.slice(0,5).map(function(r){
+        var f=r.firms||{};var name=f.name||'';
+        var dom='';try{dom=new URL(f.website||'').hostname.replace(/^www\./,'');}catch(e){}
+        var logo=dom?'<img src="https://www.google.com/s2/favicons?domain='+esc(dom)+'&sz=128" alt="" width="22" height="22" loading="lazy" onerror="this.remove()">':'';
+        var when=new Date(r.payout_date+'T00:00:00Z').toLocaleDateString(AR?'ar':'en-GB',{day:'2-digit',month:'short',year:'numeric'});
+        return '<div class="list-row"><div class="main"><span class="fname">'+logo+' '+esc(name)+'</span>'
+          +'<div class="sub">'+esc(when)+' · <a href="'+esc(r.source_url||'#')+'" target="_blank" rel="noopener">'+esc(S.source)+'</a></div></div>'
+          +'<span class="amount">'+esc(money(r.amount))+'</span></div>';
+      }).join('');
+      box.innerHTML=top+'<p class="lede" style="margin-top:10px"><b>'+esc(money(total))+'</b> '+esc(S.combined)
+        +' · '+rows.length+' '+esc(S.records)+'</p>';
+    })
+    .catch(function(){var box=$('todayPayouts');if(box)box.innerHTML='<p class="lede">'+esc(S.err)+'</p>';});
+})();
+
+})();
+</script>
+</body>
+</html>
