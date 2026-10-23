@@ -10396,6 +10396,13 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
   var reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
   var viewedScreens={};
   var previousUnreadCount=0;
+  /* Welcome-fix (2026-10-23): the badge pop + toast may only announce
+     notifications that arrive DURING this session. sbLoadNotifications
+     arms the announcer once the stored personal list has merged (plus
+     an 8s boot fallback); until then refreshes just set the baseline,
+     so pre-existing unread items (e.g. the welcome) never "arrive"
+     again at every login. */
+  var _notifAnnounceArmed=false;
   function motionDelay(){return reduceMotion.matches?0:390;}
   function indexChildren(root,selector){
     if(!root)return;root.classList.add('motion-cascade');
@@ -12042,7 +12049,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       }
     }catch(e){}
     var groups=document.getElementById('notificationGroups');
-    if(unreadCount>previousUnreadCount){notificationBadge.classList.remove('badge-pop');notificationButton.classList.remove('bell-swing');void notificationBadge.offsetWidth;notificationBadge.classList.add('badge-pop');notificationButton.classList.add('bell-swing');var newest=groups&&groups.querySelector('.notification-item.unread .notification-copy strong');if(newest&&newest.textContent.trim()&&newest.textContent.trim()!=='—')showToast(newest.textContent.trim());setTimeout(function(){notificationBadge.classList.remove('badge-pop');notificationButton.classList.remove('bell-swing');},310);}previousUnreadCount=unreadCount;
+    if(_notifAnnounceArmed&&unreadCount>previousUnreadCount){notificationBadge.classList.remove('badge-pop');notificationButton.classList.remove('bell-swing');void notificationBadge.offsetWidth;notificationBadge.classList.add('badge-pop');notificationButton.classList.add('bell-swing');var newest=groups&&groups.querySelector('.notification-item.unread .notification-copy strong');if(newest&&newest.textContent.trim()&&newest.textContent.trim()!=='—')showToast(newest.textContent.trim());setTimeout(function(){notificationBadge.classList.remove('badge-pop');notificationButton.classList.remove('bell-swing');},310);}previousUnreadCount=unreadCount;
     notificationBadge.textContent=unreadCount>1?(unreadCount>99?'99+':String(unreadCount)):'';
     notificationBadge.classList.toggle('visible',unreadCount>0);notificationBadge.classList.toggle('count',unreadCount>1);
     notificationButton.setAttribute('aria-label',currentLanguage==='ar'?(unreadCount?('الإشعارات، '+unreadCount+' غير مقروءة'):'الإشعارات'):(unreadCount?('Notifications, '+unreadCount+' unread'):'Notifications'));
@@ -12053,6 +12060,21 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
   function notifUserKey(){try{var u=(typeof sbUser!=='undefined'&&sbUser&&sbUser.id)?sbUser.id:'anon';return 'pipvant_notif_'+u;}catch(e){return 'pipvant_notif_anon';}}
   function getPersonalNotifs(){try{return JSON.parse(localStorage.getItem(notifUserKey())||'[]');}catch(e){return [];}}
   function savePersonalNotifs(list){try{localStorage.setItem(notifUserKey(),JSON.stringify(list.slice(0,50)));}catch(e){}}
+  /* News-alert dedupe store — PER USER (2026-10-23 fix): the old key was
+     device-global, so on a shared device one user's alerts suppressed
+     another's. Legacy device data is adopted once per user. */
+  function pvNewsAlertedKey(){try{var u=(typeof sbUser!=='undefined'&&sbUser&&sbUser.id)?sbUser.id:'anon';return 'pipvant_news_alerted_'+u;}catch(e){return 'pipvant_news_alerted_anon';}}
+  function pvLoadNewsAlerted(){
+    try{
+      var k=pvNewsAlertedKey();
+      var s=localStorage.getItem(k);
+      if(s)return JSON.parse(s);
+      var legacy=localStorage.getItem('pipvant_news_alerted');
+      if(legacy){try{localStorage.setItem(k,legacy);}catch(e){} return JSON.parse(legacy);}
+    }catch(e){}
+    return {};
+  }
+  function pvSaveNewsAlerted(obj){try{localStorage.setItem(pvNewsAlertedKey(),JSON.stringify(obj));}catch(e){}}
   function addPersonalNotif(title,message,type,ref){
     if(!notificationsEnabled)return;
     // Logged in → Supabase is the source of truth (persists across data-clear).
@@ -12235,8 +12257,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       if(typeof calendarEvents==='undefined'||!calendarEvents.length)return;
       var now=Date.now(),LEAD=15*60000;
       var prefs=(typeof getNotifCurrPrefs==='function')?getNotifCurrPrefs():['USD','GBP'];
-      var alerted={};
-      try{alerted=JSON.parse(localStorage.getItem('pipvant_news_alerted')||'{}');}catch(e){}
+      var alerted=pvLoadNewsAlerted();
       /* Same grouping as the load-time scan: same-minute events group
          together, exact duplicate rows deduped by title+currency. */
       var groups={};
@@ -12294,7 +12315,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
         }
         pvFireBrowserNotification(bTitle,bBody,nid);
       });
-      if(changed){try{localStorage.setItem('pipvant_news_alerted',JSON.stringify(alerted));}catch(e){}}
+      if(changed)pvSaveNewsAlerted(alerted);
     }catch(e){}
   }
   window.pvCheckPreNewsAlerts=pvCheckPreNewsAlerts;
@@ -12749,7 +12770,17 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
   });
   document.getElementById('railClose').addEventListener('click',closeRail);
   drawerBackdrop.addEventListener('click',closeRail);
-  notificationButton.addEventListener('click',function(e){e.stopPropagation();var open=notificationPanel.classList.toggle('open');notificationButton.setAttribute('aria-expanded',String(open));});
+  notificationButton.addEventListener('click',function(e){e.stopPropagation();var open=notificationPanel.classList.toggle('open');notificationButton.setAttribute('aria-expanded',String(open));
+    /* Welcome-fix (2026-10-23): viewing the panel counts as seeing the
+       welcome — mark it read (persisted via markNotifRead incl. the
+       Supabase row) so it can never resurface as new on later logins. */
+    if(open){setTimeout(function(){
+      try{
+        var _all=(typeof notifStore!=='undefined'?notifStore:[]).concat(typeof getPersonalNotifs==='function'?getPersonalNotifs():[]);
+        _all.forEach(function(x){if(x&&x.title==='Welcome to PIPVANT'&&!x.read&&x.id)markNotifRead(x.id);});
+      }catch(_we){}
+    },350);}
+  });
   notificationPanel.addEventListener('click',function(e){e.stopPropagation();});
   document.getElementById('viewAllNotifications').addEventListener('click',function(){showScreen('notifications');closeNotifications();});
   document.addEventListener('click',function(){closeNotifications();});
@@ -15243,8 +15274,8 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
         var _wLockKey='pipvant_welcome_lock_'+(sbUser?sbUser.id:'anon');
         var _wLocked=false;
         try{_wLocked=!!localStorage.getItem(_wLockKey);}catch(_e){}
-        if(!_wLocked&&!window._welcomeAttempted){
-          var hasWelcome=rows.some(function(n){return n.title==='Welcome to PIPVANT';});
+        var _maybeWelcome=function(hasWelcome){
+          if(_wLocked||window._welcomeAttempted)return;
           var createdAt=sbUser.created_at?new Date(sbUser.created_at).getTime():0;
           if(!hasWelcome&&createdAt&&(Date.now()-createdAt)<7*24*3600*1000){
             window._welcomeAttempted=true;
@@ -15255,9 +15286,21 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
             // Already have one: lock to prevent future attempts
             try{localStorage.setItem(_wLockKey,'1');}catch(_e3){}
           }
+        };
+        if(rows.some(function(n){return n.title==='Welcome to PIPVANT';})){
+          _maybeWelcome(true);
+        }else{
+          /* Welcome-fix (2026-10-23): the 30-row list above can hide an
+             older welcome behind newer notifications — ask the table
+             directly before ever creating a second one. */
+          try{
+            sb.from('notifications').select('id').eq('user_id',sbUser.id).eq('title','Welcome to PIPVANT').limit(1)
+              .then(function(wq){_maybeWelcome(!!(wq&&!wq.error&&wq.data&&wq.data.length));},function(){_maybeWelcome(false);});
+          }catch(_wq){_maybeWelcome(false);}
         }
         renderNotifications();
-      }).catch(function(){var loader=document.getElementById('authLoading');if(loader)loader.style.display='none';document.body.classList.remove('auth-checking');});
+        _notifAnnounceArmed=true;
+      }).catch(function(){var loader=document.getElementById('authLoading');if(loader)loader.style.display='none';document.body.classList.remove('auth-checking');_notifAnnounceArmed=true;});
     });
   }
   function sbNotify(title,body,data){
@@ -15481,8 +15524,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
         try{
           if(typeof addPersonalNotif==='function'){
             var _now=Date.now();
-            var _alerted={};
-            try{_alerted=JSON.parse(localStorage.getItem('pipvant_news_alerted')||'{}');}catch(e){}
+            var _alerted=pvLoadNewsAlerted();
             var _prefs=getNotifCurrPrefs();
             // Group same-time events into ONE notification:
             // events in the same minute group together (exact timestamps
@@ -15540,7 +15582,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
               }
               renderNotifications();
             });
-            try{localStorage.setItem('pipvant_news_alerted',JSON.stringify(_alerted));}catch(e){}
+            pvSaveNewsAlerted(_alerted);
           }
         }catch(e){}
       /* Ideas batch 2: 15-minute pre-alerts ride the same load cycle. */
@@ -15586,6 +15628,10 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       if(_newsRecheck>=10){_newsRecheck=0;if(typeof sbLoadCalendar==='function')sbLoadCalendar();}
     }catch(e){}
   },30000);
+  /* Welcome-fix fallback: whatever the loaders did, arm the announcer
+     8s after boot — by then every stored list has merged and the
+     baseline equals the stored unread count. */
+  setTimeout(function(){_notifAnnounceArmed=true;},8000);
   sbInitSession();
   // C-1 backstop: if the loader is still visible after 12s (hung Supabase
   // call, stalled promise), force-hide it so the app is never stuck.
