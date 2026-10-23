@@ -1021,6 +1021,12 @@
     .contact-layout{display:grid;gap:18px}.contact-card,.support-row{border:1px solid var(--line);border-radius:14px;background:var(--surface)}.contact-card{padding:20px}.contact-form{display:grid;gap:15px}.contact-form[hidden]{display:none}.contact-form textarea{min-height:150px}.contact-confirmation{min-height:390px;display:grid;place-items:center;text-align:center;padding:30px}.contact-confirmation[hidden]{display:none}.contact-confirmation-mark{width:52px;height:52px;margin:0 auto 16px;border:1px solid var(--line-strong);border-radius:50%;display:grid;place-items:center;color:var(--platinum)}.contact-confirmation h3{margin:0 0 7px}.contact-confirmation p{max-width:400px;margin:0 auto 18px;color:var(--secondary);font-size:12px;line-height:1.6}.support-row{min-height:68px;padding:13px 16px;display:flex;align-items:center;justify-content:space-between;gap:16px}.support-row span{color:var(--secondary);font-size:12px}.support-row strong{color:var(--platinum);font:500 12px/1 "IBM Plex Mono","IBM Plex Sans Arabic",monospace}
     @media (min-width:640px){.certificate-path{grid-template-columns:repeat(2,1fr)}.about-grid{grid-template-columns:1fr 1fr}.contact-card{padding:26px}}
     @media (min-width:1024px){.module-wrap{padding:52px 0 72px}.certificate-path{grid-template-columns:repeat(3,1fr)}.contact-layout{grid-template-columns:minmax(0,1fr) 300px;align-items:start}.support-row{min-height:78px}.support-row strong{overflow-wrap:anywhere}}
+    /* Open-trades notice (2026-10-23): when every logged trade is still
+       open, the KPIs read "No closed trades" and users think their numbers
+       are broken. This bar connects the dots and points at Close. */
+    .open-trades-notice{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin:0 0 14px;padding:13px 16px;border:1px solid var(--line);border-left:3px solid var(--gold,#D4AF37);border-radius:12px;background:var(--surface);color:var(--secondary);font-size:12px;line-height:1.55}
+    .open-trades-notice[hidden]{display:none}
+    .open-trades-notice strong{color:var(--platinum);font-size:12.5px;white-space:nowrap}
     /* Certificate scenes — per-mission cinematic backdrops (founder order
        2026-10-23): each mission's document wears a scene like the app's
        desktop/phone backgrounds, painted full-bleed across the whole
@@ -3746,6 +3752,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
 
       <div class="journal-filter" aria-label="Trade filters"><div class="journal-filter-row"><button class="filter-action" id="journalFilterButton" type="button" aria-expanded="false"><svg width="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 6h16M7 12h10m-7 6h4"/></svg>Filters</button><div class="active-filter-slot"><span class="active-filter-chip" id="dayFilterChip">Day —</span><span class="active-filter-chip" id="facetFilterChip">All symbols · All sides</span></div></div><div class="facet-panel" id="facetPanel"><div class="facet-group" id="facetSymbol"><strong>Symbol</strong></div><div class="facet-group" id="facetSide"><strong>Side</strong></div><div class="facet-group" id="facetSetup"><strong>Setup</strong></div><div class="facet-group" id="facetTag"><strong>Tag</strong></div><div class="facet-group" id="facetReview"><strong>Review</strong></div></div></div>
 
+      <div id="openTradesNotice" class="open-trades-notice" hidden><strong id="openTradesNoticeTitle"></strong><span id="openTradesNoticeBody"></span></div>
       <section class="trades-card" aria-labelledby="trade-list-title"><div class="journal-card-head"><div><h3 id="trade-list-title">Trade Log</h3><p>Execution records and review context</p></div><span class="tiny" id="journalEntryCount">0 TRADES</span><button type="button" id="exportTradesCsv" class="btn secondary" style="min-height:44px;padding:0 12px;font-size:11px;">Export CSV</button></div><div class="trade-toolbar"><div class="trade-toolbar-top"><input class="trade-search" type="search" placeholder="Search symbol or note" aria-label="Search trades"><div class="trade-view" role="group" aria-label="Trade view"><button type="button" aria-pressed="true" data-view-mode="table">Table</button><button type="button" aria-pressed="false" data-view-mode="chart">Chart</button><button type="button" aria-pressed="false" data-view-mode="unified">Unified</button></div></div><div class="group-tabs" role="group" aria-label="Group trades"><button type="button" aria-pressed="true" data-group-by="all">All</button><button type="button" aria-pressed="false" data-group-by="symbol">By Symbol</button><button type="button" aria-pressed="false" data-group-by="day">By Day</button><button type="button" aria-pressed="false" data-group-by="tag">By Tag</button></div></div><div class="trade-columns" aria-hidden="true"><span>Date / time</span><span>Symbol</span><span>Side</span><span>Setup</span><span>Entry / exit</span><span>Qty</span><span>Net P&amp;L</span><span>R multiple</span><span>Rating</span><span>Notes</span><span></span></div><div class="journal-entry-list" id="journalEntryList" hidden></div><div class="journal-chart-view" id="journalChartView" hidden style="padding:16px"></div><div class="trade-list-empty" id="journalEntryEmpty"><div><div class="empty-glyph" aria-hidden="true"><svg width="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 3h12v18H6zM9 7h6M9 11h6M9 15h3"/></svg></div><h3>No trades recorded</h3><p>Record the first trade to populate P&amp;L, MAE/MFE, tags, ratings, and linked notes from actual entries.</p>
       <!-- E1-empty fix: CTA button (was missing). -->
       <button type="button" class="btn primary" id="journalEmptyCta" style="margin-top:12px;">Log trade</button>
@@ -13965,6 +13972,25 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
   /* ---- Journal KPI cards: computed from real closed-trade P&L ---- */
   function updateJournalKPIs(){
     try{
+      // Open-trades notice: whole-journal state (not the filtered view) —
+      // show only when trades exist, all of them are still open, and none
+      // is closed yet, so "No closed trades" never reads as "broken".
+      try{
+        var _otn=document.getElementById('openTradesNotice');
+        if(_otn){
+          var _all=(window.sessionJournalEntries||[]).filter(function(e){return e&&e.type==='trade';});
+          var _open=_all.filter(function(e){return !e.closed;}).length;
+          var _closedAll=_all.length-_open;
+          if(_open>0&&_closedAll===0){
+            var _ar=currentLanguage==='ar';
+            var _tt=document.getElementById('openTradesNoticeTitle');
+            var _tb=document.getElementById('openTradesNoticeBody');
+            if(_tt)_tt.textContent=_ar?(_open===1?'صفقة واحدة ما زالت مفتوحة':_open+' صفقات ما زالت مفتوحة'):(_open===1?'1 trade is still open':_open+' trades are still open');
+            if(_tb)_tb.textContent=_ar?'أرقام السجل — صافي الربح ونسبة الفوز ومعامل الربح — تُحسب من الصفقات المغلقة فقط. أغلق أي صفقة من زر Close في سطرها وأدخل سعر الخروج والربح المحقق، وستظهر أرقامها هنا.':'Journal numbers — Net P&L, win rate, profit factor — count closed trades only. Close a trade from the Close button on its row, add the exit price and realized P&L, and its numbers will appear here.';
+            _otn.hidden=false;
+          }else{_otn.hidden=true;}
+        }
+      }catch(_ne){}
       // Mega-audit H7 fix: KPIs respect the active filters (were computed on
       // ALL trades regardless of search/date/facet/account filters).
       var _feeds=typeof getFilteredJournalEntries==='function'?getFilteredJournalEntries():(window.sessionJournalEntries||[]);
