@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Largest Verified On-Chain Payouts | PIPVANT</title>
+  <meta name="description" content="The largest single prop firm payouts verified on public blockchains — firm, amount, exact date and source for every record, tracked via Payout Junction.">
+  <link rel="canonical" href="https://pipvant.github.io/verified-payouts.html">
+  <meta property="og:title" content="Largest Verified On-Chain Payouts | PIPVANT">
+  <meta property="og:description" content="The largest single prop firm payouts verified on public blockchains — firm, amount, exact date and source for every record, tracked via Payout Junction.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pipvant.github.io/verified-payouts.html">
+  <meta property="og:image" content="https://pipvant.github.io/assets/pipvanta-logo.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Largest Verified On-Chain Payouts | PIPVANT">
+  <meta name="twitter:description" content="The largest single prop firm payouts verified on public blockchains — firm, amount, exact date and source for every record, tracked via Payout Junction.">
+  <link rel="icon" type="image/png" href="assets/pipvanta-logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What makes a payout “verified” on this page?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It settled on a public blockchain and is recorded by Payout Junction, which matches firm payout wallets to on-chain transactions under a published methodology. A record is listed only with the firm, the exact amount, the exact date and a public source page — anything missing one of those is excluded."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why is FTMO not on this page?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "FTMO pays through bank and other off-chain rails that public trackers cannot observe. The same applies to Topstep, Apex Trader Funding and seven other firms in our database. Their absence means “not observable this way”, never “does not pay”."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Where does this data come from?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Payout Junction (payoutjunction.com), quoted with attribution under its stated terms. Every row links to the exact source page it was read from, and the capture date is printed at the top of this page."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are these the biggest prop firm payouts ever?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "They are the largest single blockchain-verified payouts in the tracked records set as of the capture date. Payouts on off-chain rails — including some very large ones — cannot be verified this way, and PIPVANT does not estimate or guess them."
+      }
+    }
+  ]
+}
+  </script>
+  <style>
+    :root{--bg:#0A1628;--surface:#0F1D33;--raised:#14253F;--line:#1C2F4D;--line-strong:#2B4266;--text:#F4F6F8;--secondary:#A9B6C6;--muted:#8B9AB0;--accent:#5B8DEF;--accent-strong:#3A6FDE;--gold:#D4AF37}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+    h1,h2,h3{font-family:"Space Grotesk",sans-serif;letter-spacing:-.02em}
+    .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+    header.top{position:sticky;top:0;z-index:10;background:rgba(10,22,40,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+    header.top .wrap{display:flex;align-items:center;justify-content:space-between;padding:14px 20px}
+    .brand{display:flex;align-items:center;gap:10px;font-family:"Space Grotesk";font-weight:700;font-size:18px;text-decoration:none;color:var(--text)}
+    .brand img{width:30px;height:30px;border-radius:8px}
+    .cta-btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 20px;border-radius:10px;background:var(--accent-strong);color:#fff;font-weight:700;text-decoration:none;border:1px solid var(--accent-strong)}
+    .cta-btn.gold{background:linear-gradient(135deg,#F5D67B,#D4AF37);border-color:#D4AF37;color:#0A1628}
+    .cta-btn.ghost{background:transparent;border-color:var(--line-strong);color:var(--text)}
+    .hero{padding:56px 0 36px;text-align:center}
+    .eyebrow{color:var(--accent);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}
+    h1{font-size:clamp(2.2rem,6vw,3.6rem);line-height:1.05;margin:0 0 16px}
+    h1 .gold{background:linear-gradient(135deg,#F5D67B,#D4AF37);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .lede{color:var(--secondary);font-size:17px;line-height:1.7;max-width:680px;margin:0 auto 28px}
+    .section{padding:40px 0}
+    h2{font-size:clamp(1.6rem,4vw,2.4rem);margin:0 0 14px}
+    .section p.body{color:var(--secondary);line-height:1.75;max-width:760px}
+    .card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px}
+    .firm-logo{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:10px;background:var(--raised);border:1px solid var(--line-strong);color:var(--gold);font-family:"Space Grotesk";font-weight:700;font-size:19px;overflow:hidden;flex:none;vertical-align:middle}
+    .firm-logo.lg{width:76px;height:76px;border-radius:16px;font-size:32px}
+    .hero-logo{display:flex;justify-content:center;margin-bottom:18px}
+    .meta-line{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:0 0 24px}
+    .meta-chip{display:inline-flex;align-items:center;min-height:32px;padding:0 14px;border-radius:999px;background:var(--surface);border:1px solid var(--line-strong);color:var(--secondary);font-size:13px;font-weight:600}
+    .meta-chip b{color:var(--text);font-weight:700}
+    .meta-chip a{color:var(--accent);text-decoration:none}
+    .score-card{display:flex;gap:26px;flex-wrap:wrap;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:26px;margin:6px 0 8px}
+    .score-big{font-family:"Space Grotesk";font-size:64px;font-weight:700;line-height:1;color:var(--gold)}
+    .score-big small{font-size:20px;color:var(--muted)}
+    .score-side{flex:1;min-width:260px}
+    .score-rationale{color:var(--secondary);line-height:1.65;margin:8px 0 0}
+    .comp-table{width:100%;border-collapse:collapse;margin-top:14px}
+    .comp-table td,.comp-table th{padding:10px 8px;border-bottom:1px solid var(--line);font-size:14px;text-align:start}
+    .comp-table th{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+    .comp-table .pts{font-variant-numeric:tabular-nums;font-weight:700;white-space:nowrap}
+    .comp-table .driver{color:var(--secondary)}
+    .bar{height:8px;border-radius:99px;background:var(--raised);overflow:hidden;min-width:90px}
+    .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--gold));border-radius:99px}
+    .table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:16px;background:var(--surface)}
+    table.plans{width:100%;border-collapse:collapse;min-width:860px}
+    table.plans th,table.plans td{padding:11px 12px;border-bottom:1px solid var(--line);font-size:13.5px;text-align:start;white-space:nowrap;font-variant-numeric:tabular-nums}
+    table.plans th{color:var(--muted);font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;background:var(--raised)}
+    table.plans td.promo-price{color:var(--gold);font-weight:700}
+    table.plans td .off{color:var(--muted);font-weight:600;font-size:12px}
+    .promo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+    .promo-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+    .promo-card .disc{font-family:"Space Grotesk";font-weight:700;font-size:17px;color:var(--gold);margin-bottom:6px}
+    .promo-card .exp{color:var(--muted);font-size:13px;margin-top:8px}
+    .promo-card .applies{color:var(--secondary);font-size:13px}
+    .copy-btn{margin-top:12px;display:inline-flex;align-items:center;min-height:40px;padding:0 16px;border-radius:9px;background:var(--raised);border:1px solid var(--gold);color:var(--gold);font-weight:700;font-size:13.5px;cursor:pointer;font-family:inherit}
+    .empty{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:32px 28px;text-align:center;color:var(--secondary);line-height:1.7}
+    .rules-list{margin:0;padding-inline-start:20px;color:var(--secondary);line-height:1.8}
+    .rules-list b{color:var(--text)}
+    .link-chips{display:flex;gap:8px;flex-wrap:wrap}
+    .link-chip{display:inline-flex;align-items:center;min-height:38px;padding:0 16px;border-radius:999px;background:var(--surface);border:1px solid var(--line-strong);color:var(--text);font-size:13.5px;font-weight:600;text-decoration:none}
+    .link-chip:hover{border-color:var(--gold);color:var(--gold)}
+    .cta-row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+    .final{text-align:center;padding:52px 0 68px}
+    .faq{max-width:760px}
+    .faq details{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin-bottom:10px}
+    .faq summary{font-weight:600;cursor:pointer;font-size:15px}
+    .faq p{color:var(--secondary);line-height:1.7;font-size:14px;margin:10px 0 0}
+    footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted);font-size:13px}
+    footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    footer a{color:var(--muted);text-decoration:none;margin-inline-start:16px}
+    .top-actions{display:flex;align-items:center;gap:10px}
+    .lang-btn{background:transparent;border:1px solid var(--line-strong);color:var(--secondary);border-radius:10px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;min-height:44px}
+    .lang-btn:hover{border-color:var(--gold);color:var(--text)}
+    .comm-big{font-family:"Space Grotesk";font-size:40px;font-weight:700;color:var(--gold)}
+    @media (max-width:640px){.score-big{font-size:48px}.comp-table .driver{display:none}}
+
+  </style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="/"><img src="assets/pipvanta-logo.png" alt="PIPVANT logo">PIPVANT</a>
+  <div class="top-actions">
+    <button class="lang-btn" id="langToggle" type="button" aria-label="Switch language">العربية</button>
+    <a class="cta-btn" href="/" data-i18n="nav_toolkit">Open free toolkit</a>
+  </div>
+</div></header>
+
+<div class="wrap">
+
+  <style>
+    .derive{background:var(--surface);border:1px solid var(--gold);border-radius:16px;padding:24px 26px}
+    .derive p{color:var(--secondary);line-height:1.75;margin:0}
+    .derive p b{color:var(--text)}
+    .derive a{color:var(--accent)}
+    .list-row{display:flex;gap:16px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px 20px;margin-bottom:12px;flex-wrap:wrap}
+    .list-row .main{flex:1;min-width:230px}
+    .list-row .fname{font-family:"Space Grotesk";font-weight:700;font-size:19px;color:var(--text);text-decoration:none}
+    .list-row .fname:hover{color:var(--gold)}
+    .evidence{color:var(--secondary);line-height:1.65;font-size:14px;margin-top:6px}
+    .evidence b{color:var(--text)}
+    .row-links{margin-top:10px}
+    .big-stat{font-family:"Space Grotesk";font-size:26px;font-weight:700;color:var(--gold);white-space:nowrap;padding-top:4px;text-align:end}
+    .big-stat small{display:block;font-size:11px;color:var(--muted);font-family:Inter;font-weight:600}
+    td.amount{font-weight:700;color:var(--gold)}
+    td a.src{color:var(--accent);text-decoration:none;white-space:nowrap}
+    .cov h3{font-size:15px;margin:18px 0 10px;color:var(--text)}
+    .cov p{color:var(--secondary);line-height:1.75;max-width:760px}
+  </style>
+
+  <section class="hero">
+    <div class="eyebrow" data-i18n="eyebrow">Verified payout records</div>
+    <h1>Largest verified <span class="gold">on-chain payouts</span></h1>
+    <p class="lede" data-i18n="lede">Every record on this page is a single prop firm payout that settled on a public blockchain — firm, amount and exact date, each linked to its source. Only firms that pay on publicly tracked rails can appear here; a firm missing from this page is unobserved, not unpaid.</p>
+    <div class="meta-line">
+      <span class="meta-chip"><b>30</b>&nbsp;<span data-i18n="chip_records">verified records</span></span>
+      <span class="meta-chip"><b>5</b>&nbsp;<span data-i18n="chip_firms">firms</span></span>
+      <span class="meta-chip"><b>$4,645,750</b>&nbsp;<span data-i18n="chip_total">combined listed value</span></span>
+      <span class="meta-chip"><span data-i18n="chip_source">Source</span>:&nbsp;<a href="https://payoutjunction.com/records" target="_blank" rel="noopener">Payout Junction</a></span>
+      <span class="meta-chip"><span data-i18n="chip_captured">Captured</span>:&nbsp;<b>Oct 22, 2026</b></span>
+    </div>
+  </section>
+  <section class="section" style="padding-top:6px">
+    <h2 data-i18n="method_h">How a payout earns its place here</h2>
+    <div class="derive"><p data-i18n-html="method">A payout becomes a record here only when a public source states <b>the firm, the exact amount and the exact date</b> — and the settlement is verifiable on a public blockchain. These records are tracked by <a href="https://payoutjunction.com/records" target="_blank" rel="noopener">Payout Junction</a>, which matches firm payout wallets to on-chain transactions under a <a href="https://payoutjunction.com/methodology" target="_blank" rel="noopener">published methodology</a>, and are quoted here with attribution under its stated terms. No date, no record: window totals, marketing headlines and undated claims are excluded by design.</p></div>
+  </section>
+  <section class="section" style="padding-top:10px">
+    <h2 data-i18n="records_h">The records</h2>
+    <div class="table-wrap"><table class="plans">
+      <thead><tr><th data-i18n="th_rank">#</th><th data-i18n="th_firm">Firm</th><th data-i18n="th_amount">Amount</th><th data-i18n="th_date">Date</th><th data-i18n="th_evidence">Evidence</th></tr></thead>
+      <tbody><tr><td>1</td><td><span class="firm-logo" data-firm-logo data-name="FundedNext" data-website="https://fundednext.com" aria-hidden="true"></span> <a href="firms/fundednext.html" style="color:var(--text);text-decoration:none;font-weight:600">FundedNext</a></td><td class="amount">$346,838</td><td>Nov 1, 2025</td><td><span data-i18n="verified_word">Blockchain-verified</span> · <a class="src" href="https://payoutjunction.com/records" target="_blank" rel="noopener">Payout Junction ↗</a></td></tr><tr><td>2</td><td><span class="firm-logo" data-firm-logo data-name="MyFundedFutures" data-website="https://myfundedfutures.com" aria-hidden="true"></span> <a href="firms/myfundedfutures.html" style="color:var(--text);text-decoration:none;font-weight:600">MyFundedFutures</a></td><td class="amount">$229,180</td><td>Aug 1, 2025</td><td><span data-i18n="verified_word">Blockchain-verified</span> · <a class="src" href="https://payoutjunction.com/records" target="_blank" rel="noopener">Payout Junction ↗</a></td></tr><tr><td>3</td><td><span class="firm-logo" data-firm-logo data-name="Tradeify" data-website="https://tradeify.co" aria-hidden="true"></span> <a href="firms/tradeify.html" style="color:var(--text);text-decoration:none;font-weight:600">Tradeify</a></td><td class="amount">$200,000</td><td>Jun 10, 2026</td><td><span data-i18n="verified_word">Blockchain-verified</span> · <a class="src" href="https://payoutjunction.com/records" target="_blank" rel="noopener">Payout Junction ↗</a></td></tr><tr><td>4</td><td><span class="firm-logo" data-firm-logo data-name="Tradeify" data-website="https://tradeify.co" aria-hidden="true"></span> <a href="firms/tradeify.html" style="color:var(--text);text-decoration:none;font-weight:600">Tradeify</a></td><td class="amount">$200,000</td><td>Dec 13, 2025</td><td><span data-i18n="verified_word">Blockchain-verified</span> · <a class="src" href="https://payoutjunction.com/records" target="_blank" rel="noopener">Payout Junction ↗</a></td></tr><tr><td>5</td><td><span class="firm-logo" data-firm-logo data-name="MyFundedFutures" data-website="https://myfundedfutures.com" aria-hidden="true"></span> <a href="firms/myfundedfutures.html" style="color:var(--text);text-decoration:none;font-weight:600">MyFundedFutures</a></td><td class="amount">$198,771</td><td>Sep 4, 2025</td><td><span data-i18n="verified_word">Blockchain-verified</span> · <a class="src" href="https://payoutjunction.com/records" target="_blank" rel="noopener">Payout Junction ↗</a></td></tr><tr><td>6</td><td><span class="firm-logo" data-firm-logo data-name="Breakout Prop" data-website="https://www.breakoutprop.com/" aria-hidden="true"></span> <a href="firms/breakout-prop.html" style="color:var(--text);text-decoration:none;font-weight:600">Breakout Prop</a></td><td class="amount">$191,967</td><td>Aug 25, 2026</td><td><span data-i18n="verified_word">Blockchain-verified</span> · <a class="src" href="https://payoutjunction.com/records" target="_blank" rel="noopener">Payout Junction ↗</a></td></tr><tr><td>7</td><td><span class="firm-logo" data-firm-logo data-name="MyFundedFutures" data-website="https://myfundedfutures.com" aria-hidden="true"></span> <a href="firms/myfundedfutures.html" style="color:var(--text);text-decoration:none;font-weight:600">MyFundedFutures</a></td><td class="amount">$190,853</td><td>Oct 31, 2025</td><td><span data-i18n="verified_word">Blockchain-verified</span> · <a class="src" href="https://payoutjunction.com/records" target="_blank" rel="noopener">Payout Junction ↗</a></td></tr><tr><td>8</td><td><span class="firm-logo" data-firm-logo data-name="Breakout Prop" data-website="https://www.breakoutprop.com/" aria-hidden="true"></span> <a href="firms/breakout-prop.html" style="color:var(--text);text-decoration:none;font-weight:600">Breakout Prop</a></td><td class="amount">$190,429</td><td>Sep 21, 2026</td><td><span data-i18n="verified_word">Blockchain-verified</span> · <a class="src" href="https://payoutjunction.com/records" target="_blank" rel="noopener">Payout Junction ↗</a></td></tr><tr><td>9</td><td><span class="firm-logo" data-firm-logo data-name="MyFundedFutures" data-website="https://myfundedfutures.com" aria-hidden="true"></span> <a href="firms/myfundedfutures.html" style="color:var(--text);text-decoration:none;font-weight:600">MyFundedFutures</a></td><td class="amount">$183,655</td><td>Dec 8, 2025</td><td><span data-i18n="verified_word">Blockchain-verified</span> · <a class="src" href="https://payoutjunction.com/records" target="_blank" rel="noopener">Payout Junction ↗</a></td></tr><tr><td>10</td><td><span class="firm-logo" data-firm-logo data-name="MyFundedFutures" data-website="https://myfundedfutures.com" aria-hidden="true"></span> <a href="firms/myfundedfutures.html" style="color:var(--text);text-decoration:none;font-weight:600">MyFundedFutures</a></td><td class="amount">$176,117</td><td>Apr 27, 2024</td><td><span data-i18n="verified_word">Blockchain-verified</span> · <a class="src" href="https://payoutjunction.com/records" target="_blank" rel="noopener">Payout Junction ↗</a></td></tr><tr><td>11</td><td><span class="firm-logo" data-firm-logo data-name="MyFundedFutures" data-website="https://myfundedfutures.com" aria-hidden="true"></span> <a href="firms/myfundedfutures.html" style="color:var(--text);text-decoration:none;font-weight:600">MyFundedFutures</a></td><td class="amount">$158,482</td><td>Jul 31, 2024</td><td><span data-i18n="verified_word">Blockchain-verified</span> · <a class="src" href="https://payoutjunction.com/records" target="_blank" rel="noopener">Payout Junction ↗</a></td></tr><tr><td>12</td><td><span class="firm-logo" data-firm-logo data-name="MyFundedFutures" data-website="https://myfundedfutures.com" aria-hidden="true"></span> <a href="firms/myfundedfutures.html" style="color:var(--text);text-decoration:none;font-weight:600">MyFundedFutures</a></td><td class="amount">$157,000</td><td>Oct 17, 2024</td><td><span data-i18n="verified_word">Blockchain-verified</span> · <a class="src" href="https://payoutjunction.com/records" target="_blank" rel="noopener">Payout Junction ↗</a></td></tr><tr><td>13</td><td><span class="firm-logo" data-firm-logo data-name="MyFundedFutures" data-website="https://myfundedfutures.com" aria-hidden="true"></span> <a href="firms/myfundedfutures.html" style="color:var(--text);text-decoration:none;font-weight:600">MyFundedFutures</a></td><td class="amount">$153,291</td><td>May 31, 2024</td><td><span data-i18n="verified_word">Blockchain-verified</span> · <a class="src" href="https://payoutjunction.com/records" target="_blank" rel="noopener">Payout Junction ↗</a></td></tr><tr><td>14</td><td><span class="firm-logo" data-firm-logo data-name="Tradeify" data-website="https://tradeify.co" aria-hidden="true"></span> <a href="firms/tradeify.html" style="color:var(--text);text-decoration:none;font-weight:600">Tradeify</a></td><td class="amount">$150,000</td><td>Sep 10, 2026</td><td><span data-i18n="verified_word">Blockchain-verified</span> · <a class="src" href="https://payoutjunction.com/records" target="_blank" rel="noopener">Payout Junction ↗</a></td></tr><tr><td>15</td><td><span class="firm-logo" data-firm-logo data-name="FundedNext" data-website="https://fundednext.com" aria-hidden="true"></span> <a href="firms/fundednext.html" style="color:var(--text);text-decoration:none;font-weight:600">FundedNext</a></td><td class="amount">$146,318</td><td>Oct 17, 2025</td><td><span data-i18n="verified_word">Blockchain-verified</span> · <a class="src" href="https://payoutjunction.com/records" target="_blank" rel="noopener">Payout Junction ↗</a></td></tr><tr><td>16</td><td><span class="firm-logo" data-firm-logo data-name="MyFundedFutures" data-website="https://myfundedfutures.com" aria-hidden="true"></span> <a href="firms/myfundedfutures.html" style="color:var(--text);text-decoration:none;font-weight:600">MyFundedFutures</a></td><td class="amount">$146,000</td><td>Nov 30, 2024</td><td><span data-i18n="verified_word">Blockchain-verified</span> · <a class="src" href="https://payoutjunction.com/records" target="_blank" rel="noopener">Payout Junction ↗</a></td></tr><tr><td>17</td><td><span class="firm-logo" data-firm-logo data-name="FundedNext" data-website="https://fundednext.com" aria-hidden="true"></span> <a href="firms/fundednext.html" style="color:var(--text);text-decoration:none;font-weight:600">FundedNext</a></td><td class="amount">$144,750</td><td>Oct 22, 2025</td><td><span data-i18n="verified_word">Blockchain-verified</span> · <a class="src" href="https://payoutjunction.com/records" target="_blank" rel="noopener">Payout Junction ↗</a></td></tr><tr><td>18</td><td><span class="firm-logo" data-firm-logo data-name="MyFundedFutures" data-website="https://myfundedfutures.com" aria-hidden="true"></span> <a href="firms/myfundedfutures.html" style="color:var(--text);text-decoration:none;font-weight:600">MyFundedFutures</a></td><td class="amount">$144,646</td><td>Sep 10, 2024</td><td><span data-i18n="verified_word">Blockchain-verified</span> · <a class="src" href="https://payoutjunction.com/records" target="_blank" rel="noopener">Payout Junction ↗</a></td></tr><tr><td>19</td><td><span class="firm-logo" data-firm-logo data-name="Funding Pips" data-website="https://fundingpips.com" aria-hidden="true"></span> <a href="firms/funding-pips.html" style="color:var(--text);text-decoration:none;font-weight:600">Funding Pips</a></td><td class="amount">$140,354</td><td>Jan 10, 2024</td><td><span data-i18n="verified_word">Blockchain-verified</span> · <a class="src" href="https://payoutjunction.com/records" target="_blank" rel="noopener">Payout Junction ↗</a></td></tr><tr><td>20</td><td><span class="firm-logo" data-firm-logo data-name="MyFundedFutures" data-website="https://myfundedfutures.com" aria-hidden="true"></span> <a href="firms/myfundedfutures.html" style="color:var(--text);text-decoration:none;font-weight:600">MyFundedFutures</a></td><td class="amount">$133,360</td><td>Nov 14, 2024</td><td><span data-i18n="verified_word">Blockchain-verified</span> · <a class="src" href="https://payoutjunction.com/records" target="_blank" rel="noopener">Payout Junction ↗</a></td></tr><tr><td>21</td><td><span class="firm-logo" data-firm-logo data-name="MyFundedFutures" data-website="https://myfundedfutures.com" aria-hidden="true"></span> <a href="firms/myfundedfutures.html" style="color:var(--text);text-decoration:none;font-weight:600">MyFundedFutures</a></td><td class="amount">$132,279</td><td>Oct 3, 2025</td><td><span data-i18n="verified_word">Blockchain-verified</span> · <a class="src" href="https://payoutjunction.com/records" target="_blank" rel="noopener">Payout Junction ↗</a></td></tr><tr><td>22</td><td><span class="firm-logo" data-firm-logo data-name="FundedNext" data-website="https://fundednext.com" aria-hidden="true"></span> <a href="firms/fundednext.html" style="color:var(--text);text-decoration:none;font-weight:600">FundedNext</a></td><td class="amount">$131,145</td><td>Jan 21, 2026</td><td><span data-i18n="verified_word">Blockchain-verified</span> · <a class="src" href="https://payoutjunction.com/records" target="_blank" rel="noopener">Payout Junction ↗</a></td></tr><tr><td>23</td><td><span class="firm-logo" data-firm-logo data-name="MyFundedFutures" data-website="https://myfundedfutures.com" aria-hidden="true"></span> <a href="firms/myfundedfutures.html" style="color:var(--text);text-decoration:none;font-weight:600">MyFundedFutures</a></td><td class="amount">$130,760</td><td>Jun 27, 2024</td><td><span data-i18n="verified_word">Blockchain-verified</span> · <a class="src" href="https://payoutjunction.com/records" target="_blank" rel="noopener">Payout Junction ↗</a></td></tr><tr><td>24</td><td><span class="firm-logo" data-firm-logo data-name="FundedNext" data-website="https://fundednext.com" aria-hidden="true"></span> <a href="firms/fundednext.html" style="color:var(--text);text-decoration:none;font-weight:600">FundedNext</a></td><td class="amount">$123,134</td><td>Oct 29, 2025</td><td><span data-i18n="verified_word">Blockchain-verified</span> · <a class="src" href="https://payoutjunction.com/records" target="_blank" rel="noopener">Payout Junction ↗</a></td></tr><tr><td>25</td><td><span class="firm-logo" data-firm-logo data-name="Tradeify" data-website="https://tradeify.co" aria-hidden="true"></span> <a href="firms/tradeify.html" style="color:var(--text);text-decoration:none;font-weight:600">Tradeify</a></td><td class="amount">$120,000</td><td>Dec 13, 2025</td><td><span data-i18n="verified_word">Blockchain-verified</span> · <a class="src" href="https://payoutjunction.com/records" target="_blank" rel="noopener">Payout Junction ↗</a></td></tr><tr><td>26</td><td><span class="firm-logo" data-firm-logo data-name="FundedNext" data-website="https://fundednext.com" aria-hidden="true"></span> <a href="firms/fundednext.html" style="color:var(--text);text-decoration:none;font-weight:600">FundedNext</a></td><td class="amount">$112,011</td><td>Oct 1, 2026</td><td><span data-i18n="verified_word">Blockchain-verified</span> · <a class="src" href="https://payoutjunction.com/monthly" target="_blank" rel="noopener">Payout Junction ↗</a></td></tr><tr><td>27</td><td><span class="firm-logo" data-firm-logo data-name="FundedNext" data-website="https://fundednext.com" aria-hidden="true"></span> <a href="firms/fundednext.html" style="color:var(--text);text-decoration:none;font-weight:600">FundedNext</a></td><td class="amount">$105,498</td><td>Oct 7, 2026</td><td><span data-i18n="verified_word">Blockchain-verified</span> · <a class="src" href="https://payoutjunction.com/monthly" target="_blank" rel="noopener">Payout Junction ↗</a></td></tr><tr><td>28</td><td><span class="firm-logo" data-firm-logo data-name="MyFundedFutures" data-website="https://myfundedfutures.com" aria-hidden="true"></span> <a href="firms/myfundedfutures.html" style="color:var(--text);text-decoration:none;font-weight:600">MyFundedFutures</a></td><td class="amount">$78,256</td><td>Oct 16, 2026</td><td><span data-i18n="verified_word">Blockchain-verified</span> · <a class="src" href="https://payoutjunction.com/monthly" target="_blank" rel="noopener">Payout Junction ↗</a></td></tr><tr><td>29</td><td><span class="firm-logo" data-firm-logo data-name="MyFundedFutures" data-website="https://myfundedfutures.com" aria-hidden="true"></span> <a href="firms/myfundedfutures.html" style="color:var(--text);text-decoration:none;font-weight:600">MyFundedFutures</a></td><td class="amount">$67,795</td><td>Oct 16, 2026</td><td><span data-i18n="verified_word">Blockchain-verified</span> · <a class="src" href="https://payoutjunction.com/monthly" target="_blank" rel="noopener">Payout Junction ↗</a></td></tr><tr><td>30</td><td><span class="firm-logo" data-firm-logo data-name="FundedNext" data-website="https://fundednext.com" aria-hidden="true"></span> <a href="firms/fundednext.html" style="color:var(--text);text-decoration:none;font-weight:600">FundedNext</a></td><td class="amount">$62,861</td><td>Oct 1, 2026</td><td><span data-i18n="verified_word">Blockchain-verified</span> · <a class="src" href="https://payoutjunction.com/monthly" target="_blank" rel="noopener">Payout Junction ↗</a></td></tr></tbody>
+    </table></div>
+  </section>
+  <section class="section">
+    <h2 data-i18n="firms_h">Firms in this list</h2>
+    <div class="list-row"><span class="firm-logo" data-firm-logo data-name="FundedNext" data-website="https://fundednext.com" aria-hidden="true"></span><div class="main"><a class="fname" href="firms/fundednext.html">FundedNext</a><div class="evidence"><b>8</b> <span data-i18n="in_list">in this list</span> · <span data-i18n="largest_word">Largest</span> <b>$346,838</b> · <span data-i18n="chip_total">combined listed value</span> <b>$1,172,555</b></div><div class="link-chips row-links"><a class="link-chip" href="firms/fundednext.html" data-i18n="profile_link">Full profile →</a></div></div><div class="big-stat">$346,838<small data-i18n="largest_word">Largest</small></div></div><div class="list-row"><span class="firm-logo" data-firm-logo data-name="MyFundedFutures" data-website="https://myfundedfutures.com" aria-hidden="true"></span><div class="main"><a class="fname" href="firms/myfundedfutures.html">MyFundedFutures</a><div class="evidence"><b>15</b> <span data-i18n="in_list">in this list</span> · <span data-i18n="largest_word">Largest</span> <b>$229,180</b> · <span data-i18n="chip_total">combined listed value</span> <b>$2,280,445</b></div><div class="link-chips row-links"><a class="link-chip" href="firms/myfundedfutures.html" data-i18n="profile_link">Full profile →</a></div></div><div class="big-stat">$229,180<small data-i18n="largest_word">Largest</small></div></div><div class="list-row"><span class="firm-logo" data-firm-logo data-name="Tradeify" data-website="https://tradeify.co" aria-hidden="true"></span><div class="main"><a class="fname" href="firms/tradeify.html">Tradeify</a><div class="evidence"><b>4</b> <span data-i18n="in_list">in this list</span> · <span data-i18n="largest_word">Largest</span> <b>$200,000</b> · <span data-i18n="chip_total">combined listed value</span> <b>$670,000</b></div><div class="link-chips row-links"><a class="link-chip" href="firms/tradeify.html" data-i18n="profile_link">Full profile →</a></div></div><div class="big-stat">$200,000<small data-i18n="largest_word">Largest</small></div></div><div class="list-row"><span class="firm-logo" data-firm-logo data-name="Breakout Prop" data-website="https://www.breakoutprop.com/" aria-hidden="true"></span><div class="main"><a class="fname" href="firms/breakout-prop.html">Breakout Prop</a><div class="evidence"><b>2</b> <span data-i18n="in_list">in this list</span> · <span data-i18n="largest_word">Largest</span> <b>$191,967</b> · <span data-i18n="chip_total">combined listed value</span> <b>$382,396</b></div><div class="link-chips row-links"><a class="link-chip" href="firms/breakout-prop.html" data-i18n="profile_link">Full profile →</a></div></div><div class="big-stat">$191,967<small data-i18n="largest_word">Largest</small></div></div><div class="list-row"><span class="firm-logo" data-firm-logo data-name="Funding Pips" data-website="https://fundingpips.com" aria-hidden="true"></span><div class="main"><a class="fname" href="firms/funding-pips.html">Funding Pips</a><div class="evidence"><b>1</b> <span data-i18n="in_list">in this list</span> · <span data-i18n="largest_word">Largest</span> <b>$140,354</b> · <span data-i18n="chip_total">combined listed value</span> <b>$140,354</b></div><div class="link-chips row-links"><a class="link-chip" href="firms/funding-pips.html" data-i18n="profile_link">Full profile →</a></div></div><div class="big-stat">$140,354<small data-i18n="largest_word">Largest</small></div></div>
+  </section>
+  <section class="section cov">
+    <h2 data-i18n="coverage_h">Which firms are not here — and why</h2>
+    <p data-i18n-html="coverage">This is a list of the largest <b>blockchain-verified</b> payouts — not a ranking of who pays most. 17 of the 22 firms in PIPVANT’s database do not appear above. Most pay through bank, card or platform rails that public trackers cannot observe; their absence here is a limit of observation, never evidence that a firm does not pay.</p>
+    <h3 data-i18n="tracked_h">Tracked on-chain, no record in this set yet</h3>
+    <div class="link-chips"><a class="link-chip" href="firms/alpha-capital-group.html">Alpha Capital Group</a><a class="link-chip" href="firms/blue-guardian.html">Blue Guardian</a><a class="link-chip" href="firms/e8-markets.html">E8 Markets</a><a class="link-chip" href="firms/funded-trader-markets.html">Funded Trader Markets</a><a class="link-chip" href="firms/fxify.html">FXIFY</a><a class="link-chip" href="firms/goat-funded-trader.html">Goat Funded Trader</a><a class="link-chip" href="firms/the5ers.html">The5ers</a></div>
+    <h3 data-i18n="offrail_h">Not observable on-chain (bank and other rails)</h3>
+    <div class="link-chips"><a class="link-chip" href="firms/ftmo.html">FTMO</a><a class="link-chip" href="firms/apex-trader-funding.html">Apex Trader Funding</a><a class="link-chip" href="firms/topstep.html">Topstep</a><a class="link-chip" href="firms/takeprofittrader.html">TakeProfitTrader</a><a class="link-chip" href="firms/lucid-trading.html">Lucid Trading</a><a class="link-chip" href="firms/funding-traders.html">Funding Traders</a><a class="link-chip" href="firms/maven-trading.html">Maven Trading</a><a class="link-chip" href="firms/pipfarm.html">PipFarm</a><a class="link-chip" href="firms/brightfunded.html">BrightFunded</a><a class="link-chip" href="firms/funded7.html">Funded7</a></div>
+  </section>
+  <section class="section">
+    <h2 data-i18n="more_h">Keep exploring</h2>
+    <div class="link-chips">
+      <a class="link-chip" href="prop-firm-payouts.html" data-i18n="more_terms">Payout terms &amp; profit splits</a>
+      <a class="link-chip" href="lists/highest-profit-split-prop-firms.html" data-i18n="more_split">Highest profit split firms</a>
+      <a class="link-chip" href="prop-firm-comparison.html" data-i18n="foot_comp">Comparison</a>
+      <a class="link-chip" href="data-ledger.html" data-i18n="cta_ledger">Data ledger</a>
+    </div>
+  </section>
+  <section class="section faq">
+    <h2 data-i18n="faq_h">FAQs</h2>
+    <details><summary data-i18n="faq_q1">What makes a payout “verified” on this page?</summary><p data-i18n="faq_a1">It settled on a public blockchain and is recorded by Payout Junction, which matches firm payout wallets to on-chain transactions under a published methodology. A record is listed only with the firm, the exact amount, the exact date and a public source page — anything missing one of those is excluded.</p></details><details><summary data-i18n="faq_q2">Why is FTMO not on this page?</summary><p data-i18n="faq_a2">FTMO pays through bank and other off-chain rails that public trackers cannot observe. The same applies to Topstep, Apex Trader Funding and seven other firms in our database. Their absence means “not observable this way”, never “does not pay”.</p></details><details><summary data-i18n="faq_q3">Where does this data come from?</summary><p data-i18n="faq_a3">Payout Junction (payoutjunction.com), quoted with attribution under its stated terms. Every row links to the exact source page it was read from, and the capture date is printed at the top of this page.</p></details><details><summary data-i18n="faq_q4">Are these the biggest prop firm payouts ever?</summary><p data-i18n="faq_a4">They are the largest single blockchain-verified payouts in the tracked records set as of the capture date. Payouts on off-chain rails — including some very large ones — cannot be verified this way, and PIPVANT does not estimate or guess them.</p></details>
+  </section>
+  <section class="final">
+    <h2 data-i18n="final_h">Rank them your way.</h2>
+    <p class="body" data-i18n="final_b" style="text-align:center;margin:0 auto 24px;max-width:560px;color:var(--secondary);line-height:1.7">Open the free PIPVANT matcher to filter every verified firm by price, size, split and score — and open any firm’s full profile from there.</p>
+    <div class="cta-row">
+      <a class="cta-btn gold" href="/" data-i18n="cta_matcher">Open the matcher</a>
+      <a class="cta-btn" href="prop-firm-comparison.html" data-i18n="cta_compare">Compare firms</a>
+      <a class="cta-btn ghost" href="prop-firm-deals.html" data-i18n="cta_deals">See active deals</a>
+      <a class="cta-btn ghost" href="data-ledger.html" data-i18n="cta_ledger">Data ledger</a>
+    </div>
+  </section>
+</div>
+
+<footer><div class="wrap">
+  <span data-i18n="foot">© 2026 PIPVANT by Orovanta — Trade with a process, not a prediction.</span>
+  <span><a href="/" data-i18n="foot_toolkit">Toolkit</a><a href="prop-firm-comparison.html" data-i18n="foot_comp">Comparison</a><a href="prop-firm-deals.html" data-i18n="foot_deals">Deals</a><a href="data-ledger.html" data-i18n="foot_ledger">Data Ledger</a></span>
+</div></footer>
+<script src="assets/pipv-os.js" defer></script>
+<script>
+(function(){
+  var I18N={"ar": {"chip_captured": "جُمعت في", "chip_firms": "شركات", "chip_records": "سجل موثق", "chip_source": "المصدر", "chip_total": "القيمة الإجمالية المدرجة", "coverage": "هذه قائمة بأكبر السحوبات <b>الموثقة على البلوكتشين</b> — وليست ترتيباً لمن يدفع أكثر. 17 من أصل 22 شركة في قاعدة بيانات PIPVANT لا تظهر أعلاه. أغلبها يدفع عبر البنوك أو البطاقات أو قنوات لا تستطيع أدوات التعقب العامة رصدها؛ وغيابها هنا حدّ للرصد، وليس أبداً دليلاً على أن الشركة لا تدفع.", "coverage_h": "ما الشركات الغائبة هنا — ولماذا", "cta_compare": "قارن الشركات", "cta_deals": "عرض العروض النشطة", "cta_ledger": "سجل البيانات", "cta_matcher": "افتح المطابق", "dir": "rtl", "eyebrow": "سجلات سحوبات موثقة", "faq_a1": "أن يكون قد استقر على بلوكتشين عام وسجّله Payout Junction الذي يطابق محافظ سحب الشركات مع معاملات السلسلة وفق منهجية منشورة. ولا يُدرج أي سجل إلا بالشركة والمبلغ الدقيق والتاريخ الدقيق وصفحة مصدر عامة — وكل ما نقصه أحد هذه العناصر يُستبعد.", "faq_a2": "تدفع FTMO عبر البنوك وقنوات خارج السلسلة لا تستطيع أدوات التعقب العامة رصدها. وينطبق الأمر نفسه على Topstep وApex Trader Funding وسبع شركات أخرى في قاعدة بياناتنا. غيابها يعني «غير مرصودة بهذه الطريقة»، ولا يعني أبداً «لا تدفع».", "faq_a3": "من Payout Junction (payoutjunction.com)، وتُقتبس مع نسبتها إلى مصدرها وفق شروطه المعلنة. وكل سطر مرتبط بصفحة المصدر الدقيقة التي قُرئ منها، وتاريخ الجمع مطبوع أعلى هذه الصفحة.", "faq_a4": "هي أكبر سحوبات فردية موثقة على البلوكتشين ضمن مجموعة السجلات المتعقبة حتى تاريخ الجمع. أما السحوبات عبر القنوات الخارجية — ومنها سحوبات كبيرة جداً — فلا يمكن التحقق منها بهذه الطريقة، وPIPVANT لا يقدّرها ولا يخمنها.", "faq_h": "الأسئلة الشائعة", "faq_q1": "ما الذي يجعل السحب «موثقاً» في هذه الصفحة؟", "faq_q2": "لماذا لا توجد FTMO في هذه الصفحة؟", "faq_q3": "من أين تأتي هذه البيانات؟", "faq_q4": "هل هذه أكبر سحوبات شركات التمويل على الإطلاق؟", "final_b": "افتح مطابق PIPVANT المجاني لتصفية كل شركة موثقة حسب السعر والحجم والتقاسم والنتيجة — وافتح الملف الكامل لأي شركة من هناك.", "final_h": "رتّبها على طريقتك.", "firms_h": "الشركات في هذه القائمة", "foot": "© 2026 PIPVANT من Orovanta — تداول بمنهجية، لا بتوقع.", "foot_comp": "المقارنة", "foot_deals": "العروض", "foot_ledger": "سجل البيانات", "foot_toolkit": "المجموعة", "in_list": "في هذه القائمة", "largest_word": "الأكبر", "lede": "كل سجل في هذه الصفحة هو عملية سحب واحدة من شركة تمويل استقرت على بلوكتشين عام — الشركة والمبلغ والتاريخ الدقيق، وكل سجل مرتبط بمصدره. لا تظهر هنا إلا الشركات التي تدفع عبر قنوات مالية متعقبة علناً؛ وغياب أي شركة من هذه الصفحة يعني أنها غير مرصودة، لا أنها لا تدفع.", "meta_title": "أكبر السحوبات الموثقة على السلسلة | PIPVANT", "method": "لا يصبح أي سحب سجلاً هنا إلا إذا ذكر مصدر عام <b>الشركة والمبلغ الدقيق والتاريخ الدقيق</b> — وكانت التسوية قابلة للتحقق على بلوكتشين عام. هذه السجلات يتعقبها <a href=\"https://payoutjunction.com/records\" target=\"_blank\" rel=\"noopener\">Payout Junction</a> الذي يطابق محافظ سحب الشركات مع معاملات السلسلة وفق <a href=\"https://payoutjunction.com/methodology\" target=\"_blank\" rel=\"noopener\">منهجية منشورة</a>، وتُقتبس هنا مع نسبتها إلى مصدرها وفق شروطه المعلنة. بلا تاريخ، بلا سجل: مجاميع الفترات والعناوين التسويقية والادعاءات غير المؤرخة مستبعدة بالتصميم.", "method_h": "كيف يدخل أي سحب إلى هذه القائمة", "more_h": "تابع الاستكشاف", "more_split": "شركات بأعلى تقاسم أرباح", "more_terms": "شروط السحب وتقاسم الأرباح", "nav_toolkit": "افتح المجموعة الكاملة", "offrail_h": "غير مرصودة على السلسلة (بنوك وقنوات أخرى)", "profile_link": "الملف الكامل ←", "records_h": "السجلات", "th_amount": "المبلغ", "th_date": "التاريخ", "th_evidence": "الدليل", "th_firm": "الشركة", "th_rank": "#", "toggle": "English", "tracked_h": "متعقبة على السلسلة، بلا سجل في هذه المجموعة بعد", "verified_word": "موثق على البلوكتشين"}, "en": {"chip_captured": "Captured", "chip_firms": "firms", "chip_records": "verified records", "chip_source": "Source", "chip_total": "combined listed value", "coverage": "This is a list of the largest <b>blockchain-verified</b> payouts — not a ranking of who pays most. 17 of the 22 firms in PIPVANT’s database do not appear above. Most pay through bank, card or platform rails that public trackers cannot observe; their absence here is a limit of observation, never evidence that a firm does not pay.", "coverage_h": "Which firms are not here — and why", "cta_compare": "Compare firms", "cta_deals": "See active deals", "cta_ledger": "Data ledger", "cta_matcher": "Open the matcher", "dir": "ltr", "eyebrow": "Verified payout records", "faq_a1": "It settled on a public blockchain and is recorded by Payout Junction, which matches firm payout wallets to on-chain transactions under a published methodology. A record is listed only with the firm, the exact amount, the exact date and a public source page — anything missing one of those is excluded.", "faq_a2": "FTMO pays through bank and other off-chain rails that public trackers cannot observe. The same applies to Topstep, Apex Trader Funding and seven other firms in our database. Their absence means “not observable this way”, never “does not pay”.", "faq_a3": "Payout Junction (payoutjunction.com), quoted with attribution under its stated terms. Every row links to the exact source page it was read from, and the capture date is printed at the top of this page.", "faq_a4": "They are the largest single blockchain-verified payouts in the tracked records set as of the capture date. Payouts on off-chain rails — including some very large ones — cannot be verified this way, and PIPVANT does not estimate or guess them.", "faq_h": "FAQs", "faq_q1": "What makes a payout “verified” on this page?", "faq_q2": "Why is FTMO not on this page?", "faq_q3": "Where does this data come from?", "faq_q4": "Are these the biggest prop firm payouts ever?", "final_b": "Open the free PIPVANT matcher to filter every verified firm by price, size, split and score — and open any firm’s full profile from there.", "final_h": "Rank them your way.", "firms_h": "Firms in this list", "foot": "© 2026 PIPVANT by Orovanta — Trade with a process, not a prediction.", "foot_comp": "Comparison", "foot_deals": "Deals", "foot_ledger": "Data Ledger", "foot_toolkit": "Toolkit", "in_list": "in this list", "largest_word": "Largest", "lede": "Every record on this page is a single prop firm payout that settled on a public blockchain — firm, amount and exact date, each linked to its source. Only firms that pay on publicly tracked rails can appear here; a firm missing from this page is unobserved, not unpaid.", "meta_title": "Largest Verified On-Chain Payouts | PIPVANT", "method": "A payout becomes a record here only when a public source states <b>the firm, the exact amount and the exact date</b> — and the settlement is verifiable on a public blockchain. These records are tracked by <a href=\"https://payoutjunction.com/records\" target=\"_blank\" rel=\"noopener\">Payout Junction</a>, which matches firm payout wallets to on-chain transactions under a <a href=\"https://payoutjunction.com/methodology\" target=\"_blank\" rel=\"noopener\">published methodology</a>, and are quoted here with attribution under its stated terms. No date, no record: window totals, marketing headlines and undated claims are excluded by design.", "method_h": "How a payout earns its place here", "more_h": "Keep exploring", "more_split": "Highest profit split firms", "more_terms": "Payout terms & profit splits", "nav_toolkit": "Open free toolkit", "offrail_h": "Not observable on-chain (bank and other rails)", "profile_link": "Full profile →", "records_h": "The records", "th_amount": "Amount", "th_date": "Date", "th_evidence": "Evidence", "th_firm": "Firm", "th_rank": "#", "toggle": "العربية", "tracked_h": "Tracked on-chain, no record in this set yet", "verified_word": "Blockchain-verified"}};
+
+  var lang='en';
+  try{var _s=JSON.parse(localStorage.getItem('pipvant_settings')||'{}');if(_s&&(_s.language==='ar'||_s.language==='en'))lang=_s.language;}catch(e){}
+  function t(k){var v=I18N[lang][k];return v!==undefined?v:I18N.en[k];}
+  function applyStatic(){
+    document.documentElement.lang=lang;
+    document.documentElement.dir=t('dir');
+    document.title=t('meta_title');
+    document.querySelectorAll('[data-i18n]').forEach(function(el){var v=t(el.getAttribute('data-i18n'));if(typeof v==='string')el.textContent=v;});
+    var tg=document.getElementById('langToggle');if(tg)tg.textContent=t('toggle');
+  }
+  applyStatic();
+  var tgEl=document.getElementById('langToggle');
+  if(tgEl)tgEl.addEventListener('click',function(){
+    lang=lang==='en'?'ar':'en';
+    try{var s=JSON.parse(localStorage.getItem('pipvant_settings')||'{}');s.language=lang;localStorage.setItem('pipvant_settings',JSON.stringify(s));}catch(e){}
+    applyStatic();
+  });
+
+  var LOGO_OVERRIDES={
+    'takeprofittrader.com':'https://takeprofittrader.com/assets/mobile-logo.svg',
+    'apextraderfunding.com':'https://apextraderfunding.com/cdn-cgi/image/width=512,height=512,fit=cover,gravity=auto,format=auto//app/uploads/cropped-APEX_FAV-192x192.png'
+  };
+  var LETTER_ONLY_DOMAINS=['blueguardian.com'];
+  function logoInto(el,firm){
+    if(!el||!firm)return;
+    var letter=(firm.name||'?').charAt(0).toUpperCase();
+    el.setAttribute('aria-label',firm.name||'Firm');
+    var domain='';
+    try{domain=String(new URL(firm.website||'').hostname).replace(/^www\./,'');}catch(e){domain='';}
+    if(!domain){el.textContent=letter;return;}
+    el.textContent='';
+    if(LETTER_ONLY_DOMAINS.indexOf(domain)!==-1){el.textContent=letter;return;}
+    var img=document.createElement('img');
+    img.alt=firm.name||'';img.loading='lazy';
+    img.style.cssText='width:100%;height:100%;object-fit:contain;border-radius:6px;';
+    img.onerror=function(){img.remove();el.textContent=letter;};
+    img.src=LOGO_OVERRIDES[domain]||('https://www.google.com/s2/favicons?domain='+domain+'&sz=128');
+    el.appendChild(img);
+  }
+  var staticLogos=document.querySelectorAll('[data-firm-logo]');
+  for(var li=0;li<staticLogos.length;li++){
+    logoInto(staticLogos[li],{name:staticLogos[li].getAttribute('data-name')||'',website:staticLogos[li].getAttribute('data-website')||''});
+  }
+
+  function applyHtml(){document.querySelectorAll('[data-i18n-html]').forEach(function(el){var v=t(el.getAttribute('data-i18n-html'));if(typeof v==='string')el.innerHTML=v;});}
+  applyHtml();
+  var _htg=document.getElementById('langToggle');
+  if(_htg)_htg.addEventListener('click',function(){setTimeout(applyHtml,0);});
+
+})();
+</script>
+</body>
+</html>
