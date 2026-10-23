@@ -105,7 +105,10 @@
   window.pipvSubscribe = function (email) {
     email = String(email || '').trim().toLowerCase();
     if (!validEmail(email)) return Promise.reject(new Error('invalid'));
-    return post('newsletter_subs', { email: email }, 'email')
+    /* Plain insert (2026-10-23 audit fix): the upsert variant required an
+       UPDATE policy for anon and every subscribe failed RLS (42501). A
+       duplicate email now returns 409, which pipvSubscribe maps to 'ok'. */
+    return post('newsletter_subs', { email: email })
       .then(function (r) {
         if (r && (r.ok || r.status === 409)) return 'ok';
         throw new Error('error');
