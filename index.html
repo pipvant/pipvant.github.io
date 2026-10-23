@@ -4696,6 +4696,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
      blanked the whole page). It is injected asynchronously by the data
      layer below, with a bounded boot watchdog + late-init path. -->
 <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.13/dist/html-to-image.min.js" defer></script>
+<script src="assets/qrcode.js" defer></script>
 <script>
 (function(){
   var currentLanguage='en';
@@ -10558,6 +10559,18 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
           if(dateEl)dateEl.textContent=meta.earned_at?String(meta.earned_at).slice(0,10):new Date().toISOString().slice(0,10);
           var verEl=card.querySelector('.verification-block strong');
           if(verEl)verEl.textContent=meta.id?String(meta.id).slice(0,8).toUpperCase():'—';
+          // Per-certificate QR (2026-10-23): encodes THIS certificate's own
+          // verification code -> verify.html (the old static QR pointed at
+          // a /verify address that did not exist, identical on every cert).
+          var qrImg=card.querySelector('.certificate-qr-image');
+          if(qrImg&&meta.id&&window.qrcode){
+            try{
+              var _qr=qrcode(0,'M');
+              _qr.addData('https://pipvant.github.io/verify.html#c='+String(meta.id).slice(0,8).toUpperCase());
+              _qr.make();
+              qrImg.src=_qr.createDataURL(6,8);
+            }catch(qe){}
+          }
           var fb=card.querySelector('.certificate-feedback');
           if(fb)fb.removeAttribute('id');
           var btns=card.querySelectorAll('.certificate-actions .btn');
