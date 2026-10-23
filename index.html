@@ -1027,54 +1027,19 @@
     .open-trades-notice{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin:0 0 14px;padding:13px 16px;border:1px solid var(--line);border-left:3px solid var(--gold,#D4AF37);border-radius:12px;background:var(--surface);color:var(--secondary);font-size:12px;line-height:1.55}
     .open-trades-notice[hidden]{display:none}
     .open-trades-notice strong{color:var(--platinum);font-size:12.5px;white-space:nowrap}
-    /* Certificate scenes — per-mission cinematic backdrops (founder order
-       2026-10-23): each mission's document wears a scene like the app's
-       desktop/phone backgrounds, painted full-bleed across the whole
-       certificate. Pure CSS gradients so the PNG export renders them
-       identically. A dark centre veil keeps the text perfectly legible,
-       and the gold inner frame rides above the art. */
-    .certificate-document .cert-scene{position:absolute;inset:0;z-index:0;pointer-events:none;background:#04070E}
+    /* Certificate scenes — the app's REAL scene paintings as certificate
+       backdrops (founder order 2026-10-23, replacing the gradient take):
+       each mission wears one of the actual background artworks, fitted
+       cover across the whole document (full length and width), veiled
+       for legibility the same way the app veils its own scenes. */
+    .certificate-document .cert-scene{position:absolute;inset:0;z-index:0;pointer-events:none;background-color:#04070E;background-size:cover;background-repeat:no-repeat}
     .certificate-document:before{z-index:2}
-    .certificate-document .cert-scene{background:
-      radial-gradient(90% 62% at 50% 44%,rgba(3,6,12,.52),rgba(3,6,12,.10) 58%,transparent 78%),
-      radial-gradient(15% 11% at 84% 10%,rgba(246,232,196,.60),rgba(232,201,106,.28) 52%,transparent 72%),
-      radial-gradient(38% 28% at 84% 10%,rgba(232,201,106,.13),transparent 65%),
-      radial-gradient(120% 55% at 50% 118%,rgba(212,175,55,.30),transparent 60%),
-      radial-gradient(90% 60% at 6% 110%,rgba(122,82,24,.38),transparent 60%),
-      linear-gradient(180deg,#0B1736 0%,#0A1628 46%,#060C17 100%)}
-    .certificate-document[data-mission="Profitable"] .cert-scene{background:
-      radial-gradient(90% 62% at 50% 44%,rgba(3,6,12,.52),rgba(3,6,12,.10) 58%,transparent 78%),
-      radial-gradient(78% 36% at 20% -4%,rgba(46,224,176,.36),transparent 60%),
-      radial-gradient(72% 32% at 76% -6%,rgba(91,141,239,.32),transparent 60%),
-      radial-gradient(48% 26% at 52% 0%,rgba(178,255,220,.15),transparent 65%),
-      radial-gradient(135% 62% at 50% 124%,rgba(5,42,35,.68),transparent 62%),
-      linear-gradient(180deg,#071426 0%,#0A1628 55%,#051019 100%)}
-    .certificate-document[data-mission="Sharpshooter"] .cert-scene{background:
-      radial-gradient(90% 62% at 50% 44%,rgba(3,6,12,.52),rgba(3,6,12,.10) 58%,transparent 78%),
-      radial-gradient(56% 40% at 8% 98%,rgba(255,94,58,.32),transparent 62%),
-      radial-gradient(60% 42% at 88% 8%,rgba(158,58,84,.26),transparent 60%),
-      linear-gradient(160deg,#180D26 0%,#0A1628 58%,#110918 100%)}
-    .certificate-document[data-mission="Iron Discipline"] .cert-scene{background:
-      radial-gradient(90% 62% at 50% 44%,rgba(3,6,12,.52),rgba(3,6,12,.10) 58%,transparent 78%),
-      linear-gradient(90deg,transparent 0 17.5%,rgba(183,208,238,.13) 17.5% 19%,transparent 19% 81%,rgba(183,208,238,.13) 81% 82.5%,transparent 82.5%),
-      radial-gradient(82% 42% at 50% -6%,rgba(150,182,222,.24),transparent 60%),
-      radial-gradient(125% 72% at 50% 116%,rgba(28,46,74,.58),transparent 60%),
-      linear-gradient(180deg,#0B1526 0%,#0A1628 50%,#070E1C 100%)}
-    .certificate-document[data-mission="Risk Master"] .cert-scene{background:
-      radial-gradient(90% 62% at 50% 44%,rgba(3,6,12,.52),rgba(3,6,12,.10) 58%,transparent 78%),
-      conic-gradient(from 180deg at 50% -12%,transparent 0deg,rgba(125,205,238,.11) 16deg,transparent 34deg,rgba(125,205,238,.07) 54deg,transparent 72deg,rgba(125,205,238,.10) 96deg,transparent 116deg),
-      radial-gradient(72% 44% at 50% -8%,rgba(64,164,196,.28),transparent 62%),
-      radial-gradient(135% 66% at 50% 122%,rgba(2,30,46,.78),transparent 62%),
-      linear-gradient(180deg,#081C2C 0%,#0A1628 52%,#030E1B 100%)}
-    .certificate-document[data-mission="Edge Proven"] .cert-scene{background:
-      radial-gradient(90% 62% at 50% 44%,rgba(3,6,12,.52),rgba(3,6,12,.10) 58%,transparent 78%),
-      radial-gradient(52% 34% at 84% 6%,rgba(150,120,255,.20),transparent 62%),
-      radial-gradient(2px 2px at 16% 20%,rgba(255,255,255,.55),transparent 60%),
-      radial-gradient(2px 2px at 30% 64%,rgba(255,255,255,.35),transparent 60%),
-      radial-gradient(2px 2px at 64% 82%,rgba(255,255,255,.40),transparent 60%),
-      radial-gradient(2px 2px at 8% 78%,rgba(255,255,255,.30),transparent 60%),
-      radial-gradient(92% 56% at 10% 102%,rgba(88,60,180,.30),transparent 60%),
-      linear-gradient(155deg,#130E30 0%,#0A1628 55%,#0A0F2C 100%)}
+    .certificate-document .cert-scene{background-image:linear-gradient(180deg,rgba(4,8,16,.78) 0%,rgba(4,8,16,.64) 34%,rgba(4,8,16,.68) 62%,rgba(4,8,16,.86) 100%),radial-gradient(88% 60% at 50% 44%,rgba(3,6,12,.36),rgba(3,6,12,.10) 60%,transparent 80%),url("assets/bgs/desert.webp");background-position:60% 45%}
+    .certificate-document[data-mission="Profitable"] .cert-scene{background-image:linear-gradient(180deg,rgba(4,8,16,.78) 0%,rgba(4,8,16,.64) 34%,rgba(4,8,16,.68) 62%,rgba(4,8,16,.86) 100%),radial-gradient(88% 60% at 50% 44%,rgba(3,6,12,.36),rgba(3,6,12,.10) 60%,transparent 80%),url("assets/bgs/aurora.webp");background-position:50% 40%}
+    .certificate-document[data-mission="Sharpshooter"] .cert-scene{background-image:linear-gradient(180deg,rgba(4,8,16,.78) 0%,rgba(4,8,16,.64) 34%,rgba(4,8,16,.68) 62%,rgba(4,8,16,.86) 100%),radial-gradient(88% 60% at 50% 44%,rgba(3,6,12,.36),rgba(3,6,12,.10) 60%,transparent 80%),url("assets/bgs/eagle.webp");background-position:50% 45%}
+    .certificate-document[data-mission="Iron Discipline"] .cert-scene{background-image:linear-gradient(180deg,rgba(4,8,16,.78) 0%,rgba(4,8,16,.64) 34%,rgba(4,8,16,.68) 62%,rgba(4,8,16,.86) 100%),radial-gradient(88% 60% at 50% 44%,rgba(3,6,12,.36),rgba(3,6,12,.10) 60%,transparent 80%),url("assets/bgs/torii.webp");background-position:50% 42%}
+    .certificate-document[data-mission="Risk Master"] .cert-scene{background-image:linear-gradient(180deg,rgba(4,8,16,.78) 0%,rgba(4,8,16,.64) 34%,rgba(4,8,16,.68) 62%,rgba(4,8,16,.86) 100%),radial-gradient(88% 60% at 50% 44%,rgba(3,6,12,.36),rgba(3,6,12,.10) 60%,transparent 80%),url("assets/bgs/ocean.webp");background-position:50% 45%}
+    .certificate-document[data-mission="Edge Proven"] .cert-scene{background-image:linear-gradient(180deg,rgba(4,8,16,.78) 0%,rgba(4,8,16,.64) 34%,rgba(4,8,16,.68) 62%,rgba(4,8,16,.86) 100%),radial-gradient(88% 60% at 50% 44%,rgba(3,6,12,.36),rgba(3,6,12,.10) 60%,transparent 80%),url("assets/bgs/orbit.webp");background-position:72% 30%}
     html[dir="rtl"] .certificate-document{text-align:right}
 
     /* All firms directory — data stays empty until verified firms are connected. */
