@@ -2265,6 +2265,37 @@ html[dir="rtl"] .gate-eyebrow{letter-spacing:.02em}
 .gate-line{font-size:13.5px;color:var(--secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .gate-arrow{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;background:linear-gradient(135deg,#ecd06a,#D4AF37);color:#0A1628;font-size:12.5px;font-weight:800;box-shadow:0 6px 16px -6px rgba(212,175,55,.55);white-space:nowrap}
 @media(hover:hover) and (pointer:fine){.tr-gate:hover{transform:translateY(-1px);box-shadow:0 14px 30px -14px rgba(212,175,55,.35)}}
+/* Live deals ticker — top of the matcher: one pill per firm (its best active
+   promo), click opens that firm's own page via sbOpenFirmDetail. Fed by
+   sbFirms/sbPlansByFirm through sbBuildDealsTicker(); hidden when no firm
+   carries an active promotion. No nav entry — it lives inside the matcher. */
+.app-ticker{margin:0 0 16px;padding:1px;border-radius:16px;background:linear-gradient(110deg,rgba(212,175,55,.55),rgba(91,141,239,.28) 30%,rgba(212,175,55,.14) 55%,rgba(212,175,55,.55));background-size:220% 100%;animation:appgoldborder 8s linear infinite;box-shadow:0 12px 34px rgba(212,175,55,.10)}
+.app-ticker[hidden]{display:none}
+@keyframes appgoldborder{to{background-position:-220% 0}}
+.app-tick-inner{position:relative;border-radius:15px;overflow:hidden;background:radial-gradient(420px 120px at 0% 50%,rgba(212,175,55,.13),transparent 65%),radial-gradient(420px 120px at 100% 50%,rgba(91,141,239,.13),transparent 65%),repeating-linear-gradient(115deg,rgba(255,255,255,.02) 0 2px,transparent 2px 14px),var(--surface)}
+.app-tick-inner::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 42%,rgba(245,214,123,.10) 50%,transparent 58%);background-size:250% 100%;animation:appticksheen 6.5s ease-in-out infinite;pointer-events:none}
+@keyframes appticksheen{0%{background-position:130% 0}55%,100%{background-position:-130% 0}}
+.app-tick-label{position:absolute;left:0;top:0;bottom:0;z-index:3;display:flex;align-items:center;padding:0 30px 0 12px;background:linear-gradient(90deg,var(--surface) 58%,rgba(10,22,40,0));pointer-events:none}
+.app-tick-chip{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#F5D67B,#D4AF37 60%,#B8912A);color:#0A1628;padding:6px 13px;border-radius:999px;transform:skewX(-10deg);box-shadow:0 2px 14px rgba(212,175,55,.35)}
+.app-tick-chip>*{transform:skewX(10deg)}
+.app-tick-chip b{font-family:"Space Grotesk","IBM Plex Sans Arabic",sans-serif;font-size:11px;font-weight:800;letter-spacing:.13em}
+.app-tick-dot{width:8px;height:8px;border-radius:50%;background:#0A1628;flex:none;animation:apptickpulse 1.6s ease-in-out infinite}
+@keyframes apptickpulse{0%,100%{box-shadow:0 0 0 0 rgba(10,22,40,.45)}55%{box-shadow:0 0 0 6px rgba(10,22,40,0)}}
+.app-tick-viewport{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 97%,transparent);mask-image:linear-gradient(90deg,transparent,#000 4%,#000 97%,transparent)}
+.app-tick-track{display:flex;width:max-content;padding:3px 0;animation:apptickscroll 40s linear infinite}
+.app-ticker:hover .app-tick-track{animation-play-state:paused}
+@keyframes apptickscroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.app-tick-group{display:flex;flex:none;align-items:center}
+.app-tick-item{display:inline-flex;align-items:center;gap:9px;margin:5px 12px 5px 0;padding:7px 16px 7px 8px;border-radius:999px;border:1px solid rgba(212,175,55,.20);background:rgba(255,255,255,.03);color:var(--text);font:inherit;font-size:13.5px;white-space:nowrap;cursor:pointer;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+.app-tick-item:hover{transform:translateY(-1px);border-color:rgba(212,175,55,.65);box-shadow:0 6px 18px rgba(212,175,55,.18)}
+.app-tick-logo{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:7px;background:var(--raised);border:1px solid var(--line-strong);color:#D4AF37;font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:12px;overflow:hidden;flex:none}
+.app-tick-name{font-weight:600}
+.app-tick-off{font-weight:800;font-size:15px;color:#E9C766;text-shadow:0 0 16px rgba(212,175,55,.5)}
+.app-tick-from{color:var(--muted);font-size:12px}
+.app-tick-code{font-family:ui-monospace,monospace;font-size:11px;font-weight:700;border:1px dashed rgba(212,175,55,.55);background:rgba(212,175,55,.09);color:#E9C766;padding:2px 7px;border-radius:6px;letter-spacing:.04em}
+.app-tick-ends{color:var(--muted);font-size:12px}
+@media(max-width:560px){.app-tick-label{padding:0 20px 0 8px}.app-tick-chip{padding:5px 10px}.app-tick-chip b{font-size:10px}.app-tick-item{font-size:13px;padding:6px 13px 6px 7px}}
+@media (prefers-reduced-motion:reduce){.app-tick-track,.app-ticker,.app-tick-inner::after,.app-tick-dot{animation:none}}
 @media(max-width:640px){.tr-gate{flex-wrap:wrap}.gate-line{white-space:normal}}
 @media (prefers-reduced-motion:reduce){.tr-gate{transition:none}}
 .verdict-namerow{display:flex;align-items:center;gap:16px;margin:0 0 12px;min-width:0}
@@ -3400,6 +3431,12 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     </section>
 
     <section class="screen" id="matcher" aria-label="Prop firm matcher">
+      <div class="app-ticker" id="appDealsTicker" dir="ltr" hidden>
+        <div class="app-tick-inner">
+          <div class="app-tick-label"><span class="app-tick-chip"><i class="app-tick-dot"></i><b id="appTickChipLbl">LIVE DEALS</b></span></div>
+          <div class="app-tick-viewport"><div class="app-tick-track" id="appTickTrack"></div></div>
+        </div>
+      </div>
       <div class="filter-panel">
         <button class="filter-title" id="filterToggle" type="button" aria-expanded="true" aria-controls="filterBody">
           <h3>Filters</h3>
@@ -6115,6 +6152,66 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     if(pct>0)return {base:base,final:Math.round(base*(1-pct/100)*100)/100,pct:pct};
     return {base:base,final:base,pct:0};
   }
+  /* Live deals ticker (top of matcher): ONE pill per firm — its best active
+     promotion across all its plans (the per-plan offers stay on the cards and
+     the firm page). Click opens the firm's own page (sbOpenFirmDetail).
+     Same source of truth as the cards: sbBestPromo/sbDiscountedPrice over
+     sbFirms + sbPlansByFirm. Signature-guarded so filter re-renders do not
+     restart the marquee; hidden entirely when nothing is on offer. */
+  var _sbTickSig='';
+  function sbBuildDealsTicker(){
+    var wrap=document.getElementById('appDealsTicker'),track=document.getElementById('appTickTrack');
+    if(!wrap||!track||typeof sbFirms==='undefined'||!sbFirms.length)return;
+    var ar=(typeof currentLanguage!=='undefined'&&currentLanguage==='ar');
+    var items=[];
+    sbFirms.forEach(function(f){
+      var plans=sbPlansByFirm[f.id]||[];if(!plans.length)return;
+      var best=null;
+      plans.forEach(function(p){
+        var promo=p.rules?sbBestPromo(p.rules):null;if(!promo)return;
+        var pct=sbPromoDiscountPct(promo);
+        if(!best||pct>best.pct){
+          var dp=sbDiscountedPrice(p);
+          best={promo:promo,pct:pct,final:dp.final,cur:p.currency||'USD'};
+        }
+      });
+      if(best)items.push({firm:f,promo:best.promo,pct:best.pct,final:best.final,cur:best.cur});
+    });
+    if(!items.length){wrap.hidden=true;_sbTickSig='';return;}
+    items.sort(function(a,b){if(b.pct!==a.pct)return b.pct-a.pct;return String(a.firm.name||'').localeCompare(String(b.firm.name||''));});
+    var sig=items.map(function(i){return i.firm.id+':'+i.pct+':'+(i.promo.code||'');}).join('|')+'@'+(ar?'ar':'en');
+    if(sig===_sbTickSig&&!wrap.hidden)return;
+    _sbTickSig=sig;
+    var lbl=document.getElementById('appTickChipLbl');if(lbl)lbl.textContent=ar?'عروض مباشرة':'LIVE DEALS';
+    function sym(cur){return cur==='EUR'?'€':cur==='MAD'?'MAD ':'$';}
+    function makeItem(it,clone){
+      var b=document.createElement('button');b.type='button';b.className='app-tick-item';
+      if(clone)b.tabIndex=-1;
+      b.setAttribute('aria-label',(ar?'عروض ':'Deals — ')+(it.firm.name||''));
+      var logo=document.createElement('span');logo.className='app-tick-logo';
+      if(typeof sbLogoInto==='function')sbLogoInto(logo,it.firm,(it.firm.name||'?').charAt(0).toUpperCase());
+      b.appendChild(logo);
+      var nm=document.createElement('span');nm.className='app-tick-name';nm.textContent=it.firm.name||'';b.appendChild(nm);
+      var off=document.createElement('span');off.className='app-tick-off';
+      if(it.pct>0)off.textContent='−'+it.pct+'%';
+      else if(it.promo.discount){var t=String(it.promo.discount);off.textContent=t.length>40?t.slice(0,40)+'…':t;}
+      if(off.textContent)b.appendChild(off);
+      if(it.pct>0&&it.final!=null){var fr=document.createElement('span');fr.className='app-tick-from';fr.textContent=(ar?'ابتداءً من ':'from ')+sym(it.cur)+(Math.round(it.final*100)/100).toLocaleString('en-US');b.appendChild(fr);}
+      if(it.promo.code){var c=document.createElement('span');c.className='app-tick-code';c.textContent=String(it.promo.code);b.appendChild(c);}
+      if(it.promo.expiry){var ed=new Date(it.promo.expiry);if(isFinite(ed.getTime())){var e=document.createElement('span');e.className='app-tick-ends';e.textContent=(ar?'ينتهي ':'Ends ')+(typeof sbFmtDate==='function'?sbFmtDate(it.promo.expiry):String(it.promo.expiry));b.appendChild(e);}}
+      (function(fid){b.addEventListener('click',function(){if(typeof sbOpenFirmDetail==='function')sbOpenFirmDetail(fid);});})(it.firm.id);
+      return b;
+    }
+    track.innerHTML='';
+    [false,true].forEach(function(clone){
+      var g=document.createElement('div');g.className='app-tick-group';
+      if(clone)g.setAttribute('aria-hidden','true');
+      items.forEach(function(it){g.appendChild(makeItem(it,clone));});
+      track.appendChild(g);
+    });
+    track.style.animationDuration=Math.min(90,Math.max(24,Math.round(items.length*4.5)))+'s';
+    wrap.hidden=false;
+  }
   /* BIG BATCH P1 — Challenges firm filter state (composes with sort + matcher filters) */
   var sbChalFirmFilter='';
   function sbPopulateChalFirmFilter(firms){
@@ -6701,6 +6798,8 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     if(typeof sbUpdateMethodologyStats==='function')sbUpdateMethodologyStats();
     /* BIG BATCH P1: verdict card + rated-by-traders strips for this filtered set */
     try{sbRenderVerdictAndRated(firms);}catch(_vr){}
+    /* Live deals ticker above the filters — one pill per firm with an active promo */
+    try{sbBuildDealsTicker();}catch(_dt){}
   }
   function sbUpdateMethodologyStats(){
     try{
