@@ -2299,6 +2299,15 @@ html[dir="rtl"] .gate-eyebrow{letter-spacing:.02em}
 .app-tick-ends{color:var(--muted);font-size:12px}
 @media(max-width:560px){.app-tick-label{padding:0 20px 0 8px}.app-tick-chip{padding:5px 10px}.app-tick-chip b{font-size:10px}.app-tick-item{font-size:13px;padding:6px 13px 6px 7px}}
 @media(min-width:1024px){.app-ticker{margin:24px 0 22px}.app-tick-track{padding:8px 0}.app-tick-item{margin-top:6px;margin-bottom:6px;padding:9px 18px 9px 9px;font-size:14px}.app-tick-logo{width:26px;height:26px}.app-tick-chip{padding:7px 15px}.app-tick-chip b{font-size:12px}.app-tick-edge{width:96px}}
+/* SITEWIDE BUILD 2026-10-24 — additive only: firm rule check + ending-soon strip reuse existing classes */
+.risk-firmcheck{margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+.app-ending{margin:0 0 18px}
+.app-ending-head{display:flex;align-items:center;gap:8px;margin:0 0 8px;padding:0 4px}
+.app-ending-title{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--gold)}
+.app-ending-list{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 8px;scrollbar-width:none}
+.app-ending-list::-webkit-scrollbar{display:none}
+.app-ending .app-tick-count{color:var(--gold);font-variant-numeric:tabular-nums}
+@media(min-width:1024px){.app-ending{margin-bottom:22px}}
 @media (prefers-reduced-motion:reduce){.app-tick-track,.app-ticker,.app-tick-inner::after,.app-tick-dot{animation:none}}
 @media(max-width:640px){.tr-gate{flex-wrap:wrap}.gate-line{white-space:normal}}
 @media (prefers-reduced-motion:reduce){.tr-gate{transition:none}}
@@ -3442,6 +3451,10 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
           <div class="app-tick-viewport"><div class="app-tick-track" id="appTickTrack"></div></div>
         </div>
       </div>
+      <div class="app-ending" id="appEndingSoon" hidden>
+        <div class="app-ending-head"><span class="app-ending-title" id="appEndingTitle">⏳ Ending soon</span></div>
+        <div class="app-ending-list" id="appEndingList"></div>
+      </div>
       <div class="filter-panel">
         <button class="filter-title" id="filterToggle" type="button" aria-expanded="true" aria-controls="filterBody">
           <h3>Filters</h3>
@@ -3755,8 +3768,9 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       </section>
 
       <section class="weekly-card" aria-labelledby="weekly-title">
-        <div class="journal-card-head"><div><h3 id="weekly-title">Your week in numbers</h3><p id="weekly-sub">This week · Monday to Sunday</p></div><span class="tiny" id="weeklyMode">NET P&amp;L</span></div>
+        <div class="journal-card-head"><div><h3 id="weekly-title">Your week in numbers</h3><p id="weekly-sub">This week · Monday to Sunday</p></div><span class="tiny" id="weeklyMode">NET P&amp;L</span><button class="btn secondary" id="shareWeekBtn" type="button">Share week</button></div>
         <div class="weekly-body" id="weeklyBody"><p class="mistake-empty">No closed trades this week yet.</p></div>
+        <p class="session-feedback" id="shareWeekFeedback" aria-live="polite"></p>
       </section>
 
       <section class="journal-analytics" aria-label="Performance charts">
@@ -3805,6 +3819,14 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
             <div class="equity-risk"><div class="equity-risk-head"><span id="riskContext">This trade risks —% of account</span><strong id="riskBarValue">—%</strong></div><div class="equity-track"><span class="equity-fill" id="equityFill"></span><span class="equity-marker" id="equityMarker"></span></div></div>
             <p class="risk-summary" id="plainLanguage">You risk $— (—% of your $— account) to make $— at —R. A loss costs $—.</p>
             <p class="risk-method">Method: account size × risk % ÷ (stop-loss pips × $10 pip value). Verify contract details with your broker.</p>
+            <div class="risk-firmcheck" id="riskFirmCheck">
+              <div class="risk-section-head"><div><h3>Challenge rule check</h3><p class="helper">Optional — check this risk against a firm's real limits.</p></div></div>
+              <div class="risk-fields">
+                <div class="risk-field"><label for="riskFirm">Firm</label><select id="riskFirm" class="full-calc-input"><option value="">Select firm</option></select></div>
+                <div class="risk-field"><label for="riskPlan">Plan / account size</label><select id="riskPlan" class="full-calc-input"><option value="">Select plan</option></select></div>
+              </div>
+              <p class="risk-summary" id="riskFirmVerdict">Select a firm and plan to check your risk against its daily loss and max drawdown limits.</p>
+            </div>
             <div class="risk-footer-actions"><button class="btn secondary" id="saveRiskToJournal" type="button">Save to journal</button></div>
             <p class="session-feedback" id="riskSaveFeedback" aria-live="polite"></p>
             <div class="scenario-block">
@@ -4648,8 +4670,12 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
   <div class="compare-panel">
     <div style="display:flex;justify-content:space-between;align-items:center">
       <div><p class="eyebrow" style="margin:0">Side by side</p><h3 id="cmpTitle" style="margin:0">Compare firms</h3></div>
-      <button class="sheet-close" id="cmpClose" type="button" aria-label="Close comparison"><svg width="18"><use href="#pv-i-x"/></svg></button>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="btn secondary" id="cmpShare" type="button">Share</button>
+        <button class="sheet-close" id="cmpClose" type="button" aria-label="Close comparison"><svg width="18"><use href="#pv-i-x"/></svg></button>
+      </div>
     </div>
+    <p class="session-feedback" id="cmpShareFeedback" aria-live="polite"></p>
     <div class="compare-grid" id="cmpGrid"></div>
   </div>
 </div>
@@ -5635,6 +5661,121 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     document.getElementById('compareModal').classList.add('open');
   }
   function sbCloseCompare(){var m=document.getElementById('compareModal');if(m)m.classList.remove('open');}
+  /* ============ SITEWIDE BUILD 2026-10-24 — additive only, existing classes/styles reused ============ */
+  /* #1 Risk calculator × firm rules: optional firm/plan check against real daily-loss + max-drawdown limits. */
+  function pvRiskFirmPlan(){
+    var fs=document.getElementById('riskFirm'),ps=document.getElementById('riskPlan');
+    if(!fs||!ps)return null;
+    if(fs.options.length<=1&&typeof sbFirms!=='undefined'&&sbFirms.length){try{sbLabFillFirms('riskFirm','riskPlan');}catch(e){}}
+    if(!ps._pvBound){ps._pvBound=true;ps.addEventListener('change',function(){try{pvUpdateFirmCheck();}catch(e){}});}
+    if(!fs._pvBound){fs._pvBound=true;fs.addEventListener('change',function(){try{pvUpdateFirmCheck();}catch(e){}});}
+    var plans=(typeof sbPlansByFirm!=='undefined')?(sbPlansByFirm[fs.value]||[]):[],plan=null;
+    plans.forEach(function(p){if(String(p.id)===String(ps.value))plan=p;});
+    return plan;
+  }
+  function pvUpdateFirmCheck(){
+    var v=document.getElementById('riskFirmVerdict');if(!v)return;
+    var ar=(typeof currentLanguage!=='undefined'&&currentLanguage==='ar');
+    var plan=pvRiskFirmPlan();
+    var b=n('balance'),r=n('riskPercent');
+    if(!plan){v.textContent=ar?'اختر شركة وخطة لمقارنة مخاطرتك بحدود الخسارة اليومية وأقصى تراجع.':'Select a firm and plan to check your risk against its daily loss and max drawdown limits.';v.style.color='';return;}
+    if(!(b>0&&r>0)){v.textContent=ar?'أدخل الرصيد ونسبة المخاطرة أولاً.':'Enter balance and risk % first.';v.style.color='';return;}
+    var rules=plan.rules||{};
+    var dPct=sbSimPct(rules,plan.account_size,'daily_loss_pct','daily_loss_usd');
+    var mPct=sbSimPct(rules,plan.account_size,'max_drawdown_pct','max_drawdown_usd');
+    var risk=b*r/100,size=Number(plan.account_size);
+    var fmt=function(x){return '$'+Math.round(x).toLocaleString('en-US');};
+    if(!isFinite(dPct)&&!isFinite(mPct)){v.textContent=ar?'هذه الخطة لا تنشر حدود خسارة يومية أو تراجع قصوى.':'This plan does not publish daily loss or max drawdown limits.';v.style.color='';return;}
+    var parts=[],bad=false;
+    if(isFinite(dPct)&&size>0){
+      var dl=dPct/100*size,nLoss=Math.floor(dl/risk)+1;
+      if(risk>dl){parts.push(ar?('هذه الصفقة وحدها ('+fmt(risk)+') تتجاوز حد الخسارة اليومية ('+fmt(dl)+').'):('This single trade ('+fmt(risk)+') alone breaches the daily loss limit ('+fmt(dl)+').'));bad=true;}
+      else parts.push(ar?('مخاطرتك '+fmt(risk)+' = '+Math.round(risk/dl*100)+'% من حد الخسارة اليومية ('+fmt(dl)+')؛ '+nLoss+' خسائر متتالية تكسره.'):('Your risk '+fmt(risk)+' is '+Math.round(risk/dl*100)+'% of the daily loss limit ('+fmt(dl)+'); '+nLoss+' straight losses breach it.'));
+    }
+    if(isFinite(mPct)&&size>0){
+      var md=mPct/100*size,nM=Math.floor(md/risk)+1;
+      if(risk>md){parts.push(ar?('وتتجاوز أيضاً أقصى تراجع ('+fmt(md)+').'):('It also breaches max drawdown ('+fmt(md)+').'));bad=true;}
+      else parts.push(ar?('أقصى تراجع: '+fmt(md)+' ('+nM+' خسائر متتالية).'):('Max drawdown: '+fmt(md)+' ('+nM+' straight losses).'));
+    }
+    if(size!==b)parts.push(ar?'الحدود محسوبة على حجم الخطة.':'Limits use the plan size.');
+    v.textContent=parts.join(' ');
+    v.style.color=bad?'var(--danger)':'';
+  }
+  /* #2 Ending-soon strip: promos with a real ISO expiry inside 14 days, soonest first, live countdown. */
+  function sbBuildEndingSoon(){
+    var wrap=document.getElementById('appEndingSoon'),list=document.getElementById('appEndingList');
+    if(!wrap||!list||typeof sbFirms==='undefined'||!sbFirms.length)return;
+    var ar=(typeof currentLanguage!=='undefined'&&currentLanguage==='ar');
+    var now=Date.now(),items=[];
+    sbFirms.forEach(function(f){
+      var plans=sbPlansByFirm[f.id]||[],best=null;
+      plans.forEach(function(p){
+        ((p.rules&&p.rules.promotions)||[]).forEach(function(pr){
+          if(!pr||!pr.expiry)return;
+          var ed=new Date(pr.expiry);if(!isFinite(ed.getTime()))return;
+          var ms=ed.getTime()-now;
+          if(ms<=0||ms>14*24*3600*1000)return;
+          if(!best||ed.getTime()<best.ed.getTime())best={promo:pr,ed:ed};
+        });
+      });
+      if(best)items.push({firm:f,promo:best.promo,ed:best.ed});
+    });
+    items.sort(function(a,b){return a.ed-b.ed;});
+    if(!items.length){wrap.hidden=true;return;}
+    wrap.hidden=false;
+    var head=document.getElementById('appEndingTitle');if(head)head.textContent=(ar?'⏳ كيسالي قريب':'⏳ Ending soon')+' · '+items.length;
+    var cd=function(ed){var ms=Math.max(0,ed-Date.now());var d=Math.floor(ms/86400000),h=Math.floor(ms/3600000)%24,m=Math.floor(ms/60000)%60;return d>0?(d+'d '+h+'h'):(h>0?(h+'h '+m+'m'):(m+'m'));};
+    list.innerHTML='';
+    items.forEach(function(it){
+      var b=document.createElement('button');b.type='button';b.className='app-tick-item';
+      var logo=document.createElement('span');logo.className='app-tick-logo';if(typeof sbLogoInto==='function')sbLogoInto(logo,it.firm,(it.firm.name||'?').charAt(0).toUpperCase());b.appendChild(logo);
+      var nm=document.createElement('span');nm.className='app-tick-name';nm.textContent=it.firm.name||'';b.appendChild(nm);
+      var pct=sbPromoDiscountPct(it.promo);if(pct>0){var off=document.createElement('span');off.className='app-tick-off';off.textContent='−'+pct+'%';b.appendChild(off);}
+      if(it.promo.code){var c=document.createElement('span');c.className='app-tick-code';c.textContent=String(it.promo.code);b.appendChild(c);}
+      var e=document.createElement('span');e.className='app-tick-ends app-tick-count';e.setAttribute('data-end',String(it.ed.getTime()));e.textContent=cd(it.ed.getTime());b.appendChild(e);
+      (function(fid){b.addEventListener('click',function(){if(typeof sbOpenFirmDetail==='function')sbOpenFirmDetail(fid);});})(it.firm.id);
+      list.appendChild(b);
+    });
+    if(!window._sbEndTimer){window._sbEndTimer=setInterval(function(){document.querySelectorAll('#appEndingList .app-tick-count').forEach(function(el){var ed=Number(el.getAttribute('data-end'));if(!ed)return;var ms=Math.max(0,ed-Date.now());var d=Math.floor(ms/86400000),h=Math.floor(ms/3600000)%24,m=Math.floor(ms/60000)%60;el.textContent=d>0?(d+'d '+h+'h'):(h>0?(h+'h '+m+'m'):(m+'m'));});},60000);}
+  }
+  /* #3 Compare share: link into the existing public comparison page (?firms=slugs, same slug rule). */
+  function pvCmpShareUrl(){
+    var firms2=(window.sbCompareIds||[]).map(function(id){var f=null;(sbFirms||[]).forEach(function(x){if(String(x.id)===String(id))f=x;});return f;}).filter(Boolean);
+    if(firms2.length<2)return null;
+    var sorted=firms2.slice().sort(function(a,b){return String(a.name||'').localeCompare(String(b.name||''));});
+    var used={},slugs=sorted.map(function(f){var base=String(f.name||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'firm';var s=base,i=2;while(used[s]){s=base+'-'+i;i++;}used[s]=1;return s;});
+    return window.location.origin+'/prop-firm-comparison.html?firms='+slugs.join(',');
+  }
+  (function pvCmpShareWire(){
+    var sh=document.getElementById('cmpShare');if(!sh||sh._pvBound)return;sh._pvBound=true;
+    sh.addEventListener('click',function(){
+      var fb=document.getElementById('cmpShareFeedback');
+      var url=pvCmpShareUrl();
+      if(!url){if(fb)fb.textContent=currentLanguage==='ar'?'اختر شركتين على الأقل.':'Select at least two firms.';return;}
+      var done=function(ok){if(fb)fb.textContent=ok?(currentLanguage==='ar'?'تم نسخ رابط المقارنة.':'Comparison link copied.'):(currentLanguage==='ar'?'تعذّر النسخ — انسخ الرابط يدوياً: '+url:'Could not copy — copy manually: '+url);};
+      if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(url).then(function(){done(true);}).catch(function(){done(false);});}
+      else{var ta=document.createElement('textarea');ta.value=url;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done(true);}catch(e){done(false);}document.body.removeChild(ta);}
+    });
+  })();
+  /* #5 Weekly card share: same htmlToImage → share/download chain as the trader card. */
+  function pvShareWeek(){
+    var fb=document.getElementById('shareWeekFeedback');
+    var note=function(m){if(fb)fb.textContent=m;};
+    var card=document.querySelector('#journal .weekly-card');
+    if(!card){note(currentLanguage==='ar'?'بطاقة الأسبوع غير موجودة.':'Weekly card not found.');return;}
+    var body=document.getElementById('weeklyBody');
+    if(body&&!body.querySelector('.weekly-hero')){note(currentLanguage==='ar'?'لا توجد صفقات مغلقة هذا الأسبوع بعد.':'No closed trades this week yet.');return;}
+    note(currentLanguage==='ar'?'جاري تجهيز بطاقة الأسبوع…':'Preparing your week card…');
+    var deliver=function(dataUrl){
+      var fname='pipvant-week.png';
+      try{if(navigator.canShare&&navigator.share&&typeof dataUrlToFile==='function'){var file=dataUrlToFile(dataUrl,fname);if(navigator.canShare({files:[file]})){navigator.share({title:'PIPVANT week',files:[file]}).then(function(){note(currentLanguage==='ar'?'تمت مشاركة بطاقة الأسبوع.':'Week card shared.');}).catch(function(){if(typeof saveDataUrl==='function')saveDataUrl(dataUrl,fname);});return;}}}catch(e){}
+      if(typeof saveDataUrl==='function')saveDataUrl(dataUrl,fname);
+      note(currentLanguage==='ar'?'تم تنزيل بطاقة الأسبوع.':'Week card downloaded.');
+    };
+    if(window.htmlToImage&&window.htmlToImage.toPng){window.htmlToImage.toPng(card,{pixelRatio:1,cacheBust:true,backgroundColor:'#0A1628'}).then(deliver).catch(function(){note(currentLanguage==='ar'?'تعذّر إنشاء البطاقة على هذا الجهاز.':'Could not build the card on this device.');});}
+    else{note(currentLanguage==='ar'?'المشاركة غير متاحة على هذا الجهاز.':'Sharing is unavailable on this device.');}
+  }
+  (function pvWeekWire(){var b=document.getElementById('shareWeekBtn');if(b)b.addEventListener('click',pvShareWeek);})();
   /* ============ WAVE 3 — Pro Lab ============ */
   /* Shared: populate firm+plan selects from Supabase data */
   function sbLabFillFirms(firmSelId,planSelId){
@@ -6805,6 +6946,8 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     try{sbRenderVerdictAndRated(firms);}catch(_vr){}
     /* Live deals ticker above the filters — one pill per firm with an active promo */
     try{sbBuildDealsTicker();}catch(_dt){}
+    /* Ending-soon strip under the ticker — promos expiring within 14 days */
+    try{sbBuildEndingSoon();}catch(_es){}
   }
   function sbUpdateMethodologyStats(){
     try{
@@ -15601,6 +15744,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       document.getElementById('sizeOutput').textContent='—';document.getElementById('riskOutput').textContent='—';document.getElementById('rOutput').textContent='—';document.getElementById('riskContext').textContent=currentLanguage==='ar'?'هذه الصفقة تخاطر بـ —% من الحساب':'This trade risks —% of account';document.getElementById('riskBarValue').textContent='—%';document.getElementById('equityFill').style.setProperty('--risk-scale','0');document.getElementById('equityMarker').style.setProperty('--risk-marker-scale','0');document.getElementById('plainLanguage').textContent=currentLanguage==='ar'?'أدخل الرصيد ونسبة المخاطرة ومسافة الوقف لحساب حجم الصفقة.':'Enter balance, risk %, and stop distance to calculate position size.';
     }
     calculatorCurrency=currentCurrency;
+    try{pvUpdateFirmCheck();}catch(_fc){}
   }
   document.querySelectorAll('.full-calc-input').forEach(function(el){if(el!==balanceInput&&el!==riskPercent)el.addEventListener('input',calculateFull);});
   /* ---- Economic calendar: live feed from economic_events (public read) ---- */
