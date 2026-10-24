@@ -83,10 +83,20 @@
       return v;
     } catch (e) { return null; }
   }
+  /* Local previews are not public traffic: file:// paths and
+     localhost/127.0.0.1 origins used to log rows like
+     /home/hatch/.../index.html and one fresh visitor per harness run,
+     inflating the dashboard's visitor counts. Skip them at the source. */
+  function isLocalPreview() {
+    try {
+      var h = location.hostname || '';
+      return location.protocol === 'file:' || h === '' || h === 'localhost' || h === '127.0.0.1';
+    } catch (e) { return false; }
+  }
   try {
     if (!window.__pipvTracked) {
       window.__pipvTracked = true;
-      if (!isDnt()) {
+      if (!isLocalPreview() && !isDnt()) {
         isFounderSession().then(function (founder) {
           if (founder) return;
           var row = { page: location.pathname, referrer: document.referrer || null };

@@ -128,7 +128,7 @@
     .trow{display:grid;grid-template-columns:110px 1fr 92px;gap:12px;align-items:center;margin:11px 0;font-size:13px}
     .trow span{color:var(--secondary)}
     .tbar{height:9px;background:#0f1c33;border-radius:6px;overflow:hidden;border:1px solid var(--line)}
-    .tfill{height:100%;width:0;border-radius:6px;background:linear-gradient(90deg,var(--gold2),var(--gold));transition:width .8s ease}
+    .tfill{height:100%;width:0;border-radius:6px;background:linear-gradient(90deg,var(--gold2),var(--gold1));transition:width .8s ease}
     .trow b{color:var(--gold);text-align:right;font-variant-numeric:tabular-nums}
 
     /* broadcast */
@@ -156,7 +156,43 @@
     .foot{color:var(--muted);font-size:12px;text-align:center;padding:26px 0 44px}
     .err{background:rgba(226,138,126,.07);border:1px solid rgba(226,138,126,.3);color:var(--red);
       border-radius:12px;padding:15px 17px;margin-bottom:18px;font-size:13.5px;display:none}
-    @media(max-width:560px){.kpi .num{font-size:2rem}.panel{padding:20px 16px}}
+    .delta{display:inline-block;font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:99px;margin-top:10px}
+    .delta.up{color:var(--green);background:rgba(126,226,168,.1)}
+    .delta.down{color:var(--red);background:rgba(226,138,126,.1)}
+    .delta.flat{color:var(--muted);background:rgba(255,255,255,.05)}
+    .note{color:var(--muted);font-size:12px;margin:-8px 0 22px;line-height:1.6}
+    .table-wrap{overflow-x:auto;margin:0 -4px;padding:0 4px}
+    .table-wrap table{min-width:520px}
+    .chart-wrap{overflow-x:auto;padding-bottom:4px}
+    .chart-wrap .chart{min-width:560px}
+    .frow{display:grid;grid-template-columns:130px 1fr 86px;gap:12px;align-items:center;margin:11px 0;font-size:13px}
+    .frow span{color:var(--secondary)}
+    .frow b{text-align:right;font-variant-numeric:tabular-nums}
+    .frow b small{display:block;color:var(--muted);font-weight:500;font-size:11px}
+    .hgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+    .hstat{background:rgba(255,255,255,.02);border:1px solid var(--line);border-radius:14px;padding:18px}
+    .hstat .lbl{color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;margin-bottom:8px}
+    .hstat .val{font-family:"Space Grotesk";font-size:1.5rem;font-weight:700;line-height:1.1}
+    .hstat .val.gold{background:linear-gradient(135deg,var(--gold1),var(--gold2));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .hstat .hint{color:var(--muted);font-size:12px;margin-top:6px;line-height:1.5}
+    @media(max-width:900px){.hgrid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:640px){
+      .kpis{grid-template-columns:repeat(2,1fr);gap:10px}
+      .kpi{padding:16px}.kpi .num{font-size:1.7rem}
+      .panel{padding:20px 16px}
+      header.top .wrap{flex-wrap:wrap;gap:10px}
+      .brand{font-size:15px}
+      .live{font-size:11.5px}
+      .frow{grid-template-columns:96px 1fr 70px}
+      .trow{grid-template-columns:86px 1fr 76px}
+      .table-wrap table{min-width:0}
+      .chart-wrap .chart{min-width:0;gap:3px}
+      .chart-wrap .bar .d{font-size:9px}
+      .chart-wrap .bar:not(:nth-child(3n+1)) .d{visibility:hidden}
+      .tabs{flex-wrap:nowrap;overflow-x:auto;padding-bottom:8px}
+      .tab{white-space:nowrap}
+    }
+    @media(max-width:380px){.kpis{grid-template-columns:1fr}.hgrid{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
@@ -201,29 +237,49 @@
     </div>
     <div class="err" id="err"></div>
     <div class="kpis">
-      <div class="kpi"><div class="lbl">Visitors</div><div class="num gold" id="k-total">—</div><div class="hint">Unique people. One person = 1, ever.</div></div>
-      <div class="kpi"><div class="lbl">Visitors · 7 days</div><div class="num gold" id="k-7d">—</div><div class="hint">Unique people this week. The growth signal.</div></div>
-      <div class="kpi"><div class="lbl">Newsletter subs</div><div class="num blue" id="k-subs">—</div><div class="hint">Your owned audience. No middleman.</div></div>
-      <div class="kpi"><div class="lbl">Subs · 7 days</div><div class="num blue" id="k-subs7">—</div><div class="hint">List growth this week.</div></div>
-      <div class="kpi"><div class="lbl">Registered users</div><div class="num gold" id="k-users">—</div><div class="hint">Real users (test accounts excluded).</div></div>
-      <div class="kpi"><div class="lbl">Users · 7 days</div><div class="num gold" id="k-users7">—</div><div class="hint">New real users this week.</div></div>
+      <div class="kpi"><div class="lbl">👥 Visitors</div><div class="num gold" id="k-total">—</div><div class="hint">Unique people, ever. Web traffic only.</div></div>
+      <div class="kpi"><div class="lbl">📈 Visitors · 7 days</div><div class="num gold" id="k-7d">—</div><span class="delta flat" id="d-7d">vs prior week —</span><div class="hint">The growth signal.</div></div>
+      <div class="kpi"><div class="lbl">☀️ Visitors · today</div><div class="num gold" id="k-today">—</div><div class="hint">Unique people so far today.</div></div>
+      <div class="kpi"><div class="lbl">💌 Newsletter subs</div><div class="num blue" id="k-subs">—</div><div class="hint">Your owned audience. No middleman.</div></div>
+      <div class="kpi"><div class="lbl">💌 Subs · 7 days</div><div class="num blue" id="k-subs7">—</div><span class="delta flat" id="d-subs7">vs prior week —</span><div class="hint">List growth this week.</div></div>
+      <div class="kpi"><div class="lbl">🧑‍🤝‍🧑 Registered users</div><div class="num gold" id="k-users">—</div><div class="hint">Real users (test accounts excluded).</div></div>
+      <div class="kpi"><div class="lbl">🧑‍🤝‍🧑 Users · 7 days</div><div class="num gold" id="k-users7">—</div><span class="delta flat" id="d-users7">vs prior week —</span><div class="hint">New real users this week.</div></div>
+      <div class="kpi"><div class="lbl">🔥 Live deals</div><div class="num gold" id="k-deals">—</div><div class="hint" id="k-deals-hint">Firms with an active promo.</div></div>
     </div>
+    <p class="note">Every number here is web traffic only — local file previews, harness runs and system-test pings are excluded, and legacy rows from before visitor IDs existed are never counted as people.</p>
     <div class="panel">
-      <h2>🎯 October targets <span class="live" id="days-left"></span></h2>
-      <p class="desc">Company goals for the month. Proposed by the operator — adjust anytime.</p>
+      <h2>🎯 <span id="t-month">This month</span> targets <span class="live" id="days-left"></span></h2>
+      <p class="desc">Monthly goals vs this month's real numbers (not all-time totals). Proposed by the operator — adjust anytime.</p>
       <div class="trow"><span>Visitors</span><div class="tbar"><div class="tfill" id="t-visits"></div></div><b id="t-visits-n">—</b></div>
       <div class="trow"><span>Signups</span><div class="tbar"><div class="tfill" id="t-signups"></div></div><b id="t-signups-n">—</b></div>
       <div class="trow"><span>Newsletter</span><div class="tbar"><div class="tfill" id="t-subs"></div></div><b id="t-subs-n">—</b></div>
     </div>
     <div class="panel">
-      <h2>📈 Traffic · last 14 days</h2>
-      <p class="desc">Daily visits, test pings and signup events excluded. Spot strong days and rising trends.</p>
-      <div class="chart" id="chart"><div class="empty">Loading…</div></div>
+      <h2>🔻 Funnel</h2>
+      <p class="desc">From stranger to subscriber — where the business actually converts.</p>
+      <div class="frow"><span>Unique visitors</span><div class="tbar"><div class="tfill" id="f-visits" style="width:100%"></div></div><b id="f-visits-n">—</b></div>
+      <div class="frow"><span>Registered users</span><div class="tbar"><div class="tfill" id="f-users"></div></div><b id="f-users-n">—</b></div>
+      <div class="frow"><span>Newsletter subs</span><div class="tbar"><div class="tfill" id="f-subs"></div></div><b id="f-subs-n">—</b></div>
+    </div>
+    <div class="panel">
+      <h2>🏪 Catalogue health</h2>
+      <p class="desc">Is the product itself alive — firms, deals, payouts, certificates.</p>
+      <div class="hgrid">
+        <div class="hstat"><div class="lbl">Firms tracked</div><div class="val" id="h-firms">—</div><div class="hint" id="h-fresh">Data freshness —</div></div>
+        <div class="hstat"><div class="lbl">Live deals</div><div class="val gold" id="h-deals">—</div><div class="hint" id="h-deals-hint">Active promo entries.</div></div>
+        <div class="hstat"><div class="lbl">Verified payouts</div><div class="val gold" id="h-payouts">—</div><div class="hint" id="h-payouts-hint">On-chain verified, all time.</div></div>
+        <div class="hstat"><div class="lbl">Certificates issued</div><div class="val" id="h-certs">—</div><div class="hint">Earned by real traders.</div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h2>📈 Unique visitors · last 14 days</h2>
+      <p class="desc">One person = 1 per day. Local previews, harness runs and test pings excluded — this is real web traffic.</p>
+      <div class="chart-wrap"><div class="chart" id="chart"><div class="empty">Loading…</div></div></div>
     </div>
     <div class="panel">
       <h2>📄 Views by page</h2>
       <p class="desc">Which pages pull traffic — invest where it works.</p>
-      <div id="pages"><div class="empty">Loading…</div></div>
+      <div class="table-wrap" id="pages"><div class="empty">Loading…</div></div>
     </div>
   </section>
 
@@ -356,106 +412,283 @@
   }
   function hideErr(){ document.getElementById('err').style.display='none'; }
 
-  function render(){
-    var weekAgo=new Date(Date.now()-7*86400000).toISOString();
-    var fortnightAgo=new Date(Date.now()-14*86400000).toISOString();
-    Promise.all([
-      sb.from('company_stats').select('*').single(),
-      /* Honest trend: raw page_views, client-side — system test pings and
-         signup events are excluded here so they never count as traffic. */
-      sb.from('page_views').select('created_at,page,visitor_id')
-        .gte('created_at',fortnightAgo)
-        .not('page','in','("/__system_test__","/signup")'),
-      sb.from('page_breakdown').select('*'),
-      sb.from('page_views').select('id',{count:'exact',head:true}).eq('page','/signup'),
-      sb.from('page_views').select('id',{count:'exact',head:true}).eq('page','/signup').gte('created_at',weekAgo),
-      /* REAL registrations: profiles table (one row per auth user, created by
-         DB trigger on signup + backfilled). Founder-only read via RLS policy.
-         is_test=false excludes internal test/QA/system accounts. */
-      sb.from('profiles').select('id',{count:'exact',head:true}).eq('is_test',false),
-      sb.from('profiles').select('id',{count:'exact',head:true}).eq('is_test',false).gte('created_at',weekAgo),
-      /* UNIQUE VISITORS: one person = 1, no matter how many pages they open.
-         RPC counts distinct visitor_id (rows from before the visitor_id
-         rollout count 1 each — the 7-day window self-cleans within a week). */
-      sb.rpc('unique_visitors',{}),
-      sb.rpc('unique_visitors',{since:weekAgo})
-    ]).then(function(res){
-      if(res[0].error) throw res[0].error;
-      if(res[1].error) throw res[1].error;
-      if(res[2].error) throw res[2].error;
-      hideErr();
-      var s=res[0].data||{};
-      var pv=res[1].data||[];
-      /* Build the 14-day series from raw rows — test pings and signup
-         events were already excluded by the query above.
-         UNIQUE visitors per day (one person = 1 per day). */
-      var buckets={}, bi, bk;
-      for(bi=13;bi>=0;bi--){
-        bk=new Date(Date.now()-bi*86400000).toISOString().slice(0,10);
-        buckets[bk]={ids:{},nulls:0};
-      }
-      pv.forEach(function(r){
-        var k=String(r.created_at||'').slice(0,10);
-        if(Object.prototype.hasOwnProperty.call(buckets,k)){
-          if(r.visitor_id)buckets[k].ids[r.visitor_id]=1;
-          else buckets[k].nulls++;
-        }
+  /* ---------- honest stats: pure computation, unit-testable ----------
+     Every number is derived from explicitly filtered sources:
+     - web rows = page_views minus local file paths (/home/…) and the
+       system-test ping. Harness runs and file:// previews used to inflate
+       "Visitors" 2.2x (248 shown vs 112 real people on 2026-10-24).
+     - legacy rows from before the visitor_id rollout (Oct 12-15) are never
+       counted as people: RPC totals include them, so they are subtracted.
+     - monthly targets compare THIS MONTH's numbers, never all-time totals.
+     Inputs are the raw query results; outputs are the displayed numbers. */
+  function computeStats(q, nowMs){
+    var now = new Date(nowMs);
+    var dayMs = 86400000;
+    var isoDay = function(ms){ return new Date(ms).toISOString().slice(0,10); };
+    var weekAgo = new Date(nowMs - 7*dayMs).toISOString();
+    var fortAgo = new Date(nowMs - 14*dayMs).toISOString();
+    var monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+    var isWeb = function(p){ return p && p.indexOf('/home/') !== 0 && p !== TEST; };
+    var num = function(v){ return (v == null || isNaN(Number(v))) ? null : Number(v); };
+
+    /* RPC totals minus junk = real people. */
+    var localRows = q.localRows || [];
+    var nullRows = q.nullRows || [];
+    var dist = function(rows, from, to){
+      var set = {};
+      rows.forEach(function(r){
+        if(!r.visitor_id) return;
+        var t = r.created_at || '';
+        if(from && t < from) return;
+        if(to && t >= to) return;
+        set[r.visitor_id] = 1;
       });
-      var trend=Object.keys(buckets).sort().map(function(k){var b=buckets[k];return{day:k,views:Object.keys(b.ids).length+b.nulls};});
-      var rows=res[2].data||[];
-      var sgTotal=(res[3].error||res[3].count==null)?0:res[3].count;
-      var sg7=(res[4].error||res[4].count==null)?0:res[4].count;
-      /* Real registered users (profiles table) — the signup KPI the founder sees. */
-      var regTotal=(res[5].error||res[5].count==null)?null:res[5].count;
-      var reg7=(res[6].error||res[6].count==null)?null:res[6].count;
-      var testViews=rows.filter(function(x){return x.page===TEST;}).reduce(function(a,x){return a+x.views;},0);
-      var pages=rows.filter(function(x){return x.page!==TEST&&x.page!=='/signup';});
-      /* Unique visitors (one person = 1). Falls back to — if the RPC fails. */
-      var uniqTotal=(res[7]&&!res[7].error&&res[7].data!=null)?res[7].data:null;
-      var uniq7=(res[8]&&!res[8].error&&res[8].data!=null)?res[8].data:null;
+      return Object.keys(set).length;
+    };
+    var localTotal = dist(localRows), local7 = dist(localRows, weekAgo), localMonth = dist(localRows, monthStart);
+    var nullTotal = nullRows.length;
+    var null7 = nullRows.filter(function(r){ return (r.created_at||'') >= weekAgo; }).length;
+    var nullMonth = nullRows.filter(function(r){ return (r.created_at||'') >= monthStart; }).length;
+    var rpcTotal = num(q.rpcTotal), rpc7 = num(q.rpc7), rpcMonth = num(q.rpcMonth);
+    var visitors = (rpcTotal == null) ? null : Math.max(0, rpcTotal - localTotal - nullTotal);
+    var visitors7 = (rpc7 == null) ? null : Math.max(0, rpc7 - local7 - null7);
+    var visitorsMonth = (rpcMonth == null) ? null : Math.max(0, rpcMonth - localMonth - nullMonth);
 
-      document.getElementById('k-total').textContent=(uniqTotal==null?'—':uniqTotal);
-      document.getElementById('k-7d').textContent=(uniq7==null?'—':uniq7);
-      document.getElementById('k-subs').textContent=s.subs_total||0;
-      document.getElementById('k-subs7').textContent=s.subs_7d||0;
-      document.getElementById('k-users').textContent=(regTotal==null?'—':regTotal);
-      document.getElementById('k-users7').textContent=(reg7==null?'—':reg7);
+    /* 14-day daily uniques + prior week + today, from web rows only. */
+    var buckets = {}, bi, bk;
+    for(bi = 13; bi >= 0; bi--){ bk = isoDay(nowMs - bi*dayMs); buckets[bk] = {}; }
+    var priorSet = {}, todaySet = {};
+    var todayKey = isoDay(nowMs);
+    (q.rows14 || []).forEach(function(r){
+      if(!isWeb(r.page) || !r.visitor_id) return;
+      var k = String(r.created_at || '').slice(0, 10);
+      if(Object.prototype.hasOwnProperty.call(buckets, k)) buckets[k][r.visitor_id] = 1;
+      if((r.created_at || '') >= fortAgo && (r.created_at || '') < weekAgo) priorSet[r.visitor_id] = 1;
+      if(k === todayKey) todaySet[r.visitor_id] = 1;
+    });
+    var trend = Object.keys(buckets).sort().map(function(k){ return { day: k, views: Object.keys(buckets[k]).length }; });
+    var prior7 = Object.keys(priorSet).length;
+    var today = Object.keys(todaySet).length;
 
-      /* monthly targets */
-      var TARGETS={visits:300,signups:20,subs:10};
-      var realViews=(uniqTotal==null?0:uniqTotal);
-      function tbar(fillId,numId,actual,target){
-        var pct=Math.min(100,Math.round(actual/target*100));
-        document.getElementById(fillId).style.width=pct+'%';
-        document.getElementById(numId).textContent=actual+' / '+target;
-      }
-      tbar('t-visits','t-visits-n',realViews,TARGETS.visits);
-      tbar('t-signups','t-signups-n',(regTotal==null?0:regTotal),TARGETS.signups);
-      tbar('t-subs','t-subs-n',s.subs_total||0,TARGETS.subs);
-      var daysLeft=Math.max(0,Math.ceil((new Date(2026,9,31,23,59)-Date.now())/86400000));
-      document.getElementById('days-left').textContent='· '+daysLeft+' days left';
+    /* Pages: merge / + /index.html into Home, drop local/test paths. */
+    var merged = {};
+    (q.breakdown || []).forEach(function(p){
+      if(!isWeb(p.page)) return;
+      var key = (p.page === '/' || p.page === '/index.html') ? '/' : p.page;
+      if(!merged[key]) merged[key] = { page: key, views: 0, views_7d: 0 };
+      merged[key].views += (p.views || 0);
+      merged[key].views_7d += (p.views_7d || 0);
+    });
+    var pages = Object.keys(merged).map(function(k){ return merged[k]; }).sort(function(a, b){ return b.views - a.views; });
 
-      var ch=document.getElementById('chart'); ch.innerHTML='';
-      if(!trend.length){ ch.innerHTML='<div class="empty">No traffic yet — the machines are running.</div>'; }
+    /* Catalogue health. */
+    var dealFirms = {}, dealEntries = 0;
+    (q.plans || []).forEach(function(p){
+      var pr = ((p.rules || {}).promotions || []);
+      if(pr.length){ dealFirms[p.firm_id] = 1; dealEntries += pr.length; }
+    });
+    var payoutSum = 0;
+    (q.payouts || []).forEach(function(p){ payoutSum += (Number(p.amount) || 0); });
+
+    /* Month window for targets. */
+    var monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
+    var daysLeft = Math.max(0, Math.ceil((monthEnd.getTime() - nowMs) / dayMs));
+    var monthName = now.toLocaleDateString('en-GB', { month: 'long' });
+
+    var delta = function(cur, prev){
+      if(cur == null || prev == null) return { text: 'vs prior week —', cls: 'flat' };
+      var d = cur - prev;
+      if(d === 0) return { text: 'same as prior week', cls: 'flat' };
+      return { text: (d > 0 ? '▲ +' : '▼ ') + d + ' vs prior week', cls: d > 0 ? 'up' : 'down' };
+    };
+    return {
+      visitors: visitors, visitors7: visitors7, visitorsMonth: visitorsMonth, today: today,
+      users: num(q.users), users7: num(q.users7), usersMonth: num(q.usersMonth), usersPrior7: num(q.usersPrior7),
+      subs: num(q.subs), subs7: num(q.subs7), subsMonth: num(q.subsMonth), subsPrior7: num(q.subsPrior7),
+      d7: delta(visitors7, prior7), dUsers7: delta(num(q.users7), num(q.usersPrior7)), dSubs7: delta(num(q.subs7), num(q.subsPrior7)),
+      trend: trend, pages: pages,
+      dealFirms: Object.keys(dealFirms).length, dealEntries: dealEntries,
+      payouts: (q.payouts || []).length, payoutSum: payoutSum,
+      firms: num(q.firms), freshAt: q.freshAt || null, certs: num(q.certs),
+      daysLeft: daysLeft, monthName: monthName,
+      failed: q.failed || []
+    };
+  }
+  function relTime(iso, nowMs){
+    if(!iso) return '—';
+    var ms = nowMs - new Date(iso).getTime();
+    if(ms < 0) ms = 0;
+    var m = Math.floor(ms / 60000), h = Math.floor(ms / 3600000), d = Math.floor(ms / 86400000);
+    if(m < 1) return 'just now';
+    if(m < 60) return m + ' min ago';
+    if(h < 24) return h + ' h ago';
+    return d + ' d ago';
+  }
+  function fmtMoney(x){
+    return '$' + Math.round(x).toLocaleString('en-US');
+  }
+  function setText(id, v){
+    var el = document.getElementById(id);
+    if(el) el.textContent = (v == null ? '—' : v);
+  }
+  function setDelta(id, d){
+    var el = document.getElementById(id);
+    if(!el) return;
+    el.textContent = d.text;
+    el.className = 'delta ' + d.cls;
+  }
+
+  function render(){
+    var nowMs = Date.now();
+    var weekAgo = new Date(nowMs - 7*86400000).toISOString();
+    var fortAgo = new Date(nowMs - 14*86400000).toISOString();
+    var monthStart = new Date(new Date(nowMs).getFullYear(), new Date(nowMs).getMonth(), 1).toISOString();
+    /* Each query is independently fault-tolerant: one failing source must
+       never blank the whole dashboard again (the old company_stats.single()
+       throw did exactly that). */
+    var safe = function(p){ return p.then(function(r){ return r; }).catch(function(){ return { error: true }; }); };
+    var head = function(q){ return q.then(function(r){ return (r.error || r.count == null) ? null : r.count; }); };
+    Promise.all([
+      safe(sb.rpc('unique_visitors', {})),
+      safe(sb.rpc('unique_visitors', { since: weekAgo })),
+      safe(sb.rpc('unique_visitors', { since: monthStart })),
+      safe(sb.from('page_views').select('created_at,page,visitor_id').gte('created_at', fortAgo).neq('page', TEST).order('created_at', { ascending: true }).limit(5000)),
+      safe(sb.from('page_views').select('visitor_id,created_at').like('page', '/home/%')),
+      safe(sb.from('page_views').select('created_at').is('visitor_id', null).limit(5000)),
+      safe(sb.from('page_breakdown').select('*')),
+      safe(head(sb.from('profiles').select('id', { count: 'exact', head: true }).eq('is_test', false))),
+      safe(head(sb.from('profiles').select('id', { count: 'exact', head: true }).eq('is_test', false).gte('created_at', weekAgo))),
+      safe(head(sb.from('profiles').select('id', { count: 'exact', head: true }).eq('is_test', false).gte('created_at', monthStart))),
+      safe(head(sb.from('profiles').select('id', { count: 'exact', head: true }).eq('is_test', false).gte('created_at', fortAgo).lt('created_at', weekAgo))),
+      safe(head(sb.from('newsletter_subs').select('id', { count: 'exact', head: true }))),
+      safe(head(sb.from('newsletter_subs').select('id', { count: 'exact', head: true }).gte('created_at', weekAgo))),
+      safe(head(sb.from('newsletter_subs').select('id', { count: 'exact', head: true }).gte('created_at', monthStart))),
+      safe(head(sb.from('newsletter_subs').select('id', { count: 'exact', head: true }).gte('created_at', fortAgo).lt('created_at', weekAgo))),
+      safe(sb.from('company_stats').select('*').maybeSingle()),
+      safe(sb.from('firms').select('last_verified_at').order('last_verified_at', { ascending: false }).limit(1)),
+      safe(head(sb.from('firms').select('id', { count: 'exact', head: true }))),
+      safe(sb.from('firm_plans').select('firm_id,rules').limit(500)),
+      safe(sb.from('firm_payout_records').select('amount').limit(500)),
+      safe(head(sb.from('certificates').select('id', { count: 'exact', head: true })))
+    ]).then(function(res){
+      var failed = [];
+      var data = function(i, name){
+        var r = res[i];
+        if(!r || r.error){ failed.push(name); return null; }
+        return r.data == null ? r : r.data;
+      };
+      var cnt = function(i, name){
+        var v = res[i];
+        if(v == null || (typeof v === 'object' && v.error)){ failed.push(name); return null; }
+        return v;
+      };
+      /* Newsletter: direct table first, company_stats row only as fallback. */
+      var subs = cnt(11, 'newsletter'), subs7 = cnt(12, 'newsletter'), subsMonth = cnt(13, 'newsletter'), subsPrior7 = cnt(14, 'newsletter');
+      var cs = data(15, 'company_stats');
+      if(subs == null && cs) subs = cs.subs_total || 0;
+      if(subs7 == null && cs) subs7 = cs.subs_7d || 0;
+      var freshRows = data(16, 'firms');
+      var st = computeStats({
+        rpcTotal: (res[0] && !res[0].error) ? res[0].data : (failed.push('visitors total'), null),
+        rpc7: (res[1] && !res[1].error) ? res[1].data : (failed.push('visitors 7d'), null),
+        rpcMonth: (res[2] && !res[2].error) ? res[2].data : (failed.push('visitors month'), null),
+        rows14: data(3, 'traffic') || [],
+        localRows: data(4, 'local paths') || [],
+        nullRows: data(5, 'legacy rows') || [],
+        breakdown: data(6, 'pages') || [],
+        users: cnt(7, 'users'), users7: cnt(8, 'users'), usersMonth: cnt(9, 'users'), usersPrior7: cnt(10, 'users'),
+        subs: subs, subs7: subs7, subsMonth: subsMonth, subsPrior7: subsPrior7,
+        firms: cnt(17, 'firms'),
+        freshAt: (freshRows && freshRows[0]) ? freshRows[0].last_verified_at : null,
+        plans: data(18, 'deals') || [],
+        payouts: data(19, 'payouts') || [],
+        certs: cnt(20, 'certificates'),
+        failed: failed
+      }, nowMs);
+
+      setText('k-total', st.visitors);
+      setText('k-7d', st.visitors7);
+      setText('k-today', st.today);
+      setText('k-subs', st.subs);
+      setText('k-subs7', st.subs7);
+      setText('k-users', st.users);
+      setText('k-users7', st.users7);
+      setText('k-deals', st.dealFirms);
+      setText('k-deals-hint', st.dealFirms + ' firms · ' + st.dealEntries + ' active promo entries.');
+      setDelta('d-7d', st.d7);
+      setDelta('d-users7', st.dUsers7);
+      setDelta('d-subs7', st.dSubs7);
+
+      /* monthly targets — this month's numbers only */
+      var TARGETS = { visits: 300, signups: 20, subs: 10 };
+      setText('t-month', st.monthName);
+      var tbar = function(fillId, numId, actual, target){
+        var a = (actual == null ? 0 : actual);
+        var pct = Math.min(100, Math.round(a / target * 100));
+        var f = document.getElementById(fillId), n = document.getElementById(numId);
+        if(f) f.style.width = pct + '%';
+        if(n) n.textContent = a + ' / ' + target;
+      };
+      tbar('t-visits', 't-visits-n', st.visitorsMonth, TARGETS.visits);
+      tbar('t-signups', 't-signups-n', st.usersMonth, TARGETS.signups);
+      tbar('t-subs', 't-subs-n', st.subsMonth, TARGETS.subs);
+      setText('days-left', '· ' + st.daysLeft + ' days left');
+
+      /* funnel */
+      var fv = st.visitors || 0, fu = st.users || 0, fs = st.subs || 0;
+      var pctU = fv ? Math.round(fu / fv * 1000) / 10 : 0;
+      var pctS = fu ? Math.round(fs / fu * 1000) / 10 : 0;
+      var fEl = function(id, w){ var e = document.getElementById(id); if(e) e.style.width = w + '%'; };
+      fEl('f-visits', 100);
+      fEl('f-users', fv ? Math.max(2, Math.round(fu / fv * 100)) : 0);
+      fEl('f-subs', fu ? Math.max(2, Math.round(fs / fu * 100)) : 0);
+      var fb = function(id, n, p){ var e = document.getElementById(id); if(e) e.innerHTML = n + '<small>' + p + '</small>'; };
+      fb('f-visits-n', fv, '100%');
+      fb('f-users-n', fu, pctU + '% of visitors');
+      fb('f-subs-n', fs, pctS + '% of users');
+
+      /* catalogue health */
+      setText('h-firms', st.firms);
+      setText('h-fresh', 'Fresh ' + relTime(st.freshAt, nowMs));
+      setText('h-deals', st.dealFirms);
+      setText('h-deals-hint', st.dealEntries + ' active promo entries.');
+      setText('h-payouts', fmtMoney(st.payoutSum));
+      setText('h-payouts-hint', st.payouts + ' records · on-chain verified.');
+      setText('h-certs', st.certs);
+
+      /* chart */
+      var ch = document.getElementById('chart'); ch.innerHTML = '';
+      if(!st.trend.length){ ch.innerHTML = '<div class="empty">No traffic yet — the machines are running.</div>'; }
       else{
-        var max=Math.max.apply(null,trend.map(function(t){return t.views;}))||1;
-        trend.forEach(function(t){
-          var d=new Date(t.day+'T12:00:00'), lbl=d.toLocaleDateString('en-GB',{day:'2-digit',month:'short'});
-          var b=document.createElement('div'); b.className='bar';
-          b.innerHTML='<div class="v">'+t.views+'</div><div class="fill" style="height:'+Math.max(3,Math.round(t.views/max*130))+'px"></div><div class="d">'+lbl+'</div>';
+        var max = Math.max.apply(null, st.trend.map(function(t){ return t.views; })) || 1;
+        st.trend.forEach(function(t){
+          var d = new Date(t.day + 'T12:00:00'), lbl = d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
+          var b = document.createElement('div'); b.className = 'bar';
+          b.innerHTML = '<div class="v">' + t.views + '</div><div class="fill" style="height:' + Math.max(3, Math.round(t.views / max * 130)) + 'px"></div><div class="d">' + lbl + '</div>';
           ch.appendChild(b);
         });
       }
 
-      var pw=document.getElementById('pages');
-      if(!pages.length){ pw.innerHTML='<div class="empty">No page data yet.</div>'; }
+      /* pages */
+      var pw = document.getElementById('pages');
+      if(!st.pages.length){ pw.innerHTML = '<div class="empty">No page data yet.</div>'; }
       else{
-        var h='<table><tr><th>Page</th><th>Total</th><th>Last 7d</th></tr>';
-        pages.forEach(function(p){ h+='<tr><td>'+pageName(p.page)+'</td><td>'+p.views+'</td><td>'+p.views_7d+'</td></tr>'; });
-        pw.innerHTML=h+'</table>';
+        var h = '<table><tr><th>Page</th><th>Total</th><th>Last 7d</th></tr>';
+        st.pages.forEach(function(p){
+          var nm = pageName(p.page);
+          h += '<tr><td title="' + escapeHtml(p.page) + '">' + escapeHtml(nm) + '</td><td>' + p.views + '</td><td>' + p.views_7d + '</td></tr>';
+        });
+        pw.innerHTML = h + '</table>';
       }
-      document.getElementById('upd').textContent='live · '+new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-    }).catch(showErr);
+      document.getElementById('upd').textContent = 'live · ' + new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+      var errEl = document.getElementById('err');
+      if(st.failed.length){
+        errEl.style.display = 'block';
+        errEl.textContent = 'Some sources failed (' + st.failed.join(', ') + ') — those numbers show — and will retry automatically.';
+      } else { errEl.style.display = 'none'; }
+    }).catch(function(e){
+      showErr((e && e.message) || 'unknown error');
+    });
   }
 
   /* ---------- broadcast ---------- */
