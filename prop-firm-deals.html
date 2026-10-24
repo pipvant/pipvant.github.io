@@ -79,9 +79,35 @@
     footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted);font-size:13px}
     footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
     footer a{color:var(--muted);text-decoration:none;margin-left:16px}
+    /* Live deals ticker — ad-style marquee under the page top: one item per firm
+       (its best active promotion), fed by the same live data as the grid below.
+       Track content is duplicated once for a seamless -50% loop. */
+    .ticker{position:relative;background:linear-gradient(90deg,#0C1B31,#0A1628 35%,#0A1628 65%,#0C1B31);border-bottom:1px solid var(--line);overflow:hidden}
+    .ticker[hidden]{display:none}
+    .tick-label{position:absolute;left:0;top:0;bottom:0;z-index:3;display:flex;align-items:center;gap:8px;padding:0 26px 0 16px;background:linear-gradient(90deg,#0A1628 62%,rgba(10,22,40,0));font-family:"Space Grotesk";font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--gold);white-space:nowrap;pointer-events:none}
+    .tick-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);flex:none;animation:tickpulse 1.6s ease-in-out infinite}
+    @keyframes tickpulse{0%,100%{box-shadow:0 0 0 0 rgba(212,175,55,.45)}55%{box-shadow:0 0 0 6px rgba(212,175,55,0)}}
+    .tick-viewport{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 96%,transparent);mask-image:linear-gradient(90deg,transparent,#000 5%,#000 96%,transparent)}
+    .tick-track{display:flex;width:max-content;animation:tickscroll 40s linear infinite}
+    .ticker:hover .tick-track{animation-play-state:paused}
+    @keyframes tickscroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+    .tick-group{display:flex;flex:none}
+    .tick-item{display:inline-flex;align-items:center;gap:9px;padding:10px 24px;color:var(--text);text-decoration:none;white-space:nowrap;border-right:1px solid rgba(212,175,55,.16);font-size:13.5px}
+    .tick-item:hover{background:rgba(212,175,55,.06)}
+    .tick-logo{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:7px;background:var(--raised);border:1px solid var(--line-strong);color:var(--gold);font-family:"Space Grotesk";font-weight:700;font-size:12px;overflow:hidden;flex:none}
+    .tick-name{font-weight:600}
+    .tick-off{color:var(--gold);font-weight:700}
+    .tick-code{font-family:ui-monospace,monospace;font-size:11px;font-weight:700;border:1px dashed rgba(212,175,55,.55);color:var(--gold);padding:2px 7px;border-radius:6px;letter-spacing:.04em}
+    .tick-ends{color:var(--muted);font-size:12px}
+    @media (max-width:560px){.tick-label{padding:0 18px 0 10px;font-size:10px}.tick-item{padding:9px 16px;font-size:13px}}
+    @media (prefers-reduced-motion:reduce){.tick-track{animation:none}.tick-dot{animation:none}}
   </style>
 </head>
 <body>
+<div class="ticker" id="dealsTicker" hidden>
+  <div class="tick-label"><span class="tick-dot"></span>LIVE&nbsp;DEALS</div>
+  <div class="tick-viewport"><div class="tick-track" id="tickTrack"></div></div>
+</div>
 <header class="top"><div class="wrap">
   <a class="brand" href="/"><img src="assets/pipvanta-logo.png" alt="PIPVANT logo">PIPVANT</a>
   <a class="cta-btn" href="/">Open free toolkit</a>
@@ -208,6 +234,41 @@
     img.src=LOGO_OVERRIDES[domain]||('https://www.google.com/s2/favicons?domain='+domain+'&sz=128');
     el.appendChild(img);
   }
+  /* Ticker: one item per firm — its best active promotion (highest % wins).
+     Built from the same deals array as the grid; the track holds two identical
+     groups so the -50% keyframe loop is seamless. Stays hidden with no deals. */
+  function buildTicker(deals){
+    var ticker=document.getElementById('dealsTicker'),track=document.getElementById('tickTrack');
+    if(!ticker||!track||!deals.length)return;
+    var byFirm={};
+    deals.forEach(function(d){var cur=byFirm[d.firm.id];if(!cur||d.pct>cur.pct)byFirm[d.firm.id]=d;});
+    var items=Object.keys(byFirm).map(function(k){return byFirm[k];});
+    items.sort(function(a,b){if(b.pct!==a.pct)return b.pct-a.pct;var an=a.firm.name||'',bn=b.firm.name||'';return an<bn?-1:an>bn?1:0;});
+    function makeItem(d,clone){
+      var a=document.createElement('a');a.className='tick-item';
+      if(clone)a.tabIndex=-1;
+      if(d.firm.website){a.href=String(d.firm.website);a.target='_blank';a.rel='noopener';}
+      var logo=document.createElement('span');logo.className='tick-logo';logoInto(logo,d.firm);a.appendChild(logo);
+      var nm=document.createElement('span');nm.className='tick-name';nm.textContent=d.firm.name||'';a.appendChild(nm);
+      var off=document.createElement('span');off.className='tick-off';
+      if(d.pct>0)off.textContent='\u2212'+d.pct+'%';
+      else if(d.promo.discount){var t=String(d.promo.discount);off.textContent=t.length>44?t.slice(0,44)+'\u2026':t;}
+      if(off.textContent)a.appendChild(off);
+      if(d.promo.code){var c=document.createElement('span');c.className='tick-code';c.textContent=String(d.promo.code);a.appendChild(c);}
+      var ends=endsLabel(d.promo.expiry);
+      if(ends){var e=document.createElement('span');e.className='tick-ends';e.textContent=ends;a.appendChild(e);}
+      return a;
+    }
+    track.innerHTML='';
+    [false,true].forEach(function(clone){
+      var g=document.createElement('div');g.className='tick-group';
+      if(clone)g.setAttribute('aria-hidden','true');
+      items.forEach(function(d){g.appendChild(makeItem(d,clone));});
+      track.appendChild(g);
+    });
+    track.style.animationDuration=Math.min(90,Math.max(24,Math.round(items.length*4.5)))+'s';
+    ticker.hidden=false;
+  }
   Promise.all([
     get('firms?select=id,name,website,last_verified_at,updated_at&order=name.asc'),
     get('firm_plans?select=firm_id,account_size,price,currency,rules')
@@ -286,6 +347,7 @@
       }
       grid.appendChild(card);
     });
+    buildTicker(deals);
     if(note)note.textContent='Live deals — every price, discount and code above is loaded from PIPVANT\u2019s verified database.';
   }).catch(function(){
     var counts=document.getElementById('dealCounts'),empty=document.getElementById('dealsEmpty');
