@@ -15,7 +15,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="PIPVANT">
   <!-- Mega-audit fix: set theme before first paint (prevents dark→light flash). -->
-  <script>try{var _s=JSON.parse(localStorage.getItem('pipvant_settings')||'{}');var _t=_s&&_s.theme;if(_t==='light'||_t==='dark')document.documentElement.setAttribute('data-theme',_t);}catch(e){}</script>
+  <script>try{var _s=JSON.parse(localStorage.getItem('pipvant_settings')||'{}');var _t=_s&&_s.theme;if(_t==='light'||_t==='dark'||_t==='platinum')document.documentElement.setAttribute('data-theme',_t);}catch(e){}</script>
   <script>try{var _pool=['ninja','ronin','torii','dragon','kitsune','koi','cranes','sakura','lanterns','aurora','ocean','desert','wolf','eagle','orbit','rain','cinematic','trader','neo-ronin','miko','pirate','astronaut','ramadan'];var _b=null;if(localStorage.getItem('pipvant_bgperdevice')==='1'){var _coarse=false;try{_coarse=window.matchMedia('(pointer: coarse)').matches;}catch(_ce){}var _dev=(_coarse||window.innerWidth<760)?'m':'d';_b=localStorage.getItem(_dev==='m'?'pipvant_bgscene_m':'pipvant_bgscene_d');if(!_b||(_pool.indexOf(_b)<0&&_b!=='classic'&&_b!=='auto'&&_b!=='moods'&&_b!=='custom'))_b=localStorage.getItem('pipvant_bgscene');}else{_b=localStorage.getItem('pipvant_bgscene');}if(!_b||(_pool.indexOf(_b)<0&&_b!=='classic'&&_b!=='auto'&&_b!=='moods'&&_b!=='custom'))_b='ninja';if(_b==='auto'){var _d=new Date();function _p(n){return String(n).padStart(2,'0');}var _s=_d.getFullYear()+'-'+_p(_d.getMonth()+1)+'-'+_p(_d.getDate());var _h=2166136261;for(var _i=0;_i<_s.length;_i++){_h^=_s.charCodeAt(_i);_h=Math.imul(_h,16777619);}_b=_pool[(_h>>>0)%_pool.length];}if(_b==='moods'){var _t=new Date();var _m=_t.getHours()*60+_t.getMinutes();_b=(_m>=300&&_m<720)?'cranes':(_m>=720&&_m<1050)?'desert':(_m>=1050&&_m<1350)?'rain':'ninja';}if(_b==='dragon'||_b==='trader'||_b==='ramadan'){var _u=null;try{_u=JSON.parse(localStorage.getItem('pipvant_bgunlocked')||'[]');}catch(_ue){_u=null;}if(!_u||_u.indexOf(_b)<0)_b='ninja';}try{if(window.matchMedia('(max-aspect-ratio: 3/4)').matches)_b='classic';}catch(_pe){}document.documentElement.setAttribute('data-bgscene',_b);var _vi=localStorage.getItem('pipvant_bgintensity');if(_vi!=='subtle'&&_vi!=='vivid')_vi='balanced';document.documentElement.setAttribute('data-bgintensity',_vi);}catch(e){document.documentElement.setAttribute('data-bgscene','ninja');document.documentElement.setAttribute('data-bgintensity','balanced');}</script>
   <link rel="icon" type="image/png" href="assets/pipvanta-logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -900,6 +900,34 @@
     .rail-bottom-spacer{margin-top:auto}
 
     html[data-theme="light"]{color-scheme:light;--bg:#F4F6F8;--surface:#FFFFFF;--raised:#E8ECF1;--sunken:#E8ECF1;--line:#C9D2DC;--line-strong:#A7B3C1;--text:#0A1628;--secondary:#34445C;--muted:#5D6C7F;--accent:#3A6FDE;--accent-strong:#3A6FDE;--accent-soft:rgba(58,111,222,.11);--platinum:#526174;--silver:#6B788A;--success:#0d9d6c;--danger:#dc2626;--warning:#b45309;--shadow:0 22px 70px rgba(10,22,40,.13)}
+    /* PIPVANT Platinum (2026-10-24): matte-grey light theme in the spirit of
+       LiquidJournal Platinum — ash frame, platinum page, near-white cards,
+       ink text, PIPVANT blue accent (proven readable on light) + gold tints.
+       Additive only: dark (default) and light themes are untouched. */
+    html[data-theme="platinum"]{color-scheme:light;--bg:#E8ECEC;--surface:#FAFAFA;--raised:#E2E5E5;--sunken:#E2E5E5;--line:#C9CFCF;--line-strong:#A8B0B0;--text:#101418;--secondary:#3A4248;--muted:#67707A;--accent:#3A6FDE;--accent-strong:#3A6FDE;--accent-soft:rgba(58,111,222,.11);--platinum:#4A5560;--silver:#757D85;--success:#0d9d6c;--danger:#dc2626;--warning:#b45309;--shadow:0 22px 70px rgba(10,22,40,.13)}
+    html[data-theme="platinum"] .topbar{background:color-mix(in srgb,var(--bg) 93%,transparent)}
+    html[data-theme="platinum"] .bottom-nav{background:color-mix(in srgb,var(--surface) 92%,transparent);box-shadow:0 16px 42px rgba(10,22,40,.16),inset 0 1px 0 rgba(255,255,255,.8)}
+    html[data-theme="platinum"] .firm-card,html[data-theme="platinum"] .pain-card,html[data-theme="platinum"] .benefit-card,html[data-theme="platinum"] .step-card{background:var(--surface)}
+    html[data-theme="platinum"] .trust-chip,html[data-theme="platinum"] .hero-trust-chip,html[data-theme="platinum"] #discipline .discipline-card{background:var(--surface)}
+    html[data-theme="platinum"] .rating-block{min-width:0;display:grid;grid-template-columns:auto 1fr;align-items:center;gap:4px 9px;padding:9px 10px;border:1px solid color-mix(in srgb,var(--market-accent) 32%,var(--line));border-radius:11px;background:var(--raised)}
+    html[data-theme="platinum"] .position-hero{background:linear-gradient(145deg,rgba(212,175,55,.12),var(--surface))}html[data-theme="platinum"] .promo-slot{color:#8A6D2B}
+    html[data-theme="platinum"] .profile-balance{box-shadow:0 16px 42px rgba(10,22,40,.08)}
+    html[data-theme="platinum"] .auth-shell:before{border-color:rgba(212,175,55,.17);box-shadow:0 0 0 54px rgba(212,175,55,.035),0 0 0 108px rgba(10,22,40,.02)}
+    html[data-theme="platinum"] .hero .calc-card,html[data-theme="platinum"] .profile-balance{background:linear-gradient(145deg,var(--surface),var(--raised))}
+    html[data-theme="platinum"] #landing .hero:before{opacity:.42}
+    html[data-theme="platinum"] .drawer-backdrop,html[data-theme="platinum"] .trade-sheet,html[data-theme="platinum"] .settings-modal{background:rgba(10,22,40,.42)}
+    html[data-theme="platinum"] .firm-card{background:linear-gradient(110deg,rgba(212,175,55,.055),var(--surface) 56%)}html[data-theme="platinum"] .filter-sheet,html[data-theme="platinum"] .firm-detail-sheet,html[data-theme="platinum"] .profile-editor,html[data-theme="platinum"] .notif-detail-overlay{background:rgba(10,22,40,.42)}
+    html[data-theme="platinum"] .position-hero strong{color:var(--text)}
+    html[data-theme="platinum"] .notification-item:hover{background:var(--raised)}
+    html[data-theme="platinum"] .settings-dialog{background:var(--surface)}
+    html[data-theme="platinum"] .account-sheet{background:rgba(10,22,40,.42)}
+    html[data-theme="platinum"] .econ-countdown{background:linear-gradient(100deg,rgba(212,175,55,.10),var(--surface))}html[data-theme="platinum"] .econ-clock span{background:var(--surface)}html[data-theme="platinum"] .calendar-filter-sheet,html[data-theme="platinum"] .calendar-event-sheet{background:rgba(10,22,40,.42)}
+    html[data-theme="platinum"] #bgSceneLayer{opacity:.26}
+    html[data-theme="platinum"] #pvCelebLayer{opacity:.26}
+    html[data-theme="platinum"] #pvPhoneBg{opacity:.26}
+    html[data-theme="platinum"] .csv-import-sheet{background:rgba(10,22,40,.42)}
+    html[data-theme="platinum"] .verdict-ring-track{stroke:rgba(10,22,40,.10)}
+    html[data-theme="platinum"] .rated-stars .stars-bg{color:rgba(10,22,40,.16)}
     html[data-theme="light"] .topbar{background:color-mix(in srgb,var(--bg) 93%,transparent)}
     html[data-theme="light"] .bottom-nav{background:color-mix(in srgb,var(--surface) 92%,transparent);box-shadow:0 16px 42px rgba(10,22,40,.16),inset 0 1px 0 rgba(255,255,255,.8)}
     html[data-theme="light"] .firm-card,html[data-theme="light"] .pain-card,html[data-theme="light"] .benefit-card,html[data-theme="light"] .step-card{background:var(--surface)}
@@ -4171,9 +4199,10 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
             <div class="settings-card">
               <div class="settings-control">
                 <div class="settings-copy"><strong>Theme</strong><small>Choose the interface that fits your environment.</small></div>
-                <div class="settings-segmented" role="group" aria-label="Appearance">
+                <div class="settings-segmented three" role="group" aria-label="Appearance">
                   <button class="settings-segment" type="button" data-theme-choice="dark" aria-pressed="true">Dark</button>
                   <button class="settings-segment" type="button" data-theme-choice="light" aria-pressed="false">Light</button>
+                  <button class="settings-segment" type="button" data-theme-choice="platinum" aria-pressed="false">Platinum</button>
                 </div>
               </div>
             </div>
@@ -12086,7 +12115,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
   var themeHydrating=true; // prevent save during initial load
   function applyTheme(theme,skipSave){
     // T7-theme fix: validate (was accepting garbage values).
-    if(theme!=='light'&&theme!=='dark')theme='dark';
+    if(theme!=='light'&&theme!=='dark'&&theme!=='platinum')theme='dark';
     document.documentElement.setAttribute('data-theme',theme);
     document.querySelectorAll('[data-theme-choice]').forEach(function(button){button.setAttribute('aria-pressed',String(button.getAttribute('data-theme-choice')===theme));});
     if(!skipSave&&!themeHydrating)sbSaveSettings();
@@ -12190,7 +12219,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
         }
         if(data.preferences&&typeof data.preferences==='object'){
           var p=data.preferences;
-          if(p.appearance==='light'||p.appearance==='dark'){document.documentElement.setAttribute('data-theme',p.appearance);restored.push(currentLanguage==='ar'?'المظهر':'theme');}
+          if(p.appearance==='light'||p.appearance==='dark'||p.appearance==='platinum'){document.documentElement.setAttribute('data-theme',p.appearance);restored.push(currentLanguage==='ar'?'المظهر':'theme');}
           // C1-lang fix: pass the language (was clobbering to undefined/English).
           if(p.language==='ar'||p.language==='en'){currentLanguage=p.language;if(typeof applyLanguage==='function')applyLanguage(p.language);restored.push(currentLanguage==='ar'?'اللغة':'language');}
           if(typeof p.currency==='string'&&p.currency){currentCurrency=p.currency;if(typeof refreshCurrencyDisplay==='function')refreshCurrencyDisplay();restored.push(currentLanguage==='ar'?'العملة':'currency');}
@@ -12318,7 +12347,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
   });
   // Mega-audit fix: restore saved theme (was forcing 'dark', flashing over the
   // head-script value and ignoring the user's choice).
-  (function(){var _t='dark';try{var _s=JSON.parse(localStorage.getItem('pipvant_settings')||'{}');if(_s&&(_s.theme==='light'||_s.theme==='dark'))_t=_s.theme;}catch(e){}applyTheme(_t,true);})();
+  (function(){var _t='dark';try{var _s=JSON.parse(localStorage.getItem('pipvant_settings')||'{}');if(_s&&(_s.theme==='light'||_s.theme==='dark'||_s.theme==='platinum'))_t=_s.theme;}catch(e){}applyTheme(_t,true);})();
   // Mega-audit fix: restore saved language for signed-out visitors too
   // (was only restored in authenticated flows via sbLoadSettings).
   (function(){try{var _s=JSON.parse(localStorage.getItem('pipvant_settings')||'{}');if(_s&&(_s.language==='ar'||_s.language==='en'))applyLanguage(_s.language);}catch(e){}})();
