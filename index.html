@@ -2306,7 +2306,7 @@ html[dir="rtl"] .gate-eyebrow{letter-spacing:.02em}
 .app-ending-title{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--gold)}
 .app-ending-list{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 8px;scrollbar-width:none}
 .app-ending-list::-webkit-scrollbar{display:none}
-.app-ending .app-tick-count{color:var(--gold);font-variant-numeric:tabular-nums}
+
 @media(min-width:1024px){.app-ending{margin-bottom:22px}}
 @media (prefers-reduced-motion:reduce){.app-tick-track,.app-ticker,.app-tick-inner::after,.app-tick-dot{animation:none}}
 @media(max-width:640px){.tr-gate{flex-wrap:wrap}.gate-line{white-space:normal}}
@@ -5731,7 +5731,6 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     if(!items.length){wrap.hidden=true;return;}
     wrap.hidden=false;
     var head=document.getElementById('appEndingTitle');if(head)head.textContent=(ar?'⏳ كيسالي قريب':'⏳ Ending soon')+' · '+items.length;
-    var cd=function(ed){var ms=Math.max(0,ed-Date.now());var d=Math.floor(ms/86400000),h=Math.floor(ms/3600000)%24,m=Math.floor(ms/60000)%60;return d>0?(d+'d '+h+'h'):(h>0?(h+'h '+m+'m'):(m+'m'));};
     list.innerHTML='';
     items.forEach(function(it){
       var b=document.createElement('button');b.type='button';b.className='app-tick-item';
@@ -5739,11 +5738,9 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       var nm=document.createElement('span');nm.className='app-tick-name';nm.textContent=it.firm.name||'';b.appendChild(nm);
       var pct=sbPromoDiscountPct(it.promo);if(pct>0){var off=document.createElement('span');off.className='app-tick-off';off.textContent='−'+pct+'%';b.appendChild(off);}
       if(it.promo.code){var c=document.createElement('span');c.className='app-tick-code';c.textContent=String(it.promo.code);b.appendChild(c);}
-      var e=document.createElement('span');e.className='app-tick-ends app-tick-count';e.setAttribute('data-end',String(it.ed.getTime()));e.textContent=cd(it.ed.getTime());b.appendChild(e);
       (function(fid){b.addEventListener('click',function(){if(typeof sbOpenFirmDetail==='function')sbOpenFirmDetail(fid);});})(it.firm.id);
       list.appendChild(b);
     });
-    if(!window._sbEndTimer){window._sbEndTimer=setInterval(function(){document.querySelectorAll('#appEndingList .app-tick-count').forEach(function(el){var ed=Number(el.getAttribute('data-end'));if(!ed)return;var ms=Math.max(0,ed-Date.now());var d=Math.floor(ms/86400000),h=Math.floor(ms/3600000)%24,m=Math.floor(ms/60000)%60;el.textContent=d>0?(d+'d '+h+'h'):(h>0?(h+'h '+m+'m'):(m+'m'));});},60000);}
   }
   /* #3 Compare share: link into the existing public comparison page (?firms=slugs, same slug rule). */
   function pvCmpShareUrl(){
