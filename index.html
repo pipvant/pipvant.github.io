@@ -10172,7 +10172,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
   if(pvTiltToggle)pvTiltToggle.addEventListener('click',function(){
     if(pvBgRM.matches)return;
     if(!pvBgTiltOn&&window.DeviceOrientationEvent&&typeof DeviceOrientationEvent.requestPermission==='function'){
-      DeviceOrientationEvent.requestPermission().then(function(r){if(r==='granted')pvBgSetTilt(true);}).catch(function(){});
+      DeviceOrientationEvent.requestPermission().then(function(r){if(r!=='denied')pvBgSetTilt(true);}).catch(function(){});
       return;
     }
     pvBgSetTilt(!pvBgTiltOn);
