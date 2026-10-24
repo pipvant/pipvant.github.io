@@ -1282,6 +1282,12 @@
        visible gradient is pixel-identical — and unlike hidden it does not
        break the sticky filter panel. Desktop-scoped: phone CSS untouched. */
     @media (min-width:1024px){.screen{overflow-x:clip}}
+    /* 2026-10-24: sub-320px devices only (e.g. Galaxy Fold folded, 280px).
+       The app floor is body{min-width:320px}; below 320px the phone layout
+       already clips horizontally, so lifting the floor here just lets it
+       shrink to the real viewport. max-width:319px => zero effect on 320px+
+       phones, tablets and desktops. */
+    @media (max-width:319px){body{min-width:0}}
     #landing:before{display:none}
     .nav-coming-soon{position:relative}
     .nav-soon-badge{display:inline-flex;align-items:center;justify-content:center;min-width:40px;min-height:20px;padding:0 7px;border:1px solid color-mix(in srgb,var(--platinum) 42%,var(--line));border-radius:999px;background:rgba(201,210,220,.06);color:var(--platinum);font:700 8px/1 "IBM Plex Mono","IBM Plex Sans Arabic",monospace;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
