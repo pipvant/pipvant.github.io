@@ -5678,26 +5678,29 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     var ar=(typeof currentLanguage!=='undefined'&&currentLanguage==='ar');
     var plan=pvRiskFirmPlan();
     var b=n('balance'),r=n('riskPercent');
+    if(r>100)r=100;
     if(!plan){v.textContent=ar?'اختر شركة وخطة لمقارنة مخاطرتك بحدود الخسارة اليومية وأقصى تراجع.':'Select a firm and plan to check your risk against its daily loss and max drawdown limits.';v.style.color='';return;}
     if(!(b>0&&r>0)){v.textContent=ar?'أدخل الرصيد ونسبة المخاطرة أولاً.':'Enter balance and risk % first.';v.style.color='';return;}
     var rules=plan.rules||{};
     var dPct=sbSimPct(rules,plan.account_size,'daily_loss_pct','daily_loss_usd');
     var mPct=sbSimPct(rules,plan.account_size,'max_drawdown_pct','max_drawdown_usd');
-    var risk=b*r/100,size=Number(plan.account_size);
+    var risk=b*r/100,size=Number(plan.account_size),sizeFallback=false;
+    if(!isFinite(size)||size<=0){size=b;sizeFallback=true;}
     var fmt=function(x){return '$'+Math.round(x).toLocaleString('en-US');};
     if(!isFinite(dPct)&&!isFinite(mPct)){v.textContent=ar?'هذه الخطة لا تنشر حدود خسارة يومية أو تراجع قصوى.':'This plan does not publish daily loss or max drawdown limits.';v.style.color='';return;}
     var parts=[],bad=false;
     if(isFinite(dPct)&&size>0){
-      var dl=dPct/100*size,nLoss=Math.floor(dl/risk)+1;
+      var dl=dPct/100*size,nLoss=Math.ceil(dl/risk);
       if(risk>dl){parts.push(ar?('هذه الصفقة وحدها ('+fmt(risk)+') تتجاوز حد الخسارة اليومية ('+fmt(dl)+').'):('This single trade ('+fmt(risk)+') alone breaches the daily loss limit ('+fmt(dl)+').'));bad=true;}
-      else parts.push(ar?('مخاطرتك '+fmt(risk)+' = '+Math.round(risk/dl*100)+'% من حد الخسارة اليومية ('+fmt(dl)+')؛ '+nLoss+' خسائر متتالية تكسره.'):('Your risk '+fmt(risk)+' is '+Math.round(risk/dl*100)+'% of the daily loss limit ('+fmt(dl)+'); '+nLoss+' straight losses breach it.'));
+      else parts.push(ar?('مخاطرتك '+fmt(risk)+' = '+Math.round(risk/dl*100)+'% من حد الخسارة اليومية ('+fmt(dl)+')؛ '+nLoss+' خسائر متتالية توصلك ليه.'):('Your risk '+fmt(risk)+' is '+Math.round(risk/dl*100)+'% of the daily loss limit ('+fmt(dl)+'); '+nLoss+' straight losses reach it.'));
     }
     if(isFinite(mPct)&&size>0){
-      var md=mPct/100*size,nM=Math.floor(md/risk)+1;
+      var md=mPct/100*size,nM=Math.ceil(md/risk);
       if(risk>md){parts.push(ar?('وتتجاوز أيضاً أقصى تراجع ('+fmt(md)+').'):('It also breaches max drawdown ('+fmt(md)+').'));bad=true;}
-      else parts.push(ar?('أقصى تراجع: '+fmt(md)+' ('+nM+' خسائر متتالية).'):('Max drawdown: '+fmt(md)+' ('+nM+' straight losses).'));
+      else parts.push(ar?('أقصى تراجع: '+fmt(md)+' ('+nM+' خسائر متتالية للوصول ليه).'):('Max drawdown: '+fmt(md)+' ('+nM+' straight losses to reach it).'));
     }
-    if(size!==b)parts.push(ar?'الحدود محسوبة على حجم الخطة.':'Limits use the plan size.');
+    if(sizeFallback)parts.push(ar?'الحدود محسوبة على الرصيد المدخل (حجم الخطة غير منشور).':'Limits use your entered balance (plan size unpublished).');
+    else if(size!==b)parts.push(ar?'الحدود محسوبة على حجم الخطة.':'Limits use the plan size.');
     v.textContent=parts.join(' ');
     v.style.color=bad?'var(--danger)':'';
   }
@@ -5712,7 +5715,11 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       plans.forEach(function(p){
         ((p.rules&&p.rules.promotions)||[]).forEach(function(pr){
           if(!pr||!pr.expiry)return;
-          var ed=new Date(pr.expiry);if(!isFinite(ed.getTime()))return;
+          /* Date-only expiry means valid THROUGH that day: count to end of day, not its midnight. */
+          var ed=null;
+          if(/^\d{4}-\d{2}-\d{2}$/.test(String(pr.expiry))){var _pp=String(pr.expiry).split('-');ed=new Date(Number(_pp[0]),Number(_pp[1])-1,Number(_pp[2]),23,59,59);}
+          else ed=new Date(pr.expiry);
+          if(!ed||!isFinite(ed.getTime()))return;
           var ms=ed.getTime()-now;
           if(ms<=0||ms>14*24*3600*1000)return;
           if(!best||ed.getTime()<best.ed.getTime())best={promo:pr,ed:ed};
