@@ -16,7 +16,7 @@
   <meta name="apple-mobile-web-app-title" content="PIPVANT">
   <!-- Mega-audit fix: set theme before first paint (prevents dark→light flash). -->
   <script>try{var _s=JSON.parse(localStorage.getItem('pipvant_settings')||'{}');var _t=_s&&_s.theme;if(_t==='light'||_t==='dark'||_t==='platinum')document.documentElement.setAttribute('data-theme',_t);}catch(e){}</script>
-  <script>try{var _pool=['ninja','ronin','torii','dragon','kitsune','koi','cranes','sakura','lanterns','aurora','ocean','desert','wolf','eagle','orbit','rain','cinematic','trader','neo-ronin','miko','pirate','astronaut','ramadan'];var _b=null;if(localStorage.getItem('pipvant_bgperdevice')==='1'){var _coarse=false;try{_coarse=window.matchMedia('(pointer: coarse)').matches;}catch(_ce){}var _dev=(_coarse||window.innerWidth<760)?'m':'d';_b=localStorage.getItem(_dev==='m'?'pipvant_bgscene_m':'pipvant_bgscene_d');if(!_b||(_pool.indexOf(_b)<0&&_b!=='classic'&&_b!=='auto'&&_b!=='moods'&&_b!=='custom'))_b=localStorage.getItem('pipvant_bgscene');}else{_b=localStorage.getItem('pipvant_bgscene');}if(!_b||(_pool.indexOf(_b)<0&&_b!=='classic'&&_b!=='auto'&&_b!=='moods'&&_b!=='custom'))_b='ninja';if(_b==='auto'){var _d=new Date();function _p(n){return String(n).padStart(2,'0');}var _s=_d.getFullYear()+'-'+_p(_d.getMonth()+1)+'-'+_p(_d.getDate());var _h=2166136261;for(var _i=0;_i<_s.length;_i++){_h^=_s.charCodeAt(_i);_h=Math.imul(_h,16777619);}_b=_pool[(_h>>>0)%_pool.length];}if(_b==='moods'){var _t=new Date();var _m=_t.getHours()*60+_t.getMinutes();_b=(_m>=300&&_m<720)?'cranes':(_m>=720&&_m<1050)?'desert':(_m>=1050&&_m<1350)?'rain':'ninja';}if(_b==='dragon'||_b==='trader'||_b==='ramadan'){var _u=null;try{_u=JSON.parse(localStorage.getItem('pipvant_bgunlocked')||'[]');}catch(_ue){_u=null;}if(!_u||_u.indexOf(_b)<0)_b='ninja';}try{if(window.matchMedia('(max-aspect-ratio: 3/4)').matches)_b='classic';}catch(_pe){}document.documentElement.setAttribute('data-bgscene',_b);var _vi=localStorage.getItem('pipvant_bgintensity');if(_vi!=='subtle'&&_vi!=='vivid')_vi='balanced';document.documentElement.setAttribute('data-bgintensity',_vi);}catch(e){document.documentElement.setAttribute('data-bgscene','ninja');document.documentElement.setAttribute('data-bgintensity','balanced');}</script>
+  <script>try{var _pool=['ninja','ronin','torii','dragon','kitsune','koi','cranes','sakura','lanterns','aurora','ocean','desert','wolf','eagle','orbit','rain','cinematic','trader','neo-ronin','miko','pirate','astronaut','ramadan','mist-platinum','petal-platinum','ribbon-gold'];var _b=null;if(localStorage.getItem('pipvant_bgperdevice')==='1'){var _coarse=false;try{_coarse=window.matchMedia('(pointer: coarse)').matches;}catch(_ce){}var _dev=(_coarse||window.innerWidth<760)?'m':'d';_b=localStorage.getItem(_dev==='m'?'pipvant_bgscene_m':'pipvant_bgscene_d');if(!_b||(_pool.indexOf(_b)<0&&_b!=='classic'&&_b!=='auto'&&_b!=='moods'&&_b!=='custom'))_b=localStorage.getItem('pipvant_bgscene');}else{_b=localStorage.getItem('pipvant_bgscene');}if(!_b||(_pool.indexOf(_b)<0&&_b!=='classic'&&_b!=='auto'&&_b!=='moods'&&_b!=='custom'))_b='ninja';if(_b==='auto'){var _d=new Date();function _p(n){return String(n).padStart(2,'0');}var _s=_d.getFullYear()+'-'+_p(_d.getMonth()+1)+'-'+_p(_d.getDate());var _h=2166136261;for(var _i=0;_i<_s.length;_i++){_h^=_s.charCodeAt(_i);_h=Math.imul(_h,16777619);}_b=_pool[(_h>>>0)%_pool.length];}if(_b==='moods'){var _t=new Date();var _m=_t.getHours()*60+_t.getMinutes();_b=(_m>=300&&_m<720)?'cranes':(_m>=720&&_m<1050)?'desert':(_m>=1050&&_m<1350)?'rain':'ninja';}if(_b==='dragon'||_b==='trader'||_b==='ramadan'){var _u=null;try{_u=JSON.parse(localStorage.getItem('pipvant_bgunlocked')||'[]');}catch(_ue){_u=null;}if(!_u||_u.indexOf(_b)<0)_b='ninja';}try{if(window.matchMedia('(max-aspect-ratio: 3/4)').matches&&['mist-platinum','petal-platinum','ribbon-gold'].indexOf(_b)<0)_b='classic';}catch(_pe){}document.documentElement.setAttribute('data-bgscene',_b);var _vi=localStorage.getItem('pipvant_bgintensity');if(_vi!=='subtle'&&_vi!=='vivid')_vi='balanced';document.documentElement.setAttribute('data-bgintensity',_vi);}catch(e){document.documentElement.setAttribute('data-bgscene','ninja');document.documentElement.setAttribute('data-bgintensity','balanced');}</script>
   <link rel="icon" type="image/png" href="assets/pipvanta-logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -925,6 +925,8 @@
     html[data-theme="platinum"] #bgSceneLayer{opacity:.26}
     html[data-theme="platinum"] #pvCelebLayer{opacity:.26}
     html[data-theme="platinum"] #pvPhoneBg{opacity:.26}
+    /* Live scenes are gray-native, so they stay readable at higher opacity under Platinum */
+    html[data-theme="platinum"][data-bgscene="mist-platinum"] #bgSceneLayer,html[data-theme="platinum"][data-bgscene="petal-platinum"] #bgSceneLayer,html[data-theme="platinum"][data-bgscene="ribbon-gold"] #bgSceneLayer{opacity:.55}
     html[data-theme="platinum"] .csv-import-sheet{background:rgba(10,22,40,.42)}
     html[data-theme="platinum"] .verdict-ring-track{stroke:rgba(10,22,40,.10)}
     html[data-theme="platinum"] .rated-stars .stars-bg{color:rgba(10,22,40,.16)}
@@ -1597,6 +1599,10 @@
     html[data-bgscene="astronaut"]{--bgs-kx:-.7%;--bgs-ky:-.8%;--bgs-st:.66;--bgs-sb:.44}html[data-bgscene="astronaut"] .bgs-photo{transform-origin:56% 55%;animation-duration:70s}
     html[data-bgscene="ramadan"]{--bgs-kx:-.6%;--bgs-ky:.5%;--bgs-st:.62;--bgs-sb:.42}html[data-bgscene="ramadan"] .bgs-photo{transform-origin:62% 38%;animation-duration:65s}
     html[data-bgscene="custom"]{--bgs-kx:-.6%;--bgs-ky:.4%;--bgs-st:.62;--bgs-sb:.44}html[data-bgscene="custom"] .bgs-photo{transform-origin:50% 50%;animation-duration:65s}
+    html[data-bgscene="mist-platinum"]{--bgs-kx:-1%;--bgs-ky:.3%;--bgs-st:.55;--bgs-sb:.36}html[data-bgscene="mist-platinum"] .bgs-photo{transform-origin:50% 45%}
+    html[data-bgscene="petal-platinum"]{--bgs-kx:-.8%;--bgs-ky:.5%;--bgs-st:.58;--bgs-sb:.38}html[data-bgscene="petal-platinum"] .bgs-photo{transform-origin:50% 40%}
+    html[data-bgscene="ribbon-gold"]{--bgs-kx:-1.2%;--bgs-ky:.2%;--bgs-st:.55;--bgs-sb:.36}html[data-bgscene="ribbon-gold"] .bgs-photo{transform-origin:50% 50%}
+    .bgs-live{position:absolute;inset:0;width:100%;height:100%;display:block}
     /* Atmosphere overlays retained over the paintings (petals for ninja/sakura, rain for rain) */
     /* Living overlays: pvBgOverlayHTML() renders one SVG per scene into each
        backdrop buffer (.bgs-fxwrap) and into the fullscreen preview. */
@@ -4299,7 +4305,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
           <p class="eyebrow">Account</p>
           <h2 class="tr-title">Backgrounds</h2>
         </header>
-        <p class="bgs-phone-note" id="bgsPhoneNote">Backdrop scenes are a desktop experience — your pick applies on your computer. This phone has its own living backdrop, controlled below.</p>
+        <p class="bgs-phone-note" id="bgsPhoneNote">Painted scenes are a desktop experience — your pick applies on your computer. Live scenes (Platinum Mist, Platinum Petals, Gold Ribbon) play on this phone too. This phone's own living backdrop is controlled below.</p>
         <div class="bgs-stage">
           <figure class="bgs-hero">
             <div class="bgs-hero-photo" id="bgsHeroPhoto"></div>
@@ -4384,6 +4390,12 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
                           <button class="bgs-card" type="button" data-bgscene-choice="pirate" aria-pressed="false"><span class="bgs-thumb"><img data-bgs-src="assets/bgs/thumbs/pirate.webp" alt="" loading="lazy" decoding="async"></span><span class="bgs-name">Pirate Captain</span><span class="bgs-star" data-bgs-fav="pirate" role="button" aria-label="Toggle favourite" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.5 5.3 5.8.7-4.3 4 1.1 5.7L12 16.5l-5.1 2.8L8 13.6 3.7 9.6l5.8-.7z"/></svg></span><span class="bgs-expand" data-bgs-expand="pirate" role="button" aria-label="Preview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></span><span class="bgs-check" aria-hidden="true"><svg width="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="m5 13 4 4L19 7"/></svg></span></button>
                           <button class="bgs-card" type="button" data-bgscene-choice="astronaut" aria-pressed="false"><span class="bgs-thumb"><img data-bgs-src="assets/bgs/thumbs/astronaut.webp" alt="" loading="lazy" decoding="async"></span><span class="bgs-name">Astronaut</span><span class="bgs-star" data-bgs-fav="astronaut" role="button" aria-label="Toggle favourite" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.5 5.3 5.8.7-4.3 4 1.1 5.7L12 16.5l-5.1 2.8L8 13.6 3.7 9.6l5.8-.7z"/></svg></span><span class="bgs-expand" data-bgs-expand="astronaut" role="button" aria-label="Preview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></span><span class="bgs-check" aria-hidden="true"><svg width="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="m5 13 4 4L19 7"/></svg></span></button>
                           <button class="bgs-card" type="button" data-bgscene-choice="ramadan" aria-pressed="false"><span class="bgs-thumb"><img data-bgs-src="assets/bgs/thumbs/ramadan.webp" alt="" loading="lazy" decoding="async"></span><span class="bgs-name">Ramadan Nights</span><span class="bgs-star" data-bgs-fav="ramadan" role="button" aria-label="Toggle favourite" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.5 5.3 5.8.7-4.3 4 1.1 5.7L12 16.5l-5.1 2.8L8 13.6 3.7 9.6l5.8-.7z"/></svg></span><span class="bgs-expand" data-bgs-expand="ramadan" role="button" aria-label="Preview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></span><span class="bgs-check" aria-hidden="true"><svg width="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="m5 13 4 4L19 7"/></svg></span></button>
+                        </div>
+                        <p class="bgs-group-label">Live</p>
+                        <div class="bgs-grid">
+                          <button class="bgs-card" type="button" data-bgscene-choice="mist-platinum" aria-pressed="false"><span class="bgs-thumb"><img data-bgs-src="assets/bgs/thumbs/mist-platinum.webp" alt="" loading="lazy" decoding="async"></span><span class="bgs-name">Platinum Mist</span><span class="bgs-star" data-bgs-fav="mist-platinum" role="button" aria-label="Toggle favourite" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.5 5.3 5.8.7-4.3 4 1.1 5.7L12 16.5l-5.1 2.8L8 13.6 3.7 9.6l5.8-.7z"/></svg></span><span class="bgs-expand" data-bgs-expand="mist-platinum" role="button" aria-label="Preview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></span><span class="bgs-check" aria-hidden="true"><svg width="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="m5 13 4 4L19 7"/></svg></span></button>
+                          <button class="bgs-card" type="button" data-bgscene-choice="petal-platinum" aria-pressed="false"><span class="bgs-thumb"><img data-bgs-src="assets/bgs/thumbs/petal-platinum.webp" alt="" loading="lazy" decoding="async"></span><span class="bgs-name">Platinum Petals</span><span class="bgs-star" data-bgs-fav="petal-platinum" role="button" aria-label="Toggle favourite" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.5 5.3 5.8.7-4.3 4 1.1 5.7L12 16.5l-5.1 2.8L8 13.6 3.7 9.6l5.8-.7z"/></svg></span><span class="bgs-expand" data-bgs-expand="petal-platinum" role="button" aria-label="Preview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></span><span class="bgs-check" aria-hidden="true"><svg width="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="m5 13 4 4L19 7"/></svg></span></button>
+                          <button class="bgs-card" type="button" data-bgscene-choice="ribbon-gold" aria-pressed="false"><span class="bgs-thumb"><img data-bgs-src="assets/bgs/thumbs/ribbon-gold.webp" alt="" loading="lazy" decoding="async"></span><span class="bgs-name">Gold Ribbon</span><span class="bgs-star" data-bgs-fav="ribbon-gold" role="button" aria-label="Toggle favourite" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.6l2.5 5.3 5.8.7-4.3 4 1.1 5.7L12 16.5l-5.1 2.8L8 13.6 3.7 9.6l5.8-.7z"/></svg></span><span class="bgs-expand" data-bgs-expand="ribbon-gold" role="button" aria-label="Preview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></span><span class="bgs-check" aria-hidden="true"><svg width="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="m5 13 4 4L19 7"/></svg></span></button>
                         </div>
                         <p class="bgs-group-label">Simple</p>
                         <div class="bgs-grid">
@@ -4823,6 +4835,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
      layer below, with a bounded boot watchdog + late-init path. -->
 <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.13/dist/html-to-image.min.js" defer></script>
 <script src="assets/qrcode.js" defer></script>
+<script src="assets/pv-live-bg.js"></script>
 <script>
 (function(){
   var currentLanguage='en';
@@ -9008,7 +9021,13 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
      ('pipvant_bgfavs'), Surprise, visibility intensity ('pipvant_bgintensity'
      -> html[data-bgintensity]) and pointer parallax ('pipvant_bgparallax').
      All keys survive sign-out via the clearUserState keep-list. */
-  var PV_BG_POOL=['ninja','ronin','torii','dragon','kitsune','koi','cranes','sakura','lanterns','aurora','ocean','desert','wolf','eagle','orbit','rain','cinematic','trader','neo-ronin','miko','pirate','astronaut','ramadan'];
+  var PV_BG_POOL=['ninja','ronin','torii','dragon','kitsune','koi','cranes','sakura','lanterns','aurora','ocean','desert','wolf','eagle','orbit','rain','cinematic','trader','neo-ronin','miko','pirate','astronaut','ramadan','mist-platinum','petal-platinum','ribbon-gold'];
+  /* Live scenes (2026-10-24): procedural canvas backgrounds that play on
+     phone AND computer — the exception to the desktop-only gate, which
+     still holds for every painted scene. */
+  var PV_BG_LIVE=['mist-platinum','petal-platinum','ribbon-gold'];
+  function pvBgIsLive(key){return PV_BG_LIVE.indexOf(key)>=0;}
+  window.pvBgIsLive=pvBgIsLive;
   var PV_BG_SCENES=PV_BG_POOL.concat(['classic']);
   var PV_BG_CHOICES=PV_BG_SCENES.concat(['auto','moods','custom']);
   var pvBgChoice='ninja';
@@ -9132,6 +9151,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     pvBgSyncShowcase();
     if(typeof pvBgPanSync==='function')pvBgPanSync();
     pvBgShow(pvBgScene);
+    if(typeof window.pvPbApply==='function')window.pvPbApply();
     pvBgParallaxKick();
     if(typeof pvBgSyncCalm==='function')pvBgSyncCalm();
     if(typeof pvSotdRender==='function')pvSotdRender();
@@ -9152,9 +9172,11 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
   function pvBgShow(key){
     var bufs=pvBgBufEls();if(!bufs.length)return;
     var token=++pvBgToken;
-    if(key==='classic'||pvBgPhoneMode()){
+    if(key==='classic'||(pvBgPhoneMode()&&!pvBgIsLive(key))){
       /* Phone mode (desktop-only scenes): the backdrop stays the clean
-         classic navy — buffers cleared and NO scene image is fetched. */
+         classic navy — buffers cleared and NO scene image is fetched.
+         Live scenes are the exception: they play on phones too. */
+      if(window.pvLiveBg)window.pvLiveBg.detach();
       bufs.forEach(function(b){b.classList.remove('is-on');var fxw=b.querySelector('.bgs-fxwrap');if(fxw)fxw.innerHTML='';});
       pvBgFront=-1;
       return;
@@ -9170,6 +9192,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       var fill=back.querySelector('.bgs-fill');if(fill)fill.style.backgroundImage='url("'+url+'")';
       if(img.naturalWidth>0&&img.naturalHeight>0)back.style.setProperty('--bgs-ar',(img.naturalWidth/img.naturalHeight).toFixed(5));
       var fxw=back.querySelector('.bgs-fxwrap');if(fxw)fxw.innerHTML=pvBgOverlayHTML(key);
+      if(fxw&&window.pvLiveBg){if(pvBgIsLive(key))window.pvLiveBg.attach(key,fxw.querySelector('canvas.bgs-live'));else window.pvLiveBg.detach();}
       back.setAttribute('data-key',key);
       back.classList.add('is-on');
       bufs.forEach(function(b){if(b!==back)b.classList.remove('is-on');});
@@ -9211,12 +9234,12 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
      live, so aspect flips can never leave a stuck layer. */
   function pvBgPhoneMode(){try{return !!(pvBgPanMQ&&pvBgPanMQ.matches);}catch(e){return false;}}
   function pvBgWriteSceneAttr(){
-    var v=pvBgPhoneMode()?'classic':pvBgScene;
+    var v=(pvBgPhoneMode()&&!pvBgIsLive(pvBgScene))?'classic':pvBgScene;
     document.documentElement.setAttribute('data-bgscene',v);
     if(document.body)document.body.setAttribute('data-bgscene',v);
   }
-  var PV_BG_FOCAL={ninja:.70,ronin:.58,torii:.50,dragon:.55,kitsune:.55,koi:.50,cranes:.45,sakura:.58,lanterns:.50,aurora:.50,ocean:.50,desert:.60,wolf:.62,eagle:.50,orbit:.72,rain:.58,cinematic:.50,trader:.62,'neo-ronin':.36,miko:.32,pirate:.66,astronaut:.56,ramadan:.62,custom:.50};
-  var PV_BG_PANDUR={torii:55,koi:55,eagle:55,ronin:65,lanterns:65,orbit:65,'neo-ronin':60,miko:65,trader:65,dragon:70,cranes:70,aurora:70,desert:70,pirate:70,cinematic:70,astronaut:70,custom:65};
+  var PV_BG_FOCAL={ninja:.70,ronin:.58,torii:.50,dragon:.55,kitsune:.55,koi:.50,cranes:.45,sakura:.58,lanterns:.50,aurora:.50,ocean:.50,desert:.60,wolf:.62,eagle:.50,orbit:.72,rain:.58,cinematic:.50,trader:.62,'neo-ronin':.36,miko:.32,pirate:.66,astronaut:.56,ramadan:.62,custom:.50,'mist-platinum':.50,'petal-platinum':.50,'ribbon-gold':.50};
+  var PV_BG_PANDUR={torii:55,koi:55,eagle:55,ronin:65,lanterns:65,orbit:65,'neo-ronin':60,miko:65,trader:65,dragon:70,cranes:70,aurora:70,desert:70,pirate:70,cinematic:70,astronaut:70,custom:65,'mist-platinum':65,'petal-platinum':65,'ribbon-gold':65};
   function pvBgPanSetup(buf,key,iw,ih){
     try{
       if(!buf||!iw||!ih)return;
@@ -9301,6 +9324,18 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       document.body.classList.remove('bgs-pan');
       pvBgWriteSceneAttr();
       if(phone){
+        /* Live scenes are the phone exception (2026-10-24): they play on
+           phones too — show the live scene instead of clearing. */
+        if(pvBgIsLive(pvBgScene)){
+          pvBgShow(pvBgScene);
+          if(typeof pvBgSyncShowcase==='function')pvBgSyncShowcase();
+          var eImgL=document.getElementById('bgsEntryImg'),eThL=document.getElementById('bgsEntryThumb');
+          if(eImgL)eImgL.src='assets/bgs/thumbs/'+pvBgScene+'.webp';
+          if(eThL)eThL.classList.remove('is-classic');
+          if(typeof pvSotdRender==='function')pvSotdRender();
+          return;
+        }
+        if(window.pvLiveBg)window.pvLiveBg.detach();
         pvBgBufEls().forEach(function(buf){
           var an=buf._panAnim;if(an){try{an.cancel();}catch(e){}buf._panAnim=null;}
           buf.classList.remove('is-on');
@@ -9909,6 +9944,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
      fullscreen preview, so a scene feels identical in both places.
      Petals/rain are the pre-existing overlays, unified into this system. */
   function pvBgOverlayHTML(key){
+    if(pvBgIsLive(key))return '<canvas class="bgs-live" data-live="'+key+'" aria-hidden="true"></canvas>';
     var S='<g class="bgs-twinkle"><use class="bgs-par" href="#bgs-stars" opacity=".5"/></g><g class="bgs-twinkle" style="animation-delay:-2.4s" transform="translate(240 110) scale(1.1)"><use href="#bgs-stars" opacity=".26"/></g>';
     var M='<g class="bgs-mist"><ellipse cx="360" cy="640" rx="580" ry="130" fill="url(#bgsGlowMist)"/><ellipse cx="1100" cy="700" rx="660" ry="150" fill="url(#bgsGlowMist)"/></g>';
     var F='<g class="bgs-fly" style="animation-duration:11s;animation-delay:-2s"><circle cx="260" cy="600" r="3.4" fill="url(#bgsGlowGold)"/></g><g class="bgs-fly" style="animation-duration:13s;animation-delay:-7s"><circle cx="420" cy="520" r="2.7" fill="url(#bgsGlowGold)"/></g><g class="bgs-fly" style="animation-duration:10s;animation-delay:-4s"><circle cx="610" cy="660" r="3" fill="url(#bgsGlowGold)"/></g><g class="bgs-fly" style="animation-duration:14s;animation-delay:-9s"><circle cx="780" cy="470" r="2.6" fill="url(#bgsGlowGold)"/></g><g class="bgs-fly" style="animation-duration:12s;animation-delay:-1s"><circle cx="940" cy="610" r="3.5" fill="url(#bgsGlowGold)"/></g><g class="bgs-fly" style="animation-duration:15s;animation-delay:-6s"><circle cx="1090" cy="540" r="2.8" fill="url(#bgsGlowGold)"/></g><g class="bgs-fly" style="animation-duration:11s;animation-delay:-8s"><circle cx="1240" cy="650" r="3.1" fill="url(#bgsGlowGold)"/></g><g class="bgs-fly" style="animation-duration:13s;animation-delay:-11s"><circle cx="520" cy="420" r="2.5" fill="url(#bgsGlowGold)"/></g>';
@@ -10005,6 +10041,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     img.onerror=function(){if(ph)ph.style.opacity='';};
     if(fsrc)img.src=fsrc;else if(ph)ph.style.opacity='';
     var fx=document.getElementById('bgsFsFx');if(fx)fx.innerHTML=pvBgOverlayHTML(key);
+    if(fx&&window.pvLiveBg){if(pvBgIsLive(key))window.pvLiveBg.attach(key,fx.querySelector('canvas.bgs-live'));else window.pvLiveBg.detach();}
     var nm=document.getElementById('bgsFsName');if(nm)nm.textContent=pvBgSceneName(key);
     var gr=document.getElementById('bgsFsGroup');if(gr)gr.textContent=pvBgGroupLabel(key);
     var sh=document.getElementById('bgsFsShare');if(sh)sh.hidden=(key==='custom');
@@ -10024,6 +10061,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
   window.pvBgFsOpen=pvBgFsOpen;
   function pvBgFsClose(){
     pvFs.open=false;
+    if(window.pvLiveBg)window.pvLiveBg.detach();
     pvFsIdleStop();
     var fs=document.getElementById('bgsFs');if(fs)fs.hidden=true;
     document.body.classList.remove('bgsfs-open');
@@ -16248,7 +16286,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     var pbOn=true,pbMotionOn=true;
     try{pbOn=localStorage.getItem('pipvant_pb')!=='0';}catch(e){}
     try{pbMotionOn=localStorage.getItem('pipvant_pb_motion')!=='0';}catch(e){}
-    function pbGate(){try{return window.matchMedia('(max-aspect-ratio: 3/4)').matches;}catch(e){return false;}}
+    function pbGate(){try{if(window.pvBgIsLive&&window.pvBgEffectiveScene&&window.pvBgIsLive(window.pvBgEffectiveScene()))return false;return window.matchMedia('(max-aspect-ratio: 3/4)').matches;}catch(e){return false;}}
     function pbReducedMotion(){try{return window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){return false;}}
     function pbCalmWanted(){
       try{
@@ -16523,6 +16561,9 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       pbEnsureArt();
       pbSyncCalm();
     }
+    /* Live scenes (2026-10-24) run their own phone layer: scene changes
+       re-evaluate this gate so Ninja Night yields to a live scene. */
+    window.pvPbApply=pbApply;
     function pbVisChange(){
       if(document.hidden){
         if(pbState.raf){cancelAnimationFrame(pbState.raf);pbState.raf=0;}
