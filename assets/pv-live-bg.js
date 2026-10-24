@@ -153,9 +153,16 @@
     }
   }
 
-  /* ---------- sweep: showroom light band gliding over a car ------------- */
+  /* ---------- sweep: car scenes — light band + 3D photo parallax + hover trail */
   function sweepInit(s){
     s.tint = s.key === 'storm-sedan' ? '170,205,255' : '255,238,200';
+    s.trail = [];
+    s.photo = null;
+    try{
+      var buf = s.canvas.closest ? s.canvas.closest('.bgs-buffer') : null;
+      if(buf) s.photo = buf.querySelector('.bgs-photo');
+      if(!s.photo) s.photo = document.getElementById('bgsFsPhoto');
+    }catch(e){}
   }
   function sweepDraw(s, ctx, w, h, t){
     var ph = s.key === 'storm-sedan' ? 2.0 : 0.0;
@@ -171,6 +178,35 @@
     ctx.fillStyle = g;
     ctx.fillRect(-bw / 2, -h, bw, h * 2);
     ctx.restore();
+    /* hover trail: fading line following the cursor / finger */
+    var now = (typeof performance !== 'undefined' && performance.now) ? performance.now() : 0;
+    if(now - s.lastMove < 150 && s.canvas){
+      var r = s.canvas.getBoundingClientRect();
+      var mx = (s.cx || 0) - r.left, my = (s.cy || 0) - r.top;
+      var lastPt = s.trail[s.trail.length - 1];
+      if(!lastPt || Math.abs(lastPt.x - mx) + Math.abs(lastPt.y - my) > 3) s.trail.push({x: mx, y: my, life: 1});
+      if(s.trail.length > 28) s.trail.splice(0, s.trail.length - 28);
+    }
+    for(var ti = 0; ti < s.trail.length; ti++) s.trail[ti].life -= 0.05;
+    while(s.trail.length && s.trail[0].life <= 0) s.trail.shift();
+    if(s.trail.length > 1){
+      ctx.save();
+      ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      for(var tj = 1; tj < s.trail.length; tj++){
+        var pa = s.trail[tj], pb = s.trail[tj - 1];
+        ctx.beginPath();
+        ctx.moveTo(pb.x, pb.y); ctx.lineTo(pa.x, pa.y);
+        ctx.strokeStyle = 'rgba(' + s.tint + ',' + (pa.life * 0.5).toFixed(3) + ')';
+        ctx.lineWidth = 0.5 + 3 * pa.life;
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+    /* 3D parallax: the photo itself drifts against the cursor (beats the
+       Ken Burns WAAPI animation via !important; detach restores it). */
+    if(s.photo){
+      s.photo.style.setProperty('transform', 'translate3d(' + (-s.px * 12).toFixed(1) + 'px,' + (-s.py * 9).toFixed(1) + 'px,0) scale(1.07)', 'important');
+    }
   }
 
   var DRAW = {'mist-platinum': [mistInit, mistDraw], 'petal-platinum': [petalInit, petalDraw], 'ribbon-gold': [ribbonInit, ribbonDraw], 'night-coupe': [sweepInit, sweepDraw], 'storm-sedan': [sweepInit, sweepDraw]};
@@ -216,6 +252,7 @@
     var w = window.innerWidth || 1, h = window.innerHeight || 1;
     cur.tx = (x / w) * 2 - 1;
     cur.ty = (y / h) * 2 - 1;
+    cur.cx = x; cur.cy = y;
     cur.lastMove = (typeof performance !== 'undefined' && performance.now) ? performance.now() : 0;
   }
   function onResize(){ if(cur) resize(cur); }
@@ -266,6 +303,7 @@
     window.removeEventListener('resize', onResize);
     document.removeEventListener('visibilitychange', onVis);
     try{ s.ctx.clearRect(0, 0, s.canvas.width, s.canvas.height); }catch(e){}
+    try{ if(s.photo) s.photo.style.removeProperty('transform'); }catch(e){}
   }
 
   window.pvLiveBg = {
