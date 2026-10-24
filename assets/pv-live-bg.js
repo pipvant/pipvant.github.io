@@ -13,7 +13,7 @@
    Journal), and prefers-reduced-motion renders a single static frame. */
 (function(){
   'use strict';
-  var LIVE = {'mist-platinum': 1, 'petal-platinum': 1, 'ribbon-gold': 1};
+  var LIVE = {'mist-platinum': 1, 'petal-platinum': 1, 'ribbon-gold': 1, 'night-coupe': 1, 'storm-sedan': 1};
   var cur = null;
 
   function reducedMotion(){
@@ -153,7 +153,27 @@
     }
   }
 
-  var DRAW = {'mist-platinum': [mistInit, mistDraw], 'petal-platinum': [petalInit, petalDraw], 'ribbon-gold': [ribbonInit, ribbonDraw]};
+  /* ---------- sweep: showroom light band gliding over a car ------------- */
+  function sweepInit(s){
+    s.tint = s.key === 'storm-sedan' ? '170,205,255' : '255,238,200';
+  }
+  function sweepDraw(s, ctx, w, h, t){
+    var ph = s.key === 'storm-sedan' ? 2.0 : 0.0;
+    var bx = w * (0.5 + 0.42 * Math.sin(t * 0.11 + ph) + s.px * 0.04);
+    var bw = Math.max(w * 0.22, 120);
+    ctx.save();
+    ctx.translate(bx, h * 0.5);
+    ctx.rotate(-0.32);
+    var g = ctx.createLinearGradient(-bw / 2, 0, bw / 2, 0);
+    g.addColorStop(0, 'rgba(' + s.tint + ',0)');
+    g.addColorStop(0.5, 'rgba(' + s.tint + ',' + (0.10 + 0.03 * Math.sin(t * 0.7)).toFixed(3) + ')');
+    g.addColorStop(1, 'rgba(' + s.tint + ',0)');
+    ctx.fillStyle = g;
+    ctx.fillRect(-bw / 2, -h, bw, h * 2);
+    ctx.restore();
+  }
+
+  var DRAW = {'mist-platinum': [mistInit, mistDraw], 'petal-platinum': [petalInit, petalDraw], 'ribbon-gold': [ribbonInit, ribbonDraw], 'night-coupe': [sweepInit, sweepDraw], 'storm-sedan': [sweepInit, sweepDraw]};
 
   function resize(s){
     var cv = s.canvas;
