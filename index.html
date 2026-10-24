@@ -1276,6 +1276,12 @@
     }
     .screen{position:relative;isolation:isolate}
     .screen:before{content:"";position:absolute;z-index:-1;top:0;left:50%;width:min(980px,118vw);height:260px;transform:translateX(-50%);background:radial-gradient(ellipse at 50% 0%,rgba(201,210,220,.05),rgba(91,141,239,.035) 34%,transparent 72%);pointer-events:none}
+    /* 2026-10-24 responsive fix: the 980px centered glow above sticks out on
+       desktop viewports under ~1226px (1024px: +101px horizontal scroll).
+       overflow-x:clip removes only the fully-transparent overhang — the
+       visible gradient is pixel-identical — and unlike hidden it does not
+       break the sticky filter panel. Desktop-scoped: phone CSS untouched. */
+    @media (min-width:1024px){.screen{overflow-x:clip}}
     #landing:before{display:none}
     .nav-coming-soon{position:relative}
     .nav-soon-badge{display:inline-flex;align-items:center;justify-content:center;min-width:40px;min-height:20px;padding:0 7px;border:1px solid color-mix(in srgb,var(--platinum) 42%,var(--line));border-radius:999px;background:rgba(201,210,220,.06);color:var(--platinum);font:700 8px/1 "IBM Plex Mono","IBM Plex Sans Arabic",monospace;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
