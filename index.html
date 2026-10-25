@@ -17312,7 +17312,7 @@ document.querySelectorAll('[data-language-choice]').forEach(function(b){
 <!-- PIPVANT Company OS: privacy-friendly analytics (no cookies, page+referrer only) -->
 <script src="assets/pipv-os.js" defer></script>
 <!-- PIPVANT AI (Pip) — floating assistant layer. ADDITIVE ONLY: no existing screen, nav item, or style is touched. -->
-<button id="pipFab" type="button" aria-label="Pip — PIPVANT AI assistant" aria-expanded="false" title="Pip — PIPVANT AI">P</button>
+<button id="pipFab" type="button" aria-label="Pip — PIPVANT AI assistant" aria-expanded="false" title="Pip — PIPVANT AI" hidden>P</button>
 <div id="pipPanel" hidden role="dialog" aria-label="Pip — PIPVANT AI">
   <div class="pip-head">
     <span class="pip-orb" aria-hidden="true">P</span>
@@ -17333,6 +17333,7 @@ document.querySelectorAll('[data-language-choice]').forEach(function(b){
 #pipFab{position:fixed;z-index:90;right:12px;bottom:calc(86px + env(safe-area-inset-bottom));width:56px;height:56px;border-radius:50%;border:1px solid rgba(212,175,55,.7);background:radial-gradient(circle at 30% 28%,#F7DC82,#D4AF37 55%,#8A6D2B);color:#0A1628;font:800 24px/1 "Space Grotesk","IBM Plex Sans Arabic",sans-serif;box-shadow:0 14px 34px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.55);cursor:pointer;padding:0}
 #pipFab:after{content:"";position:absolute;inset:-6px;border-radius:50%;border:2px solid rgba(212,175,55,.55);animation:pipRing 2.6s ease-out infinite;pointer-events:none}
 #pipFab[aria-expanded="true"]:after{animation:none;opacity:0}
+#pipFab[hidden]{display:none!important}
 @keyframes pipRing{0%{transform:scale(.9);opacity:.9}70%{transform:scale(1.25);opacity:0}100%{transform:scale(1.25);opacity:0}}
 #pipPanel{position:fixed;z-index:91;left:12px;right:12px;bottom:calc(150px + env(safe-area-inset-bottom));max-height:64vh;display:flex;flex-direction:column;overflow:hidden;background:color-mix(in srgb,var(--surface) 94%,transparent);border:1px solid color-mix(in srgb,var(--gold) 45%,var(--line));border-radius:20px;box-shadow:0 26px 60px rgba(0,0,0,.52);backdrop-filter:blur(20px) saturate(130%);animation:pipUp 220ms ease-out}
 #pipPanel[hidden]{display:none!important}
@@ -17481,6 +17482,8 @@ input.addEventListener('keydown',function(e){if(e.key==='Enter')send();});
 fileEl.addEventListener('change',function(){if(fileEl.files&&fileEl.files[0])onScanFile(fileEl.files[0]);});
 document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!panel.hidden)closePanel();});
 refreshTier();
+function pipGate(){var ok=false;try{ok=(typeof window.pvHasSession==='function'&&window.pvHasSession())||!!auth();}catch(e){ok=!!auth();}fab.hidden=!ok;if(!ok&&!panel.hidden)closePanel();return ok;}
+pipGate();setInterval(pipGate,2000);
 window.pipAI={version:'1.0',parseTradeText:parseTradeText,missingOf:missingOf,scansLeft:scansLeft,isPro:isPro,setPro:function(v){try{localStorage.setItem('pipvant_pip_pro',v?'1':'0');}catch(e){}refreshTier();}};
 })();
 </script>
