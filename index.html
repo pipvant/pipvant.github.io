@@ -427,7 +427,7 @@
     .grabber{width:40px;height:4px;border-radius:9px;background:var(--silver);opacity:.55;margin:0 auto 20px}
     .sheet-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
     .sheet-head h3{margin:0}
-                .bottom-nav{position:fixed;left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom));z-index:30;height:64px;padding:5px;display:grid;grid-template-columns:repeat(5,1fr);border:1px solid color-mix(in srgb,var(--line-strong) 82%,transparent);border-radius:22px;background:color-mix(in srgb,var(--surface) 88%,transparent);box-shadow:0 16px 45px rgba(0,0,0,.46),inset 0 1px 0 rgba(255,255,255,.035);backdrop-filter:blur(22px) saturate(135%)}
+                .bottom-nav{position:fixed;left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom));z-index:30;height:64px;padding:5px;display:grid;grid-template-columns:repeat(6,1fr);border:1px solid color-mix(in srgb,var(--line-strong) 82%,transparent);border-radius:22px;background:color-mix(in srgb,var(--surface) 88%,transparent);box-shadow:0 16px 45px rgba(0,0,0,.46),inset 0 1px 0 rgba(255,255,255,.035);backdrop-filter:blur(22px) saturate(135%)}
     .nav-btn{min-width:44px;min-height:44px;border:0;border-radius:16px;background:transparent;color:color-mix(in srgb,var(--silver) 90%,var(--bg));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:9px;font-weight:700;cursor:pointer;transition:transform var(--press) var(--ease-move),opacity var(--micro) var(--ease-move)}
     .nav-btn svg{width:19px;height:19px}
     .nav-btn.active{color:var(--accent);background:linear-gradient(180deg,rgba(91,141,239,.14),rgba(91,141,239,.055));text-shadow:0 0 16px rgba(91,141,239,.5)}
@@ -4597,6 +4597,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     <button class="nav-btn active" data-screen="matcher" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M7 12h10m-7 5h4"/></svg><span>Matcher</span></button>
     <button class="nav-btn" data-screen="journal" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h12v18H6zM9 7h6M9 11h6"/></svg><span>Journal</span></button>
     <button class="nav-btn" data-screen="calculator" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 11h2m4 0h2"/></svg><span>Risk</span></button>
+    <button class="nav-btn" id="flNavBtn" data-screen="floor" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3.5 19c.6-3.5 2.8-5 5.5-5s4.9 1.5 5.5 5M15 14.5c2.6.3 4.3 1.7 4.8 4.5"/></svg><span>Floor</span></button>
     <button class="nav-btn" data-screen="calendar" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16M8 14h3M14 14h2M8 17h2"/></svg><span>Calendar</span></button>
     <button class="nav-btn" data-screen="profile" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 20c.5-4 2.7-6 6.5-6s6 2 6.5 6"/></svg><span>Profile</span></button>
   </nav>
@@ -17641,6 +17642,391 @@ window.pipAI={version:'1.1',parseTradeText:parseTradeText,missingOf:missingOf,sc
 window.pipAI._ninjaRunning=function(){return pipNinja.running;};
 window.pipAI._emberRunning=function(){return pipEmber.running;};
 window.pipAI._charPlaying=function(){var v=document.getElementById('pipNinjaChar');return !!v&&!v.paused&&v.readyState>=2;};
+})();
+</script>
+
+<!-- The Floor — Round 1: foundation + home feed. ADDITIVE ONLY.
+     No existing screen, nav item, style, or script is modified by this block.
+     The only existing-code changes live in apply_floor.py and are limited to:
+     (a) .bottom-nav grid 5 -> 6 columns, (b) one Floor button in .bottom-nav.
+     The .bottom-nav:before width correction below is the 6-column companion
+     of (a): without it the moving nav pill keeps its 5-column width. -->
+<section class="screen" id="floor" aria-label="The Floor — community">
+  <div class="fl-wrap">
+    <div class="fl-dock" id="flDock" role="navigation" aria-label="Floor shortcuts">
+      <button type="button" class="fl-dockcard" id="flDockMessages"><span class="fl-dockico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 7l8.5 6 8.5-6"/></svg></span><span>Messages</span><i class="fl-badge" id="flBadgeMessages" hidden></i></button>
+      <button type="button" class="fl-dockcard" id="flDockFriends"><span class="fl-dockico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3.5 19c.6-3.5 2.8-5 5.5-5s4.9 1.5 5.5 5M15 14.5c2.6.3 4.3 1.7 4.8 4.5"/></svg></span><span>Friends</span><i class="fl-badge" id="flBadgeFriends" hidden></i></button>
+      <button type="button" class="fl-dockcard" id="flDockGroups"><span class="fl-dockico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="9" r="3.2"/><circle cx="16.5" cy="9" r="3.2"/><path d="M4.5 19c.8-2.8 2.6-4 4.5-4s3.7 1.2 4.5 4"/></svg></span><span>Groups</span></button>
+      <button type="button" class="fl-dockcard" id="flDockProfile"><span class="fl-dockico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 20c.5-4 2.7-6 6.5-6s6 2 6.5 6"/></svg></span><span>My profile</span></button>
+    </div>
+    <div class="fl-notice" id="flNotice" hidden><span id="flNoticeText"></span><button type="button" id="flNoticeClose" aria-label="Dismiss">✕</button></div>
+    <div class="fl-composer" id="flComposer">
+      <div class="fl-comp-head"><span class="fl-ava" id="flMyAva">؟</span><strong>Share something with the Floor…</strong></div>
+      <textarea id="flTextarea" rows="3" maxlength="2000" placeholder="Share something with the Floor…" aria-label="Write a post"></textarea>
+      <div class="fl-imgprev" id="flImgPreview" hidden><img id="flImgPreviewImg" alt=""><button type="button" id="flImgRemove" aria-label="Remove image">✕</button></div>
+      <div class="fl-comp-foot">
+        <label class="fl-imgbtn" for="flImgInput" title="Add a photo">🖼 <span>Add photo</span></label>
+        <input id="flImgInput" type="file" accept="image/*" hidden>
+        <span class="fl-note" id="flGuestNote" hidden>Sign in to post on The Floor.</span>
+        <span class="fl-note err" id="flStatus" hidden></span>
+        <button type="button" class="fl-postbtn" id="flPostBtn">Post →</button>
+      </div>
+    </div>
+    <div class="fl-sect-label">Stories · 24 hours</div>
+    <div class="fl-stories" id="flStories"></div>
+    <div class="fl-sect-label">Feed</div>
+    <div class="fl-feed" id="flFeed"></div>
+    <button type="button" class="fl-loadmore" id="flLoadMore" hidden>Load more</button>
+  </div>
+  <div class="fl-viewer" id="flViewer" hidden role="dialog" aria-label="Story viewer">
+    <div class="fl-viewer-top"><div class="fl-viewer-segs" id="flViewerSegs"></div></div>
+    <div class="fl-viewer-head"><span class="fl-ava" id="flViewerAva">؟</span><span class="fl-viewer-name" id="flViewerName"></span><button type="button" id="flViewerClose" aria-label="Close story">✕</button></div>
+    <div class="fl-viewer-body"><img id="flViewerImg" alt="" hidden><p id="flViewerBody"></p></div>
+    <div class="fl-viewer-nav"><button type="button" id="flViewerPrev">← Previous</button><button type="button" id="flViewerNext">Next →</button></div>
+  </div>
+</section>
+<button id="floorFab" type="button" aria-label="Open The Floor"><span aria-hidden="true">✦</span> Floor</button>
+<style>
+/* 6-column companion for the authorized .bottom-nav grid change. */
+.bottom-nav:before{width:calc((100% - 10px)/6)}
+#floorFab{display:none}
+@media (min-width:1024px){
+#floorFab{display:flex;align-items:center;gap:8px;position:fixed;left:252px;bottom:28px;z-index:60;height:52px;padding:0 20px;border-radius:999px;border:1px solid rgba(212,175,55,.8);background:linear-gradient(120deg,#F7DC82,#D4AF37 45%,#C9A227 60%,#F7DC82);color:#0A1628;font:800 15px/1 "Space Grotesk","IBM Plex Sans Arabic",sans-serif;box-shadow:0 14px 34px rgba(0,0,0,.5),0 0 26px rgba(212,175,55,.35);cursor:pointer}
+}
+@media (min-width:1024px){#floor{padding-left:224px}}
+#flNavBtn.active{color:#D4AF37;text-shadow:0 0 16px rgba(212,175,55,.5)}
+#flNavBtn.active svg{filter:drop-shadow(0 0 7px rgba(212,175,55,.55))}
+#floor{min-height:100vh;min-height:100dvh}
+#floor .fl-wrap{max-width:680px;margin:0 auto;padding:16px 16px calc(110px + env(safe-area-inset-bottom))}
+@media (min-width:1024px){#floor .fl-wrap{max-width:760px;padding:28px 40px 60px}}
+#floor .fl-dock{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:14px}
+#floor .fl-dockcard{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;background:linear-gradient(165deg,rgba(212,175,55,.16),rgba(18,32,54,.95) 55%);border:1px solid rgba(212,175,55,.42);border-radius:17px;padding:11px 2px 9px;font-size:10.5px;font-weight:800;color:#EDEFF5;box-shadow:0 8px 22px rgba(0,0,0,.32);cursor:pointer}
+#floor .fl-dockcard svg{width:21px;height:21px;display:block}
+#floor .fl-badge{position:absolute;top:-6px;right:8px;background:#E5484D;color:#fff;font-style:normal;font-size:9.5px;font-weight:800;min-width:17px;height:17px;line-height:17px;text-align:center;border-radius:99px;padding:0 4px}
+#floor .fl-notice{display:flex;gap:10px;align-items:center;background:rgba(212,175,55,.12);border:1px solid rgba(212,175,55,.5);border-radius:14px;padding:11px 13px;font-size:13px;margin-bottom:14px}
+#floor .fl-notice[hidden]{display:none!important}
+#floor .fl-notice button{margin-left:auto;border:0;background:transparent;color:var(--muted);cursor:pointer;font-size:14px}
+#floor .fl-composer{background:#122036;border:1px solid #22314A;border-radius:18px;padding:13px 14px;margin-bottom:16px}
+#floor .fl-comp-head{display:flex;gap:10px;align-items:center;margin-bottom:10px;font-size:13px;color:#8A94A6}
+#floor .fl-ava{width:32px;height:32px;flex:0 0 auto;border-radius:50%;background:linear-gradient(160deg,#D4AF37,#8a6d1f);color:#0A1628;font-weight:800;text-align:center;line-height:32px;font-size:14px}
+#floor .fl-composer textarea{width:100%;min-height:64px;resize:vertical;border:1px solid #22314A;border-radius:12px;background:#0A1628;color:#F2F5F8;font-size:14px;line-height:1.55;padding:10px 12px;outline:none}
+#floor .fl-composer textarea:focus{border-color:#D4AF37}
+#floor .fl-imgprev{position:relative;margin-top:10px}
+#floor .fl-imgprev img{width:100%;border-radius:12px;display:block}
+#floor .fl-imgprev button{position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;border:0;background:rgba(10,22,40,.8);color:#fff;cursor:pointer}
+#floor .fl-comp-foot{display:flex;gap:10px;align-items:center;margin-top:10px}
+#floor .fl-imgbtn{font-size:12.5px;font-weight:700;color:#D4AF37;cursor:pointer}
+#floor .fl-note{font-size:12px;color:#8A94A6}
+#floor .fl-note.err{color:#ef4444}
+#floor .fl-postbtn{margin-left:auto;min-height:36px;padding:0 18px;border-radius:999px;border:0;background:linear-gradient(120deg,#F7DC82,#D4AF37);color:#0A1628;font-size:13px;font-weight:800;cursor:pointer}
+#floor .fl-postbtn:disabled{opacity:.55;cursor:default}
+#floor .fl-sect-label{font-size:11px;letter-spacing:.14em;color:#8A94A6;font-weight:800;margin:4px 0 10px}
+#floor .fl-stories{display:flex;gap:14px;overflow-x:auto;padding-bottom:4px;margin-bottom:16px}
+#floor .fl-story{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:10px;color:#8A94A6;background:transparent;border:0;cursor:pointer;flex:0 0 auto}
+#floor .fl-ring{width:56px;height:56px;border-radius:50%;padding:3px;background:conic-gradient(#D4AF37,#5B8DEF,#D4AF37)}
+#floor .fl-ring i{display:block;width:100%;height:100%;border-radius:50%;background:linear-gradient(160deg,#1E3A5F,#0A1628);border:2px solid #0A1628;text-align:center;line-height:46px;font-style:normal;font-size:18px;color:#F2F5F8}
+#floor .fl-story b{color:#E8ECF2;font-weight:600}
+#floor .fl-empty{font-size:13px;color:#8A94A6;padding:6px 2px 14px}
+#floor .fl-post{background:#101E32;border:1px solid #22314A;border-radius:18px;padding:13px 14px;margin-bottom:12px}
+#floor .fl-post-head{display:flex;gap:10px;align-items:center;margin-bottom:9px}
+#floor .fl-post-head b{font-size:13px}
+#floor .fl-post-head span{font-size:11px;color:#8A94A6}
+#floor .fl-post p{font-size:13.5px;line-height:1.55;color:#D8DEE8;white-space:pre-wrap;overflow-wrap:anywhere}
+#floor .fl-post img{width:100%;border-radius:12px;margin-top:10px;display:block}
+#floor .fl-actions{display:flex;gap:18px;margin-top:11px;font-size:12px;color:#8A94A6}
+#floor .fl-actions button{border:0;background:transparent;color:#8A94A6;font-size:12px;cursor:pointer;padding:0}
+#floor .fl-actions button b{color:#D8DEE8}
+#floor .fl-actions button.liked{color:#D4AF37}
+#floor .fl-actions button.liked b{color:#D4AF37}
+#floor .fl-comments{margin-top:11px;border-top:1px solid #22314A;padding-top:10px}
+#floor .fl-comment{font-size:12.5px;line-height:1.55;color:#D8DEE8;padding:5px 0}
+#floor .fl-comment b{color:#E8ECF2}
+#floor .fl-comment span{color:#8A94A6;font-size:11px;margin-left:6px}
+#floor .fl-comment-form{display:flex;gap:8px;margin-top:8px}
+#floor .fl-comment-form input{flex:1;min-width:0;height:36px;border-radius:999px;border:1px solid #22314A;background:#0A1628;color:#F2F5F8;font-size:12.5px;padding:0 13px;outline:none}
+#floor .fl-comment-form button{min-height:36px;padding:0 14px;border-radius:999px;border:0;background:linear-gradient(120deg,#F7DC82,#D4AF37);color:#0A1628;font-size:12px;font-weight:800;cursor:pointer}
+#floor .fl-report-form{display:flex;gap:8px;margin-top:10px}
+#floor .fl-report-form input{flex:1;min-width:0;height:34px;border-radius:10px;border:1px solid #22314A;background:#0A1628;color:#F2F5F8;font-size:12px;padding:0 11px;outline:none}
+#floor .fl-report-form button{min-height:34px;padding:0 13px;border-radius:10px;border:1px solid rgba(212,175,55,.5);background:transparent;color:#D4AF37;font-size:12px;font-weight:700;cursor:pointer}
+#floor .fl-thanks{font-size:12px;color:#D4AF37;margin-top:10px}
+#floor .fl-loadmore{display:block;width:100%;min-height:42px;border-radius:12px;border:1px solid #22314A;background:#122036;color:#E8ECF2;font-size:13px;font-weight:700;cursor:pointer;margin:4px 0 10px}
+#floor .fl-viewer{position:fixed;inset:0;z-index:80;background:linear-gradient(180deg,#0B1E3A,#0A1628 50%,#131B2E);display:flex;flex-direction:column;padding:14px}
+#floor .fl-viewer[hidden]{display:none!important}
+#floor .fl-viewer-segs{display:flex;gap:5px;margin-bottom:14px}
+#floor .fl-viewer-segs i{flex:1;height:3px;border-radius:99px;background:rgba(255,255,255,.3)}
+#floor .fl-viewer-segs i.done{background:#fff}
+#floor .fl-viewer-segs i.now{background:#D4AF37}
+#floor .fl-viewer-head{display:flex;gap:10px;align-items:center;font-size:14px;font-weight:700}
+#floor .fl-viewer-head button{margin-left:auto;width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:transparent;color:#fff;cursor:pointer;font-size:15px}
+#floor .fl-viewer-body{flex:1;display:flex;flex-direction:column;justify-content:center;gap:14px;max-width:560px;margin:0 auto;width:100%}
+#floor .fl-viewer-body img{width:100%;border-radius:16px;display:block}
+#floor .fl-viewer-body p{font-size:19px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+#floor .fl-viewer-nav{display:flex;gap:10px;max-width:560px;margin:0 auto;width:100%;padding-bottom:env(safe-area-inset-bottom)}
+#floor .fl-viewer-nav button{flex:1;min-height:44px;border-radius:12px;border:1px solid rgba(255,255,255,.25);background:transparent;color:#fff;font-size:13.5px;font-weight:700;cursor:pointer}
+#floor .fl-viewer-nav button:disabled{opacity:.4}
+@media (prefers-reduced-motion:reduce){#floor *,#floorFab{animation:none!important;transition:none!important}}
+</style>
+<script>
+(function(){
+"use strict";
+var SB='https://acpkzavmifjwnskiaret.supabase.co/rest/v1/';
+var ST='https://acpkzavmifjwnskiaret.supabase.co/storage/v1/';
+var KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFjcGt6YXZtaWZqd25za2lhcmV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyMDk1ODcsImV4cCI6MjEwNjc4NTU4N30.9-k-DoB6467EXTPKrvWUi-LRDPbSSC30f6BgrZezo2A';
+function $(id){return document.getElementById(id);}
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function flAuth(){try{var raw=localStorage.getItem('sb-acpkzavmifjwnskiaret-auth-token');if(!raw)return null;var j=JSON.parse(raw);if(j&&j.access_token&&j.user&&j.user.id)return{token:j.access_token,uid:j.user.id};}catch(e){}return null;}
+function flHeaders(token,json){var h={'apikey':KEY,'Authorization':'Bearer '+(token||KEY)};if(json)h['Content-Type']='application/json';return h;}
+function flGet(path,token){return fetch(SB+path,{headers:flHeaders(token)}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();});}
+function flInsert(table,obj,token){return fetch(SB+table,{method:'POST',headers:flHeaders(token,true),'Prefer':'return=representation',body:JSON.stringify(obj)}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();});}
+function flDel(path,token){return fetch(SB+path,{method:'DELETE',headers:flHeaders(token)}).then(function(r){if(!r.ok&&r.status!==204)throw new Error('HTTP '+r.status);});}
+function flRel(iso){try{var d=new Date(iso).getTime();if(!isFinite(d))return '';var m=Math.max(0,Math.round((Date.now()-d)/60000));if(m<60)return m+'m';var h=Math.floor(m/60);if(h<24)return h+'h';var dd=Math.floor(h/24);if(dd<7)return dd+'d';return new Date(iso).toLocaleDateString('en-US',{month:'short',day:'numeric'});}catch(e){return '';}}
+function flInitial(name){var n=String(name||'').trim();return n?n.charAt(0).toUpperCase():'؟';}
+var flState={loaded:false,posts:[],offset:0,profiles:{},likes:{},myLikes:{},stories:[],storyIdx:0,imgBlob:null,imgName:null,myName:null};
+function flScrollTop(){
+  /* Floor lives after .app in the document (append-only block), so the
+     document top is NOT the Floor top: .app keeps viewport height even
+     with all screens hidden. Scroll the section itself into view. */
+  var s=$('floor');if(!s)return;
+  try{s.scrollIntoView({behavior:'auto',block:'start'});}catch(e){window.scrollTo({top:0,behavior:'auto'});}
+}
+function flShow(){
+  var s=$('floor');if(!s)return;
+  if(s.classList.contains('active')){flScrollTop();return;}
+  document.querySelectorAll('.screen').forEach(function(el){el.classList.remove('active');});
+  s.classList.add('active');
+  document.querySelectorAll('.bottom-nav .nav-btn').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-screen')==='floor');});
+  var nav=document.querySelector('.bottom-nav');
+  if(nav){var btns=Array.prototype.slice.call(nav.querySelectorAll('.nav-btn'));var idx=btns.findIndex(function(b){return b.classList.contains('active');});if(idx>=0){nav.style.setProperty('--nav-pill-opacity','1');nav.style.setProperty('--nav-index',String(idx));nav.style.setProperty('--nav-shift',(idx*100)+'%');nav.style.setProperty('--nav-shift-rtl',(-idx*100)+'%');}}
+  var cr=$('crumb');if(cr)cr.textContent='Community';
+  var st=$('screenTitle');if(st)st.textContent='The Floor';
+  flScrollTop();
+  if(!flState.loaded)flLoad();
+}
+function flNotice(msg){var n=$('flNotice');if(!n)return;$('flNoticeText').textContent=msg;n.hidden=false;}
+$('flNoticeClose').addEventListener('click',function(){$('flNotice').hidden=true;});
+$('flDockMessages').addEventListener('click',function(){flNotice('Messages are coming in round 2 — جاية فالجولة الجاية');});
+$('flDockFriends').addEventListener('click',function(){flNotice('Friends are coming in round 2 — جاية فالجولة الجاية');});
+$('flDockGroups').addEventListener('click',function(){flNotice('Groups are coming in round 2 — جاية فالجولة الجاية');});
+$('flDockProfile').addEventListener('click',function(){var b=document.querySelector('[data-screen="profile"]');if(b)b.click();});
+var flNavBtn=$('flNavBtn');
+if(flNavBtn)flNavBtn.addEventListener('click',function(e){e.preventDefault();flShow();});
+var flFab=$('floorFab');
+if(flFab)flFab.addEventListener('click',function(){flShow();});
+function flSetBadge(id,count){var b=$(id);if(!b)return;if(count&&count>0){b.textContent=count>99?'99+':String(count);b.hidden=false;}else{b.hidden=true;}}
+function flLoad(){
+  flState.loaded=true;
+  var a=flAuth();
+  var guestNote=$('flGuestNote'),postBtn=$('flPostBtn');
+  if(!a){if(guestNote)guestNote.hidden=false;if(postBtn)postBtn.disabled=true;}
+  else{flGet('public_profiles?select=user_id,slug,display&user_id=eq.'+encodeURIComponent(a.uid),a.token).then(function(rows){if(rows&&rows.length){var d=rows[0].display;var nm=(d&&d.name)||rows[0].slug||null;if(nm){flState.myName=nm;var av=$('flMyAva');if(av)av.textContent=flInitial(nm);}}}).catch(function(){});}
+  flGet('friendships?select=id&addressee_id=eq.'+(a?a.uid:'none')+'&status=eq.pending',a?a.token:null).then(function(rows){flSetBadge('flBadgeFriends',rows?rows.length:0);}).catch(function(){flSetBadge('flBadgeFriends',0);});
+  /* Messages badge: round-1 schema has no read receipts, so no unread
+     count can be computed honestly. Badge stays hidden until round 2. */
+  flSetBadge('flBadgeMessages',0);
+  flLoadStories();
+  flLoadFeed(true);
+}
+function flLoadStories(){
+  var box=$('flStories');if(!box)return;
+  var now=new Date().toISOString();
+  flGet('stories?select=id,user_id,body,image_url,created_at,expires_at&expires_at=gt.'+encodeURIComponent(now)+'&order=created_at.desc&limit=30')
+  .then(function(rows){
+    var live=(rows||[]).filter(function(s){try{return new Date(s.expires_at).getTime()>Date.now();}catch(e){return false;}});
+    flState.stories=live;
+    if(!live.length){box.innerHTML='<div class="fl-empty">No stories yet</div>';return;}
+    var uids=[];live.forEach(function(s){if(uids.indexOf(s.user_id)<0)uids.push(s.user_id);});
+    return flResolveProfiles(uids).then(function(){box.innerHTML='';live.forEach(function(s,i){var nm=flState.profiles[s.user_id]||'متداول';var b=document.createElement('button');b.type='button';b.className='fl-story';b.setAttribute('data-fl-story',String(i));b.innerHTML='<span class="fl-ring"><i>'+esc(flInitial(nm))+'</i></span><b>'+esc(nm)+'</b>';b.addEventListener('click',function(){flOpenStory(i);});box.appendChild(b);});});
+  })
+  .catch(function(){box.innerHTML='<div class="fl-empty">Stories could not load — try again later.</div>';});
+}
+function flResolveProfiles(uids){
+  var missing=uids.filter(function(u){return !(u in flState.profiles);});
+  if(!missing.length)return Promise.resolve();
+  var q=missing.map(function(u){return encodeURIComponent(u);}).join(',');
+  return flGet('public_profiles?select=user_id,slug,display&user_id=in.('+q+')').then(function(rows){(rows||[]).forEach(function(r){var d=r.display;flState.profiles[r.user_id]=(d&&d.name)||r.slug||'متداول';});missing.forEach(function(u){if(!(u in flState.profiles))flState.profiles[u]='متداول';});}).catch(function(){missing.forEach(function(u){if(!(u in flState.profiles))flState.profiles[u]='متداول';});});
+}
+function flLoadFeed(reset){
+  var feed=$('flFeed');if(!feed)return;
+  if(reset){flState.offset=0;flState.posts=[];feed.innerHTML='';}
+  var off=flState.offset;
+  flGet('community_posts?select=id,user_id,body,image_url,created_at&order=created_at.desc&limit=20&offset='+off)
+  .then(function(rows){
+    rows=rows||[];
+    if(reset&&!rows.length){feed.innerHTML='<div class="fl-empty">No posts yet — be the first to share.</div>';var lm=$('flLoadMore');if(lm)lm.hidden=true;return;}
+    flState.posts=flState.posts.concat(rows);
+    flState.offset+=rows.length;
+    var lm2=$('flLoadMore');if(lm2)lm2.hidden=rows.length<20;
+    var uids=[];rows.forEach(function(p){if(uids.indexOf(p.user_id)<0)uids.push(p.user_id);});
+    var ids=rows.map(function(p){return p.id;});
+    return flResolveProfiles(uids).then(function(){
+      var likeQ=ids.length?flGet('post_likes?select=post_id&post_id=in.('+ids.map(encodeURIComponent).join(',')+')').catch(function(){return [];}) : Promise.resolve([]);
+      var a=flAuth();
+      var myQ=(a&&ids.length)?flGet('post_likes?select=post_id&user_id=eq.'+encodeURIComponent(a.uid)+'&post_id=in.('+ids.map(encodeURIComponent).join(',')+')',a.token).catch(function(){return [];}) : Promise.resolve([]);
+      return Promise.all([likeQ,myQ]).then(function(res){
+        (res[0]||[]).forEach(function(l){flState.likes[l.post_id]=(flState.likes[l.post_id]||0)+1;});
+        (res[1]||[]).forEach(function(l){flState.myLikes[l.post_id]=true;});
+        rows.forEach(function(p){flRenderPost(p,false);});
+      });
+    });
+  })
+  .catch(function(){
+    if(reset)feed.innerHTML='<div class="fl-empty">Couldn\u2019t load the feed — try again later.</div>';
+  });
+}
+function flRenderPost(p,prepend){
+  var feed=$('flFeed');if(!feed)return;
+  var nm=flState.profiles[p.user_id]||'متداول';
+  var art=document.createElement('article');
+  art.className='fl-post';art.setAttribute('data-fl-post',p.id);
+  var imgHtml='';
+  if(p.image_url&&String(p.image_url).indexOf('https://')===0)imgHtml='<img src="'+esc(p.image_url)+'" alt="" loading="lazy" onerror="this.remove()">';
+  var liked=!!flState.myLikes[p.id],count=flState.likes[p.id]||0;
+  art.innerHTML='<div class="fl-post-head"><span class="fl-ava">'+esc(flInitial(nm))+'</span><div><b>'+esc(nm)+'</b><br><span>'+esc(flRel(p.created_at))+'</span></div></div><p>'+esc(p.body)+'</p>'+imgHtml+
+    '<div class="fl-actions"><button type="button" class="fl-like'+(liked?' liked':'')+'" data-fl-like="'+p.id+'">♡ <b>'+count+'</b></button><button type="button" data-fl-comments="'+p.id+'">💬 Comments</button><button type="button" data-fl-report="'+p.id+'">⚑ Report</button></div><div class="fl-comments" data-fl-comments-box="'+p.id+'" hidden></div>';
+  if(prepend&&feed.firstChild)feed.insertBefore(art,feed.firstChild);else feed.appendChild(art);
+  var likeBtn=art.querySelector('[data-fl-like]');
+  if(likeBtn)likeBtn.addEventListener('click',function(){flToggleLike(p.id,likeBtn);});
+  var cBtn=art.querySelector('[data-fl-comments]');
+  if(cBtn)cBtn.addEventListener('click',function(){flToggleComments(p.id);});
+  var rBtn=art.querySelector('[data-fl-report]');
+  if(rBtn)rBtn.addEventListener('click',function(){flReportForm(p.id,art);});
+}
+function flToggleLike(postId,btn){
+  var a=flAuth();
+  if(!a){flNotice('Sign in to like posts.');return;}
+  var liked=!!flState.myLikes[postId];
+  var bEl=btn.querySelector('b');
+  var cur=flState.likes[postId]||0;
+  function paint(){flState.likes[postId]=Math.max(0,cur);if(bEl)bEl.textContent=String(flState.likes[postId]);btn.classList.toggle('liked',!!flState.myLikes[postId]);}
+  if(liked){
+    flState.myLikes[postId]=false;cur=cur-1;paint();
+    flDel('post_likes?post_id=eq.'+encodeURIComponent(postId)+'&user_id=eq.'+encodeURIComponent(a.uid),a.token).catch(function(){flState.myLikes[postId]=true;cur=cur+1;paint();});
+  }else{
+    flState.myLikes[postId]=true;cur=cur+1;paint();
+    flInsert('post_likes',{post_id:postId,user_id:a.uid},a.token).catch(function(){flState.myLikes[postId]=false;cur=cur-1;paint();});
+  }
+}
+function flToggleComments(postId){
+  var box=document.querySelector('[data-fl-comments-box="'+postId+'"]');if(!box)return;
+  if(!box.hidden){box.hidden=true;return;}
+  box.hidden=false;
+  if(box.dataset.loaded)return;box.dataset.loaded='1';
+  box.innerHTML='<div class="fl-empty">Loading comments…</div>';
+  flGet('post_comments?select=id,user_id,body,created_at&post_id=eq.'+encodeURIComponent(postId)+'&order=created_at.asc')
+  .then(function(rows){
+    rows=rows||[];
+    var uids=[];rows.forEach(function(c){if(uids.indexOf(c.user_id)<0)uids.push(c.user_id);});
+    return flResolveProfiles(uids).then(function(){
+      var html='';
+      rows.forEach(function(c){var nm=flState.profiles[c.user_id]||'متداول';html+='<div class="fl-comment"><b>'+esc(nm)+'</b><span>'+esc(flRel(c.created_at))+'</span><div>'+esc(c.body)+'</div></div>';});
+      if(!rows.length)html='<div class="fl-empty">No comments yet.</div>';
+      var a=flAuth();
+      html+='<form class="fl-comment-form" data-fl-cform="'+postId+'"><input type="text" maxlength="1000" placeholder="'+(a?'Write a comment…':'Sign in to comment')+'" '+(a?'':'disabled')+' aria-label="Write a comment"><button type="submit" '+(a?'':'disabled')+'>Send</button></form>';
+      box.innerHTML=html;
+      var form=box.querySelector('[data-fl-cform]');
+      if(form)form.addEventListener('submit',function(ev){ev.preventDefault();var inp=form.querySelector('input');var v=inp.value.trim();if(!v)return;var au=flAuth();if(!au){flNotice('Sign in to comment.');return;}flInsert('post_comments',{post_id:postId,user_id:au.uid,body:v},au.token).then(function(created){var nm=flState.myName||flState.profiles[au.uid]||'متداول';var d=document.createElement('div');d.className='fl-comment';d.innerHTML='<b>'+esc(nm)+'</b><span>now</span><div>'+esc(v)+'</div>';form.parentNode.insertBefore(d,form);inp.value='';}).catch(function(){flNotice('Could not post the comment — try again.');});});
+    });
+  })
+  .catch(function(){delete box.dataset.loaded;box.innerHTML='<div class="fl-empty">Comments could not load.</div>';});
+}
+function flReportForm(postId,art){
+  if(art.querySelector('[data-fl-report-form]'))return;
+  var wrap=document.createElement('form');
+  wrap.className='fl-report-form';wrap.setAttribute('data-fl-report-form','1');
+  wrap.innerHTML='<input type="text" maxlength="500" placeholder="Why are you reporting this? (required)" aria-label="Report reason"><button type="submit">Send report</button>';
+  art.appendChild(wrap);
+  wrap.addEventListener('submit',function(ev){
+    ev.preventDefault();
+    var inp=wrap.querySelector('input');var reason=inp.value.trim();
+    if(!reason){inp.focus();return;}
+    var a=flAuth();
+    if(!a){flNotice('Sign in to report.');return;}
+    flInsert('reports',{reporter_id:a.uid,target_type:'post',target_id:postId,reason:reason},a.token).then(function(){wrap.remove();var th=document.createElement('div');th.className='fl-thanks';th.textContent='Thank you — your report was received.';art.appendChild(th);}).catch(function(){flNotice('Could not send the report — try again.');});
+  });
+}
+function flOpenStory(i){
+  var list=flState.stories;if(!list.length)return;
+  flState.storyIdx=i;
+  var v=$('flViewer');if(!v)return;
+  v.hidden=false;
+  flPaintStory();
+}
+function flPaintStory(){
+  var list=flState.stories,i=flState.storyIdx;
+  var s=list[i];if(!s)return;
+  var nm=flState.profiles[s.user_id]||'متداول';
+  $('flViewerAva').textContent=flInitial(nm);
+  $('flViewerName').textContent=nm+' · '+flRel(s.created_at);
+  var img=$('flViewerImg');
+  if(s.image_url&&String(s.image_url).indexOf('https://')===0){img.src=s.image_url;img.hidden=false;}else{img.hidden=true;img.removeAttribute('src');}
+  $('flViewerBody').textContent=s.body||'';
+  var segs=$('flViewerSegs');segs.innerHTML='';
+  list.forEach(function(_,j){var el=document.createElement('i');el.className=j<i?'done':(j===i?'now':'');segs.appendChild(el);});
+  $('flViewerPrev').disabled=i<=0;
+  $('flViewerNext').disabled=i>=list.length-1;
+}
+$('flViewerClose').addEventListener('click',function(){$('flViewer').hidden=true;});
+$('flViewerPrev').addEventListener('click',function(){if(flState.storyIdx>0){flState.storyIdx--;flPaintStory();}});
+$('flViewerNext').addEventListener('click',function(){if(flState.storyIdx<flState.stories.length-1){flState.storyIdx++;flPaintStory();}});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&$('flViewer')&&!$('flViewer').hidden)$('flViewer').hidden=true;});
+$('flLoadMore').addEventListener('click',function(){flLoadFeed(false);});
+$('flImgRemove').addEventListener('click',function(){flState.imgBlob=null;flState.imgName=null;var inp=$('flImgInput');if(inp)inp.value='';$('flImgPreview').hidden=true;});
+$('flImgInput').addEventListener('change',function(){
+  var f=this.files&&this.files[0];if(!f)return;
+  var img=new Image();
+  img.onload=function(){
+    try{
+      var max=1200,scale=Math.min(1,max/Math.max(img.width,img.height));
+      var w=Math.max(1,Math.round(img.width*scale)),h=Math.max(1,Math.round(img.height*scale));
+      var cv=document.createElement('canvas');cv.width=w;cv.height=h;
+      cv.getContext('2d').drawImage(img,0,0,w,h);
+      var q=0.82;
+      (function attempt(){
+        cv.toBlob(function(blob){
+          if(!blob){flSetStatus('Could not read that image.');return;}
+          if(blob.size>1048576&&q>0.4){q-=0.15;attempt();return;}
+          if(blob.size>1048576){flSetStatus('Image is too large (max 1MB after compression).');return;}
+          flState.imgBlob=blob;
+          flState.imgName='post-'+Date.now()+'.webp';
+          var pv=$('flImgPreviewImg');pv.src=URL.createObjectURL(blob);
+          $('flImgPreview').hidden=false;
+          flSetStatus('');
+        },'image/webp',q);
+      })();
+    }catch(e){flSetStatus('Could not read that image.');}
+    try{URL.revokeObjectURL(img.src);}catch(e){}
+  };
+  img.onerror=function(){flSetStatus('Could not read that image.');};
+  img.src=URL.createObjectURL(f);
+});
+function flSetStatus(msg){var el=$('flStatus');if(!el)return;if(msg){el.textContent=msg;el.hidden=false;}else{el.hidden=true;}}
+$('flPostBtn').addEventListener('click',function(){
+  var a=flAuth();
+  if(!a){flNotice('Sign in to post on The Floor.');return;}
+  var ta=$('flTextarea');var body=ta.value.trim();
+  if(!body){ta.focus();return;}
+  var btn=$('flPostBtn');btn.disabled=true;
+  function insertPost(imageUrl){
+    flInsert('community_posts',{user_id:a.uid,body:body,image_url:imageUrl||null,meta:{}},a.token).then(function(created){
+      var row=(created&&created[0])||{id:'tmp-'+Date.now(),user_id:a.uid,body:body,image_url:imageUrl||null,created_at:new Date().toISOString()};
+      if(flState.myName)flState.profiles[a.uid]=flState.myName;
+      var feed=$('flFeed');var empty=feed.querySelector('.fl-empty');if(empty)empty.remove();
+      flState.posts.unshift(row);flState.offset++;
+      flRenderPost(row,true);
+      ta.value='';
+      flState.imgBlob=null;flState.imgName=null;var inp=$('flImgInput');if(inp)inp.value='';$('flImgPreview').hidden=true;
+      flSetStatus('');btn.disabled=false;
+    }).catch(function(){flSetStatus('Could not publish — try again.');btn.disabled=false;});
+  }
+  if(flState.imgBlob&&flState.imgName){
+    var path=encodeURIComponent(a.uid)+'/'+encodeURIComponent(flState.imgName);
+    fetch(ST+'object/community-images/'+path,{method:'POST',headers:{'apikey':KEY,'Authorization':'Bearer '+a.token,'Content-Type':'image/webp'},body:flState.imgBlob}).then(function(r){
+      if(!r.ok)throw new Error('HTTP '+r.status);
+      insertPost(ST.replace('/storage/v1/','/storage/v1/object/public/')+'community-images/'+encodeURIComponent(a.uid)+'/'+encodeURIComponent(flState.imgName));
+    }).catch(function(){flSetStatus('Image upload failed — the community-images bucket may not exist yet. Remove the photo or try again.');btn.disabled=false;});
+  }else{insertPost(null);}
+});
+window.flFloor={show:flShow,isOpen:function(){var s=$('floor');return !!(s&&s.classList.contains('active'));},feedCount:function(){return document.querySelectorAll('#flFeed .fl-post').length;},storyCount:function(){return document.querySelectorAll('#flStories .fl-story').length;},dockCards:function(){return document.querySelectorAll('#flDock .fl-dockcard').length;}};
 })();
 </script>
 
