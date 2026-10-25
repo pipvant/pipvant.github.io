@@ -17440,7 +17440,7 @@ function capabilities(){say(T('I can:\n• Scan a trade screenshot and journal i
 function route(text){var q=(text||'').toLowerCase();if(/scan|صورة|سكان|screenshot|سكرين/.test(q)){openScan();return;}if(/pro|برو/.test(q)){showPro();return;}if(/خلفية|background|ثيم|theme/.test(q)){bgChips();return;}if(/payout|سحب|سحوبات|موثق/.test(q)){payoutTotal();return;}if(/firm|شركة|prop|cheapest|أرخص|split|تقسيم|\d+\s*k/.test(q)){findFirm(text);return;}if(/hello|hi|سلام|اهلا|مرحبا|help|مساعدة|شنو تقدر|what can/.test(q)){capabilities();return;}capabilities();}
 /* ---- trade scan: on-device OCR, rule parse, ask-missing, auto-journal ---- */
 var pendingTrade=null;
-function numAfter(text,re){var m=text.match(re);if(!m)return null;var v=parseFloat(String(m[1]).replace(/,/g,''));return isFinite(v)?v:null;}
+function numAfter(text,re){var m=text.match(re);if(!m)return null;var v=parseFloat(String(m[1]).replace(/[$,]/g,''));return isFinite(v)?v:null;}
 function parseTradeText(raw){
 var text=String(raw||'');var up=text.toUpperCase();
 var sym=null;var sm=up.match(/\b(US100|NAS100|NQ|US30|SPX500|XAUUSD|GOLD|EURUSD|GBPUSD|BTCUSD|ETHUSD|USTEC|DE40|AUDUSD|USDJPY|GBPJPY)\b/);if(sm)sym=sm[1];
@@ -17449,8 +17449,8 @@ var entry=numAfter(up,/ENTRY[^0-9]{0,14}([0-9][0-9,]*\.?[0-9]*)/)||numAfter(up,/
 var sl=numAfter(up,/STOP[\s\-]*LOSS[^0-9]{0,14}([0-9][0-9,]*\.?[0-9]*)/)||numAfter(up,/\bSL\b[^0-9]{0,14}([0-9][0-9,]*\.?[0-9]*)/);
 var tp=numAfter(up,/TAKE[\s\-]*PROFIT[^0-9]{0,14}([0-9][0-9,]*\.?[0-9]*)/)||numAfter(up,/\bTP\b[^0-9]{0,14}([0-9][0-9,]*\.?[0-9]*)/);
 var exit=numAfter(up,/(CLOSE|CLOSED|EXIT)[^0-9]{0,14}([0-9][0-9,]*\.?[0-9]*)/);
-var pnl=numAfter(up,/PROFIT[^0-9+\-]{0,12}([+\-]?\$?[0-9][0-9,]*\.?[0-9]*)/)||numAfter(up,/P\s*&\s*L[^0-9+\-]{0,12}([+\-]?\$?[0-9][0-9,]*\.?[0-9]*)/)||numAfter(up,/PNL[^0-9+\-]{0,12}([+\-]?\$?[0-9][0-9,]*\.?[0-9]*)/);
-if(pnl!==null)pnl=Number(String(pnl).replace('$',''));
+var upNoTp=up.replace(/TAKE[\s\-]*PROFIT[^0-9]{0,14}[0-9][0-9,]*\.?[0-9]*/g,' ');
+var pnl=numAfter(upNoTp,/PROFIT[^0-9+\-]{0,12}([+\-]?\$?[0-9][0-9,]*\.?[0-9]*)/)||numAfter(upNoTp,/P\s*&\s*L[^0-9+\-]{0,12}([+\-]?\$?[0-9][0-9,]*\.?[0-9]*)/)||numAfter(upNoTp,/PNL[^0-9+\-]{0,12}([+\-]?\$?[0-9][0-9,]*\.?[0-9]*)/);
 return{symbol:sym,direction:dir,entry:entry,sl:sl,tp:tp,exit:exit,pnl:pnl};
 }
 function missingOf(t){var m=[];if(!t.symbol)m.push(T('symbol','الرمز'));if(!t.direction)m.push(T('direction (long/short)','الاتجاه (شراء/بيع)'));if(t.entry===null||t.entry===undefined)m.push(T('entry price','ثمن الدخول'));return m;}
