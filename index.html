@@ -17663,10 +17663,10 @@ window.pipAI._charPlaying=function(){var v=document.getElementById('pipNinjaChar
     <div class="fl-composer" id="flComposer">
       <div class="fl-comp-head"><span class="fl-ava" id="flMyAva">؟</span><strong>Share something with the Floor…</strong></div>
       <div class="fl2-types" role="group" aria-label="Post type">
-        <button type="button" class="fl2-type on" data-fl2-type="post">📝 Post</button>
-        <button type="button" class="fl2-type" data-fl2-type="question">❓ Question</button>
-        <button type="button" class="fl2-type" data-fl2-type="trade">📈 Trade idea</button>
-        <button type="button" class="fl2-type" data-fl2-type="mistake">📉 Mistake lesson</button>
+        <button type="button" class="fl2-type on" data-fl2-type="post">Post</button>
+        <button type="button" class="fl2-type" data-fl2-type="question">Question</button>
+        <button type="button" class="fl2-type" data-fl2-type="trade">Trade idea</button>
+        <button type="button" class="fl2-type" data-fl2-type="mistake">Mistake lesson</button>
       </div>
       <textarea id="flTextarea" rows="3" maxlength="2000" placeholder="Share something with the Floor…" aria-label="Write a post"></textarea>
       <div class="fl2-trade" id="fl2TradeFields" hidden>
@@ -17704,7 +17704,7 @@ window.pipAI._charPlaying=function(){var v=document.getElementById('pipNinjaChar
     <div class="fl-viewer-nav"><button type="button" id="flViewerPrev">← Previous</button><button type="button" id="flViewerNext">Next →</button></div>
   </div>
 </section>
-<button id="floorFab" type="button" aria-label="Open The Floor"><span aria-hidden="true">✦</span> Floor</button>
+<button id="floorFab" type="button" aria-label="Open The Floor">Floor</button>
 <!-- The Floor — Round 2: friends + messages + profile-visit + trade ideas.
      Same additive-only rule as round 1: these sections, their CSS and
      their script live inside this block. Nothing else in the site is
@@ -17766,9 +17766,9 @@ window.pipAI._charPlaying=function(){var v=document.getElementById('pipNinjaChar
       <div class="fl2-pbadges" id="fl2PBadges"></div>
       <p class="fl2-pbio" id="fl2PBio" hidden></p>
       <div class="fl2-pactions"><button type="button" class="fl2-goldbtn wide" id="fl2PMsgBtn">✉ Message</button><button type="button" class="fl2-ghostbtn wide" id="fl2PAddBtn">+ Add friend</button><button type="button" class="fl2-ghostbtn" id="fl2PDotBtn" aria-label="More actions">⋯</button></div>
-      <div class="fl2-pmenu" id="fl2PMenu" hidden><button type="button" id="fl2PAskBtn">❓ Ask me a question</button><button type="button" id="fl2PBlockBtn">⛔ Block</button><button type="button" id="fl2PReportBtn">⚑ Report profile</button></div>
+      <div class="fl2-pmenu" id="fl2PMenu" hidden><button type="button" id="fl2PAskBtn">Ask me a question</button><button type="button" id="fl2PBlockBtn">Block</button><button type="button" id="fl2PReportBtn">Report profile</button></div>
       <div class="fl2-pstats" id="fl2PStats"></div>
-      <div class="fl2-sig"><div class="fl2-sigt">FROM THE JOURNAL — PUBLIC SIGNALS ONLY</div><div id="fl2PSig"></div><p class="fl2-note">🔒 Private journal stays private — individual trades, notes and P&amp;L never show here. Only signals this trader published on their public profile appear.</p></div>
+      <div class="fl2-sig"><div class="fl2-sigt">FROM THE JOURNAL — PUBLIC SIGNALS ONLY</div><div id="fl2PSig"></div><p class="fl2-note">Private journal stays private — individual trades, notes and P&amp;L never show here. Only signals this trader published on their public profile appear.</p></div>
       <div class="fl2-ptabs"><button type="button" class="fl2-ptab on" data-fl2-ptab="posts">Posts</button><button type="button" class="fl2-ptab" data-fl2-ptab="media">Media</button><button type="button" class="fl2-ptab" data-fl2-ptab="about">About</button></div>
       <div id="fl2PPosts"></div>
       <div id="fl2PMedia" hidden></div>
@@ -18135,7 +18135,7 @@ function flRenderPost(p,prepend){
   var authorHtml=anon?('<b>'+esc(dispName)+'</b>'):('<button type="button" class="fl-author" data-fl-author="'+p.user_id+'"><b>'+esc(dispName)+'</b></button>');
   var metaHtml=(typeof fl2MetaHtml==='function')?fl2MetaHtml(p):'';
   art.innerHTML='<div class="fl-post-head"><span class="fl-ava">'+esc(flInitial(dispName))+'</span><div>'+authorHtml+'<br><span>'+esc(flRel(p.created_at))+'</span></div></div><p>'+esc(p.body)+'</p>'+metaHtml+imgHtml+
-    '<div class="fl-actions"><button type="button" class="fl-like'+(liked?' liked':'')+'" data-fl-like="'+p.id+'">♡ <b>'+count+'</b></button><button type="button" data-fl-comments="'+p.id+'">💬 Comments</button><button type="button" data-fl-report="'+p.id+'">⚑ Report</button></div><div class="fl-comments" data-fl-comments-box="'+p.id+'" hidden></div>';
+    '<div class="fl-actions"><button type="button" class="fl-like'+(liked?' liked':'')+'" data-fl-like="'+p.id+'">♡ <b>'+count+'</b></button><button type="button" data-fl-comments="'+p.id+'">Comments</button><button type="button" data-fl-report="'+p.id+'">Report</button></div><div class="fl-comments" data-fl-comments-box="'+p.id+'" hidden></div>';
   var auBtn=art.querySelector('[data-fl-author]');
   if(auBtn)auBtn.addEventListener('click',function(){flShowProfile(p.user_id);});
   if(prepend&&feed.firstChild)feed.insertBefore(art,feed.firstChild);else feed.appendChild(art);
@@ -18408,10 +18408,10 @@ function fl2MetaHtml(p){
     var dir=m.direction==='short'?'Short ↓':'Long ↑';
     var cls=m.direction==='short'?'short':'long';
     var rr=(m.rr!=null&&isFinite(Number(m.rr)))?('Risk : Reward 1 : '+Number(m.rr).toFixed(1)):'';
-    return '<div class="fl2-tradecard"><div class="fl2-thead"><span class="fl2-tpair">📈 '+esc(String(m.pair||''))+'</span><span class="fl2-tdir '+cls+'">'+dir+'</span></div><div class="fl2-tgrid"><div>Entry<b>'+esc(String(m.entry))+'</b></div><div>Stop<b>'+esc(String(m.stop))+'</b></div><div>Target<b>'+esc(String(m.target))+'</b></div></div>'+(rr?('<div class="fl2-trr">'+rr+'</div>'):'')+'</div>';
+    return '<div class="fl2-tradecard"><div class="fl2-thead"><span class="fl2-tpair">'+esc(String(m.pair||''))+'</span><span class="fl2-tdir '+cls+'">'+dir+'</span></div><div class="fl2-tgrid"><div>Entry<b>'+esc(String(m.entry))+'</b></div><div>Stop<b>'+esc(String(m.stop))+'</b></div><div>Target<b>'+esc(String(m.target))+'</b></div></div>'+(rr?('<div class="fl2-trr">'+rr+'</div>'):'')+'</div>';
   }
-  if(m.type==='question')return '<span class="fl2-typetag">❓ Question — ask the community</span>';
-  if(m.type==='mistake')return '<span class="fl2-typetag">📉 Mistake lesson</span>';
+  if(m.type==='question')return '<span class="fl2-typetag">Question — ask the community</span>';
+  if(m.type==='mistake')return '<span class="fl2-typetag">Mistake lesson</span>';
   return '';
 }
 /* ---------- home side panel: who is on the Floor now ---------- */
@@ -18776,7 +18776,7 @@ function fl2RenderChatDetails(){
   }else{
     var pid=conv.partnerId;
     var nm=pid?(flState.profiles[pid]||'متداول'):'Chat';
-    box.innerHTML='<div class="fl2-drow">Private chat with <b>'+esc(nm)+'</b> — only you two can read this.</div><div class="fl2-drow"><button type="button" class="fl2-ghostbtn" id="fl2BlockBtn">⛔ Block this trader</button></div>';
+    box.innerHTML='<div class="fl2-drow">Private chat with <b>'+esc(nm)+'</b> — only you two can read this.</div><div class="fl2-drow"><button type="button" class="fl2-ghostbtn" id="fl2BlockBtn">Block this trader</button></div>';
     var bb=$('fl2BlockBtn');if(bb)bb.addEventListener('click',fl2BlockPartner);
   }
 }
@@ -19028,7 +19028,7 @@ function flShowProfile(uid){
     if(d&&Array.isArray(d.certificates))d.certificates.forEach(function(c){var n=String(c);if(certNames.indexOf(n)<0)certNames.push(n);});
     if(res[4]!==null)res[4].forEach(function(c){var n=fl2CertName(c.mission);if(certNames.indexOf(n)<0)certNames.push(n);});
     stats.push({n:certNames.length,l:'Certificates'});
-    if(d&&typeof d.streak==='number')stats.push({n:d.streak+'🔥',l:'Day streak'});
+    if(d&&typeof d.streak==='number')stats.push({n:d.streak,l:'Day streak'});
     $('fl2PStats').innerHTML=stats.map(function(s){return '<div><b>'+esc(String(s.n))+'</b><span>'+s.l+'</span></div>';}).join('');
     var sig=[];
     if(d&&typeof d.closedTrades==='number')sig.push({k:'Level',v:fl2LevelName(d.closedTrades)});
