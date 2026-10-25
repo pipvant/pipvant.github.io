@@ -17315,8 +17315,7 @@ document.querySelectorAll('[data-language-choice]').forEach(function(b){
 <button id="pipFab" type="button" aria-label="Pip — PIPVANT AI assistant" aria-expanded="false" title="Pip — PIPVANT AI" hidden><span>Pip</span><span class="pip-spark" aria-hidden="true">✦</span><span class="pip-spark2" aria-hidden="true">✧</span></button>
 <div id="pipPanel" hidden role="dialog" aria-label="Pip — PIPVANT AI">
   <canvas id="pipNinjaCanvas" aria-hidden="true"></canvas>
-  <img id="pipNinjaChar" src="assets/pip-scene-ninja.webp" alt="" aria-hidden="true">
-  <img id="pipNinjaBlink" src="assets/pip-ninja-blink.webp" alt="" aria-hidden="true">
+  <video id="pipNinjaChar" src="assets/pip-ninja-anim.mp4" poster="assets/pip-scene-ninja.webp" muted loop playsinline preload="none" aria-hidden="true"></video>
   <div id="pipNinjaVeil" aria-hidden="true"></div>
   <canvas id="pipEmberCanvas" aria-hidden="true"></canvas>
   <div id="pipGoldGlow" aria-hidden="true"></div>
@@ -17413,7 +17412,7 @@ document.querySelectorAll('[data-language-choice]').forEach(function(b){
 #pipFab{right:28px;bottom:28px}
 #pipPanel{inset:auto;left:auto;right:28px;bottom:100px;width:384px;height:auto;max-height:min(600px,76vh);max-height:min(600px,76dvh);border:1px solid color-mix(in srgb,var(--gold) 45%,var(--line));border-radius:20px}
 }
-@media (prefers-reduced-motion:reduce){#pipFab:after,#pipFab:before,#pipFab,#pipPanel,#pipPanel:before,#pipFab .pip-spark,#pipFab .pip-spark2,#pipPanel #pipNinjaChar,#pipPanel #pipNinjaBlink,.pip-typing i{animation:none}}
+@media (prefers-reduced-motion:reduce){#pipFab:after,#pipFab:before,#pipFab,#pipPanel,#pipPanel:before,#pipFab .pip-spark,#pipFab .pip-spark2,#pipPanel #pipNinjaChar,.pip-typing i{animation:none}}
 html[data-theme="platinum"] #pipPanel,html[data-theme="light"] #pipPanel{box-shadow:0 26px 60px rgba(10,22,40,.22)}
 
 
@@ -17426,13 +17425,11 @@ html[data-theme="platinum"] #pipPanel,html[data-theme="light"] #pipPanel{box-sha
 #pipPanel{background:transparent}
 #pipNinjaCanvas{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;border-radius:inherit}
 #pipPanel #pipNinjaChar{position:absolute;right:0;bottom:0;height:100%;width:100%;max-width:none;object-fit:cover;object-position:center 35%;z-index:1;pointer-events:none;opacity:.95;-webkit-mask-image:linear-gradient(to top,black 82%,transparent 98%);mask-image:linear-gradient(to top,black 82%,transparent 98%);filter:drop-shadow(0 0 26px rgba(212,175,55,.28));animation:pipCharMajestic 16s ease-in-out infinite}
-#pipPanel #pipNinjaBlink{position:absolute;right:0;bottom:0;height:100%;width:100%;max-width:none;object-fit:cover;object-position:center 35%;z-index:1;pointer-events:none;opacity:0;-webkit-mask-image:linear-gradient(to top,black 82%,transparent 98%);mask-image:linear-gradient(to top,black 82%,transparent 98%);filter:drop-shadow(0 0 26px rgba(212,175,55,.28));animation:pipCharMajestic 16s ease-in-out infinite,pipBlink 4.8s infinite}
 #pipPanel #pipNinjaVeil{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(10,22,40,.15),rgba(10,22,40,.15))}
 #pipPanel #pipEmberCanvas{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
 #pipPanel #pipGoldGlow{position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(120% 60% at 50% 0%,rgba(212,175,55,.20),transparent 60%),radial-gradient(80% 50% at 0% 100%,rgba(212,175,55,.12),transparent 60%),radial-gradient(80% 50% at 100% 100%,rgba(212,175,55,.12),transparent 60%)}
 #pipPanel .pip-msg.pip{background:rgba(27,44,74,.55)}
 @keyframes pipCharMajestic{0%,100%{transform:translateY(0) scale(1) rotate(0deg)}25%{transform:translateY(-4px) scale(1.02) rotate(.4deg) translateX(2px)}50%{transform:translateY(-8px) scale(1.045) rotate(0deg)}75%{transform:translateY(-4px) scale(1.02) rotate(-.4deg) translateX(-2px)}}
-@keyframes pipBlink{0%,92%,100%{opacity:0}93%,96%{opacity:1}}
 
 #pipPanel>*:not(canvas){position:relative;z-index:1}
 
@@ -17498,8 +17495,8 @@ function pipEmberStop(){pipEmber.running=false;if(pipEmber.raf)cancelAnimationFr
 function pipNinjaStart(){if(pipNinja.running)return;pipEmberStart();if(!pipNinja.cv&&!pipNinjaSetup())return;pipNinjaSize();if(!pipNinja.cv.width)return;pipNinjaSeed();pipNinja.running=true;if(pipNinja.reduced){pipNinjaDraw();pipNinja.running=false;return;}if(document.hidden){pipNinja.running=false;return;}pipNinjaFrame();}
 function pipNinjaStop(){pipNinja.running=false;if(pipNinja.raf)cancelAnimationFrame(pipNinja.raf);pipNinja.raf=0;pipEmberStop();}
 window.addEventListener('resize',function(){if(pipNinja.running){pipNinjaSize();pipNinjaSeed();}if(pipEmber.running){pipEmberSize();pipEmberSeed();}});
-function openPanel(){panel.hidden=false;pipNinjaStart();fab.setAttribute('aria-expanded','true');if(!openPanel.done){openPanel.done=true;greet();}setTimeout(function(){try{input.focus();}catch(e){}},80);}
-function closePanel(){pipNinjaStop();pipLangOverride=null;stopVoice();closeSettings();panel.hidden=true;fab.setAttribute('aria-expanded','false');}
+function openPanel(){panel.hidden=false;pipNinjaStart();var __cv=document.getElementById('pipNinjaChar');if(__cv&&__cv.play&&!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)){__cv.play().catch(function(){});}fab.setAttribute('aria-expanded','true');if(!openPanel.done){openPanel.done=true;greet();}setTimeout(function(){try{input.focus();}catch(e){}},80);}
+function closePanel(){pipNinjaStop();var __cv=document.getElementById('pipNinjaChar');if(__cv&&__cv.pause)__cv.pause();pipLangOverride=null;stopVoice();closeSettings();panel.hidden=true;fab.setAttribute('aria-expanded','false');}
 function navTo(screen){closePanel();var b=document.querySelector('[data-screen="'+screen+'"]');if(b){b.click();return true;}return false;}
 function proPriceLine(parent){var line=el('div');var st=document.createElement('s');st.textContent='$20';line.appendChild(st);line.appendChild(el('span','pip-free-badge',T('FREE now','مجاني دابا')));parent.appendChild(line);}
 function showPro(){var card=el('div','pip-pro');card.appendChild(el('div',null,T('Pip Pro — the full power of Pip.','Pip Pro — القوة الكاملة ديال Pip.')));proPriceLine(card);var ul=document.createElement('ul');[T('Unlimited trade scans','سكان بلا حدود'),T('Deep ICT reading of your trades (session, sweep, FVG)','قراءة ICT معمقة لصفقاتك (سيشن، سيولة، FVG)'),T('Priority answers, no daily cap','أجوبة بأولوية، بلا سقف يومي')].forEach(function(f){var li=document.createElement('li');li.textContent=f;ul.appendChild(li);});card.appendChild(ul);if(LAUNCH_FREE){card.appendChild(el('div',null,T('Launch offer: Pro is free for everyone right now. $20 applies later.','عرض الإطلاق: Pro مجاني للجميع دابا. $20 غادي يتطبق من بعد.')));}else{card.appendChild(el('div',null,T('Free plan: 3 scans a day + firm finder + backgrounds.','الخطة المجانية: 3 سكان فالنهار + البحث على الشركات + الخلفيات.')));}msgs.appendChild(card);scrollDown();var row=el('div','pip-row');var b=el('button','pip-btn gold',T('Got it','فهمت'));b.type='button';b.addEventListener('click',function(){defaultChips();});row.appendChild(b);msgs.appendChild(row);scrollDown();}
@@ -17644,6 +17641,7 @@ document.addEventListener('click',function(e){try{var b=e.target&&e.target.close
 window.pipAI={version:'1.1',parseTradeText:parseTradeText,missingOf:missingOf,scansLeft:scansLeft,isPro:isPro,setPro:function(v){try{localStorage.setItem('pipvant_pip_pro',v?'1':'0');}catch(e){}refreshTier();},_setLaunchFree:function(v){LAUNCH_FREE=!!v;refreshTier();}};
 window.pipAI._ninjaRunning=function(){return pipNinja.running;};
 window.pipAI._emberRunning=function(){return pipEmber.running;};
+window.pipAI._charPlaying=function(){var v=document.getElementById('pipNinjaChar');return !!v&&!v.paused&&v.readyState>=2;};
 })();
 </script>
 
