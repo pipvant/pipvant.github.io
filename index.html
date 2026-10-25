@@ -17311,5 +17311,179 @@ document.querySelectorAll('[data-language-choice]').forEach(function(b){
 </script>
 <!-- PIPVANT Company OS: privacy-friendly analytics (no cookies, page+referrer only) -->
 <script src="assets/pipv-os.js" defer></script>
+<!-- PIPVANT AI (Pip) — floating assistant layer. ADDITIVE ONLY: no existing screen, nav item, or style is touched. -->
+<button id="pipFab" type="button" aria-label="Pip — PIPVANT AI assistant" aria-expanded="false" title="Pip — PIPVANT AI">P</button>
+<div id="pipPanel" hidden role="dialog" aria-label="Pip — PIPVANT AI">
+  <div class="pip-head">
+    <span class="pip-orb" aria-hidden="true">P</span>
+    <span class="pip-titles"><strong>Pip</strong><small>PIPVANT AI · Private scans</small></span>
+    <span class="pip-tier" id="pipTier">FREE</span>
+    <button id="pipClose" type="button" aria-label="Close Pip">✕</button>
+  </div>
+  <div class="pip-msgs" id="pipMsgs" aria-live="polite"></div>
+  <div class="pip-chips" id="pipChips"></div>
+  <div class="pip-input-row">
+    <input id="pipInput" type="text" autocomplete="off" placeholder="Ask Pip… or scan a trade" aria-label="Message Pip">
+    <button id="pipScanBtn" type="button" aria-label="Scan a trade screenshot" title="Scan a trade">◉</button>
+    <button id="pipSend" type="button" aria-label="Send">➤</button>
+  </div>
+  <input id="pipFile" type="file" accept="image/*" hidden>
+</div>
+<style>
+#pipFab{position:fixed;z-index:90;right:12px;bottom:calc(86px + env(safe-area-inset-bottom));width:56px;height:56px;border-radius:50%;border:1px solid rgba(212,175,55,.7);background:radial-gradient(circle at 30% 28%,#F7DC82,#D4AF37 55%,#8A6D2B);color:#0A1628;font:800 24px/1 "Space Grotesk","IBM Plex Sans Arabic",sans-serif;box-shadow:0 14px 34px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.55);cursor:pointer;padding:0}
+#pipFab:after{content:"";position:absolute;inset:-6px;border-radius:50%;border:2px solid rgba(212,175,55,.55);animation:pipRing 2.6s ease-out infinite;pointer-events:none}
+#pipFab[aria-expanded="true"]:after{animation:none;opacity:0}
+@keyframes pipRing{0%{transform:scale(.9);opacity:.9}70%{transform:scale(1.25);opacity:0}100%{transform:scale(1.25);opacity:0}}
+#pipPanel{position:fixed;z-index:91;left:12px;right:12px;bottom:calc(150px + env(safe-area-inset-bottom));max-height:64vh;display:flex;flex-direction:column;overflow:hidden;background:color-mix(in srgb,var(--surface) 94%,transparent);border:1px solid color-mix(in srgb,var(--gold) 45%,var(--line));border-radius:20px;box-shadow:0 26px 60px rgba(0,0,0,.52);backdrop-filter:blur(20px) saturate(130%);animation:pipUp 220ms ease-out}
+#pipPanel[hidden]{display:none!important}
+@keyframes pipUp{from{transform:translateY(14px);opacity:0}to{transform:none;opacity:1}}
+.pip-head{display:flex;align-items:center;gap:10px;padding:12px 14px;background:linear-gradient(120deg,rgba(212,175,55,.28),rgba(212,175,55,.05) 55%,transparent);border-bottom:1px solid var(--line)}
+.pip-orb{width:34px;height:34px;flex:0 0 auto;display:grid;place-items:center;border-radius:50%;background:radial-gradient(circle at 30% 28%,#F7DC82,#D4AF37 55%,#8A6D2B);color:#0A1628;font:800 17px/1 "Space Grotesk",sans-serif;box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
+.pip-titles{display:flex;flex-direction:column;flex:1;min-width:0;line-height:1.3}
+.pip-titles strong{font-size:15px}
+.pip-titles small{font-size:10px;color:var(--muted)}
+.pip-tier{font:800 9px/1 "IBM Plex Mono",monospace;letter-spacing:.12em;padding:5px 8px;border-radius:999px;border:1px solid rgba(212,175,55,.6);color:var(--gold)}
+.pip-tier.pro{background:linear-gradient(120deg,#F7DC82,#D4AF37);color:#0A1628;border-color:transparent}
+#pipClose{width:32px;height:32px;border:1px solid var(--line);border-radius:9px;background:var(--surface);color:var(--text);cursor:pointer;font-size:13px}
+.pip-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;min-height:180px}
+.pip-msg{max-width:86%;padding:9px 12px;border-radius:14px;font-size:13px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
+.pip-msg.pip{align-self:flex-start;background:var(--raised);border:1px solid var(--line);border-bottom-left-radius:4px}
+.pip-msg.user{align-self:flex-end;background:rgba(212,175,55,.16);border:1px solid rgba(212,175,55,.45);border-bottom-right-radius:4px}
+.pip-msg .pip-firm{font-weight:700}
+.pip-msg .pip-num{font-family:"IBM Plex Mono",monospace}
+.pip-trade{align-self:flex-start;width:100%;max-width:100%;border:1px solid rgba(212,175,55,.55);border-radius:14px;padding:11px 13px;background:linear-gradient(160deg,rgba(212,175,55,.12),transparent 60%),var(--raised);font-size:12.5px;line-height:1.7}
+.pip-trade b{color:var(--gold)}
+.pip-trade .pip-miss{color:var(--danger,#ef4444);font-weight:700}
+.pip-row{display:flex;gap:8px;margin-top:9px;flex-wrap:wrap}
+.pip-btn{min-height:34px;padding:0 13px;border-radius:999px;border:1px solid rgba(212,175,55,.55);background:transparent;color:var(--text);font-size:11.5px;font-weight:700;cursor:pointer}
+.pip-btn.gold{background:linear-gradient(120deg,#F7DC82,#D4AF37);color:#0A1628;border-color:transparent}
+.pip-btn.danger{border-color:rgba(239,68,68,.55);color:#ef4444}
+.pip-chips{display:flex;flex-wrap:wrap;gap:6px;padding:0 12px 10px}
+.pip-chip{min-height:32px;padding:0 12px;border-radius:999px;border:1px solid rgba(212,175,55,.5);background:transparent;color:var(--text);font-size:11.5px;font-weight:700;cursor:pointer}
+.pip-input-row{display:flex;gap:8px;padding:10px 12px;border-top:1px solid var(--line);background:color-mix(in srgb,var(--surface) 96%,transparent)}
+#pipInput{flex:1;min-width:0;height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--line);background:var(--sunken);color:var(--text);font-size:13px;outline:none}
+#pipInput:focus{border-color:var(--gold)}
+#pipScanBtn,#pipSend{width:40px;height:40px;flex:0 0 auto;border-radius:50%;border:1px solid rgba(212,175,55,.6);background:rgba(212,175,55,.14);color:var(--gold);font-size:16px;cursor:pointer}
+#pipSend{background:linear-gradient(120deg,#F7DC82,#D4AF37);color:#0A1628;border-color:transparent}
+.pip-typing{align-self:flex-start;display:flex;gap:4px;padding:10px 13px;border-radius:14px;background:var(--raised);border:1px solid var(--line)}
+.pip-typing i{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pipBlink 1s infinite}
+.pip-typing i:nth-child(2){animation-delay:.15s}.pip-typing i:nth-child(3){animation-delay:.3s}
+@keyframes pipBlink{0%,100%{opacity:.25}50%{opacity:1}}
+.pip-pro{border:1px solid rgba(212,175,55,.65);border-radius:14px;padding:13px;background:linear-gradient(150deg,rgba(212,175,55,.2),rgba(212,175,55,.04) 55%),var(--raised);font-size:12.5px;line-height:1.7}
+.pip-pro b{color:var(--gold)}
+@media (min-width:1024px){
+#pipFab{right:28px;bottom:28px}
+#pipPanel{left:auto;right:28px;bottom:100px;width:384px;max-height:min(600px,76vh)}
+}
+@media (prefers-reduced-motion:reduce){#pipFab:after,.pip-typing i{animation:none}}
+html[data-theme="platinum"] #pipPanel,html[data-theme="light"] #pipPanel{box-shadow:0 26px 60px rgba(10,22,40,.22)}
+</style>
+<script>
+(function(){
+"use strict";
+var SB='https://acpkzavmifjwnskiaret.supabase.co/rest/v1/';
+var KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFjcGt6YXZtaWZqd25za2lhcmV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyMDk1ODcsImV4cCI6MjEwNjc4NTU4N30.9-k-DoB6467EXTPKrvWUi-LRDPbSSC30f6BgrZezo2A';
+var FREE_LIMIT=3;
+var fab=document.getElementById('pipFab'),panel=document.getElementById('pipPanel'),msgs=document.getElementById('pipMsgs'),
+    chipsEl=document.getElementById('pipChips'),input=document.getElementById('pipInput'),
+    sendBtn=document.getElementById('pipSend'),scanBtn=document.getElementById('pipScanBtn'),
+    fileEl=document.getElementById('pipFile'),closeBtn=document.getElementById('pipClose'),tierEl=document.getElementById('pipTier');
+if(!fab||!panel)return;
+function lang(){try{if(typeof window.pvLang==='function'){var l=window.pvLang();if(l&&l.indexOf('ar')===0)return 'ar';}}catch(e){}return 'en';}
+function T(en,ar){return lang()==='ar'?ar:en;}
+function isPro(){try{return localStorage.getItem('pipvant_pip_pro')==='1';}catch(e){return false;}}
+function refreshTier(){if(!tierEl)return;tierEl.textContent=isPro()?'PRO':'FREE';tierEl.className='pip-tier'+(isPro()?' pro':'');}
+function todayKey(){var d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
+function scansUsed(){try{var j=JSON.parse(localStorage.getItem('pipvant_pip_scans')||'null');if(j&&j.d===todayKey())return j.n||0;}catch(e){}return 0;}
+function scansLeft(){return isPro()?Infinity:(FREE_LIMIT-scansUsed());}
+function bumpScan(){if(isPro())return;try{localStorage.setItem('pipvant_pip_scans',JSON.stringify({d:todayKey(),n:scansUsed()+1}));}catch(e){}}
+function auth(){try{var raw=localStorage.getItem('sb-acpkzavmifjwnskiaret-auth-token');if(!raw)return null;var j=JSON.parse(raw);if(j&&j.access_token&&j.user&&j.user.id)return{token:j.access_token,uid:j.user.id};}catch(e){}return null;}
+function get(path,token){var h={'apikey':KEY,'Authorization':'Bearer '+(token||KEY)};return fetch(SB+path,{headers:h}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();});}
+function postTrade(body,token){return fetch(SB+'trades',{method:'POST',headers:{'apikey':KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json','Prefer':'return=representation'},body:JSON.stringify(body)}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();});}
+function delTrade(id,token,uid){return fetch(SB+'trades?id=eq.'+encodeURIComponent(id)+'&user_id=eq.'+encodeURIComponent(uid),{method:'DELETE',headers:{'apikey':KEY,'Authorization':'Bearer '+token}});}
+function el(tag,cls,txt){var n=document.createElement(tag);if(cls)n.className=cls;if(txt!==undefined&&txt!==null)n.textContent=txt;return n;}
+function scrollDown(){try{msgs.scrollTop=msgs.scrollHeight;}catch(e){}}
+function say(text,who){var m=el('div','pip-msg '+(who||'pip'),text);msgs.appendChild(m);scrollDown();return m;}
+function typing(){var t=el('div','pip-typing');t.appendChild(el('i'));t.appendChild(el('i'));t.appendChild(el('i'));msgs.appendChild(t);scrollDown();return t;}
+function setChips(list){chipsEl.innerHTML='';(list||[]).forEach(function(c){var b=el('button','pip-chip',c.label);b.type='button';b.addEventListener('click',c.onClick);chipsEl.appendChild(b);});}
+function defaultChips(){setChips([
+{label:T('Scan a trade','امسح صفقة'),onClick:openScan},
+{label:T('Find a firm','لقا ليا شركة'),onClick:function(){say(T('Find a firm','لقا ليا شركة'),'user');findFirm('');}},
+{label:T('Change background','بدّل الخلفية'),onClick:bgChips},
+{label:T('Pip Pro','Pip Pro'),onClick:showPro}
+]);}
+function money(n){if(n===null||n===undefined||!isFinite(Number(n)))return '—';return '$'+Number(n).toLocaleString('en-US');}
+function fmtSize(n){n=Number(n);if(!isFinite(n))return '—';return n>=1000?(n/1000)+'k':String(n);}
+function openPanel(){panel.hidden=false;fab.setAttribute('aria-expanded','true');if(!openPanel.done){openPanel.done=true;say(T('Hey, I am Pip — the PIPVANT AI assistant.\n\nI can:\n• Scan a trade screenshot and journal it for you\n• Find a prop firm from our real catalogue\n• Change your background\n\nScans are private: they are read on your device and never uploaded.','سلام، أنا Pip — مساعد PIPVANT الذكي.\n\nنقدر:\n• نقرا صورة صفقة ونسجلها ليك فالجورنال\n• نلقا ليك شركة تمويل من الكتالوغ الحقيقي ديالنا\n• نبدل ليك الخلفية\n\nالسكان خاص: كيتقرا فجهازك وما كيتصيفطش لشي سيرفر.'),'pip');defaultChips();}setTimeout(function(){try{input.focus();}catch(e){}},80);}
+function closePanel(){panel.hidden=true;fab.setAttribute('aria-expanded','false');}
+function navTo(screen){closePanel();var b=document.querySelector('[data-screen="'+screen+'"]');if(b){b.click();return true;}return false;}
+function showPro(){var card=el('div','pip-pro');var h=el('div');h.innerHTML='';card.appendChild(el('div',null,T('Pip Pro — the full power of Pip.','Pip Pro — القوة الكاملة ديال Pip.')));var ul=document.createElement('ul');[T('Unlimited trade scans','سكان بلا حدود'),T('Deep ICT reading of your trades (session, sweep, FVG)','قراءة ICT معمقة لصفقاتك (سيشن، سيولة، FVG)'),T('Priority answers, no daily cap','أجوبة بأولوية، بلا سقف يومي')].forEach(function(f){var li=document.createElement('li');li.textContent=f;ul.appendChild(li);});card.appendChild(ul);card.appendChild(el('div',null,T('Free plan: 3 scans a day + firm finder + backgrounds.','الخطة المجانية: 3 سكان فالنهار + البحث على الشركات + الخلفيات.')));card.appendChild(el('div',null,T('Pro is coming soon — pricing will be announced here. No payment is taken today.','Pro جاي قريب — الثمن غادي يتعلن هنا. اليوم ما كيتخلص والو.')));msgs.appendChild(card);scrollDown();var row=el('div','pip-row');var b=el('button','pip-btn gold',T('Got it','فهمت'));b.type='button';b.addEventListener('click',function(){defaultChips();});row.appendChild(b);msgs.appendChild(row);scrollDown();}
+function bgChips(){say(T('Pick a background — I will apply it to your account right away:','ختار خلفية — غادي نطبقها فحسابك دابا:'),'pip');setChips([
+{label:'Platinum Mist',onClick:function(){applyBg('mist-platinum','Platinum Mist');}},
+{label:'Platinum Petals',onClick:function(){applyBg('petal-platinum','Platinum Petals');}},
+{label:'Gold Ribbon',onClick:function(){applyBg('ribbon-gold','Gold Ribbon');}},
+{label:'Ninja Night',onClick:function(){applyBg('ninja','Ninja Night');}}
+]);}
+function applyBg(key,name){if(typeof window.pvBgApply==='function'){try{window.pvBgApply(key);say(T('Done — background set to '+name+'.','صافي — الخلفية ولات '+name+'.'),'pip');}catch(e){say(T('I could not change it right now. Try from Settings → Backgrounds.','ما قدرتش نبدلها دابا. جرّب من Settings → Backgrounds.'),'pip');} }else{say(T('Background control is not available on this screen.','تبديل الخلفية ما خدامش فهاد الشاشة.'),'pip');}defaultChips();}
+function findFirm(q){var t=typing();var sizeMatch=(q||'').match(/(\d+)\s*k/i);var size=sizeMatch?Number(sizeMatch[1])*1000:null;var wantSplit=/split|تقسيم|نسبة/.test(q||'');
+Promise.all([get('firms?select=id,name,slug'),get('firm_plans?select=firm_id,account_size,price,currency,rules')]).then(function(res){
+t.remove();var firms=res[0]||[],plans=res[1]||[];var byId={};firms.forEach(function(f){byId[f.id]=f;});
+var rows=plans.filter(function(p){return byId[p.firm_id];});if(size)rows=rows.filter(function(p){return Number(p.account_size)===size;});
+if(!rows.length){say(T('I found no firm matching that in our catalogue. Try another size or ask me for the cheapest overall.','ما لقيت تا شركة بهاد الشروط فالكتالوغ ديالنا. جرّب حجم آخر ولا سولني على الأرخص بصفة عامة.'),'pip');defaultChips();return;}
+rows.sort(function(a,b){if(wantSplit){var sa=(a.rules&&a.rules.profit_split)||0,sb=(b.rules&&b.rules.profit_split)||0;return sb-sa;}return Number(a.price)-Number(b.price);});
+var top=rows.slice(0,3);var lines=top.map(function(p,i){var f=byId[p.firm_id];var split=(p.rules&&p.rules.profit_split)?p.rules.profit_split+'% split':'—';var prom='';try{var pr=(p.rules&&p.rules.promotions)||[];if(pr.length&&pr[0].code)prom=' · Promo '+pr[0].code+((pr[0].discount)?' ('+pr[0].discount+')':'');}catch(e){}return (i+1)+'. '+f.name+' — '+fmtSize(p.account_size)+' — '+money(p.price)+' — '+split+prom;});
+say(T('From our real catalogue'+(size?' ('+fmtSize(size)+')':'')+':\n'+lines.join('\n')+'\n\nThese are live prices from the firms themselves, not estimates.','من الكتالوغ الحقيقي ديالنا'+(size?' ('+fmtSize(size)+')':'')+':\n'+lines.join('\n')+'\n\nهادو أثمنة حقيقية من الشركات نفسها، ماشي تقديرات.'),'pip');
+setChips([{label:T('Open matcher','افتح الماتشر'),onClick:function(){navTo('matcher');}},{label:T('Cheapest overall','الأرخص بصفة عامة'),onClick:function(){say(T('Cheapest overall','الأرخص بصفة عامة'),'user');findFirm('cheapest');}}]);
+}).catch(function(){t.remove();say(T('I could not reach the catalogue right now. Try again in a moment.','ما قدرتش نوصل للكتالوغ دابا. عاود جرّب من بعد شوية.'),'pip');defaultChips();});}
+function payoutTotal(){var t=typing();get('firm_payout_records?select=amount').then(function(rows){t.remove();var sum=0;(rows||[]).forEach(function(r){sum+=Number(r.amount)||0;});say(T('Verified payouts across our catalogue: '+money(sum)+' in total, from on-chain verified records.','مجموع السحوبات الموثقة فالكتالوغ ديالنا: '+money(sum)+'، من سجلات موثقة على السلسلة.'),'pip');defaultChips();}).catch(function(){t.remove();say(T('I could not reach the payout records right now.','ما قدرتش نوصل لسجلات السحوبات دابا.'),'pip');defaultChips();});}
+function capabilities(){say(T('I can:\n• Scan a trade screenshot and journal it — tap “Scan a trade”\n• Find a prop firm from our real catalogue — just tell me a size like 100k\n• Change your background\n• Tell you the verified payout total\n\nFree plan: 3 scans a day. Pip Pro (coming soon) removes the cap and adds deep ICT reading.','نقدر:\n• نقرا صورة صفقة ونسجلها — ضغط على “امسح صفقة”\n• نلقا ليك شركة من الكتالوغ الحقيقي — غير قول ليا الحجم بحال 100k\n• نبدل ليك الخلفية\n• نقول ليك مجموع السحوبات الموثقة\n\nالمجاني: 3 سكان فالنهار. Pip Pro (جاي قريب) كيحيد السقف وكيزيد القراءة ICT المعمقة.'),'pip');defaultChips();}
+function route(text){var q=(text||'').toLowerCase();if(/scan|صورة|سكان|screenshot|سكرين/.test(q)){openScan();return;}if(/pro|برو/.test(q)){showPro();return;}if(/خلفية|background|ثيم|theme/.test(q)){bgChips();return;}if(/payout|سحب|سحوبات|موثق/.test(q)){payoutTotal();return;}if(/firm|شركة|prop|cheapest|أرخص|split|تقسيم|\d+\s*k/.test(q)){findFirm(text);return;}if(/hello|hi|سلام|اهلا|مرحبا|help|مساعدة|شنو تقدر|what can/.test(q)){capabilities();return;}capabilities();}
+/* ---- trade scan: on-device OCR, rule parse, ask-missing, auto-journal ---- */
+var pendingTrade=null;
+function numAfter(text,re){var m=text.match(re);if(!m)return null;var v=parseFloat(String(m[1]).replace(/,/g,''));return isFinite(v)?v:null;}
+function parseTradeText(raw){
+var text=String(raw||'');var up=text.toUpperCase();
+var sym=null;var sm=up.match(/\b(US100|NAS100|NQ|US30|SPX500|XAUUSD|GOLD|EURUSD|GBPUSD|BTCUSD|ETHUSD|USTEC|DE40|AUDUSD|USDJPY|GBPJPY)\b/);if(sm)sym=sm[1];
+var dir=null;var li=up.search(/\b(LONG|BUY)\b/);var si=up.search(/\b(SHORT|SELL)\b/);if(li>=0&&(si<0||li<si))dir='long';else if(si>=0)dir='short';
+var entry=numAfter(up,/ENTRY[^0-9]{0,14}([0-9][0-9,]*\.?[0-9]*)/)||numAfter(up,/OPEN[^0-9]{0,14}([0-9][0-9,]*\.?[0-9]*)/);
+var sl=numAfter(up,/STOP[\s\-]*LOSS[^0-9]{0,14}([0-9][0-9,]*\.?[0-9]*)/)||numAfter(up,/\bSL\b[^0-9]{0,14}([0-9][0-9,]*\.?[0-9]*)/);
+var tp=numAfter(up,/TAKE[\s\-]*PROFIT[^0-9]{0,14}([0-9][0-9,]*\.?[0-9]*)/)||numAfter(up,/\bTP\b[^0-9]{0,14}([0-9][0-9,]*\.?[0-9]*)/);
+var exit=numAfter(up,/(CLOSE|CLOSED|EXIT)[^0-9]{0,14}([0-9][0-9,]*\.?[0-9]*)/);
+var pnl=numAfter(up,/PROFIT[^0-9+\-]{0,12}([+\-]?\$?[0-9][0-9,]*\.?[0-9]*)/)||numAfter(up,/P\s*&\s*L[^0-9+\-]{0,12}([+\-]?\$?[0-9][0-9,]*\.?[0-9]*)/)||numAfter(up,/PNL[^0-9+\-]{0,12}([+\-]?\$?[0-9][0-9,]*\.?[0-9]*)/);
+if(pnl!==null)pnl=Number(String(pnl).replace('$',''));
+return{symbol:sym,direction:dir,entry:entry,sl:sl,tp:tp,exit:exit,pnl:pnl};
+}
+function missingOf(t){var m=[];if(!t.symbol)m.push(T('symbol','الرمز'));if(!t.direction)m.push(T('direction (long/short)','الاتجاه (شراء/بيع)'));if(t.entry===null||t.entry===undefined)m.push(T('entry price','ثمن الدخول'));return m;}
+function tradeCard(t,savedId){
+var card=el('div','pip-trade');
+var rows=[[T('Symbol','الرمز'),t.symbol||'—'],[T('Direction','الاتجاه'),t.direction?(t.direction==='long'?T('Long','شراء'):T('Short','بيع')):'—'],[T('Entry','الدخول'),t.entry!==null&&t.entry!==undefined?t.entry:'—'],[T('Stop','الستوب'),t.sl!==null&&t.sl!==undefined?t.sl:'—'],[T('Target','الهدف'),t.tp!==null&&t.tp!==undefined?t.tp:'—'],[T('Exit','الخروج'),t.exit!==null&&t.exit!==undefined?t.exit:'—'],[T('P&L','الربح/الخسارة'),t.pnl!==null&&t.pnl!==undefined?money(t.pnl):'—']];
+rows.forEach(function(r){var d=el('div');var b=el('b',null,r[0]+': ');d.appendChild(b);d.appendChild(document.createTextNode(String(r[1])));card.appendChild(d);});
+var row=el('div','pip-row');
+if(savedId){var undo=el('button','pip-btn danger',T('Undo save','تراجع عن الحفظ'));undo.type='button';undo.addEventListener('click',function(){var a=auth();if(!a)return;delTrade(savedId,a.token,a.uid).then(function(){say(T('Undone — the trade was removed from your journal.','تم التراجع — تحيدات الصفقة من الجورنال ديالك.'),'pip');}).catch(function(){say(T('I could not undo it. You can delete it from the journal.','ما قدرتش نتراجع. تقدر تمسحها من الجورنال.'),'pip');});});row.appendChild(undo);
+var view=el('button','pip-btn gold',T('View in journal','شوفها فالجورنال'));view.type='button';view.addEventListener('click',function(){navTo('journal');});row.appendChild(view);
+}else{var saveAnyway=el('button','pip-btn gold',T('Save as open trade','حفظها كصفقة مفتوحة'));saveAnyway.type='button';saveAnyway.addEventListener('click',function(){saveTrade(t);});row.appendChild(saveAnyway);}
+card.appendChild(row);msgs.appendChild(card);scrollDown();return card;}
+function askMissing(t){var m=missingOf(t);if(!m.length){saveTrade(t);return;}pendingTrade=t;say(T('I read part of your trade. I still need: '+m.join(', ')+'. Reply with the missing values (for example: “SL 24200”).','قريت طرف من الصفقة ديالك. باقي خاصني: '+m.join('، ')+'. جاوبني بالقيم الناقصة (مثال: “SL 24200”).'),'pip');setChips([{label:T('Save as open trade','حفظها كصفقة مفتوحة'),onClick:function(){saveTrade(t);}}]);}
+function fillFromReply(t,text){var up=String(text||'').toUpperCase();var p=parseTradeText(text);if(!t.symbol&&p.symbol)t.symbol=p.symbol;if(!t.direction&&p.direction)t.direction=p.direction;if((t.entry===null||t.entry===undefined)&&p.entry!==null)t.entry=p.entry;if((t.sl===null||t.sl===undefined)&&p.sl!==null)t.sl=p.sl;if((t.tp===null||t.tp===undefined)&&p.tp!==null)t.tp=p.tp;if((t.exit===null||t.exit===undefined)&&p.exit!==null)t.exit=p.exit;if((t.pnl===null||t.pnl===undefined)&&p.pnl!==null)t.pnl=p.pnl;return t;}
+function saveTrade(t){var a=auth();if(!a){try{localStorage.setItem('pipvant_pip_draft',JSON.stringify(t));}catch(e){}say(T('Sign in to save this trade to your journal — I kept it as a draft. Open the journal and sign in, then ask me to save it.','سجّل الدخول باش نحفظ هاد الصفقة فالجورنال ديالك — خليتها مسودة. افتح الجورنال وسجل الدخول، ومن بعد قول ليا نحفظها.'),'pip');defaultChips();return;}
+var body={user_id:a.uid,symbol:t.symbol||'UNKNOWN',direction:(t.direction||'long').toLowerCase(),entry_price:isFinite(Number(t.entry))?Number(t.entry):0,exit_price:(t.exit!==null&&t.exit!==undefined)?Number(t.exit):null,position_size:0,pnl:(t.pnl!==null&&t.pnl!==undefined)?Number(t.pnl):null,stop_price:(t.sl!==null&&t.sl!==undefined)?Number(t.sl):null,target_price:(t.tp!==null&&t.tp!==undefined)?Number(t.tp):null,opened_at:new Date().toISOString(),closed_at:((t.pnl!==null&&t.pnl!==undefined)||(t.exit!==null&&t.exit!==undefined))?new Date().toISOString():null,notes:'Saved by Pip from a screenshot',setup:null,tag:'pip',account_id:null};
+var w=typing();postTrade(body,a.token).then(function(rows){w.remove();pendingTrade=null;var id=(rows&&rows[0]&&rows[0].id)||null;say(T('Saved to your journal.','تحفظات فالجورنال ديالك.'),'pip');tradeCard(t,id);defaultChips();}).catch(function(){w.remove();say(T('I could not save it right now — your journal may be unreachable. The draft is kept; try again in a moment.','ما قدرتش نحفظها دابا — الجورنال يمكن ما واصلش. المسودة محفوظة؛ عاود جرّب من بعد شوية.'),'pip');defaultChips();});}
+function loadOcr(){if(window.Tesseract)return Promise.resolve(window.Tesseract);return new Promise(function(res,rej){var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';s.onload=function(){res(window.Tesseract);};s.onerror=function(){rej(new Error('cdn'));};document.head.appendChild(s);});}
+function recognize(file){if(window.pipAI&&typeof window.pipAI._recognize==='function')return window.pipAI._recognize(file);return loadOcr().then(function(Tess){return Tess.recognize(file,'eng');}).then(function(r){return (r&&r.data&&r.data.text)||'';});}
+function openScan(){if(scansLeft()<=0){showPro();say(T('You reached today’s free limit (3 scans). Pip Pro removes the cap.','وصلتي للحد المجاني ديال اليوم (3 سكان). Pip Pro كيحيد السقف.'),'pip');return;}try{fileEl.value='';fileEl.click();}catch(e){}}
+function onScanFile(file){if(!file)return;var w=typing();say(T('Reading your screenshot…','كنقرا الصورة ديالك…'),'pip');recognize(file).then(function(text){w.remove();bumpScan();var t=parseTradeText(text);say(T('Here is what I read:','هادشي اللي قريت:'),'pip');tradeCard(t,null);var m=missingOf(t);if(m.length){askMissing(t);}else{saveTrade(t);}}).catch(function(){w.remove();say(T('I could not read that image. Make sure the numbers are clear and try again — or type the trade values here and I will journal them.','ما قدرتش نقرا هاد الصورة. تأكد أن الأرقام واضحة وعاود جرّب — ولا كتب ليا قيم الصفقة هنا وأنا نسجلها.'),'pip');defaultChips();});}
+function send(){var v=(input.value||'').trim();if(!v)return;input.value='';say(v,'user');if(pendingTrade){fillFromReply(pendingTrade,v);var m=missingOf(pendingTrade);if(m.length){say(T('Still missing: '+m.join(', ')+'.','باقي ناقص: '+m.join('، ')+'.'),'pip');return;}var t=pendingTrade;pendingTrade=null;saveTrade(t);return;}route(v);}
+fab.addEventListener('click',function(){if(panel.hidden)openPanel();else closePanel();});
+closeBtn.addEventListener('click',closePanel);
+sendBtn.addEventListener('click',send);
+scanBtn.addEventListener('click',openScan);
+input.addEventListener('keydown',function(e){if(e.key==='Enter')send();});
+fileEl.addEventListener('change',function(){if(fileEl.files&&fileEl.files[0])onScanFile(fileEl.files[0]);});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!panel.hidden)closePanel();});
+refreshTier();
+window.pipAI={version:'1.0',parseTradeText:parseTradeText,missingOf:missingOf,scansLeft:scansLeft,isPro:isPro,setPro:function(v){try{localStorage.setItem('pipvant_pip_pro',v?'1':'0');}catch(e){}refreshTier();}};
+})();
+</script>
+
 </body>
 </html>
