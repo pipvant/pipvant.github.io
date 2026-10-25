@@ -1,6 +1,15 @@
 {
-  "updated": "2026-10-25T04:20:41.250045+00:00",
+  "updated": "2026-10-25T04:43:59.552412+00:00",
   "changes": [
+    {
+      "date": "2026-10-25",
+      "firm": "FundedNext",
+      "field": "promotion",
+      "old": "{\"code\": \"STRTN\", \"discount\": \"up to 16%\", \"expiry\": null}",
+      "new": "",
+      "source": "https://fundednext.com/cfds",
+      "kind": "promo"
+    },
     {
       "date": "2026-10-22",
       "firm": "Apex Trader Funding",
