@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-26T02:21:33.811095+00:00",
+  "updated": "2026-10-26T02:47:20.984849+00:00",
   "changes": [
     {
       "date": "2026-10-26",
@@ -538,6 +538,114 @@
       "field": "promotion (400000 (Two Phase Standard))",
       "old": "[{\"code\": \"AGHHH35\", \"discount\": \"\", \"expiry\": null}]",
       "new": "[{\"code\": null, \"discount\": \"35% OFF\", \"source_note\": \"FXIFY official site sale price 2026-10-26\"}]",
+      "source": "https://fxify.com/programs/one-phase/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-26",
+      "firm": "Topstep",
+      "field": "promotion (150000 (Standard))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"13% OFF\", \"source_note\": \"Topstep official site sale price 2026-10-26\"}]",
+      "source": "https://www.topstep.com/topstep-prop",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-26",
+      "firm": "Funded7",
+      "field": "promotion (5000 (Instant Funding))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"25% OFF\", \"source_note\": \"Funded7 official site sale price 2026-10-26\"}]",
+      "source": "https://funded7.com/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-26",
+      "firm": "Funded7",
+      "field": "promotion (10000 (Instant Funding))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"25% OFF\", \"source_note\": \"Funded7 official site sale price 2026-10-26\"}]",
+      "source": "https://funded7.com/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-26",
+      "firm": "Funded7",
+      "field": "promotion (25000 (Instant Funding))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"25% OFF\", \"source_note\": \"Funded7 official site sale price 2026-10-26\"}]",
+      "source": "https://funded7.com/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-26",
+      "firm": "Funded7",
+      "field": "promotion (50000 (Instant Funding))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"25% OFF\", \"source_note\": \"Funded7 official site sale price 2026-10-26\"}]",
+      "source": "https://funded7.com/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-26",
+      "firm": "Funded7",
+      "field": "promotion (75000 (Instant Funding))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"25% OFF\", \"source_note\": \"Funded7 official site sale price 2026-10-26\"}]",
+      "source": "https://funded7.com/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-26",
+      "firm": "Funded7",
+      "field": "promotion (15000 (One Phase))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"25% OFF\", \"source_note\": \"Funded7 official site sale price 2026-10-26\"}]",
+      "source": "https://funded7.com/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-26",
+      "firm": "Funded7",
+      "field": "promotion (50000 (One Phase))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"25% OFF\", \"source_note\": \"Funded7 official site sale price 2026-10-26\"}]",
+      "source": "https://funded7.com/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-26",
+      "firm": "Funded7",
+      "field": "promotion (75000 (One Phase))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"25% OFF\", \"source_note\": \"Funded7 official site sale price 2026-10-26\"}]",
+      "source": "https://funded7.com/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-26",
+      "firm": "Funded7",
+      "field": "promotion (100000 (One Phase))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"25% OFF\", \"source_note\": \"Funded7 official site sale price 2026-10-26\"}]",
+      "source": "https://funded7.com/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-26",
+      "firm": "Funded7",
+      "field": "promotion (200000 (One Phase))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"25% OFF\", \"source_note\": \"Funded7 official site sale price 2026-10-26\"}]",
+      "source": "https://funded7.com/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-26",
+      "firm": "FXIFY",
+      "field": "promotion",
+      "old": "{\"code\": \"AGHHH35\", \"discount\": \"35% OFF\", \"expiry\": \"2026-11-02\"}",
+      "new": "{\"code\": \"AGHHH35\", \"discount\": \"\", \"expiry\": null}",
       "source": "https://fxify.com/programs/one-phase/",
       "kind": "promo"
     },
