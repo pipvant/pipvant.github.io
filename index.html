@@ -816,6 +816,7 @@
     .session-feedback{margin:-3px 0 12px;color:var(--accent);font-size:11px;line-height:1.5}.session-feedback:empty{display:none}.risk-footer-actions+.session-feedback{margin:10px 0 0;text-align:right}.trade-form .session-feedback{margin:12px 0 0;text-align:right}
     .journal-entry-list{display:grid}.journal-entry-list[hidden],.trade-list-empty[hidden]{display:none}.journal-entry-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:16px;border-bottom:1px solid var(--line);background:var(--surface)}.journal-entry-row:last-child{border-bottom:0}.journal-entry-cell{min-width:0}.journal-entry-cell small{display:block;margin-bottom:5px;color:var(--muted);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em}.journal-entry-cell strong{display:block;color:var(--secondary);font-size:11px;font-weight:500;line-height:1.45;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}.journal-entry-cell.pnl-win strong{color:var(--success)}.journal-entry-cell.pnl-loss strong{color:var(--danger)}.journal-entry-cell.primary strong{color:var(--text);font-weight:700}.journal-entry-cell.note{grid-column:1/-1}
     #journal .journal-fab{display:flex}
+    @media (max-width:1023px){#journal .journal-entry-list{padding-bottom:calc(150px + env(safe-area-inset-bottom))}}
     @media (min-width:640px){.journal-kpis{grid-template-columns:repeat(2,1fr)}.calendar-main{padding:18px}.day-cell{min-height:78px}.facet-panel.open{grid-template-columns:repeat(3,1fr)}.trade-sheet{align-items:center;padding:24px}.trade-form{max-width:680px;margin:0 auto;border-radius:20px;padding-bottom:22px}}
     @media (min-width:1024px){
       .app{padding-left:246px}.app.rail-collapsed{padding-left:76px}
@@ -6982,8 +6983,8 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       var totalPlans=0;for(var fid in sbPlansByFirm){totalPlans+=(sbPlansByFirm[fid]||[]).length;}
       // Data points: firms × core fields (name, HQ, website, source, updated) + plans × fields (size, price, target, drawdown)
       var dataPoints=firmsTracked*5+totalPlans*4;
-      // Re-verification cadence: based on most recent update
-      var latest=null;sbFirms.forEach(function(f){if(f.updated_at&&(!latest||f.updated_at>latest))latest=f.updated_at;});
+      // Re-verification cadence: based on most recent verification
+      var latest=null;sbFirms.forEach(function(f){var _v=f.last_verified_at||f.updated_at;if(_v&&(!latest||_v>latest))latest=_v;});
       var cadence='—';
       if(latest){
         var daysAgo=Math.floor((Date.now()-new Date(latest).getTime())/86400000);
