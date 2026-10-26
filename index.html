@@ -17984,9 +17984,6 @@ window.pipAI._charPlaying=function(){var v=document.getElementById('pipNinjaChar
 .fl2-msg .fl2-mimg{max-width:100%;border-radius:10px;margin-top:6px}
 .fl2-msg .fl2-mmeta{font-size:11px;color:var(--muted);margin-top:4px;display:flex;gap:8px;align-items:center}
 .fl2-msg .fl2-mmeta button{background:none;border:none;color:var(--muted);cursor:pointer;padding:0;font-size:11px}
-.fl2-msg .fl2-reacts{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
-.fl2-msg .fl2-reacts button{border:1px solid var(--line);background:var(--raised);border-radius:999px;padding:2px 8px;font-size:12px;cursor:pointer;color:var(--text)}
-.fl2-msg .fl2-reacts button.on{border-color:var(--gold)}
 .fl2-loadolder{margin:10px auto 0;border:1px solid var(--line);background:var(--sunken);color:var(--text);border-radius:999px;padding:7px 14px;font-size:12px;cursor:pointer}
 .fl2-replybar{display:flex;gap:8px;align-items:center;padding:8px 12px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
 .fl2-replybar span{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -18660,7 +18657,7 @@ function fl2RespondRequest(uid,status){
 }
 
 /* ---------- messages ---------- */
-var fl2Chat={conv:null,convs:[],msgs:[],offset:0,replyTo:null,members:[],pinned:[],reacts:[],seg:'dm',imgBlob:null,imgName:null,search:''};
+var fl2Chat={conv:null,convs:[],msgs:[],offset:0,replyTo:null,members:[],pinned:[],seg:'dm',imgBlob:null,imgName:null,search:''};
 function flShowMessages(seg){
   fl2ShowSection('floor-messages');
   if(seg)fl2Chat.seg=seg;
@@ -18854,12 +18851,7 @@ function fl2LoadMsgs(reset){
     if(reset)fl2Chat.msgs=page;else fl2Chat.msgs=page.concat(fl2Chat.msgs);
     fl2Chat.offset+=rows.length;
     var lo=$('fl2LoadOlder');if(lo)lo.hidden=rows.length<50;
-    var ids=fl2Chat.msgs.map(function(m){return m.id;});
-    if(!ids.length){fl2RenderMsgs();return;}
-    return flGet('message_reactions?select=message_id,emoji,user_id&message_id=in.('+ids.map(encodeURIComponent).join(',')+')',a.token).catch(function(){return [];}).then(function(reacts){
-      fl2Chat.reacts=reacts||[];
-      fl2RenderMsgs();
-    });
+    fl2RenderMsgs();
   }).catch(function(){var box=$('fl2MsgList');if(box&&reset)box.innerHTML='<p class="fl2-emptynote">Messages could not load.</p>';});
 }
 function fl2RenderMsgs(){
@@ -18884,7 +18876,7 @@ function fl2RenderMsgs(){
     var img=(m.image_url&&String(m.image_url).indexOf('https://')===0)?('<img class="fl2-mimg" src="'+esc(m.image_url)+'" alt="" loading="lazy" onerror="this.remove()">'):'';
     var nm=mine?'You':(flState.profiles[m.user_id]||'متداول');
     div.innerHTML=quote+(mine?'':'<b style="font-size:12px;color:var(--gold)">'+esc(nm)+'</b><br>')+esc(m.body||'')+img+
-      '<div class="fl2-mmeta"><span>'+esc(flRel(m.created_at))+'</span><button type="button" data-fl2-mact="reply">Reply</button><button type="button" data-fl2-mact="pin">'+(fl2Chat.pinned.indexOf(m.id)>=0?'Unpin':'Pin')+'</button><button type="button" data-fl2-mact="report">Report</button></div><div class="fl2-reacts"></div>';
+      '<div class="fl2-mmeta"><span>'+esc(flRel(m.created_at))+'</span><button type="button" data-fl2-mact="reply">Reply</button><button type="button" data-fl2-mact="pin">'+(fl2Chat.pinned.indexOf(m.id)>=0?'Unpin':'Pin')+'</button><button type="button" data-fl2-mact="report">Report</button></div>';
     div.querySelector('[data-fl2-mact="reply"]').addEventListener('click',function(){
       fl2Chat.replyTo=m.id;
       var rb=$('fl2ReplyBar');if(rb){rb.hidden=false;$('fl2ReplyText').textContent='Replying to: '+String(m.body||'Photo').slice(0,80);}
@@ -18892,35 +18884,9 @@ function fl2RenderMsgs(){
     });
     div.querySelector('[data-fl2-mact="pin"]').addEventListener('click',function(){fl2TogglePin(m.id);});
     div.querySelector('[data-fl2-mact="report"]').addEventListener('click',function(){fl2ReportMsg(m.id);});
-    var reactsBox=div.querySelector('.fl2-reacts');
-    var byEmoji={};
-    (fl2Chat.reacts||[]).forEach(function(r){if(r.message_id!==m.id)return;(byEmoji[r.emoji]=byEmoji[r.emoji]||[]).push(r.user_id);});
-    ['❤️','🔥','👍','🎯'].forEach(function(e){
-      var users=byEmoji[e]||[];
-      var b=document.createElement('button');b.type='button';
-      if(users.indexOf(me)>=0)b.className='on';
-      b.textContent=e+(users.length?(' '+users.length):'');
-      b.addEventListener('click',function(){fl2ToggleReaction(m.id,e);});
-      reactsBox.appendChild(b);
-    });
     box.appendChild(div);
   });
   if(!fl2Chat.search&&fl2Chat.offset<=50){box.scrollTop=box.scrollHeight;}
-}
-function fl2ReloadReacts(){
-  var a=flAuth(),conv=fl2Chat.conv;if(!a||!conv)return;
-  var ids=fl2Chat.msgs.map(function(m){return m.id;});
-  if(!ids.length)return;
-  flGet('message_reactions?select=message_id,emoji,user_id&message_id=in.('+ids.map(encodeURIComponent).join(',')+')',a.token).catch(function(){return [];}).then(function(r){fl2Chat.reacts=r||[];fl2RenderMsgs();});
-}
-function fl2ToggleReaction(msgId,emoji){
-  var a=flAuth();if(!a)return;
-  var mine=(fl2Chat.reacts||[]).filter(function(r){return r.message_id===msgId&&r.user_id===a.uid&&r.emoji===emoji;});
-  if(mine.length){
-    fetch(SB+'message_reactions?message_id=eq.'+encodeURIComponent(msgId)+'&user_id=eq.'+encodeURIComponent(a.uid)+'&emoji=eq.'+encodeURIComponent(emoji),{method:'DELETE',headers:flHeaders(a.token)}).then(function(){fl2ReloadReacts();}).catch(function(){});
-  }else{
-    flInsert('message_reactions',{message_id:msgId,user_id:a.uid,emoji:emoji},a.token).then(function(){fl2ReloadReacts();}).catch(function(){});
-  }
 }
 function fl2TogglePin(msgId){
   var a=flAuth(),conv=fl2Chat.conv;if(!a||!conv)return;
