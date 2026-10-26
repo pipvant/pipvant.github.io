@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-26T03:20:40.408824+00:00",
+  "updated": "2026-10-26T03:47:04.091962+00:00",
   "changes": [
     {
       "date": "2026-10-26",
@@ -646,6 +646,24 @@
       "field": "promotion",
       "old": "{\"code\": \"AGHHH35\", \"discount\": \"35% OFF\", \"expiry\": \"2026-11-02\"}",
       "new": "{\"code\": \"AGHHH35\", \"discount\": \"\", \"expiry\": null}",
+      "source": "https://fxify.com/programs/one-phase/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-26",
+      "firm": "FXIFY",
+      "field": "promotion",
+      "old": "{\"code\": \"AGHHH35\", \"discount\": \"35% off\", \"expiry\": \"2026-11-02\"}",
+      "new": "{\"code\": \"AGHHH35\", \"discount\": \"\", \"expiry\": null}",
+      "source": "https://fxify.com/programs/one-phase/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-26",
+      "firm": "FXIFY",
+      "field": "promotion",
+      "old": "{\"code\": \"AGHHH35\", \"discount\": \"\", \"expiry\": null}",
+      "new": "{\"code\": \"AGHHH35\", \"discount\": \"35% off\", \"expiry\": \"2026-11-02\"}",
       "source": "https://fxify.com/programs/one-phase/",
       "kind": "promo"
     },
