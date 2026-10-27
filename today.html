@@ -152,7 +152,7 @@
   </section>
   <section class="section">
     <h2 data-i18n="deals_h">Live deals right now</h2>
-    <div><div class="list-row"><div class="main"><span class="fname"><span class="firm-logo" data-firm-logo data-name="Apex Trader Funding" data-website="https://apextraderfunding.com" aria-hidden="true"></span> Apex Trader Funding</span><div class="sub">with code <b>SAVENOW</b></div></div><span class="amount">−90%</span></div><div class="list-row"><div class="main"><span class="fname"><span class="firm-logo" data-firm-logo data-name="E8 Markets" data-website="https://e8markets.com" aria-hidden="true"></span> E8 Markets</span><div class="sub">with code <b>E8</b></div></div><span class="amount">−30%</span></div><div class="list-row"><div class="main"><span class="fname"><span class="firm-logo" data-firm-logo data-name="Funded Trader Markets" data-website="https://fundedtradermarkets.com" aria-hidden="true"></span> Funded Trader Markets</span><div class="sub">with code <b>OCT</b></div></div><span class="amount">−75%</span></div></div>
+    <div id="todayDeals"><p class="lede">Loading…</p></div>
     <div class="link-chips">
       <a class="link-chip" href="prop-firm-deals.html" data-i18n="deals_link">All active deals</a>
     </div>
@@ -251,6 +251,7 @@
     previous:AR?'السابق':'Previous',
     combined:AR?'المجموع المدرج':'combined listed value',
     records:AR?'سجل موثق':'verified records',
+    noneDeals:AR?'لا عروض نشطة برمز حالياً.':'No active coded deals right now.',
     source:AR?'المصدر':'Source'
   };
   function $(id){return document.getElementById(id);}
@@ -359,6 +360,54 @@
         +' · '+rows.length+' '+esc(S.records)+'</p>';
     })
     .catch(function(){var box=$('todayPayouts');if(box)box.innerHTML='<p class="lede">'+esc(S.err)+'</p>';});
+  /* ---- live deals: top 3 coded promos by discount, same rules as the deals page ----
+     Per plan: first unexpired promo (unparseable expiry counts as active, as on the
+     deals page). Per firm: highest % wins. Only promos with a code and a % appear,
+     so code-less sales and tab-confusion artefacts can never surface here. */
+  (function(){
+    var box=$('todayDeals');if(!box)return;
+    box.innerHTML='<p class="lede">'+esc(S.loading)+'</p>';
+    function bestPromo(rules){
+      if(!rules||!Array.isArray(rules.promotions)||!rules.promotions.length)return null;
+      var now=Date.now(),best=null;
+      rules.promotions.forEach(function(pr){
+        if(!pr)return;
+        if(pr.expiry){var e=new Date(pr.expiry).getTime();if(isFinite(e)&&e<now)return;}
+        if(!best)best=pr;
+      });
+      return best;
+    }
+    function promoPct(promo){
+      if(!promo||!promo.discount)return 0;
+      var m=String(promo.discount).match(/(\d+)\s*%/);
+      return m?Number(m[1]):0;
+    }
+    Promise.all([
+      fetch(BASE+'firms?select=id,name,website&limit=200',{headers:H}).then(function(r){return r.json();}),
+      fetch(BASE+'firm_plans?select=firm_id,rules&limit=1000',{headers:H}).then(function(r){return r.json();})
+    ]).then(function(res){
+      var firms=Array.isArray(res[0])?res[0]:[];
+      var plans=Array.isArray(res[1])?res[1]:[];
+      var byId={};firms.forEach(function(f){byId[f.id]=f;});
+      var best={};
+      plans.forEach(function(pl){
+        var promo=bestPromo(pl.rules);if(!promo||!promo.code)return;
+        var pct=promoPct(promo);if(!pct)return;
+        var cur=best[pl.firm_id];
+        if(!cur||pct>cur.pct)best[pl.firm_id]={firm:byId[pl.firm_id],code:promo.code,pct:pct};
+      });
+      var items=Object.keys(best).map(function(k){return best[k];})
+        .filter(function(d){return d.firm;})
+        .sort(function(a,b){if(b.pct!==a.pct)return b.pct-a.pct;var an=a.firm.name||'',bn=b.firm.name||'';return an<bn?-1:an>bn?1:0;})
+        .slice(0,3);
+      if(!items.length){box.innerHTML='<p class="lede">'+esc(S.noneDeals)+'</p>';return;}
+      box.innerHTML=items.map(function(d){
+        return '<div class="list-row"><div class="main"><span class="fname"><span class="firm-logo" data-firm-logo data-name="'+esc(d.firm.name)+'" data-website="'+esc(d.firm.website||'')+'" aria-hidden="true"></span> '+esc(d.firm.name)+'</span><div class="sub">with code <b>'+esc(d.code)+'</b></div></div><span class="amount">\u2212'+d.pct+'%</span></div>';
+      }).join('');
+      var logos=box.querySelectorAll('[data-firm-logo]');
+      for(var li=0;li<logos.length;li++){logoInto(logos[li],{name:logos[li].getAttribute('data-name')||'',website:logos[li].getAttribute('data-website')||''});}
+    }).catch(function(){box.innerHTML='<p class="lede">'+esc(S.err)+'</p>';});
+  })();
 })();
 
 })();
