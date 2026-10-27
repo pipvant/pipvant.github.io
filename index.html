@@ -13421,7 +13421,12 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       var _suTimeout=new Promise(function(_,rej){setTimeout(function(){rej(new Error('Request timed out — try again.'));},20000);});
       Promise.race([_suP,_suTimeout]).then(function(res){
         if(res.error){_reenable();sbAuthError(res.error.message);return;}
-        try{sb.from('page_views').insert({page:'/signup',referrer:null});}catch(e){}
+        /* Signup-tracking fix (2026-10-27): the old sb insert was never awaited
+           (supabase-js builders are lazy, so no request was ever sent) AND a bare
+           sb insert defaults to return=representation, which anon cannot satisfy
+           (anon SELECT on page_views returns nothing) → 42501. Send it as a raw
+           fetch with return=minimal, exactly like pipv-os.js page-view posts. */
+        try{fetch(SUPABASE_URL+'/rest/v1/page_views',{method:'POST',headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+SUPABASE_ANON_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({page:'/signup',referrer:null}),keepalive:true}).catch(function(){});}catch(e){}
         if(!res.data.session){
           _reenable();
           sbAuthError(currentLanguage==='ar'?'تم إنشاء الحساب — تحقق من بريدك الإلكتروني ثم سجّل الدخول.':'Account created — check your email to confirm, then log in.');
