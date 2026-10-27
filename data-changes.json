@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-27T10:20:39.844493+00:00",
+  "updated": "2026-10-27T10:47:05.534317+00:00",
   "changes": [
     {
       "date": "2026-10-27",
@@ -306,6 +306,159 @@
       "new": "900.0",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "promotion",
+      "old": "{\"code\": \"FNFLEX\", \"discount\": \"up to 47% off\", \"expiry\": null}",
+      "new": "{\"code\": \"FNTRICK\", \"discount\": \"up to 41%\", \"expiry\": null, \"scoped\": [{\"code\": \"FNFLEX\", \"discount\": \"up to 47% off\", \"expiry\": null, \"scope\": \"futures flex\"}, {\"code\": \"RAPID\", \"discount\": \"up to 50% off\", \"expiry\": null, \"scope\": \"futures rapid\"}, {\"code\": \"FNDIRECT\", \"discount\": \"up to 40% off\", \"expiry\": null, \"scope\": \"futures direct\"}]}",
+      "source": "https://fundednext.com/cfds",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "promotion (6000 (Stellar 1-Step))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"32% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
+      "source": "https://fundednext.com/cfds",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "promotion (15000 (Stellar 1-Step))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
+      "source": "https://fundednext.com/cfds",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "promotion (25000 (Stellar 1-Step))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
+      "source": "https://fundednext.com/cfds",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "promotion (50000 (Stellar 1-Step))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
+      "source": "https://fundednext.com/cfds",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "promotion (6000 (Stellar 2-Step))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"42% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
+      "source": "https://fundednext.com/cfds",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "promotion (15000 (Stellar 2-Step))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
+      "source": "https://fundednext.com/cfds",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "promotion (25000 (Stellar 2-Step))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
+      "source": "https://fundednext.com/cfds",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "promotion (50000 (Stellar 2-Step))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
+      "source": "https://fundednext.com/cfds",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "promotion (2000 (Stellar Instant))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"17% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
+      "source": "https://fundednext.com/cfds",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "promotion (5000 (Stellar Instant))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
+      "source": "https://fundednext.com/cfds",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "promotion (10000 (Stellar Instant))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
+      "source": "https://fundednext.com/cfds",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "promotion (20000 (Stellar Instant))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
+      "source": "https://fundednext.com/cfds",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "promotion (5000 (Stellar Lite))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"9% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
+      "source": "https://fundednext.com/cfds",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "promotion (10000 (Stellar Lite))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
+      "source": "https://fundednext.com/cfds",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "promotion (25000 (Stellar Lite))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
+      "source": "https://fundednext.com/cfds",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "promotion (50000 (Stellar Lite))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
+      "source": "https://fundednext.com/cfds",
+      "kind": "promo"
     },
     {
       "date": "2026-10-26",
