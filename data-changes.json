@@ -1,6 +1,312 @@
 {
-  "updated": "2026-10-27T02:47:06.901013+00:00",
+  "updated": "2026-10-27T02:59:44.990558+00:00",
   "changes": [
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "plan added (50000 (Futures Flex))",
+      "old": "",
+      "new": "141.99",
+      "source": "https://fundednext.com/futures",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "plan added (100000 (Futures Flex))",
+      "old": "",
+      "new": "273.99",
+      "source": "https://fundednext.com/futures",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "plan added (150000 (Futures Flex))",
+      "old": "",
+      "new": "490.99",
+      "source": "https://fundednext.com/futures",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "plan added (25000 (Futures Rapid Pro))",
+      "old": "",
+      "new": "159.98",
+      "source": "https://fundednext.com/futures",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "plan added (50000 (Futures Rapid Pro))",
+      "old": "",
+      "new": "299.98",
+      "source": "https://fundednext.com/futures",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "plan added (100000 (Futures Rapid Pro))",
+      "old": "",
+      "new": "499.98",
+      "source": "https://fundednext.com/futures",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "plan added (25000 (Futures Rapid Daily))",
+      "old": "",
+      "new": "159.98",
+      "source": "https://fundednext.com/futures",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "plan added (50000 (Futures Rapid Daily))",
+      "old": "",
+      "new": "299.98",
+      "source": "https://fundednext.com/futures",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "plan added (100000 (Futures Rapid Daily))",
+      "old": "",
+      "new": "499.98",
+      "source": "https://fundednext.com/futures",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "plan added (50000 (Futures Direct))",
+      "old": "",
+      "new": "283.99",
+      "source": "https://fundednext.com/futures",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (1000 (Instant EOD Trailing))",
+      "old": "",
+      "new": "5.0",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (2500 (Instant EOD Trailing))",
+      "old": "",
+      "new": "30.0",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (5000 (Instant EOD Trailing))",
+      "old": "",
+      "new": "60.0",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (10000 (Instant EOD Trailing))",
+      "old": "",
+      "new": "120.0",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (20000 (Instant EOD Trailing))",
+      "old": "",
+      "new": "200.0",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (50000 (Instant EOD Trailing))",
+      "old": "",
+      "new": "400.0",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (100000 (Instant EOD Trailing))",
+      "old": "",
+      "new": "600.0",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (150000 (Instant EOD Trailing))",
+      "old": "",
+      "new": "900.0",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (1000 (Instant Equity Trailing))",
+      "old": "",
+      "new": "5.0",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (2500 (Instant Equity Trailing))",
+      "old": "",
+      "new": "30.0",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (5000 (Instant Equity Trailing))",
+      "old": "",
+      "new": "60.0",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (10000 (Instant Equity Trailing))",
+      "old": "",
+      "new": "120.0",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (20000 (Instant Equity Trailing))",
+      "old": "",
+      "new": "200.0",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (50000 (Instant Equity Trailing))",
+      "old": "",
+      "new": "400.0",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (100000 (Instant Equity Trailing))",
+      "old": "",
+      "new": "600.0",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (150000 (Instant Equity Trailing))",
+      "old": "",
+      "new": "900.0",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (1000 (Instant Payout Trailing))",
+      "old": "",
+      "new": "5.0",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (2500 (Instant Payout Trailing))",
+      "old": "",
+      "new": "30.0",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (5000 (Instant Payout Trailing))",
+      "old": "",
+      "new": "60.0",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (10000 (Instant Payout Trailing))",
+      "old": "",
+      "new": "120.0",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (20000 (Instant Payout Trailing))",
+      "old": "",
+      "new": "200.0",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (50000 (Instant Payout Trailing))",
+      "old": "",
+      "new": "400.0",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (100000 (Instant Payout Trailing))",
+      "old": "",
+      "new": "600.0",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (150000 (Instant Payout Trailing))",
+      "old": "",
+      "new": "900.0",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
     {
       "date": "2026-10-26",
       "firm": "FTMO",
