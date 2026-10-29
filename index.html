@@ -1147,11 +1147,6 @@
     .pc-hero{position:relative;overflow:hidden;border-radius:20px;border:1px solid rgba(91,141,239,.28);background:linear-gradient(165deg,rgba(91,141,239,.20),rgba(10,22,40,.55) 65%);padding:18px;touch-action:pan-y;user-select:none;-webkit-user-select:none}
     .pc-firmbtn{display:flex;align-items:center;gap:10px;flex:1;min-width:0;background:none;border:0;padding:0;margin:0;cursor:pointer;font:inherit;color:inherit;text-align:left}
     .pc-firmbtn h3{flex:1}
-    .pc-slide{position:relative;overflow:hidden}
-    .pc-watermark{position:absolute;top:8px;right:-70px;width:420px;height:420px;z-index:0;display:flex;align-items:center;justify-content:center;font-size:360px;font-weight:900;line-height:1;color:rgba(255,255,255,.13);pointer-events:none;user-select:none;-webkit-user-select:none}
-    .pc-watermark img{width:100%!important;height:100%!important;object-fit:contain;filter:brightness(0) invert(1);opacity:.14;border-radius:0!important}
-    .pc-watermark.wm-screen img{filter:none;opacity:.16;mix-blend-mode:screen}
-    .pc-flip,.pc-flipbtn{position:relative;z-index:1}
     .pc-variants{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:10px 4px 0}
     .pc-vartab{min-height:42px;padding:0 20px;border-radius:12px;border:1px solid transparent;background:rgba(255,255,255,.045);color:var(--muted);font-weight:700;font-size:14.5px;cursor:pointer;font-family:inherit}
     .pc-vartab.on{background:rgba(255,255,255,.10);color:var(--text);border-color:var(--line-strong)}
@@ -7707,6 +7702,8 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     return cats;
   }
   function _pcPlan(){var s=_pcState;if(!s)return null;var c=s.cats[s.cat];if(!c)return null;var l=c.variants[s.variant||_PC_SINGLE]||[];return l[s.idx]||null;}
+  function _pcNum(v){if(v==null||v==='')return NaN;var m=String(v).match(/\d+(\.\d+)?/);return m?Number(m[0]):NaN;}
+  function _pcPct(r,pctKey,usdKey,size){var v=_pcNum(r[pctKey]);if(isFinite(v)&&v>0)return v;var u=_pcNum(r[usdKey]);if(isFinite(size)&&size>0&&isFinite(u)&&u>0)return u/size*100;return NaN;}
   function sbOpenPlanCard(firmId,program,size){
     var firm=null;(sbFirms||[]).forEach(function(f){if(String(f.id)===String(firmId))firm=f;});
     if(!firm)return;
@@ -7753,21 +7750,21 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
         return '<button type="button" role="tab" class="pc-vartab'+(vk===(s.variant||_PC_SINGLE)?' on':'')+'" data-pc-var="'+_pcEsc(vk)+'">'+_pcEsc(vk)+'</button>';
       }).join('')+'</div>';
     }
-    var ghost=_pcEsc((s.firm.name||'P').charAt(0).toUpperCase());
     /* one slide per account size — swipe between full cards like the reference */
     function slideHtml(p){
       var r=p.rules||{};
-      var size=sbNum(p.account_size);
-      var tp=sbNum(r.profit_target_pct),dd=sbNum(r.max_drawdown_pct),dl=sbNum(r.daily_loss_pct);
+      var size=_pcNum(p.account_size);
+      var tp=_pcPct(r,'profit_target_pct','profit_target_usd',size),dd=_pcPct(r,'max_drawdown_pct','max_drawdown_usd',size),dl=_pcPct(r,'daily_loss_pct','daily_loss_usd',size);
       function L(v,pct){return s.pct?(money(v)+' · '+pct):money(v);}
       var barHtml='';
-      if(isFinite(size)&&isFinite(tp)&&isFinite(dd)&&tp>0&&dd>0){
-        var fail=size*(1-dd/100),start=size,target=size*(1+tp/100);
-        var pos=Math.max(0,Math.min(100,(start-fail)/(target-fail)*100));
+      var hasTp=isFinite(tp)&&tp>0,hasDd=isFinite(dd)&&dd>0;
+      if(isFinite(size)&&hasDd){
+        var fail=size*(1-dd/100),start=size,target=hasTp?size*(1+tp/100):start;
+        var pos=Math.max(0,Math.min(100,(start-fail)/(Math.max(target,start)-fail)*100));
         barHtml='<div class="pc-track"><div class="pc-fill" style="width:'+pos+'%"></div><div class="pc-marker" style="left:calc('+pos+'% - 1px)"></div></div>'
           +'<div class="pc-scale"><span>'+L(fail,'-'+dd+'%')+'<small>'+(ar?'الفشل تحت':'Fail below')+'</small></span>'
           +'<span>'+L(start,'0%')+'<small>'+(ar?'البداية':'Start')+'</small></span>'
-          +'<span>'+L(target,'+'+tp+'%')+'<small>'+(ar?'الهدف':'Target')+'</small></span></div>';
+          +(hasTp?'<span>'+L(target,'+'+tp+'%')+'<small>'+(ar?'الهدف':'Target')+'</small></span>':'')+'</div>';
       }
       var ddt=r.drawdown_type?(' <small>'+_pcEsc(String(r.drawdown_type).split(' ')[0])+'</small>'):'';
       var rows=[
@@ -7803,7 +7800,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       ];
       var frowsHtml=frows.map(function(x){return '<div class="pc-row"><span>'+_pcEsc(x[0])+'</span><b>'+x[1]+'</b></div>';}).join('');
       var fbar='';
-      if(isFinite(dd)&&dd>0){
+      if(hasDd){
         fbar='<div class="pc-track"><div class="pc-fill" style="width:100%"></div><div class="pc-marker" style="left:calc(100% - 1px)"></div></div>'
           +'<div class="pc-scale"><span>'+(ar?'الأرضية ':'Floor ')+'-'+dd+'%'+'</span><span>'+(ar?'البداية':'Start')+'</span></div>';
       }
@@ -7814,7 +7811,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
         +fbar+'</div>'
         +'<div class="pc-rows">'+frowsHtml+'</div>'
         +'<button type="button" class="pc-flipback" data-pc-flipback>'+(ar?'تفاصيل التقييم':'Eval details')+'</button>';
-      return '<div class="pc-slide"><div class="pc-watermark" data-pc-wm aria-hidden="true">'+ghost+'</div><div class="pc-flip"><div class="pc-flip-inner">'
+      return '<div class="pc-slide"><div class="pc-flip"><div class="pc-flip-inner">'
         +'<div class="pc-face pc-front">'+front+'</div>'
         +'<div class="pc-face pc-back">'+back+'</div>'
         +'</div></div>'
@@ -7843,8 +7840,6 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     q('#pcBack').onclick=sbClosePlanCard;
     q('#pcClose').onclick=sbClosePlanCard;
     var fb=q('#pcFirmBtn');if(fb)fb.onclick=function(){sbClosePlanCard();if(typeof sbOpenFirmSheet==='function')sbOpenFirmSheet(s.firmId);};
-    var _wmDom='';try{_wmDom=String(new URL(s.firm.website||'').hostname).replace(/^www\./,'');}catch(_we){}
-    qa('[data-pc-wm]').forEach(function(w){try{if(_wmDom==='fundingpips.com')w.classList.add('wm-screen');if(typeof sbLogoInto==='function')sbLogoInto(w,s.firm);}catch(_wm){}});
     q('#pcModeUsd').onclick=function(){s.pct=false;_pcRender();};
     q('#pcModePct').onclick=function(){s.pct=true;_pcRender();};
     qa('.pc-pill').forEach(function(b){b.onclick=function(){s.cat=b.getAttribute('data-pc-cat');var c=s.cats[s.cat];s.variant=(c.vorder[0]===_PC_SINGLE?null:c.vorder[0]);s.idx=0;_pcRender();};});
