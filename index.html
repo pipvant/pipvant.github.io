@@ -1175,6 +1175,26 @@
     .pc-cta .btn.primary{border:0;background:linear-gradient(135deg,#D4AF37,#b8942a);color:#0A1628}
     .pc-verified{text-align:center;color:var(--muted);font-size:11px;margin-top:12px}
     .pc-rules{margin-top:6px}
+    /* funded-details flip */
+    .pc-flip{perspective:1400px}
+    .pc-flip-inner{position:relative;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.4,.1,.2,1)}
+    .pc-flip.flipped .pc-flip-inner{transform:rotateY(180deg)}
+    .pc-face{backface-visibility:hidden;-webkit-backface-visibility:hidden}
+    .pc-face.pc-back{position:absolute;inset:0;transform:rotateY(180deg);overflow-y:auto;overscroll-behavior:contain;visibility:hidden}
+    .pc-flip.flipped .pc-face.pc-back{visibility:visible}
+    .pc-flip.flipped .pc-face.pc-front{visibility:hidden}
+    .pc-funded-pill{font-size:10.5px;letter-spacing:.08em;border:1px solid rgba(212,175,55,.55);color:var(--gold,#D4AF37);background:rgba(212,175,55,.10);border-radius:999px;padding:4px 12px;font-weight:800}
+    .pc-flipback{width:100%;margin-top:12px;min-height:48px;border-radius:14px;border:1px solid var(--line-strong);background:rgba(255,255,255,.05);color:var(--text);font-weight:700;font-size:14px;cursor:pointer;font-family:inherit}
+    /* plan carousel: one full card per size, snap-swipe between them */
+    .pc-carousel{margin-top:2px}
+    .pc-track2{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-ms-overflow-style:none}
+    .pc-track2::-webkit-scrollbar{display:none}
+    .pc-slide{flex:0 0 100%;scroll-snap-align:center;scroll-snap-stop:always;min-width:0}
+    .pc-nav{display:flex;align-items:center;justify-content:space-between;margin:10px 2px 0}
+    .pc-arrow{min-height:44px;padding:0 16px;border-radius:12px;border:1px solid var(--line-strong);background:rgba(255,255,255,.05);color:var(--text);font-weight:700;font-size:13.5px;cursor:pointer;font-family:inherit}
+    .pc-arrow:disabled{opacity:.32;cursor:default}
+    .pc-pos{font-size:12.5px;color:var(--muted);font-weight:700}
+    .pc-flipbtn{width:100%;margin-top:10px;min-height:48px;border-radius:14px;border:1px dashed rgba(212,175,55,.5);background:rgba(212,175,55,.07);color:var(--gold,#D4AF37);font-weight:800;font-size:14px;cursor:pointer;font-family:inherit}
     .promo-line small{color:var(--muted);font-size:11px;display:block}
     @media (max-width:639px){
       /* founder order 2026-10-29: phone gets the same floating glass CARD as
@@ -7673,19 +7693,20 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     _pcState={firm:firm,firmId:firmId,groups:groups,progs:progs,program:program,idx:idx,pct:false};
     _pcRender();
     var ov=document.getElementById('planCard');if(ov)ov.classList.add('open');
+    try{var _s2=_pcState;if(_s2&&_s2._paint){var _tr=document.getElementById('pcTrack');if(_tr){var _sl=_tr.querySelector('.pc-slide');var _st=_sl?_sl.offsetWidth:_tr.clientWidth;if(_st>0)_tr.scrollLeft=_s2.idx*_st;}_s2._paint();}}catch(_ps){}
   }
   function sbClosePlanCard(){var ov=document.getElementById('planCard');if(ov)ov.classList.remove('open');_pcState=null;}
   function _pcSizeLabel(n){n=sbNum(n);if(!isFinite(n))return '—';return n>=1000?(Math.round(n/100)/10).toString().replace(/\.0$/,'')+'K':String(Math.round(n));}
   function _pcRender(){
     var s=_pcState;if(!s)return;
-    var plan=_pcPlan();if(!plan)return;
     var ar=(typeof currentLanguage!=='undefined'&&currentLanguage==='ar');
-    var r=plan.rules||{};
-    var size=sbNum(plan.account_size);
-    var tp=sbNum(r.profit_target_pct),dd=sbNum(r.max_drawdown_pct),dl=sbNum(r.daily_loss_pct);
     var body=document.getElementById('planCardBody');if(!body)return;
-    function val(usd,pctTxt){return s.pct?pctTxt:usd;}
+    var list=s.groups[s.program]||[];
+    if(!list.length){sbClosePlanCard();return;}
+    if(s.idx>=list.length)s.idx=0;
     function money(n){n=Number(n);return isFinite(n)?'$'+Math.round(n).toLocaleString('en-US'):'—';}
+    function pctTxt(v){return isFinite(v)?v+'%':'—';}
+    function val(usd,pct){return s.pct?pct:usd;}
     /* program pills */
     var pills=s.progs.map(function(pg){
       var ps=s.groups[pg],minTp=Infinity,minPr=Infinity;
@@ -7693,45 +7714,74 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       var sub=isFinite(minTp)?(ar?'الهدف ':'Target ')+minTp+'%':(isFinite(minPr)?(ar?'من ':'From ')+money(minPr):'');
       return '<button type="button" class="pc-pill'+(pg===s.program?' on':'')+'" data-pc-prog="'+_pcEsc(pg)+'"><b>'+_pcEsc(pg)+'</b>'+(sub?'<small>'+_pcEsc(sub)+'</small>':'')+'</button>';
     }).join('');
-    /* sizes */
-    var list=s.groups[s.program]||[];
-    var chips=list.map(function(p,i){return '<button type="button" class="pc-sizechip'+(i===s.idx?' on':'')+'" data-pc-size="'+i+'">'+_pcEsc(_pcSizeLabel(p.account_size))+'</button>';}).join('');
-    /* progress bar */
-    var barHtml='';
-    if(isFinite(size)&&isFinite(tp)&&isFinite(dd)&&tp>0&&dd>0){
-      var fail=size*(1-dd/100),start=size,target=size*(1+tp/100);
-      var pos=Math.max(0,Math.min(100,(start-fail)/(target-fail)*100));
-      barHtml='<div class="pc-track"><div class="pc-fill" style="width:'+pos+'%"></div><div class="pc-marker" style="left:calc('+pos+'% - 1px)"></div></div>'
-        +'<div class="pc-scale"><span>'+money(fail)+'<small>'+(ar?'الفشل تحت':'Fail below')+'</small></span>'
-        +'<span>'+money(start)+'<small>'+(ar?'البداية':'Start')+'</small></span>'
-        +'<span>'+money(target)+'<small>'+(ar?'الهدف':'Target')+'</small></span></div>';
-    }
-    /* rows */
-    function pctTxt(v){return isFinite(v)?v+'%':'—';}
-    var rows=[
-      [ar?'هدف الربح':'Profit target',val(money(size*tp/100),pctTxt(tp))],
-      [ar?'أقصى خسارة':'Max loss',val(money(size*dd/100)+(r.drawdown_type?' <small>'+_pcEsc(String(r.drawdown_type).split(' ')[0])+'</small>':''),pctTxt(dd)+(r.drawdown_type?' <small>'+_pcEsc(String(r.drawdown_type).split(' ')[0])+'</small>':''))],
-      [ar?'الخسارة اليومية':'Daily loss',val(isFinite(dl)?money(size*dl/100):(ar?'غير مذكور':'Not listed'),isFinite(dl)?pctTxt(dl):(ar?'غير مذكور':'Not listed'))]
-    ];
-    var minD=r.min_trading_days!=null&&r.min_trading_days!==''?r.min_trading_days:(ar?'غير مذكور':'Not listed');
-    rows.push([ar?'أيام التداول الدنيا':'Min days',minD]);
-    rows.push([ar?'الاتساق':'Consistency',(r.consistency_pct!=null&&isFinite(sbNum(r.consistency_pct)))?sbNum(r.consistency_pct)+'%':(ar?'لا يوجد':'None')]);
-    var dp=(typeof sbDiscountedPrice==='function')?sbDiscountedPrice(plan):{final:sbNum(plan.price)};
-    var priceHtml=dp.final!=null?((dp.pct>0?'<s style="color:var(--muted);font-weight:400">'+money(dp.base)+'</s> ':'')+money(dp.final)):'—';
-    rows.push([ar?'السعر':'List price',priceHtml]);
-    var rowsHtml=rows.map(function(x){return '<div class="pc-row"><span>'+_pcEsc(x[0])+'</span><b>'+x[1]+'</b></div>';}).join('');
-    /* promo (our addition) */
-    var promo=(typeof sbBestPromo==='function')?sbBestPromo(r):null;
-    var promoHtml='';
-    if(promo&&promo.code){
-      promoHtml='<div class="pc-promo" id="pcPromo"><div><b>'+_pcEsc(promo.code)+'</b><small>'+_pcEsc((promo.discount||'')+(promo.expiry?' · '+promo.expiry:''))+'</small></div><small>'+(ar?'انسخ':'Copy')+'</small></div>';
-    }
-    /* plain-language rules (our addition) */
-    var rulesHtml='';
-    try{var rsEl=(typeof sbRuleSheetEl==='function')?sbRuleSheetEl(s.firm,plan):null;
-      if(rsEl){var w=document.createElement('div');w.className='pc-rules';w.appendChild(rsEl);rulesHtml=w.innerHTML;}
-    }catch(_re){}
     var ghost=_pcEsc((s.firm.name||'P').charAt(0).toUpperCase());
+    /* one slide per account size — swipe between full cards like the reference */
+    function slideHtml(p){
+      var r=p.rules||{};
+      var size=sbNum(p.account_size);
+      var tp=sbNum(r.profit_target_pct),dd=sbNum(r.max_drawdown_pct),dl=sbNum(r.daily_loss_pct);
+      function L(v,pct){return s.pct?(money(v)+' · '+pct):money(v);}
+      var barHtml='';
+      if(isFinite(size)&&isFinite(tp)&&isFinite(dd)&&tp>0&&dd>0){
+        var fail=size*(1-dd/100),start=size,target=size*(1+tp/100);
+        var pos=Math.max(0,Math.min(100,(start-fail)/(target-fail)*100));
+        barHtml='<div class="pc-track"><div class="pc-fill" style="width:'+pos+'%"></div><div class="pc-marker" style="left:calc('+pos+'% - 1px)"></div></div>'
+          +'<div class="pc-scale"><span>'+L(fail,'-'+dd+'%')+'<small>'+(ar?'الفشل تحت':'Fail below')+'</small></span>'
+          +'<span>'+L(start,'0%')+'<small>'+(ar?'البداية':'Start')+'</small></span>'
+          +'<span>'+L(target,'+'+tp+'%')+'<small>'+(ar?'الهدف':'Target')+'</small></span></div>';
+      }
+      var ddt=r.drawdown_type?(' <small>'+_pcEsc(String(r.drawdown_type).split(' ')[0])+'</small>'):'';
+      var rows=[
+        [ar?'هدف الربح':'Profit target',val(money(size*tp/100),pctTxt(tp))],
+        [ar?'أقصى خسارة':'Max loss',val(money(size*dd/100)+ddt,pctTxt(dd)+ddt)],
+        [ar?'الخسارة اليومية':'Daily loss',val(isFinite(dl)?money(size*dl/100):(ar?'غير مذكور':'Not listed'),isFinite(dl)?pctTxt(dl):(ar?'غير مذكور':'Not listed'))]
+      ];
+      var minD=r.min_trading_days!=null&&r.min_trading_days!==''?r.min_trading_days:(ar?'غير مذكور':'Not listed');
+      rows.push([ar?'أيام التداول الدنيا':'Min days',minD]);
+      rows.push([ar?'الاتساق':'Consistency',(r.consistency_pct!=null&&isFinite(sbNum(r.consistency_pct)))?sbNum(r.consistency_pct)+'%':(ar?'لا يوجد':'None')]);
+      var dp=(typeof sbDiscountedPrice==='function')?sbDiscountedPrice(p):{final:sbNum(p.price)};
+      var priceHtml=dp.final!=null?((dp.pct>0?'<s style="color:var(--muted);font-weight:400">'+money(dp.base)+'</s> ':'')+money(dp.final)):'—';
+      rows.push([ar?'السعر':'List price',priceHtml]);
+      var rowsHtml=rows.map(function(x){return '<div class="pc-row"><span>'+_pcEsc(x[0])+'</span><b>'+x[1]+'</b></div>';}).join('');
+      var promo=(typeof sbBestPromo==='function')?sbBestPromo(r):null;
+      var promoHtml='';
+      if(promo&&promo.code){
+        promoHtml='<div class="pc-promo" data-pc-promo="'+_pcEsc(promo.code)+'"><div><b>'+_pcEsc(promo.code)+'</b><small>'+_pcEsc((promo.discount||'')+(promo.expiry?' · '+promo.expiry:''))+'</small></div><small>'+(ar?'انسخ':'Copy')+'</small></div>';
+      }
+      var front='<div class="pc-hero"><span class="pc-ghost" aria-hidden="true">'+ghost+'</span>'
+        +'<div class="pc-eyebrow"><span>'+(ar?'حجم الحساب':'ACCOUNT SIZE')+'</span><span class="pc-phase">'+_pcEsc(s.program)+'</span></div>'
+        +'<div class="pc-size">'+_pcEsc(_pcSizeLabel(size))+'</div>'
+        +'<div class="pc-sub">'+_pcEsc(s.firm.name+' '+s.program)+'</div>'
+        +barHtml+'</div>'
+        +promoHtml
+        +'<div class="pc-rows">'+rowsHtml+'</div>';
+      var frows=[
+        [ar?'أقصى خسارة':'Max loss',pctTxt(dd)+ddt],
+        [ar?'الخسارة اليومية':'Daily loss',isFinite(dl)?pctTxt(dl):(ar?'غير مذكور':'Not listed')],
+        [ar?'الاتساق':'Consistency',(r.consistency_pct!=null&&isFinite(sbNum(r.consistency_pct)))?sbNum(r.consistency_pct)+'%':(ar?'لا يوجد':'None')],
+        [ar?'تقسيم الأرباح':'Profit split',(r.profit_split!=null&&r.profit_split!=='')?r.profit_split+'%':'—'],
+        [ar?'تكرار الدفع':'Payout frequency',((typeof sbCapPayout==='function')&&r.payout_frequency)?sbCapPayout(r.payout_frequency):'—']
+      ];
+      var frowsHtml=frows.map(function(x){return '<div class="pc-row"><span>'+_pcEsc(x[0])+'</span><b>'+x[1]+'</b></div>';}).join('');
+      var fbar='';
+      if(isFinite(dd)&&dd>0){
+        fbar='<div class="pc-track"><div class="pc-fill" style="width:100%"></div><div class="pc-marker" style="left:calc(100% - 1px)"></div></div>'
+          +'<div class="pc-scale"><span>'+(ar?'الأرضية ':'Floor ')+'-'+dd+'%'+'</span><span>'+(ar?'البداية':'Start')+'</span></div>';
+      }
+      var back='<div class="pc-hero"><span class="pc-ghost" aria-hidden="true">'+ghost+'</span>'
+        +'<div class="pc-eyebrow"><span>'+(ar?'حساب ممول':'FUNDED ACCOUNT')+'</span><span class="pc-funded-pill">'+(ar?'ممول':'Funded')+'</span></div>'
+        +'<div class="pc-size">'+_pcEsc(_pcSizeLabel(size))+'</div>'
+        +'<div class="pc-sub">'+_pcEsc(s.firm.name+' '+s.program)+'</div>'
+        +fbar+'</div>'
+        +'<div class="pc-rows">'+frowsHtml+'</div>'
+        +'<button type="button" class="pc-flipback" data-pc-flipback>'+(ar?'تفاصيل التقييم':'Eval details')+'</button>';
+      return '<div class="pc-slide"><div class="pc-flip"><div class="pc-flip-inner">'
+        +'<div class="pc-face pc-front">'+front+'</div>'
+        +'<div class="pc-face pc-back">'+back+'</div>'
+        +'</div></div>'
+        +'<button type="button" class="pc-flipbtn" data-pc-flip>'+(ar?'تفاصيل الممول':'Funded details')+'</button>'
+        +'</div>';
+    }
     body.innerHTML=
       '<div class="pc-head">'
       +'<button type="button" class="pc-iconbtn" id="pcBack" aria-label="Back">‹</button>'
@@ -7740,24 +7790,15 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       +'<button type="button" class="pc-iconbtn" id="pcClose" aria-label="Close">✕</button>'
       +'</div>'
       +(s.progs.length>1?'<div class="pc-programs">'+pills+'</div>':'')
-      +'<div class="pc-hero" id="pcHero"><span class="pc-ghost" aria-hidden="true">'+ghost+'</span>'
-      +'<div class="pc-eyebrow"><span>'+(ar?'حجم الحساب':'ACCOUNT SIZE')+'</span><span class="pc-phase">'+_pcEsc(s.program)+'</span></div>'
-      +'<div class="pc-size">'+_pcEsc(_pcSizeLabel(size))+'</div>'
-      +'<div class="pc-sub">'+_pcEsc(s.firm.name+' '+s.program)+'</div>'
-      +barHtml
-      +'<div class="pc-sizes">'+chips+'</div>'
-      +'<div class="pc-swipehint">'+(ar?'اسحب يمين/يسار لتغيير الحجم':'Swipe left/right to change size')+'</div>'
-      +'</div>'
-      +promoHtml
-      +'<div class="pc-rows">'+rowsHtml+'</div>'
-      +rulesHtml
+      +'<div class="pc-carousel"><div class="pc-track2" id="pcTrack">'+list.map(slideHtml).join('')+'</div></div>'
+      +'<div class="pc-nav"><button type="button" class="pc-arrow" id="pcPrev">‹ '+(ar?'أصغر':'Smaller')+'</button>'
+      +'<span class="pc-pos" id="pcPos"></span>'
+      +'<button type="button" class="pc-arrow" id="pcNext">'+(ar?'أكبر':'Bigger')+' ›</button></div>'
       +'<div class="pc-cta">'
-      +(promo&&promo.code?'<button type="button" class="btn" id="pcCopyCode">'+(ar?'نسخ ':'Copy ')+_pcEsc(promo.code)+'</button>':'')
       +'<button type="button" class="btn primary" id="pcOfficial">'+(ar?'الموقع الرسمي':'Official site')+'</button>'
       +'</div>'
       +'<div class="pc-verified">'+(ar?'تم التحقق ':'Verified ')+((typeof sbTimeAgo==='function')?sbTimeAgo(s.firm.last_verified_at||s.firm.updated_at):'')+'</div>';
     try{var _lg=document.getElementById('pcLogo');if(_lg&&typeof sbFirmLogo==='function')sbFirmLogo(_lg,s.firm);}catch(_l){}
-    /* wire */
     function q(sel){return body.querySelector(sel);}
     function qa(sel){return Array.prototype.slice.call(body.querySelectorAll(sel));}
     q('#pcBack').onclick=sbClosePlanCard;
@@ -7765,23 +7806,28 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     q('#pcModeUsd').onclick=function(){s.pct=false;_pcRender();};
     q('#pcModePct').onclick=function(){s.pct=true;_pcRender();};
     qa('.pc-pill').forEach(function(b){b.onclick=function(){s.program=b.getAttribute('data-pc-prog');s.idx=0;_pcRender();};});
-    qa('.pc-sizechip').forEach(function(b){b.onclick=function(){s.idx=Number(b.getAttribute('data-pc-size'))||0;_pcRender();};});
     var off=q('#pcOfficial');if(off&&s.firm.website)off.onclick=function(){try{window.open(s.firm.website,'_blank','noopener');}catch(e){}};
-    function copyCode(){try{if(promo&&navigator.clipboard)navigator.clipboard.writeText(promo.code||'');if(typeof showToast==='function')showToast(ar?'تم نسخ الكود':'Code copied');}catch(e){}}
-    var pr2=q('#pcPromo');if(pr2)pr2.onclick=copyCode;
-    var cc=q('#pcCopyCode');if(cc)cc.onclick=copyCode;
-    /* swipe sizes on the hero */
-    var hero=q('#pcHero'),sx=null;
-    if(hero){
-      hero.addEventListener('touchstart',function(e){sx=e.touches[0].clientX;},{passive:true});
-      hero.addEventListener('touchend',function(e){
-        if(sx===null)return;var dx=e.changedTouches[0].clientX-sx;sx=null;
-        if(Math.abs(dx)<40)return;
-        var l=s.groups[s.program]||[];
-        if(dx<0&&s.idx<l.length-1){s.idx++;_pcRender();}
-        else if(dx>0&&s.idx>0){s.idx--;_pcRender();}
-      },{passive:true});
+    var track=q('#pcTrack'),pos=q('#pcPos');
+    function step(){var sl=track.querySelector('.pc-slide');var w=sl?sl.offsetWidth:0;return w>0?w:track.clientWidth;}
+    function paintPos(){
+      var st=step();
+      if(!(st>0)){pos.textContent=(s.idx+1)+' / '+list.length;return;}
+      var i=Math.max(0,Math.min(list.length-1,Math.round(track.scrollLeft/st)));
+      s.idx=i;
+      pos.textContent=(i+1)+' / '+list.length+' · '+_pcSizeLabel(list[i].account_size);
+      q('#pcPrev').disabled=(i===0);
+      q('#pcNext').disabled=(i===list.length-1);
     }
+    s._paint=paintPos;
+    var deb=null;
+    track.addEventListener('scroll',function(){if(deb)clearTimeout(deb);deb=setTimeout(paintPos,120);},{passive:true});
+    q('#pcPrev').onclick=function(){track.scrollBy({left:-step(),behavior:'smooth'});};
+    q('#pcNext').onclick=function(){track.scrollBy({left:step(),behavior:'smooth'});};
+    qa('[data-pc-flip]').forEach(function(b){b.onclick=function(){var f=b.parentElement.querySelector('.pc-flip');if(f)f.classList.add('flipped');b.style.display='none';};});
+    qa('[data-pc-flipback]').forEach(function(b){b.onclick=function(){var slide=b.closest('.pc-slide');var f=slide.querySelector('.pc-flip');if(f)f.classList.remove('flipped');var fb=slide.querySelector('[data-pc-flip]');if(fb)fb.style.display='';};});
+    function copyCode(code){try{if(code&&navigator.clipboard)navigator.clipboard.writeText(code);if(typeof showToast==='function')showToast(ar?'تم نسخ الكود':'Code copied');}catch(e){}}
+    qa('[data-pc-promo]').forEach(function(el){el.onclick=function(){copyCode(el.getAttribute('data-pc-promo'));};});
+    paintPos();
   }
   (function(){
     var ov=document.getElementById('planCard');
