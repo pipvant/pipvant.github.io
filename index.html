@@ -1145,7 +1145,10 @@
     .pc-pill small{color:var(--muted);font-size:11px}
     .pc-pill.on{border-color:rgba(91,141,239,.65);background:rgba(91,141,239,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
     .pc-hero{position:relative;overflow:hidden;border-radius:20px;border:1px solid rgba(91,141,239,.28);background:linear-gradient(165deg,rgba(91,141,239,.20),rgba(10,22,40,.55) 65%);padding:18px;touch-action:pan-y;user-select:none;-webkit-user-select:none}
-    .pc-hero .pc-ghost{position:absolute;right:6px;top:50%;transform:translateY(-52%);font-size:150px;font-weight:800;color:rgba(255,255,255,.045);pointer-events:none;line-height:1}
+    .pc-firmbtn{display:flex;align-items:center;gap:10px;flex:1;min-width:0;background:none;border:0;padding:0;margin:0;cursor:pointer;font:inherit;color:inherit;text-align:left}
+    .pc-firmbtn h3{flex:1}
+    .pc-watermark{position:absolute;right:-34px;top:50%;transform:translateY(-52%);width:240px;height:240px;display:flex;align-items:center;justify-content:center;font-size:210px;font-weight:900;line-height:1;color:rgba(255,255,255,.055);pointer-events:none;user-select:none;-webkit-user-select:none}
+    .pc-watermark img{width:100%!important;height:100%!important;object-fit:contain;filter:grayscale(1) brightness(2);opacity:.5;border-radius:0!important}
     .pc-eyebrow{display:flex;justify-content:space-between;align-items:center;font-size:10.5px;letter-spacing:.14em;color:var(--muted);font-weight:700;margin-bottom:6px}
     .pc-phase{font-size:10.5px;letter-spacing:.08em;border:1px solid rgba(212,175,55,.4);color:var(--gold,#D4AF37);border-radius:999px;padding:4px 10px}
     .pc-size{font-size:64px;font-weight:800;letter-spacing:-.02em;line-height:1;margin:2px 0 4px;font-variant-numeric:tabular-nums}
@@ -7748,7 +7751,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       if(promo&&promo.code){
         promoHtml='<div class="pc-promo" data-pc-promo="'+_pcEsc(promo.code)+'"><div><b>'+_pcEsc(promo.code)+'</b><small>'+_pcEsc((promo.discount||'')+(promo.expiry?' · '+promo.expiry:''))+'</small></div><small>'+(ar?'انسخ':'Copy')+'</small></div>';
       }
-      var front='<div class="pc-hero"><span class="pc-ghost" aria-hidden="true">'+ghost+'</span>'
+      var front='<div class="pc-hero"><div class="pc-watermark" data-pc-wm aria-hidden="true">'+ghost+'</div>'
         +'<div class="pc-eyebrow"><span>'+(ar?'حجم الحساب':'ACCOUNT SIZE')+'</span><span class="pc-phase">'+_pcEsc(s.program)+'</span></div>'
         +'<div class="pc-size">'+_pcEsc(_pcSizeLabel(size))+'</div>'
         +'<div class="pc-sub">'+_pcEsc(s.firm.name+' '+s.program)+'</div>'
@@ -7768,7 +7771,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
         fbar='<div class="pc-track"><div class="pc-fill" style="width:100%"></div><div class="pc-marker" style="left:calc(100% - 1px)"></div></div>'
           +'<div class="pc-scale"><span>'+(ar?'الأرضية ':'Floor ')+'-'+dd+'%'+'</span><span>'+(ar?'البداية':'Start')+'</span></div>';
       }
-      var back='<div class="pc-hero"><span class="pc-ghost" aria-hidden="true">'+ghost+'</span>'
+      var back='<div class="pc-hero"><div class="pc-watermark" data-pc-wm aria-hidden="true">'+ghost+'</div>'
         +'<div class="pc-eyebrow"><span>'+(ar?'حساب ممول':'FUNDED ACCOUNT')+'</span><span class="pc-funded-pill">'+(ar?'ممول':'Funded')+'</span></div>'
         +'<div class="pc-size">'+_pcEsc(_pcSizeLabel(size))+'</div>'
         +'<div class="pc-sub">'+_pcEsc(s.firm.name+' '+s.program)+'</div>'
@@ -7786,7 +7789,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       '<div class="pc-head">'
       +'<button type="button" class="pc-iconbtn" id="pcBack" aria-label="Back">‹</button>'
       +'<div class="pc-toggle" role="group" aria-label="$ or %"><button type="button" id="pcModeUsd" class="'+(s.pct?'':'on')+'">$</button><button type="button" id="pcModePct" class="'+(s.pct?'on':'')+'">%</button></div>'
-      +'<span class="logo-slot" id="pcLogo"></span><h3>'+_pcEsc(s.firm.name)+'</h3>'
+      +'<button type="button" class="pc-firmbtn" id="pcFirmBtn" aria-label="'+_pcEsc(s.firm.name)+'"><span class="logo-slot" id="pcLogo"></span><h3>'+_pcEsc(s.firm.name)+'</h3></button>'
       +'<button type="button" class="pc-iconbtn" id="pcClose" aria-label="Close">✕</button>'
       +'</div>'
       +(s.progs.length>1?'<div class="pc-programs">'+pills+'</div>':'')
@@ -7803,6 +7806,8 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     function qa(sel){return Array.prototype.slice.call(body.querySelectorAll(sel));}
     q('#pcBack').onclick=sbClosePlanCard;
     q('#pcClose').onclick=sbClosePlanCard;
+    var fb=q('#pcFirmBtn');if(fb)fb.onclick=function(){sbClosePlanCard();if(typeof sbOpenFirmSheet==='function')sbOpenFirmSheet(s.firmId);};
+    qa('[data-pc-wm]').forEach(function(w){try{if(typeof sbLogoInto==='function')sbLogoInto(w,s.firm);}catch(_wm){}});
     q('#pcModeUsd').onclick=function(){s.pct=false;_pcRender();};
     q('#pcModePct').onclick=function(){s.pct=true;_pcRender();};
     qa('.pc-pill').forEach(function(b){b.onclick=function(){s.program=b.getAttribute('data-pc-prog');s.idx=0;_pcRender();};});
@@ -8327,13 +8332,22 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
   function sbOpenFirmDetail(firmId){
     var firm=null;(sbFirms||[]).forEach(function(f){if(String(f.id)===String(firmId))firm=f;});
     if(!firm)return;
-    /* 2026-10-29 (founder order): firm clicks open the GLASS POPUP, not the
-       firm-detail screen. One reroute here covers every call site (matcher,
-       directory, deals, today, versus, search, hash deep links, Pip). */
+    /* 2026-10-30 (founder order): the FIRST click on a firm opens the PLAN CARD
+       carousel directly, like the reference — no intermediate step. The glass
+       firm sheet (Overview/Challenges/Deals/Payouts) stays reachable via the
+       firm name in the card header (sbOpenFirmSheet). */
     sbDetailFirmId=firm.id;
     /* Firm-detail persistence: remember the open detail so a browser
-       restart brings the user back here (pipvant_last_screen only
-       stores primary screens, not the detail). */
+       restart brings the user back here. */
+    try{localStorage.setItem('pipvant_last_firm',firm.id);}catch(_plf){}
+    try{if(typeof sbSetFirmHash==='function')sbSetFirmHash(firm.id);}catch(_hh){}
+    sbOpenPlanCard(firm.id,null,null);
+  }
+  /* Glass firm sheet — opened from the plan-card header (firm name/logo). */
+  function sbOpenFirmSheet(firmId){
+    var firm=null;(sbFirms||[]).forEach(function(f){if(String(f.id)===String(firmId))firm=f;});
+    if(!firm)return;
+    sbDetailFirmId=firm.id;
     try{localStorage.setItem('pipvant_last_firm',firm.id);}catch(_plf){}
     try{if(typeof sbSetFirmHash==='function')sbSetFirmHash(firm.id);}catch(_hh){}
     try{if(typeof sbFillDetailSheet==='function')sbFillDetailSheet(firm.id);}catch(_s){}
