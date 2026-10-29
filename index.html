@@ -1150,6 +1150,7 @@
     .pc-slide{position:relative;overflow:hidden}
     .pc-watermark{position:absolute;top:8px;right:-70px;width:420px;height:420px;z-index:0;display:flex;align-items:center;justify-content:center;font-size:360px;font-weight:900;line-height:1;color:rgba(255,255,255,.13);pointer-events:none;user-select:none;-webkit-user-select:none}
     .pc-watermark img{width:100%!important;height:100%!important;object-fit:contain;filter:brightness(0) invert(1);opacity:.14;border-radius:0!important}
+    .pc-watermark.wm-screen img{filter:none;opacity:.16;mix-blend-mode:screen}
     .pc-flip,.pc-flipbtn{position:relative;z-index:1}
     .pc-variants{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:10px 4px 0}
     .pc-vartab{min-height:42px;padding:0 20px;border-radius:12px;border:1px solid transparent;background:rgba(255,255,255,.045);color:var(--muted);font-weight:700;font-size:14.5px;cursor:pointer;font-family:inherit}
@@ -7827,7 +7828,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       +'<button type="button" class="pc-firmbtn" id="pcFirmBtn" aria-label="'+_pcEsc(s.firm.name)+'"><span class="logo-slot" id="pcLogo"></span><h3>'+_pcEsc(s.firm.name)+'</h3></button>'
       +'<button type="button" class="pc-iconbtn" id="pcClose" aria-label="Close">✕</button>'
       +'</div>'
-      +(s.catOrder.length>1?'<div class="pc-programs">'+pills+'</div>':'')+variantsHtml
+      +'<div class="pc-programs">'+pills+'</div>'+variantsHtml
       +'<div class="pc-carousel"><div class="pc-track2" id="pcTrack">'+list.map(slideHtml).join('')+'</div></div>'
       +'<div class="pc-nav"><button type="button" class="pc-arrow" id="pcPrev">‹ '+(ar?'أصغر':'Smaller')+'</button>'
       +'<span class="pc-pos" id="pcPos"></span>'
@@ -7842,7 +7843,8 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     q('#pcBack').onclick=sbClosePlanCard;
     q('#pcClose').onclick=sbClosePlanCard;
     var fb=q('#pcFirmBtn');if(fb)fb.onclick=function(){sbClosePlanCard();if(typeof sbOpenFirmSheet==='function')sbOpenFirmSheet(s.firmId);};
-    qa('[data-pc-wm]').forEach(function(w){try{if(typeof sbLogoInto==='function')sbLogoInto(w,s.firm);}catch(_wm){}});
+    var _wmDom='';try{_wmDom=String(new URL(s.firm.website||'').hostname).replace(/^www\./,'');}catch(_we){}
+    qa('[data-pc-wm]').forEach(function(w){try{if(_wmDom==='fundingpips.com')w.classList.add('wm-screen');if(typeof sbLogoInto==='function')sbLogoInto(w,s.firm);}catch(_wm){}});
     q('#pcModeUsd').onclick=function(){s.pct=false;_pcRender();};
     q('#pcModePct').onclick=function(){s.pct=true;_pcRender();};
     qa('.pc-pill').forEach(function(b){b.onclick=function(){s.cat=b.getAttribute('data-pc-cat');var c=s.cats[s.cat];s.variant=(c.vorder[0]===_PC_SINGLE?null:c.vorder[0]);s.idx=0;_pcRender();};});
