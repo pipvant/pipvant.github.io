@@ -1104,7 +1104,7 @@
     .directory-stat-strip{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line)}.directory-stat{min-width:0;padding:13px;background:var(--sunken)}.directory-stat label{font-size:8px;line-height:1.35;margin-bottom:6px}.directory-stat strong{display:block;color:var(--platinum);font:600 16px/1 "Space Grotesk","IBM Plex Sans Arabic",sans-serif}.directory-stat small{display:block;margin-top:5px;color:var(--muted);font-size:8px}
     .directory-trust{display:grid;gap:0;padding:0 16px}.directory-trust span{min-height:44px;display:flex;align-items:center;justify-content:space-between;gap:14px;border-bottom:1px solid var(--line);color:var(--muted);font-size:10px}.directory-trust span:last-child{border-bottom:0}.directory-trust strong{color:var(--platinum);font:500 10px/1 "IBM Plex Mono","IBM Plex Sans Arabic",monospace}
     .filter-sheet,.firm-detail-sheet{position:fixed;inset:0;z-index:90;display:none;align-items:flex-end;padding:0;background:rgba(2,8,17,.74)}.filter-sheet.open,.firm-detail-sheet.open{display:flex}.filter-sheet-panel,.firm-detail-panel{width:100%;max-height:88svh;overflow:auto;padding:10px 18px calc(22px + env(safe-area-inset-bottom));border:1px solid var(--line-strong);border-radius:20px 20px 0 0;background:var(--raised);box-shadow:var(--shadow)}
-    .sheet-title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:20px}.sheet-title-row h3{margin:0 0 5px}.sheet-title-row p{margin:0;color:var(--muted);font-size:10px;line-height:1.45}.sheet-close{width:38px;height:38px;flex:0 0 auto;border:1px solid var(--line);border-radius:9px;background:var(--surface);display:grid;place-items:center;cursor:pointer}
+    .sheet-title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:20px}.sheet-title-main{flex:1;min-width:0}.sheet-title-row h3{margin:0 0 5px}.sheet-title-row p{margin:0;color:var(--muted);font-size:10px;line-height:1.45}.sheet-close{width:38px;height:38px;flex:0 0 auto;border:1px solid var(--line);border-radius:9px;background:var(--surface);display:grid;place-items:center;cursor:pointer}
     .directory-filter-list{display:grid;gap:18px}.directory-range-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:7px}.directory-range-head label{margin:0}.directory-range-head output{color:var(--platinum);font:500 10px/1 "IBM Plex Mono","IBM Plex Sans Arabic",monospace}.directory-filter-list input[type="range"]{height:28px;padding:0;border:0;background:transparent;accent-color:var(--accent)}
     .adv-filter-wrap{margin-top:2px}.adv-filter-toggle-row{padding-top:15px}#advFilterPanel{margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}.adv-filter-list{display:grid;gap:16px}.adv-range-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:7px}.adv-range-head label{margin:0}.adv-range-head output{color:var(--platinum);font:500 10px/1 "IBM Plex Mono","IBM Plex Sans Arabic",monospace}.adv-filter-list input[type="range"]{width:100%;height:28px;padding:0;border:0;background:transparent;accent-color:var(--accent)}.adv-reset-row{margin-top:14px}.toolkit-extras{margin:18px 0 0;text-align:center;color:var(--muted);font-size:13px}.toolkit-extras a{color:var(--accent);text-decoration:none}.toolkit-extras a:hover{text-decoration:underline}
     .directory-chip-group{display:flex;gap:7px;flex-wrap:wrap}.directory-chip{min-height:36px;padding:0 12px;border:1px solid var(--line);border-radius:999px;background:var(--sunken);color:var(--secondary);font-size:10px;font-weight:700;cursor:pointer}.directory-chip[aria-pressed="true"]{border-color:var(--platinum);background:var(--platinum);color:var(--bg)}
@@ -1112,6 +1112,27 @@
     .rule-table{border-top:1px solid var(--line)}.rule-row{min-height:52px;padding:11px 0;display:grid;grid-template-columns:minmax(120px,.7fr) 1fr;gap:16px;align-items:center;border-bottom:1px solid var(--line)}.rule-table .rule-row:nth-child(even){background:color-mix(in srgb,var(--surface) 55%,transparent)}.rule-row span{color:var(--muted);font-size:10px}.rule-row strong{color:var(--platinum);font:500 11px/1.35 "IBM Plex Mono","IBM Plex Sans Arabic",monospace}.notable-rules{margin:22px 0 0;padding:0;list-style:none;border-top:1px solid var(--line)}.notable-rules li{min-height:45px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--line);color:var(--secondary);font-size:11px}.notable-rules i{width:6px;height:6px;border-radius:50%;border:1px solid var(--platinum)}
     html[dir="rtl"] .directory-search svg{left:auto;right:14px}html[dir="rtl"] .directory-search input{padding-left:14px;padding-right:42px}
     @media (min-width:640px){.directory-toolbar{grid-template-columns:minmax(280px,1fr) auto;align-items:center}.directory-actions{grid-template-columns:220px auto}.directory-stat-strip{grid-template-columns:repeat(5,minmax(0,1fr))}.filter-sheet,.firm-detail-sheet{align-items:center;justify-content:center;padding:24px}.filter-sheet-panel,.firm-detail-panel{width:min(100%,620px);border-radius:18px;padding:24px}.firm-detail-panel{width:min(100%,760px)}}
+    /* GLASS FIRM POPUP (founder order 2026-10-29): frosted-glass firm popup like the reference — our navy/gold, transparent */
+    .firm-detail-sheet{background:rgba(2,8,17,.55);backdrop-filter:blur(10px) saturate(1.1);-webkit-backdrop-filter:blur(10px) saturate(1.1)}
+    .firm-detail-sheet .firm-detail-panel{background:rgba(10,22,40,.62);backdrop-filter:blur(28px) saturate(1.3);-webkit-backdrop-filter:blur(28px) saturate(1.3);border:1px solid rgba(212,175,55,.30);box-shadow:0 24px 80px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.09)}
+    .firm-detail-sheet .grabber{background:rgba(212,175,55,.5)}
+    #firmDetailLogo{width:46px;height:46px;flex:0 0 auto;border-radius:14px}
+    .sheet-like{display:flex;align-items:center;gap:6px;flex:none;white-space:nowrap;border:1px solid var(--line-strong);border-radius:999px;background:rgba(212,175,55,.06);padding:7px 10px;cursor:pointer;font-family:inherit;color:var(--text);min-height:40px}
+    .sheet-like b{font-size:14px;font-variant-numeric:tabular-nums}
+    .sheet-like .fd-like-ico{font-size:16px;filter:grayscale(1);opacity:.55;transition:all .15s}
+    .sheet-like[aria-pressed="true"]{border-color:rgba(212,175,55,.55);background:rgba(212,175,55,.12)}
+    .sheet-like[aria-pressed="true"] .fd-like-ico{filter:none;opacity:1}
+    .sheet-compare{flex:none;white-space:nowrap;border:1px solid var(--line-strong);border-radius:999px;background:transparent;padding:7px 12px;cursor:pointer;font-family:inherit;color:var(--muted);font-size:12px;font-weight:700;min-height:40px}
+    .sheet-compare.on{border-color:rgba(212,175,55,.55);background:rgba(212,175,55,.12);color:var(--gold,#D4AF37)}
+    .promo-line{display:flex;align-items:center;gap:10px;justify-content:space-between;padding:10px 12px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;cursor:pointer;background:rgba(212,175,55,.05)}
+    .promo-line b{font-family:ui-monospace,monospace;color:var(--gold,#D4AF37);font-size:14px}
+    .promo-line small{color:var(--muted);font-size:11px;display:block}
+    @media (max-width:639px){
+      .firm-detail-sheet{align-items:stretch;justify-content:stretch;padding:0}
+      .firm-detail-sheet .firm-detail-panel{width:100%;height:100dvh;max-height:none;border-radius:0;border:0;border-top:1px solid rgba(212,175,55,.30);padding:14px 18px calc(26px + env(safe-area-inset-bottom))}
+      .firm-detail-sheet .sheet-title-row{flex-wrap:wrap;row-gap:10px}
+      .firm-detail-sheet .sheet-title-main{flex:1 1 calc(100% - 62px)}
+    }
     @media (min-width:1024px){.directory-wrap{padding:46px 0 74px}.directory-head{grid-template-columns:auto 1fr;align-items:start}.directory-empty{min-height:360px}}
 
     /* Methodology, support, and journal account management. */
@@ -2038,6 +2059,9 @@
 .compare-row .cmp-same{opacity:.55}
 /* WAVE 2 — Detail sheet tabs */
 .sheet-tabs{display:flex;gap:6px;margin:14px 0 4px;border-bottom:1px solid var(--line);padding-bottom:0}
+    .firm-detail-sheet .sheet-tabs{overflow-x:auto;scrollbar-width:none}
+    .firm-detail-sheet .sheet-tabs::-webkit-scrollbar{display:none}
+    .firm-detail-sheet .sheet-tab{flex:none;white-space:nowrap}
 .sheet-tab{border:0;background:transparent;color:var(--muted);font-size:13px;font-weight:700;padding:10px 14px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
 .sheet-tab[aria-selected="true"]{color:var(--platinum);border-bottom-color:var(--gold,#D4AF37)}
 .sheet-tabpane{display:none;padding-top:12px}
@@ -4707,10 +4731,11 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
 <div class="firm-detail-sheet" id="firmDetailSheet" role="dialog" aria-modal="true" aria-labelledby="firmDetailTitle">
   <div class="firm-detail-panel">
     <div class="grabber"></div>
-    <div class="sheet-title-row"><div><p class="eyebrow">Verified firm profile <span class="new-badge" id="firmDetailNewBadge" hidden>✦ NEW</span> <span class="cat-badge" id="firmDetailCatBadge" hidden></span></p><h3 id="firmDetailTitle">—</h3><p>Data updated —</p></div><button class="sheet-close" id="closeFirmDetail" type="button" aria-label="Close firm details"><svg width="18"><use href="#pv-i-x"/></svg></button></div>
+    <div class="sheet-title-row"><span class="logo-slot" id="firmDetailLogo" aria-hidden="true"></span><div class="sheet-title-main"><p class="eyebrow">Verified firm profile <span class="new-badge" id="firmDetailNewBadge" hidden>✦ NEW</span> <span class="cat-badge" id="firmDetailCatBadge" hidden></span></p><h3 id="firmDetailTitle">—</h3><p>Data updated —</p></div><button class="sheet-compare" id="sheetCompare" type="button" aria-pressed="false">Compare</button><button class="sheet-like" id="sheetLike" type="button" aria-pressed="false" aria-label="Vote for this firm"><span class="fd-like-ico">👍</span><b id="sheetLikeCount">0</b></button><button class="sheet-close" id="closeFirmDetail" type="button" aria-label="Close firm details"><svg width="18"><use href="#pv-i-x"/></svg></button></div>
     <div class="sheet-tabs" role="tablist" aria-label="Firm detail sections">
       <button class="sheet-tab" type="button" role="tab" aria-selected="true" data-sheet-tab="overview">Overview</button>
       <button class="sheet-tab" type="button" role="tab" aria-selected="false" data-sheet-tab="challenges">Challenges</button>
+      <button class="sheet-tab" type="button" role="tab" aria-selected="false" data-sheet-tab="deals">Deals</button>
       <button class="sheet-tab" type="button" role="tab" aria-selected="false" data-sheet-tab="payouts">Payouts</button>
     </div>
     <div class="sheet-tabpane active" data-sheet-pane="overview">
@@ -4718,6 +4743,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     <h3 style="margin:24px 0 0">Notable rules</h3><ul class="notable-rules"><li><i aria-hidden="true"></i><span>—</span></li><li><i aria-hidden="true"></i><span>—</span></li><li><i aria-hidden="true"></i><span>—</span></li></ul>
     </div><!-- /overview pane -->
     <div class="sheet-tabpane" data-sheet-pane="challenges" role="tabpanel"><div id="sheetChallenges"></div></div>
+    <div class="sheet-tabpane" data-sheet-pane="deals" role="tabpanel"><div id="sheetDeals"></div></div>
     <div class="sheet-tabpane" data-sheet-pane="payouts" role="tabpanel"><div id="sheetPayouts"></div></div>
   </div>
 </div>
@@ -7439,6 +7465,14 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     var plans=sbPlansByFirm[firm.id]||[];var rules=plans.length?plans[0].rules:null;
     var sheet=document.getElementById('firmDetailSheet');if(!sheet)return;
     var title=document.getElementById('firmDetailTitle');if(title)title.textContent=firm.name;
+    var logoEl=document.getElementById('firmDetailLogo');if(logoEl&&typeof sbFirmLogo==='function')sbFirmLogo(logoEl,firm);
+    /* Compare toggle lives in the popup header now (was on the firm-detail screen) */
+    var cmpBtn=document.getElementById('sheetCompare');
+    if(cmpBtn){
+      var _uc=function(){var s=(window.sbCompareIds||[]).indexOf(String(firm.id))!==-1;cmpBtn.classList.toggle('on',s);cmpBtn.setAttribute('aria-pressed',String(s));};
+      _uc();
+      cmpBtn.onclick=function(ev){if(ev)ev.stopPropagation();var _was=(window.sbCompareIds||[]).indexOf(String(firm.id))!==-1;if(typeof sbToggleCompare==='function')sbToggleCompare(firm.id);_uc();var _now=(window.sbCompareIds||[]).indexOf(String(firm.id))!==-1;if(_now!==_was&&typeof showToast==='function')showToast(_now?(currentLanguage==='ar'?'تزادت للمقارنة':'Added to compare'):(currentLanguage==='ar'?'تحيدات من المقارنة':'Removed from compare'));};
+    }
     // NEW badge + category badge on detail sheet
     var newBadge=document.getElementById('firmDetailNewBadge');
     if(newBadge)newBadge.hidden=!sbIsNewFirm(firm.id);
@@ -7528,23 +7562,26 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
           prel.slice(0,5).forEach(function(k){var li=document.createElement('li');var sp=document.createElement('span');sp.textContent=k;li.appendChild(sp);ul.appendChild(li);});
           poEl.appendChild(ul);
         }
-        // promotions
+        // promotions -> Deals tab (was buried in Payouts)
         var promos=[];
         var _seen={};plans.forEach(function(p){var pr2=p.rules?sbBestPromo(p.rules):null;if(pr2){var _k=String(pr2.code||'PV').toUpperCase();if(!_seen[_k]){_seen[_k]=1;promos.push(pr2);}}});
-        if(promos.length){
-          var hp=document.createElement('h3');hp.style.margin='6px 0 8px';hp.style.fontSize='14px';hp.textContent=ar?'العروض':'Promotions';
-          poEl.appendChild(hp);
-          promos.slice(0,4).forEach(function(pr2){
-            var line=document.createElement('div');line.className='promo-line';
-            var code=document.createElement('b');code.textContent=pr2.code||'PV';
-            var meta=document.createElement('small');meta.textContent=(pr2.discount||'')+(pr2.expiry?(' · '+(ar?'ينتهي ':'ends ')+sbFmtDate(pr2.expiry)):'');
-            line.appendChild(code);line.appendChild(meta);
-            line.style.cursor='pointer';
-            line.addEventListener('click',function(){try{if(navigator.clipboard)navigator.clipboard.writeText(pr2.code||'PV');if(typeof showToast==='function')showToast(ar?'تم نسخ الكود':'Code copied');}catch(e){}});
-            poEl.appendChild(line);
-          });
+        var deEl=document.getElementById('sheetDeals');
+        if(deEl){
+          deEl.innerHTML='';
+          if(promos.length){
+            promos.slice(0,6).forEach(function(pr2){
+              var line=document.createElement('div');line.className='promo-line';
+              var code=document.createElement('b');code.textContent=pr2.code||'PV';
+              var meta=document.createElement('small');meta.textContent=(pr2.discount||'')+(pr2.expiry?(' · '+(ar?'ينتهي ':'ends ')+sbFmtDate(pr2.expiry)):'');
+              line.appendChild(code);line.appendChild(meta);
+              line.addEventListener('click',function(){try{if(navigator.clipboard)navigator.clipboard.writeText(pr2.code||'PV');if(typeof showToast==='function')showToast(ar?'تم نسخ الكود':'Code copied');}catch(e){}});
+              deEl.appendChild(line);
+            });
+          }else{
+            deEl.innerHTML='<p style="color:var(--muted);font-size:13px">'+(ar?'لا توجد عروض نشطة.':'No active promos.')+'</p>';
+          }
         }
-        if(!prel.length&&!promos.length){
+        if(!prel.length){
           poEl.innerHTML+='<p style="color:var(--muted);font-size:13px">'+(ar?'لا توجد بيانات دفع إضافية.':'No additional payout data.')+'</p>';
         }
       }
@@ -7806,6 +7843,10 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       else if(starsEl){starsEl.title='';}
       if(likeCnt)likeCnt.textContent=likeCount||0;
       if(likeBtn){likeBtn.setAttribute('aria-pressed',String(!!liked));}
+      /* Glass popup header like-button (same Versus vote mechanism) */
+      var _shLike=document.getElementById('sheetLike'),_shLikeCnt=document.getElementById('sheetLikeCount');
+      if(_shLikeCnt)_shLikeCnt.textContent=likeCount||0;
+      if(_shLike)_shLike.setAttribute('aria-pressed',String(!!liked));
     }
     paint(0,0,0,0,false,false);
     if(typeof sb==='undefined'||!sb)return;
@@ -7841,6 +7882,9 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
         }catch(_ce){}
         if(likeBtn){likeBtn.onclick=function(ev){if(ev)ev.stopPropagation();sbToggleLike(firmId);};
           likeBtn.title=uidAtCall?'':(ar?'سجل الدخول للإعجاب':'Log in to like');}
+        var _shLike2=document.getElementById('sheetLike');
+        if(_shLike2){_shLike2.onclick=function(ev){if(ev)ev.stopPropagation();sbToggleLike(firmId);};
+          _shLike2.title=uidAtCall?'':(ar?'سجل الدخول للإعجاب':'Log in to like');}
       },function(){if(uidNow()!==uidAtCall)return;paint(avg,cnt,my,0,false,!!uidAtCall);});
     },function(){
       // ISSUE 2 fix: retry once on failure (race condition left "No ratings yet" permanently)
@@ -8035,63 +8079,32 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
   })();
   function sbOpenFirmDetail(firmId){
     var firm=null;(sbFirms||[]).forEach(function(f){if(String(f.id)===String(firmId))firm=f;});
-    if(!firm||typeof showScreen!=='function')return;
+    if(!firm)return;
+    /* 2026-10-29 (founder order): firm clicks open the GLASS POPUP, not the
+       firm-detail screen. One reroute here covers every call site (matcher,
+       directory, deals, today, versus, search, hash deep links, Pip). */
     sbDetailFirmId=firm.id;
     /* Firm-detail persistence: remember the open detail so a browser
        restart brings the user back here (pipvant_last_screen only
        stores primary screens, not the detail). */
     try{localStorage.setItem('pipvant_last_firm',firm.id);}catch(_plf){}
     try{if(typeof sbSetFirmHash==='function')sbSetFirmHash(firm.id);}catch(_hh){}
-    try{sbLoadCommunity(firm.id);}catch(e){}
-    var plans=sbPlansByFirm[firm.id]||[];
-    var ar=currentLanguage==='ar';
+    try{if(typeof sbFillDetailSheet==='function')sbFillDetailSheet(firm.id);}catch(_s){}
+    try{if(typeof sbLoadCommunity==='function')sbLoadCommunity(firm.id);}catch(e){}
+    /* reset to the Overview tab on every open */
     try{
-      var logo=document.getElementById('fdLogo');if(logo)sbFirmLogo(logo,firm);
-      var nm=document.getElementById('fdName');if(nm)nm.textContent=firm.name;
-      var sub=document.getElementById('fdSub');
-      if(sub){var fl=sbCountryFlag(firm.headquarters);var _dcat=sbCategoryOf(firm);var _dcatLbl=_dcat?((sbCatBadgeText[_dcat]||{})[ar?'ar':'en']||_dcat.toUpperCase()):'';sub.textContent=(fl?fl+' ':'')+(sbCountryName(firm.headquarters)||'—')+(_dcatLbl?' · '+_dcatLbl:'')+' · '+(ar?'تم التحقق ':'Verified ')+sbTimeAgo(firm.last_verified_at||firm.updated_at);}
-      var pl=document.getElementById('fdPlans');if(pl)pl.textContent=plans.length||'—';
-      var mx=plans.reduce(function(m,p){var n=Number(p.account_size);return n>m?n:m;},0);
-      var al=document.getElementById('fdAlloc');if(al)al.textContent=mx?sbFmtSize(mx):'—';
-      var pt=document.getElementById('fdPtdd');if(pt)pt.textContent=sbBestPtdd(plans)||'—';
-      var heart=document.getElementById('fdHeart');
-      if(heart){
-        heart.setAttribute('data-firm-id',firm.id);
-        heart.setAttribute('data-firm-name',firm.name||'');
-        if(typeof sbRepaintHeart==='function')sbRepaintHeart(heart,firm.id);
-        if(typeof sbBindHeartTap==='function')sbBindHeartTap(heart);
-      }
-      /* Compare lives here now (removed from cards) */
-      var fcmp=document.getElementById('fdCompare');
-      if(fcmp){
-        var uc=function(){var s=(window.sbCompareIds||[]).indexOf(String(firm.id))!==-1;fcmp.classList.toggle('on',s);fcmp.setAttribute('aria-pressed',String(s));};
-        uc();
-        /* BATCH N (m4): exactly ONE truthful toast per click — toast only
-           when the compare state actually changed. If the toggle was a
-           no-op (maximum 3 firms), sbToggleCompare() has already toasted
-           the reason and nothing more is claimed here. */
-        fcmp.onclick=function(ev){if(ev)ev.stopPropagation();var _was=(window.sbCompareIds||[]).indexOf(String(firm.id))!==-1;if(typeof sbToggleCompare==='function')sbToggleCompare(firm.id);uc();var _now=(window.sbCompareIds||[]).indexOf(String(firm.id))!==-1;if(_now!==_was&&typeof showToast==='function')showToast(_now?(ar?'تزادت للمقارنة ':'Added to compare '):(ar?'تحيدات من المقارنة ':'Removed from compare '));};
-      }
-      var L={back:ar?'رجوع للمطابق':'Back to matcher',plans:ar?'الخطط':'Plans',alloc:ar?'أقصى تخصيص':'Max allocation',ptdd:ar?'أفضل PT:DD':'Best PT:DD',tO:ar?'نظرة عامة':'Overview',tC:ar?'التحديات':'Challenges',tP:ar?'الدفعات':'Payouts',copy:ar?'نسخ كود PV':'Copy PV code'};
-      document.querySelectorAll('#firm-detail [data-fd-lbl]').forEach(function(elm){
-        var k=elm.getAttribute('data-fd-lbl');
-        var map={back:'back',plans:'plans',alloc:'alloc',ptdd:'ptdd',tOverview:'tO',tChallenges:'tC',tPayouts:'tP',copyPv:'copy'};
-        if(map[k]&&L[map[k]])elm.textContent=L[map[k]];
-      });
-      sbFillFdOverview(firm,plans,ar);
-      sbFillFdChallenges(firm,plans,ar);
-      sbFillFdPayouts(firm,plans,ar);
-      document.querySelectorAll('#firm-detail .fd-tab').forEach(function(t){
-        var on=t.getAttribute('data-fd-tab')==='overview';
-        t.classList.toggle('active',on);t.setAttribute('aria-selected',String(on));
-      });
-      document.querySelectorAll('#firm-detail .fd-pane').forEach(function(p){
-        p.classList.toggle('active',p.getAttribute('data-fd-pane')==='overview');
-      });
-      var cp=document.getElementById('fdCopyPv');
-      if(cp)cp.onclick=function(){try{if(navigator.clipboard)navigator.clipboard.writeText('PV');if(typeof showToast==='function')showToast(ar?'تم نسخ PV':'PV copied');}catch(e){}};
-    }catch(e){}
-    showScreen('firm-detail');
+      document.querySelectorAll('#firmDetailSheet .sheet-tab').forEach(function(t){t.setAttribute('aria-selected',String(t.getAttribute('data-sheet-tab')==='overview'));});
+      document.querySelectorAll('#firmDetailSheet .sheet-tabpane').forEach(function(p){p.classList.toggle('active',p.getAttribute('data-sheet-pane')==='overview');});
+    }catch(_t){}
+    var sheet=document.getElementById('firmDetailSheet');
+    if(sheet){
+      sheet.classList.add('open');
+      var panel=sheet.querySelector('.firm-detail-panel');
+      if(panel){panel.classList.remove('detail-morph');void panel.offsetWidth;panel.classList.add('detail-morph');}
+      var verified=sheet.querySelector('.verified-check');
+      if(verified){verified.classList.remove('is-drawing');void verified.offsetWidth;verified.classList.add('is-drawing');}
+    }
+    var cb=document.getElementById('closeFirmDetail');if(cb){try{cb.focus();}catch(_f){}}
   }
   // detail page tabs (wired once)
   try{
@@ -11692,7 +11705,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     var ar=currentLanguage==='ar';
     tabs.forEach(function(t){
       var k=t.getAttribute('data-sheet-tab');
-      t.textContent=k==='overview'?(ar?'نظرة عامة':'Overview'):k==='challenges'?(ar?'التحديات':'Challenges'):(ar?'الدفعات':'Payouts');
+      t.textContent=k==='overview'?(ar?'نظرة عامة':'Overview'):k==='challenges'?(ar?'التحديات':'Challenges'):k==='deals'?(ar?'العروض':'Deals'):(ar?'الدفعات':'Payouts');
     });
     tabs.forEach(function(tab){tab.addEventListener('click',function(){
       tabs.forEach(function(o){o.setAttribute('aria-selected',String(o===tab));});
