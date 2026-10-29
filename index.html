@@ -1126,6 +1126,55 @@
     .sheet-compare.on{border-color:rgba(212,175,55,.55);background:rgba(212,175,55,.12);color:var(--gold,#D4AF37)}
     .promo-line{display:flex;align-items:center;gap:10px;justify-content:space-between;padding:10px 12px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;cursor:pointer;background:rgba(212,175,55,.05)}
     .promo-line b{font-family:ui-monospace,monospace;color:var(--gold,#D4AF37);font-size:14px}
+    /* PLAN CARD (founder order 2026-10-29): liquidjournal-style plan detail, swipeable sizes */
+    #planCard{position:fixed;inset:0;z-index:120;display:none;align-items:center;justify-content:center;padding:14px;background:rgba(2,8,17,.62);backdrop-filter:blur(10px) saturate(1.1);-webkit-backdrop-filter:blur(10px) saturate(1.1)}
+    #planCard.open{display:flex}
+    .plan-card{width:100%;max-width:480px;max-height:94dvh;max-height:94svh;overflow-y:auto;border-radius:24px;background:rgba(10,22,40,.68);backdrop-filter:blur(28px) saturate(1.3);-webkit-backdrop-filter:blur(28px) saturate(1.3);border:1px solid rgba(212,175,55,.30);box-shadow:0 24px 80px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.09);padding:14px 16px calc(20px + env(safe-area-inset-bottom));overscroll-behavior:contain}
+    @media(min-width:640px){.plan-card{max-width:620px;padding:22px 26px 28px}}
+    .pc-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+    .pc-head .logo-slot{width:38px;height:38px;border-radius:12px;flex:0 0 auto}
+    .pc-head h3{margin:0;font-size:19px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .pc-iconbtn{width:38px;height:38px;flex:0 0 auto;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.04);color:var(--text);display:grid;place-items:center;cursor:pointer;font-size:15px;font-weight:700}
+    .pc-toggle{display:flex;border:1px solid var(--line);border-radius:12px;overflow:hidden;flex:0 0 auto}
+    .pc-toggle button{border:0;background:transparent;color:var(--muted);font-size:14px;font-weight:800;min-width:38px;min-height:38px;cursor:pointer;font-family:inherit}
+    .pc-toggle button.on{background:rgba(212,175,55,.16);color:var(--gold,#D4AF37)}
+    .pc-programs{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;margin-bottom:12px}
+    .pc-programs::-webkit-scrollbar{display:none}
+    .pc-pill{flex:1 0 auto;min-width:130px;border:1px solid var(--line-strong);border-radius:16px;background:rgba(255,255,255,.03);padding:12px 14px;cursor:pointer;text-align:center;font-family:inherit;color:var(--text)}
+    .pc-pill b{display:block;font-size:16px;margin-bottom:2px}
+    .pc-pill small{color:var(--muted);font-size:11px}
+    .pc-pill.on{border-color:rgba(91,141,239,.65);background:rgba(91,141,239,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+    .pc-hero{position:relative;overflow:hidden;border-radius:20px;border:1px solid rgba(91,141,239,.28);background:linear-gradient(165deg,rgba(91,141,239,.20),rgba(10,22,40,.55) 65%);padding:18px;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+    .pc-hero .pc-ghost{position:absolute;right:6px;top:50%;transform:translateY(-52%);font-size:150px;font-weight:800;color:rgba(255,255,255,.045);pointer-events:none;line-height:1}
+    .pc-eyebrow{display:flex;justify-content:space-between;align-items:center;font-size:10.5px;letter-spacing:.14em;color:var(--muted);font-weight:700;margin-bottom:6px}
+    .pc-phase{font-size:10.5px;letter-spacing:.08em;border:1px solid rgba(212,175,55,.4);color:var(--gold,#D4AF37);border-radius:999px;padding:4px 10px}
+    .pc-size{font-size:64px;font-weight:800;letter-spacing:-.02em;line-height:1;margin:2px 0 4px;font-variant-numeric:tabular-nums}
+    .pc-sub{color:var(--muted);font-size:13px;margin-bottom:14px}
+    .pc-track{position:relative;height:8px;border-radius:99px;background:rgba(255,255,255,.10);margin:6px 0 8px}
+    .pc-fill{position:absolute;left:0;top:0;bottom:0;border-radius:99px;background:linear-gradient(90deg,rgba(212,175,55,.55),rgba(91,141,239,.85))}
+    .pc-marker{position:absolute;top:-3px;bottom:-3px;width:3px;border-radius:2px;background:#fff;box-shadow:0 0 8px rgba(255,255,255,.7)}
+    .pc-scale{display:flex;justify-content:space-between;font-size:12px;font-weight:700;font-variant-numeric:tabular-nums;margin-bottom:12px}
+    .pc-scale small{display:block;font-weight:500;color:var(--muted);font-size:10.5px}
+    .pc-scale span:nth-child(2){text-align:center}
+    .pc-scale span:nth-child(3){text-align:right}
+    .pc-sizes{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+    .pc-sizes::-webkit-scrollbar{display:none}
+    .pc-sizechip{flex:0 0 auto;border:1px solid var(--line-strong);background:rgba(255,255,255,.03);color:var(--muted);border-radius:999px;padding:8px 14px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;font-variant-numeric:tabular-nums}
+    .pc-sizechip.on{border-color:rgba(212,175,55,.6);color:var(--gold,#D4AF37);background:rgba(212,175,55,.10)}
+    .pc-swipehint{text-align:center;color:var(--muted);font-size:10.5px;margin-top:8px}
+    .pc-promo{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:12px 0 4px;padding:12px 14px;border:1px dashed rgba(212,175,55,.5);border-radius:14px;background:rgba(212,175,55,.06);cursor:pointer}
+    .pc-promo b{font-family:ui-monospace,monospace;color:var(--gold,#D4AF37);font-size:15px}
+    .pc-promo small{color:var(--muted);font-size:11px;display:block}
+    .pc-rows{margin-top:8px}
+    .pc-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 2px;border-bottom:1px solid var(--line)}
+    .pc-row span{color:var(--muted);font-size:13.5px}
+    .pc-row b{font-size:15.5px;font-variant-numeric:tabular-nums;text-align:right}
+    .pc-row b small{color:var(--muted);font-weight:500;font-size:11.5px}
+    .pc-cta{display:flex;gap:10px;margin-top:16px}
+    .pc-cta .btn{flex:1;min-height:52px;border-radius:16px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;border:1px solid var(--line-strong);background:rgba(255,255,255,.05);color:var(--text)}
+    .pc-cta .btn.primary{border:0;background:linear-gradient(135deg,#D4AF37,#b8942a);color:#0A1628}
+    .pc-verified{text-align:center;color:var(--muted);font-size:11px;margin-top:12px}
+    .pc-rules{margin-top:6px}
     .promo-line small{color:var(--muted);font-size:11px;display:block}
     @media (max-width:639px){
       /* founder order 2026-10-29: phone gets the same floating glass CARD as
@@ -4750,6 +4799,11 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
   </div>
 </div>
 
+<!-- PLAN CARD — founder order 2026-10-29: liquidjournal-style plan detail, swipeable sizes -->
+<div id="planCard" role="dialog" aria-modal="true" aria-label="Plan details">
+  <div class="plan-card" id="planCardBody"></div>
+</div>
+
 <!-- WAVE 2b — Compare tray + modal -->
 <div class="compare-tray" id="compareTray" role="toolbar" aria-label="Compare selected firms">
   <span><span class="cmp-count" id="cmpCount">0</span> <span data-i18n-cmp="selected">selected</span></span>
@@ -7530,6 +7584,14 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
           pr.innerHTML=dp.final!=null?(dp.pct>0?'<s style="color:var(--muted);font-weight:400">'+sbFmtUSD(dp.base)+'</s> ':'')+sbFmtUSD(dp.final):'—';
           row.appendChild(left);row.appendChild(pr);
           chEl.appendChild(row);
+          /* PLAN CARD: tapping a plan row opens the liquidjournal-style plan card */
+          (function(_fid,_prog,_size,_row){
+            _row.style.cursor='pointer';_row.setAttribute('role','button');_row.setAttribute('tabindex','0');
+            _row.setAttribute('aria-label',(currentLanguage==='ar'?'تفاصيل خطة ':'Plan details ')+sbFmtSize(_size));
+            function _open(){if(typeof sbOpenPlanCard==='function')sbOpenPlanCard(_fid,_prog,_size);}
+            _row.addEventListener('click',function(){_open();});
+            _row.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();_open();}});
+          })(firm.id,((p.rules||{}).program||'Standard'),p.account_size,row);
           /* Launch additions: plain-language Rule Sheet per plan, collapsed behind a toggle (reuses sbRuleSheetEl as-is). */
           try{
             var rsEl=(typeof sbRuleSheetEl==='function')?sbRuleSheetEl(firm,p):null;
@@ -7589,6 +7651,143 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       }
     }catch(_sp){}
   }
+  /* ============ PLAN CARD (founder order 2026-10-29): liquidjournal-style plan detail, swipeable sizes ============ */
+  var _pcState=null;
+  function _pcEsc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+  function _pcGroups(firmId){
+    var plans=(typeof sbPlansByFirm!=='undefined'?sbPlansByFirm[firmId]:null)||[];
+    var g={};
+    plans.forEach(function(p){var k=((p.rules||{}).program||'Standard');(g[k]=g[k]||[]).push(p);});
+    Object.keys(g).forEach(function(k){g[k].sort(function(a,b){return sbNum(a.account_size)-sbNum(b.account_size);});});
+    return g;
+  }
+  function _pcPlan(){var s=_pcState;if(!s)return null;var l=s.groups[s.program]||[];return l[s.idx]||null;}
+  function sbOpenPlanCard(firmId,program,size){
+    var firm=null;(sbFirms||[]).forEach(function(f){if(String(f.id)===String(firmId))firm=f;});
+    if(!firm)return;
+    var groups=_pcGroups(firmId),progs=Object.keys(groups);
+    if(!progs.length)return;
+    if(progs.indexOf(program)<0)program=progs[0];
+    var list=groups[program],idx=0,i;
+    for(i=0;i<list.length;i++){if(String(list[i].account_size)===String(size)){idx=i;break;}}
+    _pcState={firm:firm,firmId:firmId,groups:groups,progs:progs,program:program,idx:idx,pct:false};
+    _pcRender();
+    var ov=document.getElementById('planCard');if(ov)ov.classList.add('open');
+  }
+  function sbClosePlanCard(){var ov=document.getElementById('planCard');if(ov)ov.classList.remove('open');_pcState=null;}
+  function _pcSizeLabel(n){n=sbNum(n);if(!isFinite(n))return '—';return n>=1000?(Math.round(n/100)/10).toString().replace(/\.0$/,'')+'K':String(Math.round(n));}
+  function _pcRender(){
+    var s=_pcState;if(!s)return;
+    var plan=_pcPlan();if(!plan)return;
+    var ar=(typeof currentLanguage!=='undefined'&&currentLanguage==='ar');
+    var r=plan.rules||{};
+    var size=sbNum(plan.account_size);
+    var tp=sbNum(r.profit_target_pct),dd=sbNum(r.max_drawdown_pct),dl=sbNum(r.daily_loss_pct);
+    var body=document.getElementById('planCardBody');if(!body)return;
+    function val(usd,pctTxt){return s.pct?pctTxt:usd;}
+    function money(n){n=Number(n);return isFinite(n)?'$'+Math.round(n).toLocaleString('en-US'):'—';}
+    /* program pills */
+    var pills=s.progs.map(function(pg){
+      var ps=s.groups[pg],minTp=Infinity,minPr=Infinity;
+      ps.forEach(function(p){var rr=p.rules||{};var t=sbNum(rr.profit_target_pct);if(isFinite(t)&&t<minTp)minTp=t;var pr=sbNum(p.price);if(isFinite(pr)&&pr<minPr)minPr=pr;});
+      var sub=isFinite(minTp)?(ar?'الهدف ':'Target ')+minTp+'%':(isFinite(minPr)?(ar?'من ':'From ')+money(minPr):'');
+      return '<button type="button" class="pc-pill'+(pg===s.program?' on':'')+'" data-pc-prog="'+_pcEsc(pg)+'"><b>'+_pcEsc(pg)+'</b>'+(sub?'<small>'+_pcEsc(sub)+'</small>':'')+'</button>';
+    }).join('');
+    /* sizes */
+    var list=s.groups[s.program]||[];
+    var chips=list.map(function(p,i){return '<button type="button" class="pc-sizechip'+(i===s.idx?' on':'')+'" data-pc-size="'+i+'">'+_pcEsc(_pcSizeLabel(p.account_size))+'</button>';}).join('');
+    /* progress bar */
+    var barHtml='';
+    if(isFinite(size)&&isFinite(tp)&&isFinite(dd)&&tp>0&&dd>0){
+      var fail=size*(1-dd/100),start=size,target=size*(1+tp/100);
+      var pos=Math.max(0,Math.min(100,(start-fail)/(target-fail)*100));
+      barHtml='<div class="pc-track"><div class="pc-fill" style="width:'+pos+'%"></div><div class="pc-marker" style="left:calc('+pos+'% - 1px)"></div></div>'
+        +'<div class="pc-scale"><span>'+money(fail)+'<small>'+(ar?'الفشل تحت':'Fail below')+'</small></span>'
+        +'<span>'+money(start)+'<small>'+(ar?'البداية':'Start')+'</small></span>'
+        +'<span>'+money(target)+'<small>'+(ar?'الهدف':'Target')+'</small></span></div>';
+    }
+    /* rows */
+    function pctTxt(v){return isFinite(v)?v+'%':'—';}
+    var rows=[
+      [ar?'هدف الربح':'Profit target',val(money(size*tp/100),pctTxt(tp))],
+      [ar?'أقصى خسارة':'Max loss',val(money(size*dd/100)+(r.drawdown_type?' <small>'+_pcEsc(String(r.drawdown_type).split(' ')[0])+'</small>':''),pctTxt(dd)+(r.drawdown_type?' <small>'+_pcEsc(String(r.drawdown_type).split(' ')[0])+'</small>':''))],
+      [ar?'الخسارة اليومية':'Daily loss',val(isFinite(dl)?money(size*dl/100):(ar?'غير مذكور':'Not listed'),isFinite(dl)?pctTxt(dl):(ar?'غير مذكور':'Not listed'))]
+    ];
+    var minD=r.min_trading_days!=null&&r.min_trading_days!==''?r.min_trading_days:(ar?'غير مذكور':'Not listed');
+    rows.push([ar?'أيام التداول الدنيا':'Min days',minD]);
+    rows.push([ar?'الاتساق':'Consistency',(r.consistency_pct!=null&&isFinite(sbNum(r.consistency_pct)))?sbNum(r.consistency_pct)+'%':(ar?'لا يوجد':'None')]);
+    var dp=(typeof sbDiscountedPrice==='function')?sbDiscountedPrice(plan):{final:sbNum(plan.price)};
+    var priceHtml=dp.final!=null?((dp.pct>0?'<s style="color:var(--muted);font-weight:400">'+money(dp.base)+'</s> ':'')+money(dp.final)):'—';
+    rows.push([ar?'السعر':'List price',priceHtml]);
+    var rowsHtml=rows.map(function(x){return '<div class="pc-row"><span>'+_pcEsc(x[0])+'</span><b>'+x[1]+'</b></div>';}).join('');
+    /* promo (our addition) */
+    var promo=(typeof sbBestPromo==='function')?sbBestPromo(r):null;
+    var promoHtml='';
+    if(promo&&promo.code){
+      promoHtml='<div class="pc-promo" id="pcPromo"><div><b>'+_pcEsc(promo.code)+'</b><small>'+_pcEsc((promo.discount||'')+(promo.expiry?' · '+promo.expiry:''))+'</small></div><small>'+(ar?'انسخ':'Copy')+'</small></div>';
+    }
+    /* plain-language rules (our addition) */
+    var rulesHtml='';
+    try{var rsEl=(typeof sbRuleSheetEl==='function')?sbRuleSheetEl(s.firm,plan):null;
+      if(rsEl){var w=document.createElement('div');w.className='pc-rules';w.appendChild(rsEl);rulesHtml=w.innerHTML;}
+    }catch(_re){}
+    var ghost=_pcEsc((s.firm.name||'P').charAt(0).toUpperCase());
+    body.innerHTML=
+      '<div class="pc-head">'
+      +'<button type="button" class="pc-iconbtn" id="pcBack" aria-label="Back">‹</button>'
+      +'<div class="pc-toggle" role="group" aria-label="$ or %"><button type="button" id="pcModeUsd" class="'+(s.pct?'':'on')+'">$</button><button type="button" id="pcModePct" class="'+(s.pct?'on':'')+'">%</button></div>'
+      +'<span class="logo-slot" id="pcLogo"></span><h3>'+_pcEsc(s.firm.name)+'</h3>'
+      +'<button type="button" class="pc-iconbtn" id="pcClose" aria-label="Close">✕</button>'
+      +'</div>'
+      +(s.progs.length>1?'<div class="pc-programs">'+pills+'</div>':'')
+      +'<div class="pc-hero" id="pcHero"><span class="pc-ghost" aria-hidden="true">'+ghost+'</span>'
+      +'<div class="pc-eyebrow"><span>'+(ar?'حجم الحساب':'ACCOUNT SIZE')+'</span><span class="pc-phase">'+_pcEsc(s.program)+'</span></div>'
+      +'<div class="pc-size">'+_pcEsc(_pcSizeLabel(size))+'</div>'
+      +'<div class="pc-sub">'+_pcEsc(s.firm.name+' '+s.program)+'</div>'
+      +barHtml
+      +'<div class="pc-sizes">'+chips+'</div>'
+      +'<div class="pc-swipehint">'+(ar?'اسحب يمين/يسار لتغيير الحجم':'Swipe left/right to change size')+'</div>'
+      +'</div>'
+      +promoHtml
+      +'<div class="pc-rows">'+rowsHtml+'</div>'
+      +rulesHtml
+      +'<div class="pc-cta">'
+      +(promo&&promo.code?'<button type="button" class="btn" id="pcCopyCode">'+(ar?'نسخ ':'Copy ')+_pcEsc(promo.code)+'</button>':'')
+      +'<button type="button" class="btn primary" id="pcOfficial">'+(ar?'الموقع الرسمي':'Official site')+'</button>'
+      +'</div>'
+      +'<div class="pc-verified">'+(ar?'تم التحقق ':'Verified ')+((typeof sbTimeAgo==='function')?sbTimeAgo(s.firm.last_verified_at||s.firm.updated_at):'')+'</div>';
+    try{var _lg=document.getElementById('pcLogo');if(_lg&&typeof sbFirmLogo==='function')sbFirmLogo(_lg,s.firm);}catch(_l){}
+    /* wire */
+    function q(sel){return body.querySelector(sel);}
+    function qa(sel){return Array.prototype.slice.call(body.querySelectorAll(sel));}
+    q('#pcBack').onclick=sbClosePlanCard;
+    q('#pcClose').onclick=sbClosePlanCard;
+    q('#pcModeUsd').onclick=function(){s.pct=false;_pcRender();};
+    q('#pcModePct').onclick=function(){s.pct=true;_pcRender();};
+    qa('.pc-pill').forEach(function(b){b.onclick=function(){s.program=b.getAttribute('data-pc-prog');s.idx=0;_pcRender();};});
+    qa('.pc-sizechip').forEach(function(b){b.onclick=function(){s.idx=Number(b.getAttribute('data-pc-size'))||0;_pcRender();};});
+    var off=q('#pcOfficial');if(off&&s.firm.website)off.onclick=function(){try{window.open(s.firm.website,'_blank','noopener');}catch(e){}};
+    function copyCode(){try{if(promo&&navigator.clipboard)navigator.clipboard.writeText(promo.code||'');if(typeof showToast==='function')showToast(ar?'تم نسخ الكود':'Code copied');}catch(e){}}
+    var pr2=q('#pcPromo');if(pr2)pr2.onclick=copyCode;
+    var cc=q('#pcCopyCode');if(cc)cc.onclick=copyCode;
+    /* swipe sizes on the hero */
+    var hero=q('#pcHero'),sx=null;
+    if(hero){
+      hero.addEventListener('touchstart',function(e){sx=e.touches[0].clientX;},{passive:true});
+      hero.addEventListener('touchend',function(e){
+        if(sx===null)return;var dx=e.changedTouches[0].clientX-sx;sx=null;
+        if(Math.abs(dx)<40)return;
+        var l=s.groups[s.program]||[];
+        if(dx<0&&s.idx<l.length-1){s.idx++;_pcRender();}
+        else if(dx>0&&s.idx>0){s.idx--;_pcRender();}
+      },{passive:true});
+    }
+  }
+  (function(){
+    var ov=document.getElementById('planCard');
+    if(ov)ov.addEventListener('click',function(e){if(e.target===ov)sbClosePlanCard();});
+  })();
+  /* ============ END PLAN CARD ============ */
   /* ============ FIRM DETAIL PAGE (dedicated page per firm) ============ */
   var sbDetailFirmId=null;
   function sbBestPtdd(plans){
@@ -11878,7 +12077,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     var detailTrigger=event.target.closest('[data-open-firm-detail]');if(detailTrigger){firmDetailSheet.classList.add('open');var panel=firmDetailSheet.querySelector('.firm-detail-panel');if(panel){panel.classList.remove('detail-morph');void panel.offsetWidth;panel.classList.add('detail-morph');}var verified=firmDetailSheet.querySelector('.verified-check');if(verified){verified.classList.remove('is-drawing');void verified.offsetWidth;verified.classList.add('is-drawing');}document.getElementById('closeFirmDetail').focus();}
     var saveTrigger=event.target.closest('[data-save-firm]');if(saveTrigger){var cardEl=saveTrigger.closest('[data-firm-id]');var sFid=cardEl?cardEl.getAttribute('data-firm-id'):null;var nowSaved=false;try{nowSaved=sFid?sbToggleShortlist(sFid):(saveTrigger.getAttribute('aria-pressed')!=='true');}catch(e){nowSaved=saveTrigger.getAttribute('aria-pressed')!=='true';}/* Batch P (M21/M10b): sbToggleShortlist already repainted every heart/bookmark for this firm from storage truth; on a failed write, say so instead of claiming a save. */if(sFid&&typeof _sbShortlistWriteOk!=='undefined'&&!_sbShortlistWriteOk){saveTrigger.setAttribute('aria-pressed',String(nowSaved));sbShortlistStorageToast();}else{saveTrigger.setAttribute('aria-pressed',String(nowSaved));saveTrigger.classList.remove('bookmark-pop');void saveTrigger.offsetWidth;saveTrigger.classList.add('bookmark-pop');showToast(currentLanguage==='ar'?(nowSaved?'تم الحفظ':'تمت الإزالة من المحفوظات'):(nowSaved?'Saved':'Removed from saved'));}}
   });
-  document.addEventListener('keydown',function(event){if(event.key==='Escape'){closeDirectoryFilters();closeFirmDetail();closeCalendarFilters();closeCalendarEvent();}});
+  document.addEventListener('keydown',function(event){if(event.key==='Escape'){if(typeof sbClosePlanCard==='function')sbClosePlanCard();closeDirectoryFilters();closeFirmDetail();closeCalendarFilters();closeCalendarEvent();}});
 
   function setupPullRefresh(screenId,contentSelector,refreshCallback){
     var screen=document.getElementById(screenId),surface=screen?screen.querySelector('.pull-refresh-surface'):null,content=screen?screen.querySelector(contentSelector):null;
