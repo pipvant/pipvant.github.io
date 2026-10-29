@@ -1147,8 +1147,13 @@
     .pc-hero{position:relative;overflow:hidden;border-radius:20px;border:1px solid rgba(91,141,239,.28);background:linear-gradient(165deg,rgba(91,141,239,.20),rgba(10,22,40,.55) 65%);padding:18px;touch-action:pan-y;user-select:none;-webkit-user-select:none}
     .pc-firmbtn{display:flex;align-items:center;gap:10px;flex:1;min-width:0;background:none;border:0;padding:0;margin:0;cursor:pointer;font:inherit;color:inherit;text-align:left}
     .pc-firmbtn h3{flex:1}
-    .pc-watermark{position:absolute;right:-34px;top:50%;transform:translateY(-52%);width:240px;height:240px;display:flex;align-items:center;justify-content:center;font-size:210px;font-weight:900;line-height:1;color:rgba(255,255,255,.055);pointer-events:none;user-select:none;-webkit-user-select:none}
-    .pc-watermark img{width:100%!important;height:100%!important;object-fit:contain;filter:brightness(0) invert(1);opacity:.07;border-radius:0!important}
+    .pc-slide{position:relative;overflow:hidden}
+    .pc-watermark{position:absolute;top:8px;right:-70px;width:420px;height:420px;z-index:0;display:flex;align-items:center;justify-content:center;font-size:360px;font-weight:900;line-height:1;color:rgba(255,255,255,.13);pointer-events:none;user-select:none;-webkit-user-select:none}
+    .pc-watermark img{width:100%!important;height:100%!important;object-fit:contain;filter:brightness(0) invert(1);opacity:.14;border-radius:0!important}
+    .pc-flip,.pc-flipbtn{position:relative;z-index:1}
+    .pc-variants{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:10px 4px 0}
+    .pc-vartab{min-height:42px;padding:0 20px;border-radius:12px;border:1px solid transparent;background:rgba(255,255,255,.045);color:var(--muted);font-weight:700;font-size:14.5px;cursor:pointer;font-family:inherit}
+    .pc-vartab.on{background:rgba(255,255,255,.10);color:var(--text);border-color:var(--line-strong)}
     .pc-eyebrow{display:flex;justify-content:space-between;align-items:center;font-size:10.5px;letter-spacing:.14em;color:var(--muted);font-weight:700;margin-bottom:6px}
     .pc-phase{font-size:10.5px;letter-spacing:.08em;border:1px solid rgba(212,175,55,.4);color:var(--gold,#D4AF37);border-radius:999px;padding:4px 10px}
     .pc-size{font-size:64px;font-weight:800;letter-spacing:-.02em;line-height:1;margin:2px 0 4px;font-variant-numeric:tabular-nums}
@@ -7677,23 +7682,42 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
   /* ============ PLAN CARD (founder order 2026-10-29): liquidjournal-style plan detail, swipeable sizes ============ */
   var _pcState=null;
   function _pcEsc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-  function _pcGroups(firmId){
-    var plans=(typeof sbPlansByFirm!=='undefined'?sbPlansByFirm[firmId]:null)||[];
-    var g={};
-    plans.forEach(function(p){var k=((p.rules||{}).program||'Standard');(g[k]=g[k]||[]).push(p);});
-    Object.keys(g).forEach(function(k){g[k].sort(function(a,b){return sbNum(a.account_size)-sbNum(b.account_size);});});
-    return g;
+  var _PC_SINGLE='\u0000';
+  function _pcSplitProg(p){
+    var w=String(p||'Standard').trim().split(/\s+/);
+    if(w.length>1)return {cat:w.slice(0,-1).join(' '),variant:w[w.length-1]};
+    return {cat:w[0]||'Standard',variant:null};
   }
-  function _pcPlan(){var s=_pcState;if(!s)return null;var l=s.groups[s.program]||[];return l[s.idx]||null;}
+  function _pcGroups2(firmId){
+    var plans=(typeof sbPlansByFirm!=='undefined'?sbPlansByFirm[firmId]:null)||[];
+    var cats={};
+    plans.forEach(function(p){
+      var sp=_pcSplitProg((p.rules||{}).program||'Standard');
+      var c=cats[sp.cat]||(cats[sp.cat]={variants:{},vorder:[]});
+      var vk=sp.variant||_PC_SINGLE;
+      if(!c.variants[vk]){c.variants[vk]=[];c.vorder.push(vk);}
+      c.variants[vk].push(p);
+    });
+    Object.keys(cats).forEach(function(ck){
+      cats[ck].vorder.forEach(function(vk){
+        cats[ck].variants[vk].sort(function(a,b){return sbNum(a.account_size)-sbNum(b.account_size);});
+      });
+    });
+    return cats;
+  }
+  function _pcPlan(){var s=_pcState;if(!s)return null;var c=s.cats[s.cat];if(!c)return null;var l=c.variants[s.variant||_PC_SINGLE]||[];return l[s.idx]||null;}
   function sbOpenPlanCard(firmId,program,size){
     var firm=null;(sbFirms||[]).forEach(function(f){if(String(f.id)===String(firmId))firm=f;});
     if(!firm)return;
-    var groups=_pcGroups(firmId),progs=Object.keys(groups);
-    if(!progs.length)return;
-    if(progs.indexOf(program)<0)program=progs[0];
-    var list=groups[program],idx=0,i;
+    var cats=_pcGroups2(firmId),order=Object.keys(cats);
+    if(!order.length)return;
+    var sp=_pcSplitProg(program),cat=sp.cat,variant=sp.variant;
+    if(!cats[cat])cat=order[0];
+    var cc=cats[cat],vk=variant||_PC_SINGLE;
+    if(!cc.variants[vk])vk=cc.vorder[0];
+    var list=cc.variants[vk],idx=0,i;
     for(i=0;i<list.length;i++){if(String(list[i].account_size)===String(size)){idx=i;break;}}
-    _pcState={firm:firm,firmId:firmId,groups:groups,progs:progs,program:program,idx:idx,pct:false};
+    _pcState={firm:firm,firmId:firmId,cats:cats,catOrder:order,cat:cat,variant:(vk===_PC_SINGLE?null:vk),idx:idx,pct:false};
     _pcRender();
     var ov=document.getElementById('planCard');if(ov)ov.classList.add('open');
     try{var _s2=_pcState;if(_s2&&_s2._paint){var _tr=document.getElementById('pcTrack');if(_tr){var _sl=_tr.querySelector('.pc-slide');var _st=_sl?_sl.offsetWidth:_tr.clientWidth;if(_st>0)_tr.scrollLeft=_s2.idx*_st;}_s2._paint();}}catch(_ps){}
@@ -7704,19 +7728,30 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     var s=_pcState;if(!s)return;
     var ar=(typeof currentLanguage!=='undefined'&&currentLanguage==='ar');
     var body=document.getElementById('planCardBody');if(!body)return;
-    var list=s.groups[s.program]||[];
+    var _cc=s.cats[s.cat];var list=_cc?(_cc.variants[s.variant||_PC_SINGLE]||[]):[];
     if(!list.length){sbClosePlanCard();return;}
     if(s.idx>=list.length)s.idx=0;
     function money(n){n=Number(n);return isFinite(n)?'$'+Math.round(n).toLocaleString('en-US'):'—';}
     function pctTxt(v){return isFinite(v)?v+'%':'—';}
     function val(usd,pct){return s.pct?pct:usd;}
     /* program pills */
-    var pills=s.progs.map(function(pg){
-      var ps=s.groups[pg],minTp=Infinity,minPr=Infinity;
-      ps.forEach(function(p){var rr=p.rules||{};var t=sbNum(rr.profit_target_pct);if(isFinite(t)&&t<minTp)minTp=t;var pr=sbNum(p.price);if(isFinite(pr)&&pr<minPr)minPr=pr;});
-      var sub=isFinite(minTp)?(ar?'الهدف ':'Target ')+minTp+'%':(isFinite(minPr)?(ar?'من ':'From ')+money(minPr):'');
-      return '<button type="button" class="pc-pill'+(pg===s.program?' on':'')+'" data-pc-prog="'+_pcEsc(pg)+'"><b>'+_pcEsc(pg)+'</b>'+(sub?'<small>'+_pcEsc(sub)+'</small>':'')+'</button>';
+    function _pcCatSub(ck){
+      var c=s.cats[ck],minTp=Infinity,minPr=Infinity;
+      c.vorder.forEach(function(vk){c.variants[vk].forEach(function(p){var rr=p.rules||{};var t=sbNum(rr.profit_target_pct);if(isFinite(t)&&t<minTp)minTp=t;var pr=sbNum(p.price);if(isFinite(pr)&&pr<minPr)minPr=pr;});});
+      if(isFinite(minTp))return (ar?'الهدف ':'Target ')+minTp+'%';
+      if(isFinite(minPr))return (ar?'من ':'From ')+money(minPr);
+      return '';
+    }
+    var pills=s.catOrder.map(function(ck){
+      var sub=_pcCatSub(ck);
+      return '<button type="button" class="pc-pill'+(ck===s.cat?' on':'')+'" data-pc-cat="'+_pcEsc(ck)+'"><b>'+_pcEsc(ck)+'</b>'+(sub?'<small>'+_pcEsc(sub)+'</small>':'')+'</button>';
     }).join('');
+    var catObj=s.cats[s.cat],variantsHtml='';
+    if(catObj&&catObj.vorder.length>1){
+      variantsHtml='<div class="pc-variants" role="tablist">'+catObj.vorder.map(function(vk){
+        return '<button type="button" role="tab" class="pc-vartab'+(vk===(s.variant||_PC_SINGLE)?' on':'')+'" data-pc-var="'+_pcEsc(vk)+'">'+_pcEsc(vk)+'</button>';
+      }).join('')+'</div>';
+    }
     var ghost=_pcEsc((s.firm.name||'P').charAt(0).toUpperCase());
     /* one slide per account size — swipe between full cards like the reference */
     function slideHtml(p){
@@ -7751,10 +7786,10 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       if(promo&&promo.code){
         promoHtml='<div class="pc-promo" data-pc-promo="'+_pcEsc(promo.code)+'"><div><b>'+_pcEsc(promo.code)+'</b><small>'+_pcEsc((promo.discount||'')+(promo.expiry?' · '+promo.expiry:''))+'</small></div><small>'+(ar?'انسخ':'Copy')+'</small></div>';
       }
-      var front='<div class="pc-hero"><div class="pc-watermark" data-pc-wm aria-hidden="true">'+ghost+'</div>'
-        +'<div class="pc-eyebrow"><span>'+(ar?'حجم الحساب':'ACCOUNT SIZE')+'</span><span class="pc-phase">'+_pcEsc(s.program)+'</span></div>'
+      var front='<div class="pc-hero">'
+        +'<div class="pc-eyebrow"><span>'+(ar?'حجم الحساب':'ACCOUNT SIZE')+'</span><span class="pc-phase">'+_pcEsc(s.variant||s.cat)+'</span></div>'
         +'<div class="pc-size">'+_pcEsc(_pcSizeLabel(size))+'</div>'
-        +'<div class="pc-sub">'+_pcEsc(s.firm.name+' '+s.program)+'</div>'
+        +'<div class="pc-sub">'+_pcEsc(s.firm.name+' '+s.cat)+'</div>'
         +barHtml+'</div>'
         +promoHtml
         +'<div class="pc-rows">'+rowsHtml+'</div>';
@@ -7771,14 +7806,14 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
         fbar='<div class="pc-track"><div class="pc-fill" style="width:100%"></div><div class="pc-marker" style="left:calc(100% - 1px)"></div></div>'
           +'<div class="pc-scale"><span>'+(ar?'الأرضية ':'Floor ')+'-'+dd+'%'+'</span><span>'+(ar?'البداية':'Start')+'</span></div>';
       }
-      var back='<div class="pc-hero"><div class="pc-watermark" data-pc-wm aria-hidden="true">'+ghost+'</div>'
+      var back='<div class="pc-hero">'
         +'<div class="pc-eyebrow"><span>'+(ar?'حساب ممول':'FUNDED ACCOUNT')+'</span><span class="pc-funded-pill">'+(ar?'ممول':'Funded')+'</span></div>'
         +'<div class="pc-size">'+_pcEsc(_pcSizeLabel(size))+'</div>'
-        +'<div class="pc-sub">'+_pcEsc(s.firm.name+' '+s.program)+'</div>'
+        +'<div class="pc-sub">'+_pcEsc(s.firm.name+' '+s.cat)+'</div>'
         +fbar+'</div>'
         +'<div class="pc-rows">'+frowsHtml+'</div>'
         +'<button type="button" class="pc-flipback" data-pc-flipback>'+(ar?'تفاصيل التقييم':'Eval details')+'</button>';
-      return '<div class="pc-slide"><div class="pc-flip"><div class="pc-flip-inner">'
+      return '<div class="pc-slide"><div class="pc-watermark" data-pc-wm aria-hidden="true">'+ghost+'</div><div class="pc-flip"><div class="pc-flip-inner">'
         +'<div class="pc-face pc-front">'+front+'</div>'
         +'<div class="pc-face pc-back">'+back+'</div>'
         +'</div></div>'
@@ -7792,7 +7827,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       +'<button type="button" class="pc-firmbtn" id="pcFirmBtn" aria-label="'+_pcEsc(s.firm.name)+'"><span class="logo-slot" id="pcLogo"></span><h3>'+_pcEsc(s.firm.name)+'</h3></button>'
       +'<button type="button" class="pc-iconbtn" id="pcClose" aria-label="Close">✕</button>'
       +'</div>'
-      +(s.progs.length>1?'<div class="pc-programs">'+pills+'</div>':'')
+      +(s.catOrder.length>1?'<div class="pc-programs">'+pills+'</div>':'')+variantsHtml
       +'<div class="pc-carousel"><div class="pc-track2" id="pcTrack">'+list.map(slideHtml).join('')+'</div></div>'
       +'<div class="pc-nav"><button type="button" class="pc-arrow" id="pcPrev">‹ '+(ar?'أصغر':'Smaller')+'</button>'
       +'<span class="pc-pos" id="pcPos"></span>'
@@ -7810,7 +7845,8 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     qa('[data-pc-wm]').forEach(function(w){try{if(typeof sbLogoInto==='function')sbLogoInto(w,s.firm);}catch(_wm){}});
     q('#pcModeUsd').onclick=function(){s.pct=false;_pcRender();};
     q('#pcModePct').onclick=function(){s.pct=true;_pcRender();};
-    qa('.pc-pill').forEach(function(b){b.onclick=function(){s.program=b.getAttribute('data-pc-prog');s.idx=0;_pcRender();};});
+    qa('.pc-pill').forEach(function(b){b.onclick=function(){s.cat=b.getAttribute('data-pc-cat');var c=s.cats[s.cat];s.variant=(c.vorder[0]===_PC_SINGLE?null:c.vorder[0]);s.idx=0;_pcRender();};});
+    qa('.pc-vartab').forEach(function(b){b.onclick=function(){s.variant=b.getAttribute('data-pc-var');s.idx=0;_pcRender();};});
     var off=q('#pcOfficial');if(off&&s.firm.website)off.onclick=function(){try{window.open(s.firm.website,'_blank','noopener');}catch(e){}};
     var track=q('#pcTrack'),pos=q('#pcPos');
     function step(){var sl=track.querySelector('.pc-slide');var w=sl?sl.offsetWidth:0;return w>0?w:track.clientWidth;}
