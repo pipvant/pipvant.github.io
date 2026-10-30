@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-30T09:20:54.467936+00:00",
+  "updated": "2026-10-30T10:11:11.593079+00:00",
   "changes": [
     {
       "date": "2026-10-30",
@@ -90,6 +90,33 @@
       "new": "90",
       "source": "https://toponefutures.com/",
       "kind": "rule"
+    },
+    {
+      "date": "2026-10-30",
+      "firm": "Funded Trader Markets",
+      "field": "promotion (5000 (Instant Standard))",
+      "old": "[{\"code\": \"OCT\", \"discount\": \"45% OFF\", \"source_note\": \"Funded Trader Markets official site sale 2026-10-26\"}]",
+      "new": "[{\"code\": null, \"discount\": \"44% OFF\", \"source_note\": \"Funded Trader Markets official site sale price 2026-10-30\"}]",
+      "source": "https://fundedtradermarkets.com",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-30",
+      "firm": "Funded Trader Markets",
+      "field": "promotion (5000 (Instant Pro))",
+      "old": "[{\"code\": \"OCT\", \"discount\": \"45% OFF\", \"source_note\": \"Funded Trader Markets official site sale 2026-10-26\"}]",
+      "new": "[{\"code\": null, \"discount\": \"44% OFF\", \"source_note\": \"Funded Trader Markets official site sale price 2026-10-30\"}]",
+      "source": "https://fundedtradermarkets.com",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-30",
+      "firm": "Funded Trader Markets",
+      "field": "promotion (10000 (Instant Standard))",
+      "old": "[{\"code\": \"OCT\", \"discount\": \"45% OFF\", \"source_note\": \"Funded Trader Markets official site sale 2026-10-26\"}]",
+      "new": "[{\"code\": null, \"discount\": \"44% OFF\", \"source_note\": \"Funded Trader Markets official site sale price 2026-10-30\"}]",
+      "source": "https://fundedtradermarkets.com",
+      "kind": "promo"
     },
     {
       "date": "2026-10-27",
