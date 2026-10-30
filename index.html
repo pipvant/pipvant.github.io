@@ -1172,6 +1172,7 @@
     .pc-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 2px;border-bottom:1px solid var(--line)}
     .pc-row span{color:var(--muted);font-size:13.5px}
     .pc-row b{font-size:15.5px;font-variant-numeric:tabular-nums;text-align:right}
+    .pc-row b .pc-na{color:var(--muted);font-weight:500}
     .pc-row b small{color:var(--muted);font-weight:500;font-size:11.5px}
     .pc-cta{display:flex;gap:10px;margin-top:16px}
     .pc-cta .btn{flex:1;min-height:52px;border-radius:16px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;border:1px solid var(--line-strong);background:rgba(255,255,255,.05);color:var(--text)}
@@ -7695,6 +7696,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
   }
   function _pcPlan(){var s=_pcState;if(!s)return null;var l=s.groups[s.group]||[];return l[s.idx]||null;}
   function _pcNum(v){if(v==null||v==='')return NaN;var m=String(v).match(/\d+(\.\d+)?/);return m?Number(m[0]):NaN;}
+  function _pcNa(t){return '<span class="pc-na">'+_pcEsc(t)+'</span>';}
   function _pcPct(r,pctKey,usdKey,size){var v=_pcNum(r[pctKey]);if(isFinite(v)&&v>0)return v;var u=_pcNum(r[usdKey]);if(isFinite(size)&&size>0&&isFinite(u)&&u>0)return u/size*100;return NaN;}
   function sbOpenPlanCard(firmId,program,size){
     var firm=null;(sbFirms||[]).forEach(function(f){if(String(f.id)===String(firmId))firm=f;});
@@ -7754,11 +7756,11 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       var rows=[
         [ar?'هدف الربح':'Profit target',val(money(size*tp/100),pctTxt(tp))],
         [ar?'أقصى خسارة':'Max loss',val(money(size*dd/100)+ddt,pctTxt(dd)+ddt)],
-        [ar?'الخسارة اليومية':'Daily loss',val(isFinite(dl)?money(size*dl/100):(ar?'غير مذكور':'Not listed'),isFinite(dl)?pctTxt(dl):(ar?'غير مذكور':'Not listed'))]
+        [ar?'الخسارة اليومية':'Daily loss',val(isFinite(dl)?money(size*dl/100):_pcNa(ar?'غير مذكور':'Not listed'),isFinite(dl)?pctTxt(dl):_pcNa(ar?'غير مذكور':'Not listed'))]
       ];
-      var minD=r.min_trading_days!=null&&r.min_trading_days!==''?r.min_trading_days:(ar?'غير مذكور':'Not listed');
+      var minD=r.min_trading_days!=null&&r.min_trading_days!==''?r.min_trading_days:_pcNa(ar?'غير مذكور':'Not listed');
       rows.push([ar?'أيام التداول الدنيا':'Min days',minD]);
-      rows.push([ar?'الاتساق':'Consistency',(r.consistency_pct!=null&&isFinite(sbNum(r.consistency_pct)))?sbNum(r.consistency_pct)+'%':(ar?'لا يوجد':'None')]);
+      rows.push([ar?'الاتساق':'Consistency',(r.consistency_pct!=null&&isFinite(sbNum(r.consistency_pct)))?sbNum(r.consistency_pct)+'%':_pcNa(ar?'لا يوجد':'None')]);
       var dp=(typeof sbDiscountedPrice==='function')?sbDiscountedPrice(p):{final:sbNum(p.price)};
       var priceHtml=dp.final!=null?((dp.pct>0?'<s style="color:var(--muted);font-weight:400">'+money(dp.base)+'</s> ':'')+money(dp.final)):'—';
       rows.push([ar?'السعر':'List price',priceHtml]);
@@ -7777,8 +7779,8 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
         +'<div class="pc-rows">'+rowsHtml+'</div>';
       var frows=[
         [ar?'أقصى خسارة':'Max loss',pctTxt(dd)+ddt],
-        [ar?'الخسارة اليومية':'Daily loss',isFinite(dl)?pctTxt(dl):(ar?'غير مذكور':'Not listed')],
-        [ar?'الاتساق':'Consistency',(r.consistency_pct!=null&&isFinite(sbNum(r.consistency_pct)))?sbNum(r.consistency_pct)+'%':(ar?'لا يوجد':'None')],
+        [ar?'الخسارة اليومية':'Daily loss',isFinite(dl)?pctTxt(dl):_pcNa(ar?'غير مذكور':'Not listed')],
+        [ar?'الاتساق':'Consistency',(r.consistency_pct!=null&&isFinite(sbNum(r.consistency_pct)))?sbNum(r.consistency_pct)+'%':_pcNa(ar?'لا يوجد':'None')],
         [ar?'تقسيم الأرباح':'Profit split',(r.profit_split!=null&&r.profit_split!=='')?r.profit_split+'%':'—'],
         [ar?'تكرار الدفع':'Payout frequency',((typeof sbCapPayout==='function')&&r.payout_frequency)?sbCapPayout(r.payout_frequency):'—']
       ];
@@ -12152,7 +12154,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
   document.querySelectorAll('.directory-tab').forEach(function(tab){tab.addEventListener('click',function(){document.querySelectorAll('.directory-tab').forEach(function(other){other.setAttribute('aria-selected',String(other===tab));});try{var dt=document.getElementById('directoryTitle');if(dt){var saved=tab.getAttribute('data-directory-tab')==='saved';var ar=(typeof currentLanguage!=='undefined'&&currentLanguage==='ar');dt.textContent=saved?(ar?'الشركات المحفوظة':'Saved firms'):(ar?'جميع الشركات':'All firms');}}catch(e){}refreshDirectory();});});
   document.querySelectorAll('[data-methodology-section]').forEach(function(button){button.addEventListener('click',function(){var target=button.getAttribute('data-methodology-section');showScreen('methodology');setTimeout(function(){var section=document.getElementById('methodology-'+target);if(section)section.scrollIntoView({behavior:'smooth',block:'start'});},20);});});
   document.addEventListener('click',function(event){
-    var detailTrigger=event.target.closest('[data-open-firm-detail]');if(detailTrigger){firmDetailSheet.classList.add('open');var panel=firmDetailSheet.querySelector('.firm-detail-panel');if(panel){panel.classList.remove('detail-morph');void panel.offsetWidth;panel.classList.add('detail-morph');}var verified=firmDetailSheet.querySelector('.verified-check');if(verified){verified.classList.remove('is-drawing');void verified.offsetWidth;verified.classList.add('is-drawing');}document.getElementById('closeFirmDetail').focus();}
+    var detailTrigger=event.target.closest('[data-open-firm-detail]');if(detailTrigger){firmDetailSheet.classList.add('open');var panel=firmDetailSheet.querySelector('.firm-detail-panel');if(panel){panel.classList.remove('detail-morph');void panel.offsetWidth;panel.classList.add('detail-morph');}var verified=firmDetailSheet.querySelector('.verified-check');if(verified){verified.classList.remove('is-drawing');void verified.offsetWidth;verified.classList.add('is-drawing');}}
     var saveTrigger=event.target.closest('[data-save-firm]');if(saveTrigger){var cardEl=saveTrigger.closest('[data-firm-id]');var sFid=cardEl?cardEl.getAttribute('data-firm-id'):null;var nowSaved=false;try{nowSaved=sFid?sbToggleShortlist(sFid):(saveTrigger.getAttribute('aria-pressed')!=='true');}catch(e){nowSaved=saveTrigger.getAttribute('aria-pressed')!=='true';}/* Batch P (M21/M10b): sbToggleShortlist already repainted every heart/bookmark for this firm from storage truth; on a failed write, say so instead of claiming a save. */if(sFid&&typeof _sbShortlistWriteOk!=='undefined'&&!_sbShortlistWriteOk){saveTrigger.setAttribute('aria-pressed',String(nowSaved));sbShortlistStorageToast();}else{saveTrigger.setAttribute('aria-pressed',String(nowSaved));saveTrigger.classList.remove('bookmark-pop');void saveTrigger.offsetWidth;saveTrigger.classList.add('bookmark-pop');showToast(currentLanguage==='ar'?(nowSaved?'تم الحفظ':'تمت الإزالة من المحفوظات'):(nowSaved?'Saved':'Removed from saved'));}}
   });
   document.addEventListener('keydown',function(event){if(event.key==='Escape'){if(typeof sbClosePlanCard==='function')sbClosePlanCard();closeDirectoryFilters();closeFirmDetail();closeCalendarFilters();closeCalendarEvent();}
