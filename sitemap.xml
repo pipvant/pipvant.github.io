@@ -36,6 +36,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://pipvant.github.io/changelog.html</loc>
+    <lastmod>2026-10-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://pipvant.github.io/free-trading-journal.html</loc>
     <lastmod>2026-10-30</lastmod>
     <changefreq>monthly</changefreq>

@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Changelog — Prop Firm Data Updates | PIPVANT</title>
+  <meta name="description" content="Every meaningful change to PIPVANT's prop firm data: new plans, price updates, new promotions and rule changes, verified against official firm sites.">
+  <link rel="canonical" href="https://pipvant.github.io/changelog.html">
+  <meta property="og:title" content="Changelog — Prop Firm Data Updates | PIPVANT">
+  <meta property="og:description" content="New plans, price updates, promotions and rule changes across 22 prop firms — verified, never invented.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://pipvant.github.io/changelog.html">
+  <meta property="og:image" content="https://pipvant.github.io/assets/pipvanta-logo.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/png" href="assets/pipvanta-logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0A1628;--surface:#0F1D33;--raised:#14253F;--line:#1C2F4D;--line-strong:#2B4266;--text:#F4F6F8;--secondary:#A9B6C6;--muted:#8B9AB0;--accent:#5B8DEF;--accent-strong:#3A6FDE;--gold:#D4AF37}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,"IBM Plex Sans Arabic",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+    body[dir="rtl"]{font-family:"IBM Plex Sans Arabic",Inter,system-ui,sans-serif}
+    h1,h2,h3{font-family:"Space Grotesk","IBM Plex Sans Arabic",sans-serif;letter-spacing:-.02em}
+    .wrap{max-width:820px;margin:0 auto;padding:0 20px}
+    header.top{position:sticky;top:0;z-index:10;background:rgba(10,22,40,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+    header.top .wrap{display:flex;align-items:center;justify-content:space-between;padding:14px 20px}
+    .brand{display:flex;align-items:center;gap:10px;font-family:"Space Grotesk";font-weight:700;font-size:18px;text-decoration:none;color:var(--text)}
+    .brand img{width:30px;height:30px;border-radius:8px}
+    .top-actions{display:flex;align-items:center;gap:10px}
+    .lang-btn{min-height:44px;padding:0 16px;border-radius:10px;background:var(--raised);border:1px solid var(--line-strong);color:var(--text);font-weight:700;cursor:pointer;font-size:14px}
+    .lang-btn:hover{border-color:var(--gold);color:var(--gold)}
+    .cta-btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 20px;border-radius:10px;background:var(--accent-strong);color:#fff;font-weight:700;text-decoration:none;border:1px solid var(--accent-strong)}
+    .hero{padding:56px 0 32px;text-align:center}
+    .eyebrow{color:var(--accent);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}
+    h1{font-size:clamp(2rem,5vw,3rem);line-height:1.05;margin:0 0 16px}
+    h1 .gold{background:linear-gradient(110deg,#F5D67B 15%,#D4AF37 38%,#FFF3C4 50%,#D4AF37 62%,#F5D67B 85%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent}
+    .lede{color:var(--secondary);font-size:16px;line-height:1.7;max-width:640px;margin:0 auto 8px}
+    .timeline{padding:20px 0 60px;position:relative}
+    .timeline::before{content:"";position:absolute;top:0;bottom:0;left:19px;width:2px;background:var(--line)}
+    body[dir="rtl"] .timeline::before{left:auto;right:19px}
+    .entry{position:relative;padding:0 0 28px 56px}
+    body[dir="rtl"] .entry{padding:0 56px 28px 0}
+    .entry::before{content:"";position:absolute;top:6px;left:12px;width:16px;height:16px;border-radius:50%;background:var(--bg);border:2px solid var(--gold)}
+    body[dir="rtl"] .entry::before{left:auto;right:12px}
+    .entry-date{color:var(--gold);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+    .entry-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+    .entry-card:hover{border-color:var(--line-strong)}
+    .entry-type{display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px;margin-bottom:10px;letter-spacing:.04em}
+    .type-new_plans{background:rgba(91,141,239,.14);border:1px solid var(--accent);color:var(--accent)}
+    .type-price_update{background:rgba(212,175,55,.14);border:1px solid var(--gold);color:var(--gold)}
+    .type-new_promo{background:rgba(46,204,113,.12);border:1px solid #2ECC71;color:#2ECC71}
+    .entry-card h3{margin:0 0 4px;font-size:17px}
+    .entry-firm{color:var(--muted);font-size:13px;margin-bottom:10px}
+    .entry-detail{color:var(--secondary);font-size:14px;line-height:1.7;margin:0}
+    .empty{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:36px 28px;text-align:center;color:var(--secondary);line-height:1.7;margin:20px 0 40px}
+    footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted);font-size:13px}
+    footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+    footer a{color:var(--muted);text-decoration:none;margin-left:16px}
+    body[dir="rtl"] footer a{margin-left:0;margin-right:16px}
+  </style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="/"><img src="assets/pipvanta-logo.png" alt="PIPVANT">PIPVANT</a>
+  <div class="top-actions">
+    <button class="lang-btn" id="langToggle" type="button">عربي</button>
+    <a class="cta-btn" href="/" id="ctaBtn">Open App</a>
+  </div>
+</div></header>
+
+<div class="wrap">
+  <div class="hero">
+    <div class="eyebrow" id="eyebrow">Data transparency</div>
+    <h1 id="pageTitle">Changelog <span class="gold">—</span> What changed</h1>
+    <p class="lede" id="pageLede">Every meaningful change to our prop firm data: new plans, price updates, new promotions and rule changes. Verified against official firm sites — never invented.</p>
+  </div>
+  <div class="timeline" id="timeline"></div>
+</div>
+
+<footer><div class="wrap">
+  <span>© 2026 PIPVANT by Orovanta — Trade with a process, not a prediction.</span>
+  <span><a href="/" id="fToolkit">Toolkit</a><a href="prop-firm-comparison.html" id="fCompare">Comparison</a><a href="prop-firm-deals.html" id="fDeals">Deals</a><a href="data-ledger.html" id="fLedger">Data Ledger</a></span>
+</div></footer>
+
+<script>
+var ENTRIES=[
+{"date":"2026-10-30","firm":"E8 Markets","type":"price_update","title_en":"E8 Pro plan prices updated","title_ar":"تحديث أسعار خطط E8 Pro","detail_en":"All 8 E8 Pro plan prices updated to match the official site (e.g. 5K $32, 50K $228, 100K $488, 500K $2,598).","detail_ar":"تم تحديث أسعار جميع خطط E8 Pro الثمانية لتطابق الموقع الرسمي."},
+{"date":"2026-10-30","firm":"Apex Trader Funding","type":"price_update","title_en":"Apex Intraday plan prices corrected","title_ar":"تصحيح أسعار خطط Apex Intraday","detail_en":"Intraday (non-auto-renew) prices corrected: 50K $799 and 100K $999 (were showing incorrect values).","detail_ar":"تم تصحيح أسعار Intraday: 50K بـ$799 و100K بـ$999."},
+{"date":"2026-10-30","firm":"Funding Pips","type":"new_plans","title_en":"1-Step Flex program added (5 plans)","title_ar":"إضافة برنامج 1-Step Flex (5 خطط)","detail_en":"New 1-Step Flex program tracked: 5K $74, 10K $111, 25K $255, 50K $353, 100K $666. 12% profit target, 3% daily loss, 12% max drawdown.","detail_ar":"تمت إضافة برنامج 1-Step Flex الجديد: 5 خطط من 5K إلى 100K."},
+{"date":"2026-10-30","firm":"Funding Pips","type":"new_plans","title_en":"Zero program added (6 plans)","title_ar":"إضافة برنامج Zero (6 خطط)","detail_en":"New Zero program tracked: 5K $60, 10K $88, 25K $188, 50K $244, 100K $444, 200K $888. No profit target, 95% profit split.","detail_ar":"تمت إضافة برنامج Zero الجديد: 6 خطط من 5K إلى 200K، بدون هدف ربح."},
+{"date":"2026-10-27","firm":"FundedNext","type":"new_promo","title_en":"Halloween promo: FNTRICK (up to 41% off)","title_ar":"عرض الهالوين: FNTRICK (حتى 41% خصم)","detail_en":"New Halloween promo code FNTRICK with up to 41% off on Futures and Stellar plans.","detail_ar":"كود خصم الهالوين الجديد FNTRICK بخصم يصل إلى 41%."},
+{"date":"2026-10-27","firm":"FundedNext","type":"new_plans","title_en":"10 new Futures plans added","title_ar":"إضافة 10 خطط Futures جديدة","detail_en":"Futures lineup expanded: Flex (50K $141.99, 100K $273.99, 150K $490.99), Rapid Pro, Rapid Daily, and Direct (50K $283.99).","detail_ar":"توسعة خطط Futures: Flex وRapid Pro وRapid Daily وDirect."},
+{"date":"2026-10-27","firm":"PipFarm","type":"new_plans","title_en":"24 new Instant plans added","title_ar":"إضافة 24 خطة Instant جديدة","detail_en":"Instant funding lineup added: 3 trailing types (EOD, Equity, Payout) x 8 sizes, from 1K ($5) to 150K ($900).","detail_ar":"تمت إضافة خطط التمويل الفوري: 3 أنواع × 8 أحجام، من 1K إلى 150K."},
+{"date":"2026-10-26","firm":"Alpha Capital Group","type":"new_promo","title_en":"New promo: FUNDED40 (20% off)","title_ar":"عرض جديد: FUNDED40 (خصم 20%)","detail_en":"New promo code FUNDED40 with 20% off challenge fees.","detail_ar":"كود الخصم الجديد FUNDED40 بخصم 20% على رسوم التحديات."},
+{"date":"2026-10-22","firm":"FXIFY","type":"new_promo","title_en":"New promo: AGHHH35","title_ar":"عرض جديد: AGHHH35","detail_en":"New FXIFY promo code AGHHH35 detected on the official site.","detail_ar":"تم رصد كود الخصم الجديد AGHHH35 على الموقع الرسمي."},
+{"date":"2026-10-21","firm":"BrightFunded","type":"new_promo","title_en":"New promo: HW30 (30% off)","title_ar":"عرض جديد: HW30 (خصم 30%)","detail_en":"New promo code HW30 with 30% off.","detail_ar":"كود الخصم الجديد HW30 بخصم 30%."}
+];
+var TYPE_LABELS={new_plans:{en:"New plans",ar:"خطط جديدة"},price_update:{en:"Price update",ar:"تحديث أسعار"},new_promo:{en:"New promo",ar:"عرض جديد"}};
+var lang=localStorage.getItem('pv_changelog_lang')||'en';
+function fmtDate(d){
+  var dt=new Date(d+'T12:00:00');
+  return lang==='ar'
+    ? dt.toLocaleDateString('ar-MA',{year:'numeric',month:'long',day:'numeric'})
+    : dt.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+}
+function render(){
+  var ar=lang==='ar';
+  document.documentElement.lang=ar?'ar':'en';
+  document.body.dir=ar?'rtl':'ltr';
+  document.getElementById('langToggle').textContent=ar?'English':'عربي';
+  document.getElementById('ctaBtn').textContent=ar?'افتح التطبيق':'Open App';
+  document.getElementById('eyebrow').textContent=ar?'شفافية البيانات':'Data transparency';
+  document.getElementById('pageTitle').innerHTML=ar?'سجل التغييرات <span class="gold">—</span> شنو تبدل':'Changelog <span class="gold">—</span> What changed';
+  document.getElementById('pageLede').textContent=ar
+    ? 'كل تغيير مهم في بيانات شركات التمويل: خطط جديدة، تحديثات الأسعار، عروض جديدة وتغييرات القوانين. متحقق منها من المواقع الرسمية — عمرنا ما نخترعو الأرقام.'
+    : 'Every meaningful change to our prop firm data: new plans, price updates, new promotions and rule changes. Verified against official firm sites — never invented.';
+  document.getElementById('fToolkit').textContent=ar?'الأدوات':'Toolkit';
+  document.getElementById('fCompare').textContent=ar?'المقارنة':'Comparison';
+  document.getElementById('fDeals').textContent=ar?'العروض':'Deals';
+  document.getElementById('fLedger').textContent=ar?'سجل البيانات':'Data Ledger';
+  var tl=document.getElementById('timeline');
+  tl.innerHTML='';
+  ENTRIES.forEach(function(e){
+    var div=document.createElement('div');div.className='entry';
+    var lbl=TYPE_LABELS[e.type]||{en:e.type,ar:e.type};
+    div.innerHTML='<div class="entry-date">'+fmtDate(e.date)+'</div>'
+      +'<div class="entry-card"><span class="entry-type type-'+e.type+'">'+(ar?lbl.ar:lbl.en)+'</span>'
+      +'<h3>'+(ar?e.title_ar:e.title_en)+'</h3>'
+      +'<div class="entry-firm">'+e.firm+'</div>'
+      +'<p class="entry-detail">'+(ar?e.detail_ar:e.detail_en)+'</p></div>';
+    tl.appendChild(div);
+  });
+  document.title=ar?'سجل التغييرات — تحديثات بيانات شركات التمويل | PIPVANT':'Changelog — Prop Firm Data Updates | PIPVANT';
+}
+document.getElementById('langToggle').onclick=function(){
+  lang=lang==='en'?'ar':'en';
+  localStorage.setItem('pv_changelog_lang',lang);
+  render();
+};
+render();
+</script>
+</body>
+</html>

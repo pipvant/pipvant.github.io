@@ -1,0 +1,164 @@
+[
+ {
+  "date": "2026-10-30",
+  "firm": "E8 Markets",
+  "type": "price_update",
+  "title_en": "E8 Pro plan prices updated",
+  "title_ar": "تحديث أسعار خطط E8 Pro",
+  "detail_en": "All 8 E8 Pro plan prices updated to match the official site (e.g. 5K $32, 50K $228, 100K $488, 500K $2,598).",
+  "detail_ar": "تم تحديث أسعار جميع خطط E8 Pro الثمانية لتطابق الموقع الرسمي."
+ },
+ {
+  "date": "2026-10-30",
+  "firm": "Apex Trader Funding",
+  "type": "price_update",
+  "title_en": "Apex Intraday plan prices corrected",
+  "title_ar": "تصحيح أسعار خطط Apex Intraday",
+  "detail_en": "Intraday (non-auto-renew) prices corrected: 50K $799 and 100K $999 (were showing incorrect values).",
+  "detail_ar": "تم تصحيح أسعار Intraday: 50K بـ$799 و100K بـ$999."
+ },
+ {
+  "date": "2026-10-30",
+  "firm": "Funding Pips",
+  "type": "new_plans",
+  "title_en": "1-Step Flex program added (5 plans)",
+  "title_ar": "إضافة برنامج 1-Step Flex (5 خطط)",
+  "detail_en": "New 1-Step Flex program tracked: 5K $74, 10K $111, 25K $255, 50K $353, 100K $666. 12% profit target, 3% daily loss, 12% max drawdown.",
+  "detail_ar": "تمت إضافة برنامج 1-Step Flex الجديد: 5 خطط من 5K إلى 100K."
+ },
+ {
+  "date": "2026-10-30",
+  "firm": "Funding Pips",
+  "type": "new_plans",
+  "title_en": "Zero program added (6 plans)",
+  "title_ar": "إضافة برنامج Zero (6 خطط)",
+  "detail_en": "New Zero program tracked: 5K $60, 10K $88, 25K $188, 50K $244, 100K $444, 200K $888. No profit target, 95% profit split.",
+  "detail_ar": "تمت إضافة برنامج Zero الجديد: 6 خطط من 5K إلى 200K، بدون هدف ربح."
+ },
+ {
+  "date": "2026-10-27",
+  "firm": "FundedNext",
+  "type": "new_promo",
+  "title_en": "New promo: FNTRICK (up to 41%)",
+  "title_ar": "عرض جديد: FNTRICK (up to 41%)",
+  "detail_en": "New promo code FNTRICK detected with up to 41%.",
+  "detail_ar": "تم رصد كود الخصم الجديد FNTRICK."
+ },
+ {
+  "date": "2026-10-27",
+  "firm": "FundedNext",
+  "type": "new_plans",
+  "title_en": "1 new Futures Direct plans added (50K)",
+  "title_ar": "إضافة 1 خطط Futures Direct جديدة",
+  "detail_en": "New Futures Direct plans tracked: 50K.",
+  "detail_ar": "تمت إضافة خطط Futures Direct الجديدة."
+ },
+ {
+  "date": "2026-10-27",
+  "firm": "FundedNext",
+  "type": "new_plans",
+  "title_en": "3 new Futures Flex plans added (50K–150K)",
+  "title_ar": "إضافة 3 خطط Futures Flex جديدة",
+  "detail_en": "New Futures Flex plans tracked: 50K, 100K, 150K.",
+  "detail_ar": "تمت إضافة خطط Futures Flex الجديدة."
+ },
+ {
+  "date": "2026-10-27",
+  "firm": "FundedNext",
+  "type": "new_plans",
+  "title_en": "3 new Futures Rapid Daily plans added (25K–100K)",
+  "title_ar": "إضافة 3 خطط Futures Rapid Daily جديدة",
+  "detail_en": "New Futures Rapid Daily plans tracked: 25K, 50K, 100K.",
+  "detail_ar": "تمت إضافة خطط Futures Rapid Daily الجديدة."
+ },
+ {
+  "date": "2026-10-27",
+  "firm": "FundedNext",
+  "type": "new_plans",
+  "title_en": "3 new Futures Rapid Pro plans added (25K–100K)",
+  "title_ar": "إضافة 3 خطط Futures Rapid Pro جديدة",
+  "detail_en": "New Futures Rapid Pro plans tracked: 25K, 50K, 100K.",
+  "detail_ar": "تمت إضافة خطط Futures Rapid Pro الجديدة."
+ },
+ {
+  "date": "2026-10-27",
+  "firm": "PipFarm",
+  "type": "new_plans",
+  "title_en": "8 new Instant EOD Trailing plans added (1K–150K)",
+  "title_ar": "إضافة 8 خطط Instant EOD Trailing جديدة",
+  "detail_en": "New Instant EOD Trailing plans tracked: 1K, 2K, 5K, 10K, 20K, 50K, 100K, 150K.",
+  "detail_ar": "تمت إضافة خطط Instant EOD Trailing الجديدة."
+ },
+ {
+  "date": "2026-10-27",
+  "firm": "PipFarm",
+  "type": "new_plans",
+  "title_en": "8 new Instant Equity Trailing plans added (1K–150K)",
+  "title_ar": "إضافة 8 خطط Instant Equity Trailing جديدة",
+  "detail_en": "New Instant Equity Trailing plans tracked: 1K, 2K, 5K, 10K, 20K, 50K, 100K, 150K.",
+  "detail_ar": "تمت إضافة خطط Instant Equity Trailing الجديدة."
+ },
+ {
+  "date": "2026-10-27",
+  "firm": "PipFarm",
+  "type": "new_plans",
+  "title_en": "8 new Instant Payout Trailing plans added (1K–150K)",
+  "title_ar": "إضافة 8 خطط Instant Payout Trailing جديدة",
+  "detail_en": "New Instant Payout Trailing plans tracked: 1K, 2K, 5K, 10K, 20K, 50K, 100K, 150K.",
+  "detail_ar": "تمت إضافة خطط Instant Payout Trailing الجديدة."
+ },
+ {
+  "date": "2026-10-26",
+  "firm": "Alpha Capital Group",
+  "type": "new_promo",
+  "title_en": "New promo: FUNDED40 (20% off)",
+  "title_ar": "عرض جديد: FUNDED40 (20% off)",
+  "detail_en": "New promo code FUNDED40 detected with 20% off.",
+  "detail_ar": "تم رصد كود الخصم الجديد FUNDED40."
+ },
+ {
+  "date": "2026-10-26",
+  "firm": "FXIFY",
+  "type": "new_promo",
+  "title_en": "New promo: AGHHH35",
+  "title_ar": "عرض جديد: AGHHH35",
+  "detail_en": "New promo code AGHHH35 detected.",
+  "detail_ar": "تم رصد كود الخصم الجديد AGHHH35."
+ },
+ {
+  "date": "2026-10-26",
+  "firm": "Topstep",
+  "type": "price_update",
+  "title_en": "Topstep Standard 150K price: $199 → $229",
+  "title_ar": "تحديث سعر Topstep Standard: $199 → $229",
+  "detail_en": "Price updated from $199 to $229 for the 150K Standard plan.",
+  "detail_ar": "تم تحديث السعر من $199 إلى $229."
+ },
+ {
+  "date": "2026-10-26",
+  "firm": "Topstep",
+  "type": "price_update",
+  "title_en": "Topstep Standard 150K price: $229 → $199",
+  "title_ar": "تحديث سعر Topstep Standard: $229 → $199",
+  "detail_en": "Price updated from $229 to $199 for the 150K Standard plan.",
+  "detail_ar": "تم تحديث السعر من $229 إلى $199."
+ },
+ {
+  "date": "2026-10-22",
+  "firm": "FXIFY",
+  "type": "new_promo",
+  "title_en": "New promo: AGHHH35",
+  "title_ar": "عرض جديد: AGHHH35",
+  "detail_en": "New promo code AGHHH35 detected.",
+  "detail_ar": "تم رصد كود الخصم الجديد AGHHH35."
+ },
+ {
+  "date": "2026-10-21",
+  "firm": "BrightFunded",
+  "type": "new_promo",
+  "title_en": "New promo: HW30 (30% off)",
+  "title_ar": "عرض جديد: HW30 (30% off)",
+  "detail_en": "New promo code HW30 detected with 30% off.",
+  "detail_ar": "تم رصد كود الخصم الجديد HW30."
+ }
+]
