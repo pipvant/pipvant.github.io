@@ -8187,7 +8187,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     var ar=currentLanguage==='ar';
     if(typeof sb==='undefined'||!sb)return;
     var uid=(typeof sbUser!=='undefined'&&sbUser)?sbUser.id:null;
-    if(!uid){if(typeof showToast==='function')showToast(ar?'سجل الدخول باش تقيّم':'Log in to rate');return;}
+    if(!uid){if(typeof showToast==='function')showToast(ar?'سجل الدخول للتقييم':'Log in to rate');return;}
     sb.from('firm_ratings').upsert({firm_id:firmId,user_id:uid,rating:n},{onConflict:'firm_id,user_id'}).then(function(){
       if(typeof showToast==='function')showToast(ar?'شكراً على تقييمك!':'Thanks for rating!');
       sbLoadCommunity(firmId);
@@ -8202,7 +8202,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     var ar=currentLanguage==='ar';
     if(typeof sb==='undefined'||!sb)return;
     var uid=(typeof sbUser!=='undefined'&&sbUser)?sbUser.id:null;
-    if(!uid){if(typeof showToast==='function')showToast(ar?'سجل الدخول باش دير إعجاب':'Log in to like');return;}
+    if(!uid){if(typeof showToast==='function')showToast(ar?'سجل الدخول للإعجاب':'Log in to like');return;}
     var _lk=String(firmId);
     if(_sbLikeInFlight[_lk])return;
     _sbLikeInFlight[_lk]=true;
