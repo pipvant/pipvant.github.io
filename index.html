@@ -3167,6 +3167,12 @@ html[dir="rtl"] .jump-row{text-align:right}
    strip can sit under the topbar zone), and the sheet stacks above it. */
 body:has(.trade-sheet.open) .topbar{pointer-events:none}
 .trade-sheet.open{z-index:300}
+/* Mobile touch targets: min 44px on coarse pointers (a11y, 2026-10-30) */
+@media (pointer:coarse){
+  .slot-cta,.view-button,.notif-curr-chip,.range-btn,.jcal-btn,.mistake-chip,.risk-preset,.active-filter-chip{min-height:44px}
+  .table-view-slot{min-height:44px}
+  .fd-stars button{min-width:44px;min-height:44px}
+}
 </style>
 <div id="siteLanding" aria-label="PIPVANT landing page">
   <div class="lp-grain" aria-hidden="true"></div>
