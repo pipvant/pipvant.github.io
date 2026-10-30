@@ -1162,6 +1162,16 @@
     .pc-likebtn{display:flex;align-items:center;gap:6px;flex:0 0 auto;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.04);color:var(--text);padding:8px 12px;cursor:pointer;font:inherit;min-height:44px}
     .pc-likebtn[aria-pressed="true"]{border-color:var(--gold,#D4AF37);background:rgba(212,175,55,.12)}
     .pc-likebtn b{font-size:13px;font-variant-numeric:tabular-nums}
+    /* Phone: plan-card header becomes two rows — like button gets its own
+       toolbar row instead of crowding the × (founder order 2026-10-30) */
+    @media(max-width:639px){
+      .pc-head{flex-wrap:wrap;row-gap:10px}
+      .pc-head #pcBack{order:1}
+      .pc-head .pc-firmbtn{order:2;flex:1 1 auto;min-width:0}
+      .pc-head #pcClose{order:3}
+      .pc-head .pc-toggle{order:4}
+      .pc-head .pc-likebtn{order:5;margin-inline-start:auto}
+    }
     .pc-rate{display:flex;align-items:center;gap:6px;margin:0 4px 12px;font-size:12px;color:var(--muted)}
     .pc-rate .pc-stars{display:flex;gap:2px}
     .pc-rate .pc-stars button{background:none;border:0;padding:4px;cursor:pointer;font-size:16px;color:var(--muted);line-height:1}
@@ -5106,7 +5116,10 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     // Logo overrides: official high-res logos (clearly visible)
     var LOGO_OVERRIDES={
       'takeprofittrader.com':'https://takeprofittrader.com/assets/mobile-logo.svg',
-      'apextraderfunding.com':'https://apextraderfunding.com/cdn-cgi/image/width=512,height=512,fit=cover,gravity=auto,format=auto//app/uploads/cropped-APEX_FAV-192x192.png'
+      'apextraderfunding.com':'https://apextraderfunding.com/cdn-cgi/image/width=512,height=512,fit=cover,gravity=auto,format=auto//app/uploads/cropped-APEX_FAV-192x192.png',
+      'bulenox.com':'https://bulenox.com/assets/logo-iXtDrF5P.svg',
+      'dnafunded.com':'https://dnafunded.com/wp-content/uploads/2024/08/DNA-Funded-Logo-1.png',
+      'blueberryfunded.com':'https://blueberryfunded.com/wp-content/themes/blueberry-excelprop-v3-05/assets/img/logo.svg'
     };
     // Blue Guardian: no high-res logo exists — force clean letter fallback
     var LETTER_ONLY_DOMAINS=['blueguardian.com'];
@@ -5124,7 +5137,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     img.style.cssText='width:100%;height:100%;object-fit:contain;border-radius:6px;';
     img.onerror=function(){img.remove();el.textContent=letter;sbRefreshNewBadge(el,firm);};
     // Google favicons high-res (free, no key) — falls back to letter
-    img.src=LOGO_OVERRIDES[domain]||('https://www.google.com/s2/favicons?domain='+domain+'&sz=128');
+    img.src=LOGO_OVERRIDES[domain]||('https://www.google.com/s2/favicons?domain='+domain+'&sz=256');
     el.appendChild(img);
     sbRefreshNewBadge(el,firm);
   }
@@ -5138,7 +5151,10 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     el.setAttribute('aria-label',firm.name||'Firm');
     var LOGO_OVERRIDES={
       'takeprofittrader.com':'https://takeprofittrader.com/assets/mobile-logo.svg',
-      'apextraderfunding.com':'https://apextraderfunding.com/cdn-cgi/image/width=512,height=512,fit=cover,gravity=auto,format=auto//app/uploads/cropped-APEX_FAV-192x192.png'
+      'apextraderfunding.com':'https://apextraderfunding.com/cdn-cgi/image/width=512,height=512,fit=cover,gravity=auto,format=auto//app/uploads/cropped-APEX_FAV-192x192.png',
+      'bulenox.com':'https://bulenox.com/assets/logo-iXtDrF5P.svg',
+      'dnafunded.com':'https://dnafunded.com/wp-content/uploads/2024/08/DNA-Funded-Logo-1.png',
+      'blueberryfunded.com':'https://blueberryfunded.com/wp-content/themes/blueberry-excelprop-v3-05/assets/img/logo.svg'
     };
     var LETTER_ONLY_DOMAINS=['blueguardian.com'];
     var domain='';
@@ -5150,7 +5166,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     img.alt=firm.name||'';img.loading='lazy';
     img.style.cssText='width:100%;height:100%;object-fit:contain;border-radius:6px;';
     img.onerror=function(){img.remove();el.textContent=letter;};
-    img.src=LOGO_OVERRIDES[domain]||('https://www.google.com/s2/favicons?domain='+domain+'&sz=128');
+    img.src=LOGO_OVERRIDES[domain]||('https://www.google.com/s2/favicons?domain='+domain+'&sz=256');
     el.appendChild(img);
   }
   function sbNum(v){if(v==null||v==='')return NaN;return Number(v);}
