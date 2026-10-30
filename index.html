@@ -4828,6 +4828,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     <div class="sheet-tabpane active" data-sheet-pane="overview">
     <div class="rule-table" aria-label="Firm rule table"><div class="rule-row"><span>Program type</span><strong>—</strong></div><div class="rule-row"><span>Account sizes</span><strong>—</strong></div><div class="rule-row"><span>Price from</span><strong>—</strong></div><div class="rule-row"><span>Profit target</span><strong>—</strong></div><div class="rule-row"><span>Profit split</span><strong>—</strong></div><div class="rule-row"><span>Max drawdown</span><strong>—</strong></div><div class="rule-row"><span>Daily loss limit</span><strong>—</strong></div><div class="rule-row"><span>Leverage</span><strong>—</strong></div><div class="rule-row"><span>Payout frequency</span><strong>—</strong></div></div>
     <h3 style="margin:24px 0 0">Notable rules</h3><ul class="notable-rules"><li><i aria-hidden="true"></i><span>—</span></li><li><i aria-hidden="true"></i><span>—</span></li><li><i aria-hidden="true"></i><span>—</span></li></ul>
+    <h3 style="margin:24px 0 12px" id="tcHeading">Trading conditions</h3><div class="rule-table" id="tcTable" aria-label="Trading conditions"><div class="rule-row"><span>—</span><strong>—</strong></div></div>
     </div><!-- /overview pane -->
     <div class="sheet-tabpane" data-sheet-pane="challenges" role="tabpanel"><div id="sheetChallenges"></div></div>
     <div class="sheet-tabpane" data-sheet-pane="deals" role="tabpanel"><div id="sheetDeals"></div></div>
@@ -7596,6 +7597,46 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     var notes=sheet.querySelectorAll('.notable-rules li span');
     var keyRules=rules&&Array.isArray(rules.key_rules)?rules.key_rules:[];
     notes.forEach(function(sp,i){sp.textContent=keyRules[i]||'—';});
+    /* Trading conditions (2026-10-30): firm-level flags from research */
+    try{
+      var tcEl=document.getElementById('tcTable');
+      var tcHead=document.getElementById('tcHeading');
+      if(tcEl){
+        var tc=firm.trading_conditions||{};
+        var _tcLabels={
+          news:currentLanguage==='ar'?'تداول الأخبار':'News trading',
+          ea:currentLanguage==='ar'?'المستشارون الخبراء':'EAs / Bots',
+          scalping:currentLanguage==='ar'?'السكالبينغ':'Scalping',
+          copy:currentLanguage==='ar'?'نسخ التداول':'Copy trading',
+          weekend:currentLanguage==='ar'?'الاحتفاظ نهاية الأسبوع':'Weekend holding',
+          overnight:currentLanguage==='ar'?'الاحتفاظ الليلي':'Overnight holding',
+          refund:currentLanguage==='ar'?'استرداد الرسوم':'Fee refund'
+        };
+        var _tcVal=function(v){
+          if(v==='yes')return currentLanguage==='ar'?'مسموح':'Allowed';
+          if(v==='no')return currentLanguage==='ar'?'ممنوع':'Not allowed';
+          if(v==='restricted')return currentLanguage==='ar'?'مقيد':'Restricted';
+          if(v==='partial')return currentLanguage==='ar'?'جزئي':'Partial';
+          return '—';
+        };
+        var _tcKeys=['news','ea','scalping','copy','weekend','overnight','refund'];
+        var hasAny=_tcKeys.some(function(k){return tc[k]&&tc[k]!=='unverified';});
+        if(tcHead)tcHead.style.display=hasAny?'':'none';
+        tcEl.innerHTML='';
+        if(!hasAny){
+          tcEl.style.display='none';
+        }else{
+          tcEl.style.display='';
+          _tcKeys.forEach(function(k){
+            if(!tc[k]||tc[k]==='unverified')return;
+            var row=document.createElement('div');row.className='rule-row';
+            var s=document.createElement('span');s.textContent=_tcLabels[k];
+            var st=document.createElement('strong');st.textContent=_tcVal(tc[k]);
+            row.appendChild(s);row.appendChild(st);tcEl.appendChild(row);
+          });
+        }
+      }
+    }catch(_tce){}
     /* WAVE 2c — fill Challenges + Payouts panes */
     try{
       var chEl=document.getElementById('sheetChallenges');
