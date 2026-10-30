@@ -1138,6 +1138,13 @@
     .pc-head h3{margin:0;font-size:15px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.2}
     .pc-firmtxt{display:flex;flex-direction:column;align-items:flex-start;gap:3px;flex:1;min-width:0}
     .pc-mkt{font-size:9.5px;font-weight:800;letter-spacing:.1em;color:var(--gold,#D4AF37);border:1px solid rgba(212,175,55,.45);border-radius:6px;padding:2px 7px;line-height:1}
+    /* Platform badges — clean, organized, brand style */
+    .plat-badges{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
+    .plat-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--text);background:var(--raised);border:1px solid var(--line-strong);border-radius:8px;padding:5px 10px;line-height:1.2}
+    .plat-badge svg{width:14px;height:14px;flex:none}
+    .plat-badge .plat-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex:none}
+    .inst-badges{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 0}
+    .inst-badge{font-size:10.5px;font-weight:600;color:var(--muted);background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:999px;padding:4px 10px}
     .pc-iconbtn{width:38px;height:38px;flex:0 0 auto;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.04);color:var(--text);display:grid;place-items:center;cursor:pointer;font-size:15px;font-weight:700}
     .pc-toggle{display:flex;border:1px solid var(--line);border-radius:12px;overflow:hidden;flex:0 0 auto}
     .pc-toggle button{border:0;background:transparent;color:var(--muted);font-size:14px;font-weight:800;min-width:38px;min-height:38px;cursor:pointer;font-family:inherit}
@@ -4839,6 +4846,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     <div class="rule-table" aria-label="Firm rule table"><div class="rule-row"><span>Program type</span><strong>—</strong></div><div class="rule-row"><span>Account sizes</span><strong>—</strong></div><div class="rule-row"><span>Price from</span><strong>—</strong></div><div class="rule-row"><span>Profit target</span><strong>—</strong></div><div class="rule-row"><span>Profit split</span><strong>—</strong></div><div class="rule-row"><span>Max drawdown</span><strong>—</strong></div><div class="rule-row"><span>Daily loss limit</span><strong>—</strong></div><div class="rule-row"><span>Leverage</span><strong>—</strong></div><div class="rule-row"><span>Payout frequency</span><strong>—</strong></div></div>
     <h3 style="margin:24px 0 0">Notable rules</h3><ul class="notable-rules"><li><i aria-hidden="true"></i><span>—</span></li><li><i aria-hidden="true"></i><span>—</span></li><li><i aria-hidden="true"></i><span>—</span></li></ul>
     <h3 style="margin:24px 0 12px" id="tcHeading">Trading conditions</h3><div class="rule-table" id="tcTable" aria-label="Trading conditions"><div class="rule-row"><span>—</span><strong>—</strong></div></div>
+    <h3 style="margin:24px 0 12px" id="platHeading">Platforms & instruments</h3><div id="platSection"><div class="plat-badges" id="platBadges"></div><div class="inst-badges" id="instBadges" style="margin-top:8px"></div></div>
     </div><!-- /overview pane -->
     <div class="sheet-tabpane" data-sheet-pane="challenges" role="tabpanel"><div id="sheetChallenges"></div></div>
     <div class="sheet-tabpane" data-sheet-pane="deals" role="tabpanel"><div id="sheetDeals"></div></div>
@@ -7647,6 +7655,35 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
         }
       }
     }catch(_tce){}
+    /* Platforms & instruments (2026-10-30): loaded from assets/platforms-data.json */
+    try{
+      var platHead=document.getElementById('platHeading');
+      var platSec=document.getElementById('platSection');
+      if(platHead&&platSec){
+        var platBadges=document.getElementById('platBadges');
+        var instBadges=document.getElementById('instBadges');
+        var renderPlats=function(data){
+          var info=data&&data[firm.name];
+          var hasP=info&&info.platforms&&info.platforms.length;
+          var hasI=info&&info.instruments&&info.instruments.length;
+          if(!hasP&&!hasI){platHead.style.display='none';platSec.style.display='none';return;}
+          platHead.style.display='';platSec.style.display='';
+          platBadges.innerHTML='';instBadges.innerHTML='';
+          (info.platforms||[]).forEach(function(p){
+            var b=document.createElement('span');b.className='plat-badge';
+            var dot=document.createElement('span');dot.className='plat-dot';
+            b.appendChild(dot);b.appendChild(document.createTextNode(p));
+            platBadges.appendChild(b);
+          });
+          (info.instruments||[]).forEach(function(ins){
+            var b=document.createElement('span');b.className='inst-badge';b.textContent=ins;
+            instBadges.appendChild(b);
+          });
+        };
+        if(window._platData){renderPlats(window._platData);}
+        else{fetch('assets/platforms-data.json').then(function(r){return r.json();}).then(function(d){window._platData=d;renderPlats(d);}).catch(function(){platHead.style.display='none';platSec.style.display='none';});}
+      }
+    }catch(_ple){}
     /* WAVE 2c — fill Challenges + Payouts panes */
     try{
       var chEl=document.getElementById('sheetChallenges');

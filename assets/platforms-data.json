@@ -1,0 +1,397 @@
+{
+ "FTMO": {
+  "platforms": [
+   "MT4",
+   "MT5",
+   "cTrader",
+   "DXtrade"
+  ],
+  "instruments": [
+   "Forex",
+   "Indices",
+   "Metals",
+   "Commodities",
+   "Crypto",
+   "Stocks"
+  ],
+  "source": "https://tradingbrokers.com/ftmo-trading-platforms/",
+  "notes": "Some reviewers also list TradingView (mypropgenius, velotrade); FTMO Futures is a separate product."
+ },
+ "The5ers": {
+  "platforms": [
+   "MT5",
+   "cTrader",
+   "TradingView",
+   "BlackArrow"
+  ],
+  "instruments": [
+   "Forex",
+   "Indices",
+   "Metals",
+   "Commodities",
+   "Crypto",
+   "Futures"
+  ],
+  "source": "https://www.myfxbook.com/prop-firms/the5ers",
+  "notes": "MT5/cTrader/TradingView for CFDs (region-dependent; no MT4); BlackArrow is the Futures-only platform. Futures instruments: equity indices, currencies, metals, agriculture, energy futures (ES, NQ, GC, CL, 6E)."
+ },
+ "E8 Markets": {
+  "platforms": [
+   "MT5",
+   "cTrader",
+   "TradeLocker",
+   "Match-Trader"
+  ],
+  "instruments": [
+   "Forex",
+   "Indices",
+   "Metals",
+   "Energies",
+   "Crypto"
+  ],
+  "source": "https://propfirmscompare.com/reviews/e8-markets-review/",
+  "notes": "E8 also sells Futures/Perpetual products with different platforms (E8 Futures platform); US clients cannot use cTrader/MT5 for CFDs."
+ },
+ "FundedNext": {
+  "platforms": [
+   "MT4",
+   "MT5",
+   "cTrader",
+   "Match-Trader",
+   "Tradovate",
+   "NinjaTrader",
+   "TradingView"
+  ],
+  "instruments": [
+   "Forex",
+   "Indices",
+   "Commodities",
+   "Crypto",
+   "Futures"
+  ],
+  "source": "https://fundedtrading.com/propfirm/fundednext/",
+  "notes": "MT4/MT5/cTrader/Match-Trader for CFD accounts; Futures product uses Tradovate, NinjaTrader, TradingView with CME/CBOT/COMEX/NYMEX contracts."
+ },
+ "Alpha Capital Group": {
+  "platforms": [
+   "MT5",
+   "cTrader",
+   "DXTrade",
+   "TradeLocker"
+  ],
+  "instruments": [
+   "Forex",
+   "Indices",
+   "Commodities",
+   "Metals"
+  ],
+  "source": "https://propfirmscompare.com/reviews/alpha-capital-review/",
+  "notes": "No crypto, no stocks, no MT4. US residents cannot use MT5."
+ },
+ "Maven Trading": {
+  "platforms": [
+   "MT5",
+   "Match-Trader"
+  ],
+  "instruments": [
+   "Forex",
+   "Indices",
+   "Commodities",
+   "Crypto",
+   "Digital ETFs"
+  ],
+  "source": "https://propfirmscompare.com/reviews/maven-review/",
+  "notes": "MetaTrader not offered in US/Canada. Older sources mentioned cTrader, but current official product cards show MT5 + Match-Trader only."
+ },
+ "Blue Guardian": {
+  "platforms": [
+   "MT5",
+   "Match-Trader",
+   "TradeLocker",
+   "cTrader"
+  ],
+  "instruments": [
+   "Forex",
+   "Indices",
+   "Commodities",
+   "Crypto",
+   "Stocks",
+   "Futures"
+  ],
+  "source": "https://propfirmscompare.com/reviews/blue-guardian-review/",
+  "notes": "Some sources list DXtrade instead of MT5; Futures division (Tradovate/NinjaTrader) covers US futures. No MT4."
+ },
+ "Goat Funded Trader": {
+  "platforms": [
+   "MT5",
+   "Match-Trader",
+   "TradeLocker",
+   "cTrader",
+   "Volumetrica"
+  ],
+  "instruments": [
+   "Forex",
+   "Indices",
+   "Metals",
+   "Commodities",
+   "Crypto",
+   "Stocks",
+   "Futures"
+  ],
+  "source": "https://www.goatfundedtrader.com/blog/goat-funded-trader-vs-ftmo",
+  "notes": "Official GFT blog confirms MT5, cTrader, MatchTrader, TradeLocker. No MT4 (migrated away in 2024). Futures division adds US futures."
+ },
+ "Funding Pips": {
+  "platforms": [
+   "MT5",
+   "cTrader",
+   "Match-Trader"
+  ],
+  "instruments": [
+   "Forex",
+   "Metals",
+   "Indices",
+   "Energy",
+   "Crypto"
+  ],
+  "source": "https://proptradingvibes.com/prop-firms/fundingpips"
+ },
+ "Apex Trader Funding": {
+  "platforms": [
+   "Rithmic",
+   "Tradovate",
+   "WealthCharts",
+   "NinjaTrader",
+   "TradingView",
+   "Quantower",
+   "Sierra Chart"
+  ],
+  "instruments": [
+   "Futures (Indices)",
+   "Futures (Energy)",
+   "Futures (Metals)",
+   "Futures (Currencies)",
+   "Futures (Agriculture)",
+   "Crypto Futures"
+  ],
+  "source": "https://brokersift.com/prop-firms/apex-trader-funding"
+ },
+ "Topstep": {
+  "platforms": [
+   "Tradovate",
+   "TopstepX",
+   "NinjaTrader",
+   "TradingView",
+   "Quantower",
+   "Rithmic",
+   "Sierra Chart"
+  ],
+  "instruments": [
+   "Futures (Equity Indexes)",
+   "Futures (Energy)",
+   "Futures (Metals)",
+   "Futures (Forex)",
+   "Futures (Agriculture)",
+   "Futures (Interest Rates)"
+  ],
+  "source": "https://www.myfxbook.com/prop-firms/topstep"
+ },
+ "TakeProfitTrader": {
+  "platforms": [
+   "Tradovate",
+   "NinjaTrader",
+   "TradingView",
+   "Rithmic",
+   "R|Trader",
+   "Quantower",
+   "Bookmap",
+   "MotiveWave",
+   "ATAS",
+   "MultiCharts"
+  ],
+  "instruments": [
+   "Futures (Equity Indexes)",
+   "Futures (Energy)",
+   "Futures (Metals)",
+   "Futures (Currencies)",
+   "Futures (Interest Rates)",
+   "Futures (Agriculture)",
+   "Futures (Livestock)",
+   "Crypto Futures"
+  ],
+  "source": "https://proptradingvibes.com/blog/takeprofittrader-permitted-products"
+ },
+ "Tradeify": {
+  "platforms": [
+   "Tradovate",
+   "NinjaTrader",
+   "TradingView",
+   "Rithmic",
+   "Quantower",
+   "Sierra Chart",
+   "R|Trader",
+   "WealthCharts",
+   "Tradesea",
+   "Bookmap"
+  ],
+  "instruments": [
+   "Futures (Equity Indexes)",
+   "Futures (Energy)",
+   "Futures (Metals)",
+   "Futures (Currencies)",
+   "Futures (Agriculture)",
+   "Futures (Bonds)"
+  ],
+  "source": "https://tradeify.co/post/tradeify-vs-fundednext-futures-traders-2026"
+ },
+ "Lucid Trading": {
+  "platforms": [
+   "NinjaTrader",
+   "Tradovate",
+   "TradingView",
+   "Rithmic",
+   "Quantower",
+   "Sierra Chart",
+   "Bookmap",
+   "ATAS",
+   "MotiveWave",
+   "R|Trader Pro",
+   "MultiCharts"
+  ],
+  "instruments": [
+   "Futures (Equity Indexes)",
+   "Futures (Currencies)",
+   "Futures (Energy)",
+   "Futures (Metals)",
+   "Futures (Agriculture)"
+  ],
+  "source": "https://bestprops.com/prop-firms/lucid-trading/"
+ },
+ "MyFundedFutures": {
+  "platforms": [
+   "NinjaTrader",
+   "Tradovate",
+   "TradingView",
+   "Quantower",
+   "ATAS",
+   "Volumetrica",
+   "DeepChart"
+  ],
+  "instruments": [
+   "Futures (Equity Indexes)",
+   "Futures (Currencies)",
+   "Futures (Metals)",
+   "Futures (Energy)",
+   "Futures (Agriculture)",
+   "Futures (Livestock)",
+   "Crypto Futures"
+  ],
+  "source": "https://h2tfunding.com/reviews/my-funded-futures/"
+ },
+ "Breakout Prop": {
+  "instruments": [
+   "Crypto",
+   "Indices",
+   "Commodities"
+  ],
+  "note": "Kraken-owned crypto prop firm; proprietary terminal; 63 markets: crypto, two indices (Nasdaq 100, S&P 500), oil and silver; leverage up to 10x",
+  "platforms": [
+   "Breakout Terminal"
+  ],
+  "source": "https://www.hyrotrader.com/blog/best-crypto-prop-firms/"
+ },
+ "BrightFunded": {
+  "instruments": [
+   "Forex",
+   "Indices",
+   "Commodities",
+   "Crypto"
+  ],
+  "note": "Official help center lists DXTrade, cTrader, MT5 (MT5 unavailable for US/UAE residents; cTrader unavailable for US residents)",
+  "platforms": [
+   "MT5",
+   "cTrader",
+   "DXtrade"
+  ],
+  "source": "https://help.brightfunded.com/en/articles/10855521-what-trading-platform-does-brightfunded-offer"
+ },
+ "FXIFY": {
+  "instruments": [
+   "Forex",
+   "Metals",
+   "Indices",
+   "Stocks",
+   "Commodities",
+   "Crypto"
+  ],
+  "note": "300+ CFD instruments (43 forex pairs, 5 metals, 14 indices, stocks, crypto); separate 80+ pair crypto programs; TradingView on select programs",
+  "platforms": [
+   "MT4",
+   "MT5",
+   "DXtrade",
+   "TradingView"
+  ],
+  "source": "https://www.fxempire.com/prop-firms/fxify"
+ },
+ "Funded Trader Markets": {
+  "instruments": [
+   "Forex",
+   "Metals",
+   "Energies",
+   "Indices",
+   "Crypto"
+  ],
+  "note": "Firm's official 2026-09-04 press release: four platforms, 76 instruments (27 forex pairs, 2 metals, 2 energies, 6 indices, 39 cryptocurrencies)",
+  "platforms": [
+   "MT5",
+   "cTrader",
+   "TradeLocker",
+   "Match-Trader"
+  ],
+  "source": "https://www.globenewswire.com/news-release/2026/09/04/3356676/0/en/funded-trader-markets-publishes-full-programme-specifications-for-simulated-funding-accounts.html"
+ },
+ "Funded7": {
+  "instruments": [
+   "Forex",
+   "Indices",
+   "Metals",
+   "Energies",
+   "Crypto"
+  ],
+  "note": "43 forex pairs, 14 indices, metals (gold/silver/palladium/platinum), oil (USOIL/UKOIL), crypto (BTC/ETH/LTC/SOL/BNB/BCH/XRP)",
+  "platforms": [
+   "MT5",
+   "cTrader"
+  ],
+  "source": "https://bestpropfirmguide.com/firm/funded7/"
+ },
+ "Funding Traders": {
+  "instruments": [
+   "Forex",
+   "Indices",
+   "Metals",
+   "Commodities",
+   "Crypto"
+  ],
+  "note": "Official help center + homepage confirm MT5 and TradeLocker; FX majors/minors/exotics, Nasdaq/Dow/DAX/Nikkei/S&P/UK100 indices, gold/silver, oil, crypto",
+  "platforms": [
+   "MT5",
+   "TradeLocker"
+  ],
+  "source": "https://fundingtraders.com/help/en/articles/17459915-instant-funding"
+ },
+ "PipFarm": {
+  "instruments": [
+   "Forex",
+   "Indices",
+   "Metals",
+   "Commodities",
+   "Crypto"
+  ],
+  "note": "cTrader only (MT5 promised for the future per earnforex); 100+ instruments, leverage 1:30",
+  "platforms": [
+   "cTrader"
+  ],
+  "source": "https://h2tfunding.com/reviews/pipfarm/"
+ }
+}
