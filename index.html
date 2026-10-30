@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="dark light">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.supabase.co https://fonts.googleapis.com; frame-ancestors 'none';">
   <!-- Mega-audit SEO fixes: canonical + theme-color (were missing). -->
   <link rel="canonical" href="https://pipvant.github.io/">
   <meta name="theme-color" content="#0A1628">
@@ -4964,7 +4965,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
 <!-- AUD-C3 fix: supabase-js is NO longer a synchronous tag (a hanging CDN
      blanked the whole page). It is injected asynchronously by the data
      layer below, with a bounded boot watchdog + late-init path. -->
-<script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.13/dist/html-to-image.min.js" defer></script>
+<script src="assets/html-to-image.min.js" defer></script>
 <script src="assets/qrcode.js" defer></script>
 <script src="assets/pv-live-bg.js" defer></script>
 <script>
