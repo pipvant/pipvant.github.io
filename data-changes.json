@@ -1,6 +1,96 @@
 {
-  "updated": "2026-10-30T04:20:52.482237+00:00",
+  "updated": "2026-10-30T05:09:20.726194+00:00",
   "changes": [
+    {
+      "date": "2026-10-30",
+      "firm": "Earn2Trade",
+      "field": "promotion",
+      "old": "{\"code\": \"PROPINDER\", \"discount\": \"50% off\"}",
+      "new": "{\"code\": \"60PLUS50\", \"discount\": \"60% off all evaluations\", \"expiry\": null}",
+      "source": "https://earn2trade.com/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-30",
+      "firm": "Top One Futures",
+      "field": "plan added (25000 (Elite Daily))",
+      "old": "",
+      "new": "178.0",
+      "source": "https://toponefutures.com/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-30",
+      "firm": "Top One Futures",
+      "field": "drawdown_type (25000 (Elite Daily))",
+      "old": "",
+      "new": "eod",
+      "source": "https://toponefutures.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-30",
+      "firm": "Top One Futures",
+      "field": "profit_split (25000 (Elite Daily))",
+      "old": "",
+      "new": "90",
+      "source": "https://toponefutures.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-30",
+      "firm": "Top One Futures",
+      "field": "plan added (100000 (Elite Daily))",
+      "old": "",
+      "new": "398.0",
+      "source": "https://toponefutures.com/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-30",
+      "firm": "Top One Futures",
+      "field": "drawdown_type (100000 (Elite Daily))",
+      "old": "",
+      "new": "eod",
+      "source": "https://toponefutures.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-30",
+      "firm": "Top One Futures",
+      "field": "profit_split (100000 (Elite Daily))",
+      "old": "",
+      "new": "90",
+      "source": "https://toponefutures.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-30",
+      "firm": "Top One Futures",
+      "field": "plan added (150000 (Elite Daily))",
+      "old": "",
+      "new": "549.0",
+      "source": "https://toponefutures.com/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-30",
+      "firm": "Top One Futures",
+      "field": "drawdown_type (150000 (Elite Daily))",
+      "old": "",
+      "new": "eod",
+      "source": "https://toponefutures.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-30",
+      "firm": "Top One Futures",
+      "field": "profit_split (150000 (Elite Daily))",
+      "old": "",
+      "new": "90",
+      "source": "https://toponefutures.com/",
+      "kind": "rule"
+    },
     {
       "date": "2026-10-27",
       "firm": "FundedNext",
