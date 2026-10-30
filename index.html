@@ -1151,6 +1151,13 @@
     .pc-pill.on{border-color:rgba(91,141,239,.65);background:rgba(91,141,239,.14);box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
     .pc-hero{position:relative;overflow:hidden;border-radius:20px;border:1px solid rgba(91,141,239,.28);background:linear-gradient(165deg,color-mix(in srgb,var(--accent) 16%,transparent),color-mix(in srgb,var(--surface) 60%,transparent) 65%);padding:18px;touch-action:pan-y;user-select:none;-webkit-user-select:none}
     .pc-firmbtn{display:flex;align-items:center;gap:9px;flex:1;min-width:0;background:none;border:0;padding:0;margin:0;cursor:pointer;font:inherit;color:inherit;text-align:left}
+    .pc-likebtn{display:flex;align-items:center;gap:6px;flex:0 0 auto;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.04);color:var(--text);padding:8px 12px;cursor:pointer;font:inherit;min-height:44px}
+    .pc-likebtn[aria-pressed="true"]{border-color:var(--gold,#D4AF37);background:rgba(212,175,55,.12)}
+    .pc-likebtn b{font-size:13px;font-variant-numeric:tabular-nums}
+    .pc-rate{display:flex;align-items:center;gap:6px;margin:0 4px 12px;font-size:12px;color:var(--muted)}
+    .pc-rate .pc-stars{display:flex;gap:2px}
+    .pc-rate .pc-stars button{background:none;border:0;padding:4px;cursor:pointer;font-size:16px;color:var(--muted);line-height:1}
+    .pc-rate .pc-stars button.on{color:var(--gold,#D4AF37)}
     .pc-variants{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:10px 4px 0}
     .pc-eyebrow{display:flex;justify-content:space-between;align-items:center;font-size:10.5px;letter-spacing:.14em;color:var(--muted);font-weight:700;margin-bottom:6px}
     .pc-phase{font-size:10.5px;letter-spacing:.08em;border:1px solid rgba(212,175,55,.4);color:var(--gold,#D4AF37);border-radius:999px;padding:4px 10px}
@@ -7759,6 +7766,8 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     for(i=0;i<list.length;i++){if(String(list[i].account_size)===String(size)){idx=i;break;}}
     _pcState={firm:firm,firmId:firmId,groups:g.groups,groupOrder:order,group:grp,idx:idx,pct:false};
     _pcRender();
+    /* Load community data (ratings + likes) for the plan card */
+    try{if(typeof sbLoadCommunity==='function')sbLoadCommunity(firmId);}catch(_pcl){}
     var ov=document.getElementById('planCard');if(ov)ov.classList.add('open');
     try{var _s2=_pcState;if(_s2&&_s2._paint){var _tr=document.getElementById('pcTrack');if(_tr){var _sl=_tr.querySelector('.pc-slide');var _st=_sl?_sl.offsetWidth:_tr.clientWidth;if(_st>0)_tr.scrollLeft=_s2.idx*_st;}_s2._paint();}}catch(_ps){}
   }
@@ -7861,8 +7870,10 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       +'<button type="button" class="pc-iconbtn" id="pcBack" aria-label="Back">‹</button>'
       +'<div class="pc-toggle" role="group" aria-label="$ or %"><button type="button" id="pcModeUsd" class="'+(s.pct?'':'on')+'">$</button><button type="button" id="pcModePct" class="'+(s.pct?'on':'')+'">%</button></div>'
       +'<button type="button" class="pc-firmbtn" id="pcFirmBtn" aria-label="'+_pcEsc(s.firm.name)+'"><span class="logo-slot" id="pcLogo"></span><span class="pc-firmtxt"><h3>'+_pcEsc(s.firm.name)+'</h3>'+(mktLbl?'<span class="pc-mkt">'+_pcEsc(mktLbl)+'</span>':'')+'</span></button>'
+      +'<button type="button" class="pc-likebtn" id="pcLike" aria-pressed="false" aria-label="Vote for this firm"><span class="fd-like-ico">👍</span><b id="pcLikeCount">0</b></button>'
       +'<button type="button" class="pc-iconbtn" id="pcClose" aria-label="Close">✕</button>'
       +'</div>'
+      +'<div class="pc-rate" id="pcRate"><span class="pc-stars" id="pcStars"></span><span id="pcRateText">—</span></div>'
       +'<div class="pc-programs">'+pills+'</div>'
       +'<div class="pc-carousel"><div class="pc-track2" id="pcTrack">'+list.map(slideHtml).join('')+'</div></div>'
       +'<div class="pc-nav"><button type="button" class="pc-arrow" id="pcPrev">‹ '+(ar?'أصغر':'Smaller')+'</button>'
@@ -8169,6 +8180,29 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       var _shLike=document.getElementById('sheetLike'),_shLikeCnt=document.getElementById('sheetLikeCount');
       if(_shLikeCnt)_shLikeCnt.textContent=likeCount||0;
       if(_shLike)_shLike.setAttribute('aria-pressed',String(!!liked));
+      /* Plan card header like-button + star rating (same mechanism) */
+      var _pcLike=document.getElementById('pcLike'),_pcLikeCnt=document.getElementById('pcLikeCount');
+      if(_pcLikeCnt)_pcLikeCnt.textContent=likeCount||0;
+      if(_pcLike){
+        _pcLike.setAttribute('aria-pressed',String(!!liked));
+        _pcLike.onclick=function(ev){if(ev)ev.stopPropagation();sbToggleLike(firmId);};
+      }
+      var _pcStars=document.getElementById('pcStars'),_pcRateText=document.getElementById('pcRateText');
+      if(_pcStars){
+        _pcStars.innerHTML='';
+        for(var _si=1;_si<=5;_si++){
+          (function(_n){
+            var _b=document.createElement('button');
+            _b.type='button';_b.textContent='★';
+            _b.className=_n<=Math.round(myRating||0)?'on':'';
+            _b.setAttribute('aria-label',(ar?'قيّم ':'Rate ')+_n);
+            if(canRate){_b.onclick=function(ev){if(ev)ev.stopPropagation();sbSubmitRating(firmId,_n);};}
+            else{_b.disabled=true;_b.title=ar?'سجل الدخول للتقييم':'Log in to rate';}
+            _pcStars.appendChild(_b);
+          })(_si);
+        }
+      }
+      if(_pcRateText)_pcRateText.textContent=sbRatingCompact(avg,count,ar);
     }
     paint(0,0,0,0,false,false);
     if(typeof sb==='undefined'||!sb)return;
