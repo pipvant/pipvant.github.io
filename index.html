@@ -7781,11 +7781,16 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
   /* ============ PLAN CARD (founder order 2026-10-29): liquidjournal-style plan detail, swipeable sizes ============ */
   var _pcState=null;
   function _pcEsc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-  function _pcGroups(firmId){
+  function _pcGroups(firmId,market){
     var plans=(typeof sbPlansByFirm!=='undefined'?sbPlansByFirm[firmId]:null)||[];
     var groups={},order=[];
     plans.forEach(function(p){
-      var g=String((p.rules||{}).program||'Standard').trim()||'Standard';
+      var prog=String((p.rules||{}).program||'Standard').trim()||'Standard';
+      /* Market filter: 'futures' programs contain 'futures' (case-insensitive) */
+      var isFut=/futures/i.test(prog);
+      if(market==='futures'&&!isFut)return;
+      if(market==='cfds'&&isFut)return;
+      var g=prog;
       if(!groups[g]){groups[g]=[];order.push(g);}
       groups[g].push(p);
     });
@@ -7794,20 +7799,31 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     });
     return {groups:groups,order:order};
   }
+  function _pcHasDualMarket(firmId){
+    var plans=(typeof sbPlansByFirm!=='undefined'?sbPlansByFirm[firmId]:null)||[];
+    var hasFut=false,hasCfd=false;
+    plans.forEach(function(p){
+      var prog=String((p.rules||{}).program||'');
+      if(/futures/i.test(prog))hasFut=true;else hasCfd=true;
+    });
+    return hasFut&&hasCfd;
+  }
   /* final-audit: dead _pcPlan() removed */
   function _pcNum(v){if(v==null||v==='')return NaN;var m=String(v).match(/\d+(\.\d+)?/);return m?Number(m[0]):NaN;}
   function _pcNa(t){return '<span class="pc-na">'+_pcEsc(t)+'</span>';}
   function _pcPct(r,pctKey,usdKey,size){var v=_pcNum(r[pctKey]);if(isFinite(v)&&v>0)return v;var u=_pcNum(r[usdKey]);if(isFinite(size)&&size>0&&isFinite(u)&&u>0)return u/size*100;return NaN;}
-  function sbOpenPlanCard(firmId,program,size){
+  function sbOpenPlanCard(firmId,program,size,market){
     var firm=null;(sbFirms||[]).forEach(function(f){if(String(f.id)===String(firmId))firm=f;});
     if(!firm)return;
-    var g=_pcGroups(firmId),order=g.order;
+    var dual=_pcHasDualMarket(firmId);
+    var mkt=market||(dual?'cfds':null);
+    var g=_pcGroups(firmId,mkt),order=g.order;
     if(!order.length){if(typeof showToast==='function')showToast(currentLanguage==='ar'?'لا توجد خطط متاحة لهذه الشركة بعد.':'No plans available for this firm yet.');return;}
     var grp=String(program||'').trim();
     if(!g.groups[grp])grp=order[0];
     var list=g.groups[grp],idx=0,i;
     for(i=0;i<list.length;i++){if(String(list[i].account_size)===String(size)){idx=i;break;}}
-    _pcState={firm:firm,firmId:firmId,groups:g.groups,groupOrder:order,group:grp,idx:idx,pct:false};
+    _pcState={firm:firm,firmId:firmId,groups:g.groups,groupOrder:order,group:grp,idx:idx,pct:false,market:mkt,dual:dual};
     _pcRender();
     /* Load community data (ratings + likes) for the plan card */
     try{if(typeof sbLoadCommunity==='function')sbLoadCommunity(firmId);}catch(_pcl){}
@@ -7916,6 +7932,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       '<div class="pc-head">'
       +'<button type="button" class="pc-iconbtn" id="pcBack" aria-label="Back">‹</button>'
       +'<div class="pc-toggle" role="group" aria-label="$ or %"><button type="button" id="pcModeUsd" class="'+(s.pct?'':'on')+'">$</button><button type="button" id="pcModePct" class="'+(s.pct?'on':'')+'">%</button></div>'
+      +(s.dual?'<div class="pc-toggle" role="group" aria-label="Market"><button type="button" id="pcMktCfd" class="'+(s.market==='futures'?'':'on')+'">CFD</button><button type="button" id="pcMktFut" class="'+(s.market==='futures'?'on':'')+'">FUT</button></div>':'')
       +'<button type="button" class="pc-firmbtn" id="pcFirmBtn" aria-label="'+_pcEsc(s.firm.name)+'"><span class="logo-slot" id="pcLogo"></span><span class="pc-firmtxt"><h3>'+_pcEsc(s.firm.name)+'</h3>'+(mktLbl?'<span class="pc-mkt">'+_pcEsc(mktLbl)+'</span>':'')+'</span></button>'
       +'<button type="button" class="pc-likebtn" id="pcLike" aria-pressed="false" aria-label="Vote for this firm"><span class="fd-like-ico">👍</span><b id="pcLikeCount">0</b></button>'
       +'<button type="button" class="pc-iconbtn" id="pcClose" aria-label="Close">✕</button>'
@@ -7938,6 +7955,9 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     var fb=q('#pcFirmBtn');if(fb)fb.onclick=function(){sbClosePlanCard();if(typeof sbOpenFirmSheet==='function')sbOpenFirmSheet(s.firmId);};
     q('#pcModeUsd').onclick=function(){s.pct=false;_pcRender();};
     q('#pcModePct').onclick=function(){s.pct=true;_pcRender();};
+    var _mktCfd=q('#pcMktCfd'),_mktFut=q('#pcMktFut');
+    if(_mktCfd)_mktCfd.onclick=function(){if(typeof sbOpenPlanCard==='function')sbOpenPlanCard(s.firmId,null,null,'cfds');};
+    if(_mktFut)_mktFut.onclick=function(){if(typeof sbOpenPlanCard==='function')sbOpenPlanCard(s.firmId,null,null,'futures');};
     qa('.pc-pill').forEach(function(b){b.onclick=function(){s.group=b.getAttribute('data-pc-grp');s.idx=0;_pcRender();};});
     var off=q('#pcOfficial');if(off){if(s.firm.website){off.onclick=function(){try{window.open(s.firm.website,'_blank','noopener');}catch(e){}};}else{off.style.display='none';/* final-audit UX-M3: hide dead button when no website */}}
     var track=q('#pcTrack'),pos=q('#pcPos');
