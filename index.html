@@ -9724,6 +9724,10 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       var on=pvBgFavs.indexOf(st.getAttribute('data-bgs-fav'))>=0;
       st.classList.toggle('is-fav',on);
       st.setAttribute('aria-pressed',String(on));
+      st.setAttribute('tabindex','0'); // a11y: keyboard-focusable (2026-10-30)
+    });
+    document.querySelectorAll('[data-bgs-expand]').forEach(function(x){
+      x.setAttribute('tabindex','0'); // a11y: keyboard-focusable (2026-10-30)
     });
     pvBgSyncPicker();
   }
