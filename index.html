@@ -7711,7 +7711,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     var firm=null;(sbFirms||[]).forEach(function(f){if(String(f.id)===String(firmId))firm=f;});
     if(!firm)return;
     var g=_pcGroups(firmId),order=g.order;
-    if(!order.length)return;
+    if(!order.length){if(typeof showToast==='function')showToast(currentLanguage==='ar'?'لا توجد خطط متاحة لهذه الشركة بعد.':'No plans available for this firm yet.');return;}
     var grp=String(program||'').trim();
     if(!g.groups[grp])grp=order[0];
     var list=g.groups[grp],idx=0,i;
