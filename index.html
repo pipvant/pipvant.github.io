@@ -3195,6 +3195,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
 /* Mobile touch targets: min 44px on coarse pointers (a11y, 2026-10-30) */
 @media (pointer:coarse){
   .slot-cta,.view-button,.notif-curr-chip,.range-btn,.jcal-btn,.mistake-chip,.risk-preset,.active-filter-chip{min-height:44px}
+  .pc-iconbtn,.pc-toggle button{min-height:44px} /* plan-card header touch targets */
   .table-view-slot{min-height:44px}
   .fd-stars button{min-width:44px;min-height:44px}
   /* final-audit MOBILE-M1: landing footer + brand touch targets */
@@ -7824,6 +7825,9 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     });
     return hasFut&&hasCfd;
   }
+  /* Remember the user's CFD/FUT choice per dual-market firm (local only). */
+  function _pcStoredMarket(firmId){try{var v=localStorage.getItem('pv_mkt_'+firmId);return (v==='futures'||v==='cfds')?v:null;}catch(e){return null;}}
+  function _pcSaveMarket(firmId,m){try{localStorage.setItem('pv_mkt_'+firmId,m);}catch(e){}}
   /* final-audit: dead _pcPlan() removed */
   function _pcNum(v){if(v==null||v==='')return NaN;var m=String(v).match(/\d+(\.\d+)?/);return m?Number(m[0]):NaN;}
   function _pcNa(t){return '<span class="pc-na">'+_pcEsc(t)+'</span>';}
@@ -7832,7 +7836,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     var firm=null;(sbFirms||[]).forEach(function(f){if(String(f.id)===String(firmId))firm=f;});
     if(!firm)return;
     var dual=_pcHasDualMarket(firmId);
-    var mkt=market||(dual?'cfds':null);
+    var mkt=market||(dual?(_pcStoredMarket(firmId)||'cfds'):null);
     var g=_pcGroups(firmId,mkt),order=g.order;
     if(!order.length){if(typeof showToast==='function')showToast(currentLanguage==='ar'?'لا توجد خطط متاحة لهذه الشركة بعد.':'No plans available for this firm yet.');return;}
     var grp=String(program||'').trim();
@@ -7943,6 +7947,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
         +'</div>';
     }
     var mkt=(typeof sbCategoryOf==='function')?sbCategoryOf(s.firm):null;
+    if(s.dual&&s.market)mkt=s.market; /* badge follows the CFD/FUT toggle view */
     var mktLbl=(mkt&&typeof sbCatBadgeText!=='undefined'&&(sbCatBadgeText[mkt]||{}))?(sbCatBadgeText[mkt][ar?'ar':'en']||null):null;
     body.innerHTML=
       '<div class="pc-head">'
@@ -7972,8 +7977,8 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     q('#pcModeUsd').onclick=function(){s.pct=false;_pcRender();};
     q('#pcModePct').onclick=function(){s.pct=true;_pcRender();};
     var _mktCfd=q('#pcMktCfd'),_mktFut=q('#pcMktFut');
-    if(_mktCfd)_mktCfd.onclick=function(){if(typeof sbOpenPlanCard==='function')sbOpenPlanCard(s.firmId,null,null,'cfds');};
-    if(_mktFut)_mktFut.onclick=function(){if(typeof sbOpenPlanCard==='function')sbOpenPlanCard(s.firmId,null,null,'futures');};
+    if(_mktCfd)_mktCfd.onclick=function(){_pcSaveMarket(s.firmId,'cfds');if(typeof sbOpenPlanCard==='function')sbOpenPlanCard(s.firmId,null,null,'cfds');};
+    if(_mktFut)_mktFut.onclick=function(){_pcSaveMarket(s.firmId,'futures');if(typeof sbOpenPlanCard==='function')sbOpenPlanCard(s.firmId,null,null,'futures');};
     qa('.pc-pill').forEach(function(b){b.onclick=function(){s.group=b.getAttribute('data-pc-grp');s.idx=0;_pcRender();};});
     var off=q('#pcOfficial');if(off){if(s.firm.website){off.onclick=function(){try{window.open(s.firm.website,'_blank','noopener');}catch(e){}};}else{off.style.display='none';/* final-audit UX-M3: hide dead button when no website */}}
     var track=q('#pcTrack'),pos=q('#pcPos');
