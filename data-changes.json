@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-31T20:20:46.332639+00:00",
+  "updated": "2026-10-31T20:57:49.498379+00:00",
   "changes": [
     {
       "date": "2026-10-31",
@@ -1143,6 +1143,15 @@
       "new": "10.0",
       "source": "https://the5ers.com/high-stakes/",
       "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "FundedNext",
+      "field": "promotion",
+      "old": "{\"code\": \"FNTRICK\", \"discount\": \"up to 41%\", \"expiry\": null}",
+      "new": "{\"code\": null, \"discount\": \"\", \"expiry\": null, \"scoped\": [{\"code\": \"FNFLEX\", \"discount\": \"up to 47% off\", \"expiry\": null, \"scope\": \"futures flex\"}, {\"code\": \"RAPID\", \"discount\": \"up to 50% off\", \"expiry\": null, \"scope\": \"futures rapid\"}, {\"code\": \"FNDIRECT\", \"discount\": \"up to 40% off\", \"expiry\": null, \"scope\": \"futures direct\"}]}",
+      "source": "https://fundednext.com/cfds",
+      "kind": "promo"
     },
     {
       "date": "2026-10-31",
