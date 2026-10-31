@@ -5691,13 +5691,30 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
   };
   var sbActiveCat='all';
   function sbCategoryOf(firm){return (firm&&sbCatByFirm[firm.name])||null;}
+  /* Per-plan market detection: rules.market='futures' (DB-marked) wins,
+     program names containing 'futures' are the fallback. Everything else
+     is CFDs. Dual-market firms (both) appear in BOTH market tabs. */
+  function _sbPlanMarket(p,firm){
+    var r=(p&&p.rules)||{};
+    if(r.market==='futures')return 'futures';
+    if(/futures/i.test(String(r.program||'')))return 'futures';
+    if(r.market==='cfds')return 'cfds';
+    /* Fallback: the firm's primary classification (covers futures-only
+       firms whose plans carry no marker, e.g. Apex, Topstep). */
+    var c=(firm&&typeof sbCategoryOf==='function')?sbCategoryOf(firm):null;
+    return c==='futures'?'futures':'cfds';
+  }
+  function sbFirmMarkets(firmId){var firm=null;
+    try{(sbFirms||[]).forEach(function(f){if(String(f.id)===String(firmId))firm=f;});}catch(e){}
+    var plans=(typeof sbPlansByFirm!=='undefined'?sbPlansByFirm[firmId]:null)||[];
+    var m={};plans.forEach(function(p){m[_sbPlanMarket(p,firm)]=true;});return m;}
   var sbCatLabels={all:{en:'All',ar:'الكل'},futures:{en:'Futures',ar:'الفيوتشرز'},cfds:{en:'CFDs',ar:'CFD'},crypto:{en:'Crypto',ar:'الكريبتو'}};
   var sbCatBadgeText={futures:{en:'FUTURES',ar:'فيوتشرز'},cfds:{en:'CFDs',ar:'CFD'},crypto:{en:'CRYPTO',ar:'كريبتو'}};
   function sbUpdateCatButtons(){
     var bar=document.getElementById('catFilter');if(!bar)return;
     var ar=currentLanguage==='ar';
     var counts={all:0,futures:0,cfds:0,crypto:0};
-    (sbFirms||[]).forEach(function(f){counts.all++;var c=sbCategoryOf(f);if(c&&counts[c]!=null)counts[c]++;});
+    (sbFirms||[]).forEach(function(f){counts.all++;var mk=sbFirmMarkets(f.id);for(var k in mk){if(counts[k]!=null)counts[k]++;}});
     bar.querySelectorAll('.cat-btn').forEach(function(btn){
       var cat=btn.getAttribute('data-cat');
       var lbl=btn.querySelector('.cat-label');
@@ -5723,9 +5740,18 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     };
   }
   function sbFirmMatchesFilters(firm,plans,filters){
-    if(filters.cat&&filters.cat!=='all'&&sbCategoryOf(firm)!==filters.cat)return false;
+    /* Market tabs are plan-aware: a dual firm appears in BOTH the Futures
+       and CFDs tabs, and plan-level filters apply to that market's plans. */
+    var mktPlans=plans;
+    if(filters.cat&&filters.cat!=='all'){
+      if(filters.cat==='futures'||filters.cat==='cfds'){
+        var mk=sbFirmMarkets(firm.id);
+        if(!mk[filters.cat])return false;
+        mktPlans=plans.filter(function(p){return _sbPlanMarket(p,firm)===filters.cat;});
+      }else if(sbCategoryOf(firm)!==filters.cat)return false;
+    }
     if(filters.size>0){
-      var hasSize=plans.some(function(p){return sbNum(p.account_size)===filters.size;});
+      var hasSize=mktPlans.some(function(p){return sbNum(p.account_size)===filters.size;});
       if(!hasSize)return false;
     }
     if(filters.maxPrice>0){
@@ -5733,7 +5759,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       var _maxUsd=filters.maxPrice/_rate;
       // Currency fix: convert each plan price to USD using its own currency
       // (a €79 plan is ~$88.76, not $79).
-      var minP=plans.map(function(p){
+      var minP=mktPlans.map(function(p){
         var v=sbNum(p.price);if(!isFinite(v))return NaN;
         var cur=(p.currency||'USD').toUpperCase();
         var pr=(typeof exchangeRates!=='undefined'&&exchangeRates[cur])?exchangeRates[cur]:1;
@@ -5745,7 +5771,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
        Plan-level: a firm qualifies when ANY of its plans meets each active bound. */
     if(filters.advMinPrice>0||isFinite(filters.advMaxPrice)){
       var _apMax=isFinite(filters.advMaxPrice)?filters.advMaxPrice:1e12;
-      var _hasPrice=plans.some(function(p){
+      var _hasPrice=mktPlans.some(function(p){
         var v=sbNum(p.price);if(!isFinite(v))return false;
         var cur=(p.currency||'USD').toUpperCase();
         var pr=(typeof exchangeRates!=='undefined'&&exchangeRates[cur])?exchangeRates[cur]:1;
@@ -5755,11 +5781,11 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       if(!_hasPrice)return false;
     }
     if(filters.advSplitMin>0){
-      var _hasSplit=plans.some(function(p){var v=p.rules?Number(p.rules.profit_split):NaN;return isFinite(v)&&v>=filters.advSplitMin;});
+      var _hasSplit=mktPlans.some(function(p){var v=p.rules?Number(p.rules.profit_split):NaN;return isFinite(v)&&v>=filters.advSplitMin;});
       if(!_hasSplit)return false;
     }
     if(filters.advDdMin>0){
-      var _hasDd=plans.some(function(p){var v=p.rules?Number(p.rules.max_drawdown_pct):NaN;return isFinite(v)&&v>=filters.advDdMin;});
+      var _hasDd=mktPlans.some(function(p){var v=p.rules?Number(p.rules.max_drawdown_pct):NaN;return isFinite(v)&&v>=filters.advDdMin;});
       if(!_hasDd)return false;
     }
     return true;
@@ -7522,7 +7548,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
         try{(sbFirms||[]).forEach(function(f){if(String(f.id)===String(fid2))firm0=f;});}catch(e){}
         if(firm0){
           hay+=' '+(firm0.headquarters||'').toLowerCase();
-          try{var _cat=sbCategoryOf(firm0);if(_cat)hay+=' '+String(_cat).toLowerCase();}catch(e){}
+          try{var _mks2=sbFirmMarkets(firm0.id);for(var _kk in _mks2)hay+=' '+_kk;}catch(e){}
           try{(sbPlansByFirm[firm0.id]||[]).forEach(function(p){var rs=p.rules;if(rs&&Array.isArray(rs.promotions))rs.promotions.forEach(function(pr){if(pr&&pr.code)hay+=' '+String(pr.code).toLowerCase();});});}catch(e){}
         }
       }
@@ -7609,12 +7635,16 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     if(newBadge)newBadge.hidden=!sbIsNewFirm(firm.id);
     var catBadge=document.getElementById('firmDetailCatBadge');
     if(catBadge){
-      var cat=sbCategoryOf(firm);
-      if(cat&&sbCatBadgeText[cat]){
-        catBadge.hidden=false;
-        catBadge.className='cat-badge cat-'+cat;
-        catBadge.textContent=(sbCatBadgeText[cat]||{})[currentLanguage==='ar'?'ar':'en']||cat.toUpperCase();
-      }else{catBadge.hidden=true;}
+      /* Dual firms show both market badges */
+      var _mks=sbFirmMarkets(firm.id);
+      var _ml=['cfds','futures','crypto'].filter(function(k){return _mks[k]&&sbCatBadgeText[k];});
+      if(!_ml.length){var _c0=sbCategoryOf(firm);if(_c0&&sbCatBadgeText[_c0])_ml=[_c0];}
+      if(_ml.length){
+        catBadge.hidden=false;catBadge.className='';catBadge.style.display='inline-flex';catBadge.style.gap='6px';
+        catBadge.innerHTML=_ml.map(function(k){
+          return '<span class="cat-badge cat-'+k+'">'+((sbCatBadgeText[k]||{})[currentLanguage==='ar'?'ar':'en']||k.toUpperCase())+'</span>';
+        }).join('');
+      }else{catBadge.hidden=true;catBadge.innerHTML='';}
     }
     var sub=sheet.querySelector('.sheet-title-row div p:last-child');
     // C-1-matcher fix: disclose that rules are from the first plan (not all).
@@ -7800,11 +7830,13 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
   function _pcEsc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
   function _pcGroups(firmId,market){
     var plans=(typeof sbPlansByFirm!=='undefined'?sbPlansByFirm[firmId]:null)||[];
+    var firm=null;
+    try{(sbFirms||[]).forEach(function(f){if(String(f.id)===String(firmId))firm=f;});}catch(e){}
     var groups={},order=[];
     plans.forEach(function(p){
       var prog=String((p.rules||{}).program||'Standard').trim()||'Standard';
-      /* Market filter: 'futures' programs contain 'futures' (case-insensitive) */
-      var isFut=/futures/i.test(prog);
+      /* Market filter: rules.market='futures' (DB) or 'futures' in the program name */
+      var isFut=_sbPlanMarket(p,firm)==='futures';
       if(market==='futures'&&!isFut)return;
       if(market==='cfds'&&isFut)return;
       var g=prog;
@@ -7817,13 +7849,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     return {groups:groups,order:order};
   }
   function _pcHasDualMarket(firmId){
-    var plans=(typeof sbPlansByFirm!=='undefined'?sbPlansByFirm[firmId]:null)||[];
-    var hasFut=false,hasCfd=false;
-    plans.forEach(function(p){
-      var prog=String((p.rules||{}).program||'');
-      if(/futures/i.test(prog))hasFut=true;else hasCfd=true;
-    });
-    return hasFut&&hasCfd;
+    var m=sbFirmMarkets(firmId);return !!(m.futures&&m.cfds);
   }
   /* Remember the user's CFD/FUT choice per dual-market firm (local only). */
   function _pcStoredMarket(firmId){try{var v=localStorage.getItem('pv_mkt_'+firmId);return (v==='futures'||v==='cfds')?v:null;}catch(e){return null;}}
