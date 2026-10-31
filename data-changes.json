@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-31T11:59:59.335543+00:00",
+  "updated": "2026-10-31T12:05:56.277973+00:00",
   "changes": [
     {
       "date": "2026-10-31",
@@ -606,87 +606,6 @@
     },
     {
       "date": "2026-10-31",
-      "firm": "Top One Futures",
-      "field": "plan added (25000 (Elite Daily))",
-      "old": "",
-      "new": "178.0",
-      "source": "https://toponefutures.com/",
-      "kind": "other"
-    },
-    {
-      "date": "2026-10-31",
-      "firm": "Top One Futures",
-      "field": "drawdown_type (25000 (Elite Daily))",
-      "old": "",
-      "new": "eod",
-      "source": "https://toponefutures.com/",
-      "kind": "rule"
-    },
-    {
-      "date": "2026-10-31",
-      "firm": "Top One Futures",
-      "field": "profit_split (25000 (Elite Daily))",
-      "old": "",
-      "new": "90",
-      "source": "https://toponefutures.com/",
-      "kind": "rule"
-    },
-    {
-      "date": "2026-10-31",
-      "firm": "Top One Futures",
-      "field": "plan added (100000 (Elite Daily))",
-      "old": "",
-      "new": "398.0",
-      "source": "https://toponefutures.com/",
-      "kind": "other"
-    },
-    {
-      "date": "2026-10-31",
-      "firm": "Top One Futures",
-      "field": "drawdown_type (100000 (Elite Daily))",
-      "old": "",
-      "new": "eod",
-      "source": "https://toponefutures.com/",
-      "kind": "rule"
-    },
-    {
-      "date": "2026-10-31",
-      "firm": "Top One Futures",
-      "field": "profit_split (100000 (Elite Daily))",
-      "old": "",
-      "new": "90",
-      "source": "https://toponefutures.com/",
-      "kind": "rule"
-    },
-    {
-      "date": "2026-10-31",
-      "firm": "Top One Futures",
-      "field": "plan added (150000 (Elite Daily))",
-      "old": "",
-      "new": "549.0",
-      "source": "https://toponefutures.com/",
-      "kind": "other"
-    },
-    {
-      "date": "2026-10-31",
-      "firm": "Top One Futures",
-      "field": "drawdown_type (150000 (Elite Daily))",
-      "old": "",
-      "new": "eod",
-      "source": "https://toponefutures.com/",
-      "kind": "rule"
-    },
-    {
-      "date": "2026-10-31",
-      "firm": "Top One Futures",
-      "field": "profit_split (150000 (Elite Daily))",
-      "old": "",
-      "new": "90",
-      "source": "https://toponefutures.com/",
-      "kind": "rule"
-    },
-    {
-      "date": "2026-10-31",
       "firm": "FTUK",
       "field": "promotion",
       "old": "{\"code\": \"SITE30\", \"discount\": \"30% off first purchase (site banner)\"}",
@@ -1007,6 +926,87 @@
       "old": "",
       "new": "90",
       "source": "https://ftuk.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Top One Futures",
+      "field": "plan added (25000 (Elite Daily))",
+      "old": "",
+      "new": "178.0",
+      "source": "https://toponefutures.com/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Top One Futures",
+      "field": "drawdown_type (25000 (Elite Daily))",
+      "old": "",
+      "new": "eod",
+      "source": "https://toponefutures.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Top One Futures",
+      "field": "profit_split (25000 (Elite Daily))",
+      "old": "",
+      "new": "90",
+      "source": "https://toponefutures.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Top One Futures",
+      "field": "plan added (100000 (Elite Daily))",
+      "old": "",
+      "new": "398.0",
+      "source": "https://toponefutures.com/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Top One Futures",
+      "field": "drawdown_type (100000 (Elite Daily))",
+      "old": "",
+      "new": "eod",
+      "source": "https://toponefutures.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Top One Futures",
+      "field": "profit_split (100000 (Elite Daily))",
+      "old": "",
+      "new": "90",
+      "source": "https://toponefutures.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Top One Futures",
+      "field": "plan added (150000 (Elite Daily))",
+      "old": "",
+      "new": "549.0",
+      "source": "https://toponefutures.com/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Top One Futures",
+      "field": "drawdown_type (150000 (Elite Daily))",
+      "old": "",
+      "new": "eod",
+      "source": "https://toponefutures.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Top One Futures",
+      "field": "profit_split (150000 (Elite Daily))",
+      "old": "",
+      "new": "90",
+      "source": "https://toponefutures.com/",
       "kind": "rule"
     },
     {
