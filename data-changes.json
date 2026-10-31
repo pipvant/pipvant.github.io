@@ -1,6 +1,609 @@
 {
-  "updated": "2026-10-31T01:20:43.566704+00:00",
+  "updated": "2026-10-31T02:03:51.059877+00:00",
   "changes": [
+    {
+      "date": "2026-10-31",
+      "firm": "Alpha Capital Group",
+      "field": "promotion",
+      "old": "",
+      "new": "{\"code\": \"ALPHA20\", \"discount\": \"20% off\", \"expiry\": \"2026-10-31\", \"scoped\": [{\"code\": \"FUNDED40\", \"discount\": \"40% off\", \"expiry\": \"2026-10-31\", \"scope\": \"direct\"}, {\"code\": \"10KFOR40\", \"discount\": \"$10K Account Deal\", \"expiry\": \"2026-10-31\", \"scope\": \"10k\"}]}",
+      "source": "https://alphacapitalgroup.uk/product",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "BrightFunded",
+      "field": "promotion (5000 (2-Step))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"30% OFF\", \"source_note\": \"BrightFunded official site sale price 2026-10-31\"}]",
+      "source": "https://brightfunded.com/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "BrightFunded",
+      "field": "promotion (10000 (2-Step))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"30% OFF\", \"source_note\": \"BrightFunded official site sale price 2026-10-31\"}]",
+      "source": "https://brightfunded.com/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "BrightFunded",
+      "field": "promotion (25000 (2-Step))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"30% OFF\", \"source_note\": \"BrightFunded official site sale price 2026-10-31\"}]",
+      "source": "https://brightfunded.com/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "BrightFunded",
+      "field": "promotion (50000 (2-Step))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"30% OFF\", \"source_note\": \"BrightFunded official site sale price 2026-10-31\"}]",
+      "source": "https://brightfunded.com/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "BrightFunded",
+      "field": "promotion (100000 (2-Step))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"30% OFF\", \"source_note\": \"BrightFunded official site sale price 2026-10-31\"}]",
+      "source": "https://brightfunded.com/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "BrightFunded",
+      "field": "promotion (200000 (2-Step))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"30% OFF\", \"source_note\": \"BrightFunded official site sale price 2026-10-31\"}]",
+      "source": "https://brightfunded.com/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "plan added (25000 (LucidFlex))",
+      "old": "",
+      "new": "89.0",
+      "source": "https://lucidtrading.com/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "drawdown_type (25000 (LucidFlex))",
+      "old": "",
+      "new": "EOD trailing",
+      "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "profit_split (25000 (LucidFlex))",
+      "old": "",
+      "new": "90",
+      "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "plan added (50000 (LucidFlex))",
+      "old": "",
+      "new": "146.0",
+      "source": "https://lucidtrading.com/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "drawdown_type (50000 (LucidFlex))",
+      "old": "",
+      "new": "EOD trailing",
+      "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "profit_split (50000 (LucidFlex))",
+      "old": "",
+      "new": "90",
+      "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "plan added (100000 (LucidFlex))",
+      "old": "",
+      "new": "293.0",
+      "source": "https://lucidtrading.com/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "drawdown_type (100000 (LucidFlex))",
+      "old": "",
+      "new": "EOD trailing",
+      "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "profit_split (100000 (LucidFlex))",
+      "old": "",
+      "new": "90",
+      "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "plan added (150000 (LucidFlex))",
+      "old": "",
+      "new": "407.0",
+      "source": "https://lucidtrading.com/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "drawdown_type (150000 (LucidFlex))",
+      "old": "",
+      "new": "EOD trailing",
+      "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "profit_split (150000 (LucidFlex))",
+      "old": "",
+      "new": "90",
+      "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "plan added (25000 (LucidPro))",
+      "old": "",
+      "new": "123.0",
+      "source": "https://lucidtrading.com/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "drawdown_type (25000 (LucidPro))",
+      "old": "",
+      "new": "EOD trailing",
+      "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "profit_split (25000 (LucidPro))",
+      "old": "",
+      "new": "90",
+      "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "plan added (50000 (LucidPro))",
+      "old": "",
+      "new": "192.0",
+      "source": "https://lucidtrading.com/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "drawdown_type (50000 (LucidPro))",
+      "old": "",
+      "new": "EOD trailing",
+      "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "profit_split (50000 (LucidPro))",
+      "old": "",
+      "new": "90",
+      "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "plan added (100000 (LucidPro))",
+      "old": "",
+      "new": "307.0",
+      "source": "https://lucidtrading.com/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "drawdown_type (100000 (LucidPro))",
+      "old": "",
+      "new": "EOD trailing",
+      "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "profit_split (100000 (LucidPro))",
+      "old": "",
+      "new": "90",
+      "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "plan added (150000 (LucidPro))",
+      "old": "",
+      "new": "410.0",
+      "source": "https://lucidtrading.com/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "drawdown_type (150000 (LucidPro))",
+      "old": "",
+      "new": "EOD trailing",
+      "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "profit_split (150000 (LucidPro))",
+      "old": "",
+      "new": "90",
+      "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "plan added (25000 (LucidDirect))",
+      "old": "",
+      "new": "329.0",
+      "source": "https://lucidtrading.com/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "drawdown_type (25000 (LucidDirect))",
+      "old": "",
+      "new": "EOD trailing",
+      "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "profit_split (25000 (LucidDirect))",
+      "old": "",
+      "new": "90",
+      "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "plan added (50000 (LucidDirect))",
+      "old": "",
+      "new": "515.0",
+      "source": "https://lucidtrading.com/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "drawdown_type (50000 (LucidDirect))",
+      "old": "",
+      "new": "EOD trailing",
+      "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "profit_split (50000 (LucidDirect))",
+      "old": "",
+      "new": "90",
+      "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "plan added (100000 (LucidDirect))",
+      "old": "",
+      "new": "700.0",
+      "source": "https://lucidtrading.com/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "drawdown_type (100000 (LucidDirect))",
+      "old": "",
+      "new": "EOD trailing",
+      "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "profit_split (100000 (LucidDirect))",
+      "old": "",
+      "new": "90",
+      "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "plan added (150000 (LucidDirect))",
+      "old": "",
+      "new": "836.0",
+      "source": "https://lucidtrading.com/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "drawdown_type (150000 (LucidDirect))",
+      "old": "",
+      "new": "EOD trailing",
+      "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "profit_split (150000 (LucidDirect))",
+      "old": "",
+      "new": "90",
+      "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "plan added (25000 (LucidDaily Intraday))",
+      "old": "",
+      "new": "115.0",
+      "source": "https://lucidtrading.com/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "drawdown_type (25000 (LucidDaily Intraday))",
+      "old": "",
+      "new": "intraday",
+      "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "profit_split (25000 (LucidDaily Intraday))",
+      "old": "",
+      "new": "90",
+      "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "plan added (50000 (LucidDaily Intraday))",
+      "old": "",
+      "new": "156.0",
+      "source": "https://lucidtrading.com/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "drawdown_type (50000 (LucidDaily Intraday))",
+      "old": "",
+      "new": "intraday",
+      "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "profit_split (50000 (LucidDaily Intraday))",
+      "old": "",
+      "new": "90",
+      "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "plan added (100000 (LucidDaily Intraday))",
+      "old": "",
+      "new": "264.0",
+      "source": "https://lucidtrading.com/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "drawdown_type (100000 (LucidDaily Intraday))",
+      "old": "",
+      "new": "intraday",
+      "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "profit_split (100000 (LucidDaily Intraday))",
+      "old": "",
+      "new": "90",
+      "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "plan added (150000 (LucidDaily Intraday))",
+      "old": "",
+      "new": "367.0",
+      "source": "https://lucidtrading.com/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "drawdown_type (150000 (LucidDaily Intraday))",
+      "old": "",
+      "new": "intraday",
+      "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "profit_split (150000 (LucidDaily Intraday))",
+      "old": "",
+      "new": "90",
+      "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "plan added (25000 (LucidDaily EOD))",
+      "old": "",
+      "new": "137.0",
+      "source": "https://lucidtrading.com/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "drawdown_type (25000 (LucidDaily EOD))",
+      "old": "",
+      "new": "EOD",
+      "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "profit_split (25000 (LucidDaily EOD))",
+      "old": "",
+      "new": "90",
+      "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "plan added (50000 (LucidDaily EOD))",
+      "old": "",
+      "new": "185.0",
+      "source": "https://lucidtrading.com/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "drawdown_type (50000 (LucidDaily EOD))",
+      "old": "",
+      "new": "EOD",
+      "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "profit_split (50000 (LucidDaily EOD))",
+      "old": "",
+      "new": "90",
+      "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "plan added (100000 (LucidDaily EOD))",
+      "old": "",
+      "new": "314.0",
+      "source": "https://lucidtrading.com/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "drawdown_type (100000 (LucidDaily EOD))",
+      "old": "",
+      "new": "EOD",
+      "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "profit_split (100000 (LucidDaily EOD))",
+      "old": "",
+      "new": "90",
+      "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "plan added (150000 (LucidDaily EOD))",
+      "old": "",
+      "new": "436.0",
+      "source": "https://lucidtrading.com/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "drawdown_type (150000 (LucidDaily EOD))",
+      "old": "",
+      "new": "EOD",
+      "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Lucid Trading",
+      "field": "profit_split (150000 (LucidDaily EOD))",
+      "old": "",
+      "new": "90",
+      "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
     {
       "date": "2026-10-30",
       "firm": "Earn2Trade",
