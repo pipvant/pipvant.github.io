@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-31T02:20:44.555327+00:00",
+  "updated": "2026-10-31T03:08:30.364708+00:00",
   "changes": [
     {
       "date": "2026-10-31",
@@ -602,6 +602,411 @@
       "old": "",
       "new": "90",
       "source": "https://lucidtrading.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Top One Futures",
+      "field": "plan added (25000 (Elite Daily))",
+      "old": "",
+      "new": "178.0",
+      "source": "https://toponefutures.com/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Top One Futures",
+      "field": "drawdown_type (25000 (Elite Daily))",
+      "old": "",
+      "new": "eod",
+      "source": "https://toponefutures.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Top One Futures",
+      "field": "profit_split (25000 (Elite Daily))",
+      "old": "",
+      "new": "90",
+      "source": "https://toponefutures.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Top One Futures",
+      "field": "plan added (100000 (Elite Daily))",
+      "old": "",
+      "new": "398.0",
+      "source": "https://toponefutures.com/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Top One Futures",
+      "field": "drawdown_type (100000 (Elite Daily))",
+      "old": "",
+      "new": "eod",
+      "source": "https://toponefutures.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Top One Futures",
+      "field": "profit_split (100000 (Elite Daily))",
+      "old": "",
+      "new": "90",
+      "source": "https://toponefutures.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Top One Futures",
+      "field": "plan added (150000 (Elite Daily))",
+      "old": "",
+      "new": "549.0",
+      "source": "https://toponefutures.com/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Top One Futures",
+      "field": "drawdown_type (150000 (Elite Daily))",
+      "old": "",
+      "new": "eod",
+      "source": "https://toponefutures.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "Top One Futures",
+      "field": "profit_split (150000 (Elite Daily))",
+      "old": "",
+      "new": "90",
+      "source": "https://toponefutures.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "FTUK",
+      "field": "promotion",
+      "old": "{\"code\": \"SITE30\", \"discount\": \"30% off first purchase (site banner)\"}",
+      "new": "{'code': 'FTUK30', 'discount': '30% off first purchase', 'expiry': None, 'scoped': [{...}]}",
+      "source": "https://ftuk.com/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "FTUK",
+      "field": "plan added (5000 (Flex Challenge))",
+      "old": "",
+      "new": "9.0",
+      "source": "https://ftuk.com/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "FTUK",
+      "field": "daily_loss_pct (5000 (Flex Challenge))",
+      "old": "",
+      "new": "5",
+      "source": "https://ftuk.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "FTUK",
+      "field": "max_drawdown_pct (5000 (Flex Challenge))",
+      "old": "",
+      "new": "6",
+      "source": "https://ftuk.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "FTUK",
+      "field": "drawdown_type (5000 (Flex Challenge))",
+      "old": "",
+      "new": "trailing",
+      "source": "https://ftuk.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "FTUK",
+      "field": "profit_target_pct (5000 (Flex Challenge))",
+      "old": "",
+      "new": "4",
+      "source": "https://ftuk.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "FTUK",
+      "field": "profit_split (5000 (Flex Challenge))",
+      "old": "",
+      "new": "90",
+      "source": "https://ftuk.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "FTUK",
+      "field": "plan added (10000 (Flex Challenge))",
+      "old": "",
+      "new": "9.0",
+      "source": "https://ftuk.com/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "FTUK",
+      "field": "daily_loss_pct (10000 (Flex Challenge))",
+      "old": "",
+      "new": "5",
+      "source": "https://ftuk.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "FTUK",
+      "field": "max_drawdown_pct (10000 (Flex Challenge))",
+      "old": "",
+      "new": "6",
+      "source": "https://ftuk.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "FTUK",
+      "field": "drawdown_type (10000 (Flex Challenge))",
+      "old": "",
+      "new": "trailing",
+      "source": "https://ftuk.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "FTUK",
+      "field": "profit_target_pct (10000 (Flex Challenge))",
+      "old": "",
+      "new": "4",
+      "source": "https://ftuk.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "FTUK",
+      "field": "profit_split (10000 (Flex Challenge))",
+      "old": "",
+      "new": "90",
+      "source": "https://ftuk.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "FTUK",
+      "field": "plan added (25000 (Flex Challenge))",
+      "old": "",
+      "new": "9.0",
+      "source": "https://ftuk.com/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "FTUK",
+      "field": "daily_loss_pct (25000 (Flex Challenge))",
+      "old": "",
+      "new": "5",
+      "source": "https://ftuk.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "FTUK",
+      "field": "max_drawdown_pct (25000 (Flex Challenge))",
+      "old": "",
+      "new": "6",
+      "source": "https://ftuk.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "FTUK",
+      "field": "drawdown_type (25000 (Flex Challenge))",
+      "old": "",
+      "new": "trailing",
+      "source": "https://ftuk.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "FTUK",
+      "field": "profit_target_pct (25000 (Flex Challenge))",
+      "old": "",
+      "new": "4",
+      "source": "https://ftuk.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "FTUK",
+      "field": "profit_split (25000 (Flex Challenge))",
+      "old": "",
+      "new": "90",
+      "source": "https://ftuk.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "FTUK",
+      "field": "plan added (100000 (Flex Challenge))",
+      "old": "",
+      "new": "9.0",
+      "source": "https://ftuk.com/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "FTUK",
+      "field": "daily_loss_pct (100000 (Flex Challenge))",
+      "old": "",
+      "new": "5",
+      "source": "https://ftuk.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "FTUK",
+      "field": "max_drawdown_pct (100000 (Flex Challenge))",
+      "old": "",
+      "new": "6",
+      "source": "https://ftuk.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "FTUK",
+      "field": "drawdown_type (100000 (Flex Challenge))",
+      "old": "",
+      "new": "trailing",
+      "source": "https://ftuk.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "FTUK",
+      "field": "profit_target_pct (100000 (Flex Challenge))",
+      "old": "",
+      "new": "4",
+      "source": "https://ftuk.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "FTUK",
+      "field": "profit_split (100000 (Flex Challenge))",
+      "old": "",
+      "new": "90",
+      "source": "https://ftuk.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "FTUK",
+      "field": "plan added (200000 (Flex Challenge))",
+      "old": "",
+      "new": "9.0",
+      "source": "https://ftuk.com/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "FTUK",
+      "field": "daily_loss_pct (200000 (Flex Challenge))",
+      "old": "",
+      "new": "5",
+      "source": "https://ftuk.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "FTUK",
+      "field": "max_drawdown_pct (200000 (Flex Challenge))",
+      "old": "",
+      "new": "6",
+      "source": "https://ftuk.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "FTUK",
+      "field": "drawdown_type (200000 (Flex Challenge))",
+      "old": "",
+      "new": "trailing",
+      "source": "https://ftuk.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "FTUK",
+      "field": "profit_target_pct (200000 (Flex Challenge))",
+      "old": "",
+      "new": "4",
+      "source": "https://ftuk.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "FTUK",
+      "field": "profit_split (200000 (Flex Challenge))",
+      "old": "",
+      "new": "90",
+      "source": "https://ftuk.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "FTUK",
+      "field": "plan added (200000 (Instant Funding))",
+      "old": "",
+      "new": "2220.0",
+      "source": "https://ftuk.com/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "FTUK",
+      "field": "daily_loss_pct (200000 (Instant Funding))",
+      "old": "",
+      "new": "5",
+      "source": "https://ftuk.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "FTUK",
+      "field": "max_drawdown_pct (200000 (Instant Funding))",
+      "old": "",
+      "new": "6",
+      "source": "https://ftuk.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "FTUK",
+      "field": "drawdown_type (200000 (Instant Funding))",
+      "old": "",
+      "new": "trailing",
+      "source": "https://ftuk.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "FTUK",
+      "field": "profit_split (200000 (Instant Funding))",
+      "old": "",
+      "new": "90",
+      "source": "https://ftuk.com/",
       "kind": "rule"
     },
     {
