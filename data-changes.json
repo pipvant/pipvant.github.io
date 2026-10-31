@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-31T17:20:44.569431+00:00",
+  "updated": "2026-10-31T18:00:57.433266+00:00",
   "changes": [
     {
       "date": "2026-10-31",
@@ -926,6 +926,222 @@
       "old": "",
       "new": "90",
       "source": "https://ftuk.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "The5ers",
+      "field": "plan added (2500 (High Stakes New))",
+      "old": "",
+      "new": "19.0",
+      "source": "https://the5ers.com/high-stakes/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "The5ers",
+      "field": "daily_loss_pct (2500 (High Stakes New))",
+      "old": "",
+      "new": "5.0",
+      "source": "https://the5ers.com/high-stakes/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "The5ers",
+      "field": "max_drawdown_pct (2500 (High Stakes New))",
+      "old": "",
+      "new": "10.0",
+      "source": "https://the5ers.com/high-stakes/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "The5ers",
+      "field": "profit_target_pct (2500 (High Stakes New))",
+      "old": "",
+      "new": "10.0",
+      "source": "https://the5ers.com/high-stakes/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "The5ers",
+      "field": "plan added (5000 (High Stakes New))",
+      "old": "",
+      "new": "35.0",
+      "source": "https://the5ers.com/high-stakes/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "The5ers",
+      "field": "daily_loss_pct (5000 (High Stakes New))",
+      "old": "",
+      "new": "5.0",
+      "source": "https://the5ers.com/high-stakes/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "The5ers",
+      "field": "max_drawdown_pct (5000 (High Stakes New))",
+      "old": "",
+      "new": "10.0",
+      "source": "https://the5ers.com/high-stakes/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "The5ers",
+      "field": "profit_target_pct (5000 (High Stakes New))",
+      "old": "",
+      "new": "10.0",
+      "source": "https://the5ers.com/high-stakes/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "The5ers",
+      "field": "plan added (10000 (High Stakes New))",
+      "old": "",
+      "new": "69.0",
+      "source": "https://the5ers.com/high-stakes/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "The5ers",
+      "field": "daily_loss_pct (10000 (High Stakes New))",
+      "old": "",
+      "new": "5.0",
+      "source": "https://the5ers.com/high-stakes/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "The5ers",
+      "field": "max_drawdown_pct (10000 (High Stakes New))",
+      "old": "",
+      "new": "10.0",
+      "source": "https://the5ers.com/high-stakes/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "The5ers",
+      "field": "profit_target_pct (10000 (High Stakes New))",
+      "old": "",
+      "new": "10.0",
+      "source": "https://the5ers.com/high-stakes/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "The5ers",
+      "field": "plan added (25000 (High Stakes New))",
+      "old": "",
+      "new": "176.0",
+      "source": "https://the5ers.com/high-stakes/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "The5ers",
+      "field": "daily_loss_pct (25000 (High Stakes New))",
+      "old": "",
+      "new": "5.0",
+      "source": "https://the5ers.com/high-stakes/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "The5ers",
+      "field": "max_drawdown_pct (25000 (High Stakes New))",
+      "old": "",
+      "new": "10.0",
+      "source": "https://the5ers.com/high-stakes/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "The5ers",
+      "field": "profit_target_pct (25000 (High Stakes New))",
+      "old": "",
+      "new": "10.0",
+      "source": "https://the5ers.com/high-stakes/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "The5ers",
+      "field": "plan added (50000 (High Stakes New))",
+      "old": "",
+      "new": "249.0",
+      "source": "https://the5ers.com/high-stakes/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "The5ers",
+      "field": "daily_loss_pct (50000 (High Stakes New))",
+      "old": "",
+      "new": "4.0",
+      "source": "https://the5ers.com/high-stakes/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "The5ers",
+      "field": "max_drawdown_pct (50000 (High Stakes New))",
+      "old": "",
+      "new": "8.0",
+      "source": "https://the5ers.com/high-stakes/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "The5ers",
+      "field": "profit_target_pct (50000 (High Stakes New))",
+      "old": "",
+      "new": "10.0",
+      "source": "https://the5ers.com/high-stakes/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "The5ers",
+      "field": "plan added (100000 (High Stakes New))",
+      "old": "",
+      "new": "405.0",
+      "source": "https://the5ers.com/high-stakes/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "The5ers",
+      "field": "daily_loss_pct (100000 (High Stakes New))",
+      "old": "",
+      "new": "4.0",
+      "source": "https://the5ers.com/high-stakes/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "The5ers",
+      "field": "max_drawdown_pct (100000 (High Stakes New))",
+      "old": "",
+      "new": "8.0",
+      "source": "https://the5ers.com/high-stakes/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-10-31",
+      "firm": "The5ers",
+      "field": "profit_target_pct (100000 (High Stakes New))",
+      "old": "",
+      "new": "10.0",
+      "source": "https://the5ers.com/high-stakes/",
       "kind": "rule"
     },
     {
