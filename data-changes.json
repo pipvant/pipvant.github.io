@@ -1,6 +1,15 @@
 {
-  "updated": "2026-11-01T00:20:43.013063+00:00",
+  "updated": "2026-11-01T01:02:08.508199+00:00",
   "changes": [
+    {
+      "date": "2026-11-01",
+      "firm": "Alpha Capital Group",
+      "field": "promotion",
+      "old": "{\"code\": \"ALPHA20\", \"discount\": \"20% off\", \"expiry\": \"2026-10-31\"}",
+      "new": "{\"code\": null, \"discount\": \"\", \"expiry\": null, \"scoped\": [{\"code\": \"FUNDED40\", \"discount\": \"40% off\", \"expiry\": \"2026-10-31\", \"scope\": \"direct\"}, {\"code\": \"10KFOR40\", \"discount\": \"$10K Account Deal\", \"expiry\": \"2026-10-31\", \"scope\": \"10k\"}]}",
+      "source": "https://alphacapitalgroup.uk/product",
+      "kind": "promo"
+    },
     {
       "date": "2026-10-31",
       "firm": "Alpha Capital Group",
