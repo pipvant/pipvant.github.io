@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-01T10:20:45.588107+00:00",
+  "updated": "2026-11-01T10:58:27.938755+00:00",
   "changes": [
     {
       "date": "2026-11-01",
@@ -34,6 +34,15 @@
       "field": "promotion",
       "old": "{\"code\": \"OCT25\", \"discount\": \"25% off\", \"expiry\": null}",
       "new": "{\"code\": \"NOV25\", \"discount\": \"25% off\", \"expiry\": null}",
+      "source": "https://funded7.com/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-11-01",
+      "firm": "Funded7",
+      "field": "promotion",
+      "old": "{\"code\": \"NOV25\", \"discount\": \"25% off\", \"expiry\": null}",
+      "new": "{\"code\": \"OCT25\", \"discount\": \"25% off\", \"expiry\": null}",
       "source": "https://funded7.com/",
       "kind": "promo"
     },
