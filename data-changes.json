@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-01T08:20:40.331665+00:00",
+  "updated": "2026-11-01T08:57:38.780309+00:00",
   "changes": [
     {
       "date": "2026-11-01",
@@ -17,6 +17,15 @@
       "old": "",
       "new": "{\"code\": null, \"discount\": \"\", \"expiry\": null, \"scoped\": [{\"code\": \"FUNDED40\", \"discount\": \"40% off\", \"expiry\": \"2026-10-31\", \"scope\": \"direct\"}, {\"code\": \"10KFOR40\", \"discount\": \"$10K Account Deal\", \"expiry\": \"2026-10-31\", \"scope\": \"10k\"}]}",
       "source": "https://alphacapitalgroup.uk/product",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-11-01",
+      "firm": "Funded7",
+      "field": "promotion",
+      "old": "{\"code\": \"SEP25\", \"discount\": \"25% off + 10% profit share add-on\", \"expiry\": null}",
+      "new": "{\"code\": \"OCT25\", \"discount\": \"25% off\", \"expiry\": null}",
+      "source": "https://funded7.com/",
       "kind": "promo"
     },
     {
