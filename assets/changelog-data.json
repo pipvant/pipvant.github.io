@@ -1,5 +1,104 @@
 [
  {
+  "date": "2026-10-31",
+  "firm": "Alpha Capital Group",
+  "type": "new_promo",
+  "title_en": "New promo: ALPHA20 (20% off)",
+  "title_ar": "عرض جديد: ALPHA20 (20% off)",
+  "detail_en": "New promo code ALPHA20 detected with 20% off.",
+  "detail_ar": "تم رصد كود الخصم الجديد ALPHA20."
+ },
+ {
+  "date": "2026-10-31",
+  "firm": "FTUK",
+  "type": "new_plans",
+  "title_en": "5 new Flex Challenge plans added (5K–200K)",
+  "title_ar": "إضافة 5 خطط Flex Challenge جديدة",
+  "detail_en": "New Flex Challenge plans tracked: 5K, 10K, 25K, 100K, 200K.",
+  "detail_ar": "تمت إضافة خطط Flex Challenge الجديدة."
+ },
+ {
+  "date": "2026-10-31",
+  "firm": "FTUK",
+  "type": "new_plans",
+  "title_en": "1 new Instant Funding plans added (200K)",
+  "title_ar": "إضافة 1 خطط Instant Funding جديدة",
+  "detail_en": "New Instant Funding plans tracked: 200K.",
+  "detail_ar": "تمت إضافة خطط Instant Funding الجديدة."
+ },
+ {
+  "date": "2026-10-31",
+  "firm": "Lucid Trading",
+  "type": "new_plans",
+  "title_en": "4 new LucidDaily EOD plans added (25K–150K)",
+  "title_ar": "إضافة 4 خطط LucidDaily EOD جديدة",
+  "detail_en": "New LucidDaily EOD plans tracked: 25K, 50K, 100K, 150K.",
+  "detail_ar": "تمت إضافة خطط LucidDaily EOD الجديدة."
+ },
+ {
+  "date": "2026-10-31",
+  "firm": "Lucid Trading",
+  "type": "new_plans",
+  "title_en": "21 new LucidDaily Intraday plans added (25K–150K)",
+  "title_ar": "إضافة 21 خطط LucidDaily Intraday جديدة",
+  "detail_en": "New LucidDaily Intraday plans tracked: 25K, 25K, 25K, 25K, 25K, 25K, 50K, 100K, 100K, 100K, 100K, 100K, 100K, 100K, 100K, 150K, 150K, 150K, 150K, 150K, 150K.",
+  "detail_ar": "تمت إضافة خطط LucidDaily Intraday الجديدة."
+ },
+ {
+  "date": "2026-10-31",
+  "firm": "Lucid Trading",
+  "type": "new_plans",
+  "title_en": "6 new LucidDirect plans added (25K–150K)",
+  "title_ar": "إضافة 6 خطط LucidDirect جديدة",
+  "detail_en": "New LucidDirect plans tracked: 25K, 50K, 50K, 50K, 100K, 150K.",
+  "detail_ar": "تمت إضافة خطط LucidDirect الجديدة."
+ },
+ {
+  "date": "2026-10-31",
+  "firm": "Lucid Trading",
+  "type": "new_plans",
+  "title_en": "10 new LucidFlex plans added (25K–150K)",
+  "title_ar": "إضافة 10 خطط LucidFlex جديدة",
+  "detail_en": "New LucidFlex plans tracked: 25K, 25K, 25K, 50K, 100K, 100K, 100K, 150K, 150K, 150K.",
+  "detail_ar": "تمت إضافة خطط LucidFlex الجديدة."
+ },
+ {
+  "date": "2026-10-31",
+  "firm": "Lucid Trading",
+  "type": "new_plans",
+  "title_en": "6 new LucidPro plans added (25K–150K)",
+  "title_ar": "إضافة 6 خطط LucidPro جديدة",
+  "detail_en": "New LucidPro plans tracked: 25K, 25K, 25K, 50K, 100K, 150K.",
+  "detail_ar": "تمت إضافة خطط LucidPro الجديدة."
+ },
+ {
+  "date": "2026-10-31",
+  "firm": "The5ers",
+  "type": "new_plans",
+  "title_en": "6 new High Stakes New plans added (2K–100K)",
+  "title_ar": "إضافة 6 خطط High Stakes New جديدة",
+  "detail_en": "New High Stakes New plans tracked: 2K, 5K, 10K, 25K, 50K, 100K.",
+  "detail_ar": "تمت إضافة خطط High Stakes New الجديدة."
+ },
+ {
+  "date": "2026-10-30",
+  "firm": "Earn2Trade",
+  "type": "new_promo",
+  "title_en": "New promo: 60PLUS50 (60% off all evaluations)",
+  "title_ar": "عرض جديد: 60PLUS50 (60% off all evaluations)",
+  "detail_en": "New promo code 60PLUS50 detected with 60% off all evaluations.",
+  "detail_ar": "تم رصد كود الخصم الجديد 60PLUS50."
+ },
+ {
+  "date": "2026-10-30",
+  "firm": "Top One Futures",
+  "type": "new_plans",
+  "title_en": "3 new Elite Daily plans added (25K–150K)",
+  "title_ar": "إضافة 3 خطط Elite Daily جديدة",
+  "detail_en": "New Elite Daily plans tracked: 25K, 100K, 150K.",
+  "detail_ar": "تمت إضافة خطط Elite Daily الجديدة."
+ },
+ {
   "date": "2026-10-30",
   "firm": "E8 Markets",
   "type": "price_update",
