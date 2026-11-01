@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-01T15:20:43.890747+00:00",
+  "updated": "2026-11-01T16:23:25.814364+00:00",
   "changes": [
     {
       "date": "2026-11-01",
@@ -45,6 +45,69 @@
       "new": "{\"code\": \"OCT25\", \"discount\": \"25% off\", \"expiry\": null}",
       "source": "https://funded7.com/",
       "kind": "promo"
+    },
+    {
+      "date": "2026-11-01",
+      "firm": "FTUK",
+      "field": "promotion (200000 (Instant Funding))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"30% OFF\", \"source_note\": \"FTUK official site sale price 2026-11-01\"}]",
+      "source": "https://ftuk.com/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-11-01",
+      "firm": "FTUK",
+      "field": "plan added (50000 (Flex Challenge))",
+      "old": "",
+      "new": "9.0",
+      "source": "https://ftuk.com/",
+      "kind": "other"
+    },
+    {
+      "date": "2026-11-01",
+      "firm": "FTUK",
+      "field": "daily_loss_pct (50000 (Flex Challenge))",
+      "old": "",
+      "new": "5",
+      "source": "https://ftuk.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-11-01",
+      "firm": "FTUK",
+      "field": "max_drawdown_pct (50000 (Flex Challenge))",
+      "old": "",
+      "new": "6",
+      "source": "https://ftuk.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-11-01",
+      "firm": "FTUK",
+      "field": "drawdown_type (50000 (Flex Challenge))",
+      "old": "",
+      "new": "trailing",
+      "source": "https://ftuk.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-11-01",
+      "firm": "FTUK",
+      "field": "profit_target_pct (50000 (Flex Challenge))",
+      "old": "",
+      "new": "4",
+      "source": "https://ftuk.com/",
+      "kind": "rule"
+    },
+    {
+      "date": "2026-11-01",
+      "firm": "FTUK",
+      "field": "profit_split (50000 (Flex Challenge))",
+      "old": "",
+      "new": "90",
+      "source": "https://ftuk.com/",
+      "kind": "rule"
     },
     {
       "date": "2026-10-31",
@@ -2636,24 +2699,6 @@
       "old": "$488",
       "new": "$468",
       "source": "https://e8markets.com/",
-      "kind": "price"
-    },
-    {
-      "date": "2026-10-16",
-      "firm": "Funding Pips",
-      "field": "split terms",
-      "old": "60-100%",
-      "new": "Bi-Weekly 80% / Monthly 100% (up to 100%)",
-      "source": "https://fundingpips.com/",
-      "kind": "rule"
-    },
-    {
-      "date": "2026-10-16",
-      "firm": "FundedNext",
-      "field": "6K Stellar 2-Step",
-      "old": "$59.99",
-      "new": "$49.99",
-      "source": "https://fundednext.com/usa/cfds/stellar-2-step",
       "kind": "price"
     }
   ]
