@@ -1,5 +1,23 @@
 [
  {
+  "date": "2026-11-01",
+  "firm": "Funded7",
+  "type": "new_promo",
+  "title_en": "New promo: OCT25 (25% off)",
+  "title_ar": "عرض جديد: OCT25 (25% off)",
+  "detail_en": "New promo code OCT25 detected with 25% off.",
+  "detail_ar": "تم رصد كود الخصم الجديد OCT25."
+ },
+ {
+  "date": "2026-11-01",
+  "firm": "Funded7",
+  "type": "new_promo",
+  "title_en": "New promo: NOV25 (25% off)",
+  "title_ar": "عرض جديد: NOV25 (25% off)",
+  "detail_en": "New promo code NOV25 detected with 25% off.",
+  "detail_ar": "تم رصد كود الخصم الجديد NOV25."
+ },
+ {
   "date": "2026-10-31",
   "firm": "Alpha Capital Group",
   "type": "new_promo",
