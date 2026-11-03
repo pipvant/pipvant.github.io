@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-03T01:20:55.378224+00:00",
+  "updated": "2026-11-03T01:48:12.725170+00:00",
   "changes": [
     {
       "date": "2026-11-03",
@@ -7,6 +7,15 @@
       "field": "promotion",
       "old": "{\"code\": \"OCT25\", \"discount\": \"25% off\", \"expiry\": null}",
       "new": "{\"code\": \"NOV25\", \"discount\": \"25% off\", \"expiry\": null}",
+      "source": "https://funded7.com/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-11-03",
+      "firm": "Funded7",
+      "field": "promotion",
+      "old": "{\"code\": \"NOV25\", \"discount\": \"25% off\", \"expiry\": null}",
+      "new": "{\"code\": \"OCT25\", \"discount\": \"25% off\", \"expiry\": null}",
       "source": "https://funded7.com/",
       "kind": "promo"
     },
@@ -2691,15 +2700,6 @@
       "new": "3.00%",
       "source": "https://alphacapitalgroup.uk/product",
       "kind": "rule"
-    },
-    {
-      "date": "2026-10-20",
-      "firm": "Alpha Capital Group",
-      "field": "new promo MYALPHA added",
-      "old": "(none)",
-      "new": "30% off",
-      "source": "https://alphacapitalgroup.uk",
-      "kind": "promo"
     }
   ]
 }
