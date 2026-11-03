@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-03T08:20:41.266282+00:00",
+  "updated": "2026-11-03T08:38:24.056813+00:00",
   "changes": [
     {
       "date": "2026-11-03",
@@ -26,6 +26,15 @@
       "old": "{\"code\": \"ALPHA20\", \"discount\": \"20% Off All Accounts\", \"expiry\": \"2026-11-30\"}",
       "new": "{\"code\": \"FUNDED40\", \"discount\": \"20% off\", \"expiry\": \"2026-11-30\", \"scoped\": [{\"code\": \"ALPHA20\", \"discount\": \"\", \"expiry\": \"2026-11-30\", \"scope\": \"10k\"}, {\"code\": \"10KFOR40\", \"discount\": \"$10K Account Deal\", \"expiry\": null, \"scope\": \"10k\"}]}",
       "source": "https://alphacapitalgroup.uk/product",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-11-03",
+      "firm": "FXIFY",
+      "field": "promotion",
+      "old": "AGHHH35 (35% off, expired 2026-11-02)",
+      "new": "retired — code no longer on fxify.com; expiry past",
+      "source": "https://fxify.com/",
       "kind": "promo"
     },
     {
@@ -1608,6 +1617,375 @@
       "firm": "PipFarm",
       "field": "plan added (1000 (Instant EOD Trailing))",
       "old": "",
+      "new": "5",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (2500 (Instant EOD Trailing))",
+      "old": "",
+      "new": "30",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (5000 (Instant EOD Trailing))",
+      "old": "",
+      "new": "60",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (10000 (Instant EOD Trailing))",
+      "old": "",
+      "new": "120",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (20000 (Instant EOD Trailing))",
+      "old": "",
+      "new": "200",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (50000 (Instant EOD Trailing))",
+      "old": "",
+      "new": "400",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (100000 (Instant EOD Trailing))",
+      "old": "",
+      "new": "600",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (150000 (Instant EOD Trailing))",
+      "old": "",
+      "new": "900",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (1000 (Instant Equity Trailing))",
+      "old": "",
+      "new": "5",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (2500 (Instant Equity Trailing))",
+      "old": "",
+      "new": "30",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (5000 (Instant Equity Trailing))",
+      "old": "",
+      "new": "60",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (10000 (Instant Equity Trailing))",
+      "old": "",
+      "new": "120",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (20000 (Instant Equity Trailing))",
+      "old": "",
+      "new": "200",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (50000 (Instant Equity Trailing))",
+      "old": "",
+      "new": "400",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (100000 (Instant Equity Trailing))",
+      "old": "",
+      "new": "600",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (150000 (Instant Equity Trailing))",
+      "old": "",
+      "new": "900",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (1000 (Instant Payout Trailing))",
+      "old": "",
+      "new": "5",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (2500 (Instant Payout Trailing))",
+      "old": "",
+      "new": "30",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (5000 (Instant Payout Trailing))",
+      "old": "",
+      "new": "60",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (10000 (Instant Payout Trailing))",
+      "old": "",
+      "new": "120",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (20000 (Instant Payout Trailing))",
+      "old": "",
+      "new": "200",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (50000 (Instant Payout Trailing))",
+      "old": "",
+      "new": "400",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (100000 (Instant Payout Trailing))",
+      "old": "",
+      "new": "600",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (150000 (Instant Payout Trailing))",
+      "old": "",
+      "new": "900",
+      "source": "https://pipfarm.com/instant",
+      "kind": "other"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "promotion",
+      "old": "{\"code\": \"FNFLEX\", \"discount\": \"up to 47% off\", \"expiry\": null}",
+      "new": "{\"code\": \"FNTRICK\", \"discount\": \"up to 41%\", \"expiry\": null, \"scoped\": [{\"code\": \"FNFLEX\", \"discount\": \"up to 47% off\", \"expiry\": null, \"scope\": \"futures flex\"}, {\"code\": \"RAPID\", \"discount\": \"up to 50% off\", \"expiry\": null, \"scope\": \"futures rapid\"}, {\"code\": \"FNDIRECT\", \"discount\": \"up to 40% off\", \"expiry\": null, \"scope\": \"futures direct\"}]}",
+      "source": "https://fundednext.com/cfds",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "promotion (6000 (Stellar 1-Step))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"32% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
+      "source": "https://fundednext.com/cfds",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "promotion (15000 (Stellar 1-Step))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
+      "source": "https://fundednext.com/cfds",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "promotion (25000 (Stellar 1-Step))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
+      "source": "https://fundednext.com/cfds",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "promotion (50000 (Stellar 1-Step))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
+      "source": "https://fundednext.com/cfds",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "promotion (6000 (Stellar 2-Step))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"42% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
+      "source": "https://fundednext.com/cfds",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "promotion (15000 (Stellar 2-Step))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
+      "source": "https://fundednext.com/cfds",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "promotion (25000 (Stellar 2-Step))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
+      "source": "https://fundednext.com/cfds",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "promotion (50000 (Stellar 2-Step))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
+      "source": "https://fundednext.com/cfds",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "promotion (2000 (Stellar Instant))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"17% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
+      "source": "https://fundednext.com/cfds",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "promotion (5000 (Stellar Instant))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
+      "source": "https://fundednext.com/cfds",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "promotion (10000 (Stellar Instant))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
+      "source": "https://fundednext.com/cfds",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "promotion (20000 (Stellar Instant))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
+      "source": "https://fundednext.com/cfds",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "promotion (5000 (Stellar Lite))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"9% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
+      "source": "https://fundednext.com/cfds",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "promotion (10000 (Stellar Lite))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
+      "source": "https://fundednext.com/cfds",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "promotion (25000 (Stellar Lite))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
+      "source": "https://fundednext.com/cfds",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "FundedNext",
+      "field": "promotion (50000 (Stellar Lite))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
+      "source": "https://fundednext.com/cfds",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-10-27",
+      "firm": "PipFarm",
+      "field": "plan added (1000 (Instant EOD Trailing))",
+      "old": "",
       "new": "5.0",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
@@ -1818,159 +2196,6 @@
       "new": "900.0",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
-    },
-    {
-      "date": "2026-10-27",
-      "firm": "FundedNext",
-      "field": "promotion",
-      "old": "{\"code\": \"FNFLEX\", \"discount\": \"up to 47% off\", \"expiry\": null}",
-      "new": "{\"code\": \"FNTRICK\", \"discount\": \"up to 41%\", \"expiry\": null, \"scoped\": [{\"code\": \"FNFLEX\", \"discount\": \"up to 47% off\", \"expiry\": null, \"scope\": \"futures flex\"}, {\"code\": \"RAPID\", \"discount\": \"up to 50% off\", \"expiry\": null, \"scope\": \"futures rapid\"}, {\"code\": \"FNDIRECT\", \"discount\": \"up to 40% off\", \"expiry\": null, \"scope\": \"futures direct\"}]}",
-      "source": "https://fundednext.com/cfds",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-27",
-      "firm": "FundedNext",
-      "field": "promotion (6000 (Stellar 1-Step))",
-      "old": "[]",
-      "new": "[{\"code\": null, \"discount\": \"32% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
-      "source": "https://fundednext.com/cfds",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-27",
-      "firm": "FundedNext",
-      "field": "promotion (15000 (Stellar 1-Step))",
-      "old": "[]",
-      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
-      "source": "https://fundednext.com/cfds",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-27",
-      "firm": "FundedNext",
-      "field": "promotion (25000 (Stellar 1-Step))",
-      "old": "[]",
-      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
-      "source": "https://fundednext.com/cfds",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-27",
-      "firm": "FundedNext",
-      "field": "promotion (50000 (Stellar 1-Step))",
-      "old": "[]",
-      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
-      "source": "https://fundednext.com/cfds",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-27",
-      "firm": "FundedNext",
-      "field": "promotion (6000 (Stellar 2-Step))",
-      "old": "[]",
-      "new": "[{\"code\": null, \"discount\": \"42% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
-      "source": "https://fundednext.com/cfds",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-27",
-      "firm": "FundedNext",
-      "field": "promotion (15000 (Stellar 2-Step))",
-      "old": "[]",
-      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
-      "source": "https://fundednext.com/cfds",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-27",
-      "firm": "FundedNext",
-      "field": "promotion (25000 (Stellar 2-Step))",
-      "old": "[]",
-      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
-      "source": "https://fundednext.com/cfds",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-27",
-      "firm": "FundedNext",
-      "field": "promotion (50000 (Stellar 2-Step))",
-      "old": "[]",
-      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
-      "source": "https://fundednext.com/cfds",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-27",
-      "firm": "FundedNext",
-      "field": "promotion (2000 (Stellar Instant))",
-      "old": "[]",
-      "new": "[{\"code\": null, \"discount\": \"17% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
-      "source": "https://fundednext.com/cfds",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-27",
-      "firm": "FundedNext",
-      "field": "promotion (5000 (Stellar Instant))",
-      "old": "[]",
-      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
-      "source": "https://fundednext.com/cfds",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-27",
-      "firm": "FundedNext",
-      "field": "promotion (10000 (Stellar Instant))",
-      "old": "[]",
-      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
-      "source": "https://fundednext.com/cfds",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-27",
-      "firm": "FundedNext",
-      "field": "promotion (20000 (Stellar Instant))",
-      "old": "[]",
-      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
-      "source": "https://fundednext.com/cfds",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-27",
-      "firm": "FundedNext",
-      "field": "promotion (5000 (Stellar Lite))",
-      "old": "[]",
-      "new": "[{\"code\": null, \"discount\": \"9% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
-      "source": "https://fundednext.com/cfds",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-27",
-      "firm": "FundedNext",
-      "field": "promotion (10000 (Stellar Lite))",
-      "old": "[]",
-      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
-      "source": "https://fundednext.com/cfds",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-27",
-      "firm": "FundedNext",
-      "field": "promotion (25000 (Stellar Lite))",
-      "old": "[]",
-      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
-      "source": "https://fundednext.com/cfds",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-27",
-      "firm": "FundedNext",
-      "field": "promotion (50000 (Stellar Lite))",
-      "old": "[]",
-      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}]",
-      "source": "https://fundednext.com/cfds",
-      "kind": "promo"
     },
     {
       "date": "2026-10-26",
@@ -2474,231 +2699,6 @@
       "old": "[{\"code\": \"AGHHH35\", \"discount\": \"\", \"expiry\": null}]",
       "new": "[{\"code\": null, \"discount\": \"35% OFF\", \"source_note\": \"FXIFY official site sale price 2026-10-26\"}]",
       "source": "https://fxify.com/programs/one-phase/",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-26",
-      "firm": "FXIFY",
-      "field": "promotion (50000 (Two Phase Standard))",
-      "old": "[{\"code\": \"AGHHH35\", \"discount\": \"\", \"expiry\": null}]",
-      "new": "[{\"code\": null, \"discount\": \"35% OFF\", \"source_note\": \"FXIFY official site sale price 2026-10-26\"}]",
-      "source": "https://fxify.com/programs/one-phase/",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-26",
-      "firm": "FXIFY",
-      "field": "promotion (100000 (Two Phase Standard))",
-      "old": "[{\"code\": \"AGHHH35\", \"discount\": \"\", \"expiry\": null}]",
-      "new": "[{\"code\": null, \"discount\": \"35% OFF\", \"source_note\": \"FXIFY official site sale price 2026-10-26\"}]",
-      "source": "https://fxify.com/programs/one-phase/",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-26",
-      "firm": "FXIFY",
-      "field": "promotion (200000 (Two Phase Standard))",
-      "old": "[{\"code\": \"AGHHH35\", \"discount\": \"\", \"expiry\": null}]",
-      "new": "[{\"code\": null, \"discount\": \"35% OFF\", \"source_note\": \"FXIFY official site sale price 2026-10-26\"}]",
-      "source": "https://fxify.com/programs/one-phase/",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-26",
-      "firm": "FXIFY",
-      "field": "promotion (400000 (Two Phase Standard))",
-      "old": "[{\"code\": \"AGHHH35\", \"discount\": \"\", \"expiry\": null}]",
-      "new": "[{\"code\": null, \"discount\": \"35% OFF\", \"source_note\": \"FXIFY official site sale price 2026-10-26\"}]",
-      "source": "https://fxify.com/programs/one-phase/",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-26",
-      "firm": "Topstep",
-      "field": "promotion (150000 (Standard))",
-      "old": "[]",
-      "new": "[{\"code\": null, \"discount\": \"13% OFF\", \"source_note\": \"Topstep official site sale price 2026-10-26\"}]",
-      "source": "https://www.topstep.com/topstep-prop",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-26",
-      "firm": "Funded7",
-      "field": "promotion (5000 (Instant Funding))",
-      "old": "[]",
-      "new": "[{\"code\": null, \"discount\": \"25% OFF\", \"source_note\": \"Funded7 official site sale price 2026-10-26\"}]",
-      "source": "https://funded7.com/",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-26",
-      "firm": "Funded7",
-      "field": "promotion (10000 (Instant Funding))",
-      "old": "[]",
-      "new": "[{\"code\": null, \"discount\": \"25% OFF\", \"source_note\": \"Funded7 official site sale price 2026-10-26\"}]",
-      "source": "https://funded7.com/",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-26",
-      "firm": "Funded7",
-      "field": "promotion (25000 (Instant Funding))",
-      "old": "[]",
-      "new": "[{\"code\": null, \"discount\": \"25% OFF\", \"source_note\": \"Funded7 official site sale price 2026-10-26\"}]",
-      "source": "https://funded7.com/",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-26",
-      "firm": "Funded7",
-      "field": "promotion (50000 (Instant Funding))",
-      "old": "[]",
-      "new": "[{\"code\": null, \"discount\": \"25% OFF\", \"source_note\": \"Funded7 official site sale price 2026-10-26\"}]",
-      "source": "https://funded7.com/",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-26",
-      "firm": "Funded7",
-      "field": "promotion (75000 (Instant Funding))",
-      "old": "[]",
-      "new": "[{\"code\": null, \"discount\": \"25% OFF\", \"source_note\": \"Funded7 official site sale price 2026-10-26\"}]",
-      "source": "https://funded7.com/",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-26",
-      "firm": "Funded7",
-      "field": "promotion (15000 (One Phase))",
-      "old": "[]",
-      "new": "[{\"code\": null, \"discount\": \"25% OFF\", \"source_note\": \"Funded7 official site sale price 2026-10-26\"}]",
-      "source": "https://funded7.com/",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-26",
-      "firm": "Funded7",
-      "field": "promotion (50000 (One Phase))",
-      "old": "[]",
-      "new": "[{\"code\": null, \"discount\": \"25% OFF\", \"source_note\": \"Funded7 official site sale price 2026-10-26\"}]",
-      "source": "https://funded7.com/",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-26",
-      "firm": "Funded7",
-      "field": "promotion (75000 (One Phase))",
-      "old": "[]",
-      "new": "[{\"code\": null, \"discount\": \"25% OFF\", \"source_note\": \"Funded7 official site sale price 2026-10-26\"}]",
-      "source": "https://funded7.com/",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-26",
-      "firm": "Funded7",
-      "field": "promotion (100000 (One Phase))",
-      "old": "[]",
-      "new": "[{\"code\": null, \"discount\": \"25% OFF\", \"source_note\": \"Funded7 official site sale price 2026-10-26\"}]",
-      "source": "https://funded7.com/",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-26",
-      "firm": "Funded7",
-      "field": "promotion (200000 (One Phase))",
-      "old": "[]",
-      "new": "[{\"code\": null, \"discount\": \"25% OFF\", \"source_note\": \"Funded7 official site sale price 2026-10-26\"}]",
-      "source": "https://funded7.com/",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-26",
-      "firm": "FXIFY",
-      "field": "promotion",
-      "old": "{\"code\": \"AGHHH35\", \"discount\": \"35% OFF\", \"expiry\": \"2026-11-02\"}",
-      "new": "{\"code\": \"AGHHH35\", \"discount\": \"\", \"expiry\": null}",
-      "source": "https://fxify.com/programs/one-phase/",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-26",
-      "firm": "FXIFY",
-      "field": "promotion",
-      "old": "{\"code\": \"AGHHH35\", \"discount\": \"35% off\", \"expiry\": \"2026-11-02\"}",
-      "new": "{\"code\": \"AGHHH35\", \"discount\": \"\", \"expiry\": null}",
-      "source": "https://fxify.com/programs/one-phase/",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-26",
-      "firm": "FXIFY",
-      "field": "promotion",
-      "old": "{\"code\": \"AGHHH35\", \"discount\": \"\", \"expiry\": null}",
-      "new": "{\"code\": \"AGHHH35\", \"discount\": \"35% off\", \"expiry\": \"2026-11-02\"}",
-      "source": "https://fxify.com/programs/one-phase/",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-26",
-      "firm": "Topstep",
-      "field": "price (150000 (Standard))",
-      "old": "229.0",
-      "new": "199.0",
-      "source": "https://www.topstep.com/topstep-prop",
-      "kind": "price"
-    },
-    {
-      "date": "2026-10-25",
-      "firm": "FundedNext",
-      "field": "promotion",
-      "old": "{\"code\": \"STRTN\", \"discount\": \"up to 16%\", \"expiry\": null}",
-      "new": "",
-      "source": "https://fundednext.com/cfds",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-22",
-      "firm": "Apex Trader Funding",
-      "field": "promotion",
-      "old": "{\"code\": \"SAVENOW\", \"discount\": \"90% OFF ALL EVALS!\", \"expiry\": \"Ends in 1d 02h 29m 19s\"}",
-      "new": "{\"code\": \"SAVENOW\", \"discount\": \"90% OFF ALL EVALS!\", \"expiry\": \"Ends in 1d 01h 29m 45s\"}",
-      "source": "https://apextraderfunding.com/",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-22",
-      "firm": "FXIFY",
-      "field": "promotion",
-      "old": "{\"code\": \"REWARD25\", \"discount\": \"25% off\", \"expiry\": \"2026-11-01\"}",
-      "new": "{\"code\": \"AGHHH35\", \"discount\": \"\", \"expiry\": null}",
-      "source": "https://fxify.com/programs/one-phase/",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-21",
-      "firm": "Alpha Capital Group",
-      "field": "promotion",
-      "old": "{\"code\": \"MYALPHA\", \"discount\": \"30% off\", \"expiry\": null}",
-      "new": "(removed from site)",
-      "source": "https://alphacapitalgroup.uk",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-21",
-      "firm": "BrightFunded",
-      "field": "promotion",
-      "old": "",
-      "new": "{\"code\": \"HW30\", \"discount\": \"30% off\", \"expiry\": null}",
-      "source": "https://brightfunded.com/",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-20",
-      "firm": "TakeProfitTrader",
-      "field": "new promo NOFEE40 added",
-      "old": "(none)",
-      "new": "40% Off For Life + Never Pay An Activation Fee",
-      "source": "https://takeprofittrader.com",
       "kind": "promo"
     }
   ]
