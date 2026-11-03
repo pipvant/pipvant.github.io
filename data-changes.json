@@ -1,6 +1,15 @@
 {
-  "updated": "2026-11-03T00:20:55.206673+00:00",
+  "updated": "2026-11-03T01:00:41.929450+00:00",
   "changes": [
+    {
+      "date": "2026-11-03",
+      "firm": "Funded7",
+      "field": "promotion",
+      "old": "{\"code\": \"OCT25\", \"discount\": \"25% off\", \"expiry\": null}",
+      "new": "{\"code\": \"NOV25\", \"discount\": \"25% off\", \"expiry\": null}",
+      "source": "https://funded7.com/",
+      "kind": "promo"
+    },
     {
       "date": "2026-11-02",
       "firm": "Alpha Capital Group",
@@ -2690,15 +2699,6 @@
       "old": "(none)",
       "new": "30% off",
       "source": "https://alphacapitalgroup.uk",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-20",
-      "firm": "FTMO",
-      "field": "100K 2-Step promo price",
-      "old": "€540",
-      "new": "€439",
-      "source": "https://ftmo.com/en/#pricing",
       "kind": "promo"
     }
   ]
