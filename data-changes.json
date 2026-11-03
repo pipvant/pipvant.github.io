@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-03T06:20:44.457517+00:00",
+  "updated": "2026-11-03T06:48:58.658203+00:00",
   "changes": [
     {
       "date": "2026-11-03",
@@ -17,6 +17,15 @@
       "old": "{\"code\": \"NOV25\", \"discount\": \"25% off\", \"expiry\": null}",
       "new": "{\"code\": \"OCT25\", \"discount\": \"25% off\", \"expiry\": null}",
       "source": "https://funded7.com/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-11-03",
+      "firm": "Alpha Capital Group",
+      "field": "promotion",
+      "old": "{\"code\": \"ALPHA20\", \"discount\": \"20% Off All Accounts\", \"expiry\": \"2026-11-30\"}",
+      "new": "{\"code\": \"FUNDED40\", \"discount\": \"20% off\", \"expiry\": \"2026-11-30\", \"scoped\": [{\"code\": \"ALPHA20\", \"discount\": \"\", \"expiry\": \"2026-11-30\", \"scope\": \"10k\"}, {\"code\": \"10KFOR40\", \"discount\": \"$10K Account Deal\", \"expiry\": null, \"scope\": \"10k\"}]}",
+      "source": "https://alphacapitalgroup.uk/product",
       "kind": "promo"
     },
     {
@@ -2691,15 +2700,6 @@
       "new": "40% Off For Life + Never Pay An Activation Fee",
       "source": "https://takeprofittrader.com",
       "kind": "promo"
-    },
-    {
-      "date": "2026-10-20",
-      "firm": "Alpha Capital Group",
-      "field": "Alpha One 6% Max Daily Loss",
-      "old": "4.0%",
-      "new": "3.00%",
-      "source": "https://alphacapitalgroup.uk/product",
-      "kind": "rule"
     }
   ]
 }
