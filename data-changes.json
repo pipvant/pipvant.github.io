@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-03T08:38:24.056813+00:00",
+  "updated": "2026-11-03T09:01:54.729048+00:00",
   "changes": [
     {
       "date": "2026-11-03",
@@ -1617,7 +1617,7 @@
       "firm": "PipFarm",
       "field": "plan added (1000 (Instant EOD Trailing))",
       "old": "",
-      "new": "5",
+      "new": "5.0",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -1626,7 +1626,7 @@
       "firm": "PipFarm",
       "field": "plan added (2500 (Instant EOD Trailing))",
       "old": "",
-      "new": "30",
+      "new": "30.0",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -1635,7 +1635,7 @@
       "firm": "PipFarm",
       "field": "plan added (5000 (Instant EOD Trailing))",
       "old": "",
-      "new": "60",
+      "new": "60.0",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -1644,7 +1644,7 @@
       "firm": "PipFarm",
       "field": "plan added (10000 (Instant EOD Trailing))",
       "old": "",
-      "new": "120",
+      "new": "120.0",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -1653,7 +1653,7 @@
       "firm": "PipFarm",
       "field": "plan added (20000 (Instant EOD Trailing))",
       "old": "",
-      "new": "200",
+      "new": "200.0",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -1662,7 +1662,7 @@
       "firm": "PipFarm",
       "field": "plan added (50000 (Instant EOD Trailing))",
       "old": "",
-      "new": "400",
+      "new": "400.0",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -1671,7 +1671,7 @@
       "firm": "PipFarm",
       "field": "plan added (100000 (Instant EOD Trailing))",
       "old": "",
-      "new": "600",
+      "new": "600.0",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -1680,7 +1680,7 @@
       "firm": "PipFarm",
       "field": "plan added (150000 (Instant EOD Trailing))",
       "old": "",
-      "new": "900",
+      "new": "900.0",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -1689,7 +1689,7 @@
       "firm": "PipFarm",
       "field": "plan added (1000 (Instant Equity Trailing))",
       "old": "",
-      "new": "5",
+      "new": "5.0",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -1698,7 +1698,7 @@
       "firm": "PipFarm",
       "field": "plan added (2500 (Instant Equity Trailing))",
       "old": "",
-      "new": "30",
+      "new": "30.0",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -1707,7 +1707,7 @@
       "firm": "PipFarm",
       "field": "plan added (5000 (Instant Equity Trailing))",
       "old": "",
-      "new": "60",
+      "new": "60.0",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -1716,7 +1716,7 @@
       "firm": "PipFarm",
       "field": "plan added (10000 (Instant Equity Trailing))",
       "old": "",
-      "new": "120",
+      "new": "120.0",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -1725,7 +1725,7 @@
       "firm": "PipFarm",
       "field": "plan added (20000 (Instant Equity Trailing))",
       "old": "",
-      "new": "200",
+      "new": "200.0",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -1734,7 +1734,7 @@
       "firm": "PipFarm",
       "field": "plan added (50000 (Instant Equity Trailing))",
       "old": "",
-      "new": "400",
+      "new": "400.0",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -1743,7 +1743,7 @@
       "firm": "PipFarm",
       "field": "plan added (100000 (Instant Equity Trailing))",
       "old": "",
-      "new": "600",
+      "new": "600.0",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -1752,7 +1752,7 @@
       "firm": "PipFarm",
       "field": "plan added (150000 (Instant Equity Trailing))",
       "old": "",
-      "new": "900",
+      "new": "900.0",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -1761,7 +1761,7 @@
       "firm": "PipFarm",
       "field": "plan added (1000 (Instant Payout Trailing))",
       "old": "",
-      "new": "5",
+      "new": "5.0",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -1770,7 +1770,7 @@
       "firm": "PipFarm",
       "field": "plan added (2500 (Instant Payout Trailing))",
       "old": "",
-      "new": "30",
+      "new": "30.0",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -1779,7 +1779,7 @@
       "firm": "PipFarm",
       "field": "plan added (5000 (Instant Payout Trailing))",
       "old": "",
-      "new": "60",
+      "new": "60.0",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -1788,7 +1788,7 @@
       "firm": "PipFarm",
       "field": "plan added (10000 (Instant Payout Trailing))",
       "old": "",
-      "new": "120",
+      "new": "120.0",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -1797,7 +1797,7 @@
       "firm": "PipFarm",
       "field": "plan added (20000 (Instant Payout Trailing))",
       "old": "",
-      "new": "200",
+      "new": "200.0",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -1806,7 +1806,7 @@
       "firm": "PipFarm",
       "field": "plan added (50000 (Instant Payout Trailing))",
       "old": "",
-      "new": "400",
+      "new": "400.0",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -1815,7 +1815,7 @@
       "firm": "PipFarm",
       "field": "plan added (100000 (Instant Payout Trailing))",
       "old": "",
-      "new": "600",
+      "new": "600.0",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -1824,7 +1824,7 @@
       "firm": "PipFarm",
       "field": "plan added (150000 (Instant Payout Trailing))",
       "old": "",
-      "new": "900",
+      "new": "900.0",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -1986,7 +1986,7 @@
       "firm": "PipFarm",
       "field": "plan added (1000 (Instant EOD Trailing))",
       "old": "",
-      "new": "5.0",
+      "new": "5",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -1995,7 +1995,7 @@
       "firm": "PipFarm",
       "field": "plan added (2500 (Instant EOD Trailing))",
       "old": "",
-      "new": "30.0",
+      "new": "30",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -2004,7 +2004,7 @@
       "firm": "PipFarm",
       "field": "plan added (5000 (Instant EOD Trailing))",
       "old": "",
-      "new": "60.0",
+      "new": "60",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -2013,7 +2013,7 @@
       "firm": "PipFarm",
       "field": "plan added (10000 (Instant EOD Trailing))",
       "old": "",
-      "new": "120.0",
+      "new": "120",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -2022,7 +2022,7 @@
       "firm": "PipFarm",
       "field": "plan added (20000 (Instant EOD Trailing))",
       "old": "",
-      "new": "200.0",
+      "new": "200",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -2031,7 +2031,7 @@
       "firm": "PipFarm",
       "field": "plan added (50000 (Instant EOD Trailing))",
       "old": "",
-      "new": "400.0",
+      "new": "400",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -2040,7 +2040,7 @@
       "firm": "PipFarm",
       "field": "plan added (100000 (Instant EOD Trailing))",
       "old": "",
-      "new": "600.0",
+      "new": "600",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -2049,7 +2049,7 @@
       "firm": "PipFarm",
       "field": "plan added (150000 (Instant EOD Trailing))",
       "old": "",
-      "new": "900.0",
+      "new": "900",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -2058,7 +2058,7 @@
       "firm": "PipFarm",
       "field": "plan added (1000 (Instant Equity Trailing))",
       "old": "",
-      "new": "5.0",
+      "new": "5",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -2067,7 +2067,7 @@
       "firm": "PipFarm",
       "field": "plan added (2500 (Instant Equity Trailing))",
       "old": "",
-      "new": "30.0",
+      "new": "30",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -2076,7 +2076,7 @@
       "firm": "PipFarm",
       "field": "plan added (5000 (Instant Equity Trailing))",
       "old": "",
-      "new": "60.0",
+      "new": "60",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -2085,7 +2085,7 @@
       "firm": "PipFarm",
       "field": "plan added (10000 (Instant Equity Trailing))",
       "old": "",
-      "new": "120.0",
+      "new": "120",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -2094,7 +2094,7 @@
       "firm": "PipFarm",
       "field": "plan added (20000 (Instant Equity Trailing))",
       "old": "",
-      "new": "200.0",
+      "new": "200",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -2103,7 +2103,7 @@
       "firm": "PipFarm",
       "field": "plan added (50000 (Instant Equity Trailing))",
       "old": "",
-      "new": "400.0",
+      "new": "400",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -2112,7 +2112,7 @@
       "firm": "PipFarm",
       "field": "plan added (100000 (Instant Equity Trailing))",
       "old": "",
-      "new": "600.0",
+      "new": "600",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -2121,7 +2121,7 @@
       "firm": "PipFarm",
       "field": "plan added (150000 (Instant Equity Trailing))",
       "old": "",
-      "new": "900.0",
+      "new": "900",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -2130,7 +2130,7 @@
       "firm": "PipFarm",
       "field": "plan added (1000 (Instant Payout Trailing))",
       "old": "",
-      "new": "5.0",
+      "new": "5",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -2139,7 +2139,7 @@
       "firm": "PipFarm",
       "field": "plan added (2500 (Instant Payout Trailing))",
       "old": "",
-      "new": "30.0",
+      "new": "30",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -2148,7 +2148,7 @@
       "firm": "PipFarm",
       "field": "plan added (5000 (Instant Payout Trailing))",
       "old": "",
-      "new": "60.0",
+      "new": "60",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -2157,7 +2157,7 @@
       "firm": "PipFarm",
       "field": "plan added (10000 (Instant Payout Trailing))",
       "old": "",
-      "new": "120.0",
+      "new": "120",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -2166,7 +2166,7 @@
       "firm": "PipFarm",
       "field": "plan added (20000 (Instant Payout Trailing))",
       "old": "",
-      "new": "200.0",
+      "new": "200",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -2175,7 +2175,7 @@
       "firm": "PipFarm",
       "field": "plan added (50000 (Instant Payout Trailing))",
       "old": "",
-      "new": "400.0",
+      "new": "400",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -2184,7 +2184,7 @@
       "firm": "PipFarm",
       "field": "plan added (100000 (Instant Payout Trailing))",
       "old": "",
-      "new": "600.0",
+      "new": "600",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
@@ -2193,7 +2193,7 @@
       "firm": "PipFarm",
       "field": "plan added (150000 (Instant Payout Trailing))",
       "old": "",
-      "new": "900.0",
+      "new": "900",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
     },
