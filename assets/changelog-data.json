@@ -18,6 +18,15 @@
   "detail_ar": "تم رصد كود الخصم الجديد NOV25."
  },
  {
+  "date": "2026-11-04",
+  "firm": "Alpha Capital Group",
+  "type": "new_promo",
+  "title_en": "New promo: FUNDED40 (20% off)",
+  "title_ar": "عرض جديد: FUNDED40 (20% off)",
+  "detail_en": "New promo code FUNDED40 detected with 20% off.",
+  "detail_ar": "تم رصد كود الخصم الجديد FUNDED40."
+ },
+ {
   "date": "2026-11-03",
   "firm": "Funded7",
   "type": "new_promo",
