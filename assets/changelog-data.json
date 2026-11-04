@@ -1,5 +1,77 @@
 [
  {
+  "date": "2026-11-04",
+  "firm": "Funded7",
+  "type": "new_promo",
+  "title_en": "New promo: OCT25 (25% off)",
+  "title_ar": "عرض جديد: OCT25 (25% off)",
+  "detail_en": "New promo code OCT25 detected with 25% off.",
+  "detail_ar": "تم رصد كود الخصم الجديد OCT25."
+ },
+ {
+  "date": "2026-11-03",
+  "firm": "Funded7",
+  "type": "new_promo",
+  "title_en": "New promo: NOV25 (25% off)",
+  "title_ar": "عرض جديد: NOV25 (25% off)",
+  "detail_en": "New promo code NOV25 detected with 25% off.",
+  "detail_ar": "تم رصد كود الخصم الجديد NOV25."
+ },
+ {
+  "date": "2026-11-03",
+  "firm": "Funded7",
+  "type": "new_promo",
+  "title_en": "New promo: OCT25 (25% off)",
+  "title_ar": "عرض جديد: OCT25 (25% off)",
+  "detail_en": "New promo code OCT25 detected with 25% off.",
+  "detail_ar": "تم رصد كود الخصم الجديد OCT25."
+ },
+ {
+  "date": "2026-11-03",
+  "firm": "Alpha Capital Group",
+  "type": "new_promo",
+  "title_en": "New promo: FUNDED40 (20% off)",
+  "title_ar": "عرض جديد: FUNDED40 (20% off)",
+  "detail_en": "New promo code FUNDED40 detected with 20% off.",
+  "detail_ar": "تم رصد كود الخصم الجديد FUNDED40."
+ },
+ {
+  "date": "2026-11-03",
+  "firm": "FundedNext",
+  "type": "new_promo",
+  "title_en": "New promo: NOVSTR (up to 41%)",
+  "title_ar": "عرض جديد: NOVSTR (up to 41%)",
+  "detail_en": "New promo code NOVSTR detected with up to 41%.",
+  "detail_ar": "تم رصد كود الخصم الجديد NOVSTR."
+ },
+ {
+  "date": "2026-11-02",
+  "firm": "Alpha Capital Group",
+  "type": "new_promo",
+  "title_en": "New promo: FUNDED40 (20% off)",
+  "title_ar": "عرض جديد: FUNDED40 (20% off)",
+  "detail_en": "New promo code FUNDED40 detected with 20% off.",
+  "detail_ar": "تم رصد كود الخصم الجديد FUNDED40."
+ },
+ {
+  "date": "2026-11-02",
+  "firm": "Funded7",
+  "type": "new_promo",
+  "title_en": "New promo: NOV25 (25% off)",
+  "title_ar": "عرض جديد: NOV25 (25% off)",
+  "detail_en": "New promo code NOV25 detected with 25% off.",
+  "detail_ar": "تم رصد كود الخصم الجديد NOV25."
+ },
+ {
+  "date": "2026-11-02",
+  "firm": "Funded7",
+  "type": "new_promo",
+  "title_en": "New promo: OCT25 (25% off)",
+  "title_ar": "عرض جديد: OCT25 (25% off)",
+  "detail_en": "New promo code OCT25 detected with 25% off.",
+  "detail_ar": "تم رصد كود الخصم الجديد OCT25."
+ },
+ {
   "date": "2026-11-01",
   "firm": "Funded7",
   "type": "new_promo",
@@ -16,6 +88,15 @@
   "title_ar": "عرض جديد: NOV25 (25% off)",
   "detail_en": "New promo code NOV25 detected with 25% off.",
   "detail_ar": "تم رصد كود الخصم الجديد NOV25."
+ },
+ {
+  "date": "2026-11-01",
+  "firm": "FTUK",
+  "type": "new_plans",
+  "title_en": "1 new Flex Challenge plans added (50K)",
+  "title_ar": "إضافة 1 خطط Flex Challenge جديدة",
+  "detail_en": "New Flex Challenge plans tracked: 50K.",
+  "detail_ar": "تمت إضافة خطط Flex Challenge الجديدة."
  },
  {
   "date": "2026-10-31",
