@@ -838,66 +838,65 @@
     .session-feedback{margin:-3px 0 12px;color:var(--accent);font-size:11px;line-height:1.5}.session-feedback:empty{display:none}.risk-footer-actions+.session-feedback{margin:10px 0 0;text-align:right}.trade-form .session-feedback{margin:12px 0 0;text-align:right}
     .journal-entry-list{display:grid}.journal-entry-list[hidden],.trade-list-empty[hidden]{display:none}.journal-entry-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:16px;border-bottom:1px solid var(--line);background:var(--surface)}.journal-entry-row:last-child{border-bottom:0}
 #journal .trade-columns{display:none}
-.trade-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px;margin:12px 14px;display:grid;gap:12px}
-.tc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+/* PIPVANT trade card — exact Liquid replica, brand tokens (no emoji, real SVG icons) */
+.trade-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;margin:12px 14px;display:flex;flex-direction:column;gap:12px;font-family:"Inter",system-ui,sans-serif;color:var(--text);box-sizing:border-box}
+.tc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
 .tc-symline{display:flex;align-items:center;gap:8px;min-width:0;flex-wrap:wrap}
 .tc-flags{display:inline-flex;align-items:center}
-.tc-flag{width:21px;height:21px;border-radius:50%;object-fit:cover;border:1px solid var(--line-strong);background:var(--sunken)}
-.tc-pair{font:700 17px/1.2 "Space Grotesk","IBM Plex Sans Arabic",sans-serif;color:var(--text)}
-.tc-dir{font-size:15px;font-weight:800}
+.tc-flag{width:20px;height:20px;border-radius:50%;object-fit:cover;border:1px solid var(--line);background:var(--sunken)}
+.tc-rating{font-size:11px;font-weight:700;background:var(--sunken);border:1px solid var(--line);color:var(--muted);border-radius:4px;padding:2px 6px}
+.tc-rating.hot{color:var(--accent);border-color:rgba(91,141,239,.55);background:var(--accent-soft)}
+.tc-rating.low{color:var(--muted)}
+.tc-pair{font-family:"Space Grotesk","Inter",sans-serif;font-size:16px;font-weight:700;letter-spacing:.02em}
+.tc-dir{font-size:14px;font-weight:700}
 .tc-dir.long{color:var(--success)}
 .tc-dir.short{color:var(--danger)}
-.tc-rating{font-size:11px;font-weight:800;border:1px solid var(--line-strong);border-radius:999px;padding:4px 10px;color:var(--platinum);background:rgba(255,255,255,.04)}
-.tc-pnlbox{text-align:end;flex:0 0 auto}
-.tc-pnl{font:700 21px/1.2 "Space Grotesk","IBM Plex Sans Arabic",sans-serif;color:var(--text);font-variant-numeric:tabular-nums}
+.tc-pnlbox{text-align:end;display:flex;flex-direction:column;align-items:flex-end}
+.tc-pnl{font-family:"Space Grotesk","Inter",sans-serif;font-size:18px;font-weight:700;display:flex;align-items:center;gap:4px;font-variant-numeric:tabular-nums}
 .tc-pnl.win{color:var(--success)}
 .tc-pnl.loss{color:var(--danger)}
-.tc-pnl.open{color:var(--muted);font-size:14px}
-.tc-r{font:600 14px/1.4 "Space Grotesk","IBM Plex Sans Arabic",sans-serif;color:var(--secondary);margin-top:2px;font-variant-numeric:tabular-nums}
+.tc-pnl.be{color:var(--muted)}
+.tc-pnl.open{color:var(--muted);font-size:14px;font-weight:600}
+.tc-share-icon{background:transparent;border:none;padding:0;color:inherit;display:inline-flex;align-items:center;cursor:pointer;opacity:.7}
+.tc-share-icon:hover{opacity:1}
+.tc-r{font-family:"Space Grotesk","Inter",sans-serif;font-size:13px;font-weight:600;color:var(--muted);margin-top:2px}
 .tc-chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.tc-chip{font-size:11px;font-weight:700;padding:5px 10px;border:1px solid var(--line);border-radius:999px;background:var(--sunken);color:var(--secondary)}
-.tc-chip.ok{color:var(--success)}
-.tc-chip.bad{color:var(--danger)}
-.tc-setup{font-size:12.5px;font-weight:600;color:var(--secondary)}
-.tc-tag{font-size:12.5px;font-weight:700;color:var(--accent)}
-.tc-exec{font:500 11.5px/1.6 "IBM Plex Mono","IBM Plex Sans Arabic",monospace;color:var(--muted);overflow-wrap:anywhere}
-.tc-chart{background:var(--sunken);border:1px solid var(--line);border-radius:12px;min-height:64px;display:grid;place-items:center;color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.08em}
-.tc-chart a{color:var(--accent);text-decoration:none;font-size:12.5px;letter-spacing:0}
-.tc-note{background:var(--sunken);border:1px solid var(--line);border-radius:12px;padding:12px 13px;font-size:13px;line-height:1.55;color:var(--secondary);overflow-wrap:anywhere}
-.tc-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:12px}
-.tc-meta{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
-.tc-actions{display:flex;gap:6px;flex-wrap:wrap}
-.tc-btn{min-height:36px;padding:6px 11px;border:1px solid var(--line);border-radius:10px;background:var(--sunken);color:var(--secondary);font-size:11px;font-weight:700;cursor:pointer}
-.tc-btn.danger{color:var(--danger)}
-.trade-card{transition:border-color .18s ease,background-color .18s ease}
-.trade-card:hover{border-color:var(--line-strong);background:var(--raised)}
-.trade-card.win{border-inline-start:3px solid var(--success)}
-.trade-card.loss{border-inline-start:3px solid var(--danger)}
-.tc-rating.hot{color:var(--accent);border-color:rgba(91,141,239,.55);background:rgba(91,141,239,.12)}
-.tc-rating.low{color:var(--muted)}
-.tc-btn{transition:background-color .15s ease,border-color .15s ease}
-.tc-btn:hover{background:var(--raised);border-color:var(--line-strong)}
+.tc-chip{font-size:12px;font-weight:500;padding:4px 10px;background:var(--sunken);border:1px solid var(--line);border-radius:999px;color:var(--text);display:inline-flex;align-items:center;gap:5px}
+.tc-chip.ok{color:var(--success);border-color:rgba(16,185,129,.25);background:rgba(16,185,129,.08)}
+.tc-chip.bad{color:var(--danger);border-color:rgba(239,68,68,.25);background:rgba(239,68,68,.08)}
+.tc-dot{width:6px;height:6px;background-color:var(--accent);border-radius:50%;flex:0 0 auto}
+.tc-text-chip{font-size:12px;color:var(--muted);padding:4px}
+.tc-tag{font-size:12px;font-weight:700;color:var(--accent)}
+.tc-exec{font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:500;line-height:1.6;color:var(--muted);background:var(--sunken);border:1px solid var(--line);border-radius:10px;padding:10px 12px;overflow-wrap:anywhere}
+.tc-chart{background:var(--sunken);border:1px solid var(--line);border-radius:12px;min-height:56px;display:grid;place-items:center;color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.08em}
+.tc-chart a{color:var(--accent);text-decoration:none;font-size:12px;font-weight:600;letter-spacing:0}
 .tc-chart a:hover{text-decoration:underline}
-@media (prefers-reduced-motion:reduce){.trade-card,.tc-btn{transition:none}}
-/* Desktop card: SAME card DOM as mobile, real desktop layout via CSS only.
-   tc-top / tc-foot become display:contents so their children join the card
-   grid: identity (symline+meta+chips) | details (exec+note) | P&L+actions.
-   Mobile rendering is untouched — this block only applies >=1024px. */
+.tc-note{background:var(--sunken);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:13px;line-height:1.4;color:var(--muted);overflow-wrap:anywhere}
+.tc-progress-row{display:flex;gap:12px;font-size:11px;color:var(--muted)}
+.tc-meta-text{display:inline-flex;align-items:center;gap:4px}
+.tc-foot{display:flex;align-items:center;justify-content:flex-end;gap:10px;border-top:1px solid var(--line);padding-top:10px;flex-wrap:wrap}
+.tc-foot-right{display:flex;align-items:center;gap:12px}
+.tc-win-badge{font-size:11px;font-weight:600;color:var(--success)}
+.tc-win-badge.loss{color:var(--danger)}
+.tc-win-badge.be{color:var(--muted)}
+.tc-win-badge.open{color:var(--muted)}
+.tc-actions{display:flex;gap:6px}
+.tc-icon-btn{background:transparent;border:none;color:var(--muted);cursor:pointer;padding:4px;display:inline-flex;align-items:center;justify-content:center;border-radius:4px}
+.tc-icon-btn:hover{color:var(--text);background:var(--sunken)}
+.tc-icon-btn.danger:hover{color:var(--danger)}
+.tc-icon-btn.on{color:var(--accent);background:var(--accent-soft)}
+/* Desktop: same card DOM, widened replica grid */
 @media (min-width:1024px){
-  .trade-card{grid-template-columns:250px minmax(0,1fr) 230px;gap:12px 20px;padding:20px 22px;align-items:start}
-  .trade-card .tc-top{display:contents}
-  .trade-card .tc-symline{grid-column:1;grid-row:1}
-  .trade-card .tc-pnlbox{grid-column:3;grid-row:1}
-  .trade-card .tc-pair{font-size:20px}
-  .trade-card .tc-pnl{font-size:26px}
-  .trade-card .tc-chips{grid-column:1/span 2;grid-row:2}
-  .trade-card .tc-chart{grid-column:3;grid-row:2;min-height:38px}
-  .trade-card .tc-exec{grid-column:2;grid-row:3;font-size:12.5px}
-  .trade-card .tc-note{grid-column:2;grid-row:4;font-size:13.5px}
-  .trade-card .tc-foot{display:contents}
-  .trade-card .tc-meta{grid-column:1;grid-row:3}
-  .trade-card .tc-actions{grid-column:3;grid-row:3/span 2;justify-content:flex-end}
-}.journal-entry-cell{min-width:0}.journal-entry-cell small{display:block;margin-bottom:5px;color:var(--muted);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em}.journal-entry-cell strong{display:block;color:var(--secondary);font-size:11px;font-weight:500;line-height:1.45;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}.journal-entry-cell.pnl-win strong{color:var(--success)}.journal-entry-cell.pnl-loss strong{color:var(--danger)}.journal-entry-cell.primary strong{color:var(--text);font-weight:700}.journal-entry-cell.note{grid-column:1/-1}
+  .trade-card{max-width:900px;margin:24px auto;padding:24px;display:grid;grid-template-columns:2fr 1fr;gap:16px 24px}
+  .tc-top{grid-column:1/-1}
+  .tc-chips{grid-column:1/-1}
+  .tc-exec{grid-column:1/-1}
+  .tc-chart{grid-column:1/2;min-height:120px}
+  .tc-note{grid-column:2/3}
+  .tc-progress-row{grid-column:1/-1}
+  .tc-foot{grid-column:1/-1}
+}
+.journal-entry-cell{min-width:0}.journal-entry-cell small{display:block;margin-bottom:5px;color:var(--muted);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em}.journal-entry-cell strong{display:block;color:var(--secondary);font-size:11px;font-weight:500;line-height:1.45;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}.journal-entry-cell.pnl-win strong{color:var(--success)}.journal-entry-cell.pnl-loss strong{color:var(--danger)}.journal-entry-cell.primary strong{color:var(--text);font-weight:700}.journal-entry-cell.note{grid-column:1/-1}
     #journal .journal-fab{display:flex}
     @media (max-width:1023px){#journal .journal-entry-list{padding-bottom:calc(150px + env(safe-area-inset-bottom))}}
     @media (min-width:640px){.journal-kpis{grid-template-columns:repeat(2,1fr)}.calendar-main{padding:18px}.day-cell{min-height:78px}.facet-panel.open{grid-template-columns:repeat(3,1fr)}.trade-sheet{align-items:center;padding:24px}.trade-form{max-width:680px;margin:0 auto;border-radius:20px;padding-bottom:22px}}
@@ -14676,6 +14675,21 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       if(typeof showToast==='function')showToast(ok?(currentLanguage==='ar'?'تم نسخ الصفقة.':'Trade duplicated.'):(currentLanguage==='ar'?'تم النسخ محلياً فقط.':'Duplicated locally only.'));
     }catch(e){}
   }
+  function shareTradeCard(entry){
+    var ar=currentLanguage==='ar';
+    var res=tcResultOf(entry);
+    var parts=[String(entry.pair||'—')];
+    if(entry.direction)parts.push(String(entry.direction).toUpperCase());
+    if(entry.closed)parts.push(tcFmtPnl(entry.pnl));
+    parts.push(tcFmtR(entry.rMultiple));
+    parts.push(res.label);
+    var txt=parts.join(' ')+' · PIPVANT';
+    function done(ok){if(typeof showToast==='function')showToast(ok?(ar?'تم نسخ ملخص الصفقة':'Trade summary copied'):(ar?'تعذر النسخ':'Copy failed'));}
+    try{
+      if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(function(){done(true);},function(){done(false);});}
+      else done(false);
+    }catch(e){done(false);}
+  }
   function buildTradeCard(entry){
     var ar=currentLanguage==='ar';
     var card=document.createElement('article');card.className='trade-card';
@@ -14684,7 +14698,22 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     var dirWord=dirLower==='long'?(ar?'شراء':'Long'):(dirLower==='short'?(ar?'بيع':'Short'):'');
     var res=tcResultOf(entry);
     card.className='trade-card '+res.cls;
-    /* Head: pair + rating | P&L + R */
+    /* Real SVG icons — no emoji anywhere on the card */
+    var IC={
+      clock:'<svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 15.5 14"></polyline></svg>',
+      share:'<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>',
+      check:'<svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>',
+      x:'<svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>',
+      edit:'<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>',
+      copy:'<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>',
+      trash:'<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>'
+    };
+    function tcIconBtn(title,svg,action,danger,on){
+      var b=document.createElement('button');b.type='button';b.className='tc-icon-btn'+(danger?' danger':'')+(on?' on':'');b.title=title;b.setAttribute('aria-label',title);b.innerHTML=svg;
+      b.addEventListener('click',function(e){e.stopPropagation();action();});
+      return b;
+    }
+    /* Head: flags + rating | pair + dir | P&L + share | R */
     var top=document.createElement('div');top.className='tc-top';
     var symline=document.createElement('div');symline.className='tc-symline';
     var flagCodes=tcPairFlagCodes(entry.pair);
@@ -14698,27 +14727,32 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       });
       symline.appendChild(fw);
     }
+    if(entry.rating!=null&&entry.rating!==''){var _rn=Number(entry.rating);var _rp='tc-rating'+(isFinite(_rn)&&_rn>=4?' hot':(isFinite(_rn)&&_rn<=2?' low':''));symline.appendChild(tcEl('span',_rp,'★'+entry.rating));}
     symline.appendChild(tcEl('strong','tc-pair',String(entry.pair||'—')));
     if(dirArrow){var da=tcEl('span','tc-dir '+dirLower,dirArrow);da.title=dirWord;symline.appendChild(da);}
-    if(entry.rating!=null&&entry.rating!==''){var _rn=Number(entry.rating);var _rp='tc-rating'+(isFinite(_rn)&&_rn>=4?' hot':(isFinite(_rn)&&_rn<=2?' low':''));symline.appendChild(tcEl('span',_rp,'★'+entry.rating));}
     top.appendChild(symline);
     var pnlbox=document.createElement('div');pnlbox.className='tc-pnlbox';
-    pnlbox.appendChild(tcEl('div','tc-pnl '+res.cls,entry.closed?tcFmtPnl(entry.pnl):(ar?'فتح':'Open')));
+    var pnl=document.createElement('div');pnl.className='tc-pnl '+res.cls;
+    var shareBtn=document.createElement('button');shareBtn.type='button';shareBtn.className='tc-share-icon';shareBtn.title=ar?'مشاركة':'Share';shareBtn.setAttribute('aria-label',shareBtn.title);shareBtn.innerHTML=IC.share;
+    shareBtn.addEventListener('click',function(e){e.stopPropagation();shareTradeCard(entry);});
+    pnl.appendChild(shareBtn);
+    pnl.appendChild(document.createTextNode(entry.closed?tcFmtPnl(entry.pnl):(ar?'فتح':'Open')));
+    pnlbox.appendChild(pnl);
     pnlbox.appendChild(tcEl('div','tc-r',tcFmtR(entry.rMultiple)));
     top.appendChild(pnlbox);
     card.appendChild(top);
-    /* Chips row: session / condition / plan + setup + tag (plain text) */
+    /* Chips row: session (clock) / condition (dot) / plan (check/x) + setup + tag */
     var chips=document.createElement('div');chips.className='tc-chips';
     var hasChip=false;
-    function addChip(text,cls){if(!text)return;chips.appendChild(tcEl('span','tc-chip'+(cls?' '+cls:''),text));hasChip=true;}
-    if(entry.session)addChip(entry.session);
-    if(entry.condition)addChip(entry.condition);
-    if(entry.plan==='yes')addChip(ar?'على الخطة ✓':'On plan ✓','ok');
-    else if(entry.plan==='no')addChip(ar?'خارج الخطة':'Off plan','bad');
-    if(entry.setup)chips.appendChild(tcEl('span','tc-setup',entry.setup)),hasChip=true;
+    function addIconChip(svg,text,cls){if(!text)return;var c=document.createElement('span');c.className='tc-chip'+(cls?' '+cls:'');c.innerHTML=svg;c.appendChild(document.createTextNode(text));chips.appendChild(c);hasChip=true;}
+    if(entry.session)addIconChip(IC.clock,entry.session);
+    if(entry.condition)addIconChip('<span class="tc-dot"></span>',entry.condition);
+    if(entry.plan==='yes')addIconChip(IC.check,ar?'على الخطة':'On plan','ok');
+    else if(entry.plan==='no')addIconChip(IC.x,ar?'خارج الخطة':'Off plan','bad');
+    if(entry.setup)chips.appendChild(tcEl('span','tc-text-chip',entry.setup)),hasChip=true;
     if(entry.tag)chips.appendChild(tcEl('span','tc-tag','#'+entry.tag)),hasChip=true;
     if(hasChip)card.appendChild(chips);
-    /* Execution line: E / S / T / X / Qty (same data the old row showed) */
+    /* Execution line: E / S / T / X / Qty (sunken mono box) */
     var ex=[];
     if(entry.entry!=null&&entry.entry!=='')ex.push('E '+entry.entry);
     if(entry.stop!=null&&entry.stop!=='')ex.push('S '+entry.stop);
@@ -14738,21 +14772,33 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     card.appendChild(chartBox);
     /* Note box (only when notes exist) */
     if(entry.notes)card.appendChild(tcEl('div','tc-note',entry.notes));
-    /* Foot: date · side · result | actions */
+    /* Meta row: date · side · time (real clock icon, no emoji) */
+    var prow=document.createElement('div');prow.className='tc-progress-row';
+    var _ts=entry.timestamp||0;var _d=new Date(_ts);var _ok=_ts&&!isNaN(_d.getTime());
+    var _loc=currentLanguage==='ar'?'ar-MA':'en-GB';
+    var _dateStr=_ok?_d.toLocaleDateString(_loc,{day:'2-digit',month:'short',year:'numeric'}):'—';
+    var _timeStr=_ok?_d.toLocaleTimeString(_loc,{hour:'2-digit',minute:'2-digit'}):'—';
+    prow.appendChild(tcEl('span','tc-meta-text',_dateStr));
+    if(dirWord)prow.appendChild(tcEl('span','tc-meta-text',dirWord));
+    var _tm=document.createElement('span');_tm.className='tc-meta-text';_tm.innerHTML=IC.clock;_tm.appendChild(document.createTextNode(' '+_timeStr));prow.appendChild(_tm);
+    card.appendChild(prow);
+    /* Foot: result badge + icon actions (no fake score bar / Elite / AI — no such data) */
     var foot=document.createElement('div');foot.className='tc-foot';
-    foot.appendChild(tcEl('span','tc-meta',journalDate(entry.timestamp)+(dirWord?' · '+dirWord:'')+' · '+res.label+(res.arrow?' '+res.arrow:'')));
+    var fright=document.createElement('div');fright.className='tc-foot-right';
+    fright.appendChild(tcEl('span','tc-win-badge'+(res.cls==='loss'?' loss':(res.cls==='be'?' be':(res.cls==='open'?' open':''))),res.arrow?res.arrow+' '+res.label:res.label));
     var acts=document.createElement('div');acts.className='tc-actions';
-    acts.appendChild(tcSmallBtn(ar?'تعديل':'Edit',function(){startEditTrade(entry);}));
-    acts.appendChild(tcSmallBtn(ar?'تكرار':'Duplicate',function(){duplicateTradeEntry(entry);}));
-    var del=tcSmallBtn(ar?'حذف':'Delete',function(){deleteTradeEntry(entry,del);},true);acts.appendChild(del);
-    if(!entry.closed)acts.appendChild(tcSmallBtn(ar?'إغلاق':'Close',function(){openCloseTradeModal(entry);}));
-    acts.appendChild(tcSmallBtn(entry.reviewed?(ar?'تمت المراجعة ✓':'Reviewed ✓'):(ar?'مراجعة':'Review'),function(){
+    acts.appendChild(tcIconBtn(ar?'تعديل':'Edit',IC.edit,function(){startEditTrade(entry);}));
+    acts.appendChild(tcIconBtn(ar?'تكرار':'Duplicate',IC.copy,function(){duplicateTradeEntry(entry);}));
+    var del=tcIconBtn(ar?'حذف':'Delete',IC.trash,function(){deleteTradeEntry(entry,del);},true);acts.appendChild(del);
+    if(!entry.closed)acts.appendChild(tcIconBtn(ar?'إغلاق':'Close',IC.x,function(){openCloseTradeModal(entry);}));
+    acts.appendChild(tcIconBtn(entry.reviewed?(ar?'تمت المراجعة':'Reviewed'):(ar?'مراجعة':'Review'),IC.check,function(){
       entry.reviewed=!entry.reviewed;
       if(!entry._dbId&&typeof persistLocalTrade==='function')persistLocalTrade(entry);
       if(typeof saveTradeExtras==='function')saveTradeExtras(entry);
       if(typeof refreshAllTradeUI==='function')refreshAllTradeUI();else renderJournalEntries();
-    }));
-    foot.appendChild(acts);
+    },false,!!entry.reviewed));
+    fright.appendChild(acts);
+    foot.appendChild(fright);
     card.appendChild(foot);
     return card;
   }
