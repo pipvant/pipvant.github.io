@@ -839,11 +839,13 @@
     .journal-entry-list{display:grid}.journal-entry-list[hidden],.trade-list-empty[hidden]{display:none}.journal-entry-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:16px;border-bottom:1px solid var(--line);background:var(--surface)}.journal-entry-row:last-child{border-bottom:0}
 #journal .trade-columns{display:none}
 /* PIPVANT trade card — exact Liquid replica, brand tokens (no emoji, real SVG icons) */
-.trade-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;margin:12px 14px;display:flex;flex-direction:column;gap:12px;font-family:"Inter",system-ui,sans-serif;color:var(--text);box-sizing:border-box}
+.trade-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;margin:12px 14px;display:flex;flex-direction:column;gap:12px;font-family:"Inter",system-ui,sans-serif;color:var(--text);box-sizing:border-box;box-shadow:0 4px 20px rgba(0,0,0,.25);transition:border-color .2s ease,background-color .2s ease,box-shadow .2s ease,transform .15s ease}
+.trade-card:hover{border-color:var(--line-strong);background:var(--raised);box-shadow:var(--shadow)}
+.trade-card:active{transform:scale(.998)}
 .tc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
 .tc-symline{display:flex;align-items:center;gap:8px;min-width:0;flex-wrap:wrap}
 .tc-flags{display:inline-flex;align-items:center}
-.tc-flag{width:20px;height:20px;border-radius:50%;object-fit:cover;border:1px solid var(--line);background:var(--sunken)}
+.tc-flag{width:20px;height:20px;border-radius:50%;object-fit:cover;border:1px solid var(--line);background:var(--sunken);box-shadow:0 2px 5px rgba(0,0,0,.3)}
 .tc-rating{font-size:11px;font-weight:700;background:var(--sunken);border:1px solid var(--line);color:var(--muted);border-radius:4px;padding:2px 6px}
 .tc-rating.hot{color:var(--accent);border-color:rgba(91,141,239,.55);background:var(--accent-soft)}
 .tc-rating.low{color:var(--muted)}
@@ -857,18 +859,20 @@
 .tc-pnl.loss{color:var(--danger)}
 .tc-pnl.be{color:var(--muted)}
 .tc-pnl.open{color:var(--muted);font-size:14px;font-weight:600}
-.tc-share-icon{background:transparent;border:none;padding:0;color:inherit;display:inline-flex;align-items:center;cursor:pointer;opacity:.7}
+.tc-share-icon{background:transparent;border:none;padding:0;color:inherit;display:inline-flex;align-items:center;cursor:pointer;opacity:.7;transition:opacity .15s ease}
 .tc-share-icon:hover{opacity:1}
 .tc-r{font-family:"Space Grotesk","Inter",sans-serif;font-size:13px;font-weight:600;color:var(--muted);margin-top:2px}
 .tc-chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.tc-chip{font-size:12px;font-weight:500;padding:4px 10px;background:var(--sunken);border:1px solid var(--line);border-radius:999px;color:var(--text);display:inline-flex;align-items:center;gap:5px}
+.tc-chip{font-size:12px;font-weight:500;padding:4px 10px;background:var(--sunken);border:1px solid var(--line);border-radius:999px;color:var(--text);display:inline-flex;align-items:center;gap:5px;transition:background-color .15s ease,border-color .15s ease,color .15s ease}
+.tc-chip:hover{background:var(--raised);border-color:var(--line-strong);color:var(--text)}
 .tc-chip.ok{color:var(--success);border-color:rgba(16,185,129,.25);background:rgba(16,185,129,.08)}
 .tc-chip.bad{color:var(--danger);border-color:rgba(239,68,68,.25);background:rgba(239,68,68,.08)}
 .tc-dot{width:6px;height:6px;background-color:var(--accent);border-radius:50%;flex:0 0 auto}
 .tc-text-chip{font-size:12px;color:var(--muted);padding:4px}
 .tc-tag{font-size:12px;font-weight:700;color:var(--accent)}
 .tc-exec{font-family:"IBM Plex Mono",monospace;font-size:11.5px;font-weight:500;line-height:1.6;color:var(--muted);background:var(--sunken);border:1px solid var(--line);border-radius:10px;padding:10px 12px;overflow-wrap:anywhere}
-.tc-chart{background:var(--sunken);border:1px solid var(--line);border-radius:12px;min-height:56px;display:grid;place-items:center;color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.08em}
+.tc-chart{background:var(--sunken);border:1px solid var(--line);border-radius:12px;min-height:56px;display:grid;place-items:center;color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.08em;transition:border-color .15s ease,background-color .15s ease}
+.tc-chart:hover{border-color:var(--line-strong);background:var(--raised)}
 .tc-chart a{color:var(--accent);text-decoration:none;font-size:12px;font-weight:600;letter-spacing:0}
 .tc-chart a:hover{text-decoration:underline}
 .tc-note{background:var(--sunken);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:13px;line-height:1.4;color:var(--muted);overflow-wrap:anywhere}
@@ -881,7 +885,8 @@
 .tc-win-badge.be{color:var(--muted)}
 .tc-win-badge.open{color:var(--muted)}
 .tc-actions{display:flex;gap:6px}
-.tc-icon-btn{background:transparent;border:none;color:var(--muted);cursor:pointer;padding:4px;display:inline-flex;align-items:center;justify-content:center;border-radius:4px}
+.tc-icon-btn{background:transparent;border:none;color:var(--muted);cursor:pointer;padding:4px;display:inline-flex;align-items:center;justify-content:center;border-radius:4px;transition:background-color .15s ease,color .15s ease,transform .1s ease}
+.tc-icon-btn:active{transform:scale(.97)}
 .tc-icon-btn:hover{color:var(--text);background:var(--sunken)}
 .tc-icon-btn.danger:hover{color:var(--danger)}
 .tc-icon-btn.on{color:var(--accent);background:var(--accent-soft)}
@@ -896,6 +901,7 @@
   .tc-progress-row{grid-column:1/-1}
   .tc-foot{grid-column:1/-1}
 }
+@media (prefers-reduced-motion:reduce){.trade-card,.tc-chip,.tc-chart,.tc-icon-btn,.tc-share-icon{transition:none}}
 .journal-entry-cell{min-width:0}.journal-entry-cell small{display:block;margin-bottom:5px;color:var(--muted);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em}.journal-entry-cell strong{display:block;color:var(--secondary);font-size:11px;font-weight:500;line-height:1.45;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}.journal-entry-cell.pnl-win strong{color:var(--success)}.journal-entry-cell.pnl-loss strong{color:var(--danger)}.journal-entry-cell.primary strong{color:var(--text);font-weight:700}.journal-entry-cell.note{grid-column:1/-1}
     #journal .journal-fab{display:flex}
     @media (max-width:1023px){#journal .journal-entry-list{padding-bottom:calc(150px + env(safe-area-inset-bottom))}}
