@@ -1,5 +1,77 @@
 [
  {
+  "date": "2026-11-05",
+  "firm": "Funded7",
+  "type": "new_promo",
+  "title_en": "New promo: OCT25 (25% off)",
+  "title_ar": "عرض جديد: OCT25 (25% off)",
+  "detail_en": "New promo code OCT25 detected with 25% off.",
+  "detail_ar": "تم رصد كود الخصم الجديد OCT25."
+ },
+ {
+  "date": "2026-11-05",
+  "firm": "Funded7",
+  "type": "new_promo",
+  "title_en": "New promo: NOV25 (25% off)",
+  "title_ar": "عرض جديد: NOV25 (25% off)",
+  "detail_en": "New promo code NOV25 detected with 25% off.",
+  "detail_ar": "تم رصد كود الخصم الجديد NOV25."
+ },
+ {
+  "date": "2026-11-05",
+  "firm": "FundedNext",
+  "type": "new_promo",
+  "title_en": "New promo: NOVSTR (up to 41%)",
+  "title_ar": "عرض جديد: NOVSTR (up to 41%)",
+  "detail_en": "New promo code NOVSTR detected with up to 41%.",
+  "detail_ar": "تم رصد كود الخصم الجديد NOVSTR."
+ },
+ {
+  "date": "2026-11-05",
+  "firm": "Alpha Capital Group",
+  "type": "new_promo",
+  "title_en": "New promo: FUNDED40 (20% off)",
+  "title_ar": "عرض جديد: FUNDED40 (20% off)",
+  "detail_en": "New promo code FUNDED40 detected with 20% off.",
+  "detail_ar": "تم رصد كود الخصم الجديد FUNDED40."
+ },
+ {
+  "date": "2026-11-05",
+  "firm": "FundedNext",
+  "type": "price_update",
+  "title_en": "FundedNext Futures Rapid Daily 25K price: $160 → $126",
+  "title_ar": "تحديث سعر FundedNext Futures Rapid Daily: $160 → $126",
+  "detail_en": "Price updated from $160 to $126 for the 25K Futures Rapid Daily plan.",
+  "detail_ar": "تم تحديث السعر من $160 إلى $126."
+ },
+ {
+  "date": "2026-11-05",
+  "firm": "FundedNext",
+  "type": "price_update",
+  "title_en": "FundedNext Futures Rapid Daily 100K price: $500 → $484",
+  "title_ar": "تحديث سعر FundedNext Futures Rapid Daily: $500 → $484",
+  "detail_en": "Price updated from $500 to $484 for the 100K Futures Rapid Daily plan.",
+  "detail_ar": "تم تحديث السعر من $500 إلى $484."
+ },
+ {
+  "date": "2026-11-05",
+  "firm": "FundedNext",
+  "type": "price_update",
+  "title_en": "FundedNext Futures Rapid Pro 25K price: $160 → $126",
+  "title_ar": "تحديث سعر FundedNext Futures Rapid Pro: $160 → $126",
+  "detail_en": "Price updated from $160 to $126 for the 25K Futures Rapid Pro plan.",
+  "detail_ar": "تم تحديث السعر من $160 إلى $126."
+ },
+ {
+  "date": "2026-11-05",
+  "firm": "FundedNext",
+  "type": "price_update",
+  "title_en": "FundedNext Futures Rapid Pro 100K price: $500 → $484",
+  "title_ar": "تحديث سعر FundedNext Futures Rapid Pro: $500 → $484",
+  "detail_en": "Price updated from $500 to $484 for the 100K Futures Rapid Pro plan.",
+  "detail_ar": "تم تحديث السعر من $500 إلى $484."
+ },
+ {
   "date": "2026-11-04",
   "firm": "Funded7",
   "type": "new_promo",
