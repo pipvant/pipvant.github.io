@@ -8,13 +8,13 @@
   <meta property="og:title" content="PIPVANT Trader on PIPVANT">
   <meta property="og:description" content="Win rate, profit factor, trades and certificates — a public track record shared from PIPVANT, the free trading journal and prop-firm toolkit.">
   <meta property="og:type" content="profile">
-  <meta property="og:url" content="https://pipvant.netlify.app/p.html">
-  <meta property="og:image" content="https://pipvant.netlify.app/assets/bgs/ninja.webp">
+  <meta property="og:url" content="https://pipvant.vercel.app/p.html">
+  <meta property="og:image" content="https://pipvant.vercel.app/assets/bgs/ninja.webp">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="PIPVANT Trader on PIPVANT">
   <meta name="twitter:description" content="A public trading track record shared from PIPVANT — free journal, risk tools and prop-firm matcher.">
   <meta name="theme-color" content="#0A1628">
-  <link rel="canonical" href="https://pipvant.netlify.app/p.html">
+  <link rel="canonical" href="https://pipvant.vercel.app/p.html">
   <link rel="preconnect" href="https://acpkzavmifjwnskiaret.supabase.co">
   <link rel="icon" type="image/png" href="assets/pipvanta-logo.png">
   <style>
@@ -188,11 +188,11 @@
       $('pAvatar').textContent=name.charAt(0).toUpperCase()||'—';
       document.title=name+t('on_pipv');
       var ogT=document.querySelector('meta[property="og:title"]');if(ogT)ogT.setAttribute('content',name+t('on_pipv'));
-      var ogI=document.querySelector('meta[property="og:image"]');if(ogI)ogI.setAttribute('content','https://pipvant.netlify.app/assets/bgs/'+scene+'.webp');
+      var ogI=document.querySelector('meta[property="og:image"]');if(ogI)ogI.setAttribute('content','https://pipvant.vercel.app/assets/bgs/'+scene+'.webp');
       /* AUD-m48: canonical + og:url follow the shared profile URL once
          the profile is known; the static defaults stay the bare page. */
       if(currentSlug){
-        var profileUrl='https://pipvant.netlify.app/p.html?u='+encodeURIComponent(currentSlug);
+        var profileUrl='https://pipvant.vercel.app/p.html?u='+encodeURIComponent(currentSlug);
         var canon=document.querySelector('link[rel="canonical"]');if(canon)canon.setAttribute('href',profileUrl);
         var ogU=document.querySelector('meta[property="og:url"]');if(ogU)ogU.setAttribute('content',profileUrl);
       }
