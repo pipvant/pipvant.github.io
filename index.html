@@ -876,7 +876,26 @@
 .tc-btn{transition:background-color .15s ease,border-color .15s ease}
 .tc-btn:hover{background:var(--raised);border-color:var(--line-strong)}
 .tc-chart a:hover{text-decoration:underline}
-@media (prefers-reduced-motion:reduce){.trade-card,.tc-btn{transition:none}}.journal-entry-cell{min-width:0}.journal-entry-cell small{display:block;margin-bottom:5px;color:var(--muted);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em}.journal-entry-cell strong{display:block;color:var(--secondary);font-size:11px;font-weight:500;line-height:1.45;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}.journal-entry-cell.pnl-win strong{color:var(--success)}.journal-entry-cell.pnl-loss strong{color:var(--danger)}.journal-entry-cell.primary strong{color:var(--text);font-weight:700}.journal-entry-cell.note{grid-column:1/-1}
+@media (prefers-reduced-motion:reduce){.trade-card,.tc-btn{transition:none}}
+/* Desktop card: SAME card DOM as mobile, real desktop layout via CSS only.
+   tc-top / tc-foot become display:contents so their children join the card
+   grid: identity (symline+meta+chips) | details (exec+note) | P&L+actions.
+   Mobile rendering is untouched — this block only applies >=1024px. */
+@media (min-width:1024px){
+  .trade-card{grid-template-columns:250px minmax(0,1fr) 230px;gap:12px 20px;padding:20px 22px;align-items:start}
+  .trade-card .tc-top{display:contents}
+  .trade-card .tc-symline{grid-column:1;grid-row:1}
+  .trade-card .tc-pnlbox{grid-column:3;grid-row:1}
+  .trade-card .tc-pair{font-size:20px}
+  .trade-card .tc-pnl{font-size:26px}
+  .trade-card .tc-chips{grid-column:1/span 2;grid-row:2}
+  .trade-card .tc-chart{grid-column:3;grid-row:2;min-height:38px}
+  .trade-card .tc-exec{grid-column:2;grid-row:3;font-size:12.5px}
+  .trade-card .tc-note{grid-column:2;grid-row:4;font-size:13.5px}
+  .trade-card .tc-foot{display:contents}
+  .trade-card .tc-meta{grid-column:1;grid-row:3}
+  .trade-card .tc-actions{grid-column:3;grid-row:3/span 2;justify-content:flex-end}
+}.journal-entry-cell{min-width:0}.journal-entry-cell small{display:block;margin-bottom:5px;color:var(--muted);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em}.journal-entry-cell strong{display:block;color:var(--secondary);font-size:11px;font-weight:500;line-height:1.45;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}.journal-entry-cell.pnl-win strong{color:var(--success)}.journal-entry-cell.pnl-loss strong{color:var(--danger)}.journal-entry-cell.primary strong{color:var(--text);font-weight:700}.journal-entry-cell.note{grid-column:1/-1}
     #journal .journal-fab{display:flex}
     @media (max-width:1023px){#journal .journal-entry-list{padding-bottom:calc(150px + env(safe-area-inset-bottom))}}
     @media (min-width:640px){.journal-kpis{grid-template-columns:repeat(2,1fr)}.calendar-main{padding:18px}.day-cell{min-height:78px}.facet-panel.open{grid-template-columns:repeat(3,1fr)}.trade-sheet{align-items:center;padding:24px}.trade-form{max-width:680px;margin:0 auto;border-radius:20px;padding-bottom:22px}}
