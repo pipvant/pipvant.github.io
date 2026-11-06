@@ -2355,7 +2355,7 @@ body.priv #journal .net,body.priv #journal .pv b,body.priv #journal .day .d,body
 #journal .logbtn kbd{background:#00000022}
 #journal .srch{margin-top:auto;padding:12px 14px;border-radius:14px;background:var(--sur);color:var(--mut);display:flex;justify-content:space-between;font-size:13px}
 @media (min-width:640px){#journal .app,#journal .ins{max-width:640px}}
-@media (min-width:960px){
+@media (min-width:1200px){
 #journal .shell{display:grid;grid-template-columns:232px minmax(0,1fr) 340px;gap:36px;max-width:1440px;margin:0 auto;padding:0 28px}
 #journal nav{display:none}
 #journal .side{display:flex;flex-direction:column;gap:6px;position:sticky;top:0;height:100vh;padding:28px 0}
@@ -2370,7 +2370,7 @@ body.priv #journal .net,body.priv #journal .pv b,body.priv #journal .day .d,body
 #journal .toast{bottom:32px}
 #journal .ov{align-items:center}#journal .sheet{border-radius:30px;max-width:520px;max-height:86vh}#journal .sheet:before{display:none}
 }
-@media (min-width:1024px){body:has(#journal.active) > .app{padding-left:0}}
+@media (min-width:1200px){body:has(#journal.active) > .app{padding-left:0}}
 #journal .scene{position:absolute;inset:0;z-index:-2;overflow:hidden;border-radius:inherit;pointer-events:none;opacity:.55}
 #journal .scene::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,#0b163300 30%,var(--ink) 100%)}
 #journal .scene svg{position:absolute;left:-6%;top:-6%;width:112%;height:112%}#journal .scene g{transition:transform .25s ease-out}
@@ -2392,12 +2392,15 @@ body.priv #journal .net,body.priv #journal .pv b,body.priv #journal .day .d,body
 #journal .jc-card.jc-sweep::after{content:'';position:absolute;top:0;left:-60%;width:38%;height:100%;background:linear-gradient(100deg,transparent,#ffffff26,transparent);transform:skewX(-18deg);animation:j2-shine 1.5s .8s ease-out both;pointer-events:none}
 #journal .jc-card .jc-bar i{transform-origin:left;animation:j2-grow 1s .5s cubic-bezier(.2,.8,.2,1) both}
 #journal .jc-card{touch-action:pan-y}
-@media (min-width:960px){#journal #list.cards .jc-card{margin:0;max-width:none;width:100%}}
+@media (min-width:1200px){#journal #list.cards .jc-card{margin:0;max-width:none;width:100%}}
 /* Journal page owns its desktop chrome: hide the site's global desktop rail
-   while Journal is active (the design has its own sidebar). The mobile bottom
+   only on wide screens (>=1200px, where the design's own 3-column sidebar
+   takes over). Below that the rail stays (tablet navigation) and the Journal
+   uses the single-column mobile layout, so a ~980px viewport (phone in
+   desktop-site mode) never gets the cramped 3-column. The mobile bottom
    nav stays the site's own (restored 2026-11-06 at the user's order — the
    design's bottom nav was removed). */
-body:has(#journal.active) .desktop-rail{display:none}
+@media (min-width:1200px){body:has(#journal.active) .desktop-rail{display:none}}
 @media (min-width:1024px){#journal{margin:0 -28px}}
 
   </style>
