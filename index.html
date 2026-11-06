@@ -383,6 +383,7 @@
     .chart-empty p,.table-empty p{margin:0;color:var(--secondary);font-size:13px;line-height:1.55}
                     .journal-fab{position:fixed;right:16px;bottom:calc(82px + env(safe-area-inset-bottom));z-index:28;min-height:48px;padding:0 18px;border:0;border-radius:24px;background:var(--accent-strong);color:#fff;font-weight:700;box-shadow:0 14px 32px rgba(0,0,0,.38);display:flex;align-items:center;gap:9px;cursor:pointer;transition:transform var(--micro) var(--ease-move)}
     .journal-fab:active{transform:scale(.97)}
+    .journal-fab{transition:transform .28s ease,opacity .28s ease}.journal-fab.fab-hide{transform:translateY(140%);opacity:0;pointer-events:none}
     .trade-sheet{position:fixed;inset:0;z-index:60;display:none;align-items:flex-end;background:rgba(2,8,17,.74)}
     .trade-sheet.open{display:flex}
     .trade-form{width:100%;max-height:min(88svh,760px);overflow:auto;background:var(--raised);border:1px solid var(--line-strong);border-radius:20px 20px 0 0;padding:10px 18px calc(22px + env(safe-area-inset-bottom));box-shadow:0 -18px 60px rgba(2,8,17,.5);animation:sheetIn var(--sheet) var(--ease-enter)}
@@ -843,7 +844,7 @@
    Classes are prefixed (jc-) and the palette is scoped to the card, so the design
    cannot clash with the site tokens. The design is static (no hover/press rules
    in the file) — none are added. */
-.jc-card{--jc-bg:#050a1a;--jc-c1:#17306a;--jc-c2:#0a1633;--jc-well:#050c22;--jc-chip:#12254f;--jc-btn:#0a1530;--jc-line:#1c2f5c;--jc-text:#eaf1ff;--jc-muted:#7f92b8;--jc-cyan:#17b8e6;--jc-green:#22c58b;--jc-gold:#e8c14a;--jc-red:#ef4444;background:linear-gradient(180deg,var(--jc-c1),var(--jc-c2) 70%);border-radius:28px;padding:16px;box-shadow:0 20px 50px -20px #000a,inset 0 1px 0 #ffffff14;max-width:420px;width:calc(100% - 28px);margin:12px auto;color:var(--jc-text);font-family:"Space Grotesk",system-ui,sans-serif;box-sizing:border-box;cursor:pointer}
+.jc-card{--jc-bg:#050a1a;--jc-c1:#17306a;--jc-c2:#0a1633;--jc-well:#050c22;--jc-chip:#12254f;--jc-btn:#0a1530;--jc-line:#1c2f5c;--jc-text:#eaf1ff;--jc-muted:#a9badb;--jc-cyan:#17b8e6;--jc-green:#22c58b;--jc-gold:#e8c14a;--jc-red:#ef4444;background:linear-gradient(180deg,var(--jc-c1),var(--jc-c2) 70%);border-radius:28px;padding:16px;box-shadow:0 20px 50px -20px #000a,inset 0 1px 0 #ffffff14;max-width:420px;width:calc(100% - 28px);margin:12px auto;color:var(--jc-text);font-family:"Space Grotesk",system-ui,sans-serif;box-sizing:border-box;cursor:pointer}
 @media (prefers-color-scheme:light){.jc-card{--jc-bg:#eef3fb;--jc-c1:#ffffff;--jc-c2:#e6eefb;--jc-well:#dbe6f7;--jc-chip:#d3e0f5;--jc-btn:#ffffff;--jc-line:#c5d4ee;--jc-text:#0b1630;--jc-muted:#5b6d90;--jc-green:#0f9f6e}}
 .jc-card *{box-sizing:border-box}
 .jc-top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:8px}
@@ -860,13 +861,13 @@
 .jc-pnl b{display:block;font-size:18px;color:var(--jc-green)}
 .jc-pnl.loss b{color:var(--jc-red)}
 .jc-pnl.open b{color:var(--jc-muted);font-size:14px}
-.jc-pnl span{font-size:16px;font-weight:700}
+.jc-pnl span{font-size:16px;font-weight:700;color:var(--jc-text)}
 .jc-card svg.jc-i{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .jc-tags{display:flex;align-items:center;gap:8px;margin:16px 0 12px;flex-wrap:wrap}
-.jc-chip{display:inline-flex;align-items:center;gap:6px;background:var(--jc-chip);border-radius:11px;padding:8px 12px;font-size:15px}
+.jc-chip{display:inline-flex;align-items:center;gap:6px;background:var(--jc-chip);border-radius:11px;padding:8px 12px;font-size:15px;color:var(--jc-text)}
 .jc-chip.sm{font-size:14px;padding:7px 11px}
 .jc-dot{width:8px;height:8px;border-radius:50%;background:var(--jc-cyan);flex:0 0 auto}
-.jc-plain{color:var(--jc-muted);font-size:15px}
+.jc-plain{color:var(--jc-text);font-size:15px}
 .jc-well{background:var(--jc-well);border-radius:14px}
 .jc-chart{height:72px;display:grid;place-items:center;color:var(--jc-muted);letter-spacing:2px;font-size:14px;margin-bottom:10px}
 .jc-chart.has-img{padding:0;overflow:hidden;position:relative;display:block}
@@ -877,11 +878,16 @@
 .jc-chart .jc-chart-link:hover{text-decoration:underline}
 .jc-note{padding:16px;color:var(--jc-muted);font-size:15px;margin-bottom:10px}
 .jc-meta{margin-top:16px;padding-top:14px;border-top:1px solid var(--jc-line);display:flex;gap:12px;color:var(--jc-muted);font-size:14px}
-.jc-bot{display:flex;align-items:center;gap:10px;margin-top:12px}
+.jc-exec{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--jc-well);border:1px solid var(--jc-line)}
+.jc-ex{display:inline-flex;align-items:baseline;gap:5px;font-size:13px;color:var(--jc-text);white-space:nowrap}
+.jc-ex i{font-style:normal;font-size:11px;font-weight:700;color:var(--jc-muted);text-transform:uppercase;letter-spacing:.05em}
+.jc-ex.dir-long{color:var(--jc-green);font-weight:700}
+.jc-ex.dir-short{color:var(--jc-red);font-weight:700}
+.jc-bot{display:flex;align-items:center;gap:8px;margin-top:12px;flex-wrap:wrap}
 .jc-bar{flex:1;height:7px;border-radius:99px;background:var(--jc-chip);overflow:hidden;min-width:60px}
 .jc-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--jc-cyan),var(--jc-gold));border-radius:99px}
-.jc-bot b{font-size:14px;white-space:nowrap}
-.jc-ai{background:var(--jc-chip);border:0;border-radius:9px;padding:7px 10px;color:var(--jc-muted);font-size:14px;cursor:pointer;font-family:inherit;white-space:nowrap}
+.jc-bot b{font-size:14px;white-space:nowrap;color:var(--jc-text)}
+.jc-ai{background:var(--jc-chip);border:0;border-radius:9px;padding:7px 10px;color:var(--jc-text);font-size:14px;cursor:pointer;font-family:inherit;white-space:nowrap}
 .jc-ai.on{color:var(--jc-green)}
 .jc-win{color:var(--jc-green);font-size:14px;white-space:nowrap}
 .jc-win.loss{color:var(--jc-red)}
@@ -2249,9 +2255,9 @@
 #journal .meter{display:flex;align-items:center;gap:12px;margin-bottom:14px}
 #journal .ticks{display:flex;gap:3px;flex:none}#journal .ticks i{width:11px;height:6px;border-radius:3px;background:#ffffff1c}#journal .ticks i.on{background:var(--gold)}
 #journal .meter p{margin:0;font-size:13px;color:var(--mut);line-height:1.35}
-#journal .rail{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -18px;padding:0 18px 4px;scrollbar-width:none}
+#journal .rail{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0;padding:0;overflow:visible}
 #journal .rail::-webkit-scrollbar{display:none}
-#journal .tile{flex:0 0 150px;scroll-snap-align:start;background:var(--sur);border-radius:22px;padding:15px}
+#journal .tile{flex:none;scroll-snap-align:start;background:var(--sur);border-radius:22px;padding:15px}
 #journal .tile small{color:var(--mut);font-size:12px}#journal .tile .big{font-size:28px;font-weight:700;margin:8px 0 2px;letter-spacing:-.5px}#journal .tile p{margin:0;font-size:12px;color:var(--mut)}
 #journal .tile.dim .big{opacity:.4}
 #journal .lock{background:none;border:1.5px dashed var(--line);display:flex;flex-direction:column;justify-content:center}
@@ -2293,6 +2299,7 @@
 #journal .rr{margin:12px 0;padding:12px 14px;border-radius:14px;background:var(--sur);font-size:13px;color:var(--mut)}#journal .rr.bad{color:var(--red)}
 #journal .more{color:var(--cyan);padding:12px 0;font-size:14px}#journal .mx{display:none}#journal .mx.show{display:block}
 #journal .mc{display:flex;flex-wrap:wrap;gap:6px}#journal .mc button{border-radius:99px;background:var(--sur);padding:8px 12px;font-size:12px;border:1px solid var(--line)}#journal .mc button.on{border-color:var(--red);color:var(--red)}
+#journal .sheet-head{display:flex;align-items:center;justify-content:space-between;gap:12px}#journal .sheet-head h3{margin:0}#journal .sheet-x{flex:0 0 auto;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--sur);color:var(--text);font-size:15px;cursor:pointer;display:grid;place-items:center}
 #journal .save{width:100%;margin-top:14px;border-radius:18px;padding:16px;font-weight:700;font-size:16px;color:#201700;background:linear-gradient(160deg,#f6dc82,#d2a52c)}#journal .save:disabled{opacity:.35}
 #journal .toast{position:fixed;left:50%;bottom:calc(100px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--text);color:var(--ink);padding:10px 16px;border-radius:99px;font-size:13px;font-weight:500;z-index:50;display:none}#journal .toast.show{display:block}
 #journal .hero{overflow:hidden;isolation:isolate}
@@ -2317,7 +2324,7 @@
 #journal .vt button.on{background:var(--text);color:var(--ink)}
 @media (prefers-reduced-motion:reduce){#journal *,#journal *::before,#journal *::after{animation:none!important;transition:none!important}#journal .chart.fx .dot{opacity:1!important}}
 #journal .shell{display:block}#journal .side{display:none}
-#journal .app{padding-bottom:12px}
+#journal .app{padding-bottom:calc(150px + env(safe-area-inset-bottom,0px))}
 #journal .ins{max-width:480px;margin:0 auto;padding:6px 18px calc(130px + env(safe-area-inset-bottom,0px))}
 #journal .ic{background:var(--sur);border-radius:24px;padding:18px;margin-bottom:12px}
 #journal .ic h3{margin:0 0 12px;font:700 16px 'Bricolage Grotesque'}
@@ -2396,7 +2403,7 @@ body.priv #journal .net,body.priv #journal .pv b,body.priv #journal .day .d,body
 /* First card (user-chosen design) — recolored with this page's palette +
    effects, per his order. Overrides the v6 card's own tokens; the layout
    (jc- classes) is untouched. */
-#journal .jc-card{--jc-c1:#1b3d8a;--jc-c2:#0d1b40;--jc-well:#0000003d;--jc-chip:#0f1d40;--jc-btn:#0b1633;--jc-line:#ffffff14;--jc-muted:#7f93bb;--jc-cyan:#35bff0;--jc-green:#2fd39a;--jc-gold:#ecc652;--jc-red:#ff5d73;background:linear-gradient(165deg,#1b3d8acc,#0d1b40 55%,#0a1432);border:1px solid #ffffff1c;box-shadow:0 22px 50px -26px #000;position:relative;overflow:hidden;isolation:isolate;width:100%;margin:0 auto 14px}
+#journal .jc-card{--jc-text:#eaf1ff;--jc-c1:#1b3d8a;--jc-c2:#0d1b40;--jc-well:#0000003d;--jc-chip:#0f1d40;--jc-btn:#0b1633;--jc-line:#ffffff14;--jc-muted:#a9badb;--jc-cyan:#35bff0;--jc-green:#2fd39a;--jc-gold:#ecc652;--jc-red:#ff5d73;background:linear-gradient(165deg,#1b3d8acc,#0d1b40 55%,#0a1432);border:1px solid #ffffff1c;box-shadow:0 22px 50px -26px #000;position:relative;overflow:hidden;isolation:isolate;width:100%;margin:0 auto 14px}
 @media (prefers-color-scheme:light){html:not([data-theme="dark"]) #journal .jc-card{--jc-c1:#ffffff;--jc-c2:#dde8fb;--jc-well:#e6edfa;--jc-chip:#e6edfa;--jc-btn:#ffffff;--jc-line:#0b163322;--jc-text:#0b1633;--jc-muted:#5a6c93;--jc-cyan:#0b86b8;--jc-green:#0d9d6c;--jc-gold:#a67c00;--jc-red:#d23a52;background:linear-gradient(165deg,#fff,#dde8fb)}}
 #journal .jc-card::before{content:'';position:absolute;inset:0;z-index:-1;background:radial-gradient(240px circle at var(--jc-mx,75%) var(--jc-my,0%),#35bff038,transparent 70%)}
 #journal .jc-card.jc-sweep::after{content:'';position:absolute;top:0;left:-60%;width:38%;height:100%;background:linear-gradient(100deg,transparent,#ffffff26,transparent);transform:skewX(-18deg);animation:j2-shine 1.5s .8s ease-out both;pointer-events:none}
@@ -4230,7 +4237,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
 <div class="app">
 <section class="hero"><div class="scene" id="scene"></div>
  <div class="bar"><span class="ttl">Journal</span><button class="pill" id="acc" type="button">All accounts ▾</button>
-  <button class="ib" id="eye" type="button" aria-label="Hide amounts"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="ib" id="mb" type="button" aria-label="More">⋯</button><div class="av">S</div>
+  <button class="ib" id="eye" type="button" aria-label="Hide amounts"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button><button class="ib" id="mb" type="button" aria-label="More">⋯</button><div class="av" title="Sifeddine beniaich — View profile" role="button" tabindex="0" aria-label="View profile" onclick="if(typeof showScreen==='function')showScreen('profile');">S</div>
   <div class="menu" id="menu"><button data-act="share" type="button">Share stats</button><button data-act="import" type="button">Import CSV</button><button data-act="export" type="button">Export CSV</button><button data-sc="ninja" type="button">Scene: Ninja Night</button><button data-sc="aurora" type="button">Scene: Aurora</button><button data-sc="gold" type="button">Scene: Gold ribbon</button><button data-sc="off" type="button">Scene: Off</button></div></div>
  <div class="lbl">Net P&amp;L</div><div class="net" id="net"></div><div class="sub" id="cnt"></div><div class="gd" id="gd"></div>
  <div class="chart" id="chart"></div>
@@ -4254,13 +4261,14 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
 
 <div class="ov cpo" id="cpo"><div class="cp"><input id="cpi" placeholder="Type a command or a trade" autocomplete="off"><div id="cpl"></div></div></div>
 <div class="ov" id="ov"><div class="sheet">
- <h3>Log a trade</h3>
+ <div class="sheet-head"><h3>Log a trade</h3><button class="sheet-x" id="sx" type="button" aria-label="Close">✕</button></div>
  <div class="f">
   <div><label>Pair</label><input id="fs" value="US100"></div>
   <div><label>Direction</label><div class="t2" id="fd"><button class="on" data-v="Long" type="button">Long</button><button data-v="Short" type="button">Short</button></div></div>
   <div><label>Entry</label><input id="fe" inputmode="decimal" placeholder="30000"></div>
   <div><label>Stop</label><input id="fst" inputmode="decimal" placeholder="29900"></div>
   <div><label>Target</label><input id="ft" inputmode="decimal" placeholder="31000"></div>
+  <div><label>Exit</label><input id="fx" inputmode="decimal" placeholder="30000"></div>
   <div><label>Size</label><input id="fz" inputmode="decimal" value="1"></div>
  </div>
  <div class="rr" id="rr">Enter entry, stop and target.</div>
@@ -14817,12 +14825,13 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
   }
   function tcFmtPnl(n){
     var v=Number(n);if(!isFinite(v))return '—';
-    return (v>0?'+':(v<0?'−':''))+tcCurSym()+Math.abs(v).toFixed(2);
+    var _a=Math.abs(v).toFixed(2).split('.');
+    return (v>0?'+':(v<0?'−':''))+tcCurSym()+(+_a[0]).toLocaleString('en-US')+'.'+_a[1];
   }
   function tcFmtR(v){
     if(v==null||v==='')return '—';
-    var n=Number(v);if(!isFinite(n))return String(v);
-    return (n>0?'+':(n<0?'−':''))+Math.abs(n).toFixed(1)+'R';
+    var n=parseFloat(v);if(!isFinite(n))return String(v);
+    return (n>0?'+':(n<0?'−':''))+Math.abs(n).toFixed(2)+'R';
   }
   function tcResultOf(entry){
     var ar=currentLanguage==='ar';
@@ -14994,6 +15003,15 @@ function tcTradeImagePick(file){
     if(entry.session){var c2=tcEl('span','jc-chip');c2.innerHTML='<svg class="jc-i" viewBox="0 0 24 24" style="width:15px;height:15px"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';c2.appendChild(document.createTextNode(entry.session));tags.appendChild(c2);}
     if(entry.setup)tags.appendChild(tcEl('span','jc-plain',entry.setup));
     if(tags.childNodes.length)card.appendChild(tags);
+    /* Exec row: direction + entry/stop/target/exit/size (real data, was hidden) */
+    var exec=tcEl('div','jc-exec');
+    var dirTxt=String(entry.direction||'').toLowerCase()==='short'?'Short':'Long';
+    exec.appendChild(tcEl('span','jc-ex dir-'+dirTxt.toLowerCase(),dirTxt));
+    var _ex=function(lbl,val){if(val==null||val==='')return;var it=tcEl('span','jc-ex');it.appendChild(tcEl('i',null,lbl));it.appendChild(document.createTextNode(String(val)));exec.appendChild(it);};
+    _ex('E',entry.entry);_ex('S',entry.stop);_ex('T',entry.target);
+    if(entry.closed)_ex('X',entry.exitPrice);
+    _ex('Qty',entry.size);
+    if(exec.childNodes.length)card.appendChild(exec);
     /* Chart well: uploaded picture first, then chart link, else NO CHART */
     var chart=document.createElement('div');chart.className='jc-well jc-chart';
     if(entry.imageUrl&&/^https?:\/\//i.test(entry.imageUrl)){
@@ -15070,7 +15088,7 @@ function tcTradeImagePick(file){
    Adapts the user-chosen design to the site's real data. All numbers come
    from sessionJournalEntries (closed trades only for stats); nothing is
    invented. The first card (buildTradeCard, v6) is used in Cards view. */
-var j2Days=7,j2Sel=null,j2View='cards',j2Fx=true,j2Shown=0,j2S=null,j2CmI=0,j2CmL=[],j2Armed=null,j2Open=null,j2Dir='Long',j2Res='Win',j2Mk=new Set(),j2Rt=new Set(),j2UpId=0,j2LastDel=null,j2Scene='ninja';
+var j2Days=7,j2Sel=null,j2View='cards',j2Fx=true,j2Shown=0,j2S=null,j2CmI=0,j2CmL=[],j2Armed=null,j2Open=null,j2Dir='Long',j2Res='Win',j2Mk=new Set(),j2Rt=new Set(),j2UpId=0,j2ExitManual=false,j2LastDel=null,j2Scene='ninja';
 var j2G={on:true,size:50000,dl:5,dd:10,pt:10};
 var j2MIN=10;
 function j2Pl(n,w){return n+' '+w+(n===1?'':'s');}
@@ -15086,7 +15104,7 @@ function j2Map(e){
   if(!mk.length&&e.tag&&known.indexOf(e.tag)>=0)mk=[e.tag];
   var r=parseFloat(e.rMultiple);if(!isFinite(r))r=0;
   var p=Number(e.pnl);if(!isFinite(p))p=0;
-  return {id:e._localId||e._id||e._dbId||e.timestamp,sym:String(e.pair||'—').toUpperCase(),dir:String(e.direction||'Long'),e:Number(e.entry)||0,s:Number(e.stop)||0,t:Number(e.target)||0,x:(e.exitPrice!=null&&e.exitPrice!==''?Number(e.exitPrice):null),res:j2ResOf(e),pnl:e.closed?p:0,r:r,se:e.session||'',su:e.setup||'',mk:mk,note:e.notes||'',date:j2Iso(d),time:String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'),mood:e.mood||'',rit:(e.ritual!=null?Number(e.ritual):null),img:e.imageUrl||'',candles:Array.isArray(e.candles)?e.candles:null,entry:e};
+  return {id:e._localId||e._id||e._dbId||e.timestamp,sym:String(e.pair||'—').toUpperCase(),dir:(function(){var _d=String(e.direction||'Long').toLowerCase();return _d==='short'?'Short':'Long';})(),e:Number(e.entry)||0,s:Number(e.stop)||0,t:Number(e.target)||0,x:(e.exitPrice!=null&&e.exitPrice!==''?Number(e.exitPrice):null),res:j2ResOf(e),pnl:e.closed?p:0,r:r,se:e.session||'',su:e.setup||'',mk:mk,note:e.notes||'',date:j2Iso(d),time:String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0'),mood:e.mood||'',rit:(e.ritual!=null?Number(e.ritual):null),img:e.imageUrl||'',candles:Array.isArray(e.candles)?e.candles:null,entry:e};
 }
 function j2AllTrades(){
   var list=[];
@@ -15114,8 +15132,9 @@ function j2GuardUI(){
   var el=document.getElementById('gd');if(!el)return;
   el.style.display=j2G.on?'flex':'none';if(!j2G.on)return;
   var g=j2Guard();
-  var m=function(l,v,gold){return '<span class="gm"><i style="width:'+Math.min(100,v)+'%;background:'+(gold?'var(--gold)':v>70?'var(--red)':'var(--cyan)')+'"></i><b>'+l+' '+Math.round(v)+'%</b></span>';};
-  el.innerHTML=m('Target',g.tp,1)+m('Daily loss',g.dl_)+m('Max drawdown',g.dd_);
+  var fmt$=function(x){return '$'+Math.round(x).toLocaleString('en-US');};
+  var m=function(l,v,gold,ti){return '<span class="gm"'+(ti?' title="'+ti+'"':'')+'><i style="width:'+Math.min(100,v)+'%;background:'+(gold?'var(--gold)':v>70?'var(--red)':'var(--cyan)')+'"></i><b>'+l+' '+Math.round(v)+'%</b></span>';};
+  el.innerHTML=m('Target',g.tp,1,'Profit target: '+fmt$(g.tp/100*g.pt)+' of '+fmt$(g.pt))+m('Daily loss',g.dl_,0,'Today’s loss vs the daily limit')+m('Max drawdown',g.dd_,0,'Drawdown vs the max limit of '+fmt$(g.dd));
 }
 function j2Tween(v){
   var el=document.getElementById('net');if(!el)return;
@@ -15128,10 +15147,10 @@ function j2Tween(v){
 }
 function j2Toast(m){var t=document.getElementById('to');if(!t)return;t.textContent=m;t.classList.add('show');clearTimeout(j2Toast.h);j2Toast.h=setTimeout(function(){t.classList.remove('show');},1600);}
 function j2Row(t){
-  var o=j2Open===t.id;
+  var o=String(j2Open)===String(t.id);
   var resCls=t.res==='Open'?'BE':t.res;
   var pnlTxt=t.res==='Open'?'—':j2Money(t.pnl);
-  var rTxt=t.res==='Open'?'—':(t.r>=0?'+':'')+t.r.toFixed(1)+'R';
+  var rTxt=t.res==='Open'?'—':(t.r>=0?'+':'')+t.r.toFixed(2)+'R';
   return '<div class="row '+resCls+(o?' open':'')+'"><button class="rh" data-o="'+t.id+'" type="button" aria-expanded="'+o+'"><div class="m"><b>'+t.sym+'</b><span class="dr '+t.dir+'">'+(t.dir==='Long'?'↗':'↘')+' '+t.dir+'</span><div class="s">'+t.se+(t.su?' · '+t.su:'')+' · '+t.time+'</div></div><div class="pv"><b class="d '+(t.pnl>=0?'pos':'neg')+'">'+pnlTxt+'</b><span>'+rTxt+'</span></div></button>'+
   '<div class="xp"><div class="xi"><div class="lv"><div><small>Entry</small><b>'+t.e+'</b></div><div><small>Stop</small><b class="neg">'+t.s+'</b></div><div><small>Target</small><b class="pos">'+t.t+'</b></div><div><small>Exit</small><b>'+(t.x!=null?t.x:'–')+'</b></div></div>'+
   (t.mk.length?'<div class="tg">'+t.mk.map(function(m){return '<span style="color:var(--red)">'+m+'</span>';}).join('')+'</div>':'')+(t.note?'<p class="nt">'+t.note+'</p>':'')+
@@ -15244,7 +15263,7 @@ function j2Insights(){
     return '<div class="er"><small>'+sn+'</small>'+[1,2,3,4,5].map(function(w){
       var g=all.filter(function(t){return t.se===sn&&new Date(t.date+'T12:00:00').getDay()===w&&t.res!=='Open';}),n=g.length,ar=n?g.reduce(function(x,t){return x+t.r;},0)/n:0;
       var bg=n?'background:'+(ar>=0?'rgba(47,211,154,':'rgba(255,93,115,')+Math.min(.85,.2+Math.abs(ar)/4).toFixed(2)+')':'';
-      return '<i class="ec'+(n&&n<3?' lo':'')+'" style="'+bg+'" title="'+n+(n===1?' trade':' trades')+(n?', avg '+ar.toFixed(1)+'R':'')+'">'+(n||'')+'</i>';
+      return '<i class="ec'+(n&&n<3?' lo':'')+'" style="'+bg+'" title="'+n+(n===1?' trade':' trades')+(n?', avg '+ar.toFixed(2)+'R':'')+'">'+(n||'')+'</i>';
     }).join('')+'</div>';
   }).join('')+'</div>'+(lk?'<div class="elock">Unlocks at 30 trades<br>'+all.filter(function(t){return t.res!=='Open';}).length+' of 30 logged</div>':'<p class="sub" style="margin:8px 0 0">Faded cells have fewer than 3 trades.</p>')+'</div>';
   var mo={};all.forEach(function(t){if(t.mood){(mo[t.mood]=mo[t.mood]||[]).push(t);}});
@@ -15258,10 +15277,11 @@ function j2Insights(){
 }
 function j2Calc(){
   var e=+document.getElementById('fe').value,s=+document.getElementById('fst').value,t=+document.getElementById('ft').value,z=+document.getElementById('fz').value||1,r=document.getElementById('rr'),ok=e&&s&&t&&(j2Dir==='Long'?s<e&&t>e:s>e&&t<e);
+  var fx=document.getElementById('fx');if(fx&&!j2ExitManual&&e&&s&&t){fx.value=j2Res==='Win'?t:j2Res==='Loss'?s:e;}
   var sv=document.getElementById('sv');if(sv)sv.disabled=!ok;
   if(!r)return;
   r.className='rr'+(e&&s&&t&&!ok?' bad':'');
-  r.textContent=ok?'Risk '+Math.abs(e-s)+' pts, reward '+Math.abs(t-e)+' pts. That is '+(Math.abs(t-e)/Math.abs(e-s)).toFixed(1)+'R with $'+(Math.abs(e-s)*z).toFixed(0)+' at risk.':(e&&s&&t?'For a '+j2Dir+', the stop must be '+(j2Dir==='Long'?'below entry and the target above.':'above entry and the target below.'):'Enter entry, stop and target.');
+  r.textContent=ok?'Risk '+Math.abs(e-s)+' pts, reward '+Math.abs(t-e)+' pts. That is '+(Math.abs(t-e)/Math.abs(e-s)).toFixed(2)+'R with $'+(Math.abs(e-s)*z).toFixed(0)+' at risk.':(e&&s&&t?'For a '+j2Dir+', the stop must be '+(j2Dir==='Long'?'below entry and the target above.':'above entry and the target below.'):'Enter entry, stop and target.');
 }
 function j2ParseC(){
   var fc=document.getElementById('fc');if(!fc)return null;
@@ -15275,7 +15295,7 @@ function j2OpenSheet(entry){
   if(entry){
     var t=j2Map(entry);
     set('fs',t.sym);
-    set('fe',t.e);set('fst',t.s);set('ft',t.t);set('fz',entry.size||1);
+    set('fe',t.e);set('fst',t.s);set('ft',t.t);set('fz',entry.size||1);set('fx',t.x!=null?String(t.x):'');j2ExitManual=(t.x!=null&&t.x!==''&&((t.res==='Win'&&Number(t.x)!==t.t)||(t.res==='Loss'&&Number(t.x)!==t.s)||(t.res==='BE'&&Number(t.x)!==t.e)));
     j2Dir=t.dir;j2Res=t.res==='Open'?'Win':t.res;
     set('fse',t.se||'New York');set('fsu',t.su);
     set('frt',entry.rating||'');set('fmo',t.mood||'');
@@ -15286,7 +15306,7 @@ function j2OpenSheet(entry){
     document.querySelectorAll('#journal #fk button').forEach(function(b){b.classList.toggle('on',j2Rt.has(b.textContent));});
   }else{
     j2Dir='Long';j2Res='Win';j2Mk=new Set();j2Rt=new Set();
-    set('fs','US100');set('fe','');set('fst','');set('ft','');set('fz','1');set('fsu','');set('frt','');set('fmo','');set('fc','');set('fn','');
+    set('fs','US100');set('fe','');set('fst','');set('ft','');set('fz','1');set('fx','');j2ExitManual=false;set('fsu','');set('frt','');set('fmo','');set('fc','');set('fn','');
     var fse=document.getElementById('fse');if(fse)fse.value='New York';
     document.querySelectorAll('#journal #fm button').forEach(function(b){b.classList.remove('on');});
     document.querySelectorAll('#journal #fk button').forEach(function(b){b.classList.remove('on');});
@@ -15307,10 +15327,13 @@ function j2CloseSheet(){
 }
 function j2Save(){
   var en=+document.getElementById('fe').value,s=+document.getElementById('fst').value,t=+document.getElementById('ft').value,z=+document.getElementById('fz').value||1;
-  var rk=Math.abs(en-s)*z,rr=Math.abs(t-en)/Math.abs(en-s),r=j2Res==='Win'?rr:j2Res==='Loss'?-1:0;
+  var rk=Math.abs(en-s)*z,rr=Math.abs(t-en)/Math.abs(en-s);
   var sym=(document.getElementById('fs').value||'US100').toUpperCase();
-  var exit=j2Res==='Win'?t:j2Res==='Loss'?s:en;
-  var resVal=j2Res==='Win'?'win':j2Res==='Loss'?'loss':'breakeven';
+  var fxEl=document.getElementById('fx'),fxRaw=fxEl?fxEl.value.trim():'';
+  var exit=(fxRaw!==''&&isFinite(+fxRaw))?+fxRaw:(j2Res==='Win'?t:j2Res==='Loss'?s:en);
+  var rRaw=(j2Dir==='Long'?(exit-en)/(en-s):(en-exit)/(s-en));
+  var r=isFinite(rRaw)?rRaw:(j2Res==='Win'?rr:j2Res==='Loss'?-1:0);
+  var resVal=(fxRaw!==''&&isFinite(+fxRaw))?(r>0?'win':r<0?'loss':'breakeven'):(j2Res==='Win'?'win':j2Res==='Loss'?'loss':'breakeven');
   var editingId=window.editingTradeId;
   var base=editingId?(window.sessionJournalEntries||[]).find(function(e2){var eid=e2._localId||e2._id||e2._dbId||e2.timestamp;return eid===editingId&&e2.type==='trade';}):null;
   var tradeEntry={type:'trade',timestamp:base?base.timestamp:Date.now(),account_id:base?base.account_id:((typeof isAccountUuid==='function'&&isAccountUuid(typeof selectedAccountId!=='undefined'?selectedAccountId:''))?selectedAccountId:null),pair:sym,direction:j2Dir,entry:String(en),stop:String(s),target:String(t),size:String(z),rMultiple:(r>=0?'+':'')+r.toFixed(2)+'R',setup:(document.getElementById('fsu').value||'').trim(),tag:base?base.tag||'':'',rating:(document.getElementById('frt').value||''),notes:(document.getElementById('fn').value||'').trim(),closed:true,exitPrice:String(exit),pnl:Math.round(r*rk*100)/100,result:resVal};
@@ -15361,7 +15384,7 @@ function j2CpRender(){
 }
 function j2CpRun(i){var c=j2CmL[i];if(!c)return;var cpo=document.getElementById('cpo');if(cpo)cpo.classList.remove('show');c.f();}
 var j2SCN={
-  ninja:'<svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a1a4a"/><stop offset="1" stop-color="#2a4fb0"/></linearGradient></defs><rect width="400" height="300" fill="url(#sk)"/><g data-d="4"><circle cx="305" cy="80" r="38" fill="#f4e7b8" opacity=".9"/></g><g data-d="8"><path d="M0 220 L70 140 L120 190 L190 110 L260 200 L330 150 L400 215 V300 H0Z" fill="#12296b" opacity=".85"/></g><g data-d="14"><path d="M0 250 L60 200 L130 245 L210 190 L290 250 L360 215 L400 245 V300 H0Z" fill="#0a1a48"/></g></svg>',
+  ninja:'<svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a1a4a"/><stop offset="1" stop-color="#2a4fb0"/></linearGradient></defs><rect width="400" height="300" fill="url(#sk)"/><g data-d="4"><circle cx="305" cy="105" r="34" fill="#f4e7b8" opacity=".9"/></g><g data-d="8"><path d="M0 220 L70 140 L120 190 L190 110 L260 200 L330 150 L400 215 V300 H0Z" fill="#12296b" opacity=".85"/></g><g data-d="14"><path d="M0 250 L60 200 L130 245 L210 190 L290 250 L360 215 L400 245 V300 H0Z" fill="#0a1a48"/></g></svg>',
   aurora:'<svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice"><rect width="400" height="300" fill="#06122e"/><g data-d="6" style="filter:blur(10px)"><path d="M-20 120 C80 40 160 190 260 90 S380 60 430 110 V170 C340 130 260 230 160 150 S40 200 -20 170Z" fill="#22e0b0" opacity=".55"/></g><g data-d="12" style="filter:blur(14px)"><path d="M-20 170 C90 110 190 230 290 140 S390 120 430 160 V220 C330 190 250 270 150 210 S30 250 -20 220Z" fill="#35bff0" opacity=".5"/></g><g data-d="3"><circle cx="60" cy="40" r="1.5" fill="#fff"/><circle cx="170" cy="25" r="1.2" fill="#fff"/><circle cx="330" cy="50" r="1.5" fill="#fff"/><circle cx="250" cy="20" r="1" fill="#fff"/></g></svg>',
   gold:'<svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="gg"><stop offset="0" stop-color="#8a6a12"/><stop offset=".5" stop-color="#f6dc82"/><stop offset="1" stop-color="#c99a24"/></linearGradient></defs><rect width="400" height="300" fill="#0b1226"/><g data-d="6"><path d="M-20 200 C100 80 200 260 420 100" stroke="url(#gg)" stroke-width="26" fill="none" opacity=".8" stroke-linecap="round"/></g><g data-d="14"><path d="M-20 240 C120 140 240 290 420 170" stroke="url(#gg)" stroke-width="12" fill="none" opacity=".6" stroke-linecap="round"/></g></svg>',off:''};
 function j2SetScene(k){j2Scene=k;var sc=document.getElementById('scene');if(sc)sc.innerHTML=j2SCN[k]||'';try{localStorage.setItem('pipvant_journal_scene',k);}catch(e){}}
@@ -15425,9 +15448,9 @@ function j2Init(){
       else if(b.dataset.act==='export'){if(typeof exportTradesCsv==='function')exportTradesCsv();}
       return;
     }
-    if(b.dataset&&b.dataset.up){j2UpId=+b.dataset.up;var fi=document.getElementById('fi');if(fi)fi.click();return;}
+    if(b.dataset&&b.dataset.up){j2UpId=b.dataset.up;var fi=document.getElementById('fi');if(fi)fi.click();return;}
     if(b.dataset&&b.dataset.edit){
-      var ent=(window.sessionJournalEntries||[]).find(function(e2){var eid=e2._localId||e2._id||e2._dbId||e2.timestamp;return eid===+b.dataset.edit&&e2.type==='trade';});
+      var ent=(window.sessionJournalEntries||[]).find(function(e2){var eid=e2._localId||e2._id||e2._dbId||e2.timestamp;return String(eid)===String(b.dataset.edit)&&e2.type==='trade';});
       if(ent)j2OpenSheet(ent);
       return;
     }
@@ -15440,16 +15463,16 @@ function j2Init(){
     if(b.dataset&&b.dataset.d){j2Sel=j2Sel===b.dataset.d?null:b.dataset.d;j2Render();return;}
     if(b.id==='clr'){j2Sel=null;j2Render();return;}
     if(b.dataset&&b.dataset.o){
-      var id=+b.dataset.o,was=j2Open===id;
+      var id=String(b.dataset.o),was=String(j2Open)===id;
       document.querySelectorAll('#journal .row.open').forEach(function(x){x.classList.remove('open');var rh=x.querySelector('.rh');if(rh)rh.setAttribute('aria-expanded','false');});
       j2Open=was?null:id;j2Armed=null;
       if(!was){var row=b.closest('.row');if(row)row.classList.add('open');b.setAttribute('aria-expanded','true');}
       return;
     }
     if(b.dataset&&b.dataset.del){
-      var did=+b.dataset.del;
+      var did=String(b.dataset.del);
       if(j2Armed===did){
-        var ent2=(window.sessionJournalEntries||[]).find(function(e2){var eid=e2._localId||e2._id||e2._dbId||e2.timestamp;return eid===did&&e2.type==='trade';});
+        var ent2=(window.sessionJournalEntries||[]).find(function(e2){var eid=e2._localId||e2._id||e2._dbId||e2.timestamp;return String(eid)===did&&e2.type==='trade';});
         j2Armed=null;
         if(ent2&&(typeof deleteTradeEntry==='function'))deleteTradeEntry(ent2,null);
         j2Render();
@@ -15461,15 +15484,21 @@ function j2Init(){
       return;
     }
     if(b.closest&&b.closest('#journal #fd')){j2Dir=b.dataset.v;document.querySelectorAll('#journal #fd button').forEach(function(x){x.classList.toggle('on',x===b);});j2Calc();return;}
-    if(b.closest&&b.closest('#journal #fr')){j2Res=b.dataset.v;document.querySelectorAll('#journal #fr button').forEach(function(x){x.classList.toggle('on',x===b);});return;}
+    if(b.closest&&b.closest('#journal #fr')){j2Res=b.dataset.v;document.querySelectorAll('#journal #fr button').forEach(function(x){x.classList.toggle('on',x===b);});j2Calc();return;}
     if(b.closest&&b.closest('#journal #fm')){var mm=b.textContent;j2Mk.has(mm)?j2Mk.delete(mm):j2Mk.add(mm);b.classList.toggle('on');return;}
     if(b.closest&&b.closest('#journal #fk')){var mm2=b.textContent;j2Rt.has(mm2)?j2Rt.delete(mm2):j2Rt.add(mm2);b.classList.toggle('on');return;}
+    if(b.id==='sx'){j2CloseSheet();return;}
     if(b.id==='mo'){var mx=document.getElementById('mx');if(!mx)return;var o=mx.classList.toggle('show');b.textContent=o?'− Fewer details':'+ More details';return;}
     if(b.id==='sv'){j2Save();return;}
   });
   var ov=document.getElementById('ov');
   if(ov)ov.addEventListener('click',function(e){if(e.target.id==='ov')j2CloseSheet();});
-  ['fe','fst','ft','fz'].forEach(function(i){var el=document.getElementById(i);if(el)el.addEventListener('input',j2Calc);});
+  ['fe','fst','ft','fz'].forEach(function(i){var el=document.getElementById(i);if(el)el.addEventListener('input',j2Calc);});var fxEl=document.getElementById('fx');if(fxEl)fxEl.addEventListener('input',function(){j2ExitManual=fxEl.value.trim()!=='';});
+  /* FAB hides on scroll down so it never covers a card bottom bar; shows on scroll up */
+  (function(){var fab=document.querySelector('#journal .journal-fab')||document.getElementById('fab');if(!fab)return;var lastY=window.scrollY||0,ticking=false;
+  function onScroll(){ticking=false;var j=document.getElementById('journal');if(!j||!j.classList.contains('active')){fab.classList.remove('fab-hide');return;}var y=window.scrollY||0;if(y>lastY&&y>120){fab.classList.add('fab-hide');}else if(y<lastY-4){fab.classList.remove('fab-hide');}lastY=y;}
+  window.addEventListener('scroll',function(){if(!ticking){ticking=true;requestAnimationFrame(onScroll);}},{passive:true});})();
+
   var list=document.getElementById('list');
   if(list)list.addEventListener('pointermove',function(e){
     var c=e.target.closest?e.target.closest('.jc-card'):null;
@@ -15497,7 +15526,7 @@ function j2Init(){
       else if(e.key==='Enter')j2CpRun(j2CmI);
       return;
     }
-    if(e.key==='Escape'){j2CloseSheet();return;}
+    if(e.key==='Escape'){var _m=document.getElementById('menu');if(_m)_m.classList.remove('show');j2CloseSheet();return;}
     if(typing||e.ctrlKey||e.metaKey||e.altKey)return;
     var k=e.key.toLowerCase();
     if(k==='n'){e.preventDefault();j2OpenSheet(null);}
