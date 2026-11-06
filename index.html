@@ -22,8 +22,7 @@
   <!-- Mega-audit fix: set theme before first paint (prevents dark→light flash). -->
   <script>try{var _s=JSON.parse(localStorage.getItem('pipvant_settings')||'{}');var _t=_s&&_s.theme;if(_t==='light'||_t==='dark'||_t==='platinum')document.documentElement.setAttribute('data-theme',_t);}catch(e){}</script>
   <script>try{var _pool=['ninja','ronin','torii','dragon','kitsune','koi','cranes','sakura','lanterns','aurora','ocean','desert','wolf','eagle','orbit','rain','cinematic','trader','neo-ronin','miko','pirate','astronaut','ramadan','mist-platinum','petal-platinum','ribbon-gold'];var _b=null;if(localStorage.getItem('pipvant_bgperdevice')==='1'){var _coarse=false;try{_coarse=window.matchMedia('(pointer: coarse)').matches;}catch(_ce){}var _dev=(_coarse||window.innerWidth<760)?'m':'d';_b=localStorage.getItem(_dev==='m'?'pipvant_bgscene_m':'pipvant_bgscene_d');if(!_b||(_pool.indexOf(_b)<0&&_b!=='classic'&&_b!=='auto'&&_b!=='moods'&&_b!=='custom'))_b=localStorage.getItem('pipvant_bgscene');}else{_b=localStorage.getItem('pipvant_bgscene');}if(!_b||(_pool.indexOf(_b)<0&&_b!=='classic'&&_b!=='auto'&&_b!=='moods'&&_b!=='custom'))_b='ninja';if(_b==='auto'){var _d=new Date();function _p(n){return String(n).padStart(2,'0');}var _s=_d.getFullYear()+'-'+_p(_d.getMonth()+1)+'-'+_p(_d.getDate());var _h=2166136261;for(var _i=0;_i<_s.length;_i++){_h^=_s.charCodeAt(_i);_h=Math.imul(_h,16777619);}_b=_pool[(_h>>>0)%_pool.length];}if(_b==='moods'){var _t=new Date();var _m=_t.getHours()*60+_t.getMinutes();_b=(_m>=300&&_m<720)?'cranes':(_m>=720&&_m<1050)?'desert':(_m>=1050&&_m<1350)?'rain':'ninja';}if(_b==='dragon'||_b==='trader'||_b==='ramadan'){var _u=null;try{_u=JSON.parse(localStorage.getItem('pipvant_bgunlocked')||'[]');}catch(_ue){_u=null;}if(!_u||_u.indexOf(_b)<0)_b='ninja';}try{if(window.matchMedia('(max-aspect-ratio: 3/4)').matches&&['mist-platinum','petal-platinum','ribbon-gold'].indexOf(_b)<0)_b='classic';}catch(_pe){}document.documentElement.setAttribute('data-bgscene',_b);var _vi=localStorage.getItem('pipvant_bgintensity');if(_vi!=='subtle'&&_vi!=='vivid')_vi='balanced';document.documentElement.setAttribute('data-bgintensity',_vi);}catch(e){document.documentElement.setAttribute('data-bgscene','ninja');document.documentElement.setAttribute('data-bgintensity','balanced');}</script>
-  <link rel="icon" type="image/x-icon" href="/favicon.ico">
-  <link rel="icon" type="image/png" sizes="192x192" href="/favicon.png">
+  <link rel="icon" type="image/png" href="assets/pipvanta-logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://acpkzavmifjwnskiaret.supabase.co">
@@ -4295,7 +4294,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
  <label style="margin-top:14px">Before you entered</label><div class="mc" id="fk"><button type="button">Stop set</button><button type="button">Risk 1% or less</button><button type="button">Checked the news</button><button type="button">Waited for my setup</button></div>
  <label style="margin-top:14px">Chart picture (optional)</label>
  <button class="j2img" id="j2ImgBtn" type="button"><span id="j2ImgTxt">+ Add chart picture</span></button>
- <input type="file" id="j2ImgFile" accept="image/png,image/jpeg,image/webp" hidden>
+ <input type="file" id="j2ImgFile" accept="image/png,image/jpeg,image/webp" style="position:fixed;left:-9999px;top:0;width:1px;height:1px;opacity:0;pointer-events:none" aria-hidden="true" tabindex="-1">
  <div class="j2img-prev" id="j2ImgPrevWrap" style="display:none"><img id="j2ImgPrev" alt="Chart preview"><span id="j2ImgPrevName"></span><button id="j2ImgRm" type="button">Remove</button></div>
  <button class="save" id="sv" type="button" disabled>Save trade</button>
 </div></div>
@@ -14729,7 +14728,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       var orig=btn.textContent;
       btn.textContent=currentLanguage==='ar'?'تأكيد الحذف؟':'Confirm delete?';
       btn.style.color='var(--danger,#ef4444)';btn.style.fontWeight='800';
-      setTimeout(function(){if(btn.isConnected){btn.removeAttribute('data-confirm-armed');btn.textContent=orig;}},3000);
+      setTimeout(function(){if(btn.isConnected){btn.removeAttribute('data-confirm-armed');btn.textContent=orig;}},10000);
       return;
     }
     var id=entry._localId||entry._id||entry._dbId||entry.timestamp;
@@ -15090,7 +15089,7 @@ function tcTradeImagePick(file){
         del.setAttribute('data-confirm-armed','1');
         del.style.color='var(--jc-red)';del.style.opacity='1';
         if(typeof showToast==='function')showToast(ar?'اضغط على الحذف مرة أخرى للتأكيد':'Tap delete again to confirm');
-        setTimeout(function(){if(del.isConnected){del.removeAttribute('data-confirm-armed');del.style.color='';del.style.opacity='';}},3000);
+        setTimeout(function(){if(del.isConnected){del.removeAttribute('data-confirm-armed');del.style.color='';del.style.opacity='';}},10000);
         return;
       }
       deleteTradeEntry(entry,null);
@@ -15313,7 +15312,7 @@ function j2ParseC(){
 }
 function j2OpenSheet(entry){
   var ov=document.getElementById('ov');if(!ov)return;
-  window.editingTradeId=entry?entry.id:null;
+  window.editingTradeId=entry?(entry._localId||entry._id||entry._dbId||entry.id||entry.timestamp):null;
   var set=function(id,v){var el=document.getElementById(id);if(el)el.value=v==null?'':v;};
   if(entry){
     var t=j2Map(entry);
@@ -15517,7 +15516,7 @@ function j2Init(){
         j2Render();
       }else{
         j2Armed=did;
-        setTimeout(function(){if(j2Armed===did){j2Armed=null;j2Render();}},2500);
+        setTimeout(function(){if(j2Armed===did){j2Armed=null;j2Render();}},10000);
         j2Render();
       }
       return;
