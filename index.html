@@ -2282,8 +2282,8 @@
 #journal nav button{flex:1;font-size:11px;color:var(--mut);padding:8px 0;min-height:44px}
 #journal nav button.on{color:var(--text);font-weight:600}
 #journal nav .plus{flex:none;width:54px;height:54px;border-radius:50%;margin:0 6px;background:linear-gradient(160deg,#f6dc82,#d2a52c);color:#201700;font-size:28px;font-weight:500;line-height:1;box-shadow:0 8px 24px -4px #ecc65288}
-#journal .ov{position:fixed;inset:0;background:#000b;z-index:40;display:none;align-items:flex-end}#journal .ov.show{display:flex}
-#journal .sheet{width:100%;max-width:480px;margin:0 auto;background:var(--deep);border-radius:30px 30px 0 0;padding:10px 18px calc(18px + env(safe-area-inset-bottom,0px));max-height:92vh;overflow:auto}
+#journal .ov{position:fixed;inset:0;background:#000b;z-index:40;display:none;align-items:flex-end}#journal .ov.show{display:flex}body:has(#journal .ov.show) #journal{z-index:60}
+#journal .sheet{width:100%;max-width:480px;margin:0 auto;background:var(--deep);border-radius:30px 30px 0 0;padding:10px 18px calc(26px + env(safe-area-inset-bottom,0px));max-height:calc(100vh - 88px);max-height:calc(100dvh - 88px);overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:pan-y}
 #journal .sheet:before{content:"";display:block;width:40px;height:4px;border-radius:2px;background:#ffffff33;margin:0 auto 14px}
 #journal .sheet h3{margin:0 0 14px;font:700 22px "Bricolage Grotesque"}
 #journal .f{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -2356,13 +2356,13 @@ body.priv #journal .net,body.priv #journal .pv b,body.priv #journal .day .d,body
 #journal .srch{margin-top:auto;padding:12px 14px;border-radius:14px;background:var(--sur);color:var(--mut);display:flex;justify-content:space-between;font-size:13px}
 @media (min-width:640px){#journal .app,#journal .ins{max-width:640px}}
 @media (min-width:960px){
-#journal .shell{display:grid;grid-template-columns:232px minmax(0,1fr) 340px;gap:32px;max-width:1380px;margin:0 auto;padding:0 28px}
+#journal .shell{display:grid;grid-template-columns:232px minmax(0,1fr) 340px;gap:36px;max-width:1440px;margin:0 auto;padding:0 28px}
 #journal nav{display:none}
 #journal .side{display:flex;flex-direction:column;gap:6px;position:sticky;top:0;height:100vh;padding:28px 0}
 #journal .app{max-width:none;margin:0;padding:24px 0 60px}
 #journal .ins{position:sticky;top:0;align-self:start;max-width:none;margin:0;padding:24px 0;max-height:100vh;overflow:auto}
 #journal .hero{border-radius:36px;padding:22px 28px 24px}
-#journal .net{font-size:84px}#journal .chart{height:210px;margin:18px -28px 16px}
+#journal .net{font-size:96px}#journal .chart{height:240px;margin:18px -28px 16px}
 #journal .pad{padding:0}
 #journal .rail{display:grid;grid-template-columns:repeat(5,1fr);margin:0;padding:0;overflow:visible}#journal .tile{flex:none}
 #journal #list.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
@@ -2370,6 +2370,7 @@ body.priv #journal .net,body.priv #journal .pv b,body.priv #journal .day .d,body
 #journal .toast{bottom:32px}
 #journal .ov{align-items:center}#journal .sheet{border-radius:30px;max-width:520px;max-height:86vh}#journal .sheet:before{display:none}
 }
+@media (min-width:1024px){body:has(#journal.active) > .app{padding-left:0}}
 #journal .scene{position:absolute;inset:0;z-index:-2;overflow:hidden;border-radius:inherit;pointer-events:none;opacity:.55}
 #journal .scene::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,#0b163300 30%,var(--ink) 100%)}
 #journal .scene svg{position:absolute;left:-6%;top:-6%;width:112%;height:112%}#journal .scene g{transition:transform .25s ease-out}
