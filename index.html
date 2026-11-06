@@ -33,7 +33,6 @@
   <meta name="description" content="Pipvant by Orovanta: compare verified prop-firm rules and calculate position risk precisely. Built for process, not predictions.">
   <meta name="application-name" content="Pipvant">
   <meta property="og:title" content="PIPVANT — Free Trading Toolkit for Serious Traders">
-  <meta property="og:site_name" content="PIPVANT">
   <meta property="og:description" content="Prop firm matcher, smart journal, risk calculator & economic calendar. Free forever.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://pipvant.vercel.app/">
@@ -50,7 +49,7 @@
   {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "PIPVANT",
+    "name": "Pipvant",
     "alternateName": "PIPVANT by Orovanta",
     "url": "https://pipvant.vercel.app/",
     "description": "Pipvant by Orovanta: compare verified prop-firm rules and calculate position risk precisely. Built for process, not predictions.",
@@ -2256,9 +2255,9 @@
 #journal .meter{display:flex;align-items:center;gap:12px;margin-bottom:14px}
 #journal .ticks{display:flex;gap:3px;flex:none}#journal .ticks i{width:11px;height:6px;border-radius:3px;background:#ffffff1c}#journal .ticks i.on{background:var(--gold)}
 #journal .meter p{margin:0;font-size:13px;color:var(--mut);line-height:1.35}
-#journal .rail{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0;padding:0;overflow:visible}
+#journal .rail{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -18px;padding:0 18px 4px;scrollbar-width:none}
 #journal .rail::-webkit-scrollbar{display:none}
-#journal .tile{flex:none;scroll-snap-align:start;background:var(--sur);border-radius:22px;padding:15px}
+#journal .tile{flex:0 0 150px;scroll-snap-align:start;background:var(--sur);border-radius:22px;padding:15px}
 #journal .tile small{color:var(--mut);font-size:12px}#journal .tile .big{font-size:28px;font-weight:700;margin:8px 0 2px;letter-spacing:-.5px}#journal .tile p{margin:0;font-size:12px;color:var(--mut)}
 #journal .tile.dim .big{opacity:.4}
 #journal .lock{background:none;border:1.5px dashed var(--line);display:flex;flex-direction:column;justify-content:center}
@@ -2325,7 +2324,7 @@
 #journal .vt button.on{background:var(--text);color:var(--ink)}
 @media (prefers-reduced-motion:reduce){#journal *,#journal *::before,#journal *::after{animation:none!important;transition:none!important}#journal .chart.fx .dot{opacity:1!important}}
 #journal .shell{display:block}#journal .side{display:none}
-#journal .app{padding-bottom:calc(150px + env(safe-area-inset-bottom,0px))}
+#journal .app{padding-bottom:12px}
 #journal .ins{max-width:480px;margin:0 auto;padding:6px 18px calc(130px + env(safe-area-inset-bottom,0px))}
 #journal .ic{background:var(--sur);border-radius:24px;padding:18px;margin-bottom:12px}
 #journal .ic h3{margin:0 0 12px;font:700 16px 'Bricolage Grotesque'}
@@ -2363,6 +2362,7 @@ body.priv #journal .net,body.priv #journal .pv b,body.priv #journal .day .d,body
 #journal .logbtn kbd{background:#00000022}
 .rail-logtrade{margin:14px 0 6px;padding:13px 14px;border:0;border-radius:14px;font-weight:800;color:#201700;background:linear-gradient(160deg,#f6dc82,#d2a52c);display:flex;justify-content:space-between;align-items:center;cursor:pointer;width:100%;font-size:14px}
 .rail-logtrade kbd{background:#00000022;border-radius:6px;padding:2px 7px;font-size:11px;font-family:inherit}
+@media (max-width:1023px){.rail-logtrade{display:none}}
 #journal .j2img{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;border:1.5px dashed rgba(255,255,255,.3);border-radius:14px;background:rgba(255,255,255,.05);color:#eaf1ff;font-weight:700;cursor:pointer}
 #journal .j2img-prev{display:flex;align-items:center;gap:10px;margin-top:10px}
 #journal .j2img-prev img{width:96px;height:54px;object-fit:cover;border-radius:10px;border:1px solid rgba(255,255,255,.2)}
