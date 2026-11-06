@@ -15131,6 +15131,8 @@ function j2Guard(){
 function j2GuardUI(){
   var el=document.getElementById('gd');if(!el)return;
   el.style.display=j2G.on?'flex':'none';if(!j2G.on)return;
+  var gdEl=document.getElementById('gd');
+  if(gdEl&&!gdEl._tipWired){gdEl._tipWired=true;gdEl.addEventListener('click',function(e){var gm=e.target.closest?e.target.closest('.gm'):null;if(gm&&gm.getAttribute('title'))j2Toast(gm.getAttribute('title'));});}
   var g=j2Guard();
   var fmt$=function(x){return '$'+Math.round(x).toLocaleString('en-US');};
   var m=function(l,v,gold,ti){return '<span class="gm"'+(ti?' title="'+ti+'"':'')+'><i style="width:'+Math.min(100,v)+'%;background:'+(gold?'var(--gold)':v>70?'var(--red)':'var(--cyan)')+'"></i><b>'+l+' '+Math.round(v)+'%</b></span>';};
@@ -15393,7 +15395,7 @@ function j2UploadImage(file){
   if(!file)return;
   if(!/^image\/(png|jpeg|webp)$/.test(file.type)){j2Toast('Choose a PNG, JPEG, or WebP image.');return;}
   if(file.size>5*1024*1024){j2Toast('Picture must be 5 MB or smaller.');return;}
-  var entry=(window.sessionJournalEntries||[]).find(function(e2){var eid=e2._localId||e2._id||e2._dbId||e2.timestamp;return eid===j2UpId&&e2.type==='trade';});
+  var entry=(window.sessionJournalEntries||[]).find(function(e2){var eid=e2._localId||e2._id||e2._dbId||e2.timestamp;return String(eid)===String(j2UpId)&&e2.type==='trade';});
   if(!entry){j2Toast('Trade not found.');return;}
   if(!sb||!sbUser){j2Toast('Sign in to save the picture with the trade.');return;}
   j2Toast('Uploading picture…');
@@ -15495,9 +15497,7 @@ function j2Init(){
   if(ov)ov.addEventListener('click',function(e){if(e.target.id==='ov')j2CloseSheet();});
   ['fe','fst','ft','fz'].forEach(function(i){var el=document.getElementById(i);if(el)el.addEventListener('input',j2Calc);});var fxEl=document.getElementById('fx');if(fxEl)fxEl.addEventListener('input',function(){j2ExitManual=fxEl.value.trim()!=='';});
   /* FAB hides on scroll down so it never covers a card bottom bar; shows on scroll up */
-  (function(){var fab=document.querySelector('#journal .journal-fab')||document.getElementById('fab');if(!fab)return;var lastY=window.scrollY||0,ticking=false;
-  function onScroll(){ticking=false;var j=document.getElementById('journal');if(!j||!j.classList.contains('active')){fab.classList.remove('fab-hide');return;}var y=window.scrollY||0;if(y>lastY&&y>120){fab.classList.add('fab-hide');}else if(y<lastY-4){fab.classList.remove('fab-hide');}lastY=y;}
-  window.addEventListener('scroll',function(){if(!ticking){ticking=true;requestAnimationFrame(onScroll);}},{passive:true});})();
+
 
   var list=document.getElementById('list');
   if(list)list.addEventListener('pointermove',function(e){
