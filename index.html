@@ -2392,9 +2392,10 @@ body.priv #journal .net,body.priv #journal .pv b,body.priv #journal .day .d,body
 #journal .jc-card .jc-bar i{transform-origin:left;animation:j2-grow 1s .5s cubic-bezier(.2,.8,.2,1) both}
 #journal .jc-card{touch-action:pan-y}
 @media (min-width:960px){#journal #list.cards .jc-card{margin:0;max-width:none;width:100%}}
-/* Journal page owns its chrome: hide the site's global bottom nav + desktop
-   rail while Journal is active (the design has its own nav + sidebar). */
-body:has(#journal.active) .bottom-nav{display:none}
+/* Journal page owns its desktop chrome: hide the site's global desktop rail
+   while Journal is active (the design has its own sidebar). The mobile bottom
+   nav stays the site's own (restored 2026-11-06 at the user's order — the
+   design's bottom nav was removed). */
 body:has(#journal.active) .desktop-rail{display:none}
 @media (min-width:1024px){#journal{margin:0 -28px}}
 
@@ -4237,7 +4238,6 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
 </div>
 <aside class="ins" id="ins"></aside></div>
 
-<nav><div><button data-screen="matcher" type="button">Matcher</button><button class="on" data-screen="journal" type="button">Journal</button><button class="plus" id="fab" type="button" aria-label="Log trade">+</button><button data-screen="calculator" type="button">Risk</button><button data-screen="calendar" type="button">Calendar</button></div></nav>
 
 <div class="ov cpo" id="cpo"><div class="cp"><input id="cpi" placeholder="Type a command or a trade" autocomplete="off"><div id="cpl"></div></div></div>
 <div class="ov" id="ov"><div class="sheet">
@@ -4269,6 +4269,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
 <p class="session-feedback" id="journalFeedback" aria-live="polite" hidden></p>
 <p class="session-feedback" id="shareStatsFeedback" aria-live="polite" hidden></p>
 <p class="session-feedback" id="shareWeekFeedback" aria-live="polite" hidden></p>
+<button class="journal-fab" id="logTradeButton" type="button"><svg width="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Log trade</button>
 </section>
 
     <section class="screen" id="calculator" aria-label="Risk calculator">
