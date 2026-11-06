@@ -902,6 +902,44 @@
   .tc-foot{grid-column:1/-1}
 }
 @media (prefers-reduced-motion:reduce){.trade-card,.tc-chip,.tc-chart,.tc-icon-btn,.tc-share-icon{transition:none}}
+/* Trade picture + per-pair color (Gemini design 2026-11-06, adapted by Atlas:
+   pair color stays visible on every card via the top border — Gemini's left
+   bar would have been overridden by the win/loss color on closed trades. */
+.trade-card{--tc-pair:var(--accent);--tc-pair-rgb:91,141,239;border-top:2px solid var(--tc-pair)}
+.trade-card:hover{border-top-color:var(--tc-pair)}
+.trade-card[data-pair="EURUSD"]{--tc-pair:#3B82F6;--tc-pair-rgb:59,130,246}
+.trade-card[data-pair="GBPUSD"]{--tc-pair:#8B5CF6;--tc-pair-rgb:139,92,246}
+.trade-card[data-pair="USDJPY"]{--tc-pair:#F43F5E;--tc-pair-rgb:244,63,94}
+.trade-card[data-pair="GBPJPY"]{--tc-pair:#D946EF;--tc-pair-rgb:217,70,239}
+.trade-card[data-pair="XAUUSD"]{--tc-pair:#F59E0B;--tc-pair-rgb:245,158,11}
+.trade-card[data-pair="BTCUSD"]{--tc-pair:#F97316;--tc-pair-rgb:249,115,22}
+.trade-card[data-pair="US30"]{--tc-pair:#10B981;--tc-pair-rgb:16,185,129}
+.trade-card[data-pair="US100"]{--tc-pair:#06B6D4;--tc-pair-rgb:6,182,212}
+.trade-card[data-pair="ETHUSD"]{--tc-pair:#6366F1;--tc-pair-rgb:99,102,241}
+.trade-card[data-pair="AUDUSD"]{--tc-pair:#84CC16;--tc-pair-rgb:132,204,22}
+.trade-card[data-pair="USDCAD"]{--tc-pair:#EF4444;--tc-pair-rgb:239,68,68}
+.trade-card[data-pair="NZDUSD"]{--tc-pair:#14B8A6;--tc-pair-rgb:20,184,166}
+.tc-symline{background:rgba(var(--tc-pair-rgb),.10);border-radius:8px;padding:2px 6px 2px 2px}
+.tc-pair{text-shadow:0 0 10px rgba(var(--tc-pair-rgb),.28)}
+.tc-upload-zone{background:var(--sunken);border:1.5px dashed var(--line);border-radius:var(--r-md);padding:16px;text-align:center;transition:border-color .2s ease,background-color .2s ease;cursor:pointer}
+.tc-upload-zone:hover{border-color:var(--accent);background:var(--accent-soft)}
+.tc-upload-empty{display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--muted)}
+.tc-upload-icon{color:var(--accent)}
+.tc-upload-title{font-size:13px;font-weight:600;color:var(--text)}
+.tc-upload-hint{font-size:11px;color:var(--muted)}
+.tc-upload-filled{display:flex;align-items:center;gap:12px;text-align:left}
+.tc-upload-filled img{width:54px;height:54px;border-radius:var(--r-sm);object-fit:cover;border:1px solid var(--line)}
+.tc-upload-info{display:flex;flex-direction:column;gap:4px}
+.tc-filename{font-size:12px;font-weight:600;color:var(--text);overflow-wrap:anywhere}
+.tc-btn-remove{background:transparent;border:none;color:var(--danger);font-size:11px;font-weight:600;cursor:pointer;padding:0;text-align:left}
+.tc-btn-remove:hover{text-decoration:underline}
+.tc-img-hint{font-size:11px;color:var(--muted);margin:4px 0 0}
+.tc-chart.has-img{padding:0;min-height:140px;overflow:hidden;position:relative}
+.tc-chart-img{width:100%;height:100%;aspect-ratio:16/9;max-height:220px;object-fit:cover;display:block;border-radius:calc(var(--r-md) - 1px);cursor:zoom-in;transition:transform .25s cubic-bezier(.16,1,.3,1)}
+.tc-chart:hover .tc-chart-img{transform:scale(1.02)}
+.tc-chart .tc-chart-link{position:absolute;right:8px;bottom:8px;background:rgba(6,13,26,.78);border:1px solid var(--line-strong);border-radius:999px;padding:4px 10px;font-size:11px;font-weight:600;color:var(--text);text-decoration:none}
+.tc-chart .tc-chart-link:hover{text-decoration:underline}
+@media (min-width:1024px){.tc-chart-img{max-height:260px}}
 .journal-entry-cell{min-width:0}.journal-entry-cell small{display:block;margin-bottom:5px;color:var(--muted);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em}.journal-entry-cell strong{display:block;color:var(--secondary);font-size:11px;font-weight:500;line-height:1.45;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}.journal-entry-cell.pnl-win strong{color:var(--success)}.journal-entry-cell.pnl-loss strong{color:var(--danger)}.journal-entry-cell.primary strong{color:var(--text);font-weight:700}.journal-entry-cell.note{grid-column:1/-1}
     #journal .journal-fab{display:flex}
     @media (max-width:1023px){#journal .journal-entry-list{padding-bottom:calc(150px + env(safe-area-inset-bottom))}}
@@ -5060,6 +5098,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
         <div><label for="tradeDate">Date</label><input id="tradeDate" name="date" type="datetime-local"></div>
         <div><label for="tradeFees">Fees / commission (optional)</label><input id="tradeFees" type="number" step="any" min="0" inputmode="decimal" placeholder=""></div>
         <div><label for="tradeChart">Chart link (optional)</label><input id="tradeChart" type="url" inputmode="url" autocomplete="off" placeholder="https://"></div>
+        <div class="span-2"><label for="tradeImage">Trade picture (optional)</label><div class="tc-upload-zone" id="tradeImageZone"><input id="tradeImage" type="file" accept="image/png,image/jpeg,image/webp" hidden><div class="tc-upload-empty" id="tradeImageEmpty"><svg class="tc-upload-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg><span class="tc-upload-title">Upload Chart Image</span><span class="tc-upload-hint">PNG, JPG, WebP up to 5MB</span></div><div class="tc-upload-filled" id="tradeImageFilled" style="display:none;"><img src="" alt="Chart preview" id="tradeImagePreview"><div class="tc-upload-info"><span class="tc-filename" id="tradeImageName"></span><button type="button" class="tc-btn-remove" id="tradeImageRemove">Remove</button></div></div></div><p class="tc-img-hint" id="tradeImageHint"></p></div>
         <div class="span-2"><label for="tradeNotes">Notes</label><textarea id="tradeNotes" name="notes" placeholder=""></textarea></div>
       </div>
       <p class="session-feedback" id="tradeFormFeedback" aria-live="polite"></p>
@@ -8802,9 +8841,10 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       var extras={setup:entry.setup||'',tag:entry.tag||'',rating:entry.rating||'',
         session:entry.session||'',condition:entry.condition||'',plan:entry.plan||'',
         chartUrl:entry.chartUrl||'',
+        imageUrl:entry.imageUrl||'',imagePath:entry.imagePath||'',
         fees:(entry.fees!=null&&isFinite(Number(entry.fees)))?Number(entry.fees):null,
         reviewed:entry.reviewed?true:false};
-      var _hasX=extras.setup||extras.tag||extras.rating||extras.session||extras.condition||extras.plan||extras.chartUrl||extras.fees!=null||extras.reviewed;
+      var _hasX=extras.setup||extras.tag||extras.rating||extras.session||extras.condition||extras.plan||extras.chartUrl||extras.imageUrl||extras.imagePath||extras.fees!=null||extras.reviewed;
       var all={};
       try{all=JSON.parse(localStorage.getItem('pipvant_trade_extras')||'{}');}catch(e){}
       if(!_hasX){
@@ -8988,6 +9028,8 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
           if(ex.condition!=null)e.condition=ex.condition;
           if(ex.plan!=null)e.plan=ex.plan;
           if(ex.chartUrl!=null)e.chartUrl=ex.chartUrl;
+          if(ex.imageUrl!=null)e.imageUrl=ex.imageUrl;
+          if(ex.imagePath!=null)e.imagePath=ex.imagePath;
           if(ex.fees!=null)e.fees=Number(ex.fees);
           if(ex.reviewed)e.reviewed=true;
         }
@@ -14495,6 +14537,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     var _tplEl=document.getElementById('tradePlan');if(_tplEl)_tplEl.value=entry.plan||'';
     var _tfEl=document.getElementById('tradeFees');if(_tfEl)_tfEl.value=(entry.fees!=null&&isFinite(Number(entry.fees)))?String(entry.fees):'';
     var _tchEl=document.getElementById('tradeChart');if(_tchEl)_tchEl.value=entry.chartUrl||'';
+    if(typeof tcTradeImageSetExisting==='function')tcTradeImageSetExisting(entry.imageUrl||'',entry.imagePath||'');
     if(typeof window.syncMistakeChips==='function')window.syncMistakeChips();
     document.getElementById('tradeRating').value=entry.rating||'';
     if(entry.timestamp){var d=new Date(entry.timestamp);var pad=function(n){return String(n).padStart(2,'0');};document.getElementById('tradeDate').value=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'T'+pad(d.getHours())+':'+pad(d.getMinutes());}
@@ -14671,7 +14714,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
   }
   function duplicateTradeEntry(entry){
     try{
-      var copy={type:'trade',pair:entry.pair,direction:entry.direction,entry:entry.entry,stop:entry.stop,target:entry.target,size:entry.size,rMultiple:entry.rMultiple,setup:entry.setup,tag:entry.tag,rating:entry.rating,notes:entry.notes,closed:entry.closed,exitPrice:entry.exitPrice,pnl:entry.pnl,result:entry.result,session:entry.session,condition:entry.condition,plan:entry.plan,chartUrl:entry.chartUrl,fees:entry.fees,account_id:entry.account_id,timestamp:Date.now(),reviewed:false};
+      var copy={type:'trade',pair:entry.pair,direction:entry.direction,entry:entry.entry,stop:entry.stop,target:entry.target,size:entry.size,rMultiple:entry.rMultiple,setup:entry.setup,tag:entry.tag,rating:entry.rating,notes:entry.notes,closed:entry.closed,exitPrice:entry.exitPrice,pnl:entry.pnl,result:entry.result,session:entry.session,condition:entry.condition,plan:entry.plan,chartUrl:entry.chartUrl,imageUrl:entry.imageUrl,imagePath:entry.imagePath,fees:entry.fees,account_id:entry.account_id,timestamp:Date.now(),reviewed:false};
       copy._localId='dup-'+Date.now()+'-'+Math.floor(Math.random()*1000000000);
       var ok=true;
       if(typeof persistLocalTrade==='function')ok=!!persistLocalTrade(copy);
@@ -14696,6 +14739,44 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       else done(false);
     }catch(e){done(false);}
   }
+/* Per-pair accent color: Gemini's palette (2026-11-06). The palette lives in
+   CSS (.trade-card[data-pair]) — this map is only the JS fallback for pairs
+   Gemini did not list (hash → hue) plus the rgb helper. */
+var TC_PAIR_COLORS={EURUSD:'#3B82F6',GBPUSD:'#8B5CF6',USDJPY:'#F43F5E',GBPJPY:'#D946EF',XAUUSD:'#F59E0B',BTCUSD:'#F97316',US30:'#10B981',US100:'#06B6D4',ETHUSD:'#6366F1',AUDUSD:'#84CC16',USDCAD:'#EF4444',NZDUSD:'#14B8A6'};
+function tcHslRgb(h,s,l){s/=100;l/=100;var k=function(n){return (n+h/30)%12;};var a=s*Math.min(l,1-l);var f=function(n){return l-a*Math.max(-1,Math.min(k(n)-3,Math.min(9-k(n),1)));};return Math.round(f(0)*255)+', '+Math.round(f(8)*255)+', '+Math.round(f(4)*255);}
+function tcPairFallback(pair){var p=String(pair||'').toUpperCase().replace(/[^A-Z0-9]/g,'');var h=0;for(var i=0;i<p.length;i++){h=(h*31+p.charCodeAt(i))>>>0;}var hue=h%360;return {color:'hsl('+hue+' 70% 60%)',rgb:tcHslRgb(hue,70,60)};}
+/* Trade picture: upload-on-pick to Supabase Storage (trade-images bucket).
+   The public URL + storage path ride the trade_extras mechanism (same as
+   chartUrl) so no DB migration is needed. */
+var _tradeImageState={url:'',path:'',oldPath:'',removed:false,uploading:false};
+function tcTradeImagePublicUrl(path){try{if(sb)return sb.storage.from('trade-images').getPublicUrl(path).data.publicUrl;}catch(e){}return '';}
+function tcTradeImageSetPreview(src,name){var e=document.getElementById('tradeImageEmpty'),f=document.getElementById('tradeImageFilled'),im=document.getElementById('tradeImagePreview'),nm=document.getElementById('tradeImageName');if(e)e.style.display=src?'none':'flex';if(f)f.style.display=src?'flex':'none';if(im){if(src)im.src=src;else im.removeAttribute('src');}if(nm)nm.textContent=name||'';}
+function tcTradeImageReset(){_tradeImageState={url:'',path:'',oldPath:'',removed:false,uploading:false};var inp=document.getElementById('tradeImage');if(inp)inp.value='';tcTradeImageSetPreview('','');var h=document.getElementById('tradeImageHint');if(h)h.textContent='';}
+function tcTradeImageSetExisting(url,path){_tradeImageState={url:url||'',path:path||'',oldPath:path||'',removed:false,uploading:false};var inp=document.getElementById('tradeImage');if(inp)inp.value='';tcTradeImageSetPreview(url||'','');}
+function tcTradeImageDelete(path){try{if(sb&&sbUser&&path)return sb.storage.from('trade-images').remove([path]).then(function(){}).catch(function(){});}catch(e){}return null;}
+function tcTradeImageCleanupOld(){var old=_tradeImageState.oldPath;if(!old||old===_tradeImageState.path)return;var used=false;try{(window.sessionJournalEntries||[]).forEach(function(en){if(en&&en.imagePath===old)used=true;});}catch(e){}if(!used)tcTradeImageDelete(old);}
+function tcTradeImagePick(file){
+  var hint=document.getElementById('tradeImageHint');if(hint)hint.textContent='';
+  if(!file)return;
+  if(!/^image\/(png|jpeg|webp)$/.test(file.type)){if(hint)hint.textContent=currentLanguage==='ar'?'اختر صورة PNG أو JPEG أو WebP.':'Choose a PNG, JPEG, or WebP image.';var inp=document.getElementById('tradeImage');if(inp)inp.value='';return;}
+  if(file.size>5*1024*1024){if(hint)hint.textContent=currentLanguage==='ar'?'يجب ألا يتجاوز حجم الصورة 5 MB.':'Picture must be 5 MB or smaller.';var inp2=document.getElementById('tradeImage');if(inp2)inp2.value='';return;}
+  try{tcTradeImageSetPreview(URL.createObjectURL(file),file.name);}catch(e){}
+  if(!sb||!sbUser){if(hint)hint.textContent=currentLanguage==='ar'?'سجّل الدخول باش تحفظ الصورة مع الصفقة.':'Sign in to save the picture with the trade.';return;}
+  _tradeImageState.uploading=true;if(hint)hint.textContent=currentLanguage==='ar'?'جارٍ رفع الصورة...':'Uploading picture...';
+  var ext=file.type==='image/png'?'png':(file.type==='image/webp'?'webp':'jpg');
+  var path=sbUser.id+'/'+Date.now()+'-'+Math.random().toString(36).slice(2,8)+'.'+ext;
+  sb.storage.from('trade-images').upload(path,file,{upsert:false,contentType:file.type}).then(function(up){
+    _tradeImageState.uploading=false;
+    if(up.error)throw up.error;
+    var url=tcTradeImagePublicUrl(path);
+    _tradeImageState.url=url;_tradeImageState.path=path;_tradeImageState.removed=false;
+    if(hint)hint.textContent=currentLanguage==='ar'?'تم رفع الصورة.':'Picture uploaded.';
+  }).catch(function(err){
+    _tradeImageState.uploading=false;
+    if(hint)hint.textContent=currentLanguage==='ar'?'تعذر رفع الصورة — غادي تحفظ الصفقة بلا صورة.':'Could not upload the picture — the trade will save without it.';
+    if(typeof showToast==='function')showToast(currentLanguage==='ar'?'تعذر رفع الصورة.':'Could not upload the picture.');
+  });
+}
   function buildTradeCard(entry){
     var ar=currentLanguage==='ar';
     var card=document.createElement('article');card.className='trade-card';
@@ -14704,6 +14785,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     var dirWord=dirLower==='long'?(ar?'شراء':'Long'):(dirLower==='short'?(ar?'بيع':'Short'):'');
     var res=tcResultOf(entry);
     card.className='trade-card '+res.cls;
+    var _pairKey=String(entry.pair||'').toUpperCase().replace(/[^A-Z0-9]/g,'');card.setAttribute('data-pair',_pairKey);if(_pairKey&&!TC_PAIR_COLORS[_pairKey]){try{var _pf=tcPairFallback(entry.pair);card.style.setProperty('--tc-pair',_pf.color);card.style.setProperty('--tc-pair-rgb',_pf.rgb);}catch(e){}}
     /* Real SVG icons — no emoji anywhere on the card */
     var IC={
       clock:'<svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 15.5 14"></polyline></svg>',
@@ -14766,9 +14848,20 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     if(entry.closed&&entry.exitPrice!=null&&entry.exitPrice!=='')ex.push('X '+entry.exitPrice);
     if(entry.size!=null&&entry.size!=='')ex.push((ar?'الكمية ':'Qty ')+entry.size);
     if(ex.length)card.appendChild(tcEl('div','tc-exec',ex.join(' · ')));
-    /* Chart area: link when present, NO CHART placeholder when absent */
+    /* Chart area: uploaded picture first, then chart link, else NO CHART */
     var chartBox=document.createElement('div');chartBox.className='tc-chart';
-    if(entry.chartUrl&&/^https?:\/\//i.test(entry.chartUrl)){
+    if(entry.imageUrl&&/^https?:\/\//i.test(entry.imageUrl)){
+      chartBox.classList.add('has-img');
+      var _im=document.createElement('img');_im.className='tc-chart-img';_im.src=entry.imageUrl;_im.alt='Trade chart';_im.loading='lazy';
+      _im.onerror=function(){this.style.display='none';};
+      _im.addEventListener('click',function(e){e.stopPropagation();try{window.open(entry.imageUrl,'_blank','noopener');}catch(_){}});
+      chartBox.appendChild(_im);
+      if(entry.chartUrl&&/^https?:\/\//i.test(entry.chartUrl)){
+        var _ca=document.createElement('a');_ca.className='tc-chart-link';_ca.href=entry.chartUrl;_ca.target='_blank';_ca.rel='noopener noreferrer';_ca.textContent=ar?'الرسم ↗':'Chart ↗';
+        _ca.addEventListener('click',function(e){e.stopPropagation();});
+        chartBox.appendChild(_ca);
+      }
+    }else if(entry.chartUrl&&/^https?:\/\//i.test(entry.chartUrl)){
       var a=document.createElement('a');a.href=entry.chartUrl;a.target='_blank';a.rel='noopener noreferrer';a.textContent=ar?'عرض الرسم ↗':'View chart ↗';
       a.addEventListener('click',function(e){e.stopPropagation();});
       chartBox.appendChild(a);
@@ -15730,6 +15823,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
       try{
         var _tf=document.getElementById('tradeForm');if(_tf)_tf.reset();
         if(typeof window.syncMistakeChips==='function')window.syncMistakeChips();
+        if(typeof tcTradeImageReset==='function')tcTradeImageReset();
         document.querySelectorAll('.chip[data-direction]').forEach(function(chip){chip.setAttribute('aria-pressed','false');});
       }catch(e){}
     }
@@ -15893,12 +15987,14 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
   document.getElementById('railLogout').addEventListener('click',function(){logout();closeRail();});
   document.querySelector('#tradeSheet #closeTradeSheet').addEventListener('click',closeTradeSheet);
   document.getElementById('cancelTrade').addEventListener('click',closeTradeSheet);
+  (function(){var _ti=document.getElementById('tradeImage');if(_ti)_ti.addEventListener('change',function(){var f=_ti.files&&_ti.files[0];if(f)tcTradeImagePick(f);});var _tz=document.getElementById('tradeImageZone');if(_tz)_tz.addEventListener('click',function(ev){if(ev.target&&ev.target.closest&&ev.target.closest('#tradeImageRemove'))return;var i2=document.getElementById('tradeImage');if(i2)i2.click();});var _tr=document.getElementById('tradeImageRemove');if(_tr)_tr.addEventListener('click',function(ev){if(ev)ev.stopPropagation();_tradeImageState.removed=true;_tradeImageState.url='';_tradeImageState.path='';var i3=document.getElementById('tradeImage');if(i3)i3.value='';tcTradeImageSetPreview('','');});})();
   document.getElementById('tradeForm').addEventListener('submit',function(e){
     e.preventDefault();if(!e.currentTarget.reportValidity())return;
     // N2 fix: prevent double-submit creating duplicate trades.
     var _tbtn=e.submitter||e.currentTarget.querySelector('[type="submit"]');
     if(_tbtn&&_tbtn.disabled)return;
     if(_tbtn){_tbtn.disabled=true;setTimeout(function(){try{_tbtn.disabled=false;}catch(_x){}},3000);}
+    if(_tradeImageState.uploading){document.getElementById('tradeFormFeedback').textContent=currentLanguage==='ar'?'جارٍ رفع الصورة — تسنّى لحظة.':'Uploading picture — please wait a moment.';if(_tbtn)_tbtn.disabled=false;return;}
     var tradeFormEl=e.currentTarget;
     var directionButton=document.querySelector('.chip[data-direction][aria-pressed="true"]');
     if(!directionButton){document.getElementById('tradeFormFeedback').textContent=currentLanguage==='ar'?'اختر اتجاه الصفقة.':'Choose a trade direction.';document.querySelector('.chip[data-direction]').focus();return;}
@@ -15968,6 +16064,8 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
     tradeEntry.plan=(document.getElementById('tradePlan')||{}).value||'';
     var _chartRaw=((document.getElementById('tradeChart')||{}).value||'').trim();
     tradeEntry.chartUrl=/^https?:\/\/\S+$/i.test(_chartRaw)?_chartRaw:'';
+    tradeEntry.imageUrl=_tradeImageState.removed?'':(_tradeImageState.url||'');
+    tradeEntry.imagePath=_tradeImageState.removed?'':(_tradeImageState.path||'');
     var _feesVal=parseFloat((document.getElementById('tradeFees')||{}).value);
     tradeEntry.fees=(isClosed&&isFinite(_feesVal)&&_feesVal>0)?Math.round(_feesVal*100)/100:null;
     if(!window.editingTradeId&&tradeEntry.fees!=null&&tradeEntry.pnl!=null&&isFinite(tradeEntry.pnl))tradeEntry.pnl=Math.round((tradeEntry.pnl-tradeEntry.fees)*100)/100;
@@ -15993,7 +16091,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
               if(_nf!==_of)tradeEntry.pnl=Math.round((Number(tradeEntry.pnl)-(_nf-_of))*100)/100;
             }
             en.pair=tradeEntry.pair;en.direction=tradeEntry.direction;en.entry=tradeEntry.entry;en.stop=tradeEntry.stop;en.target=tradeEntry.target;en.size=tradeEntry.size;en.rMultiple=tradeEntry.rMultiple;en.setup=tradeEntry.setup;en.tag=tradeEntry.tag;en.rating=tradeEntry.rating;en.timestamp=tradeEntry.timestamp;en.notes=tradeEntry.notes;en.closed=tradeEntry.closed;en.exitPrice=tradeEntry.exitPrice;en.pnl=tradeEntry.pnl;en.result=tradeEntry.result;
-            en.session=tradeEntry.session;en.condition=tradeEntry.condition;en.plan=tradeEntry.plan;en.chartUrl=tradeEntry.chartUrl;en.fees=tradeEntry.fees;
+            en.session=tradeEntry.session;en.condition=tradeEntry.condition;en.plan=tradeEntry.plan;en.chartUrl=tradeEntry.chartUrl;en.fees=tradeEntry.fees;en.imageUrl=tradeEntry.imageUrl;en.imagePath=tradeEntry.imagePath;
             // E8 fix: allow changing the account.
             if(typeof tradeEntry.account_id!=='undefined')en.account_id=tradeEntry.account_id;
             updated=true;
@@ -16034,7 +16132,7 @@ body:has(.trade-sheet.open) .topbar{pointer-events:none}
         }
         if(sb&&sbUser){sbSaveTrade(tradeEntry);}else{var feedback=document.getElementById('journalFeedback');if(feedback){feedback.textContent=!_persistOk?(currentLanguage==='ar'?'تعذر الحفظ على هذا الجهاز (التخزين ممتلئ) — حرّر بعض المساحة وحاول مجدداً.':"Couldn't save on this device (storage full) — free up space and try again."):(currentLanguage==='ar'?'تم حفظ الصفقة على هذا الجهاز فقط — أنشئ حساباً مجانياً للحفاظ عليها.':'Trade saved on this device only — create a free account to keep it.');if(typeof feedbackMotion==='function')feedbackMotion(feedback);if(typeof showToast==='function')showToast(feedback.textContent);}}
       }
-      if(typeof refreshAllTradeUI==='function')refreshAllTradeUI();else renderJournalEntries();tradeFormEl.reset();tradeFormEl.querySelectorAll('input,textarea').forEach(updateFloatingField);document.querySelectorAll('.chip[data-direction]').forEach(function(chip){chip.setAttribute('aria-pressed','false');});document.getElementById('tradeFormFeedback').textContent='';closeTradeSheet();
+      if(typeof refreshAllTradeUI==='function')refreshAllTradeUI();else renderJournalEntries();if(typeof tcTradeImageCleanupOld==='function')tcTradeImageCleanupOld();if(typeof tcTradeImageReset==='function')tcTradeImageReset();tradeFormEl.reset();tradeFormEl.querySelectorAll('input,textarea').forEach(updateFloatingField);document.querySelectorAll('.chip[data-direction]').forEach(function(chip){chip.setAttribute('aria-pressed','false');});document.getElementById('tradeFormFeedback').textContent='';closeTradeSheet();
     });
   });
 
