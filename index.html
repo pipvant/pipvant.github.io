@@ -2355,12 +2355,23 @@ body.priv #journal .net,body.priv #journal .pv b,body.priv #journal .day .d,body
 #journal .logbtn kbd{background:#00000022}
 #journal .srch{margin-top:auto;padding:12px 14px;border-radius:14px;background:var(--sur);color:var(--mut);display:flex;justify-content:space-between;font-size:13px}
 @media (min-width:640px){#journal .app,#journal .ins{max-width:640px}}
+@media (min-width:768px){
+#journal .app{max-width:720px}
+#journal .ins{max-width:720px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start}
+#journal .net{font-size:64px}
+#journal .chart{height:160px}
+#journal .rail{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));margin:0;padding:0;overflow:visible}
+#journal .tile{flex:none}
+#journal #list.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+#journal #list.cards .jc-card{margin:0;max-width:none;width:100%}
+#journal #list.cards .day,#journal #list.cards .empty{grid-column:1/-1}
+}
 @media (min-width:1200px){
 #journal .shell{display:grid;grid-template-columns:232px minmax(0,1fr) 340px;gap:36px;max-width:1440px;margin:0 auto;padding:0 28px}
 #journal nav{display:none}
 #journal .side{display:flex;flex-direction:column;gap:6px;position:sticky;top:0;height:100vh;padding:28px 0}
 #journal .app{max-width:none;margin:0;padding:24px 0 60px}
-#journal .ins{position:sticky;top:0;align-self:start;max-width:none;margin:0;padding:24px 0;max-height:100vh;overflow:auto}
+#journal .ins{display:block;position:sticky;top:0;align-self:start;max-width:none;margin:0;padding:24px 0;max-height:100vh;overflow:auto}
 #journal .hero{border-radius:36px;padding:22px 28px 24px}
 #journal .net{font-size:96px}#journal .chart{height:240px;margin:18px -28px 16px}
 #journal .pad{padding:0}
