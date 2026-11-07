@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-07T06:20:41.689663+00:00",
+  "updated": "2026-11-07T07:03:11.423103+00:00",
   "changes": [
     {
       "date": "2026-11-07",
@@ -17,6 +17,24 @@
       "old": "{\"code\": \"NOV25\", \"discount\": \"25% off\", \"expiry\": null}",
       "new": "{\"code\": \"OCT25\", \"discount\": \"25% off\", \"expiry\": null}",
       "source": "https://funded7.com/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-11-07",
+      "firm": "FundedNext",
+      "field": "promotion",
+      "old": "{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FundedNext official site sale price 2026-10-27\"}",
+      "new": "{\"code\": \"NOVSTR\", \"discount\": \"up to 41%\", \"expiry\": null, \"scoped\": [{\"code\": \"FNFLEX\", \"discount\": \"up to 47% off\", \"expiry\": null, \"scope\": \"futures flex\"}, {\"code\": \"RAPID\", \"discount\": \"up to 50% off\", \"expiry\": null, \"scope\": \"futures rapid\"}, {\"code\": \"FNDIRECT\", \"discount\": \"up to 40% off\", \"expiry\": null, \"scope\": \"futures direct\"}]}",
+      "source": "https://fundednext.com/cfds",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-11-07",
+      "firm": "Alpha Capital Group",
+      "field": "promotion",
+      "old": "{\"code\": \"ALPHA20\", \"discount\": \"20% Off All Accounts\", \"expiry\": \"2026-11-30\"}",
+      "new": "{\"code\": \"FUNDED40\", \"discount\": \"20% off\", \"expiry\": \"2026-11-30\", \"scoped\": [{\"code\": \"ALPHA20\", \"discount\": \"\", \"expiry\": \"2026-11-30\", \"scope\": \"10k\"}, {\"code\": \"10KFOR40\", \"discount\": \"$10K Account Deal\", \"expiry\": null, \"scope\": \"10k\"}]}",
+      "source": "https://alphacapitalgroup.uk/product",
       "kind": "promo"
     },
     {
@@ -2678,24 +2696,6 @@
       "date": "2026-10-26",
       "firm": "FXIFY",
       "field": "promotion (50000 (Lightning))",
-      "old": "[{\"code\": \"AGHHH35\", \"discount\": \"\", \"expiry\": null}]",
-      "new": "[{\"code\": null, \"discount\": \"35% OFF\", \"source_note\": \"FXIFY official site sale price 2026-10-26\"}]",
-      "source": "https://fxify.com/programs/one-phase/",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-26",
-      "firm": "FXIFY",
-      "field": "promotion (100000 (Lightning))",
-      "old": "[{\"code\": \"AGHHH35\", \"discount\": \"\", \"expiry\": null}]",
-      "new": "[{\"code\": null, \"discount\": \"35% OFF\", \"source_note\": \"FXIFY official site sale price 2026-10-26\"}]",
-      "source": "https://fxify.com/programs/one-phase/",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-26",
-      "firm": "FXIFY",
-      "field": "promotion (5000 (One Phase))",
       "old": "[{\"code\": \"AGHHH35\", \"discount\": \"\", \"expiry\": null}]",
       "new": "[{\"code\": null, \"discount\": \"35% OFF\", \"source_note\": \"FXIFY official site sale price 2026-10-26\"}]",
       "source": "https://fxify.com/programs/one-phase/",
