@@ -23,7 +23,7 @@
   a{color:var(--blue)}
   .wrap{max-width:1020px;margin:0 auto;padding:28px 18px 48px}
   .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text)}
-  .brand-mark{width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,#e8c455,#D4AF37);color:#0A1628;font-weight:800;font-size:18px;display:grid;place-items:center}
+  .brand-mark{width:40px;height:40px;border-radius:50%;object-fit:cover;flex:0 0 auto}
   .brand strong{letter-spacing:.08em}
   .brand span{display:block;color:var(--muted);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
   h1{font-size:clamp(30px,5vw,46px);line-height:1.05;margin:34px 0 8px}
@@ -67,7 +67,7 @@
 </head>
 <body>
 <div class="wrap">
-  <a class="brand" href="index.html"><span class="brand-mark">PV</span><span><strong>PIPVANT</strong><span>by Orovanta</span></span></a>
+  <a class="brand" href="index.html"><img class="brand-mark" src="assets/pipvanta-logo.png" alt="PIPVANT logo" decoding="async"><span><strong>PIPVANT</strong><span>by Orovanta</span></span></a>
   <h1>Versus: <em id="vsTitle">this week's battle</em></h1>
   <p class="sub">One head-to-head every week. Real prices, splits and drawdowns from the firms' own pages — and your pick decides who takes the week.</p>
   <div class="week">BATTLE OF THE WEEK · <b id="weekLabel">—</b></div>
