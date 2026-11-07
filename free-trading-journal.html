@@ -31,7 +31,7 @@
   }
   </script>
   <style>
-    :root{--bg:#0A1628;--surface:#0F1D33;--raised:#14253F;--line:#1C2F4D;--line-strong:#2B4266;--text:#F4F6F8;--secondary:#A9B6C6;--muted:#8B9AB0;--accent:#5B8DEF;--accent-strong:#3A6FDE;--gold:#D4AF37}
+    :root{--bg:#0A1628;--surface:#0F1D33;--raised:#14253F;--line:#1C2F4D;--line-strong:#2B4266;--text:#F4F6F8;--secondary:#A9B6C6;--muted:#8B9AB0;--accent:#5B8DEF;--accent-strong:#3A6FDE;--gold:#D4AF37;--ice:#7DD3FC;--ice-strong:#38BDF8;--ice-soft:rgba(125,211,252,.12)}
     *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
     h1,h2,h3{font-family:"Space Grotesk",sans-serif;letter-spacing:-.02em}
     .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
@@ -43,9 +43,9 @@
     .hero{padding:64px 0 40px;text-align:center}
     .eyebrow{color:var(--accent);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}
     h1{font-size:clamp(2.2rem,6vw,3.6rem);line-height:1.05;margin:0 0 16px}
-    h1 .gold{background:linear-gradient(135deg,#F5D67B,#D4AF37);-webkit-background-clip:text;background-clip:text;color:transparent}
+    h1 .gold{background:linear-gradient(135deg,#7DD3FC,#38BDF8);-webkit-background-clip:text;background-clip:text;color:transparent}
     .lede{color:var(--secondary);font-size:17px;line-height:1.7;max-width:680px;margin:0 auto 28px}
-    .price-tag{display:inline-block;background:rgba(212,175,55,.1);border:1px solid rgba(212,175,55,.4);color:#F5D67B;font-weight:700;font-size:14px;padding:8px 18px;border-radius:999px;margin-bottom:20px}
+    .price-tag{display:inline-block;background:rgba(125,211,252,.1);border:1px solid rgba(125,211,252,.4);color:#BAE6FD;font-weight:700;font-size:14px;padding:8px 18px;border-radius:999px;margin-bottom:20px}
     .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;padding:20px 0 40px}
     .card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px}
     .card h3{margin:0 0 8px;font-size:18px}
@@ -72,11 +72,11 @@
     .mock{max-width:760px;margin:6px auto 10px;background:var(--surface);border:1px solid var(--line-strong);border-radius:16px;padding:20px 22px;text-align:left;box-shadow:0 18px 50px rgba(0,0,0,.35)}
     .mock .mock-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
     .mock .mock-title{font-family:"Space Grotesk";font-weight:700;font-size:15px}
-    .mock .mock-badge{font-size:11px;font-weight:700;letter-spacing:.08em;color:#F5D67B;background:rgba(212,175,55,.1);border:1px solid rgba(212,175,55,.4);border-radius:999px;padding:4px 10px}
+    .mock .mock-badge{font-size:11px;font-weight:700;letter-spacing:.08em;color:#BAE6FD;background:rgba(125,211,252,.1);border:1px solid rgba(125,211,252,.4);border-radius:999px;padding:4px 10px}
     .mock .chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px}
     .mock .chip{background:var(--raised);border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:12.5px;color:var(--secondary)}
     .mock .chip strong{color:var(--text);font-variant-numeric:tabular-nums}
-    .demo-banner{background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.45);color:#F5D67B;border-radius:12px;padding:13px 18px;font-size:14px;font-weight:600;line-height:1.6;margin:0 0 16px;text-align:center}
+    .demo-banner{background:rgba(125,211,252,.08);border:1px solid rgba(125,211,252,.45);color:#BAE6FD;border-radius:12px;padding:13px 18px;font-size:14px;font-weight:600;line-height:1.6;margin:0 0 16px;text-align:center}
     .demo{background:var(--surface);border:1px solid var(--line-strong);border-radius:16px;padding:26px 28px;text-align:left}
     .demo-form{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
     .demo-form input,.demo-form select{background:var(--raised);border:1px solid var(--line);border-radius:10px;color:var(--text);font-size:15px;padding:12px 14px;font-family:inherit;min-height:46px}
@@ -97,8 +97,8 @@
     .demo .del{background:transparent;border:1px solid var(--line-strong);color:var(--muted);border-radius:8px;padding:4px 10px;cursor:pointer;font-family:inherit;font-size:12px}
     .demo .del:hover{color:var(--text);border-color:var(--accent)}
     .demo .ghost{background:transparent;border:1px solid var(--line-strong);color:var(--secondary);border-radius:10px;padding:0 16px;min-height:46px;font-weight:600;cursor:pointer;font-family:inherit;font-size:14px}
-    .demo .ghost:hover{border-color:var(--gold);color:var(--text)}
-    .sample-tag{font-size:10.5px;font-weight:700;letter-spacing:.07em;color:#F5D67B;background:rgba(212,175,55,.1);border:1px solid rgba(212,175,55,.35);border-radius:999px;padding:2px 8px;margin-left:8px;vertical-align:middle}
+    .demo .ghost:hover{border-color:var(--ice);color:var(--text)}
+    .sample-tag{font-size:10.5px;font-weight:700;letter-spacing:.07em;color:#BAE6FD;background:rgba(125,211,252,.1);border:1px solid rgba(125,211,252,.35);border-radius:999px;padding:2px 8px;margin-left:8px;vertical-align:middle}
     .pipv2-related{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px 28px;margin:20px 0;text-align:left}
     .pipv2-related h2{font-size:1.3rem;margin:0 0 12px}
     .pipv2-related ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px 18px}
@@ -136,8 +136,8 @@
     </div>
     <svg viewBox="0 0 600 140" width="100%" height="90" role="img" aria-label="Sample equity curve">
       <line x1="0" y1="98" x2="600" y2="98" stroke="#1C2F4D" stroke-width="1"/>
-      <polyline points="0,98 100,62 200,84 300,52 400,70 500,34 600,22" fill="none" stroke="#D4AF37" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
-      <circle cx="600" cy="22" r="4" fill="#D4AF37"/>
+      <polyline points="0,98 100,62 200,84 300,52 400,70 500,34 600,22" fill="none" stroke="#7DD3FC" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+      <circle cx="600" cy="22" r="4" fill="#7DD3FC"/>
     </svg>
     <p style="color:var(--muted);font-size:12px;margin:8px 0 0">Illustrative preview with sample numbers — try the live demo below with your own sample trades.</p>
   </div>
@@ -273,8 +273,8 @@
     var pts=cum.map(function(v,i){return X(i).toFixed(1)+','+Y(v).toFixed(1);}).join(' ');
     var zeroY=Y(0).toFixed(1);
     chart.innerHTML='<line x1="0" y1="'+zeroY+'" x2="'+W+'" y2="'+zeroY+'" stroke="#1C2F4D" stroke-width="1"/>'+
-      '<polyline points="'+pts+'" fill="none" stroke="#D4AF37" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>'+
-      '<circle cx="'+X(cum.length-1).toFixed(1)+'" cy="'+Y(cum[cum.length-1]).toFixed(1)+'" r="4" fill="#D4AF37"/>';
+      '<polyline points="'+pts+'" fill="none" stroke="#7DD3FC" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>'+
+      '<circle cx="'+X(cum.length-1).toFixed(1)+'" cy="'+Y(cum[cum.length-1]).toFixed(1)+'" r="4" fill="#7DD3FC"/>';
   }
   function render(){
     body.innerHTML='';

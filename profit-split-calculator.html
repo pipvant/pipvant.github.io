@@ -31,7 +31,7 @@
   }
   </script>
   <style>
-    :root{--bg:#0A1628;--surface:#0F1D33;--raised:#14253F;--line:#1C2F4D;--line-strong:#2B4266;--text:#F4F6F8;--secondary:#A9B6C6;--muted:#8B9AB0;--accent:#5B8DEF;--accent-strong:#3A6FDE;--gold:#D4AF37;--green:#3ECF8E;--red:#E5604F}
+    :root{--bg:#0A1628;--surface:#0F1D33;--raised:#14253F;--line:#1C2F4D;--line-strong:#2B4266;--text:#F4F6F8;--secondary:#A9B6C6;--muted:#8B9AB0;--accent:#5B8DEF;--accent-strong:#3A6FDE;--gold:#D4AF37;--ice:#7DD3FC;--ice-strong:#38BDF8;--ice-soft:rgba(125,211,252,.12);--green:#3ECF8E;--red:#E5604F}
     *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
     h1,h2,h3{font-family:"Space Grotesk",sans-serif;letter-spacing:-.02em}
     .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
@@ -46,7 +46,7 @@
     .hero{padding:64px 0 40px;text-align:center}
     .eyebrow{color:var(--accent);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}
     h1{font-size:clamp(2.2rem,6vw,3.6rem);line-height:1.05;margin:0 0 16px}
-    h1 .gold{background:linear-gradient(135deg,#F5D67B,#D4AF37);-webkit-background-clip:text;background-clip:text;color:transparent}
+    h1 .gold{background:linear-gradient(135deg,#7DD3FC,#38BDF8);-webkit-background-clip:text;background-clip:text;color:transparent}
     .lede{color:var(--secondary);font-size:17px;line-height:1.7;max-width:680px;margin:0 auto 28px}
     .calc{background:var(--surface);border:1px solid var(--line-strong);border-radius:18px;padding:28px;max-width:620px;margin:0 auto 20px;text-align:left}
     .calc label{display:block;color:var(--muted);font-size:13px;font-weight:600;margin:0 0 6px}
@@ -55,7 +55,7 @@
     .calc select{appearance:none}
     .hint{color:var(--muted);font-size:12.5px;margin:-10px 0 16px;line-height:1.5}
     .result{background:var(--raised);border:1px solid var(--line-strong);border-radius:12px;padding:20px;text-align:center;margin-top:8px}
-    .result .num{font-family:"Space Grotesk";font-size:2.4rem;font-weight:700;background:linear-gradient(135deg,#F5D67B,#D4AF37);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .result .num{font-family:"Space Grotesk";font-size:2.4rem;font-weight:700;background:linear-gradient(135deg,#7DD3FC,#38BDF8);-webkit-background-clip:text;background-clip:text;color:transparent}
     .result .lbl{color:var(--muted);font-size:13px;margin-top:4px}
     .stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}
     .stat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 12px;text-align:center}
@@ -86,11 +86,11 @@
     .pipv2-chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
     .pipv2-chips .pipv2-lbl{width:100%;color:var(--muted);font-size:12.5px;font-weight:600}
     .pipv2-chip{background:var(--raised);border:1px solid var(--line-strong);color:var(--secondary);border-radius:999px;padding:8px 14px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit}
-    .pipv2-chip:hover{border-color:var(--gold);color:var(--text)}
+    .pipv2-chip:hover{border-color:var(--ice);color:var(--text)}
     .pipv2-sharewrap{margin:0 auto 20px;text-align:left}
     .pipv2-share-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 18px}
-    .pipv2-copy{background:transparent;border:1px solid var(--gold);color:var(--gold);border-radius:999px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
-    .pipv2-copy:hover{background:rgba(212,175,55,.1)}
+    .pipv2-copy{background:transparent;border:1px solid var(--ice);color:var(--ice);border-radius:999px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+    .pipv2-copy:hover{background:rgba(125,211,252,.1)}
     .pipv2-msg{color:var(--green);font-size:13px;font-weight:600}
     .pipv2-related{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px 28px;margin:20px 0;text-align:left}
     .pipv2-related h2{font-size:1.3rem;margin:0 0 12px}

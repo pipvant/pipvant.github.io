@@ -18,22 +18,22 @@
   <link rel="preconnect" href="https://acpkzavmifjwnskiaret.supabase.co">
   <link rel="icon" type="image/png" href="assets/pipvanta-logo.png">
   <style>
-    :root{--bg:#0A1628;--surface:#0F1D33;--raised:#14253F;--sunken:#060D1A;--line:#1C2F4D;--line-strong:#2B4266;--text:#F4F6F8;--secondary:#A9B6C6;--muted:#8B9AB0;--accent:#5B8DEF;--gold:#D4AF37}
+    :root{--bg:#0A1628;--surface:#0F1D33;--raised:#14253F;--sunken:#060D1A;--line:#1C2F4D;--line-strong:#2B4266;--text:#F4F6F8;--secondary:#A9B6C6;--muted:#8B9AB0;--accent:#5B8DEF;--gold:#D4AF37;--ice:#7DD3FC;--ice-strong:#38BDF8;--ice-soft:rgba(125,211,252,.12)}
     *{box-sizing:border-box}
     body{margin:0;background:var(--bg);color:var(--text);font-family:"Space Grotesk",Inter,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh}
     .wrap{max-width:600px;margin:0 auto;padding:0 16px 40px}
     header.top{display:flex;align-items:center;gap:10px;padding:16px 2px 6px}
     header.top img{width:30px;height:30px;border-radius:8px;object-fit:contain}
     header.top .brand{font-weight:700;font-size:17px;letter-spacing:.04em}
-    header.top .brand span{color:var(--gold)}
+    header.top .brand span{color:var(--ice)}
     .card{border:1px solid var(--line);border-radius:18px;background:var(--surface);overflow:hidden;margin-top:14px}
     .banner{position:relative;height:190px;background:var(--sunken)}
     .banner img{width:100%;height:100%;object-fit:cover;display:block}
     .banner:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,22,40,.18) 0%,rgba(10,22,40,.55) 62%,#0F1D33 100%)}
     .identity{position:relative;padding:0 22px 22px;margin-top:-44px;text-align:start}
-    .avatar{width:88px;height:88px;border-radius:50%;border:2px solid var(--gold);background:linear-gradient(150deg,var(--raised),var(--sunken));display:grid;place-items:center;font-size:36px;font-weight:700;color:var(--gold);position:relative;z-index:1}
+    .avatar{width:88px;height:88px;border-radius:50%;border:2px solid var(--ice);background:linear-gradient(150deg,var(--raised),var(--sunken));display:grid;place-items:center;font-size:36px;font-weight:700;color:var(--ice);position:relative;z-index:1}
     h1{margin:14px 0 0;font-size:27px;line-height:1.15;overflow-wrap:anywhere}
-    .role{margin:6px 0 0;color:var(--gold);font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+    .role{margin:6px 0 0;color:var(--ice);font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
     .since{margin:5px 0 0;color:var(--muted);font-size:12.5px}
     .stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
     .stat{border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:16px 18px}
@@ -43,18 +43,18 @@
     .certs{margin-top:14px;border:1px solid var(--line);border-radius:14px;background:var(--surface);padding:16px 18px}
     .certs .lbl{color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.11em;text-transform:uppercase}
     .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:11px}
-    .chip{border:1px solid color-mix(in srgb,var(--gold) 55%,var(--line));color:var(--gold);border-radius:999px;padding:6px 12px;font-size:12px;font-weight:600;background:rgba(212,175,55,.07)}
+    .chip{border:1px solid color-mix(in srgb,var(--ice) 55%,var(--line));color:var(--ice);border-radius:999px;padding:6px 12px;font-size:12px;font-weight:600;background:rgba(125,211,252,.07)}
     .updated{margin:12px 2px 0;color:var(--muted);font-size:11px}
-    .cta{margin-top:14px;border:1px solid color-mix(in srgb,var(--gold) 45%,var(--line));border-radius:14px;background:linear-gradient(160deg,rgba(212,175,55,.10),rgba(91,141,239,.05));padding:20px;text-align:start}
+    .cta{margin-top:14px;border:1px solid color-mix(in srgb,var(--ice) 45%,var(--line));border-radius:14px;background:linear-gradient(160deg,rgba(125,211,252,.10),rgba(91,141,239,.05));padding:20px;text-align:start}
     .cta h2{margin:0;font-size:19px}
     .cta p{margin:7px 0 0;color:var(--secondary);font-size:13px;line-height:1.55}
-    .cta a{display:inline-block;margin-top:14px;background:var(--gold);color:#0A1628;font-weight:700;font-size:14px;text-decoration:none;border-radius:10px;padding:12px 20px}
+    .cta a{display:inline-block;margin-top:14px;background:var(--ice);color:#0A1628;font-weight:700;font-size:14px;text-decoration:none;border-radius:10px;padding:12px 20px}
     .state{margin-top:14px;border:1px solid var(--line);border-radius:18px;background:var(--surface);padding:34px 22px;text-align:center}
     .state h2{margin:0;font-size:20px}
     .state p{margin:9px auto 0;color:var(--secondary);font-size:13.5px;line-height:1.6;max-width:420px}
     .state .cta{margin-top:18px;text-align:start}
     .lang-btn{margin-inline-start:auto;background:transparent;border:1px solid var(--line-strong);color:var(--secondary);border-radius:999px;padding:7px 14px;font:600 12.5px inherit;cursor:pointer}
-    .lang-btn:hover{border-color:var(--gold);color:var(--text)}
+    .lang-btn:hover{border-color:var(--ice);color:var(--text)}
     .retry{margin-top:16px;background:transparent;border:1px solid var(--line-strong);color:var(--text);border-radius:10px;padding:11px 18px;font:600 13.5px inherit;cursor:pointer}
     footer{margin-top:22px;text-align:center;color:var(--muted);font-size:11.5px}
     footer b{color:var(--secondary)}

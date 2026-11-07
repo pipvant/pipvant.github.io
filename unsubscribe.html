@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://acpkzavmifjwnskiaret.supabase.co">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <style>
-    :root{--bg:#0A1628;--surface:#0F1D33;--raised:#14253F;--line:#1C2F4D;--line-strong:#2B4266;--text:#F4F6F8;--secondary:#A9B6C6;--muted:#8B9AB0;--accent:#5B8DEF;--accent-strong:#3A6FDE;--gold:#D4AF37;--green:#3ECF8E;--red:#E5604F}
+    :root{--bg:#0A1628;--surface:#0F1D33;--raised:#14253F;--line:#1C2F4D;--line-strong:#2B4266;--text:#F4F6F8;--secondary:#A9B6C6;--muted:#8B9AB0;--accent:#5B8DEF;--accent-strong:#3A6FDE;--gold:#D4AF37;--ice:#7DD3FC;--ice-strong:#38BDF8;--ice-soft:rgba(125,211,252,.12);--green:#3ECF8E;--red:#E5604F}
     *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column}
     h1{font-family:"Space Grotesk",sans-serif;letter-spacing:-.02em}
     header.top{background:rgba(10,22,40,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
@@ -19,20 +19,20 @@
     .brand{display:flex;align-items:center;gap:10px;font-family:"Space Grotesk";font-weight:700;font-size:18px;text-decoration:none;color:var(--text)}
     .brand img{width:30px;height:30px;border-radius:8px}
     main{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px}
-    .card{background:var(--surface);border:1px solid var(--line-strong);border-top:3px solid var(--gold);border-radius:16px;padding:44px 40px;max-width:460px;width:100%;text-align:center}
-    .pill{display:inline-block;background:rgba(212,175,55,.1);border:1px solid rgba(212,175,55,.4);color:#F5D67B;font-weight:700;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;padding:7px 16px;border-radius:999px;margin-bottom:18px}
+    .card{background:var(--surface);border:1px solid var(--line-strong);border-top:3px solid var(--ice);border-radius:16px;padding:44px 40px;max-width:460px;width:100%;text-align:center}
+    .pill{display:inline-block;background:rgba(125,211,252,.1);border:1px solid rgba(125,211,252,.4);color:#BAE6FD;font-weight:700;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;padding:7px 16px;border-radius:999px;margin-bottom:18px}
     .cta-btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 20px;border-radius:10px;background:var(--accent-strong);color:#fff;font-weight:700;text-decoration:none;border:1px solid var(--accent-strong);font-size:14px}
-    .check-circle{width:64px;height:64px;border-radius:50%;border:2px solid var(--gold);background:rgba(212,175,55,.08);display:flex;align-items:center;justify-content:center;margin:0 auto 18px}
+    .check-circle{width:64px;height:64px;border-radius:50%;border:2px solid var(--ice);background:rgba(125,211,252,.08);display:flex;align-items:center;justify-content:center;margin:0 auto 18px}
     .resub-form{display:flex;flex-direction:column;gap:10px;margin-top:18px}
     .resub-form input{width:100%;background:var(--raised);border:1px solid var(--line);border-radius:11px;color:var(--text);font-size:15px;padding:13px 16px;font-family:inherit}
-    .resub-form input:focus{outline:none;border-color:var(--gold)}
-    .resub-form button{min-height:48px;border-radius:11px;border:1px solid var(--gold);cursor:pointer;font-family:inherit;font-weight:700;font-size:15px;color:#0A1628;background:var(--gold)}
+    .resub-form input:focus{outline:none;border-color:var(--ice)}
+    .resub-form button{min-height:48px;border-radius:11px;border:1px solid var(--ice);cursor:pointer;font-family:inherit;font-weight:700;font-size:15px;color:#0A1628;background:var(--ice)}
     .panel-links{margin-top:18px;font-size:13.5px;color:var(--muted);line-height:1.7}
     .panel-links a{color:var(--accent);text-decoration:none;font-weight:600}
     .card h1{font-size:1.7rem;margin:0 0 10px}
     .card p{color:var(--secondary);font-size:14.5px;line-height:1.7;margin:0 0 24px}
     .card input{width:100%;background:var(--raised);border:1px solid var(--line);border-radius:11px;color:var(--text);font-size:15px;padding:13px 16px;margin-bottom:12px;font-family:inherit}
-    .card input:focus{outline:none;border-color:var(--gold)}
+    .card input:focus{outline:none;border-color:var(--ice)}
     .card button{width:100%;min-height:48px;border-radius:11px;border:none;cursor:pointer;font-family:inherit;font-weight:700;font-size:15px;color:#fff;background:var(--accent-strong)}
     .card button:disabled{opacity:.5;cursor:wait}
     #msg{min-height:24px;margin-top:14px;font-size:14px;line-height:1.6}
@@ -58,7 +58,7 @@
     </div>
     <div id="confirmPanel" hidden>
       <div class="check-circle" aria-hidden="true">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M4 12.5L9.5 18L20 6.5" stroke="#D4AF37" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M4 12.5L9.5 18L20 6.5" stroke="#7DD3FC" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
       <h1 style="font-size:1.45rem">You are unsubscribed</h1>
       <p><strong id="confirmEmail" style="color:var(--text)"></strong> has been removed from the weekly insights list. You will not receive the weekly email again.</p>

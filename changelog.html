@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    :root{--bg:#0A1628;--surface:#0F1D33;--raised:#14253F;--line:#1C2F4D;--line-strong:#2B4266;--text:#F4F6F8;--secondary:#A9B6C6;--muted:#8B9AB0;--accent:#5B8DEF;--accent-strong:#3A6FDE;--gold:#D4AF37}
+    :root{--bg:#0A1628;--surface:#0F1D33;--raised:#14253F;--line:#1C2F4D;--line-strong:#2B4266;--text:#F4F6F8;--secondary:#A9B6C6;--muted:#8B9AB0;--accent:#5B8DEF;--accent-strong:#3A6FDE;--gold:#D4AF37;--ice:#7DD3FC;--ice-strong:#38BDF8;--ice-soft:rgba(125,211,252,.12)}
     *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,"IBM Plex Sans Arabic",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
     body[dir="rtl"]{font-family:"IBM Plex Sans Arabic",Inter,system-ui,sans-serif}
     h1,h2,h3{font-family:"Space Grotesk","IBM Plex Sans Arabic",sans-serif;letter-spacing:-.02em}
@@ -28,26 +28,26 @@
     .brand img{width:30px;height:30px;border-radius:8px}
     .top-actions{display:flex;align-items:center;gap:10px}
     .lang-btn{min-height:44px;padding:0 16px;border-radius:10px;background:var(--raised);border:1px solid var(--line-strong);color:var(--text);font-weight:700;cursor:pointer;font-size:14px}
-    .lang-btn:hover{border-color:var(--gold);color:var(--gold)}
+    .lang-btn:hover{border-color:var(--ice);color:var(--ice)}
     .cta-btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 20px;border-radius:10px;background:var(--accent-strong);color:#fff;font-weight:700;text-decoration:none;border:1px solid var(--accent-strong)}
     .hero{padding:56px 0 32px;text-align:center}
     .eyebrow{color:var(--accent);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}
     h1{font-size:clamp(2rem,5vw,3rem);line-height:1.05;margin:0 0 16px}
-    h1 .gold{background:linear-gradient(110deg,#F5D67B 15%,#D4AF37 38%,#FFF3C4 50%,#D4AF37 62%,#F5D67B 85%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent}
+    h1 .gold{background:linear-gradient(110deg,#BAE6FD 15%,#7DD3FC 38%,#FFF3C4 50%,#7DD3FC 62%,#BAE6FD 85%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent}
     .lede{color:var(--secondary);font-size:16px;line-height:1.7;max-width:640px;margin:0 auto 8px}
     .timeline{padding:20px 0 60px;position:relative}
     .timeline::before{content:"";position:absolute;top:0;bottom:0;left:19px;width:2px;background:var(--line)}
     body[dir="rtl"] .timeline::before{left:auto;right:19px}
     .entry{position:relative;padding:0 0 28px 56px}
     body[dir="rtl"] .entry{padding:0 56px 28px 0}
-    .entry::before{content:"";position:absolute;top:6px;left:12px;width:16px;height:16px;border-radius:50%;background:var(--bg);border:2px solid var(--gold)}
+    .entry::before{content:"";position:absolute;top:6px;left:12px;width:16px;height:16px;border-radius:50%;background:var(--bg);border:2px solid var(--ice)}
     body[dir="rtl"] .entry::before{left:auto;right:12px}
-    .entry-date{color:var(--gold);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+    .entry-date{color:var(--ice);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
     .entry-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
     .entry-card:hover{border-color:var(--line-strong)}
     .entry-type{display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px;margin-bottom:10px;letter-spacing:.04em}
     .type-new_plans{background:rgba(91,141,239,.14);border:1px solid var(--accent);color:var(--accent)}
-    .type-price_update{background:rgba(212,175,55,.14);border:1px solid var(--gold);color:var(--gold)}
+    .type-price_update{background:rgba(125,211,252,.14);border:1px solid var(--ice);color:var(--ice)}
     .type-new_promo{background:rgba(46,204,113,.12);border:1px solid #2ECC71;color:#2ECC71}
     .entry-card h3{margin:0 0 4px;font-size:17px}
     .entry-firm{color:var(--muted);font-size:13px;margin-bottom:10px}
