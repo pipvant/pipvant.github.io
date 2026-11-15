@@ -170,7 +170,7 @@ var $=function(s){return document.querySelector(s)},KEY="pv_dash_v6",S;
 var SB_URL="https://acpkzavmifjwnskiaret.supabase.co/rest/v1/";
 var SB_AUTH="https://acpkzavmifjwnskiaret.supabase.co/auth/v1";
 var SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFjcGt6YXZtaWZqd25za2lhcmV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEyMDk1ODcsImV4cCI6MjEwNjc4NTU4N30.9-k-DoB6467EXTPKrvWUi-LRDPbSSC30f6BgrZezo2A";
-var FOUNDER_UID="38b5a8b3-47dd-490d-9cba-8bd7b0e31000";
+var FOUNDER_UIDS=["ed6c93e6-209e-4e6d-b40a-c2965a4d18b2","38b5a8b3-47dd-490d-9cba-8bd7b0e31000"];
 var AUTH=null,MISSING={};
 function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,typeof v==="string"?v:JSON.stringify(v))}catch(e){return null}}
 function lg(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
@@ -406,7 +406,7 @@ function gateShow(mode){document.body.classList.add("locked");$("#gate").hidden=
 function gateHide(){document.body.classList.remove("locked");$("#gate").hidden=true}
 function saveAuth(){ls("pv_ctrl_auth",AUTH)}
 function clearAuth(){AUTH=null;ls("pv_ctrl_auth",null)}
-function afterLogin(){if(!AUTH||!AUTH.user||AUTH.user.id!==FOUNDER_UID){gateShow("deny");return}gateHide();loadAll().then(function(){all()}).catch(function(e){to("تعذر تحميل البيانات: "+e.message);all()})}
+function afterLogin(){if(!AUTH||!AUTH.user||FOUNDER_UIDS.indexOf(AUTH.user.id)<0){gateShow("deny");return}gateHide();loadAll().then(function(){all()}).catch(function(e){to("تعذر تحميل البيانات: "+e.message);all()})}
 function doLogin(email,pass){return fetch(SB_AUTH+"/token?grant_type=password",{method:"POST",headers:{apikey:SB_KEY,"Content-Type":"application/json"},body:JSON.stringify({email:email,password:pass})}).then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j.error_description||j.msg||"خطأ في الدخول");return j})}).then(function(j){AUTH={access_token:j.access_token,refresh_token:j.refresh_token,expires_at:Date.now()+j.expires_in*1000,user:j.user};saveAuth();afterLogin()})}
 function doRefresh(){if(!AUTH||!AUTH.refresh_token)return Promise.reject(new Error("no session"));return fetch(SB_AUTH+"/token?grant_type=refresh_token",{method:"POST",headers:{apikey:SB_KEY,"Content-Type":"application/json"},body:JSON.stringify({refresh_token:AUTH.refresh_token})}).then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error("expired");return j})}).then(function(j){AUTH={access_token:j.access_token,refresh_token:j.refresh_token,expires_at:Date.now()+j.expires_in*1000,user:j.user};saveAuth();return AUTH})}
 function doLogout(){if(AUTH&&AUTH.access_token){fetch(SB_AUTH+"/logout",{method:"POST",headers:{apikey:SB_KEY,Authorization:"Bearer "+AUTH.access_token}}).catch(function(){})}clearAuth();S=emptyState();gateShow("login")}
