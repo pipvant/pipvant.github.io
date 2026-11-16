@@ -73,8 +73,7 @@ self.addEventListener('fetch', function (event) {
   /* Navigations / HTML documents: network-first. Only the app shell
      document itself (the scope root or index.html) may be stored under
      the './index.html' key and served as the offline fallback — other
-     HTML pages (p.html, data-ledger.html, orovanta-ops.html,
-     cheapest-*.html, …) are cached under their OWN URL and fall back
+     HTML pages (p.html, data-ledger.html, cheapest-*.html, …) are cached under their OWN URL and fall back
      only to their own copy, so visiting one can never poison the shell
      the installed app boots from. */
   var isNav = req.mode === 'navigate' ||
