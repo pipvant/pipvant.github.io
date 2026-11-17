@@ -457,7 +457,8 @@ window.pipvantSetPartners=function(list){
   if(!list.length){
     lab.textContent='Partner brokers & prop firms joining soon';
     for(var i=0;i<3;i++)track.appendChild(__cnxChip(null));
-    track.style.animation='none';return;
+    for(var j=0;j<3;j++)track.appendChild(__cnxChip(null,true));
+    track.style.animation='';lane.style.overflowX='';return;
   }
   var n=document.createElement('b');n.textContent=list.length;
   lab.appendChild(n);lab.appendChild(document.createTextNode(list.length===1?' partner firm':' partner firms'));
