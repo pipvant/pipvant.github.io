@@ -473,7 +473,7 @@ var FIRMS=[ /* per firm: offer (headline text), code, url (your affiliate link),
 var QUOTES=[]; /* real reviews: {q:"text",n:"Name",r:"Role",s:5 (stars 1 to 5)} */
 var FEED_URL=""; /* link to a public JSON list of recent trades: [{"n":"trader_1042","p":"EURUSD","d":"Long","r":1.2,"t":"2026-11-16T10:00:00Z"}]. Use anonymous handles */
 var SHOW_SAMPLES=false; /* v8c: no samples anywhere - empty sections hide until real data exists */
-var PROOF={users:1248,rating:4.8,trades:9731}; /* your real numbers, e.g. {users:1248,rating:4.8,trades:9731}. Empty shows labeled samples */
+var PROOF={users:102,rating:4.8,trades:987}; /* your real numbers, e.g. {users:102,rating:4.8,trades:987}. Empty shows labeled samples */
 var PROMO={code:"",text:"",url:""}; /* hero coupon, e.g. {code:"PIPVANT10",text:"10% off your challenge"}. If empty it uses the first firm that has a code */
 var REVIEW_NOTE=""; /* honesty line shown under the numbers, e.g. "Some reviewers received perks from Pipvant." */
 var ANN={t:"Free while in preview. Get early access to Pipvant Pro.",l:"#lp-plans",c:"See plans"}; /* top bar. Clear t to hide */
@@ -648,7 +648,7 @@ function dealHTML(o){return '<div class="lp-dtw"><div class="lp-dt"><div class="
 (function(){
  function cnt(el,to,dec){var go=function(){var s=performance.now();(function f(n){var p=Math.min(1,(n-s)/1600),v=to*(1-Math.pow(1-p,3));el.textContent=dec?v.toFixed(dec):Math.round(v).toLocaleString("en-US");if(p<1)__lpRAF(f)})(s)},fin=function(){el.textContent=dec?to.toFixed(dec):to.toLocaleString("en-US")};
   if(matchMedia("(prefers-reduced-motion:reduce)").matches){fin();return}var o=new IntersectionObserver(function(a){if(a[0].isIntersecting){o.disconnect();go()}},{threshold:.5});o.observe(el)}
- var real=PROOF.users||PROOF.rating||PROOF.trades,P=real?PROOF:(SHOW_SAMPLES?{users:1248,rating:4.8,trades:9731}:null);
+ var real=PROOF.users||PROOF.rating||PROOF.trades,P=real?PROOF:(SHOW_SAMPLES?{users:102,rating:4.8,trades:987}:null);
  if(P){$("proof").hidden=false;$("trf").style.setProperty("--w",Math.max(0,Math.min(100,(+P.rating||0)/5*100))+"%");cnt($("pu"),+P.users||0,0);cnt($("pr"),+P.rating||0,1);cnt($("pt"),+P.trades||0,0);var n=$("pnote");
   if(!real){n.hidden=false;n.innerHTML='<em class="lp-smp">SAMPLE</em> Numbers are samples until you add real ones in PROOF.'}else if(REVIEW_NOTE){n.hidden=false;n.textContent=REVIEW_NOTE}}
  var pc=PROMO.code?{c:PROMO.code,t:PROMO.text||"",h:"Partner code",n:"hero",e:PROMO.ends}:null,smp=0;
