@@ -711,7 +711,8 @@ function sessStats(){var by={},tr=allTradeObjs(),order=['London','New York','Tok
 /* ===== Connect account (More > Connect account) — v7 =====
    Card copied from the founder's reference (pipvant-connect-card.html).
    Partners come from PARTNERS only (empty = "joining soon" placeholders).
-   No real connection exists yet: confirm / request shows "Coming soon". */
+   v8q: partners load live from the partners table; firm requests /
+   and account-link requests save a messages row first. */
 var PARTNERS=[];
 var __cnxSel=null,__cnxFilter='All',__cnxQuery='';
 function __cnxChip(p,dup){
@@ -748,7 +749,7 @@ function goConnect(){
   cur=5;_show(5);
   btns.forEach(function(x){x.removeAttribute('aria-current')});
   btns[4].setAttribute('aria-current','page');place();
-  pipvantSetPartners(PARTNERS);
+  __cnxLoadPartners();
 }
 function __cnxRows(){
   var q=__cnxQuery.toLowerCase();
@@ -785,25 +786,132 @@ function __cnxRenderList(){
       else{lg.textContent=(r.p.mono||r.p.name||'?').charAt(0).toUpperCase()}
       var tx=document.createElement('div');tx.textContent=r.p.name||'';
       if(r.p.type){var sm=document.createElement('small');sm.textContent=r.p.type;tx.appendChild(sm)}
-      var ck=document.createElement('span');ck.className='r';ck.textContent=__cnxSel===r.i?'\u2713':'';
+      var ck=document.createElement('span');ck.className='r';ck.textContent=__cnxIsPending(r.p)?'Pending approval':(__cnxSel===r.i?'\u2713':'');
       row.appendChild(lg);row.appendChild(tx);row.appendChild(ck);
       list.appendChild(row);
     });
   }
   var selVisible=__cnxSel!==null&&rows.some(function(r){return r.i===__cnxSel});
-  go.disabled=!selVisible;
+  var selPending=selVisible&&__cnxIsPending(PARTNERS[__cnxSel]);
+  go.disabled=!selVisible||selPending;
+  go.textContent=selPending?'Pending approval':'Connect';
 }
-function __cnxSoon(name){
-  var main=gid('cnxmain'),soon=gid('cnxsoon'),msg=gid('cnxsoonmsg');
-  if(!main||!soon||!msg)return;
-  msg.textContent=name
+function __cnxSoon(name,heading,msg){
+  var main=gid('cnxmain'),soon=gid('cnxsoon'),ms=gid('cnxsoonmsg');
+  if(!main||!soon||!ms)return;
+  ms.textContent=msg||(name
     ?'We will notify you when '+name+' goes live.'
-    :'We will notify you when new firms go live.';
+    :'We will notify you when new firms go live.');
   main.hidden=true;soon.hidden=false;
-  var h=soon.querySelector('h4');if(h)h.focus();
+  var f=gid('cnxform');if(f)f.hidden=true;
+  var h=soon.querySelector('h4');if(h){h.textContent=heading||'Coming soon';h.focus()}
+}
+/* v8q: live partners + real Connect requests (saved as messages) */
+function __cnxLoadPartners(){
+  sbRest('GET','partners?select=id,name,type,logo_url,website&status=eq.active&order=name',null,false).then(function(res){
+    if(res.ok&&res.j&&res.j.length){
+      PARTNERS=res.j.map(function(r){return{id:r.id,name:r.name,type:r.type,logo:r.logo_url||null,mono:r.name,website:r.website||''}});
+    }else{PARTNERS=[]}
+    pipvantSetPartners(PARTNERS);
+    __cnxRenderList();
+  }).catch(function(){PARTNERS=[];pipvantSetPartners(PARTNERS);__cnxRenderList()});
+}
+var __cnxFormType='Prop firm';
+function __cnxShowForm(){
+  __cnxFormType='Prop firm';
+  var main=gid('cnxmain'),soon=gid('cnxsoon'),f=gid('cnxform');
+  if(!main||!soon||!f)return;
+  main.hidden=true;soon.hidden=true;f.hidden=false;
+  f.innerHTML='<button type=button class=cnx-req data-cnx-back style="align-self:flex-start;padding-left:0">\u2039 Back</button>'
+    +'<h3 style="margin:2px 0 0">Request a firm</h3>'
+    +'<form id=cnxf>'
+    +'<label>Firm name<input class=fld id=cnxf-name required autocomplete=off></label>'
+    +'<div class="chips cnx-f" role="group" aria-label="Type">'
+    +'<button type=button data-cnx-t="Prop firm" class=on aria-pressed=true>Prop firm</button>'
+    +'<button type=button data-cnx-t="Broker" aria-pressed=false>Broker</button>'
+    +'</div>'
+    +'<label>Note (optional)<input class=fld id=cnxf-note autocomplete=off></label>'
+    +'<button type=submit class="btn main" id=cnxf-go style="justify-content:center">Send request</button>'
+    +'</form>';
+  f.querySelector('[data-cnx-back]').addEventListener('click',function(){
+    f.hidden=true;main.hidden=false;__cnxRenderList();
+  });
+  f.querySelectorAll('[data-cnx-t]').forEach(function(b){
+    b.addEventListener('click',function(){
+      __cnxFormType=b.getAttribute('data-cnx-t');
+      f.querySelectorAll('[data-cnx-t]').forEach(function(x){
+        var on=x===b;x.classList.toggle('on',on);x.setAttribute('aria-pressed',on?'true':'false');
+      });
+    });
+  });
+  f.querySelector('form').addEventListener('submit',function(e){e.preventDefault();__cnxSubmit()});
+  var nm=gid('cnxf-name');if(nm)nm.focus();
+}
+function __cnxSubmit(){
+  if(!sbAuthed()){toast('Sign in to request a firm.');return}
+  var nm=gid('cnxf-name'),go=gid('cnxf-go');
+  var name=nm?nm.value.trim():'';
+  if(!name){toast('Enter a name first.');if(nm)nm.focus();return}
+  var who=US.name||'Trader';
+  var note=gid('cnxf-note').value.trim()||'\u2014';
+  var body='Type: '+__cnxFormType+'\nNote: '+note+'\nRequested by: '+who;
+  go.disabled=true;go.textContent='Sending\u2026';
+  sbRest('POST','messages',{user_id:SBID,type:'firm_request',title:name,body:body},true).then(function(res){
+    if(res.ok){
+      __cnxSoon(null,'You\u2019re on the list');
+    }else{
+      go.disabled=false;go.textContent='Send request';
+      toast('Could not send. Try again.');
+    }
+  }).catch(function(){
+    go.disabled=false;go.textContent='Send request';
+    toast('Could not send. Try again.');
+  });
+}
+function __cnxPending(){return lg('pv_cnx',[])}
+function __cnxIsPending(p){if(!p)return false;var k=p.id||p.name;return __cnxPending().indexOf(k)>-1}
+function __cnxAddPending(p){if(!p)return;var l=__cnxPending(),k=p.id||p.name;if(l.indexOf(k)===-1){l.push(k);ls('pv_cnx',l)}}
+function __cnxShowLink(){
+  var p=PARTNERS[__cnxSel];if(!p)return;
+  var main=gid('cnxmain'),soon=gid('cnxsoon'),f=gid('cnxform');
+  if(!main||!soon||!f)return;
+  main.hidden=true;soon.hidden=true;f.hidden=false;
+  f.innerHTML='<button type=button class=cnx-req data-cnx-back style="align-self:flex-start;padding-left:0">\u2039 Back</button>'
+    +'<h3 style="margin:2px 0 0">Link your account</h3>'
+    +'<form id=cnxl>'
+    +'<label>Account number or login with '+esc(p.name)+'<input class=fld id=cnxl-acct required autocomplete=off></label>'
+    +'<button type=submit class="btn main" id=cnxl-go style="justify-content:center">Link account</button>'
+    +'</form>';
+  f.querySelector('[data-cnx-back]').addEventListener('click',function(){
+    f.hidden=true;main.hidden=false;__cnxRenderList();
+  });
+  f.querySelector('form').addEventListener('submit',function(e){e.preventDefault();__cnxLinkSubmit()});
+  var ac=gid('cnxl-acct');if(ac)ac.focus();
+}
+function __cnxLinkSubmit(){
+  var p=PARTNERS[__cnxSel];if(!p)return;
+  if(!sbAuthed()){toast('Sign in to connect.');return}
+  var ac=gid('cnxl-acct'),go=gid('cnxl-go');
+  var id=ac?ac.value.trim():'';
+  if(!id){toast('Enter your account number or login.');if(ac)ac.focus();return}
+  var body='Account: '+id+'\nRequested by: '+(US.name||'Trader');
+  go.disabled=true;go.textContent='Linking\u2026';
+  sbRest('POST','messages',{user_id:SBID,type:'connect_request',title:p.name,body:body},true).then(function(res){
+    if(res.ok){
+      __cnxAddPending(p);
+      __cnxSoon(null,'Request sent','Pending approval \u2014 we\u2019ll notify you when your account is linked.');
+    }else{
+      go.disabled=false;go.textContent='Link account';
+      toast('Could not send. Try again.');
+    }
+  }).catch(function(){
+    go.disabled=false;go.textContent='Link account';
+    toast('Could not send. Try again.');
+  });
 }
 function cnxOpenPicker(){
   __cnxSel=null;__cnxFilter='All';__cnxQuery='';
+  __cnxLoadPartners();
   sheetOpen('<div class=grab></div><div class=shh><h3>Choose a firm</h3><button class=x data-close aria-label="Close">\u2715</button></div>'
     +'<div id=cnxmain class=cnx-wrap>'
     +'<input class="fld cnx-q" id=cnxq placeholder="Search brokers and prop firms" aria-label="Search firms" autocomplete=off>'
@@ -821,7 +929,8 @@ function cnxOpenPicker(){
     +'<h4 tabindex="-1">Coming soon</h4>'
     +'<p id=cnxsoonmsg></p>'
     +'<button type=button class="btn main" data-close>Done</button>'
-    +'</div>');
+    +'</div>'
+    +'<div id=cnxform class=cnx-wrap hidden></div>');
   __cnxRenderList();
   var q=gid('cnxq');
   if(q)q.addEventListener('input',function(){__cnxQuery=q.value;__cnxRenderList()});
@@ -856,11 +965,13 @@ function cnxOpenPicker(){
     if(__cnxSel===null)return;
     var nm=PARTNERS[__cnxSel]?PARTNERS[__cnxSel].name:'';
     document.dispatchEvent(new CustomEvent('pipvant:connect-start',{detail:{name:nm}}));
-    __cnxSoon(nm);
+    if(!sbAuthed()){toast('Sign in to connect.');return}
+    if(__cnxIsPending(PARTNERS[__cnxSel]))return;
+    __cnxShowLink();
   });
   var em=gid('cnxempty');
   if(em)em.addEventListener('click',function(e){
-    if(e.target.closest('[data-cnx-req]'))__cnxSoon(null);
+    if(e.target.closest('[data-cnx-req]'))__cnxShowForm();
   });
 }
 /* card wiring: connect opens the picker, dismiss returns to More */
