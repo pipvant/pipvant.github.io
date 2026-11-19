@@ -818,6 +818,7 @@ function __cnxLoadPartners(){
 }
 var __cnxFormType='Prop firm';
 function __cnxShowForm(){
+  if(!sbAuthed()){toast('Sign in to request a firm.');return}
   __cnxFormType='Prop firm';
   var main=gid('cnxmain'),soon=gid('cnxsoon'),f=gid('cnxform');
   if(!main||!soon||!f)return;
