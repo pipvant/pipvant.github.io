@@ -379,19 +379,6 @@ box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:en
     <p>We’ll let you know the moment your broker or prop firm goes live.</p>
   </div>
 </aside>
-  <aside class="cc" id="v10plat" aria-label="Connect by platform" style="margin-top:14px">
-  <div class="art" aria-hidden="true"></div>
-
-  <div class="view-main">
-    <h3>Connect by platform.</h3>
-    <p class="lead">Link your trading platform and every trade lands in your journal on its own — or import a statement file.</p>
-
-    <button class="cc-go" type="button" data-v10-open>
-      Choose platform
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-    </button>
-  </div>
-</aside>
   <section class="panel" id="v10conns" style="margin-top:14px">
     <h2>Linked accounts</h2>
     <div id="v10connlist" class="lst"></div>
@@ -735,7 +722,9 @@ function sessStats(){var by={},tr=allTradeObjs(),order=['London','New York','Tok
    Card copied from the founder's reference (pipvant-connect-card.html).
    Partners come from PARTNERS only (empty = "joining soon" placeholders).
    v8q: partners load live from the partners table; firm requests /
-   and account-link requests save a messages row first. */
+   and account-link requests save a messages row first.
+   v10a: ONE sheet (partners + platforms + import); the strip shows /
+   platform tiles + partner tiles; no separate platform card. */
 var PARTNERS=[];
 var __cnxSel=null,__cnxFilter='All',__cnxQuery='';
 function __cnxChip(p,dup){
@@ -743,12 +732,22 @@ function __cnxChip(p,dup){
   if(dup)c.setAttribute('aria-hidden','true');
   var s=document.createElement('span');
   if(p){
-    var l=document.createElement('span');l.className='cc-lg';
-    if(p.logo){var im=document.createElement('img');im.src=p.logo;im.alt='';l.appendChild(im)}
-    else{l.textContent=(p.mono||p.name||'?').charAt(0).toUpperCase()}
-    c.appendChild(l);s.textContent=p.name;
-  }else{s.textContent='Your broker or firm'}
-  c.appendChild(s);if(dup)c.className+=' dup';return c;
+    if(p.wide&&p.logo){
+      var im=document.createElement('img');im.src=p.logo;im.alt=p.name||'';
+      im.style.height='22px';im.style.width='auto';im.style.display='block';
+      c.style.paddingLeft='14px';
+      im.onerror=function(){im.remove();c.style.paddingLeft='7px';var l=document.createElement('span');l.className='cc-lg';l.textContent='T';c.insertBefore(l,c.firstChild);var nm=document.createElement('span');nm.textContent=p.name;c.appendChild(nm)};
+      c.appendChild(im);
+    }else{
+      var l=document.createElement('span');l.className='cc-lg';
+      if(p.logo){var im2=document.createElement('img');im2.src=p.logo;im2.alt='';l.appendChild(im2)}
+      else{l.textContent=(p.mono||p.name||'?').charAt(0).toUpperCase()}
+      c.appendChild(l);s.textContent=p.name+(p.soon?' \u00b7 Soon':'');
+      c.appendChild(s);
+    }
+    if(p.soon){c.style.opacity='.45';c.setAttribute('aria-disabled','true')}
+  }else{s.textContent='Your broker or firm';c.appendChild(s)}
+  if(dup)c.className+=' dup';return c;
 }
 window.pipvantSetPartners=function(list){
   var lane=gid('lane'),track=gid('track'),lab=gid('prlab');
@@ -756,17 +755,23 @@ window.pipvantSetPartners=function(list){
   list=list||[];track.textContent='';lab.textContent='';
   if(!list.length){
     lab.textContent='Partner brokers & prop firms joining soon';
-    for(var i=0;i<3;i++)track.appendChild(__cnxChip(null));
-    for(var j=0;j<3;j++)track.appendChild(__cnxChip(null,true));
-    track.style.animation='';lane.style.overflowX='';return;
+  }else{
+    var n=document.createElement('b');n.textContent=list.length;
+    lab.appendChild(n);lab.appendChild(document.createTextNode(list.length===1?' partner firm':' partner firms'));
   }
-  var n=document.createElement('b');n.textContent=list.length;
-  lab.appendChild(n);lab.appendChild(document.createTextNode(list.length===1?' partner firm':' partner firms'));
-  list.forEach(function(p){track.appendChild(__cnxChip(p))});
-  var run=list.length>=4;
-  if(run)list.forEach(function(p){track.appendChild(__cnxChip(p,true))});
-  track.style.animation=run?'':'none';
-  lane.style.overflowX=run?'':'auto';
+  function tap(el,fn){el.style.cursor='pointer';el.setAttribute('role','button');el.tabIndex=0;el.addEventListener('click',fn);el.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();fn()}})}
+  list.forEach(function(p,i){
+    var ch=__cnxChip(p);
+    tap(ch,function(){__v10aStripPartner(i)});
+    track.appendChild(ch);
+  });
+  (__v10aPlatforms||[]).forEach(function(pl){
+    var ch=__cnxChip(pl);
+    if(pl.plat==='tradelocker')tap(ch,function(){__v10aStripTL()});
+    track.appendChild(ch);
+  });
+  track.style.animation='none';
+  lane.style.overflowX='auto';
 };
 function goConnect(){
   cur=5;_show(5);
@@ -792,7 +797,9 @@ function __cnxRenderList(){
     list.hidden=true;empty.hidden=false;
     empty.textContent='';
     var p=document.createElement('p');
-    p.textContent=PARTNERS.length?'No firms match your search.':'No firms yet \u2014 partners are joining soon.';
+    p.textContent=PARTNERS.length?'No firms match your search.':'No partners yet.';
+    empty.style.padding=PARTNERS.length?'':'4px 0 2px';
+    empty.style.textAlign=PARTNERS.length?'':'left';
     var b=document.createElement('button');
     b.type='button';b.className='cnx-req';b.setAttribute('data-cnx-req','');
     b.textContent=PARTNERS.length?'Request it':'Request a firm';
@@ -827,6 +834,7 @@ function __cnxSoon(name,heading,msg){
     ?'We will notify you when '+name+' goes live.'
     :'We will notify you when new firms go live.');
   main.hidden=true;soon.hidden=false;
+  var vm=gid('v10main');if(vm)vm.hidden=true;
   var f=gid('cnxform');if(f)f.hidden=true;
   var h=soon.querySelector('h4');if(h){h.textContent=heading||'Coming soon';h.focus()}
 }
@@ -846,7 +854,7 @@ function __cnxShowForm(){
   __cnxFormType='Prop firm';
   var main=gid('cnxmain'),soon=gid('cnxsoon'),f=gid('cnxform');
   if(!main||!soon||!f)return;
-  main.hidden=true;soon.hidden=true;f.hidden=false;
+  main.hidden=true;soon.hidden=true;f.hidden=false;var vm=gid('v10main');if(vm)vm.hidden=true;
   f.innerHTML='<button type=button class=cnx-req data-cnx-back style="align-self:flex-start;padding-left:0">\u2039 Back</button>'
     +'<h3 style="margin:2px 0 0">Request a firm</h3>'
     +'<form id=cnxf>'
@@ -859,7 +867,7 @@ function __cnxShowForm(){
     +'<button type=submit class="btn main" id=cnxf-go style="justify-content:center">Send request</button>'
     +'</form>';
   f.querySelector('[data-cnx-back]').addEventListener('click',function(){
-    f.hidden=true;main.hidden=false;__cnxRenderList();
+    f.hidden=true;main.hidden=false;var vm=gid('v10main');if(vm)vm.hidden=false;__cnxRenderList();
   });
   f.querySelectorAll('[data-cnx-t]').forEach(function(b){
     b.addEventListener('click',function(){
@@ -900,7 +908,7 @@ function __cnxShowLink(){
   var p=PARTNERS[__cnxSel];if(!p)return;
   var main=gid('cnxmain'),soon=gid('cnxsoon'),f=gid('cnxform');
   if(!main||!soon||!f)return;
-  main.hidden=true;soon.hidden=true;f.hidden=false;
+  main.hidden=true;soon.hidden=true;f.hidden=false;var vm=gid('v10main');if(vm)vm.hidden=true;
   f.innerHTML='<button type=button class=cnx-req data-cnx-back style="align-self:flex-start;padding-left:0">\u2039 Back</button>'
     +'<h3 style="margin:2px 0 0">Link your account</h3>'
     +'<form id=cnxl>'
@@ -908,7 +916,7 @@ function __cnxShowLink(){
     +'<button type=submit class="btn main" id=cnxl-go style="justify-content:center">Link account</button>'
     +'</form>';
   f.querySelector('[data-cnx-back]').addEventListener('click',function(){
-    f.hidden=true;main.hidden=false;__cnxRenderList();
+    f.hidden=true;main.hidden=false;var vm=gid('v10main');if(vm)vm.hidden=false;__cnxRenderList();
   });
   f.querySelector('form').addEventListener('submit',function(e){e.preventDefault();__cnxLinkSubmit()});
   var ac=gid('cnxl-acct');if(ac)ac.focus();
@@ -1002,36 +1010,13 @@ function __v10Disconnect(id,label){
     toast(res.j&&res.j.ok?'Account disconnected.':((res.j&&res.j.error)||'Could not disconnect. Try again.'));
   }).catch(function(){toast('Could not disconnect. Try again.')});
 }
-function __v10OpenSheet(){
-  if(!sbAuthed()){toast('Sign in to connect an account.');return}
-  sheetOpen('<div class=grab></div><div class=shh><h3>Connect by platform</h3><button class=x data-close aria-label="Close">\u2715</button></div>'
-    +'<div id=v10main class=cnx-wrap>'
-    +'<div class="lst">'
-    +'<div class=rw data-v10-tl role=button tabindex=0><span class=cnx-lg>T</span><div>TradeLocker<small>Auto-import trades</small></div><span class=r>\u203a</span></div>'
-    +'<div class="rw lp-off" aria-disabled=true><span class=cnx-lg>c</span><div>cTrader<small>Auto-import trades</small></div><span class=r>Soon</span></div>'
-    +'<div class="rw lp-off" aria-disabled=true><span class=cnx-lg>D</span><div>DXtrade<small>Auto-import trades</small></div><span class=r>Soon</span></div>'
-    +'<div class="rw lp-off" aria-disabled=true><span class=cnx-lg>M</span><div>MT4 / MT5<small>Auto-import trades</small></div><span class=r>Soon</span></div>'
-    +'<div class=rw data-v10-imp role=button tabindex=0><span class=cnx-lg>I</span><div>Import statement file<small>MT5 report or CSV, parsed on your device</small></div><span class=r>\u203a</span></div>'
-    +'</div>'
-    +'<input type=file id=v10file accept=".html,.htm,.csv,.txt" hidden>'
-    +'</div>'
-    +'<div id=v10form class=cnx-wrap hidden></div>'
-    +'<div id=v10prev class=cnx-wrap hidden></div>');
-  function key(e,fn){if(e.key==='Enter'||e.key===' '){e.preventDefault();fn()}}
-  var tl=sh.querySelector('[data-v10-tl]');
-  if(tl){tl.addEventListener('click',__v10ShowTL);tl.addEventListener('keydown',function(e){key(e,__v10ShowTL)})}
-  var im=sh.querySelector('[data-v10-imp]');
-  function pickFile(){if(!sbAuthed()){toast('Sign in to import a statement.');return}var f=gid('v10file');if(f)f.click()}
-  if(im){im.addEventListener('click',pickFile);im.addEventListener('keydown',function(e){key(e,pickFile)})}
-  var fi=gid('v10file');
-  if(fi)fi.addEventListener('change',function(){if(fi.files&&fi.files[0])__v10ReadFile(fi.files[0]);fi.value=''});
-}
+function __v10OpenSheet(){cnxOpenPicker()}
 var __v10Env='demo';
 function __v10ShowTL(){
   if(!sbAuthed()){toast('Sign in to connect an account.');return}
-  var main=gid('v10main'),pv=gid('v10prev'),f=gid('v10form');
+  var main=gid('v10main'),pv=gid('v10prev'),f=gid('v10form'),cm=gid('cnxmain');
   if(!main||!f)return;
-  main.hidden=true;if(pv)pv.hidden=true;f.hidden=false;
+  main.hidden=true;if(pv)pv.hidden=true;f.hidden=false;if(cm)cm.hidden=true;
   f.innerHTML='<button type=button class=cnx-req data-v10-back style="align-self:flex-start;padding-left:0">\u2039 Back</button>'
     +'<h3 style="margin:2px 0 0">TradeLocker</h3>'
     +'<form id=v10tl>'
@@ -1045,7 +1030,7 @@ function __v10ShowTL(){
     +'<button type=submit class="btn main" id=v10tl-go style="justify-content:center">Link account</button>'
     +'</form>';
   f.querySelector('[data-v10-back]').addEventListener('click',function(){
-    f.hidden=true;main.hidden=false;
+    f.hidden=true;main.hidden=false;if(cm)cm.hidden=false;
   });
   f.querySelectorAll('[data-v10-env]').forEach(function(b){
     b.addEventListener('click',function(){
@@ -1094,9 +1079,9 @@ function __v10LinkCall(creds,accountId){
   });
 }
 function __v10ShowAccts(accts,creds){
-  var main=gid('v10main'),f=gid('v10form');
+  var main=gid('v10main'),f=gid('v10form'),cm=gid('cnxmain');
   if(!main||!f)return;
-  main.hidden=true;f.hidden=false;
+  main.hidden=true;f.hidden=false;if(cm)cm.hidden=true;
   var busy=false;
   f.innerHTML='<button type=button class=cnx-req data-v10-back style="align-self:flex-start;padding-left:0">\u2039 Back</button>'
     +'<h3 style="margin:2px 0 0">Choose an account</h3>'
@@ -1267,9 +1252,9 @@ function __v10ParseCSV(text){
   return{trades:out,skipped:skipped};
 }
 function __v10ShowPreview(p){
-  var main=gid('v10main'),f=gid('v10form'),pv=gid('v10prev');
+  var main=gid('v10main'),f=gid('v10form'),pv=gid('v10prev'),cm=gid('cnxmain');
   if(!main||!pv)return;
-  main.hidden=true;if(f)f.hidden=true;pv.hidden=false;
+  main.hidden=true;if(f)f.hidden=true;pv.hidden=false;if(cm)cm.hidden=true;
   var list=p.fresh||p.trades;
   var syms=[],seen={};
   list.forEach(function(t){if(!seen[t.s]){seen[t.s]=1;syms.push(t.s)}});
@@ -1282,7 +1267,7 @@ function __v10ShowPreview(p){
     +'<div>'+row('Trades',list.length)+row('Symbols',esc(symTxt))+row('Date range',esc(ds[0]===ds[ds.length-1]?fd(ds[0]):fd(ds[0])+' \u2013 '+fd(ds[ds.length-1])))+row('Skipped rows',p.skipped)+(p.dup?row('Already imported',p.dup):'')+'</div>'
     +'<p class=dp style="margin:8px 0 0">Trades go straight into your journal, dashboard and analytics \u2014 just like trades you log by hand.</p>'
     +'<div class=row style="margin-top:6px"><button type=button class="btn" data-v10-cancel style="margin:0">Cancel</button><button type=button class="btn main" id=v10imp-go style="margin:0;flex:1;justify-content:center">Import '+list.length+' trades</button></div>';
-  function back(){pv.hidden=true;main.hidden=false;__v10Imp=null}
+  function back(){pv.hidden=true;main.hidden=false;if(cm)cm.hidden=false;__v10Imp=null}
   pv.querySelector('[data-v10-back]').addEventListener('click',back);
   pv.querySelector('[data-v10-cancel]').addEventListener('click',back);
   gid('v10imp-go').addEventListener('click',__v10ConfirmImport);
@@ -1329,15 +1314,46 @@ function __v10ConfirmImport(){
   }
   next();
 }
-(function(){
-  var b=document.querySelector('[data-v10-open]');
-  if(b)b.addEventListener('click',__v10OpenSheet);
-})();
+/* v10a: unified sheet — platform tiles + strip taps + wiring */
+var __v10aPlatforms=[
+  {name:'TradeLocker',logo:'assets/tradelocker-logo.png',wide:true,plat:'tradelocker'},
+  {name:'cTrader',soon:true},
+  {name:'DXtrade',soon:true},
+  {name:'MT4 / MT5',soon:true}
+];
+function __v10aStripTL(){
+  if(!sbAuthed()){toast('Sign in to connect an account.');return}
+  cnxOpenPicker();
+  __v10ShowTL();
+}
+function __v10aStripPartner(i){
+  var p=PARTNERS[i];
+  cnxOpenPicker();
+  if(!p)return;
+  __cnxSel=i;
+  document.dispatchEvent(new CustomEvent('pipvant:partner-selected',{detail:{name:p.name||''}}));
+  __cnxRenderList();
+  if(__cnxIsPending(p))return;
+  document.dispatchEvent(new CustomEvent('pipvant:connect-start',{detail:{name:p.name||''}}));
+  if(!sbAuthed()){toast('Sign in to connect.');return}
+  __cnxShowLink();
+}
+function __v10aWirePlatforms(){
+  function key(e,fn){if(e.key==='Enter'||e.key===' '){e.preventDefault();fn()}}
+  var tl=sh.querySelector('[data-v10-tl]');
+  if(tl){tl.addEventListener('click',__v10ShowTL);tl.addEventListener('keydown',function(e){key(e,__v10ShowTL)})}
+  var im=sh.querySelector('[data-v10-imp]');
+  function pickFile(){if(!sbAuthed()){toast('Sign in to import a statement.');return}var f=gid('v10file');if(f)f.click()}
+  if(im){im.addEventListener('click',pickFile);im.addEventListener('keydown',function(e){key(e,pickFile)})}
+  var fi=gid('v10file');
+  if(fi)fi.addEventListener('change',function(){if(fi.files&&fi.files[0])__v10ReadFile(fi.files[0]);fi.value=''});
+}
 function cnxOpenPicker(){
   __cnxSel=null;__cnxFilter='All';__cnxQuery='';
   __cnxLoadPartners();
-  sheetOpen('<div class=grab></div><div class=shh><h3>Choose a firm</h3><button class=x data-close aria-label="Close">\u2715</button></div>'
+  sheetOpen('<div class=grab></div><div class=shh><h3>Connect account</h3><button class=x data-close aria-label="Close">\u2715</button></div>'
     +'<div id=cnxmain class=cnx-wrap>'
+    +'<div style="font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--mute)">Partners</div>'
     +'<input class="fld cnx-q" id=cnxq placeholder="Search brokers and prop firms" aria-label="Search firms" autocomplete=off>'
     +'<div class="chips cnx-f" role="group" aria-label="Filter by type">'
     +'<button type=button data-cnx-filter="All" class=on aria-pressed=true>All</button>'
@@ -1348,13 +1364,26 @@ function cnxOpenPicker(){
     +'<div id=cnxempty class=cnx-empty hidden></div>'
     +'<button type=button class="btn main cnx-go" id=cnxgo disabled>Connect</button>'
     +'</div>'
+    +'<div id=v10main class=cnx-wrap style="margin-top:16px;padding-top:14px;border-top:1px solid var(--line)">'
+    +'<div style="font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--mute)">Platforms</div>'
+    +'<div class="lst">'
+    +'<div class=rw data-v10-tl role=button tabindex=0><span class=cnx-lg>T</span><div>TradeLocker<small>Auto-import trades</small></div><span class=r>\u203a</span></div>'
+    +'<div class="rw lp-off" aria-disabled=true><span class=cnx-lg>c</span><div>cTrader<small>Auto-import trades</small></div><span class=r>Soon</span></div>'
+    +'<div class="rw lp-off" aria-disabled=true><span class=cnx-lg>D</span><div>DXtrade<small>Auto-import trades</small></div><span class=r>Soon</span></div>'
+    +'<div class="rw lp-off" aria-disabled=true><span class=cnx-lg>M</span><div>MT4 / MT5<small>Auto-import trades</small></div><span class=r>Soon</span></div>'
+    +'<div class=rw data-v10-imp role=button tabindex=0><span class=cnx-lg>I</span><div>Import statement file<small>MT5 report or CSV, parsed on your device</small></div><span class=r>\u203a</span></div>'
+    +'</div>'
+    +'<input type=file id=v10file accept=".html,.htm,.csv,.txt" hidden>'
+    +'</div>'
     +'<div id=cnxsoon class=cnx-soon hidden>'
     +'<div class=cnx-badge><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>'
     +'<h4 tabindex="-1">Coming soon</h4>'
     +'<p id=cnxsoonmsg></p>'
     +'<button type=button class="btn main" data-close>Done</button>'
     +'</div>'
-    +'<div id=cnxform class=cnx-wrap hidden></div>');
+    +'<div id=cnxform class=cnx-wrap hidden></div>'
+    +'<div id=v10form class=cnx-wrap hidden></div>'
+    +'<div id=v10prev class=cnx-wrap hidden></div>');
   __cnxRenderList();
   var q=gid('cnxq');
   if(q)q.addEventListener('input',function(){__cnxQuery=q.value;__cnxRenderList()});
@@ -1397,6 +1426,7 @@ function cnxOpenPicker(){
   if(em)em.addEventListener('click',function(e){
     if(e.target.closest('[data-cnx-req]'))__cnxShowForm();
   });
+  __v10aWirePlatforms();
 }
 /* card wiring: connect opens the picker, dismiss returns to More */
 (function(){
