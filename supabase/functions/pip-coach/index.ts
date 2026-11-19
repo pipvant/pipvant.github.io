@@ -3,8 +3,9 @@
 // Auth: the caller's Supabase JWT (Authorization: Bearer <jwt>).
 // Model: Groq free tier — gpt-oss-120b first, qwen3.8-27b then
 // gpt-oss-20b on 429 (each model has its own daily allowance).
-// Quotas: 10 questions/user/day, 240/day globally (the free tier's
-// token budget is the binding constraint, ~2k tokens per question).
+// Quotas: 10 questions/user/day, 180/day globally (the free tier's
+// token budget is the binding constraint, ~2.5k tokens per question
+// with the enriched journal context).
 // Streams Groq's SSE straight through to the client.
 // Secrets needed: GROQ_API_KEY (Edge Function secret).
 // Requires the v13 migration (public.coach_usage table).
@@ -14,7 +15,7 @@ const SYSTEM = `You are Pip, the coach inside PIPVANT — a trading journal and 
 
 The user is a trader who follows the ICT (Inner Circle Trader) methodology: liquidity (BSL/SSL), fair value gaps (FVG/IFVG), market structure shifts (MSS), order blocks, discount and premium zones, and killzones (London, New York). Speak that language when it fits their question and their logged setups.
 
-You will receive the user's JOURNAL DATA: their logged trades (symbol, side, R multiple, session, emotion, notes), their stats (win rate, average R, total P&L), today's plan and review, their review streak, their risk settings, and their funding accounts. Use ONLY this data plus general trading-process knowledge. Use their own numbers. Say plainly when the data is too thin to answer.
+You will receive the user's JOURNAL DATA: their logged trades (symbol, side, R multiple, session, emotion, notes), their stats (win rate, average R, total P&L), their discipline score, today's readiness (plan, mood, P&L), performance breakdowns by symbol, setup, session and emotion, their best hour, their monthly goal progress, and their funding accounts. On the fund tab you also receive the live FIRM CATALOGUE: real firms with their markets, steps, targets, loss limits and starting prices — use those real numbers for firm comparisons. Use ONLY this data plus general trading-process knowledge. Use their own numbers. Say plainly when the data is too thin to answer.
 
 Hard rules:
 - Never give buy or sell signals, never name an entry, stop, or target for a live market.
@@ -28,7 +29,7 @@ Style: warm, specific, concise. Plain text only, short paragraphs, no markdown h
 const MODELS = ["openai/gpt-oss-120b", "qwen/qwen3.8-27b", "openai/gpt-oss-20b"];
 const QUICK_MODEL = "openai/gpt-oss-20b";
 const USER_DAILY_CAP = 10;
-const GLOBAL_DAILY_CAP = 240;
+const GLOBAL_DAILY_CAP = 180;
 const MAX_TOKENS = 600;
 const QUICK_TOKENS = 250;
 
