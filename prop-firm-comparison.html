@@ -137,8 +137,8 @@
   <section class="hero">
     <div class="eyebrow">Prop firm matcher · Verified data</div>
     <h1>Compare the <span class="gold">best prop firms</span> of 2026 — free.</h1>
-    <p class="lede"><span id="liveCounts">34 verified prop firms, 648 funding plans, loaded live below.</span> Filter by drawdown, profit target, price and payout terms — then pick the challenge that fits your trading style. No signup, no paid reviews.</p>
-    <p style="color:var(--muted);font-size:13px;margin:6px 0 0">Data reviewed 1 Nov 2026 — 34 verified firms, 648 plans tracked. Firms below are ordered alphabetically, not ranked.</p>
+    <p class="lede"><span id="liveCounts">34 verified prop firms, 649 funding plans, loaded live below.</span> Filter by drawdown, profit target, price and payout terms — then pick the challenge that fits your trading style. No signup, no paid reviews.</p>
+    <p id="reviewLine" style="color:var(--muted);font-size:13px;margin:6px 0 0">Data reviewed 8 Nov 2026 — 34 verified firms, 649 plans tracked. Firms below are ordered alphabetically, not ranked.</p>
     <div class="freshness-wrap"><span class="freshness-badge" id="freshnessBadge" hidden><span class="fresh-dot"></span><span id="freshnessText"></span></span></div>
     <a class="cta-btn" href="/">Launch the free matcher →</a>
   </section>
@@ -592,6 +592,12 @@
     }
     var counts=document.getElementById('liveCounts');
     if(counts)counts.textContent=firms.length+' verified prop firms. '+plans.length+' funding plans, loaded live.';
+    var rev=document.getElementById('reviewLine');
+    if(rev){
+      var fresh=null;
+      firms.forEach(function(f){var v=f.last_verified_at||f.updated_at;if(v&&(!fresh||v>fresh))fresh=v;});
+      if(fresh)rev.textContent='Data reviewed '+new Date(fresh).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})+' — '+firms.length+' verified firms, '+plans.length+' plans tracked. Firms below are ordered alphabetically, not ranked.';
+    }
     var note=document.getElementById('liveNote');
     if(note)note.textContent=sharedMode
       ?'Shared comparison — showing only the firms from this link, with live prices and ratings from PIPVANT\u2019s verified database.'
