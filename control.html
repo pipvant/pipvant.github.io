@@ -426,12 +426,13 @@ function uShort(id){return id?String(id).slice(0,8):""}
 function planOf(uid){var g=S.grants.filter(function(x){return x._uid===uid&&x.st==="active"&&(!x.exp||new Date(x.exp)>new Date())});return g.length?(g.some(function(x){return x.plan==="elite"})?"elite":"pro"):"free"}
 function getProfiles(){return sb("profiles?select=user_id,display_name,bio,avatar_url,is_test,is_discoverable,is_banned,created_at&order=created_at.asc&limit=1000").catch(function(e){if(e.status===400)return sb("profiles?select=user_id,display_name,bio,avatar_url,is_test,is_discoverable,created_at&order=created_at.asc&limit=1000").then(function(r){return r.map(function(p){p.is_banned=false;return p})});throw e})}
 function chart30(ch){var a=[];for(var i=29;i>=0;i--){a.push(ch[ad(-i)]||0)}return a}
+function sbAll(path){var all=[],off=0;function next(){return sb(path+"&limit=1000&offset="+off).then(function(r){all=all.concat(r||[]);if(r&&r.length===1000){off+=1000;return next()}return all})}return next()}
 function loadAll(){
   return Promise.all([
     getProfiles().catch(function(e){return sbMiss(e)?null:Promise.reject(e)}),
-    sb("trades?select=user_id,created_at&order=created_at.desc&limit=5000").catch(function(e){return sbMiss(e)?null:Promise.reject(e)}),
+    sbAll("trades?select=user_id,created_at&order=created_at.desc").catch(function(e){return sbMiss(e)?null:Promise.reject(e)}),
     sb("firms?select=id,name&order=name.asc").catch(function(e){return sbMiss(e)?null:Promise.reject(e)}),
-    sb("page_views?select=page,visitor_id,created_at&order=created_at.desc&limit=5000").catch(function(e){return sbMiss(e)?null:Promise.reject(e)}),
+    sbAll("page_views?select=page,visitor_id,created_at&order=created_at.desc").catch(function(e){return sbMiss(e)?null:Promise.reject(e)}),
     sb("messages?select=*&order=created_at.desc&limit=500").catch(function(e){return sbMiss(e)?null:Promise.reject(e)}),
     sb("promo_codes?select=*&order=created_at.desc").catch(function(e){return sbMiss(e)?null:Promise.reject(e)}),
     sb("notifications?select=*&order=created_at.desc&limit=200").catch(function(e){return sbMiss(e)?null:Promise.reject(e)}),
@@ -463,7 +464,7 @@ function loadAll(){
     if(st.banner)S.bn=st.banner;
     var ov={};(r[10]||[]).forEach(function(o){ov[o.firm_id]=o});
     S.firms=firms.map(function(f){var o=ov[f.id]||{};return{id:f.id,n:f.name,on:o.visible!==false,ft:!!o.featured}});
-    var seenV={},visits=0;pvs.forEach(function(v){if(v.page==="/__system_test__")return;if(v.visitor_id){if(!seenV[v.visitor_id]){seenV[v.visitor_id]=1;visits++}}else visits++});
+    var seenV={},visits=0;pvs.forEach(function(v){var pg=v.page||"";if(pg==="/__system_test__"||pg.indexOf("/home/")===0)return;if(v.visitor_id&&!seenV[v.visitor_id]){seenV[v.visitor_id]=1;visits++}});
     var firstTraders={};trs.forEach(function(t){firstTraders[t.user_id]=1});
     S.fun=[["زوار الموقع",visits],["تسجيل",prof.length],["أول صفقة",Object.keys(firstTraders).length],["بدء تجربة",null],["اشتراك",null]];
     var today=ad(0),wk=ad(-7),ch={};
