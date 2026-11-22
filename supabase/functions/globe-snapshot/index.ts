@@ -1,0 +1,396 @@
+// globe-snapshot: daily rebuild of the Globe page's live snapshot.
+// Supabase Edge Function (Deno, vanilla fetch, no external imports
+// except the bundled ISO map). Mirrors broker-sync's auth + response
+// style: raw fetch against REST/Auth, Deno.serve, CORS, JSON replies.
+//
+// What it does (once a day, see the schedule note in v16):
+//  1. Reads the 34 real firms from public.firms (name, headquarters,
+//     last_verified_at, countries_restricted).
+//  2. Lists auth users (Admin API, service role) and keeps only the
+//     ACTIVE ones: last_sign_in_at within the last 90 days.
+//     ("Active" = connected in the last 90 days — founder decision
+//     2026-11-22. Single constant ACTIVE_DAYS below.)
+//  3. Reads profiles.country (set by IP auto-detection in the app,
+//     with a manual picker override) and accounts.firm (synced from
+//     the account form) for those users.
+//  4. Counts, per firm per country, the active users who have an
+//     account at that firm and whose profile country is that country.
+//     A user counts once per firm (multiple accounts at the same firm
+//     count once) and once per country (their profile country only).
+//     A firm that restricts a country contributes 0 there.
+//     Counts below the mask (5) are sent as null, never as a number.
+//  5. Validates the snapshot, then upserts the single row
+//     (key='latest') in public.globe_snapshot.
+//
+// Privacy: the snapshot contains NO user identity, NO exact location,
+// NO account data — only firm aggregates and masked country counts.
+// The page must never receive a raw per-user list. A country with
+// fewer than 5 traders shows "<5" on the page, never a percentage.
+//
+// Firms with no resolvable headquarters are OMITTED from the
+// snapshot (they cannot be placed on the map); they stay in the
+// firms table. Firm type is "Prop firm" for all 34 — no firm in the
+// table is verifiably a Broker, so none is labelled one. Platforms
+// are [] (the firms table has no platforms); the page hides the
+// platforms row when the list is empty. Do NOT invent platforms,
+// types, or headquarters.
+//
+// Deploy: the user deploys this from the Supabase dashboard
+// (Edge Functions > Deploy, folder supabase/functions/globe-snapshot).
+// Then schedule it daily (Edge Functions > globe-snapshot > Schedule,
+// cron "0 5 * * *", 05:00 UTC). No secret is stored in this file.
+// SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY are injected by Supabase.
+// Optional secret GLOBE_REBUILD_SECRET (Edge Function secret): when
+// set, the scheduled call must send it as x-globe-secret (or
+// Authorization: Bearer <secret>); when unset, any POST rebuilds.
+// NEVER log tokens, keys, or user data.
+
+import ISO_NUM from "./iso_num.json" with { type: "json" };
+
+const MASK = 5;
+const ACTIVE_DAYS = 90;
+const HIDDEN_COUNTRIES = []; // ISO alpha-2 codes to hide, e.g. ["XX"]
+const SNAP_KEY = "latest";
+const PAGE = 1000;
+
+const CORS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type, x-globe-secret",
+};
+
+function json(status, obj) {
+  return new Response(JSON.stringify(obj), {
+    status,
+    headers: { ...CORS, "Content-Type": "application/json" },
+  });
+}
+function fail(status, error, extra) {
+  return json(status, Object.assign({ ok: false, error }, extra || {}));
+}
+
+// ---------- headquarters lookup (geography, not data) ----------
+// firms.headquarters is a free-text string ("USA", "Dubai, UAE",
+// "Miami, Florida, USA", "Saint Lucia / Dubai, UAE", ...).
+// Take the FIRST location when several are named (the primary HQ),
+// then match a city when one is named, else the country's capital.
+// Returns {name, lon, lat} or null when nothing resolves.
+const HQ_CITIES = [
+  ["boca raton", "Boca Raton", -80.09, 26.36],
+  ["miami", "Miami", -80.19, 25.76],
+  ["dover", "Dover", -75.52, 39.16],
+  ["delaware", "Dover", -75.52, 39.16],
+  ["limassol", "Limassol", 33.03, 34.67],
+  ["port louis", "Port Louis", 57.55, -20.16],
+  ["dubai", "Dubai", 55.27, 25.2],
+  ["hong kong", "Hong Kong", 114.17, 22.32],
+];
+const HQ_COUNTRIES = [
+  ["saint lucia", "Castries", -60.98, 14.01],
+  ["saint vincent", "Kingstown", -61.27, 13.16],
+  ["czech", "Prague", 14.42, 50.07],
+  ["israel", "Jerusalem", 35.21, 31.77],
+  ["singapore", "Singapore", 103.85, 1.35],
+  ["australia", "Canberra", 149.13, -35.28],
+  ["mauritius", "Port Louis", 57.55, -20.16],
+  ["cyprus", "Nicosia", 33.38, 35.19],
+  ["united arab emirates", "Abu Dhabi", 54.37, 24.45],
+  ["uae", "Abu Dhabi", 54.37, 24.45],
+  ["united kingdom", "London", -0.12, 51.5],
+  ["uk", "London", -0.12, 51.5],
+  ["united states", "Washington, DC", -77.04, 38.9],
+  ["usa", "Washington, DC", -77.04, 38.9],
+];
+function hqLookup(hq) {
+  if (!hq || typeof hq !== "string") return null;
+  const primary = hq.split("/")[0].trim().toLowerCase();
+  if (!primary || primary === "(none)") return null;
+  for (const [pat, name, lon, lat] of HQ_CITIES) {
+    if (primary.includes(pat)) return { name, lon, lat };
+  }
+  for (const [pat, name, lon, lat] of HQ_COUNTRIES) {
+    if (primary.includes(pat)) return { name, lon, lat };
+  }
+  return null;
+}
+
+function normName(s) {
+  return (s || "").trim().toLowerCase().replace(/\s+/g, " ");
+}
+
+// ---------- snapshot validation (brief section 6) ----------
+function validSnapshot(snap) {
+  if (!snap || typeof snap !== "object") return "not an object";
+  if (typeof snap.generatedAt !== "number" || snap.generatedAt <= 0) {
+    return "bad generatedAt";
+  }
+  if (snap.mask !== MASK) return "bad mask";
+  if (snap.mode !== "live") return "bad mode";
+  if (!Array.isArray(snap.firms) || !Array.isArray(snap.countries)) {
+    return "firms/countries not arrays";
+  }
+  if (!snap.traders || typeof snap.traders.total !== "number" ||
+      snap.traders.total < 0) return "bad traders.total";
+  for (const f of snap.firms) {
+    if (!f.id || !f.name || !f.hq) return "firm missing id/name/hq";
+    if (typeof f.hq.lon !== "number" || typeof f.hq.lat !== "number") {
+      return "firm hq not numeric";
+    }
+    if (f.hq.lon < -180 || f.hq.lon > 180 || f.hq.lat < -90 ||
+        f.hq.lat > 90) return "firm hq out of range";
+    if (f.verifiedAt != null &&
+        (typeof f.verifiedAt !== "number" || f.verifiedAt <= 0)) {
+      return "firm bad verifiedAt";
+    }
+    if (f.status !== "live" && f.status !== "soon" &&
+        f.status !== "paused") return "firm bad status";
+  }
+  for (const c of snap.countries) {
+    if (typeof c.iso !== "string" || !/^\d{3}$/.test(c.iso)) {
+      return "country bad iso";
+    }
+    if (!c.traders || typeof c.traders !== "object") {
+      return "country bad traders";
+    }
+    for (const k of Object.keys(c.traders)) {
+      const v = c.traders[k];
+      if (v !== null &&
+          (!Number.isInteger(v) || v < 0)) return "country bad count";
+    }
+  }
+  return null;
+}
+
+// ---------- REST helpers (service role) ----------
+async function restGet(base, headers, path) {
+  const out = [];
+  let offset = 0;
+  for (;;) {
+    const sep = path.includes("?") ? "&" : "?";
+    const url = base + path + sep + "limit=" + PAGE + "&offset=" + offset;
+    const r = await fetch(url, { headers });
+    if (!r.ok) {
+      throw new Error("rest " + r.status + " " + path.split("?")[0]);
+    }
+    const rows = await r.json();
+    if (!Array.isArray(rows) || rows.length === 0) break;
+    out.push(...rows);
+    if (rows.length < PAGE) break;
+    offset += PAGE;
+  }
+  return out;
+}
+
+Deno.serve(async (req) => {
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: CORS });
+  }
+  if (req.method !== "POST") return fail(405, "POST only");
+
+  // Optional trigger secret (see header). When set, the caller must
+  // send it; when unset, any POST rebuilds (rebuilds are idempotent
+  // and publish only public aggregates).
+  const secret = Deno.env.get("GLOBE_REBUILD_SECRET");
+  if (secret) {
+    const got = req.headers.get("x-globe-secret") ||
+      (req.headers.get("Authorization") || "").replace(/^Bearer\s+/i, "");
+    if (got !== secret) return fail(401, "bad secret");
+  }
+
+  const sbUrl = Deno.env.get("SUPABASE_URL");
+  const svcKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  if (!sbUrl || !svcKey) {
+    return fail(500, "Globe snapshot is not configured.");
+  }
+  const restBase = sbUrl.replace(/\/$/, "") + "/rest/v1";
+  const svc = {};
+  svc["apikey"] = svcKey;
+  svc["Authorization"] = "Bearer " + svcKey;
+  svc["Content-Type"] = "application/json";
+  const started = Date.now();
+
+  try {
+    // 1. Firms (public table, read via service role for consistency).
+    const firms = await restGet(
+      restBase, svc,
+      "/firms?select=id,name,website,headquarters,last_verified_at,countries_restricted&order=name",
+    );
+
+    // 2. Active users via the Auth Admin API (paginated).
+    const cutoff = started - ACTIVE_DAYS * 864e5;
+    const activeIds = new Set();
+    let page = 1;
+    for (;;) {
+      const r = await fetch(
+        sbUrl.replace(/\/$/, "") +
+          "/auth/v1/admin/users?page=" + page + "&per_page=" + PAGE,
+        { headers: svc },
+      );
+      if (!r.ok) throw new Error("admin users " + r.status);
+      const body = await r.json();
+      const users = Array.isArray(body) ? body : body.users || [];
+      if (!users.length) break;
+      for (const u of users) {
+        const last = u.last_sign_in_at ? Date.parse(u.last_sign_in_at) : NaN;
+        if (!Number.isNaN(last) && last >= cutoff) activeIds.add(u.id);
+      }
+      if (users.length < PAGE) break;
+      page++;
+    }
+
+    // 3. Profiles: country per user (only rows with a country set).
+    const profiles = await restGet(
+      restBase, svc,
+      "/profiles?select=user_id,country&country=not.is.null",
+    );
+    const countryByUser = new Map();
+    for (const p of profiles) {
+      if (p.user_id && typeof p.country === "string" &&
+          /^[A-Z]{2}$/.test(p.country)) {
+        countryByUser.set(p.user_id, p.country);
+      }
+    }
+
+    // 4. Accounts: firm per user (only rows with a firm set).
+    const accounts = await restGet(
+      restBase, svc,
+      "/accounts?select=user_id,firm&firm=not.is.null",
+    );
+    const firmsByUser = new Map(); // user_id -> Set(normalized firm name)
+    for (const a of accounts) {
+      if (!a.user_id || !a.firm) continue;
+      const n = normName(a.firm);
+      if (!n) continue;
+      if (!firmsByUser.has(a.user_id)) firmsByUser.set(a.user_id, new Set());
+      firmsByUser.get(a.user_id).add(n);
+    }
+
+    // 5. Firm lookup by normalized name + HQ resolution.
+    const firmByName = new Map();
+    const snapFirms = [];
+    const skippedNoHq = [];
+    for (const f of firms) {
+      const hq = hqLookup(f.headquarters);
+      if (!hq) {
+        skippedNoHq.push(f.name);
+        continue; // cannot be placed on the map; stays in firms table
+      }
+      const verifiedAt = f.last_verified_at
+        ? Date.parse(f.last_verified_at)
+        : null;
+      const entry = {
+        id: f.id,
+        name: f.name,
+        type: "Prop firm",
+        status: "live",
+        platforms: [],
+        hq: { name: hq.name, lon: hq.lon, lat: hq.lat },
+        connectUrl: f.website || "",
+      };
+      if (verifiedAt && !Number.isNaN(verifiedAt)) {
+        entry.verifiedAt = verifiedAt;
+      }
+      snapFirms.push(entry);
+      firmByName.set(normName(f.name), entry);
+    }
+
+    // 6. Aggregate: per firm per country.
+    // counts[isoNumeric][firmId] = number of active users.
+    const counts = new Map();
+    let usersCounted = 0;
+    for (const uid of activeIds) {
+      const a2 = countryByUser.get(uid);
+      if (!a2) continue; // no country: not on the map
+      const num = ISO_NUM[a2];
+      if (!num) continue;
+      if (HIDDEN_COUNTRIES.includes(a2)) continue;
+      const userFirms = firmsByUser.get(uid);
+      if (!userFirms || userFirms.size === 0) continue;
+      usersCounted++;
+      for (const fname of userFirms) {
+        const firm = firmByName.get(fname);
+        if (!firm) continue; // firm name not in the firms table
+        if (!counts.has(num)) counts.set(num, new Map());
+        const byFirm = counts.get(num);
+        byFirm.set(firm.id, (byFirm.get(firm.id) || 0) + 1);
+      }
+    }
+
+    // Apply per-firm country restrictions (a restricted firm gives 0).
+    // We need the restriction lists: rebuild from the firms rows.
+    const restrictedByFirm = new Map();
+    for (const f of firms) {
+      if (Array.isArray(f.countries_restricted) &&
+          f.countries_restricted.length) {
+        restrictedByFirm.set(f.id, new Set(f.countries_restricted));
+      }
+    }
+    const snapCountries = [];
+    let total = 0;
+    // Reverse map (numeric -> alpha-2) for the restriction check.
+    const NUM_TO_A2 = {};
+    for (const [k, v] of Object.entries(ISO_NUM)) NUM_TO_A2[v] = k;
+    for (const [iso, byFirm] of [...counts.entries()].sort()) {
+      const a2 = NUM_TO_A2[iso] || null;
+      const traders = {};
+      for (const [firmId, n] of byFirm) {
+        const restricted = restrictedByFirm.get(firmId);
+        if (a2 && restricted && restricted.has(a2)) continue;
+        traders[firmId] = n < MASK ? null : n;
+        if (n >= MASK) total += n;
+      }
+      if (Object.keys(traders).length === 0) continue;
+      snapCountries.push({ iso, traders });
+    }
+
+    const snap = {
+      generatedAt: started,
+      mask: MASK,
+      mode: "live",
+      hidden_countries: HIDDEN_COUNTRIES,
+      firms: snapFirms,
+      countries: snapCountries,
+      traders: { total },
+    };
+
+    const bad = validSnapshot(snap);
+    if (bad) {
+      console.warn("globe-snapshot: invalid snapshot, not writing:", bad);
+      return fail(500, "invalid snapshot: " + bad);
+    }
+
+    // 7. Upsert the single snapshot row.
+    const up = await fetch(
+      restBase + "/globe_snapshot?on_conflict=key",
+      {
+        method: "POST",
+        headers: { ...svc, Prefer: "resolution=merge-duplicates" },
+        body: JSON.stringify({
+          key: SNAP_KEY,
+          snapshot: snap,
+          mode: "live",
+          updated_at: new Date().toISOString(),
+        }),
+      },
+    );
+    if (!up.ok) {
+      const t = await up.text().catch(() => "");
+      throw new Error("upsert " + up.status + " " + t.slice(0, 200));
+    }
+
+    return json(200, {
+      ok: true,
+      generatedAt: started,
+      firms: snapFirms.length,
+      countries: snapCountries.length,
+      tradersTotal: total,
+      usersCounted,
+      activeUsers: activeIds.size,
+      skippedNoHq,
+      ms: Date.now() - started,
+    });
+  } catch (e) {
+    console.warn("globe-snapshot failed:", e && e.message ? e.message : e);
+    return fail(500, "rebuild failed");
+  }
+});
