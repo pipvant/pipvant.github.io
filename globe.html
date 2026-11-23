@@ -700,7 +700,7 @@ function arcPairs() {
   const out = [];
   if (focusFirm) {
     const fm = FIRMS[focusFirm];
-    dataFeats.forEach(f => { if (DATA[f.key] && DATA[f.key][focusFirm]) out.push({a: fm.hq, b: centerOf(f), col: firmCol(focusFirm), firm: focusFirm, hq: 'a'}); });
+    dataFeats.forEach(f => { if (DATA[f.key] && Object.prototype.hasOwnProperty.call(DATA[f.key], focusFirm)) out.push({a: fm.hq, b: centerOf(f), col: firmCol(focusFirm), firm: focusFirm, hq: 'a'}); });
   }
   return out;
 }
