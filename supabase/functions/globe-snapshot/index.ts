@@ -20,16 +20,17 @@
 //     a trader on the map; the firm account only says WHICH firm.
 //     Each country entry carries `total` (active users with that
 //     country, masked <5 as null) plus `traders` (per-firm counts,
-//     masked <5). For a country with real traders, `traders` lists
-//     EVERY firm that supports the country (from the firms table's
+//     masked <5). For a country that deserves it — real traders, or
+//     a partner firm headquartered there — `traders` lists EVERY
+//     firm that supports the country (from the firms table's
 //     allowed/restricted lists), with the real per-firm count where
 //     a trader holds an account at that firm and null otherwise —
 //     so the country appears on the globe with its supporting
-//     firms (founder decision 2026-11-23). A user counts once per
-//     firm (multiple accounts at the same firm count once) and once
-//     per country (their profile country only). A firm that
-//     restricts a country contributes 0 there. Counts below the
-//     mask (5) are sent as null, never as a number.
+//     firms, and the arcs are live (founder decision 2026-11-23).
+//     A user counts once per firm (multiple accounts at the same
+//     firm count once) and once per country (their profile country
+//     only). A firm that restricts a country contributes 0 there.
+//     Counts below the mask (5) are sent as null, never as a number.
 //  5. Validates the snapshot, then upserts the single row
 //     (key='latest') in public.globe_snapshot.
 //
@@ -140,6 +141,49 @@ function hqLookup(hq) {
   }
   for (const [pat, name, lon, lat] of HQ_COUNTRIES) {
     if (primary.includes(pat)) return { name, lon, lat };
+  }
+  return null;
+}
+
+// ---------- HQ country (Firms layer "deserving countries") ----------
+// Maps a firm's PRIMARY headquarters (first location named, same
+// rule as hqLookup) to an ISO alpha-2 country code. A firm is based
+// in exactly one country; that country "deserves" a place on the
+// Firms layer because a real PIPVANT partner firm is headquartered
+// there. Derived from the firms table headquarters strings — no
+// invented countries. (Founder decision 2026-11-23: the Firms view
+// shows the countries that deserve it, with the firms that support
+// them — not just the one country that has traders.)
+const HQ_COUNTRY = [
+  ["saint lucia", "LC"],
+  ["saint vincent", "VC"],
+  ["czech", "CZ"],
+  ["israel", "IL"],
+  ["singapore", "SG"],
+  ["australia", "AU"],
+  ["mauritius", "MU"],
+  ["port louis", "MU"],
+  ["cyprus", "CY"],
+  ["limassol", "CY"],
+  ["hong kong", "HK"],
+  ["united arab emirates", "AE"],
+  ["uae", "AE"],
+  ["dubai", "AE"],
+  ["united kingdom", "GB"],
+  ["uk", "GB"],
+  ["united states", "US"],
+  ["usa", "US"],
+  ["miami", "US"],
+  ["delaware", "US"],
+  ["dover", "US"],
+  ["boca raton", "US"],
+];
+function hqCountry(hq) {
+  if (!hq || typeof hq !== "string") return null;
+  const primary = hq.split("/")[0].trim().toLowerCase();
+  if (!primary || primary === "(none)") return null;
+  for (const [pat, code] of HQ_COUNTRY) {
+    if (primary.includes(pat)) return code;
   }
   return null;
 }
@@ -426,10 +470,30 @@ Deno.serve(async (req) => {
     // Reverse map (numeric -> alpha-2) for the restriction check.
     const NUM_TO_A2 = {};
     for (const [k, v] of Object.entries(ISO_NUM)) NUM_TO_A2[v] = k;
-    // Union of countries: those with users (countryUsers) and those
-    // with firm counts. A country appears when it has >=1 user, even
-    // with no firm account (its per-firm breakdown is then empty).
-    const allIso = new Set([...countryUsers.keys(), ...counts.keys()]);
+    // "Deserving countries" (founder decision 2026-11-23): the Firms
+    // view shows the countries that deserve it — (a) countries with
+    // real traders, and (b) countries where a real partner firm is
+    // headquartered. The Traders view is driven by real traders only
+    // (a country with no traders has tot 0, so it stays dark green
+    // there), while the Firms view colours every country in DATA
+    // blue by its firm count. 24 of 34 firms support everywhere
+    // (no allowed/restricted list), so "every supported country"
+    // would be all ~249 countries — a solid blue globe, not
+    // organised. HQ countries + trader countries is the organised,
+    // honest set: every one is real (a firm HQ or a registered
+    // trader) and every firm listed for it really supports it.
+    const hqIso = new Set();
+    for (const f of firms) {
+      const code = hqCountry(f.headquarters);
+      if (code && ISO_NUM[code]) hqIso.add(ISO_NUM[code]);
+    }
+    // Union of countries: those with users (countryUsers), those
+    // with firm counts, and HQ countries. A country appears when
+    // it has >=1 user, even with no firm account (its per-firm
+    // breakdown is then empty), or when a firm is HQ'd there.
+    const allIso = new Set([
+      ...countryUsers.keys(), ...counts.keys(), ...hqIso,
+    ]);
     for (const iso of [...allIso].sort()) {
       const a2 = NUM_TO_A2[iso] || null;
       const userTotal = countryUsers.get(iso) || 0;
@@ -442,16 +506,20 @@ Deno.serve(async (req) => {
         }
       }
       // Supporting firms (founder decision 2026-11-23): for a
-      // country with real traders, list EVERY firm that supports
-      // the country (firms table allowed/restricted), not just the
-      // firms the traders hold accounts at. The per-firm count
-      // stays the real count (masked <5 -> null); a supporting
-      // firm with no traders here gets null, shown as "<5" — honest,
-      // the real count is under 5. This is what makes the country
-      // appear on the globe with its supporting firms. Countries
-      // with no traders never reach this loop, so they stay absent
-      // (0) — no "<5" is invented for them.
-      if (a2 && userTotal > 0) {
+      // country that deserves it — real traders, or a firm HQ —
+      // list EVERY firm that supports the country (firms table
+      // allowed/restricted), not just the firms the traders hold
+      // accounts at. The per-firm count stays the real count
+      // (masked <5 -> null); a supporting firm with no traders
+      // here gets null, shown as "<5" — honest, the real count is
+      // under 5. This is what makes the country appear on the
+      // globe with its supporting firms, and what makes the arcs
+      // live: selecting the country draws arcs to its supporting
+      // firms' HQs; focusing a firm draws arcs to every country
+      // in DATA that lists it. Countries with no traders and no
+      // firm HQ never reach this loop, so they stay absent (0) —
+      // no "<5" is invented for them.
+      if (a2 && (userTotal > 0 || hqIso.has(iso))) {
         for (const f of snapFirms) {
           if (f.status === "paused") continue;
           if (Object.prototype.hasOwnProperty.call(traders, f.id)) continue;
