@@ -701,9 +701,6 @@ function arcPairs() {
   if (focusFirm) {
     const fm = FIRMS[focusFirm];
     dataFeats.forEach(f => { if (DATA[f.key] && DATA[f.key][focusFirm]) out.push({a: fm.hq, b: centerOf(f), col: firmCol(focusFirm), firm: focusFirm, hq: 'a'}); });
-  } else if (selUid) {
-    const f = dataFeats.find(x => x.uid === selUid);
-    if (f && DATA[f.key]) Object.keys(DATA[f.key]).forEach(id => out.push({a: centerOf(f), b: FIRMS[id].hq, col: firmCol(id), firm: id, hq: 'b'}));
   }
   return out;
 }
