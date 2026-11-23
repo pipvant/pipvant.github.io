@@ -47,6 +47,7 @@ h2{margin:0 0 6px;font:800 22px/1.15 Sora,sans-serif;letter-spacing:-.03em}h3{ma
 .firm{display:flex;align-items:center;gap:12px;width:100%;padding:12px;margin-bottom:8px;border-radius:18px;background:var(--card);border:1px solid var(--line);text-align:start}
 .firm[aria-pressed=true]{border-color:#7ff0d0;background:rgba(127,240,208,.1)}
 .mono{flex:none;width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:#eef3ff;color:#1b3bb8;font:800 17px Sora,sans-serif}
+.flogo{flex:none;width:42px;height:42px;border-radius:13px;object-fit:contain;background:#eef3ff;padding:5px}
 .fmid{flex:1;min-width:0}.fmid b{display:block;font:600 15px Inter}.fmid small{display:block;margin-top:2px;font-size:12px;line-height:1.35;color:var(--mu)}
 .st{flex:none;display:inline-flex;align-items:center;gap:6px;min-height:28px;padding:0 10px;border-radius:999px;background:rgba(190,215,255,.08);font:600 12px Inter}.st::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
 .st.live{color:var(--win)}.st.soon{color:var(--amb)}.st.closed{color:#8b9ab5}
@@ -966,7 +967,8 @@ function detailView(f) {
   const l = el('div', 'firms');
   ids.forEach(id => {
     const fm = FIRMS[id], c = el('button', 'firm'); c.type = 'button'; c.setAttribute('aria-pressed', focusFirm === id);
-    c.append(el('span', 'mono', id));
+    const lg = document.createElement('img'); lg.className = 'flogo'; lg.src = 'assets/firm-logos/' + id.replace(/-/g, '') + '.png'; lg.alt = fm.n; lg.onerror = () => { lg.remove(); };
+    c.append(lg);
     const mid = el('div', 'fmid'); mid.append(el('b', '', fm.n), el('small', '', fm.t + (fm.hqn ? ' · HQ ' + fm.hqn : '') + (fm.p.length ? ' · ' + fm.p.join(', ') : '') + verifiedText(fm)));
     c.append(mid, el('span', 'st ' + fm.s, fm.s === 'live' ? 'Auto-import' : 'Coming soon'));
     c.onclick = () => { focusFirm = focusFirm === id ? '' : id; arcSig = ''; detailView(f); };
