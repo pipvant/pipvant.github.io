@@ -20,8 +20,9 @@
 //     a trader on the map; the firm account only says WHICH firm.
 //     Each country entry carries `total` (active users with that
 //     country, masked <5 as null) plus `traders` (per-firm counts,
-//     masked <5). For a country that deserves it — real traders, or
-//     a partner firm headquartered there — `traders` lists EVERY
+//     masked <5). For a country that deserves it — real traders, a
+//     partner firm headquartered there, or one of the world's
+//     important countries — `traders` lists EVERY
 //     firm that supports the country (from the firms table's
 //     allowed/restricted lists), with the real per-firm count where
 //     a trader holds an account at that firm and null otherwise —
@@ -472,27 +473,49 @@ Deno.serve(async (req) => {
     for (const [k, v] of Object.entries(ISO_NUM)) NUM_TO_A2[v] = k;
     // "Deserving countries" (founder decision 2026-11-23): the Firms
     // view shows the countries that deserve it — (a) countries with
-    // real traders, and (b) countries where a real partner firm is
-    // headquartered. The Traders view is driven by real traders only
-    // (a country with no traders has tot 0, so it stays dark green
-    // there), while the Firms view colours every country in DATA
-    // blue by its firm count. 24 of 34 firms support everywhere
+    // real traders, (b) countries where a real partner firm is
+    // headquartered, and (c) the world's important countries
+    // (major economies, financial centres, large trading nations),
+    // so a user from any major country finds theirs instead of
+    // feeling left out. The Traders view is driven by real traders
+    // only (a country with no traders has tot 0, so it stays dark
+    // green there), while the Firms view colours every country in
+    // DATA blue by its firm count. 24 of 34 firms support everywhere
     // (no allowed/restricted list), so "every supported country"
     // would be all ~249 countries — a solid blue globe, not
-    // organised. HQ countries + trader countries is the organised,
-    // honest set: every one is real (a firm HQ or a registered
-    // trader) and every firm listed for it really supports it.
+    // organised. The important-countries set below is the organised,
+    // honest set: every one is a real major country and every firm
+    // listed for it really supports it.
+    const IMPORTANT_COUNTRIES = [
+      "US", "CA", "MX", // North America
+      "BR", "AR", "CL", "CO", "PE", // South America
+      "GB", "DE", "FR", "ES", "IT", "NL", "CH", "SE", "NO", "DK",
+      "BE", "AT", "IE", "PT", "PL", "CZ", "HU", "RO", "GR", "CY", // Europe
+      "TR", "RU", "UA", // Turkey / Russia / Ukraine
+      "AE", "SA", "QA", "KW", "IL", "JO", // Middle East
+      "EG", "MA", "DZ", "TN", "ZA", "NG", "KE", "GH", // Africa
+      "IN", "PK", "BD", "LK", // South Asia
+      "CN", "JP", "KR", "TW", "HK", // East Asia
+      "SG", "MY", "TH", "VN", "ID", "PH", // Southeast Asia
+      "AU", "NZ", // Oceania
+      "LC", "VC", "MU", // Small HQ countries (firm headquarters)
+    ];
     const hqIso = new Set();
     for (const f of firms) {
       const code = hqCountry(f.headquarters);
       if (code && ISO_NUM[code]) hqIso.add(ISO_NUM[code]);
     }
+    const importantIso = new Set();
+    for (const code of IMPORTANT_COUNTRIES) {
+      if (ISO_NUM[code]) importantIso.add(ISO_NUM[code]);
+    }
     // Union of countries: those with users (countryUsers), those
-    // with firm counts, and HQ countries. A country appears when
-    // it has >=1 user, even with no firm account (its per-firm
-    // breakdown is then empty), or when a firm is HQ'd there.
+    // with firm counts, HQ countries, and important countries. A
+    // country appears when it has >=1 user, even with no firm
+    // account (its per-firm breakdown is then empty), or when a
+    // firm is HQ'd there, or when it is an important country.
     const allIso = new Set([
-      ...countryUsers.keys(), ...counts.keys(), ...hqIso,
+      ...countryUsers.keys(), ...counts.keys(), ...hqIso, ...importantIso,
     ]);
     for (const iso of [...allIso].sort()) {
       const a2 = NUM_TO_A2[iso] || null;
@@ -519,7 +542,7 @@ Deno.serve(async (req) => {
       // in DATA that lists it. Countries with no traders and no
       // firm HQ never reach this loop, so they stay absent (0) —
       // no "<5" is invented for them.
-      if (a2 && (userTotal > 0 || hqIso.has(iso))) {
+      if (a2 && (userTotal > 0 || hqIso.has(iso) || importantIso.has(iso))) {
         for (const f of snapFirms) {
           if (f.status === "paused") continue;
           if (Object.prototype.hasOwnProperty.call(traders, f.id)) continue;
