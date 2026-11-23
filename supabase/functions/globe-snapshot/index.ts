@@ -13,11 +13,28 @@
 //  3. Reads profiles.country (set by IP auto-detection in the app,
 //     with a manual picker override) and accounts.firm (synced from
 //     the account form) for those users.
-//  4. Counts, per firm per country, the active users who have an
-//     account at that firm and whose profile country is that country.
-//     A user counts once per firm (multiple accounts at the same firm
-//     count once) and once per country (their profile country only).
-//     A firm that restricts a country contributes 0 there.
+//  4. Counts. COUNTING RULE (founder decision 2026-11-22): a user
+//     counts in a country when ACTIVE (signed in within 90 days)
+//     AND they have profiles.country set. A firm account is NOT
+//     required for the country total — a registered PIPVANT user IS
+//     a trader on the map; the firm account only says WHICH firm.
+//     Each country entry carries `total` (active users with that
+//     country, masked <5 as null) plus `traders` (per-firm counts,
+//     masked <5). For a country that deserves it — real traders, a
+//     partner firm headquartered there, or one of the world's
+//     important countries — `traders` lists the firms that support
+//     the country (from the firms table's allowed/restricted lists),
+//     with the real per-firm count where a trader holds an account
+//     at that firm and null otherwise — so the country appears on
+//     the globe with its supporting firms, and the arcs are live
+//     (founder decision 2026-11-23). CAPPED at 6 firms per country
+//     (arc declutter, founder decision 2026-11-23): the page draws
+//     one arc per firm, so 28 firms = 28 arcs covering the globe;
+//     the 6 kept are chosen for HQ diversity (one per HQ country),
+//     firms with real trader counts are never dropped.
+//     A user counts once per firm (multiple accounts at the same
+//     firm count once) and once per country (their profile country
+//     only). A firm that restricts a country contributes 0 there.
 //     Counts below the mask (5) are sent as null, never as a number.
 //  5. Validates the snapshot, then upserts the single row
 //     (key='latest') in public.globe_snapshot.
@@ -52,6 +69,25 @@ const ACTIVE_DAYS = 90;
 const HIDDEN_COUNTRIES = []; // ISO alpha-2 codes to hide, e.g. ["XX"]
 const SNAP_KEY = "latest";
 const PAGE = 1000;
+
+// The firms table mixes 2-letter codes ("MA") and full country
+// names ("Morocco") in countries_restricted / countries_allowed
+// (today only "Morocco" appears as a name). Availability checks
+// use 2-letter codes, so names are normalised to codes here; the
+// snapshot therefore always carries codes. Unknown names are
+// dropped (they cannot be matched reliably).
+const NAME_TO_CODE = { Morocco: "MA" };
+function normCountryList(list) {
+  if (!Array.isArray(list)) return [];
+  const out = [];
+  for (const v of list) {
+    if (typeof v !== "string") continue;
+    const t = v.trim();
+    if (/^[A-Z]{2}$/.test(t)) out.push(t);
+    else if (NAME_TO_CODE[t]) out.push(NAME_TO_CODE[t]);
+  }
+  return out;
+}
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -114,8 +150,69 @@ function hqLookup(hq) {
   return null;
 }
 
+// ---------- HQ country (Firms layer "deserving countries") ----------
+// Maps a firm's PRIMARY headquarters (first location named, same
+// rule as hqLookup) to an ISO alpha-2 country code. A firm is based
+// in exactly one country; that country "deserves" a place on the
+// Firms layer because a real PIPVANT partner firm is headquartered
+// there. Derived from the firms table headquarters strings — no
+// invented countries. (Founder decision 2026-11-23: the Firms view
+// shows the countries that deserve it, with the firms that support
+// them — not just the one country that has traders.)
+const HQ_COUNTRY = [
+  ["saint lucia", "LC"],
+  ["saint vincent", "VC"],
+  ["czech", "CZ"],
+  ["israel", "IL"],
+  ["singapore", "SG"],
+  ["australia", "AU"],
+  ["mauritius", "MU"],
+  ["port louis", "MU"],
+  ["cyprus", "CY"],
+  ["limassol", "CY"],
+  ["hong kong", "HK"],
+  ["united arab emirates", "AE"],
+  ["uae", "AE"],
+  ["dubai", "AE"],
+  ["united kingdom", "GB"],
+  ["uk", "GB"],
+  ["united states", "US"],
+  ["usa", "US"],
+  ["miami", "US"],
+  ["delaware", "US"],
+  ["dover", "US"],
+  ["boca raton", "US"],
+];
+function hqCountry(hq) {
+  if (!hq || typeof hq !== "string") return null;
+  const primary = hq.split("/")[0].trim().toLowerCase();
+  if (!primary || primary === "(none)") return null;
+  for (const [pat, code] of HQ_COUNTRY) {
+    if (primary.includes(pat)) return code;
+  }
+  return null;
+}
+
 function normName(s) {
   return (s || "").trim().toLowerCase().replace(/\s+/g, " ");
+}
+
+// ---------- short stable firm ids ----------
+// The snapshot's firm `id` is rendered by the Globe page as the arc
+// badge letter and the detail-panel `.mono` chip. A UUID (36 chars)
+// overflows both. Use a short slug from the firm name instead:
+// deterministic (same firm name -> same id on every rebuild) and
+// unique (a colliding slug gets -2, -3, ...; firm order is stable
+// because the firms query is order=name). The page only ever uses
+// the id as a key and as a display initial, so a slug is safe.
+const usedShortIds = new Set();
+function shortId(name) {
+  let base = (name || "").toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "firm";
+  let id = base, n = 2;
+  while (usedShortIds.has(id)) { id = base + "-" + n; n++; }
+  usedShortIds.add(id);
+  return id;
 }
 
 // ---------- snapshot validation (brief section 6) ----------
@@ -156,6 +253,12 @@ function validSnapshot(snap) {
       const v = c.traders[k];
       if (v !== null &&
           (!Number.isInteger(v) || v < 0)) return "country bad count";
+    }
+    // Country total: the active-user count for this country
+    // (masked <5 as null). Must be null or a non-negative integer.
+    if (c.total !== null && c.total !== undefined &&
+        (!Number.isInteger(c.total) || c.total < 0)) {
+      return "country bad total";
     }
   }
   return null;
@@ -211,9 +314,11 @@ Deno.serve(async (req) => {
 
   try {
     // 1. Firms (public table, read via service role for consistency).
+    // countries_allowed is read too: it drives "supported" (a firm
+    // with a non-empty allowed list ONLY supports those countries).
     const firms = await restGet(
       restBase, svc,
-      "/firms?select=id,name,website,headquarters,last_verified_at,countries_restricted&order=name",
+      "/firms?select=id,name,website,headquarters,last_verified_at,countries_restricted,countries_allowed&order=name",
     );
 
     // 2. Active users via the Auth Admin API (paginated).
@@ -269,6 +374,7 @@ Deno.serve(async (req) => {
     const firmByName = new Map();
     const snapFirms = [];
     const skippedNoHq = [];
+    const hqCountryById = new Map(); // firm slug id -> HQ alpha-2 code
     for (const f of firms) {
       const hq = hqLookup(f.headquarters);
       if (!hq) {
@@ -279,7 +385,7 @@ Deno.serve(async (req) => {
         ? Date.parse(f.last_verified_at)
         : null;
       const entry = {
-        id: f.id,
+        id: shortId(f.name),
         name: f.name,
         type: "Prop firm",
         status: "live",
@@ -290,13 +396,40 @@ Deno.serve(async (req) => {
       if (verifiedAt && !Number.isNaN(verifiedAt)) {
         entry.verifiedAt = verifiedAt;
       }
+      // Availability (drives "supported countries" colouring and the
+      // country panel's firm list on the globe page). Only sent when
+      // non-empty; the page treats a missing list as unrestricted.
+      // allowed (non-empty) = ONLY those countries; restricted =
+      // everywhere except those.
+      if (Array.isArray(f.countries_restricted) &&
+          f.countries_restricted.length) {
+        const nr = normCountryList(f.countries_restricted);
+        if (nr.length) entry.restricted = nr;
+      }
+      if (Array.isArray(f.countries_allowed) &&
+          f.countries_allowed.length) {
+        const na = normCountryList(f.countries_allowed);
+        if (na.length) entry.allowed = na;
+      }
       snapFirms.push(entry);
       firmByName.set(normName(f.name), entry);
+      const hqCode = hqCountry(f.headquarters);
+      if (hqCode) hqCountryById.set(entry.id, hqCode);
     }
 
-    // 6. Aggregate: per firm per country.
-    // counts[isoNumeric][firmId] = number of active users.
+    // 6. Aggregate.
+    // COUNTING RULE (founder decision 2026-11-22): a user counts in a
+    // country when they are ACTIVE (signed in within 90 days) AND
+    // they have profiles.country set. A firm account is NOT required
+    // for the country total — a registered PIPVANT user IS a trader
+    // on the map; the firm account only says WHICH firm, not WHETHER
+    // they are a user. The per-firm breakdown ("Traders by firm")
+    // still requires a firm account.
+    // countryUsers[isoNumeric] = active users with that country.
+    // counts[isoNumeric][firmId] = active users with that country
+    //   AND an account at that firm.
     const counts = new Map();
+    const countryUsers = new Map();
     let usersCounted = 0;
     for (const uid of activeIds) {
       const a2 = countryByUser.get(uid);
@@ -304,9 +437,10 @@ Deno.serve(async (req) => {
       const num = ISO_NUM[a2];
       if (!num) continue;
       if (HIDDEN_COUNTRIES.includes(a2)) continue;
+      countryUsers.set(num, (countryUsers.get(num) || 0) + 1);
+      usersCounted++;
       const userFirms = firmsByUser.get(uid);
       if (!userFirms || userFirms.size === 0) continue;
-      usersCounted++;
       for (const fname of userFirms) {
         const firm = firmByName.get(fname);
         if (!firm) continue; // firm name not in the firms table
@@ -316,31 +450,155 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Apply per-firm country restrictions (a restricted firm gives 0).
-    // We need the restriction lists: rebuild from the firms rows.
+    // Availability maps (for firm support + counting), keyed by the
+    // SHORT snapshot id (not the firms-table UUID — firmSupports is
+    // called with the slug id from the per-firm counts, so the keys
+    // must match). The entries already carry normalized lists.
+    // allowed (non-empty) = ONLY those countries; restricted =
+    // everywhere except those; neither = everywhere.
     const restrictedByFirm = new Map();
-    for (const f of firms) {
-      if (Array.isArray(f.countries_restricted) &&
-          f.countries_restricted.length) {
-        restrictedByFirm.set(f.id, new Set(f.countries_restricted));
+    const allowedByFirm = new Map();
+    for (const e of snapFirms) {
+      if (Array.isArray(e.restricted) && e.restricted.length) {
+        restrictedByFirm.set(e.id, new Set(e.restricted));
       }
+      if (Array.isArray(e.allowed) && e.allowed.length) {
+        allowedByFirm.set(e.id, new Set(e.allowed));
+      }
+    }
+    function firmSupports(firmId, a2) {
+      const allowed = allowedByFirm.get(firmId);
+      if (allowed) return allowed.has(a2);
+      const restricted = restrictedByFirm.get(firmId);
+      if (restricted) return !restricted.has(a2);
+      return true;
     }
     const snapCountries = [];
     let total = 0;
     // Reverse map (numeric -> alpha-2) for the restriction check.
     const NUM_TO_A2 = {};
     for (const [k, v] of Object.entries(ISO_NUM)) NUM_TO_A2[v] = k;
-    for (const [iso, byFirm] of [...counts.entries()].sort()) {
+    // "Deserving countries" (founder decision 2026-11-23): the Firms
+    // view shows the countries that deserve it — (a) countries with
+    // real traders, (b) countries where a real partner firm is
+    // headquartered, and (c) the world's important countries
+    // (major economies, financial centres, large trading nations),
+    // so a user from any major country finds theirs instead of
+    // feeling left out. The Traders view is driven by real traders
+    // only (a country with no traders has tot 0, so it stays dark
+    // green there), while the Firms view colours every country in
+    // DATA blue by its firm count. 24 of 34 firms support everywhere
+    // (no allowed/restricted list), so "every supported country"
+    // would be all ~249 countries — a solid blue globe, not
+    // organised. The important-countries set below is the organised,
+    // honest set: every one is a real major country and every firm
+    // listed for it really supports it.
+    const IMPORTANT_COUNTRIES = [
+      "US", "CA", "MX", // North America
+      "BR", "AR", // South America
+      "GB", "DE", "FR", "ES", "IT", "NL", "CH", "PL", "CZ", "TR",
+      "RU", // Europe
+      "AE", "SA", "IL", // Middle East
+      "MA", "EG", "ZA", "NG", // Africa
+      "IN", "PK", // South Asia
+      "CN", "JP", "KR", "HK", "SG", // East Asia
+      "AU", // Oceania
+      "CY", "MU", // Small HQ countries (firm headquarters)
+    ];
+    const hqIso = new Set();
+    for (const f of firms) {
+      const code = hqCountry(f.headquarters);
+      if (code && ISO_NUM[code]) hqIso.add(ISO_NUM[code]);
+    }
+    const importantIso = new Set();
+    for (const code of IMPORTANT_COUNTRIES) {
+      if (ISO_NUM[code]) importantIso.add(ISO_NUM[code]);
+    }
+    // Union of countries: those with users (countryUsers), those
+    // with firm counts, HQ countries, and important countries. A
+    // country appears when it has >=1 user, even with no firm
+    // account (its per-firm breakdown is then empty), or when a
+    // firm is HQ'd there, or when it is an important country.
+    const allIso = new Set([
+      ...countryUsers.keys(), ...counts.keys(), ...hqIso, ...importantIso,
+    ]);
+    for (const iso of [...allIso].sort()) {
       const a2 = NUM_TO_A2[iso] || null;
+      const userTotal = countryUsers.get(iso) || 0;
       const traders = {};
-      for (const [firmId, n] of byFirm) {
-        const restricted = restrictedByFirm.get(firmId);
-        if (a2 && restricted && restricted.has(a2)) continue;
-        traders[firmId] = n < MASK ? null : n;
-        if (n >= MASK) total += n;
+      const byFirm = counts.get(iso);
+      if (byFirm) {
+        for (const [firmId, n] of byFirm) {
+          if (a2 && !firmSupports(firmId, a2)) continue;
+          traders[firmId] = n < MASK ? null : n;
+        }
       }
-      if (Object.keys(traders).length === 0) continue;
-      snapCountries.push({ iso, traders });
+      // Supporting firms (founder decision 2026-11-23): for a
+      // country that deserves it — real traders, or a firm HQ —
+      // list EVERY firm that supports the country (firms table
+      // allowed/restricted), not just the firms the traders hold
+      // accounts at. The per-firm count stays the real count
+      // (masked <5 -> null); a supporting firm with no traders
+      // here gets null, shown as "<5" — honest, the real count is
+      // under 5. This is what makes the country appear on the
+      // globe with its supporting firms, and what makes the arcs
+      // live: selecting the country draws arcs to its supporting
+      // firms' HQs; focusing a firm draws arcs to every country
+      // in DATA that lists it. Countries with no traders and no
+      // firm HQ never reach this loop, so they stay absent (0) —
+      // no "<5" is invented for them.
+      if (a2 && (userTotal > 0 || hqIso.has(iso) || importantIso.has(iso))) {
+        for (const f of snapFirms) {
+          if (f.status === "paused") continue;
+          if (Object.prototype.hasOwnProperty.call(traders, f.id)) continue;
+          if (!firmSupports(f.id, a2)) continue;
+          traders[f.id] = null;
+        }
+      }
+      // Arc declutter (founder decision 2026-11-23): the page draws
+      // one glowing arc per firm in a country's row, so 28
+      // supporting firms = 28 arcs covering the globe. Cap each
+      // row at 6 firms: keep firms with real trader counts first
+      // (real data is never dropped), then supporting firms chosen
+      // for HQ diversity — one per HQ country, HQ countries ordered
+      // by how many firms are based there — so the arcs stay clean
+      // and spread worldwide. The panel shows these same firms.
+      const MAX_FIRMS_PER_COUNTRY = 6;
+      const rowIds = Object.keys(traders);
+      if (rowIds.length > MAX_FIRMS_PER_COUNTRY) {
+        const realIds = rowIds.filter((id) => traders[id] !== null);
+        const supIds = rowIds.filter((id) => traders[id] === null);
+        const byHq = new Map();
+        for (const id of supIds) {
+          const code = hqCountryById.get(id) || "ZZ";
+          if (!byHq.has(code)) byHq.set(code, []);
+          byHq.get(code).push(id);
+        }
+        for (const arr of byHq.values()) arr.sort();
+        const hqOrder = [...byHq.keys()].sort((a, b) =>
+          byHq.get(b).length - byHq.get(a).length ||
+          (a < b ? -1 : 1));
+        const keep = new Set(realIds);
+        for (const code of hqOrder) {
+          if (keep.size >= MAX_FIRMS_PER_COUNTRY) break;
+          keep.add(byHq.get(code)[0]);
+        }
+        if (keep.size < MAX_FIRMS_PER_COUNTRY) {
+          for (const id of supIds.sort()) {
+            if (keep.size >= MAX_FIRMS_PER_COUNTRY) break;
+            keep.add(id);
+          }
+        }
+        for (const id of rowIds) if (!keep.has(id)) delete traders[id];
+      }
+      if (userTotal <= 0 && Object.keys(traders).length === 0) continue;
+      // Country total (masked <5). The global total sums the real
+      // per-country user counts (an aggregate, not a per-country
+      // figure, so it is not masked).
+      const entry = { iso, traders };
+      entry.total = userTotal < MASK ? null : userTotal;
+      total += userTotal;
+      snapCountries.push(entry);
     }
 
     const snap = {
