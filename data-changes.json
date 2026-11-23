@@ -1,6 +1,15 @@
 {
-  "updated": "2026-11-22T07:02:05.831640+00:00",
+  "updated": "2026-11-23T07:12:31.697385+00:00",
   "changes": [
+    {
+      "date": "2026-11-23",
+      "firm": "FundedNext",
+      "field": "promotion",
+      "old": "{\"code\": \"NOVSTR\", \"discount\": \"up to 41%\", \"expiry\": null}",
+      "new": "{\"code\": null, \"discount\": \"\", \"expiry\": null, \"scoped\": [{\"code\": \"FNFLEX\", \"discount\": \"up to 47% off\", \"expiry\": null, \"scope\": \"futures flex\"}, {\"code\": \"RAPID\", \"discount\": \"up to 50% off\", \"expiry\": null, \"scope\": \"futures rapid\"}, {\"code\": \"FNDIRECT\", \"discount\": \"up to 40% off\", \"expiry\": null, \"scope\": \"futures direct\"}]}",
+      "source": "https://fundednext.com/cfds",
+      "kind": "promo"
+    },
     {
       "date": "2026-11-20",
       "firm": "FundedNext",
@@ -2687,15 +2696,6 @@
       "date": "2026-10-26",
       "firm": "Funding Traders",
       "field": "promotion (5000 (2-Step Pro6))",
-      "old": "[{\"code\": \"TRYFT\", \"discount\": \"50% off first challenge\", \"expiry\": null}]",
-      "new": "[{\"code\": null, \"discount\": \"49% OFF\", \"source_note\": \"Funding Traders official site sale price 2026-10-26\"}]",
-      "source": "https://fundingtraders.com/",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-26",
-      "firm": "Funding Traders",
-      "field": "promotion (10000 (2-Step Pro6))",
       "old": "[{\"code\": \"TRYFT\", \"discount\": \"50% off first challenge\", \"expiry\": null}]",
       "new": "[{\"code\": null, \"discount\": \"49% OFF\", \"source_note\": \"Funding Traders official site sale price 2026-10-26\"}]",
       "source": "https://fundingtraders.com/",

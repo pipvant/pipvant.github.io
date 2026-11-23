@@ -375,6 +375,7 @@ Deno.serve(async (req) => {
     const firmByName = new Map();
     const snapFirms = [];
     const skippedNoHq = [];
+    const hqCountryById = new Map(); // firm slug id -> HQ alpha-2 code
     for (const f of firms) {
       const hq = hqLookup(f.headquarters);
       if (!hq) {
@@ -413,6 +414,8 @@ Deno.serve(async (req) => {
       }
       snapFirms.push(entry);
       firmByName.set(normName(f.name), entry);
+      const hqCode = hqCountry(f.headquarters);
+      if (hqCode) hqCountryById.set(entry.id, hqCode);
     }
 
     // 6. Aggregate.
