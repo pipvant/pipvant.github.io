@@ -143,6 +143,24 @@ function normName(s) {
   return (s || "").trim().toLowerCase().replace(/\s+/g, " ");
 }
 
+// ---------- short stable firm ids ----------
+// The snapshot's firm `id` is rendered by the Globe page as the arc
+// badge letter and the detail-panel `.mono` chip. A UUID (36 chars)
+// overflows both. Use a short slug from the firm name instead:
+// deterministic (same firm name -> same id on every rebuild) and
+// unique (a colliding slug gets -2, -3, ...; firm order is stable
+// because the firms query is order=name). The page only ever uses
+// the id as a key and as a display initial, so a slug is safe.
+const usedShortIds = new Set();
+function shortId(name) {
+  let base = (name || "").toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "firm";
+  let id = base, n = 2;
+  while (usedShortIds.has(id)) { id = base + "-" + n; n++; }
+  usedShortIds.add(id);
+  return id;
+}
+
 // ---------- snapshot validation (brief section 6) ----------
 function validSnapshot(snap) {
   if (!snap || typeof snap !== "object") return "not an object";
@@ -312,7 +330,7 @@ Deno.serve(async (req) => {
         ? Date.parse(f.last_verified_at)
         : null;
       const entry = {
-        id: f.id,
+        id: shortId(f.name),
         name: f.name,
         type: "Prop firm",
         status: "live",
@@ -375,16 +393,21 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Availability maps (for firm support + counting).
+    // Availability maps (for firm support + counting), keyed by the
+    // SHORT snapshot id (not the firms-table UUID — firmSupports is
+    // called with the slug id from the per-firm counts, so the keys
+    // must match). The entries already carry normalized lists.
     // allowed (non-empty) = ONLY those countries; restricted =
     // everywhere except those; neither = everywhere.
     const restrictedByFirm = new Map();
     const allowedByFirm = new Map();
-    for (const f of firms) {
-      const nr = normCountryList(f.countries_restricted);
-      if (nr.length) restrictedByFirm.set(f.id, new Set(nr));
-      const na = normCountryList(f.countries_allowed);
-      if (na.length) allowedByFirm.set(f.id, new Set(na));
+    for (const e of snapFirms) {
+      if (Array.isArray(e.restricted) && e.restricted.length) {
+        restrictedByFirm.set(e.id, new Set(e.restricted));
+      }
+      if (Array.isArray(e.allowed) && e.allowed.length) {
+        allowedByFirm.set(e.id, new Set(e.allowed));
+      }
     }
     function firmSupports(firmId, a2) {
       const allowed = allowedByFirm.get(firmId);
