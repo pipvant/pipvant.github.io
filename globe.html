@@ -12,7 +12,7 @@ canvas{position:fixed;inset:0}#stars{z-index:0}#globe{z-index:1;touch-action:non
 .top{position:fixed;z-index:5;left:0;right:0;top:0;display:flex;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top,0px) + 8px) 12px 0;pointer-events:none}
 .top>*{pointer-events:auto}
 .brand{display:flex;align-items:center;gap:10px;min-height:44px}.brand b{display:block;font:800 17px Sora,sans-serif;letter-spacing:-.03em}.brand small{display:block;margin-top:1px;font-size:12px;color:var(--mu)}
-.orb{flex:none;width:34px;height:34px;border-radius:50%;background:url(assets/pipvanta-logo.png) center/cover no-repeat;box-shadow:0 0 18px rgba(110,168,255,.6)}
+.orb{flex:none;width:30px;height:30px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,#6ea8ff 40%,#10286e 75%);box-shadow:0 0 18px rgba(110,168,255,.6)}
 .tb{display:flex;gap:8px}
 .ib{width:44px;height:44px;border:1px solid var(--line);border-radius:50%;background:var(--glass);display:grid;place-items:center}
 .ib svg{width:21px;height:21px}.ib[aria-pressed=false]{opacity:.55}
@@ -67,7 +67,7 @@ h2{margin:0 0 6px;font:800 22px/1.15 Sora,sans-serif;letter-spacing:-.03em}h3{ma
 @media (min-width:900px){
  .sheet{left:auto;top:0;width:400px;height:100%;border-radius:0;border-top:0;border-left:1px solid var(--line);box-shadow:-24px 0 50px -26px #000;transform:translateX(104%)}
  .sheet.open{transform:none}.sheet.tall{height:100%}.handle{display:none}#body{padding-top:30px}.sclose{top:10px;right:10px}
- .so .hud{right:400px}.so .top{right:400px}.sp{width:360px;right:auto}
+ .so .hud{right:400px}.sp{width:360px;right:auto}
 }
 @media (max-width:380px){.seg button{padding:0 9px;font-size:12.5px}.ex{padding:0 12px}}
 @media (prefers-reduced-motion:reduce){.sheet,.hud{transition:none}}
@@ -582,9 +582,7 @@ function fillFor(f) {
   if (!f.key) return '#0e1c3f';
   if (layer === 'markets') return DATA[f.key] ? '#17357a' : '#0e1c3f';
   if (layer === 'firms') {
-    // HYBRID: colour by the number of firms SUPPORTING the country, not by firms with traders.
-    // In demo mode (embedded PV_DATA, no restrictions) keep the native trader-based colouring.
-    const n = MODE === 'demo' ? (DATA[f.key] ? Object.keys(DATA[f.key]).length : 0) : (SUP[f.key] ? SUP[f.key].length : 0);
+    const n = DATA[f.key] ? Object.keys(DATA[f.key]).length : 0;
     return n ? rgb(mix([31, 72, 184], [125, 176, 255], Math.min(1, (n - 1) / 5))) : '#0e1c3f';
   }
   const u = tot(f.key);
@@ -654,15 +652,6 @@ function draw(t) {
     ctx.beginPath(); ctx.arc(p[0], p[1], sel ? 5.5 : 4, 0, 7); ctx.fillStyle = sel ? '#ffffff' : '#7ff0d0'; ctx.fill();
     ctx.strokeStyle = 'rgba(3,10,30,.9)'; ctx.lineWidth = 1.2; ctx.stroke();
   }
-  // HYBRID: dot for snapshot countries (have >=1 counted user, no per-firm data).
-  // Firms/Traders layers only — the Markets layer shows session markers alone.
-  if (layer !== 'markets') for (const f of snapFeats) {
-    const c = centerOf(f); if (!visible(c)) continue; const p = proj(c); if (!p) continue;
-    const sel = f.uid === selUid, k = reduce ? 0.5 : ((t / 1400) % 1);
-    ctx.beginPath(); ctx.arc(p[0], p[1], 4 + k * 9, 0, 7); ctx.strokeStyle = `rgba(127,240,208,${0.55 * (1 - k)})`; ctx.lineWidth = 1.4; ctx.stroke();
-    ctx.beginPath(); ctx.arc(p[0], p[1], sel ? 5.5 : 4, 0, 7); ctx.fillStyle = sel ? '#ffffff' : '#7ff0d0'; ctx.fill();
-    ctx.strokeStyle = 'rgba(3,10,30,.9)'; ctx.lineWidth = 1.2; ctx.stroke();
-  }
   drawArcs(t);
   const sf = selUid && dataFeats.concat(pickList()).find(f => f.uid === selUid);
   if (sf) {
@@ -711,24 +700,10 @@ function arcPairs() {
   const out = [];
   if (focusFirm) {
     const fm = FIRMS[focusFirm];
-    if (!fm || !fm.hq) return out;
-    const seen = new Set();
-    dataFeats.forEach(f => { if (DATA[f.key] && DATA[f.key][focusFirm]) { out.push({a: fm.hq, b: centerOf(f), col: firmCol(focusFirm), firm: focusFirm, hq: 'a'}); seen.add(f.key); } });
-    // HYBRID: arcs to every country the firm SUPPORTS, not only countries where it has traders.
-    // In live data DATA is empty, so without this no arcs ever draw.
-    Object.keys(SUP).forEach(num => {
-      if (!SUP[num].includes(focusFirm) || seen.has(num)) return;
-      const f = featFor(num);
-      if (f) out.push({a: fm.hq, b: centerOf(f), col: firmCol(focusFirm), firm: focusFirm, hq: 'a'});
-    });
+    dataFeats.forEach(f => { if (DATA[f.key] && DATA[f.key][focusFirm]) out.push({a: fm.hq, b: centerOf(f), col: firmCol(focusFirm), firm: focusFirm, hq: 'a'}); });
   } else if (selUid) {
-    const f = dataFeats.find(x => x.uid === selUid) || pickList().find(x => x.uid === selUid);
-    if (!f) return out;
-    const seen = new Set();
-    if (DATA[f.key]) Object.keys(DATA[f.key]).forEach(id => { out.push({a: centerOf(f), b: FIRMS[id].hq, col: firmCol(id), firm: id, hq: 'b'}); seen.add(id); });
-    // HYBRID: arcs to every SUPPORTING firm of the selected country, not only firms with traders there.
-    // In live data DATA is empty, so without this no arcs ever draw (USA must get arcs to its 30 firms).
-    (SUP[f.key] || []).forEach(id => { if (!seen.has(id) && FIRMS[id] && FIRMS[id].hq) out.push({a: centerOf(f), b: FIRMS[id].hq, col: firmCol(id), firm: id, hq: 'b'}); });
+    const f = dataFeats.find(x => x.uid === selUid);
+    if (f && DATA[f.key]) Object.keys(DATA[f.key]).forEach(id => out.push({a: centerOf(f), b: FIRMS[id].hq, col: firmCol(id), firm: id, hq: 'b'}));
   }
   return out;
 }
@@ -771,7 +746,7 @@ function drawArcs(t) {
     const hqLL = a.hq === 'a' ? a.a : a.b, otherLL = a.hq === 'a' ? a.b : a.a;
     if (prog > 0.9) {
       ringDot(ctx, elev(rotf, cx, cy, r, otherLL, 0), a.col, 1, reduce ? 0.5 : (t / 1500 + i * 0.1) % 1);
-      if (!doneFirms.has(a.firm)) { doneFirms.add(a.firm); badge(ctx, elev(rotf, cx, cy, r, hqLL, 0), a.firm.charAt(0).toUpperCase(), a.col, 1); }
+      if (!doneFirms.has(a.firm)) { doneFirms.add(a.firm); badge(ctx, elev(rotf, cx, cy, r, hqLL, 0), a.firm, a.col, 1); }
     }
   });
 }
@@ -854,75 +829,8 @@ function rebuildData() {
     if (!f && MICRO[id] && byNum[id]) f = {type: 'Feature', uid: id, key: id, a2: byNum[id][1], label: byNum[id][3], geometry: {type: 'Point', coordinates: MICRO[id]}, pt: true, area: 0, c: MICRO[id]};
     if (f) dataFeats.push(f);
   });
-  rebuildSnapFeats(); // HYBRID: dots for snapshot countries with no per-firm data
 }
 const featByKey = id => dataFeats.find(f => f.key === id);
-
-/* ============ HYBRID (user-ordered): support map + snapshot countries ============ */
-// SUP[iso3] = firm ids supporting the country (from the snapshot firms'
-// restricted/allowed lists). SNAP_ISO = iso3 codes present in the
-// snapshot's countries[] (countries with >=1 counted user, even when
-// their per-firm traders object is empty). EX[a2] = firms supporting
-// ONLY that country (allowed list of exactly one). snapFeats = map
-// features for SNAP_ISO countries not already in dataFeats (they get
-// a dot, see draw). The support map is ONLY for colouring and lists,
-// never for dots (a dot per supported country was the 249-dot bug).
-let SUP = {}, SNAP_ISO = [], EX = {}, snapFeats = [];
-const HQ2 = {london: 'GB', washington: 'US', 'abu dhabi': 'AE', dubai: 'AE', castries: 'LC', kingstown: 'VC', canberra: 'AU', prague: 'CZ', 'port louis': 'MU', limassol: 'CY', miami: 'US', 'hong kong': 'HK', delaware: 'US', dover: 'US', jerusalem: 'IL', singapore: 'SG', 'boca raton': 'US', nicosia: 'CY'};
-function normA2(v) { return v === 'Morocco' ? 'MA' : v; }
-function firmSupportsSnap(f, a2) {
-  if (Array.isArray(f.allowed) && f.allowed.length) return f.allowed.some(x => normA2(x) === a2);
-  if (Array.isArray(f.restricted) && f.restricted.length) return !f.restricted.some(x => normA2(x) === a2);
-  return true;
-}
-function buildSupport(s) {
-  SUP = {}; SNAP_ISO = []; EX = {};
-  const firms = (s.firms || []).filter(f => f.status !== 'paused');
-  for (const f of firms) {
-    if (Array.isArray(f.allowed) && f.allowed.length === 1) {
-      const a2 = normA2(f.allowed[0]);
-      EX[a2] = (EX[a2] || 0) + 1;
-    }
-  }
-  for (const r of ISO) {
-    const a2 = r[1], num = r[0], list = [];
-    for (const f of firms) if (firmSupportsSnap(f, a2)) list.push(f.id);
-    if (list.length) SUP[num] = list;
-  }
-  SNAP_ISO = (s.countries || []).map(c => String(c.iso).padStart(3, '0'));
-}
-function rebuildSnapFeats() {
-  const L = pickList(); snapFeats = [];
-  SNAP_ISO.forEach(id => {
-    if (DATA[id]) return;
-    let f = L.find(x => x.key === id);
-    if (!f && MICRO[id] && byNum[id]) f = {type: 'Feature', uid: id, key: id, a2: byNum[id][1], label: byNum[id][3], geometry: {type: 'Point', coordinates: MICRO[id]}, pt: true, area: 0, c: MICRO[id]};
-    if (f) snapFeats.push(f);
-  });
-}
-function featFor(iso) {
-  let f = pickList().find(x => x.key === iso) || dataFeats.find(x => x.key === iso) || snapFeats.find(x => x.key === iso);
-  if (f) return f;
-  if (MICRO[iso] && byNum[iso]) return {type: 'Feature', uid: iso, key: iso, a2: byNum[iso][1], label: byNum[iso][3], geometry: {type: 'Point', coordinates: MICRO[iso]}, pt: true, area: 0, c: MICRO[iso]};
-  return null;
-}
-function topCountries() {
-  const hq = {};
-  for (const id in FIRMS) {
-    const hn = (FIRMS[id].hqn || '').toLowerCase();
-    for (const ct in HQ2) if (hn.indexOf(ct) >= 0) { const cc = HQ2[ct]; hq[cc] = (hq[cc] || 0) + 1; break; }
-  }
-  const arr = [];
-  for (const r of ISO) {
-    const num = r[0], a2 = r[1], label = r[3];
-    const sup = SUP[num] ? SUP[num].length : 0;
-    const us = tot(num);
-    const sc = us * 10 + (hq[a2] || 0) * 3 + sup + (EX[a2] || 0) * 5;
-    arr.push({k: num, a2, label, sup, us, sc});
-  }
-  arr.sort((x, y) => y.sc - x.sc || (x.label < y.label ? -1 : x.label > y.label ? 1 : 0));
-  return arr.slice(0, 10);
-}
 
 /* ============ live snapshot: validate, apply, cache, refresh ============ */
 const CACHE_KEY = 'pv_globe_snap';
@@ -944,7 +852,6 @@ function recompute() {
   maxUsers = Math.max(1, ...topIds.map(tot));
 }
 function applySnapshot(s, cached) {
-  buildSupport(s); // HYBRID: support map + snapshot countries (colouring, lists, dots, stats)
   const firms = {};
   s.firms.filter(f => f.status !== 'paused').forEach(f => {
     firms[f.id] = {n: f.name, t: f.type || 'Firm', s: f.status, p: f.platforms || [], hq: [f.hq.lon, f.hq.lat], hqn: f.hq.name || '',
@@ -1022,23 +929,15 @@ function home() {
   const s = $('body'); s.textContent = '';
   if (layer === 'markets') { sessionsPanel(s); return; }
   const ids = Object.keys(DATA);
-  // HYBRID: count countries from the snapshot (have >=1 counted user), not only from DATA.
-  const nCountries = SNAP_ISO.length || ids.length;
   const stats = el('div', 'stats');
-  [[nCountries, 'countries'], [Object.keys(FIRMS).length, 'partner firms'], [ids.reduce((a, i) => a + tot(i), 0).toLocaleString('en'), 'traders']].forEach(([v, l]) => {
+  [[ids.length, 'countries'], [Object.keys(FIRMS).length, 'partner firms'], [ids.reduce((a, i) => a + tot(i), 0).toLocaleString('en'), 'traders']].forEach(([v, l]) => {
     const d = el('div'); d.append(el('b', '', v), el('small', '', l)); stats.append(d);
   });
   s.append(el('h2', '', 'Explore the world'), el('p', 'sub', 'Tap a country to see which partner firms support it and how many Pipvant traders use them.'), stats);
-  // HYBRID: Top countries (top 10 by real importance), replacing the native top-6.
-  s.append(el('h3', '', 'Top countries'));
+  s.append(el('h3', '', layer === 'firms' ? 'Most firms supported' : 'Most traders'));
   const l = el('div', 'list');
-  topCountries().forEach(o => {
-    const f = featFor(o.k); if (!f) return;
-    const b = el('button', 'row'); b.type = 'button';
-    b.append(el('span', 'fl', flag(o.a2)), el('span', 'nm', o.label));
-    b.append(el('span', 'val', o.sup + ' firms · ' + fmt(o.us) + ' traders'));
-    b.onclick = () => select(f); l.append(b);
-  });
+  const order = ids.slice().sort((a, b) => layer === 'firms' ? Object.keys(DATA[b]).length - Object.keys(DATA[a]).length || tot(b) - tot(a) : tot(b) - tot(a));
+  order.slice(0, 6).forEach(id => { const f = featByKey(id); if (f) l.append(row(f)); });
   s.append(l, updatedLine(), el('p', 'fine', noteText() + 'Counts under ' + MASK + ' are hidden to protect privacy.'));
 }
 function detailView(f) {
@@ -1048,32 +947,6 @@ function detailView(f) {
   const head = el('div', 'chead'); head.append(el('span', 'big', flag(a2)), el('h2', '', f.label));
   s.append(back, head);
   if (!d) {
-    // HYBRID: the country has no per-firm trader data, but it may still have
-    // SUPPORTING firms — show them (with a masked trader count) instead of
-    // only the empty state.
-    const sup = (SUP[f.key] || []).filter(id => FIRMS[id]);
-    if (sup.length) {
-      const stats = el('div', 'stats two');
-      const a = el('div'); a.append(el('b', '', sup.length), el('small', '', sup.length === 1 ? 'supported firm' : 'supported firms'));
-      const b = el('div'); b.append(el('b', '', fmt(0)), el('small', '', 'Pipvant traders'));
-      stats.append(a, b); s.append(stats);
-      s.append(el('h3', '', 'Supported firms'));
-      s.append(el('p', 'sub', 'Tap a firm to see everywhere it is supported on the globe.'));
-      const l = el('div', 'firms');
-      sup.forEach(id => {
-        const fm = FIRMS[id], c = el('button', 'firm'); c.type = 'button'; c.setAttribute('aria-pressed', focusFirm === id);
-        c.append(el('span', 'mono', id.charAt(0).toUpperCase()));
-        const mid = el('div', 'fmid'); mid.append(el('b', '', fm.n), el('small', '', fm.t + (fm.hqn ? ' · HQ ' + fm.hqn : '') + (fm.p.length ? ' · ' + fm.p.join(', ') : '') + verifiedText(fm)));
-        c.append(mid, el('span', 'st ' + fm.s, fm.s === 'live' ? 'Auto-import' : 'Coming soon'));
-        c.onclick = () => { focusFirm = focusFirm === id ? '' : id; arcSig = ''; detailView(f); };
-        l.append(c);
-      });
-      s.append(l);
-      const k = f.uid, r = el('button', 'cta', requested.has(k) ? 'Requested ✓' : 'Request ' + f.label); r.type = 'button'; r.setAttribute('aria-pressed', requested.has(k));
-      r.onclick = () => { requested.has(k) ? requested.delete(k) : requested.add(k); detailView(f); };
-      const sh = el('button', 'cta ghost', 'Share image'); sh.type = 'button'; sh.onclick = () => openShare(f);
-      s.append(r, sh, el('p', 'fine', MODE === 'demo' ? 'Demo: requests are not saved.' : noteText().trim())); return;
-    }
     const box = el('div', 'empty'); box.append(el('b', '', 'No supported firms here yet'), el('p', '', 'We have not partnered with a firm that supports traders in ' + f.label + '. Tell us you want it and we will prioritise partners by demand.'));
     const k = f.uid, r = el('button', 'cta', requested.has(k) ? 'Requested ✓' : 'Request ' + f.label); r.type = 'button'; r.setAttribute('aria-pressed', requested.has(k));
     r.onclick = () => { requested.has(k) ? requested.delete(k) : requested.add(k); detailView(f); };
@@ -1096,7 +969,7 @@ function detailView(f) {
   const l = el('div', 'firms');
   ids.forEach(id => {
     const fm = FIRMS[id], c = el('button', 'firm'); c.type = 'button'; c.setAttribute('aria-pressed', focusFirm === id);
-    c.append(el('span', 'mono', id.charAt(0).toUpperCase()));
+    c.append(el('span', 'mono', id));
     const mid = el('div', 'fmid'); mid.append(el('b', '', fm.n), el('small', '', fm.t + (fm.hqn ? ' · HQ ' + fm.hqn : '') + (fm.p.length ? ' · ' + fm.p.join(', ') : '') + verifiedText(fm)));
     c.append(mid, el('span', 'st ' + fm.s, fm.s === 'live' ? 'Auto-import' : 'Coming soon'));
     c.onclick = () => { focusFirm = focusFirm === id ? '' : id; arcSig = ''; detailView(f); };
@@ -1179,7 +1052,7 @@ async function makeShare(f, kind) {
   x.fillStyle = g; x.beginPath(); x.arc(gcx, gcy, Rg, 0, 7); x.fill();
   const rf = geoRotation([-cen[0], -cen[1], 0]), d = DATA[f.key], ids = d ? Object.keys(d).sort((a, b) => d[b] - d[a]) : [];
   ids.forEach((id, i) => strokeArc(x, rf, gcx, gcy, Rg, cen, FIRMS[id].hq, firmCol(id), 0.1 + 0.3 * geoDistance(cen, FIRMS[id].hq) / Math.PI + (i % 3) * 0.02, 1, 0, 0, 2.2, false));
-  ids.forEach(id => { badge(x, elev(rf, gcx, gcy, Rg, FIRMS[id].hq, 0), id.charAt(0).toUpperCase(), firmCol(id), 2.2); });
+  ids.forEach(id => { badge(x, elev(rf, gcx, gcy, Rg, FIRMS[id].hq, 0), id, firmCol(id), 2.2); });
   const pc = p(cen);
   if (pc && (f.pt || (f.area || 0) * Rg * Rg < 1400)) {
     x.beginPath(); x.arc(pc[0], pc[1], 34, 0, 7); x.strokeStyle = 'rgba(127,240,208,.95)'; x.lineWidth = 4; x.stroke();
