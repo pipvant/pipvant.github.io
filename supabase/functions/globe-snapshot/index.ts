@@ -488,17 +488,15 @@ Deno.serve(async (req) => {
     // listed for it really supports it.
     const IMPORTANT_COUNTRIES = [
       "US", "CA", "MX", // North America
-      "BR", "AR", "CL", "CO", "PE", // South America
-      "GB", "DE", "FR", "ES", "IT", "NL", "CH", "SE", "NO", "DK",
-      "BE", "AT", "IE", "PT", "PL", "CZ", "HU", "RO", "GR", "CY", // Europe
-      "TR", "RU", "UA", // Turkey / Russia / Ukraine
-      "AE", "SA", "QA", "KW", "IL", "JO", // Middle East
-      "EG", "MA", "DZ", "TN", "ZA", "NG", "KE", "GH", // Africa
-      "IN", "PK", "BD", "LK", // South Asia
-      "CN", "JP", "KR", "TW", "HK", // East Asia
-      "SG", "MY", "TH", "VN", "ID", "PH", // Southeast Asia
-      "AU", "NZ", // Oceania
-      "LC", "VC", "MU", // Small HQ countries (firm headquarters)
+      "BR", "AR", // South America
+      "GB", "DE", "FR", "ES", "IT", "NL", "CH", "PL", "CZ", "TR",
+      "RU", // Europe
+      "AE", "SA", "IL", // Middle East
+      "MA", "EG", "ZA", "NG", // Africa
+      "IN", "PK", // South Asia
+      "CN", "JP", "KR", "HK", "SG", // East Asia
+      "AU", // Oceania
+      "CY", "MU", // Small HQ countries (firm headquarters)
     ];
     const hqIso = new Set();
     for (const f of firms) {
