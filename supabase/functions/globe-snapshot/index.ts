@@ -22,16 +22,17 @@
 //     country, masked <5 as null) plus `traders` (per-firm counts,
 //     masked <5). For a country that deserves it — real traders, a
 //     partner firm headquartered there, or one of the world's
-//     important countries — `traders` lists the firms that support
+//     important countries — `traders` lists EVERY firm that supports
 //     the country (from the firms table's allowed/restricted lists),
 //     with the real per-firm count where a trader holds an account
 //     at that firm and null otherwise — so the country appears on
-//     the globe with its supporting firms, and the arcs are live
-//     (founder decision 2026-11-23). CAPPED at 6 firms per country
-//     (arc declutter, founder decision 2026-11-23): the page draws
-//     one arc per firm, so 28 firms = 28 arcs covering the globe;
-//     the 6 kept are chosen for HQ diversity (one per HQ country),
-//     firms with real trader counts are never dropped.
+//     the globe with ALL its supporting firms, and the arcs are live
+//     (founder decision 2026-11-23; his correction 2026-11-23 ~12:54:
+//     no cap — every supporting firm must be listed, the 6-firm cap
+//     is removed). Note: the page draws one arc per firm, so a
+//     country with 28 firms draws 28 arcs — that is the page's own
+//     behaviour, and the founder chose the full firm list over
+//     fewer arcs.
 //     A user counts once per firm (multiple accounts at the same
 //     firm count once) and once per country (their profile country
 //     only). A firm that restricts a country contributes 0 there.
@@ -554,42 +555,6 @@ Deno.serve(async (req) => {
           if (!firmSupports(f.id, a2)) continue;
           traders[f.id] = null;
         }
-      }
-      // Arc declutter (founder decision 2026-11-23): the page draws
-      // one glowing arc per firm in a country's row, so 28
-      // supporting firms = 28 arcs covering the globe. Cap each
-      // row at 6 firms: keep firms with real trader counts first
-      // (real data is never dropped), then supporting firms chosen
-      // for HQ diversity — one per HQ country, HQ countries ordered
-      // by how many firms are based there — so the arcs stay clean
-      // and spread worldwide. The panel shows these same firms.
-      const MAX_FIRMS_PER_COUNTRY = 6;
-      const rowIds = Object.keys(traders);
-      if (rowIds.length > MAX_FIRMS_PER_COUNTRY) {
-        const realIds = rowIds.filter((id) => traders[id] !== null);
-        const supIds = rowIds.filter((id) => traders[id] === null);
-        const byHq = new Map();
-        for (const id of supIds) {
-          const code = hqCountryById.get(id) || "ZZ";
-          if (!byHq.has(code)) byHq.set(code, []);
-          byHq.get(code).push(id);
-        }
-        for (const arr of byHq.values()) arr.sort();
-        const hqOrder = [...byHq.keys()].sort((a, b) =>
-          byHq.get(b).length - byHq.get(a).length ||
-          (a < b ? -1 : 1));
-        const keep = new Set(realIds);
-        for (const code of hqOrder) {
-          if (keep.size >= MAX_FIRMS_PER_COUNTRY) break;
-          keep.add(byHq.get(code)[0]);
-        }
-        if (keep.size < MAX_FIRMS_PER_COUNTRY) {
-          for (const id of supIds.sort()) {
-            if (keep.size >= MAX_FIRMS_PER_COUNTRY) break;
-            keep.add(id);
-          }
-        }
-        for (const id of rowIds) if (!keep.has(id)) delete traders[id];
       }
       if (userTotal <= 0 && Object.keys(traders).length === 0) continue;
       // Country total (masked <5). The global total sums the real
