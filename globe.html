@@ -711,10 +711,24 @@ function arcPairs() {
   const out = [];
   if (focusFirm) {
     const fm = FIRMS[focusFirm];
-    dataFeats.forEach(f => { if (DATA[f.key] && DATA[f.key][focusFirm]) out.push({a: fm.hq, b: centerOf(f), col: firmCol(focusFirm), firm: focusFirm, hq: 'a'}); });
+    if (!fm || !fm.hq) return out;
+    const seen = new Set();
+    dataFeats.forEach(f => { if (DATA[f.key] && DATA[f.key][focusFirm]) { out.push({a: fm.hq, b: centerOf(f), col: firmCol(focusFirm), firm: focusFirm, hq: 'a'}); seen.add(f.key); } });
+    // HYBRID: arcs to every country the firm SUPPORTS, not only countries where it has traders.
+    // In live data DATA is empty, so without this no arcs ever draw.
+    Object.keys(SUP).forEach(num => {
+      if (!SUP[num].includes(focusFirm) || seen.has(num)) return;
+      const f = featFor(num);
+      if (f) out.push({a: fm.hq, b: centerOf(f), col: firmCol(focusFirm), firm: focusFirm, hq: 'a'});
+    });
   } else if (selUid) {
-    const f = dataFeats.find(x => x.uid === selUid);
-    if (f && DATA[f.key]) Object.keys(DATA[f.key]).forEach(id => out.push({a: centerOf(f), b: FIRMS[id].hq, col: firmCol(id), firm: id, hq: 'b'}));
+    const f = dataFeats.find(x => x.uid === selUid) || pickList().find(x => x.uid === selUid);
+    if (!f) return out;
+    const seen = new Set();
+    if (DATA[f.key]) Object.keys(DATA[f.key]).forEach(id => { out.push({a: centerOf(f), b: FIRMS[id].hq, col: firmCol(id), firm: id, hq: 'b'}); seen.add(id); });
+    // HYBRID: arcs to every SUPPORTING firm of the selected country, not only firms with traders there.
+    // In live data DATA is empty, so without this no arcs ever draw (USA must get arcs to its 30 firms).
+    (SUP[f.key] || []).forEach(id => { if (!seen.has(id) && FIRMS[id] && FIRMS[id].hq) out.push({a: centerOf(f), b: FIRMS[id].hq, col: firmCol(id), firm: id, hq: 'b'}); });
   }
   return out;
 }
