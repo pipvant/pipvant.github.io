@@ -20,11 +20,16 @@
 //     a trader on the map; the firm account only says WHICH firm.
 //     Each country entry carries `total` (active users with that
 //     country, masked <5 as null) plus `traders` (per-firm counts,
-//     only users with a firm account, masked <5). A user counts
-//     once per firm (multiple accounts at the same firm count once)
-//     and once per country (their profile country only). A firm
-//     that restricts a country contributes 0 there. Counts below
-//     the mask (5) are sent as null, never as a number.
+//     masked <5). For a country with real traders, `traders` lists
+//     EVERY firm that supports the country (from the firms table's
+//     allowed/restricted lists), with the real per-firm count where
+//     a trader holds an account at that firm and null otherwise —
+//     so the country appears on the globe with its supporting
+//     firms (founder decision 2026-11-23). A user counts once per
+//     firm (multiple accounts at the same firm count once) and once
+//     per country (their profile country only). A firm that
+//     restricts a country contributes 0 there. Counts below the
+//     mask (5) are sent as null, never as a number.
 //  5. Validates the snapshot, then upserts the single row
 //     (key='latest') in public.globe_snapshot.
 //
@@ -434,6 +439,24 @@ Deno.serve(async (req) => {
         for (const [firmId, n] of byFirm) {
           if (a2 && !firmSupports(firmId, a2)) continue;
           traders[firmId] = n < MASK ? null : n;
+        }
+      }
+      // Supporting firms (founder decision 2026-11-23): for a
+      // country with real traders, list EVERY firm that supports
+      // the country (firms table allowed/restricted), not just the
+      // firms the traders hold accounts at. The per-firm count
+      // stays the real count (masked <5 -> null); a supporting
+      // firm with no traders here gets null, shown as "<5" — honest,
+      // the real count is under 5. This is what makes the country
+      // appear on the globe with its supporting firms. Countries
+      // with no traders never reach this loop, so they stay absent
+      // (0) — no "<5" is invented for them.
+      if (a2 && userTotal > 0) {
+        for (const f of snapFirms) {
+          if (f.status === "paused") continue;
+          if (Object.prototype.hasOwnProperty.call(traders, f.id)) continue;
+          if (!firmSupports(f.id, a2)) continue;
+          traders[f.id] = null;
         }
       }
       if (userTotal <= 0 && Object.keys(traders).length === 0) continue;
