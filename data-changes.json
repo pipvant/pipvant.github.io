@@ -1,6 +1,186 @@
 {
-  "updated": "2026-11-24T06:26:08.589681+00:00",
+  "updated": "2026-11-24T07:03:06.020049+00:00",
   "changes": [
+    {
+      "date": "2026-11-24",
+      "firm": "FTMO",
+      "field": "promotion (10000 (1-Step))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"29% OFF\", \"source_note\": \"FTMO official site sale price 2026-11-24\"}]",
+      "source": "https://ftmo.com/en/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-11-24",
+      "firm": "FTMO",
+      "field": "promotion (25000 (1-Step))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FTMO official site sale price 2026-11-24\"}]",
+      "source": "https://ftmo.com/en/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-11-24",
+      "firm": "FTMO",
+      "field": "promotion (50000 (1-Step))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FTMO official site sale price 2026-11-24\"}]",
+      "source": "https://ftmo.com/en/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-11-24",
+      "firm": "FTMO",
+      "field": "promotion (200000 (1-Step))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FTMO official site sale price 2026-11-24\"}]",
+      "source": "https://ftmo.com/en/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-11-24",
+      "firm": "FTMO",
+      "field": "promotion (10000 (2-Step))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"30% OFF\", \"source_note\": \"FTMO official site sale price 2026-11-24\"}]",
+      "source": "https://ftmo.com/en/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-11-24",
+      "firm": "FTMO",
+      "field": "promotion (25000 (2-Step))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FTMO official site sale price 2026-11-24\"}]",
+      "source": "https://ftmo.com/en/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-11-24",
+      "firm": "FTMO",
+      "field": "promotion (50000 (2-Step))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FTMO official site sale price 2026-11-24\"}]",
+      "source": "https://ftmo.com/en/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-11-24",
+      "firm": "FTMO",
+      "field": "promotion (100000 (2-Step))",
+      "old": "[{\"code\": null, \"discount\": \"19% OFF\", \"source_note\": \"FTMO official site sale price 2026-10-26\"}]",
+      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FTMO official site sale price 2026-11-24\"}]",
+      "source": "https://ftmo.com/en/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-11-24",
+      "firm": "FTMO",
+      "field": "promotion (200000 (2-Step))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FTMO official site sale price 2026-11-24\"}]",
+      "source": "https://ftmo.com/en/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-11-24",
+      "firm": "FTMO",
+      "field": "promotion (5000 (Instant))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"30% OFF\", \"source_note\": \"FTMO official site sale price 2026-11-24\"}]",
+      "source": "https://ftmo.com/en/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-11-24",
+      "firm": "FTMO",
+      "field": "promotion (10000 (Instant))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FTMO official site sale price 2026-11-24\"}]",
+      "source": "https://ftmo.com/en/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-11-24",
+      "firm": "FTMO",
+      "field": "promotion (25000 (Instant))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FTMO official site sale price 2026-11-24\"}]",
+      "source": "https://ftmo.com/en/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-11-24",
+      "firm": "FTMO",
+      "field": "promotion (50000 (Instant))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FTMO official site sale price 2026-11-24\"}]",
+      "source": "https://ftmo.com/en/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-11-24",
+      "firm": "FTMO",
+      "field": "promotion (100000 (Instant))",
+      "old": "[]",
+      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FTMO official site sale price 2026-11-24\"}]",
+      "source": "https://ftmo.com/en/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-11-24",
+      "firm": "BrightFunded",
+      "field": "promotion (5000 (2-Step))",
+      "old": "[{\"code\": null, \"discount\": \"30% OFF\", \"source_note\": \"BrightFunded official site sale price 2026-11-19\"}]",
+      "new": "[{\"code\": null, \"discount\": \"35% OFF\", \"source_note\": \"BrightFunded official site sale price 2026-11-24\"}]",
+      "source": "https://brightfunded.com/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-11-24",
+      "firm": "BrightFunded",
+      "field": "promotion (10000 (2-Step))",
+      "old": "[{\"code\": null, \"discount\": \"30% OFF\", \"source_note\": \"BrightFunded official site sale price 2026-11-19\"}]",
+      "new": "[{\"code\": null, \"discount\": \"35% OFF\", \"source_note\": \"BrightFunded official site sale price 2026-11-24\"}]",
+      "source": "https://brightfunded.com/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-11-24",
+      "firm": "BrightFunded",
+      "field": "promotion (25000 (2-Step))",
+      "old": "[{\"code\": null, \"discount\": \"30% OFF\", \"source_note\": \"BrightFunded official site sale price 2026-11-19\"}]",
+      "new": "[{\"code\": null, \"discount\": \"35% OFF\", \"source_note\": \"BrightFunded official site sale price 2026-11-24\"}]",
+      "source": "https://brightfunded.com/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-11-24",
+      "firm": "BrightFunded",
+      "field": "promotion (50000 (2-Step))",
+      "old": "[{\"code\": null, \"discount\": \"30% OFF\", \"source_note\": \"BrightFunded official site sale price 2026-11-19\"}]",
+      "new": "[{\"code\": null, \"discount\": \"35% OFF\", \"source_note\": \"BrightFunded official site sale price 2026-11-24\"}]",
+      "source": "https://brightfunded.com/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-11-24",
+      "firm": "BrightFunded",
+      "field": "promotion (100000 (2-Step))",
+      "old": "[{\"code\": null, \"discount\": \"30% OFF\", \"source_note\": \"BrightFunded official site sale price 2026-11-19\"}]",
+      "new": "[{\"code\": null, \"discount\": \"35% OFF\", \"source_note\": \"BrightFunded official site sale price 2026-11-24\"}]",
+      "source": "https://brightfunded.com/",
+      "kind": "promo"
+    },
+    {
+      "date": "2026-11-24",
+      "firm": "BrightFunded",
+      "field": "promotion (200000 (2-Step))",
+      "old": "[{\"code\": null, \"discount\": \"30% OFF\", \"source_note\": \"BrightFunded official site sale price 2026-11-19\"}]",
+      "new": "[{\"code\": null, \"discount\": \"35% OFF\", \"source_note\": \"BrightFunded official site sale price 2026-11-24\"}]",
+      "source": "https://brightfunded.com/",
+      "kind": "promo"
+    },
     {
       "date": "2026-11-23",
       "firm": "FundedNext",
@@ -2520,186 +2700,6 @@
       "new": "400",
       "source": "https://pipfarm.com/instant",
       "kind": "other"
-    },
-    {
-      "date": "2026-10-27",
-      "firm": "PipFarm",
-      "field": "plan added (100000 (Instant Equity Trailing))",
-      "old": "",
-      "new": "600",
-      "source": "https://pipfarm.com/instant",
-      "kind": "other"
-    },
-    {
-      "date": "2026-10-27",
-      "firm": "PipFarm",
-      "field": "plan added (150000 (Instant Equity Trailing))",
-      "old": "",
-      "new": "900",
-      "source": "https://pipfarm.com/instant",
-      "kind": "other"
-    },
-    {
-      "date": "2026-10-27",
-      "firm": "PipFarm",
-      "field": "plan added (1000 (Instant Payout Trailing))",
-      "old": "",
-      "new": "5",
-      "source": "https://pipfarm.com/instant",
-      "kind": "other"
-    },
-    {
-      "date": "2026-10-27",
-      "firm": "PipFarm",
-      "field": "plan added (2500 (Instant Payout Trailing))",
-      "old": "",
-      "new": "30",
-      "source": "https://pipfarm.com/instant",
-      "kind": "other"
-    },
-    {
-      "date": "2026-10-27",
-      "firm": "PipFarm",
-      "field": "plan added (5000 (Instant Payout Trailing))",
-      "old": "",
-      "new": "60",
-      "source": "https://pipfarm.com/instant",
-      "kind": "other"
-    },
-    {
-      "date": "2026-10-27",
-      "firm": "PipFarm",
-      "field": "plan added (10000 (Instant Payout Trailing))",
-      "old": "",
-      "new": "120",
-      "source": "https://pipfarm.com/instant",
-      "kind": "other"
-    },
-    {
-      "date": "2026-10-27",
-      "firm": "PipFarm",
-      "field": "plan added (20000 (Instant Payout Trailing))",
-      "old": "",
-      "new": "200",
-      "source": "https://pipfarm.com/instant",
-      "kind": "other"
-    },
-    {
-      "date": "2026-10-27",
-      "firm": "PipFarm",
-      "field": "plan added (50000 (Instant Payout Trailing))",
-      "old": "",
-      "new": "400",
-      "source": "https://pipfarm.com/instant",
-      "kind": "other"
-    },
-    {
-      "date": "2026-10-27",
-      "firm": "PipFarm",
-      "field": "plan added (100000 (Instant Payout Trailing))",
-      "old": "",
-      "new": "600",
-      "source": "https://pipfarm.com/instant",
-      "kind": "other"
-    },
-    {
-      "date": "2026-10-27",
-      "firm": "PipFarm",
-      "field": "plan added (150000 (Instant Payout Trailing))",
-      "old": "",
-      "new": "900",
-      "source": "https://pipfarm.com/instant",
-      "kind": "other"
-    },
-    {
-      "date": "2026-10-26",
-      "firm": "FTMO",
-      "field": "promotion (100000 (1-Step))",
-      "old": "[{\"code\": \"\", \"discount\": \"Promo price €399 (regular €499), no code shown on official page\", \"expiry\": null}]",
-      "new": "[{\"code\": null, \"discount\": \"20% OFF\", \"source_note\": \"FTMO official site sale price 2026-10-26\"}]",
-      "source": "https://ftmo.com/en/",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-26",
-      "firm": "FTMO",
-      "field": "promotion (100000 (2-Step))",
-      "old": "[{\"code\": \"\", \"discount\": \"Promo price €439 (regular €540), no code shown on official page\", \"expiry\": null}]",
-      "new": "[{\"code\": null, \"discount\": \"19% OFF\", \"source_note\": \"FTMO official site sale price 2026-10-26\"}]",
-      "source": "https://ftmo.com/en/",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-26",
-      "firm": "Topstep",
-      "field": "promotion (50000)",
-      "old": "[]",
-      "new": "[{\"code\": null, \"discount\": \"11% OFF\", \"source_note\": \"Topstep official site sale price 2026-10-26\"}]",
-      "source": "https://www.topstep.com/topstep-prop",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-26",
-      "firm": "Topstep",
-      "field": "promotion (100000)",
-      "old": "[]",
-      "new": "[{\"code\": null, \"discount\": \"13% OFF\", \"source_note\": \"Topstep official site sale price 2026-10-26\"}]",
-      "source": "https://www.topstep.com/topstep-prop",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-26",
-      "firm": "Topstep",
-      "field": "promotion (150000)",
-      "old": "[]",
-      "new": "[{\"code\": null, \"discount\": \"13% OFF\", \"source_note\": \"Topstep official site sale price 2026-10-26\"}]",
-      "source": "https://www.topstep.com/topstep-prop",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-26",
-      "firm": "Topstep",
-      "field": "price (150000 (Standard))",
-      "old": "199.0",
-      "new": "229.0",
-      "source": "https://www.topstep.com/topstep-prop",
-      "kind": "price"
-    },
-    {
-      "date": "2026-10-26",
-      "firm": "TakeProfitTrader",
-      "field": "promotion",
-      "old": "{\"code\": \"NOFEE40\", \"discount\": \"40% off for life + $130 PRO activation waived\", \"expiry\": null}",
-      "new": "",
-      "source": "https://takeprofittrader.com/#s-market",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-26",
-      "firm": "Alpha Capital Group",
-      "field": "promotion",
-      "old": "{\"code\": \"ALPHA20\", \"discount\": \"20% off\", \"expiry\": \"2026-10-31\"}",
-      "new": "{\"code\": \"FUNDED40\", \"discount\": \"20% off\", \"expiry\": \"2026-10-31\", \"scoped\": [{\"code\": \"MYALPHA\", \"discount\": \"40% off\", \"expiry\": \"2026-10-31\", \"scope\": \"direct\"}, {\"code\": \"ALPHA20\", \"discount\": \"\", \"expiry\": \"2026-10-31\", \"scope\": \"10k\"}, {\"code\": \"10KFOR40\", \"discount\": \"$10K Account Deal\", \"expiry\": null, \"scope\": \"10k\"}]}",
-      "source": "https://alphacapitalgroup.uk/product",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-26",
-      "firm": "Funding Traders",
-      "field": "promotion (5000 (1-Step))",
-      "old": "[{\"code\": \"TRYFT\", \"discount\": \"50% off first challenge\", \"expiry\": null}]",
-      "new": "[{\"code\": null, \"discount\": \"49% OFF\", \"source_note\": \"Funding Traders official site sale price 2026-10-26\"}]",
-      "source": "https://fundingtraders.com/",
-      "kind": "promo"
-    },
-    {
-      "date": "2026-10-26",
-      "firm": "Funding Traders",
-      "field": "promotion (5000 (2-Step Pro6))",
-      "old": "[{\"code\": \"TRYFT\", \"discount\": \"50% off first challenge\", \"expiry\": null}]",
-      "new": "[{\"code\": null, \"discount\": \"49% OFF\", \"source_note\": \"Funding Traders official site sale price 2026-10-26\"}]",
-      "source": "https://fundingtraders.com/",
-      "kind": "promo"
     }
   ]
 }
